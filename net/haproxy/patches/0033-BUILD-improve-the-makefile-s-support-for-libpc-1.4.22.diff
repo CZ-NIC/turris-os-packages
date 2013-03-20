@@ -1,0 +1,88 @@
+From a72ae88b2d68c3e772f14aed88687c676771e1c3 Mon Sep 17 00:00:00 2001
+From: Willy Tarreau <w@1wt.eu>
+Date: Wed, 13 Feb 2013 12:39:06 +0100
+Subject: BUILD: improve the makefile's support for libpcre
+
+Currently when cross-compiling, it's generally necessary to force
+PCREDIR which the Makefile automatically appends /include and /lib to.
+Unfortunately on most 64-bit linux distros, the lib path is instead
+/lib64, which is really annoying to fix in the makefile.
+
+So now we're computing PCRE_INC and PCRE_LIB from PCREDIR and using
+these ones instead. If one wants to force paths individually, it is
+possible to set them instead of setting PCREDIR. The old behaviour
+of not passing anything to the compiler when PCREDIR is forced to blank
+is conserved.
+
+(cherry picked from commit 39793095d7e19031504ed75aebfbb500680baaf7)
+---
+ Makefile |   40 ++++++++++++++++++++++------------------
+ 1 files changed, 22 insertions(+), 18 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 7633588..8d82543 100644
+--- a/Makefile
++++ b/Makefile
+@@ -55,6 +55,8 @@
+ #   DLMALLOC_SRC   : build with dlmalloc, indicate the location of dlmalloc.c.
+ #   DLMALLOC_THRES : should match PAGE_SIZE on every platform (default: 4096).
+ #   PCREDIR        : force the path to libpcre.
++#   PCRE_LIB       : force the lib path to libpcre (defaults to $PCREDIR/lib).
++#   PCRE_INC       : force the include path to libpcre ($PCREDIR/inc)
+ #   IGNOREGIT      : ignore GIT commit versions if set.
+ #   VERSION        : force haproxy version reporting.
+ #   SUBVERS        : add a sub-version (eg: platform, model, ...).
+@@ -436,30 +438,32 @@ DLMALLOC_THRES = 4096
+ OPTIONS_OBJS  += src/dlmalloc.o
+ endif
+ 
+-ifneq ($(USE_PCRE),)
+-# PCREDIR is the directory hosting include/pcre.h and lib/libpcre.*. It is
+-# automatically detected but can be forced if required. Forcing it to an empty
+-# string will result in search only in the default paths.
+-ifeq ($(PCREDIR),)
++ifneq ($(USE_PCRE)$(USE_STATIC_PCRE),)
++# PCREDIR is used to automatically construct the PCRE_INC and PCRE_LIB paths,
++# by appending /include and /lib respectively. If your system does not use the
++# same sub-directories, simply force these variables instead of PCREDIR. It is
++# automatically detected but can be forced if required (for cross-compiling).
++# Forcing PCREDIR to an empty string will let the compiler use the default
++# locations.
++
+ PCREDIR	        := $(shell pcre-config --prefix 2>/dev/null || echo /usr/local)
++ifneq ($(PCREDIR),)
++PCRE_INC        := $(PCREDIR)/include
++PCRE_LIB        := $(PCREDIR)/lib
+ endif
++
+ ifeq ($(USE_STATIC_PCRE),)
+-OPTIONS_CFLAGS  += -DUSE_PCRE $(if $(PCREDIR),-I$(PCREDIR)/include)
+-OPTIONS_LDFLAGS += $(if $(PCREDIR),-L$(PCREDIR)/lib) -lpcreposix -lpcre
+-endif
++# dynamic PCRE
++OPTIONS_CFLAGS  += -DUSE_PCRE $(if $(PCRE_INC),-I$(PCRE_INC))
++OPTIONS_LDFLAGS += $(if $(PCRE_LIB),-L$(PCRE_LIB)) -lpcreposix -lpcre
+ BUILD_OPTIONS   += $(call ignore_implicit,USE_PCRE)
+-endif
+-
+-ifneq ($(USE_STATIC_PCRE),)
+-# PCREDIR is the directory hosting include/pcre.h and lib/libpcre.*. It is
+-# automatically detected but can be forced if required.
+-ifeq ($(PCREDIR),)
+-PCREDIR         := $(shell pcre-config --prefix 2>/dev/null || echo /usr/local)
+-endif
+-OPTIONS_CFLAGS  += -DUSE_PCRE $(if $(PCREDIR),-I$(PCREDIR)/include)
+-OPTIONS_LDFLAGS += $(if $(PCREDIR),-L$(PCREDIR)/lib) -Wl,-Bstatic -lpcreposix -lpcre -Wl,-Bdynamic
++else
++# static PCRE
++OPTIONS_CFLAGS  += -DUSE_PCRE $(if $(PCRE_INC),-I$(PCRE_INC))
++OPTIONS_LDFLAGS += $(if $(PCRE_LIB),-L$(PCRE_LIB)) -Wl,-Bstatic -lpcreposix -lpcre -Wl,-Bdynamic
+ BUILD_OPTIONS   += $(call ignore_implicit,USE_STATIC_PCRE)
+ endif
++endif
+ 
+ # This one can be changed to look for ebtree files in an external directory
+ EBTREE_DIR := ebtree
+-- 
+1.7.1
+

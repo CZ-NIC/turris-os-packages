@@ -1,0 +1,35 @@
+From 9e98076edc9d3f25763473480e4aac6223bfd7d0 Mon Sep 17 00:00:00 2001
+From: Willy Tarreau <w@1wt.eu>
+Date: Thu, 24 Jan 2013 00:37:39 +0100
+Subject: BUG/MEDIUM: checks: ensure the health_status is always within bounds
+
+health_adjust() checks for incorrect bounds for the status argument.
+With current code, the argument is always a constant from the valid
+enum so there is no impact and the check is basically a NOP. However
+users running local patches (eg: new checks) might want to recheck
+their code.
+
+This fix should be backported to 1.4 which introduced the issue.
+
+Reported-by: Dinko Korunic <dkorunic@reflected.net>
+(cherry picked from commit bb95666bac94b6235eda431aba788644f7de7a3f)
+---
+ src/checks.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/checks.c b/src/checks.c
+index 201900a..13b5c64 100644
+--- a/src/checks.c
++++ b/src/checks.c
+@@ -584,7 +584,7 @@ void health_adjust(struct server *s, short status) {
+ 	if (s->observe >= HANA_OBS_SIZE)
+ 		return;
+ 
+-	if (status >= HCHK_STATUS_SIZE || !analyze_statuses[status].desc)
++	if (status >= HANA_STATUS_SIZE || !analyze_statuses[status].desc)
+ 		return;
+ 
+ 	switch (analyze_statuses[status].lr[s->observe - 1]) {
+-- 
+1.7.1
+

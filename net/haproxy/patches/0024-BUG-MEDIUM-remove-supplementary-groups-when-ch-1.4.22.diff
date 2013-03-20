@@ -1,0 +1,81 @@
+From e35cc9549c74f696823a13d24df39be06192bf0b Mon Sep 17 00:00:00 2001
+From: Michael Scherer <misc@zarb.org>
+Date: Sat, 12 Jan 2013 18:35:19 +0100
+Subject: BUG/MEDIUM: remove supplementary groups when changing gid
+
+Without it, haproxy will retain the group membership of root, which may
+give more access than intended to the process. For example, haproxy would
+still be in the wheel group on Fedora 18, as seen with :
+
+  # haproxy -f /etc/haproxy/haproxy.cfg
+
+  # ps a -o pid,user,group,command | grep hapr
+  3545 haproxy  haproxy  haproxy -f /etc/haproxy/haproxy.cfg
+  4356 root     root     grep --color=auto hapr
+  # grep Group /proc/3545/status
+  Groups: 0 1 2 3 4 6 10
+  # getent group wheel
+  wheel:x:10:root,misc
+
+[WT: The issue has been investigated by independent security research team
+     and realized by itself not being able to allow security exploitation.
+     Additionally, dropping groups is not allowed to unprivileged users,
+     though this mode of deployment is quite common. Thus a warning is
+     emitted in this case to inform the user. The fix could be backported
+     into all supported versions as the issue has always been there. ]
+
+(cherry picked from commit ab012dd394d596f022c0d16f3584d5f61ffcf10e)
+---
+ doc/configuration.txt |    2 ++
+ src/haproxy.c         |   15 +++++++++++----
+ 2 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/doc/configuration.txt b/doc/configuration.txt
+index e5d9af5..20b89c2 100644
+--- a/doc/configuration.txt
++++ b/doc/configuration.txt
+@@ -486,6 +486,8 @@ gid <number>
+   Changes the process' group ID to <number>. It is recommended that the group
+   ID is dedicated to HAProxy or to a small set of similar daemons. HAProxy must
+   be started with a user belonging to this group, or with superuser privileges.
++  Note that if haproxy is started from a user having supplementary groups, it
++  will only be able to drop these groups if started with superuser privileges.
+   See also "group" and "uid".
+ 
+ group <group name>
+diff --git a/src/haproxy.c b/src/haproxy.c
+index ec481aa..c302143 100644
+--- a/src/haproxy.c
++++ b/src/haproxy.c
+@@ -44,6 +44,7 @@
+ #include <sys/resource.h>
+ #include <time.h>
+ #include <syslog.h>
++#include <grp.h>
+ 
+ #ifdef DEBUG_FULL
+ #include <assert.h>
+@@ -1186,10 +1187,16 @@ int main(int argc, char **argv)
+ 	 */
+ 
+ 	/* setgid / setuid */
+-	if (global.gid && setgid(global.gid) == -1) {
+-		Alert("[%s.main()] Cannot set gid %d.\n", argv[0], global.gid);
+-		protocol_unbind_all();
+-		exit(1);
++	if (global.gid) {
++		if (getgroups(0, NULL) > 0 && setgroups(0, NULL) == -1)
++			Warning("[%s.main()] Failed to drop supplementary groups. Using 'gid'/'group'"
++				" without 'uid'/'user' is generally useless.\n", argv[0]);
++
++		if (setgid(global.gid) == -1) {
++			Alert("[%s.main()] Cannot set gid %d.\n", argv[0], global.gid);
++			protocol_unbind_all();
++			exit(1);
++		}
+ 	}
+ 
+ 	if (global.uid && setuid(global.uid) == -1) {
+-- 
+1.7.1
+

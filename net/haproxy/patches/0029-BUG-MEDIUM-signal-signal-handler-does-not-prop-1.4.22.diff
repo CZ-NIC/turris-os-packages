@@ -1,0 +1,43 @@
+From cf196abaa639f2ad940327145e59458b2cb7d9fe Mon Sep 17 00:00:00 2001
+From: Willy Tarreau <w@1wt.eu>
+Date: Thu, 24 Jan 2013 02:06:05 +0100
+Subject: BUG/MEDIUM: signal: signal handler does not properly check for signal bounds
+
+sig is checked for < 0 or > MAX_SIGNAL, but the signal array is
+MAX_SIGNAL in size. At the moment, MAX_SIGNAL is 256. If a system supports
+more than MAX_SIGNAL signals, then sending signal MAX_SIGNAL to the process
+will corrupt one integer in its memory and might also crash the process.
+
+This bug is also present in 1.4 and 1.3, and the fix must be backported.
+
+Reported-by: Dinko Korunic <dkorunic@reflected.net>
+(cherry picked from commit 1a53b5ef583988ca0405007f3ef47d2114da9546)
+---
+ src/signal.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/signal.c b/src/signal.c
+index 9825c0d..a3c6cd4 100644
+--- a/src/signal.c
++++ b/src/signal.c
+@@ -38,7 +38,7 @@ void signal_init()
+ 
+ void signal_handler(int sig)
+ {
+-	if (sig < 0 || sig > MAX_SIGNAL || !signal_state[sig].handler) {
++	if (sig < 0 || sig >= MAX_SIGNAL || !signal_state[sig].handler) {
+ 		/* unhandled signal */
+ 		qfprintf(stderr, "Received unhandled signal %d. Signal has been disabled.\n", sig);
+ 		signal(sig, SIG_IGN);
+@@ -64,7 +64,7 @@ void signal_handler(int sig)
+  */
+ void signal_register(int sig, void (*handler)(int))
+ {
+-	if (sig < 0 || sig > MAX_SIGNAL) {
++	if (sig < 0 || sig >= MAX_SIGNAL) {
+ 		qfprintf(stderr, "Failed to register signal %d : out of range [0..%d].\n", sig, MAX_SIGNAL);
+ 		return;
+ 	}
+-- 
+1.7.1
+

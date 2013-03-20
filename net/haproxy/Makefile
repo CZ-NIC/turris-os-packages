@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=haproxy
 PKG_VERSION:=1.4.22
-PKG_RELEASE:=24
+PKG_RELEASE:=35
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://haproxy.1wt.eu/download/1.4/src
@@ -37,7 +37,7 @@ define Package/haproxy/description
 endef
 
 define Build/Compile
-	$(MAKE) TARGET=linux26 -C $(PKG_BUILD_DIR) \
+	$(MAKE) TARGET=linux28 -C $(PKG_BUILD_DIR) \
 		DESTDIR="$(PKG_INSTALL_DIR)" \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)" \

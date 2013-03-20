@@ -1,0 +1,44 @@
+From a2c277afc6f12858939ba26160ce0f91fdb160d0 Mon Sep 17 00:00:00 2001
+From: Simon Horman <horms@verge.net.au>
+Date: Wed, 13 Feb 2013 17:48:00 +0900
+Subject: BUG/MINOR: Correct logic in cut_crlf()
+
+This corrects what appears to be logic errors in cut_crlf().
+I assume that the intention of this function is to truncate a
+string at the first cr or lf. However, currently lf are ignored.
+
+Also use '\0' instead of 0 as the null character, a cosmetic change.
+
+Cc: Krzysztof Piotr Oledzki <ole@ans.pl>
+Signed-off-by: Simon Horman <horms@verge.net.au>
+
+[WT: this fix may be backported to 1.4 too]
+(cherry picked from commit 5269cfb4585ebee9babc628e2fed672c00028743)
+---
+ include/common/standard.h |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/common/standard.h b/include/common/standard.h
+index cd1a609..064d216 100644
+--- a/include/common/standard.h
++++ b/include/common/standard.h
+@@ -282,14 +282,14 @@ unsigned int inetaddr_host_lim_ret(const char *text, char *stop, const char **re
+ 
+ static inline char *cut_crlf(char *s) {
+ 
+-	while (*s != '\r' || *s == '\n') {
++	while (*s != '\r' && *s != '\n') {
+ 		char *p = s++;
+ 
+ 		if (!*p)
+ 			return p;
+ 	}
+ 
+-	*s++ = 0;
++	*s++ = '\0';
+ 
+ 	return s;
+ }
+-- 
+1.7.1
+
