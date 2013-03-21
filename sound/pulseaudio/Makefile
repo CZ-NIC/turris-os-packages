@@ -139,7 +139,8 @@ define Build/InstallDev
 	$(INSTALL_DIR) \
 		$(1)/usr/lib/pkgconfig \
 		$(1)/usr/include/pulse \
-		$(1)/usr/lib
+		$(1)/usr/lib \
+		$(1)/usr/lib/pulseaudio
 	$(CP) \
 		$(PKG_INSTALL_DIR)/usr/include/pulse/* \
 		$(1)/usr/include/pulse
@@ -149,6 +150,9 @@ define Build/InstallDev
 	$(CP) \
 		$(PKG_INSTALL_DIR)/usr/lib/*.so* \
 		$(1)/usr/lib/
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/lib/pulseaudio/* \
+		$(1)/usr/lib/pulseaudio/
 endef
 
 define Package/pulseaudio-daemon/install
