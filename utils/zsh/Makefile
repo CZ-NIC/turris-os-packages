@@ -40,6 +40,7 @@ define Build/Configure
 	$(call Build/Configure/Default, \
 		--bindir=/bin \
 		--disable-etcdir \
+		--disable-gdbm \
 		--with-term-lib="ncurses" \
 	)
 	# Do not install these functions:
