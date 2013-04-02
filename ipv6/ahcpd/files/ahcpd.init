@@ -97,7 +97,7 @@ start() {
 	config_foreach ahcp_config ahcpd
 	config_foreach ahcp_server ahcpd
 	[ -z "$interfaces" ] && return 0
-	service_start /usr/sbin/ahcpd -D $args $interfaces
+	eval "service_start /usr/sbin/ahcpd -D $args $interfaces"
 }
 
 stop() {
