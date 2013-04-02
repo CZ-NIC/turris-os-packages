@@ -1,0 +1,77 @@
+From f4096052b9397e29c3638651e7487c047081c00c Mon Sep 17 00:00:00 2001
+From: Willy Tarreau <w@1wt.eu>
+Date: Sun, 31 Mar 2013 14:41:15 +0200
+Subject: [PATCH 40/42] BUG/MAJOR: ev_select: disable the select() poller if
+ maxsock > FD_SETSIZE
+
+Some recent glibc updates have added controls on FD_SET/FD_CLR/FD_ISSET
+that crash the program if it tries to use a file descriptor larger than
+FD_SETSIZE.
+
+For this reason, we now control the compatibility between global.maxsock
+and FD_SETSIZE, and refuse to use select() if there too many FDs are
+expected to be used. Note that on Solaris, FD_SETSIZE is already forced
+to 65536, and that FreeBSD and OpenBSD allow it to be redefined, though
+this is not needed thanks to kqueue which is much more efficient.
+
+In practice, since poll() is enabled on all targets, it should not cause
+any problem, unless it is explicitly disabled.
+
+This change must be backported to 1.4 because the crashes caused by glibc
+have already been reported on this version.
+(cherry picked from commit 3fa87b1db95bc4d6640999462bdae620bff147c6)
+---
+ src/ev_select.c |  7 +++++++
+ src/haproxy.c   | 11 ++++++++++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/src/ev_select.c b/src/ev_select.c
+index 5a87282..1f35b54 100644
+--- a/src/ev_select.c
++++ b/src/ev_select.c
+@@ -170,6 +170,10 @@ REGPRM1 static int _do_init(struct poller *p)
+ 	int fd_set_bytes;
+ 
+ 	p->private = NULL;
++
++	if (global.maxsock > FD_SETSIZE)
++		goto fail_revt;
++
+ 	fd_set_bytes = sizeof(fd_set) * (global.maxsock + FD_SETSIZE - 1) / FD_SETSIZE;
+ 
+ 	if ((tmp_evts[DIR_RD] = (fd_set *)calloc(1, fd_set_bytes)) == NULL)
+@@ -217,6 +221,9 @@ REGPRM1 static void _do_term(struct poller *p)
+  */
+ REGPRM1 static int _do_test(struct poller *p)
+ {
++	if (global.maxsock > FD_SETSIZE)
++		return 0;
++
+ 	return 1;
+ }
+ 
+diff --git a/src/haproxy.c b/src/haproxy.c
+index c302143..1d588e1 100644
+--- a/src/haproxy.c
++++ b/src/haproxy.c
+@@ -711,7 +711,16 @@ void init(int argc, char **argv)
+ 		list_pollers(stderr);
+ 
+ 	if (!init_pollers()) {
+-		Alert("No polling mechanism available.\n");
++		Alert("No polling mechanism available.\n"
++		      "  It is likely that haproxy was built with TARGET=generic and that FD_SETSIZE\n"
++		      "  is too low on this platform to support maxconn and the number of listeners\n"
++		      "  and servers. You should rebuild haproxy specifying your system using TARGET=\n"
++		      "  in order to support other polling systems (poll, epoll, kqueue) or reduce the\n"
++		      "  global maxconn setting to accomodate the system's limitation. For reference,\n"
++		      "  FD_SETSIZE=%d on this system, global.maxconn=%d resulting in a maximum of\n"
++		      "  %d file descriptors. You should thus reduce global.maxconn by %d. Also,\n"
++		      "  check build settings using 'haproxy -vv'.\n\n",
++		      FD_SETSIZE, global.maxconn, global.maxsock, (global.maxsock + 1 - FD_SETSIZE) / 2);
+ 		exit(1);
+ 	}
+ 	if (global.mode & (MODE_VERBOSE|MODE_DEBUG)) {
+-- 
+1.8.1.5
+

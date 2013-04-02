@@ -1,0 +1,57 @@
+From 2d7b45e7321437c1f9c4d0f2c46a793ef9d059c0 Mon Sep 17 00:00:00 2001
+From: Willy Tarreau <w@1wt.eu>
+Date: Tue, 2 Apr 2013 08:17:43 +0200
+Subject: [PATCH 42/42] BUILD: add explicit support for Mac OS/X
+
+The "osx" target may now be passed in the TARGET variable. It supports
+the same features as FreeBSD and allows its users to use the GNU makefile
+instead of the platform-specific makefile which lacks some features.
+(cherry picked from commit 8624cab29c52db9052bf022683cfd3d11369cc0d)
+---
+ Makefile | 8 ++++++++
+ README   | 3 ++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index f4dbccd..57692fe 100644
+--- a/Makefile
++++ b/Makefile
+@@ -245,6 +245,13 @@ ifeq ($(TARGET),freebsd)
+   USE_TPROXY     = implicit
+   USE_LIBCRYPT   = implicit
+ else
++ifeq ($(TARGET),osx)
++  # This is for Mac OS/X
++  USE_POLL       = implicit
++  USE_KQUEUE     = implicit
++  USE_TPROXY     = implicit
++  USE_LIBCRYPT   = implicit
++else
+ ifeq ($(TARGET),openbsd)
+   # This is for OpenBSD >= 3.0
+   USE_POLL       = implicit
+@@ -267,6 +274,7 @@ ifeq ($(TARGET),cygwin)
+ endif # cygwin
+ endif # aix52
+ endif # openbsd
++endif # osx
+ endif # freebsd
+ endif # solaris
+ endif # linux2628
+diff --git a/README b/README
+index c99897e..7897cb3 100644
+--- a/README
++++ b/README
+@@ -28,7 +28,8 @@ and assign it to the TARGET variable :
+   - linux2628   for Linux 2.6.28 and above (enables splice and tproxy)
+   - solaris     for Solaris 8 or 10 (others untested)
+   - freebsd     for FreeBSD 5 to 8.0 (others untested)
+-  - openbsd     for OpenBSD 3.1 to 4.6 (others untested)
++  - osx         for Mac OS/X
++  - openbsd     for OpenBSD 3.1 to 5.2 (others untested)
+   - aix52       for AIX 5.2
+   - cygwin      for Cygwin
+   - generic     for any other OS.
+-- 
+1.8.1.5
+

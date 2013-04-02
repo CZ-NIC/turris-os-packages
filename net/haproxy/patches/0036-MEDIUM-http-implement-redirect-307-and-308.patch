@@ -1,0 +1,71 @@
+From 8a92e409e706e503ba76f8863c87409192e9f082 Mon Sep 17 00:00:00 2001
+From: Yves Lafon <ylafon@w3.org>
+Date: Mon, 11 Mar 2013 11:06:05 -0400
+Subject: [PATCH 36/42] MEDIUM: http: implement redirect 307 and 308
+
+I needed to emit a 307 and noticed it was not available so I did it,
+as well as 308.
+(cherry picked from commit 3e8d1ae2d25d3fae659fc560506af2ae9b20da12)
+---
+ src/cfgparse.c   |  6 +++---
+ src/proto_http.c | 20 ++++++++++++++++++++
+ 2 files changed, 23 insertions(+), 3 deletions(-)
+
+diff --git a/src/cfgparse.c b/src/cfgparse.c
+index e55d30a..345b415 100644
+--- a/src/cfgparse.c
++++ b/src/cfgparse.c
+@@ -2215,9 +2215,9 @@ int cfg_parse_listen(const char *file, int linenum, char **args, int kwm)
+ 				}
+ 				cur_arg++;
+ 				code = atol(args[cur_arg]);
+-				if (code < 301 || code > 303) {
+-					Alert("parsing [%s:%d] : '%s': unsupported HTTP code '%d'.\n",
+-					      file, linenum, args[0], code);
++				if (code < 301 || code > 308 || (code > 303 && code < 307)) {
++					Alert("parsing [%s:%d] : '%s': unsupported HTTP code '%s' (must be one of 301, 302, 303, 307 or 308).\n",
++					      file, linenum, args[0], args[cur_arg]);
+ 					err_code |= ERR_ALERT | ERR_FATAL;
+ 					goto out;
+ 				}
+diff --git a/src/proto_http.c b/src/proto_http.c
+index 06b3743..8d9d8e8 100644
+--- a/src/proto_http.c
++++ b/src/proto_http.c
+@@ -90,6 +90,20 @@ const char *HTTP_303 =
+ 	"Content-length: 0\r\n"
+ 	"Location: "; /* not terminated since it will be concatenated with the URL */
+ 
++
++/* same as 302 except that the browser MUST retry with the same method */
++const char *HTTP_307 =
++	"HTTP/1.1 307 Temporary Redirect\r\n"
++	"Cache-Control: no-cache\r\n"
++	"Content-length: 0\r\n"
++	"Location: "; /* not terminated since it will be concatenated with the URL */
++
++/* same as 301 except that the browser MUST retry with the same method */
++const char *HTTP_308 =
++	"HTTP/1.1 308 Permanent Redirect\r\n"
++	"Content-length: 0\r\n"
++	"Location: "; /* not terminated since it will be concatenated with the URL */
++
+ /* Warning: this one is an sprintf() fmt string, with <realm> as its only argument */
+ const char *HTTP_401_fmt =
+ 	"HTTP/1.0 401 Unauthorized\r\n"
+@@ -3355,6 +3369,12 @@ int http_process_req_common(struct session *s, struct buffer *req, int an_bit, s
+ 
+ 			/* build redirect message */
+ 			switch(rule->code) {
++			case 308:
++				msg_fmt = HTTP_308;
++				break;
++			case 307:
++				msg_fmt = HTTP_307;
++				break;
+ 			case 303:
+ 				msg_fmt = HTTP_303;
+ 				break;
+-- 
+1.8.1.5
+

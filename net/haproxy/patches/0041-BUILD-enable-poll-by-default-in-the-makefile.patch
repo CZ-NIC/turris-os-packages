@@ -1,0 +1,60 @@
+From 4c5a09bb3c62070f139159378a8d68897b7ec8d6 Mon Sep 17 00:00:00 2001
+From: Willy Tarreau <w@1wt.eu>
+Date: Tue, 2 Apr 2013 08:14:29 +0200
+Subject: [PATCH 41/42] BUILD: enable poll() by default in the makefile
+
+This allows to build haproxy for unknown targets and still have poll().
+If for any reason a target does not support it, just passing USE_POLL=""
+disables it.
+(cherry picked from commit 32e65ef62570cbace7368ebe7262b48c28b31bb7)
+---
+ Makefile | 5 ++++-
+ README   | 9 ++++++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 8d82543..f4dbccd 100644
+--- a/Makefile
++++ b/Makefile
+@@ -172,7 +172,10 @@ LDFLAGS = $(ARCH_FLAGS) -g
+ # Depending on the target platform, some options are set, as well as some
+ # CFLAGS and LDFLAGS. The USE_* values are set to "implicit" so that they are
+ # not reported in the build options string. You should not have to change
+-# anything there.
++# anything there. poll() is always supported, unless explicitly disabled by
++# passing USE_POLL="" on the make command line.
++USE_POLL   = default
++
+ ifeq ($(TARGET),generic)
+   # generic system target has nothing specific
+   USE_POLL   = implicit
+diff --git a/README b/README
+index aca83f9..c99897e 100644
+--- a/README
++++ b/README
+@@ -12,7 +12,7 @@
+ To build haproxy, you will need :
+   - GNU make. Neither Solaris nor OpenBSD's make work with the GNU Makefile.
+     However, specific Makefiles for BSD and OSX are provided.
+-  - GCC between 2.91 and 4.5.0. Others may work, but not tested.
++  - GCC between 2.91 and 4.7. Others may work, but not tested.
+   - GNU ld
+ 
+ Also, you might want to build with libpcre support, which will provide a very
+@@ -100,6 +100,13 @@ otherwise __fd_select() will be used while not being present in the libc.
+ If you get build errors because of strange symbols or section mismatches,
+ simply remove -g from DEBUG_CFLAGS.
+ 
++You can easily define your own target with the GNU Makefile. Unknown targets
++are processed with no default option except USE_POLL=default. So you can very
++well use that property to define your own set of options. USE_POLL can even be
++disabled by setting USE_POLL="". For example :
++
++    $ gmake TARGET=tiny USE_POLL="" TARGET_CFLAGS=-fomit-frame-pointer
++
+ 
+ 2) How to install it
+ --------------------
+-- 
+1.8.1.5
+
