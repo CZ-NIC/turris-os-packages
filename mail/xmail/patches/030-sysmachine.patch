@@ -1,14 +1,20 @@
 diff -urN xmail-1.25.orig/SysMachine.h xmail-1.25/SysMachine.h
 --- xmail-1.25.orig/SysMachine.h	1970-01-01 01:00:00.000000000 +0100
 +++ xmail-1.25/SysMachine.h	2008-07-28 10:16:47.000000000 +0200
-@@ -0,0 +1,24 @@
+@@ -0,0 +1,30 @@
 +#ifndef _MACHDEFS_H
 +#define _MACHDEFS_H
 +
 +
-+#undef MACH_BIG_ENDIAN_WORDS
++#include <endian.h>
 +
++#if __BYTE_ORDER == __LITTLE_ENDIAN
++#undef MACH_BIG_ENDIAN_WORDS
 +#undef MACH_BIG_ENDIAN_BITFIELD
++#elif __BYTE_ORDER == __BIG_ENDIAN
++#define MACH_BIG_ENDIAN_WORDS
++#define MACH_BIG_ENDIAN_BITFIELD
++#endif
 +
 +typedef signed char MachInt8;
 +typedef unsigned char MachUInt8;
