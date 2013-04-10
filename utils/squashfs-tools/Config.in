@@ -1,0 +1,11 @@
+if PACKAGE_squashfs-tools
+
+config SQUASHFS_TOOLS_MKSQUASHFS
+	bool "Install mksquashfs"
+	default y
+
+config SQUASHFS_TOOLS_UNSQUASHFS
+	bool "Install unsquashfs"
+	default y
+
+endif
