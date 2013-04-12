@@ -1,11 +1,11 @@
-if PACKAGE_squashfs-tools
+if PACKAGE_squashfs-tools-mksquashfs || PACKAGE_squashfs-tools-unsquashfs
 
-config SQUASHFS_TOOLS_MKSQUASHFS
-	bool "Install mksquashfs"
+config SQUASHFS_TOOLS_LZO_SUPPORT
+	bool "Enable LZO support"
 	default y
 
-config SQUASHFS_TOOLS_UNSQUASHFS
-	bool "Install unsquashfs"
+config SQUASHFS_TOOLS_XZ_SUPPORT
+	bool "Enable XZ support"
 	default y
 
 endif
