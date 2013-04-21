@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=squashfs-tools
 PKG_VERSION:=4.2
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=squashfs$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@SF/squashfs
@@ -26,9 +26,7 @@ define Package/squashfs-tools/Default
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=squashfs-tools
-  DEPENDS += +libpthread +zlib \
-	+SQUASHFS_TOOLS_LZO_SUPPORT:liblzo \
-	+SQUASHFS_TOOLS_XZ_SUPPORT:liblzma
+  DEPENDS += +libpthread +zlib
 endef
 
 define Package/squashfs-tools-mksquashfs
