@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=xz
 PKG_VERSION:=5.0.4
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://tukaani.org/xz
@@ -64,7 +64,7 @@ endef
 define Package/liblzma
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=xz +libpthread
+  DEPENDS:=+libpthread
   TITLE:=liblzma library from XZ Utils
 endef
 
