@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gupnp-av
-PKG_VERSION:=0.10.2
+PKG_VERSION:=0.12.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=@GNOME/gupnp-av/0.10/
-PKG_MD5SUM:=a42af0751f8b0bacdda0741d3a515fec
+PKG_SOURCE_URL:=@GNOME/gupnp-av/0.12/
+PKG_MD5SUM:=2d15a94d743720febb400b2cacde1cdc
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
