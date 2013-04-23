@@ -1,0 +1,18 @@
+Index: wview-5.19.0-jgoerzen/stations/WMRUSB/wmrusbprotocol.c
+===================================================================
+--- wview-5.19.0-jgoerzen.orig/stations/WMRUSB/wmrusbprotocol.c	2013-03-10 22:24:28.000000000 +0400
++++ wview-5.19.0-jgoerzen/stations/WMRUSB/wmrusbprotocol.c	2013-03-10 22:25:01.000000000 +0400
+@@ -897,8 +897,11 @@
+ // Read raw USB data and buffer it for later processing:
+ void wmrReadData (WVIEWD_WORK *work, WMRUSB_MSG_DATA* msg)
+ {
+-    memcpy(&wmrWork.readData[wmrWork.readIndex], msg->data, msg->length);
+-    wmrWork.readIndex += msg->length;
++    if (wmrWork.readIndex + msg->length <= WMR_BUFFER_LENGTH)
++    {
++        memcpy(&wmrWork.readData[wmrWork.readIndex], msg->data, msg->length);
++        wmrWork.readIndex += msg->length;
++    }
+ 
+     return;
+ }
