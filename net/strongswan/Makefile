@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=strongswan
 PKG_VERSION:=5.0.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://download.strongswan.org/
@@ -346,6 +346,7 @@ EXTRA_LDFLAGS+= -Wl,-rpath-link,$(STAGING_DIR)/usr/lib
 define Package/strongswan/conffiles
 /etc/ipsec.conf
 /etc/ipsec.secrets
+/etc/ipsec.user
 /etc/strongswan.conf
 endef
 
@@ -427,6 +428,8 @@ define Plugin/updown/install
 	$(INSTALL_DIR) $(1)/usr/lib/ipsec/plugins
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ipsec/{_updown,_updown_espmark} $(1)/usr/lib/ipsec/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ipsec/plugins/libstrongswan-updown.so $(1)/usr/lib/ipsec/plugins/
+	$(INSTALL_DIR) $(1)/etc
+	$(INSTALL_CONF) ./files/ipsec.user $(1)/etc/
 endef
 
 define Plugin/whitelist/install
