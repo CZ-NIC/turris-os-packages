@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=babeld
-PKG_VERSION:=1.3.5
+PKG_VERSION:=1.3.6
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.pps.univ-paris-diderot.fr/~jch/software/files/
-PKG_MD5SUM:=55f3df2429f4cf7816fce312591ba488
+PKG_MD5SUM:=5dfccfeb2db5d8244c2fd2dc301e89a0
 
 include $(INCLUDE_DIR)/package.mk
 
