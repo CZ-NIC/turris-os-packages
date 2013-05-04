@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=shadow
 PKG_VERSION:=4.1.5.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://pkg-shadow.alioth.debian.org/releases
@@ -22,8 +22,8 @@ PKG_INSTALL:=1
 include $(INCLUDE_DIR)/package.mk
 
 UTILS := \
-	groupadd groupdel groupmod useradd userdel usermod \
-	su passwd groups
+	chage groupadd groupdel groupmod groups passwd su \
+	useradd userdel usermod
 
 CONFIGURE_ARGS += \
 	--without-audit \
