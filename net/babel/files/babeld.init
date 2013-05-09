@@ -98,6 +98,7 @@ babel_config() {
 	append_bool "$cfg" 'assume_wireless' '-w'
 	append_bool "$cfg" 'no_split_horizon' '-s'
 	append_bool "$cfg" 'keep_unfeasible' '-u'
+	append_bool "$cfg" 'random_router_id' '-r'
 
 	append_parm "$cfg" 'multicast_address' '-m'
 	append_parm "$cfg" 'port' '-p'
@@ -105,6 +106,7 @@ babel_config() {
 	append_parm "$cfg" 'hello_interval' '-h'
 	append_parm "$cfg" 'wired_hello_interval' '-H'
 	append_parm "$cfg" 'diversity' '-z'
+	append_parm "$cfg" 'smoothing_half_time' '-M'
 	append_parm "$cfg" 'kernel_priority' '-k'
 	append_parm "$cfg" 'duplication_priority' '-A'
 	append_parm "$cfg" 'debug' '-d'
