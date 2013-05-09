@@ -12,7 +12,7 @@ PKG_VERSION:=0.53
 PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://www.pps.jussieu.fr/~jch/software/files/
+PKG_SOURCE_URL:=http://www.pps.univ-paris-diderot.fr/~jch/software/files/
 PKG_MD5SUM:=a1a610bf20965aa522cd766bf3d5829a
 
 
@@ -22,8 +22,8 @@ define Package/ahcpd
   SECTION:=ipv6
   CATEGORY:=IPv6
   TITLE:=Ad-Hoc Configuration Protocol daemon
-  URL:=http://www.pps.jussieu.fr/~jch/software/ahcp/
-  MAINTAINER:=Gabriel Kerneis <kerneis@pps.jussieu.fr>
+  URL:=http://www.pps.univ-paris-diderot.fr/~jch/software/ahcp/
+  MAINTAINER:=Gabriel Kerneis <kerneis@pps.univ-paris-diderot.fr>
   DEPENDS:=+kmod-ipv6 +ip +librt
 endef
 
