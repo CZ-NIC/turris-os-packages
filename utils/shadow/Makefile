@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=shadow
 PKG_VERSION:=4.1.5.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://pkg-shadow.alioth.debian.org/releases
@@ -43,7 +43,7 @@ endef
 
 define Package/shadow
   $(call Package/shadow/Default)
-  MENU:=1
+  DEPENDS:=$(foreach u,$(SHADOW_APPLETS),+shadow-$(u))
 endef
 
 define Package/shadow/description
@@ -60,7 +60,6 @@ endef
 define Package/shadow-common
   $(call Package/shadow/Default)
   TITLE:=Shared definitions for the PLD Linux shadow utilities
-  DEPENDS:=shadow
 endef
 
 
@@ -68,7 +67,7 @@ define GenPlugin
   define Package/shadow-$(1)
     $(call Package/shadow/Default)
     TITLE:=Utility $(1) from the PLD Linux shadow utilities
-    DEPENDS:=shadow +shadow-common
+    DEPENDS:=+shadow-common
   endef
 
   define Package/shadow-$(1)/description
