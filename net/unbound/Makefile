@@ -137,7 +137,9 @@ define Package/unbound/install
 	$(INSTALL_CONF) ./files/root.key $(1)/etc/unbound/
 	$(INSTALL_CONF) ./files/named.cache $(1)/etc/unbound/
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/unbound.init $(1)/etc/init.d/unbound
+	$(INSTALL_BIN) ./files/unbound-init $(1)/etc/init.d/unbound
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_BIN) ./files/unbound-config $(1)/etc/config/unbound
 endef
 
 define Package/unbound-anchor/install
