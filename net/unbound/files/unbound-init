@@ -1,8 +1,8 @@
 #!/bin/sh /etc/rc.common
-
+#Copyright (C) 2013 CZ.NIC z.s.p.o. <stepan.henek@nic.cz>
 START=61
 
-CONFIGFILE="/etc/unbound/unbound-run.conf"
+CONFIGFILE="/var/etc/unbound/unbound.conf"
 
 header() {
     cat > "$CONFIGFILE" <<-EOF
