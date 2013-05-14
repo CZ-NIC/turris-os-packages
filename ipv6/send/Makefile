@@ -21,8 +21,8 @@ PKG_BUILD_PARALLEL:=0
 include $(INCLUDE_DIR)/package.mk
 
 define Package/send
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   TITLE:=Secure Neighbor Discovery implementation
   URL:=http://mobisend.org/debian-mobisend.html
   DEPENDS:=+kmod-ipv6 +ip6tables +libnetfilter-queue +libopenssl +libreadline +libncurses

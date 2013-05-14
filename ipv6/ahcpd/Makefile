@@ -19,8 +19,8 @@ PKG_MD5SUM:=a1a610bf20965aa522cd766bf3d5829a
 include $(INCLUDE_DIR)/package.mk
 
 define Package/ahcpd
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   TITLE:=Ad-Hoc Configuration Protocol daemon
   URL:=http://www.pps.univ-paris-diderot.fr/~jch/software/ahcp/
   MAINTAINER:=Gabriel Kerneis <kerneis@pps.univ-paris-diderot.fr>

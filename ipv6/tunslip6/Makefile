@@ -22,8 +22,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 include $(INCLUDE_DIR)/package.mk
 
 define Package/tunslip6
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   DEPENDS:=+kmod-slip
   TITLE:=tunslip6 from Contiki OS
   URL:=http://www.contiki-os.org/

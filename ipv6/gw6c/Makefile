@@ -17,8 +17,8 @@ include $(INCLUDE_DIR)/uclibc++.mk
 include $(INCLUDE_DIR)/package.mk
 
 define Package/gw6c
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   DEPENDS:=+libpthread +ip +kmod-tun +kmod-ipv6 $(CXX_DEPENDS) +radvd
   TITLE:=IPv6 tunnel client software
   URL:=http://www.go6.net

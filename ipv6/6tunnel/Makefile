@@ -18,8 +18,8 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 include $(INCLUDE_DIR)/package.mk
 
 define Package/6tunnel
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   DEPENDS:=+libpcap +kmod-sit
   TITLE:=IPv4 / IPv6 tunnel proxy
   URL:=http://toxygen.net/6tunnel/

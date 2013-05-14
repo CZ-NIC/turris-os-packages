@@ -20,8 +20,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)2
 include $(INCLUDE_DIR)/package.mk
 
 define Package/tspc
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   TITLE:=Client for Hexago's (Freenet6's) IPv6 service
   URL:=http://www.hexago.com
 endef
