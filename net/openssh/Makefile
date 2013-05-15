@@ -86,7 +86,7 @@ OpenSSH server.
 endef
 
 define Package/openssh-server/conffiles
-/etc/ssh/sshd_config
+/etc/config/sshd
 endef
 
 define Package/openssh-sftp-client
@@ -178,7 +178,6 @@ endef
 define Package/openssh-server/install
 	$(INSTALL_DIR) $(1)/etc/ssh
 	chmod 0700 $(1)/etc/ssh
-	$(CP) $(PKG_INSTALL_DIR)/etc/ssh/sshd_config $(1)/etc/ssh/
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/sshd.init $(1)/etc/init.d/sshd
 	$(INSTALL_DIR) $(1)/etc/config
