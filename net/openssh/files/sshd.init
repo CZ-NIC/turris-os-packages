@@ -59,7 +59,7 @@ handle_openssh_section(){
     set_multiple_parameters "$config" Port Port
     set_parameter "$config" AddressFamily AddressFamily
     set_multiple_parameters "$config" ListenAddress ListenAddress
-    set_parameter Protocol Protocol
+    set_parameter "$confing" Protocol Protocol
     set_multiple_parameters "$config" HostKey HostKey
     set_parameter "$config" KeyRegenerationInterval KeyRegenerationInterval
     set_parameter "$config" ServerKeyBits ServerKeyBits
