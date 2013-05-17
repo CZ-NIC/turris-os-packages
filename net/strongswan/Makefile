@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=strongswan
-PKG_VERSION:=5.0.2
-PKG_RELEASE:=2
+PKG_VERSION:=5.0.4
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://download.strongswan.org/
-PKG_MD5SUM:=77dc16443fd141f46183d3a4f60986ef
+PKG_MD5SUM:=0ab0397b44b197febfd0f89148344035
 
 PKG_MOD_AVAILABLE:= \
 	addrblock \
