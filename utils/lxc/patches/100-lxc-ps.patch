@@ -1,0 +1,11 @@
+--- a/src/lxc/lxc-ps.in
++++ b/src/lxc/lxc-ps.in
+@@ -91,7 +91,7 @@
+ done
+ 
+ if [ "$list_container_processes" -eq "1" ]; then
+-    set -- -e $@
++    set -- $@
+ fi
+ 
+ get_parent_cgroup
