@@ -1,5 +1,3 @@
-diff --git a/conf/zabbix_agentd.conf b/conf/zabbix_agentd.conf
-index ed04751..e714c4d 100644
 --- a/conf/zabbix_agentd.conf
 +++ b/conf/zabbix_agentd.conf
 @@ -3,12 +3,8 @@
@@ -52,3 +50,12 @@ index ed04751..e714c4d 100644
  ### Option: HostnameItem
  #	Item used for generating Hostname if it is undefined.
  #	Ignored if Hostname is defined.
+@@ -213,7 +204,7 @@ Hostname=Zabbix server
+ # Include=
+ 
+ # Include=/usr/local/etc/zabbix_agentd.userparams.conf
+-# Include=/usr/local/etc/zabbix_agentd.conf.d/
++Include=/etc/zabbix_agentd.conf.d/
+ 
+ ####### USER-DEFINED MONITORED PARAMETERS #######
+ 
