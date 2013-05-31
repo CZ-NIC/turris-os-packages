@@ -28,6 +28,11 @@ define Package/ucollect
   	DEPENDS:=+libpcap +librt +libopenssl +libuci
 endef
 
+define Build/Compile    
+        $(MAKE) NO_DOC=1
+endef
+
+
 define Package/ucollect/install
         $(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/ucollect $(1)/usr/bin/
