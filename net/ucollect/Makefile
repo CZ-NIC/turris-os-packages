@@ -29,7 +29,7 @@ define Package/ucollect
 endef
 
 define Build/Compile    
-        $(MAKE) NO_DOC=1
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1
 endef
 
 
