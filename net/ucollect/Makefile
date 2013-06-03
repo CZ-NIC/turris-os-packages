@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ucollect
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/ucollect
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -36,12 +36,9 @@ endef
 define Package/ucollect/install
         $(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/ucollect $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/hash_test $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/collectmaster $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libplugin_buckets.so $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libplugin_count.so $(1)/usr/lib/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libplugin_crash.so $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libucollect_core.so $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ucollect/ucollect.cfg $(1)/etc/config/ucollect
