@@ -1,0 +1,55 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2013 CZ.NIC z.s.p.o. <martin.strbacka@nic.cz>
+
+START=50
+PID_FILE=/var/run/ucollect.pid
+
+status() {
+    if [ -s $PID_FILE ]; then
+        ps | awk '{print $1;}' | grep `cat $PID_FILE` &> /dev/null
+        if [ $? -eq 0 ]; then
+            # echo "Running."
+            return 0
+        else
+            # echo "Not running."
+            return 1
+        fi
+    else
+        # echo "Stopped."
+        return 2
+    fi
+}
+
+start() {
+    if status ; then
+        echo "Running already. (`cat $PID_FILE`)"
+    else
+        ucollect &> /dev/null & 
+        echo $! > $PID_FILE
+        echo "Started." 
+    fi
+}
+
+stop() {
+    status
+    RETVAL=$?
+    if [ $RETVAL -eq 0 ]; then
+        kill `cat $PID_FILE`
+        rm $PID_FILE
+        echo "Stopped."
+    elif [ $RETVAL -eq 1 ]; then
+        rm $PID_FILE
+    fi
+}
+
+restart() {
+    stop
+    start
+}
+
+reload() {
+    if status ; then
+        kill -HUP `cat $PID_FILE`
+        echo "Reloaded."
+    fi
+}
