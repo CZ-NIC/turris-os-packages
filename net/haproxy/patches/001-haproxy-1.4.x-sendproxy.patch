@@ -1,3 +1,21 @@
+From af2038557a14bf6e2915bed545e216a0f1a95fc5 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Cyril=20Bont=C3=A9?= <cyril.bonte@free.fr>
+Date: Mon, 15 Apr 2013 22:05:00 +0200
+Subject: [PATCH] Proxy Protocol based on haproxy 1.4.23
+
+---
+ doc/configuration.txt     |  26 ++++++-
+ include/common/standard.h |  25 ++++++-
+ include/proto/client.h    |   1 +
+ include/types/buffers.h   |  20 ++---
+ include/types/protocols.h |   1 +
+ src/cfgparse.c            |  15 +++-
+ src/client.c              | 186 ++++++++++++++++++++++++++++++++++++++++++++++
+ src/proto_http.c          |   4 +-
+ src/session.c             |   7 ++
+ src/standard.c            |   9 ++-
+ 10 files changed, 275 insertions(+), 19 deletions(-)
+
 --- a/doc/configuration.txt
 +++ b/doc/configuration.txt
 @@ -1343,6 +1343,7 @@ bind [<address>]:<port_range> [, ...] tr
@@ -93,14 +111,18 @@
  extern unsigned int str2ui(const char *s);
  extern unsigned int str2uic(const char *s);
  extern unsigned int strl2ui(const char *s, int len);
-@@ -276,6 +298,7 @@ extern unsigned int strl2uic(const char 
+@@ -276,9 +298,10 @@ extern unsigned int strl2uic(const char 
  extern int strl2ic(const char *s, int len);
  extern int strl2irc(const char *s, int len, int *ret);
  extern int strl2llrc(const char *s, int len, long long *ret);
 +extern unsigned int read_uint(const char **s, const char *end);
  unsigned int inetaddr_host(const char *text);
  unsigned int inetaddr_host_lim(const char *text, const char *stop);
- unsigned int inetaddr_host_lim_ret(const char *text, char *stop, const char **ret);
+-unsigned int inetaddr_host_lim_ret(const char *text, char *stop, const char **ret);
++unsigned int inetaddr_host_lim_ret(char *text, char *stop, char **ret);
+ 
+ static inline char *cut_crlf(char *s) {
+ 
 --- a/include/proto/client.h
 +++ b/include/proto/client.h
 @@ -25,6 +25,7 @@
@@ -402,7 +424,7 @@
  	s->rep->analysers = 0;
  
  	http_silent_debug(__LINE__, s);
-@@ -7739,7 +7740,6 @@ void http_reset_txn(struct session *s)
+@@ -7741,7 +7742,6 @@ void http_reset_txn(struct session *s)
  	http_init_txn(s);
  
  	s->be = s->fe;
@@ -412,7 +434,15 @@
  	/* re-init store persistence */
 --- a/src/session.c
 +++ b/src/session.c
-@@ -1071,6 +1071,12 @@ resync_stream_interface:
+@@ -34,6 +34,7 @@
+ #include <proto/proxy.h>
+ #include <proto/queue.h>
+ #include <proto/server.h>
++#include <proto/client.h>
+ #include <proto/stick_table.h>
+ #include <proto/stream_interface.h>
+ #include <proto/stream_sock.h>
+@@ -1071,6 +1072,12 @@ resync_stream_interface:
  			while (ana_list && max_loops--) {
  				/* Warning! ensure that analysers are always placed in ascending order! */
  
@@ -439,3 +469,18 @@
  /* This one is 7 times faster than strtol() on athlon with checks.
   * It returns the value of the number composed of all valid digits read,
   * and can process negative numbers too.
+@@ -993,12 +998,12 @@ unsigned int inetaddr_host_lim(const cha
+  * Idem except the pointer to first unparsed byte is returned into <ret> which
+  * must not be NULL.
+  */
+-unsigned int inetaddr_host_lim_ret(const char *text, char *stop, const char **ret)
++unsigned int inetaddr_host_lim_ret(char *text, char *stop, char **ret)
+ {
+ 	const unsigned int ascii_zero = ('0' << 24) | ('0' << 16) | ('0' << 8) | '0';
+ 	register unsigned int dig100, dig10, dig1;
+ 	int s;
+-	const char *p, *d;
++	char *p, *d;
+ 
+ 	dig1 = dig10 = dig100 = ascii_zero;
+ 	s = 24;
