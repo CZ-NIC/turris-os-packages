@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libnetconf
-PKG_VERSION:=2
+PKG_VERSION:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/libnetconf
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/libnetconf
 	TITLE:=libnetconf
-	DEPENDS:=+libreadline +libevent +libxml2
+	DEPENDS:= +libevent +libxml2
 endef
 
 define Build/Configure
