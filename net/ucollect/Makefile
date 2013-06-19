@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ucollect
-PKG_VERSION:=5
+PKG_VERSION:=6
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/ucollect
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -32,8 +32,8 @@ define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 MAX_LOG_LEVEL:=LOG_DEBUG
 endef
 
-define Package/uhttpd/conffiles
-	/etc/config/ucollect
+define Package/ucollect/conffiles
+/etc/config/ucollect
 endef
 
 define Package/ucollect/install
