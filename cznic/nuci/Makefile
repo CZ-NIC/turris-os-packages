@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=2
+PKG_VERSION:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/nuci
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/nuci
 	TITLE:=nuci
-	DEPENDS:=+libnetconf +liblua +libuci
+	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua
 endef
 
 define Build/Compile
