@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/nuci
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -26,7 +26,7 @@ define Package/nuci
 endef
 
 define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1  MAX_LOG_LEVEL:=LOG_DEBUG
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) PLUGIN_PATH=/usr/share/nuci/ NO_DOC=1  MAX_LOG_LEVEL:=LOG_DEBUG
 endef
 
 
@@ -36,6 +36,12 @@ define Package/nuci/install
 
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/nuci $(1)/usr/bin/
+
+	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
+	$(CP) $(PKG_BUILD_DIR)/src/lua_plugins/* $(1)/usr/share/nuci/lua_plugins/
+
+	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_lib
+	$(CP) $(PKG_BUILD_DIR)/src/lua_lib/* $(1)/usr/share/nuci/lua_lib/
 endef
 
 $(eval $(call BuildPackage,nuci))
