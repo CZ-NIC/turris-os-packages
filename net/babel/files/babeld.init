@@ -33,6 +33,12 @@ append_bool() {
 	[ "$_loctmp" -gt 0 ] && append args "$value"
 }
 
+append_switch() {
+	local value="$1"
+	local switch="$2"
+	append args "$switch $value"
+}
+
 append_parm() {
 	local section="$1"
 	local option="$2"
@@ -112,7 +118,7 @@ babel_config() {
 	append_parm "$cfg" 'debug' '-d'
 	append_parm "$cfg" 'local_server' '-g'
 	append_parm "$cfg" 'export_table' '-t'
-	append_parm "$cfg" 'import_table' '-T'
+	config_list_foreach "$cfg" 'import_table' append_switch '-T'
 	append_parm "$cfg" 'conf_file' '-c'
 	append_parm "$cfg" 'log_file' '-L'
 }
