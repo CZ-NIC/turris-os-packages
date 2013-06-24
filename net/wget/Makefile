@@ -65,6 +65,9 @@ CONFIGURE_ARGS+= \
 	--disable-rpath \
 	--disable-iri
 
+CONFIGURE_VARS += \
+	ac_cv_header_uuid_uuid_h=no
+
 ifeq ($(BUILD_VARIANT),ssl)
 	CONFIGURE_ARGS+= \
 		--with-ssl=openssl \
