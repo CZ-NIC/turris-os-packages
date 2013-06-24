@@ -177,8 +177,6 @@ endef
 
 
 define Package/openssh-server/install
-	$(INSTALL_DIR) $(1)/etc/ssh
-	chmod 0700 $(1)/etc/ssh
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/sshd.init $(1)/etc/init.d/sshd
 	$(INSTALL_DIR) $(1)/etc/config
