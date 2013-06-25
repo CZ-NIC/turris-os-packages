@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openssh
 PKG_VERSION:=6.1p1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
@@ -20,6 +20,8 @@ PKG_SOURCE_URL:=ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
 PKG_MD5SUM:=3345cbf4efe90ffb06a78670ab2d05d5
 
 PKG_BUILD_DEPENDS:=libopenssl
+
+PKG_CONFIG_DEPENDS:=PACKAGE_openssh_server_nuci_support
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -89,6 +91,14 @@ endef
 define Package/openssh-server/conffiles
 /etc/config/sshd
 endef
+
+define Package/openssh-server/config
+	config PACKAGE_openssh_server_nuci_support
+  	bool "OpenSSH Server support for nuci"
+	default n
+	depends PACKAGE_openssh-server
+endef
+
 
 define Package/openssh-sftp-client
   $(call Package/openssh/Default)
@@ -180,7 +190,11 @@ define Package/openssh-server/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/sshd.init $(1)/etc/init.d/sshd
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_BIN) ./files/sshd.config $(1)/etc/config/sshd
+	ifeq ($(PACKAGE_openssh_server_nuci_support),y)
+		$(INSTALL_BIN) ./files/sshd.nuci.config $(1)/etc/config/sshd
+	else
+	    	$(INSTALL_BIN) ./files/sshd.config $(1)/etc/config/sshd
+	endif
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/sshd $(1)/usr/sbin/
 endef
