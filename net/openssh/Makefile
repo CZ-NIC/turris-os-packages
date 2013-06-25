@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openssh
 PKG_VERSION:=6.1p1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
@@ -97,6 +97,7 @@ define Package/openssh-server/config
   	bool "OpenSSH Server support for nuci"
 	default n
 	depends PACKAGE_openssh-server
+	select PACKAGE_nuci
 endef
 
 
