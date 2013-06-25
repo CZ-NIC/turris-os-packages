@@ -185,19 +185,26 @@ define Package/openssh-keygen/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/ssh-keygen $(1)/usr/bin/
 endef
 
-
+ifeq ($(PACKAGE_openssh_server_nuci_support),y)
 define Package/openssh-server/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/sshd.init $(1)/etc/init.d/sshd
 	$(INSTALL_DIR) $(1)/etc/config
-	ifeq ($(PACKAGE_openssh_server_nuci_support),y)
-		$(INSTALL_BIN) ./files/sshd.nuci.config $(1)/etc/config/sshd
-	else
-	    	$(INSTALL_BIN) ./files/sshd.config $(1)/etc/config/sshd
-	endif
+	$(INSTALL_BIN) ./files/sshd.nuci.config $(1)/etc/config/sshd
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/sshd $(1)/usr/sbin/
 endef
+else
+define Package/openssh-server/install
+        $(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/sshd.init $(1)/etc/init.d/sshd
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_BIN) ./files/sshd.config $(1)/etc/config/sshd
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/sshd $(1)/usr/sbin/
+endef
+endif 
+
 
 define Package/openssh-sftp-client/install
 	$(INSTALL_DIR) $(1)/usr/bin
