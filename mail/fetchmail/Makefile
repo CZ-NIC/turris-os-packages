@@ -24,6 +24,7 @@ define Package/fetchmail/Default
   SECTION:=mail
   CATEGORY:=Mail
   TITLE:=Remote mail retriever
+  MAINTAINER:=Peter Wagner <tripolar@gmx.at>
   URL:=http://fetchmail.berlios.de/
 endef
 

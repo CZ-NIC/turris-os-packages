@@ -30,8 +30,9 @@ define Package/pulseaudio/Default
   SECTION:=sound
   CATEGORY:=Sound
   DEPENDS:=+libspeexdsp +libsndfile +libltdl +libpthread \
-	+librt +alsa-lib +libjson +libopenssl +libwrap $(ICONV_DEPENDS) $(INTL_DEPENDS)
+	+librt +alsa-lib +libjson +libopenssl +libcap +libwrap $(ICONV_DEPENDS) $(INTL_DEPENDS)
   TITLE:=Network sound server
+  MAINTAINER:=Peter Wagner <tripolar@gmx.at>
   URL:=http://www.pulseaudio.org
   PROVIDES:=pulseaudio
 endef
@@ -114,7 +115,6 @@ CONFIGURE_ARGS += \
 	--disable-lirc \
 	--disable-bluez \
 	--disable-udev \
-	--without-caps \
 	--without-fftw
 
 ifeq ($(BUILD_VARIANT),avahi)

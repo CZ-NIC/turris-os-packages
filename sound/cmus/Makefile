@@ -30,6 +30,7 @@ define Package/cmus
 	+AUDIO_SUPPORT:alsa-lib \
 	+BUILD_PATENTED:libmad +libvorbisidec +libflac
   TITLE:=C* Music Player
+  MAINTAINER:=Peter Wagner <tripolar@gmx.at>
   URL:=http://cmus.sourceforge.net/
 endef
 

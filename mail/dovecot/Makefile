@@ -25,6 +25,7 @@ define Package/dovecot
   CATEGORY:=Mail
   DEPENDS:=+libopenssl +librt +zlib +libbz2 +libcap
   TITLE:=An IMAP and POP3 daemon
+  MAINTAINER:=Peter Wagner <tripolar@gmx.at>
   URL:=http://www.dovecot.org/
 endef
 
