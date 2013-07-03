@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dovecot
-PKG_VERSION:=1.2.13
-PKG_RELEASE:=2
+PKG_VERSION:=2.2.4
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://www.dovecot.org/releases/1.2
-PKG_MD5SUM:=aaee3b5fd59e01780305553248f686bc
+PKG_SOURCE_URL:=http://www.dovecot.org/releases/2.2
+PKG_MD5SUM:=984cfc921a83c580c52c86e128e9dac2
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -23,7 +23,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/dovecot
   SECTION:=mail
   CATEGORY:=Mail
-  DEPENDS:=+libopenssl +librt +zlib +libbz2
+  DEPENDS:=+libopenssl +librt +zlib +libbz2 +libcap
   TITLE:=An IMAP and POP3 daemon
   URL:=http://www.dovecot.org/
 endef
@@ -35,9 +35,8 @@ endef
 CONFIGURE_ARGS += \
 	--without-gssapi \
 	--without-pam \
-	--without-libcap \
 	--with-moduledir=/usr/lib/dovecot/modules \
-	--with-notify=dnotify \
+	--with-notify=dnotify
 
 CONFIGURE_VARS += \
 	RPCGEN= \
@@ -50,22 +49,23 @@ CONFIGURE_VARS += \
 	lib_cv_va_copy=yes \
 	lib_cv_va_copy=yes \
 	lib_cv___va_copy=yes \
-	lib_cv_va_val_copy=yes \
+	lib_cv_va_val_copy=yes
 
 define Package/dovecot/install
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/dovecot.init $(1)/etc/init.d/dovecot
-	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/etc/dovecot-example.conf $(1)/etc/dovecot.conf
-	$(INSTALL_DIR) $(1)/usr/lib/dovecot
+	$(INSTALL_DIR)  $(1)/etc/init.d \
+			$(1)/etc/dovecot \
+			$(1)/usr/share/doc/dovecot/example-config \
+			$(1)/usr/lib/dovecot \
+			$(1)/usr/bin \
+			$(1)/usr/sbin
+	$(CP) $(PKG_INSTALL_DIR)/etc/dovecot/* $(1)/etc/dovecot/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/dovecot/* $(1)/usr/lib/dovecot/
-	$(INSTALL_DIR) $(1)/usr/sbin
+	$(CP) $(PKG_INSTALL_DIR)/usr/share/doc/dovecot/example-config $(1)/usr/share/doc/dovecot/example-config
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/doveconf $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/* $(1)/usr/sbin/
-	find $(1)/usr/lib/dovecot/modules/ \
-		-name "*.a" -o -name "*.la" | xargs rm
-endef
-
-define Package/dovecot/conffiles
-/etc/dovecot.conf
+	$(INSTALL_BIN) ./files/dovecot.init $(1)/etc/init.d/dovecot
+	rm  $(1)/usr/lib/dovecot/dovecot-config
+	find $(1)/usr/lib/dovecot/ -name "*.a" -o -name "*.la" | xargs rm
 endef
 
 $(eval $(call BuildPackage,dovecot))

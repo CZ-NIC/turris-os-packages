@@ -1,5 +1,5 @@
---- a/configure.in
-+++ b/configure.in
+--- a/configure.ac
++++ b/configure.ac
 @@ -398,9 +398,9 @@ have_ioloop=no
  
  if test "$ioloop" = "best" || test "$ioloop" = "epoll"; then
