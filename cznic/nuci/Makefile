@@ -12,7 +12,7 @@ PKG_VERSION:=4
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/nuci
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=5f0c0e36c55793b5a75339f05698b28aa9a283f6
+PKG_SOURCE_VERSION:=9204af113e42f23d7ce1be8fd2f5388ccfde07b8
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -32,16 +32,16 @@ endef
 
 define Package/nuci/install
 	$(INSTALL_DIR) $(1)/usr/lib/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/liblxml2.so $(1)/usr/lib/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libxmlwrap.so $(1)/usr/lib/
 
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/nuci $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
-	$(CP) $(PKG_BUILD_DIR)/src/lua_plugins/* $(1)/usr/share/nuci/lua_plugins/
+	$(CP) $(PKG_BUILD_DIR)/lua_plugins/* $(1)/usr/share/nuci/lua_plugins/
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_lib
-	$(CP) $(PKG_BUILD_DIR)/src/lua_lib/* $(1)/usr/share/nuci/lua_lib/
+	$(CP) $(PKG_BUILD_DIR)/lua_lib/* $(1)/usr/share/nuci/lua_lib/
 endef
 
 $(eval $(call BuildPackage,nuci))
