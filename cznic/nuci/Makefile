@@ -38,10 +38,11 @@ define Package/nuci/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/nuci $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
-	$(CP) $(PKG_BUILD_DIR)/lua_plugins/* $(1)/usr/share/nuci/lua_plugins/
+	$(CP) $(PKG_BUILD_DIR)/src/lua_plugins/*.yin $(1)/usr/share/nuci/lua_plugins/
+	$(CP) $(PKG_BUILD_DIR)/src/lua_plugins/*.lua $(1)/usr/share/nuci/lua_plugins/
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_lib
-	$(CP) $(PKG_BUILD_DIR)/lua_lib/* $(1)/usr/share/nuci/lua_lib/
+	$(CP) $(PKG_BUILD_DIR)/src/lua_lib/* $(1)/usr/share/nuci/lua_lib/
 endef
 
 $(eval $(call BuildPackage,nuci))
