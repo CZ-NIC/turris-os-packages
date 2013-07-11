@@ -26,7 +26,7 @@ define Package/snort/Default
   SUBMENU:=Firewall
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libpcap +libpcre +libdnet +libdaq +libpthread +zlib
+  DEPENDS:=+libpcap +libpcre +libdnet +libdaq +libpthread +libuuid +zlib
   TITLE:=Lightweight Network Intrusion Detection System
   URL:=http://www.snort.org/
 endef
@@ -62,7 +62,7 @@ endef
 
 define Package/snort-pgsql
   $(call Package/snort/Default)
-  DEPENDS+= +libpq
+  DEPENDS+= +libpq +libuuid
   TITLE+= (PostgreSQL)
   VARIANT:=pgsql
 endef
