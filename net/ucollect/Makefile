@@ -29,7 +29,7 @@ define Package/ucollect
 endef
 
 define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 MAX_LOG_LEVEL:=LOG_DEBUG RELEASE:=1
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 MAX_LOG_LEVEL:=LLOG_DEBUG RELEASE:=1
 endef
 
 define Package/ucollect/conffiles
