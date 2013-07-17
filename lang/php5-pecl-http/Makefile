@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2012 OpenWrt.org
+# Copyright (C) 2012-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -11,7 +11,7 @@ PECL_NAME:=pecl_http
 PECL_LONGNAME:=Extended HTTP Support
 
 PKG_VERSION:=1.7.4
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_MD5SUM:=288bae57b89d8de4bdd7d7dc5954cf8c
 
 PKG_NAME:=php5-pecl-http
@@ -29,6 +29,7 @@ CONFIGURE_ARGS+= \
 	--enable-http=shared \
 	--without-http-shared-deps \
 	--with-http-curl-requests="$(STAGING_DIR)/usr" \
+	--without-http-curl-libevent \
 
 $(eval $(call PECLPackage,http,$(PECL_LONGNAME),+libcurl +librt +php5-mod-iconv +php5-mod-session))
 $(eval $(call BuildPackage,$(PKG_NAME)))
