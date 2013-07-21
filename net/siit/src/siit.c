@@ -5,11 +5,6 @@
  */
 
 #include <linux/version.h>
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,33))
-#include <generated/autoconf.h>
-#else
-#include <linux/autoconf.h>
-#endif
 #include <linux/module.h>
 #include <linux/sched.h>
 #include <linux/kernel.h>       /* printk() */
@@ -31,9 +26,7 @@
 #include <linux/init.h>
 #include <asm/uaccess.h>
 #include <asm/checksum.h>
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,0)
 #include <net/ip6_checksum.h>
-#endif
 #include <linux/in6.h>
 #include "siit.h"
 
@@ -45,31 +38,7 @@ MODULE_AUTHOR("Dmitriy Moscalev, Grigory Klyuchnikov, Felix Fietkau");
  */
 int tos_ignore_flag = 0;
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,0)
-static inline void
-skb_reset_mac_header(struct sk_buff *skb)
-{
-	skb->mac.raw=skb->data;
-}
-
-static struct net_device_stats *
-siit_get_stats(struct net_device *dev)
-{
-	return netdev_priv(dev);
-}
-
-static inline void random_ether_addr(u8 *addr)
-{
-	get_random_bytes (addr, ETH_ALEN);
-	addr [0] &= 0xfe;	/* clear multicast bit */
-	addr [0] |= 0x02;	/* set local assignment bit (IEEE802) */
-}
-
-
-#define siit_stats(_dev) ((struct net_device_stats *)netdev_priv(_dev))
-#else
 #define siit_stats(_dev) (&(_dev)->stats)
-#endif
 
 /*
  * The Utility  stuff
@@ -1385,18 +1354,14 @@ end:
 	return 0;
 }
 
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,0)
 static bool header_ops_init = false;
 static struct header_ops siit_header_ops ____cacheline_aligned;
-#endif
 
-#if !(defined CONFIG_COMPAT_NET_DEV_OPS) && LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,30)
 static const struct net_device_ops siit_netdev_ops = {
 	.ndo_open		= siit_open,
 	.ndo_stop		= siit_release,
 	.ndo_start_xmit		= siit_xmit,
 };
-#endif
 
 /*
  * The init function initialize of the SIIT device..
@@ -1412,29 +1377,15 @@ siit_init(struct net_device *dev)
 	/*
 	 * Assign device function.
 	 */
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,30)
-	dev->open            = siit_open;
-	dev->stop            = siit_release;
-	dev->hard_start_xmit = siit_xmit;
-#else
-#if !(defined CONFIG_COMPAT_NET_DEV_OPS) && LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,30)
 	dev->netdev_ops = &siit_netdev_ops;
-#endif
-#endif
 	dev->flags           |= IFF_NOARP;     /* ARP not used */
 	dev->tx_queue_len = 10;
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,0)
-	dev->hard_header_cache = NULL;        /* Disable caching */
-	memset(netdev_priv(dev), 0, sizeof(struct net_device_stats));
-	dev->get_stats = siit_get_stats;
-#else
 	if (!header_ops_init) {
 		memcpy(&siit_header_ops, dev->header_ops, sizeof(struct header_ops));
 		siit_header_ops.cache = NULL;
 	}
 	dev->header_ops = &siit_header_ops;
-#endif
 }
 
 /*
@@ -1447,11 +1398,7 @@ int init_module(void)
 	int res = -ENOMEM;
 	int priv_size;
 
-#if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,0)
-	priv_size = sizeof(struct net_device_stats);
-#else
 	priv_size = sizeof(struct header_ops);
-#endif
 	siit_dev = alloc_netdev(priv_size, "siit%d", siit_init);
 	if (!siit_dev)
 		goto err_alloc;
@@ -1475,4 +1422,4 @@ void cleanup_module(void)
 	free_netdev(siit_dev);
 }
 
-
+MODULE_LICENSE("GPL");
