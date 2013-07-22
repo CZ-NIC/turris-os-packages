@@ -1,0 +1,123 @@
+diff -uprN vc/Makefile vc-new/Makefile
+--- vc/Makefile	2013-07-18 08:41:52.130469002 +0200
++++ vc-new/Makefile	2013-07-18 10:26:09.306469001 +0200
+@@ -51,10 +51,9 @@
+ 
+ #################################### begin configurable stuff
+ #<<DESTROOT is assumed to have ./etc, ./bin, and ./man subdirectories>>
+-DESTROOT	=	$(DESTDIR)/usr
+-DESTSBIN	=	$(DESTROOT)/sbin
+-DESTBIN		=	$(DESTROOT)/bin
+-DESTMAN		=	$(DESTROOT)/share/man
++DESTROOT	=	/
++DESTSBIN	=	$(DESTROOT)/usr/sbin
++DESTBIN		=	$(DESTROOT)/usr/bin
+ #<<need bitstring.h>>
+ INCLUDE		=	-I.
+ #INCLUDE	=
+@@ -114,9 +113,6 @@ install		:	all
+ 			$(INSTALL) -c -m 4111 -o root -s crontab $(DESTBIN)/
+ #			$(INSTALL) -c -m  111 -o root -g crontab -s cron $(DESTSBIN)/
+ #			$(INSTALL) -c -m 2111 -o root -g crontab -s crontab $(DESTBIN)/
+-			sh putman.sh crontab.1 $(DESTMAN)
+-			sh putman.sh cron.8    $(DESTMAN)
+-			sh putman.sh crontab.5 $(DESTMAN)
+ 
+ distclean	:	clean
+ 			rm -f *.orig *.rej *.BAK *.CKP *~ #*
+diff -uprN vc/pathnames.h vc-new/pathnames.h
+--- vc/pathnames.h	2013-07-18 08:41:52.138469002 +0200
++++ vc-new/pathnames.h	2013-07-19 10:37:38.490469002 +0200
+@@ -30,13 +30,11 @@
+ # include <paths.h>
+ #endif /*BSD*/
+ 
+-#ifndef CRONDIR
+ 			/* CRONDIR is where cron(8) and crontab(1) both chdir
+ 			 * to; SPOOL_DIR, CRON_ALLOW, CRON_DENY, and LOG_FILE
+ 			 * are all relative to this directory.
+ 			 */
+-#define CRONDIR		"/var/cron"
+-#endif
++#define CRONDIR		"/var/spool/cron"
+ 
+ 			/* SPOOLDIR is where the crontabs live.
+ 			 * This directory will have its modtime updated
+@@ -46,13 +44,13 @@
+ 			 * newer than they were last time around (or which
+ 			 * didn't exist last time around...)
+ 			 */
+-#define SPOOL_DIR	"tabs"
++#define SPOOL_DIR	"crontabs"
+ 
+ 			/* cron allow/deny file.  At least cron.deny must
+ 			 * exist for ordinary users to run crontab.
+ 			 */
+-#define	CRON_ALLOW	"cron.allow"
+-#define	CRON_DENY	"cron.deny"
++#define	CRON_ALLOW	"/etc/cron.allow"
++#define	CRON_DENY	"/etc/cron.deny"
+ 
+ 			/* undefining this turns off logging to a file.  If
+ 			 * neither LOG_FILE or SYSLOG is defined, we don't log.
+@@ -60,16 +58,12 @@
+ 			 * LOG_CRON is defined by <syslog.h>, LOG_FILE will not
+ 			 * be used.
+ 			 */
+-#define LOG_FILE	"log"
++#define SYSLOG
+ 
+ 			/* where should the daemon stick its PID?
+ 			 * PIDDIR must end in '/'.
+ 			 */
+-#ifdef _PATH_VARRUN
+-# define PIDDIR	_PATH_VARRUN
+-#else
+-# define PIDDIR "/etc/"
+-#endif
++#define PIDDIR          "/var/run/"
+ #define PIDFILE		"cron.pid"
+ #define _PATH_CRON_PID	PIDDIR PIDFILE
+ 
+@@ -79,30 +73,16 @@
+ 			/* what editor to use if no EDITOR or VISUAL
+ 			 * environment variable specified.
+ 			 */
+-#if defined(_PATH_VI)
+-# define EDITOR _PATH_VI
+-#else
+-# define EDITOR "/usr/ucb/vi"
+-#endif
+-
+-#ifndef _PATH_SENDMAIL
+-# define _PATH_SENDMAIL "/usr/lib/sendmail"
+-#endif
+-
+-#ifndef _PATH_BSHELL
+-# define _PATH_BSHELL "/bin/sh"
+-#endif
+-
+-#ifndef _PATH_DEFPATH
+-# define _PATH_DEFPATH "/usr/bin:/bin"
+-#endif
+-
+-#ifndef _PATH_TMP
+-# define _PATH_TMP "/tmp"
+-#endif
+-
+-#ifndef _PATH_DEVNULL
+-# define _PATH_DEVNULL "/dev/null"
+-#endif
++#define EDITOR "/bin/vi"
++
++#define _PATH_SENDMAIL "/usr/lib/sendmail"
++
++#define _PATH_BSHELL "/bin/sh"
++
++#define _PATH_DEFPATH "/usr/bin:/bin:/sbin:/usr/sbin"
++
++#define _PATH_TMP "/tmp"
++
++#define _PATH_DEVNULL "/dev/null"
+ 
+ #endif /* _PATHNAMES_H_ */

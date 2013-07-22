@@ -1,0 +1,23 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006-2011 OpenWrt.org
+
+START=50
+
+start() {
+    cron
+}
+
+stop() {
+    [ -f /var/run/cron.pid ] && kill `cat /var/run/cron.pid`
+}
+
+status() {
+    if [ -f /var/run/cron.pid ] -a [ ps | grep `cat /var/run/cron.pid` | grep -v grep ]; then
+        echo Running.
+    else
+        echo Not Running.
+    fi 
+}
+
+
+

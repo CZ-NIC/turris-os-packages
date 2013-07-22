@@ -1,0 +1,247 @@
+diff --exclude='*~' -urN vixie-cron-4.1.orig/cron.8 vixie-cron-4.1/cron.8
+--- vixie-cron-4.1.orig/cron.8	2005-03-12 15:45:53.066863760 -0500
++++ vixie-cron-4.1/cron.8	2005-03-12 15:46:01.555573280 -0500
+@@ -36,10 +36,11 @@
+ starting it out of init.
+ .PP
+ .I Cron
+-searches /var/cron/tabs for crontab files which are named after accounts in
++searches /var/spool/cron/crontabs for crontab files which are named after accounts in
+ /etc/passwd; crontabs found are loaded into memory.
+ .I Cron
+-also searches for /etc/crontab which is in a different format (see
++also searches for /etc/crontab and the files in the /etc/cron.d/ directory,
++which are in a different format (see
+ .IR crontab (5)).
+ .I Cron
+ then wakes up every minute, examining all stored crontabs, checking each
+diff --exclude='*~' -urN vixie-cron-4.1.orig/crontab.1 vixie-cron-4.1/crontab.1
+--- vixie-cron-4.1.orig/crontab.1	2005-03-12 15:45:53.065863912 -0500
++++ vixie-cron-4.1/crontab.1	2005-03-12 15:46:01.555573280 -0500
+@@ -88,8 +88,8 @@
+ crontab(5), cron(8)
+ .SH FILES
+ .nf
+-/var/cron/cron.allow
+-/var/cron/cron.deny
++/etc/cron.allow
++/etc/cron.deny
+ .fi
+ .SH STANDARDS
+ The
+diff --exclude='*~' -urN vixie-cron-4.1.orig/crontab.5 vixie-cron-4.1/crontab.5
+--- vixie-cron-4.1.orig/crontab.5	2005-03-12 15:45:53.066863760 -0500
++++ vixie-cron-4.1/crontab.5	2005-03-12 15:46:01.556573128 -0500
+@@ -86,8 +86,15 @@
+ .I and
+ when at least one of the two day fields (day of month, or day of week)
+ match the current time (see ``Note'' below).
++Note that this means that non-existant times, such as "missing hours"
++during daylight savings conversion, will never match, causing jobs
++scheduled during the "missing times" not to be run.  Similarly, times
++that occur more than once (again, during daylight savings conversion)
++will cause matching jobs to be run twice.
++.PP
+ .IR cron (8)
+ examines cron entries once every minute.
++.PP
+ The time and date fields are:
+ .IP
+ .ta 1.5i
+@@ -164,6 +171,9 @@
+ 23 0-23/2 * * * echo "run 23 minutes after midn, 2am, 4am ..., everyday"
+ 5 4 * * sun     echo "run at 5 after 4 every sunday"
+ .fi
++.SH FILES
++/etc/crontab			System crontab file
++
+ .SH SEE ALSO
+ cron(8), crontab(1)
+ .SH EXTENSIONS
+diff --exclude='*~' -urN vixie-cron-4.1.orig/crontab.c vixie-cron-4.1/crontab.c
+--- vixie-cron-4.1.orig/crontab.c	2005-03-12 15:45:53.066863760 -0500
++++ vixie-cron-4.1/crontab.c	2005-03-12 15:46:01.557572976 -0500
+@@ -132,8 +132,8 @@
+ 		fprintf(stderr, "username too long\n");
+ 		exit(ERROR_EXIT);
+ 	}
+-	strcpy(User, pw->pw_name);
+-	strcpy(RealUser, User);
++	strncpy(User, pw->pw_name, MAX_UNAME);
++	strncpy(RealUser, User, MAX_UNAME);
+ 	Filename[0] = '\0';
+ 	Option = opt_unknown;
+ 	while (-1 != (argch = getopt(argc, argv, getoptargs))) {
+@@ -157,7 +157,7 @@
+ 			}
+ 			if (strlen(optarg) >= sizeof User)
+ 				usage("username too long");
+-			(void) strcpy(User, optarg);
++			(void) strncpy(User, optarg, MAX_UNAME - 1);
+ 			break;
+ 		case 'l':
+ 			if (Option != opt_unknown)
+@@ -189,7 +189,8 @@
+ 			Option = opt_replace;
+ 			if (strlen(argv[optind]) >= sizeof Filename)
+ 				usage("filename too long");
+-			(void) strcpy (Filename, argv[optind]);
++			(void) strncpy (Filename, argv[optind], sizeof(Filename) - 1);
++			Filename[sizeof(Filename) - 1] = '\0';
+ 		} else
+ 			usage("file name must be specified for replace");
+ 	}
+diff --exclude='*~' -urN vixie-cron-4.1.orig/database.c vixie-cron-4.1/database.c
+--- vixie-cron-4.1.orig/database.c	2005-03-12 15:45:53.067863608 -0500
++++ vixie-cron-4.1/database.c	2005-03-12 15:47:19.200769416 -0500
+@@ -36,7 +36,7 @@
+ 
+ void
+ load_database(cron_db *old_db) {
+-	struct stat statbuf, syscron_stat;
++	struct stat statbuf, syscron_stat, crond_stat;
+ 	cron_db new_db;
+ 	DIR_T *dp;
+ 	DIR *dir;
+@@ -53,6 +53,11 @@
+ 		(void) exit(ERROR_EXIT);
+ 	}
+ 
++	if (stat("/etc/cron.d", &crond_stat) < OK) {
++		log_it("CRON", getpid(), "STAT FAILED", SPOOL_DIR);
++		(void) exit(ERROR_EXIT);
++	}
++
+ 	/* track system crontab file
+ 	 */
+ 	if (stat(SYSCRONTAB, &syscron_stat) < OK)
+@@ -65,7 +70,8 @@
+ 	 * so is guaranteed to be different than the stat() mtime the first
+ 	 * time this function is called.
+ 	 */
+-	if (old_db->mtime == TMAX(statbuf.st_mtime, syscron_stat.st_mtime)) {
++	if (old_db->mtime == TMAX(crond_stat.st_mtime,
++			      TMAX(statbuf.st_mtime, syscron_stat.st_mtime))) {
+ 		Debug(DLOAD, ("[%ld] spool dir mtime unch, no load needed.\n",
+ 			      (long)getpid()))
+ 		return;
+@@ -76,13 +82,43 @@
+ 	 * actually changed.  Whatever is left in the old database when
+ 	 * we're done is chaff -- crontabs that disappeared.
+ 	 */
+-	new_db.mtime = TMAX(statbuf.st_mtime, syscron_stat.st_mtime);
++	new_db.mtime = TMAX(crond_stat.st_mtime,
++			    TMAX(statbuf.st_mtime, syscron_stat.st_mtime));
+ 	new_db.head = new_db.tail = NULL;
+ 
+ 	if (syscron_stat.st_mtime)
+ 		process_crontab("root", NULL, SYSCRONTAB, &syscron_stat,
+ 				&new_db, old_db);
+ 
++	if (!(dir = opendir("/etc/cron.d"))) {
++		log_it("CRON", getpid(), "OPENDIR FAILED", "/etc/cron.d");
++		(void) exit(ERROR_EXIT);
++	}
++
++	while (NULL != (dp = readdir(dir))) {
++		char	fname[MAXNAMLEN+1],
++			tabname[MAXNAMLEN+1];
++
++		/* avoid file names beginning with ".".  this is good
++		 * because we would otherwise waste two guaranteed calls
++		 * to getpwnam() for . and .., and there shouldn't be 
++		 * hidden files in here anyway. Also ignore files beginning
++		 * with '#' and ending with '~'.
++		 */
++		if (dp->d_name[0] == '.' ||
++		    dp->d_name[0] == '#' ||
++		    dp->d_name[strlen(dp->d_name) - 1] == '~')
++			continue;
++
++		(void) strncpy(fname, dp->d_name, MAXNAMLEN);
++		snprintf(tabname, MAXNAMLEN+1, "/etc/cron.d/%s", fname);
++
++		process_crontab("root", NULL, tabname,
++				&crond_stat, &new_db, old_db);
++	}
++	closedir(dir);
++
++
+ 	/* we used to keep this dir open all the time, for the sake of
+ 	 * efficiency.  however, we need to close it in every fork, and
+ 	 * we fork a lot more often than the mtime of the dir changes.
+@@ -105,7 +141,7 @@
+ 
+ 		if (strlen(dp->d_name) >= sizeof fname)
+ 			continue;	/* XXX log? */
+-		(void) strcpy(fname, dp->d_name);
++		(void) strncpy(fname, dp->d_name, MAXNAMLEN);
+ 		
+ 		if (!glue_strings(tabname, sizeof tabname, SPOOL_DIR,
+ 				  fname, '/'))
+@@ -206,7 +242,7 @@
+ 		log_it(fname, getpid(), "NOT REGULAR", tabname);
+ 		goto next_crontab;
+ 	}
+-	if ((statbuf->st_mode & 07777) != 0600) {
++	if ((statbuf->st_mode & 07733) != 0600) {
+ 		log_it(fname, getpid(), "BAD FILE MODE", tabname);
+ 		goto next_crontab;
+ 	}
+diff --exclude='*~' -urN vixie-cron-4.1.orig/do_command.c vixie-cron-4.1/do_command.c
+--- vixie-cron-4.1.orig/do_command.c	2005-03-12 15:45:53.065863912 -0500
++++ vixie-cron-4.1/do_command.c	2005-03-12 15:46:01.558572824 -0500
+@@ -371,7 +371,7 @@
+ 		int	ch = getc(in);
+ 
+ 		if (ch != EOF) {
+-			FILE	*mail;
++			FILE	*mail = NULL;
+ 			int	bytes = 1;
+ 			int	status = 0;
+ 
+diff --exclude='*~' -urN vixie-cron-4.1.orig/FEATURES vixie-cron-4.1/FEATURES
+--- vixie-cron-4.1.orig/FEATURES	2005-03-12 15:45:53.064864064 -0500
++++ vixie-cron-4.1/FEATURES	2005-03-12 15:46:01.558572824 -0500
+@@ -82,3 +82,8 @@
+ 	act this way and do the more reasonable thing, which is (IMHO) to "or"
+ 	the various field-matches together.  In that sense this cron may not
+ 	be completely similar to some AT&T crons.
++
++--	If it exists, the /etc/cron.d/ directory is parsed like the cron
++	spool directory, except that the files in it are not user-specific
++	and are therefore read with /etc/crontab syntax (the user is
++	specified explicitly in the 6th column).
+diff --exclude='*~' -urN vixie-cron-4.1.orig/misc.c vixie-cron-4.1/misc.c
+--- vixie-cron-4.1.orig/misc.c	2005-03-12 15:45:53.067863608 -0500
++++ vixie-cron-4.1/misc.c	2005-03-12 15:46:01.559572672 -0500
+@@ -274,7 +274,7 @@
+ 	char buf[3*MAX_FNAME];
+ 	const char *pidfile;
+ 	char *ep;
+-	long otherpid;
++	long otherpid = 0;
+ 	ssize_t num;
+ 
+ 	if (closeflag) {
+@@ -676,7 +676,7 @@
+ }
+ 
+ int swap_uids_back(void) {
+-	return ((setegid(getgid()) || seteuid(getuid())) ? -1 : 0);
++	return ((setegid(save_egid) || seteuid(save_euid)) ? -1 : 0);
+ }
+ 
+ #else /*HAVE_SAVED_UIDS*/
+diff --exclude='*~' -urN vixie-cron-4.1.orig/pw_dup.c vixie-cron-4.1/pw_dup.c
+--- vixie-cron-4.1.orig/pw_dup.c	2005-03-12 15:45:53.065863912 -0500
++++ vixie-cron-4.1/pw_dup.c	2005-03-12 15:46:01.560572520 -0500
+@@ -50,6 +50,8 @@
+ 	size_t		 nsize, psize, csize, gsize, dsize, ssize, total;
+ 	struct passwd	*newpw;
+ 
++	nsize = psize = csize = gsize = dsize = ssize = total = 0;
++
+ 	/* Allocate in one big chunk for easy freeing */
+ 	total = sizeof(struct passwd);
+ 	if (pw->pw_name) {
