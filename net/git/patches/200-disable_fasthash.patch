@@ -1,5 +1,3 @@
-diff --git a/config.mak.uname b/config.mak.uname
-index d78fd3d..43f5c5e 100644
 --- a/config.mak.uname
 +++ b/config.mak.uname
 @@ -17,9 +17,6 @@ endif
