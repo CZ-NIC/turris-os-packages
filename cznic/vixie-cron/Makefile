@@ -35,6 +35,11 @@ define Package/vixie-cron/postinst
 [ -d /etc/cron.d ] || mkdir -p /etc/cron.d
 endef
 
+define Package/vixie-cron/conffiles
+/etc/cron.d/
+/var/spool/cron/
+endef
+
 define Package/vixie-cron/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_DIR) $(1)/usr/sbin
