@@ -9,17 +9,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sox
-PKG_VERSION:=14.4.0
+PKG_VERSION:=14.4.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=@SF/sox
-PKG_MD5SUM:=813807c6d6fcd4b0af5c995e61f46687
+PKG_MD5SUM:=ff9ca6aca972549de0e80e8e30ed379c
 
 PKG_LICENSE:=LGPLv2.1 GPLv2
 PKG_LICENSE_FILES:=COPYING LICENSE.LGPL LICENSE.GPL
-
-PKG_FIXUP:=autoreconf
 
 PKG_INSTALL:=1
 
@@ -27,8 +25,6 @@ include $(INCLUDE_DIR)/package.mk
 
 TARGET_LDFLAGS+= \
 	-Wl,-rpath-link=$(STAGING_DIR)/usr/lib
-
-# NOTE: libflac is out of date for 8.09's freeze and can't be compiled in
 
 define Package/sox
   SECTION:=sound

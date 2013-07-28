@@ -9,10 +9,10 @@
  
  play rec: sox$(EXEEXT)
  	if test "$(PLAYRECLINKS)" = "yes"; then	\
---- a/src/Makefile.in
-+++ b/src/Makefile.in
-@@ -2849,7 +2849,7 @@ uninstall-am: uninstall-binPROGRAMS unin
- 	uninstall-pkglibLTLIBRARIES
+--- sox-14.4.1/src/Makefile.in
++++ sox-14.4.1/src/Makefile.in
+@@ -2904,7 +2904,7 @@
+ 	uninstall-libLTLIBRARIES uninstall-pkglibLTLIBRARIES
  
  
 -all: sox$(EXEEXT) play rec soxi sox_sample_test$(EXEEXT) example0$(EXEEXT) example1$(EXEEXT) example2$(EXEEXT) example3$(EXEEXT) example4$(EXEEXT) example5$(EXEEXT)
