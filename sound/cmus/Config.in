@@ -2,8 +2,8 @@ menu "Configuration"
 	depends on PACKAGE_cmus
 
 config CMUS_WITH_PULSE
-	bool
+	bool "Enable pulseaudio support"
+	depends on PACKAGE_pulseaudio-daemon
 	default n
-	prompt "Enable pulseaudio support"
 
 endmenu
