@@ -3,7 +3,10 @@ menu "Configuration"
 
 config CMUS_WITH_PULSE
 	bool "Enable pulseaudio support"
-	depends on PACKAGE_pulseaudio-daemon
+	default n
+
+config CONFIG_CMUS_WITH_OSS
+	bool "Enable OSS support"
 	default n
 
 endmenu
