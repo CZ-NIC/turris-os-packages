@@ -1,0 +1,8 @@
+menu "Configuration"
+	depends on PACKAGE_cmus
+
+config CMUS_WITH_PULSE
+	bool
+	default n
+	prompt "Enable pulseaudio support"
+endmenu
