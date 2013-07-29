@@ -5,4 +5,5 @@ config CMUS_WITH_PULSE
 	bool
 	default n
 	prompt "Enable pulseaudio support"
+
 endmenu

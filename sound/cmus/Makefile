@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cmus
 PKG_VERSION:=2.5.0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-v$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=@SF/cmus
@@ -28,12 +28,12 @@ define Package/cmus
   DEPENDS:= \
 	+libpthread +librt +libncursesw $(ICONV_DEPENDS) \
 	+AUDIO_SUPPORT:alsa-lib \
-	+BUILD_PATENTED:libmad +libvorbisidec +libflac \
-	+CMUS_WITH_PULSE:pulseaudio-daemon
+	+BUILD_PATENTED:libmad +libvorbisidec +libflac
 
   TITLE:=C* Music Player
   MAINTAINER:=Peter Wagner <tripolar@gmx.at>
   URL:=http://cmus.sourceforge.net/
+  MENU:=1
 endef
 
 define Package/cmus/config
