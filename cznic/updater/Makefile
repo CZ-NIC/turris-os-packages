@@ -25,6 +25,12 @@ define Package/updater
 	DEPENDS:=+vixie-cron
 endef
 
+# The built is empty. But as there's no makefile in the git repo, we need to
+# override the default that runs "make".
+define Build/Compile
+	true
+endef
+
 define Package/updater/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater.sh $(1)/usr/bin/
