@@ -33,10 +33,10 @@ endef
 
 define Package/daemon-watchdog/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/watchdog/wathdog.sh $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/watchdog/watchdog.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(CP) $(PKG_BUILD_DIR)/wathdog/wathdog.cron $(1)/etc/cron.d/
+	$(CP) $(PKG_BUILD_DIR)/watchdog/watchdog.cron $(1)/etc/cron.d/
 endef
 
 $(eval $(call BuildPackage,daemon-watchdog))
