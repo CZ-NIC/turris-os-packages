@@ -39,4 +39,4 @@ define Package/daemon-watchdog/install
 	$(CP) $(PKG_BUILD_DIR)/wathdog/wathdog.cron $(1)/etc/cron.d/
 endef
 
-$(eval $(call BuildPackage,updater))
+$(eval $(call BuildPackage,daemon-watchdog))
