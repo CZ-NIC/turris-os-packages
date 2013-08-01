@@ -12,7 +12,7 @@ PKG_VERSION:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/misc
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=a7a7fb6ea391959ee94e9b192f65aa1c6ba1e02c
+PKG_SOURCE_VERSION:=3dd6692d385d631d57f6e32f70d9ec4628811bd4
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -36,7 +36,8 @@ define Package/updater/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(CP) $(PKG_BUILD_DIR)/updater/updater.cron $(1)/etc/cron.d/
+	$(CP) $(PKG_BUILD_DIR)/updater/updater.cron $(1)/etc/cron.d/updater
+	chmod 0600 $(1)/etc/cron.d/updater
 endef
 
 $(eval $(call BuildPackage,updater))

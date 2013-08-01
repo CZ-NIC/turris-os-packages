@@ -12,7 +12,7 @@ PKG_VERSION:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/misc
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=c382081f0e248bf20ef560b387ac9c3ec80e3bf5
+PKG_SOURCE_VERSION:=3dd6692d385d631d57f6e32f70d9ec4628811bd4
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -36,7 +36,8 @@ define Package/daemon-watchdog/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/watchdog/watchdog.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(CP) $(PKG_BUILD_DIR)/watchdog/watchdog.cron $(1)/etc/cron.d/
+	$(CP) $(PKG_BUILD_DIR)/watchdog/watchdog.cron $(1)/etc/cron.d/watchdog
+	chmod 0600 $(1)/etc/cron.d/watchdog
 endef
 
 $(eval $(call BuildPackage,daemon-watchdog))
