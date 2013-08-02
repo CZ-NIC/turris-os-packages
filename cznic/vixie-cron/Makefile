@@ -33,6 +33,8 @@ define Package/vixie-cron/postinst
 #!/bin/sh
 [ -d /var/spool/cron ] || mkdir -p /var/spool/cron
 [ -d /etc/cron.d ] || mkdir -p /etc/cron.d
+/etc/init.d/cron enable
+/etc/init.d/cron restart
 endef
 
 define Package/vixie-cron/conffiles
