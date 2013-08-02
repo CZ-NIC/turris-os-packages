@@ -36,6 +36,11 @@ define Package/ucollect/conffiles
 /etc/config/ucollect
 endef
 
+define Package/ucollect/postinst
+/etc/init.d/ucollect enable
+/etc/init.d/ucollect restart
+endef
+
 define Package/ucollect/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/ucollect $(1)/usr/bin/
