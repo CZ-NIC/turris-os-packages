@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ucollect
-PKG_VERSION:=16
+PKG_VERSION:=17
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/ucollect
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -52,8 +52,8 @@ define Package/ucollect/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libucollect_core.so $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ucollect/ucollect.cfg $(1)/etc/config/ucollect
-	$(INSTALL_DIR) $(1)/usr/share/ucollect/config
-	$(CP) $(PKG_BUILD_DIR)/src/ucollect/main.cfg $(1)/usr/share/ucollect/config
+	$(INSTALL_DIR) $(1)/usr/share/ucollect/configs
+	$(CP) $(PKG_BUILD_DIR)/src/ucollect/main.cfg $(1)/usr/share/ucollect/configs
 endef
 
 $(eval $(call BuildPackage,ucollect))
