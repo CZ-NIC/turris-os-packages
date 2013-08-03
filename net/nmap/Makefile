@@ -13,12 +13,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nmap
-PKG_VERSION:=6.01
-PKG_RELEASE:=4
+PKG_VERSION:=6.40
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://nmap.org/dist/
-PKG_MD5SUM:=a1a71940f238abb835dbf3ee7412bcea
+PKG_MD5SUM:=c0e2f3370e1fb97fb53185b15aa22aff
 
 PKG_INSTALL:=1
 
@@ -86,7 +86,7 @@ CONFIGURE_ARGS += \
 	--with-libpcap="$(STAGING_DIR)/usr" \
 	--without-liblua
 
-CONFIGURE_VARS += CXXFLAGS="$$$$CXXFLAGS -fno-builtin -fno-rtti"
+CONFIGURE_VARS += CXXFLAGS="$$$$CXXFLAGS -fno-builtin"
 
 ifeq ($(BUILD_VARIANT),ssl)
 	CONFIGURE_ARGS += --with-openssl="$(STAGING_DIR)/usr"
