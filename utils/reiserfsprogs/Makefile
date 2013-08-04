@@ -25,6 +25,7 @@ define Package/reiserfsprogs
   CATEGORY:=Utilities
   SUBMENU:=Filesystem
   TITLE:=ReiserFS filesystems utilities
+  DEPENDS:=+libuuid
   URL:=http://www.namesys.com/
 endef
 
