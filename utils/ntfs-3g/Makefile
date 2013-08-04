@@ -126,12 +126,13 @@ endef
 define Package/ntfsprogs_ntfs-3g
   $(call Package/ntfs-3g/common)
   TITLE:=ntfsprogs (ntfs-3g)
-  DEPENDS+= +ntfs-3g +libgcrypt
+  DEPENDS+= +ntfs-3g +libgcrypt +libuuid
 endef
 
 CONFIGURE_ARGS += \
 	--enable-shared \
-	--enable-static
+	--enable-static \
+	--with-uuid
 
 # configure/make according selection
 ifdef CONFIG_PACKAGE_NTFS-3G_USE_LIBFUSE
