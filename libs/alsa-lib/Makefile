@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=alsa-lib
-PKG_VERSION:=1.0.24.1
+PKG_VERSION:=1.0.27.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=ftp://ftp.alsa-project.org/pub/lib/ \
 		http://alsa.cybermirror.org/lib/
-PKG_MD5SUM:=7cc05f25e1d5b65da8fb3fdcd540f226
+PKG_MD5SUM:=69129a7c37697f81ac092335e9fa452b
 
 PKG_LICENSE:=LGPLv2.1 GPLv2
 PKG_LICENSE_FILE:=COPYING aserver/COPYING
@@ -41,7 +41,6 @@ TARGET_CFLAGS += $(FPIC)
 
 define Build/Configure
 	$(call Build/Configure/Default, \
-		--enable-static \
 		--disable-python \
 		--disable-debug \
 		--without-debug \
@@ -58,7 +57,7 @@ define Build/InstallDev
 
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
 	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/libasound.{la,a,so*} \
+		$(PKG_INSTALL_DIR)/usr/lib/libasound.{la,so*} \
 		$(1)/usr/lib/
 	$(INSTALL_DATA) \
 		$(PKG_INSTALL_DIR)/usr/lib/pkgconfig/alsa.pc \
