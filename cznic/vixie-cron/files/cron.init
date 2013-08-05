@@ -4,6 +4,8 @@
 START=50
 
 start() {
+    mkdir -p /var/spool/
+    ln -sf /etc/crontabs /var/spool/cron
     cron
 }
 
@@ -16,8 +18,5 @@ status() {
         echo Running.
     else
         echo Not Running.
-    fi 
+    fi
 }
-
-
-
