@@ -1,5 +1,6 @@
 #
-## Copyright (C) 2013 CZ.NIC z.s.p.o. <martin.strbacka@nic.cz>
+# Copyright (C) 2013 CZ.NIC z.s.p.o. <martin.strbacka@nic.cz>
+# Copyright (C) 2013 CZ.NIC z.s.p.o. <michal.vaner@nic.cz>
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -44,9 +45,10 @@ endef
 
 define Package/ucollect-$(1)/install
 	$$(INSTALL_DIR) $$(1)/usr/lib/
-	$$(INSTALL_BIN) $$(PKG_BUILD_DIR)/lib/libplugin_$(1).so $$(1)/usr/lib/
+	$$(INSTALL_BIN) $$(PKG_BUILD_DIR)/lib/libplugin_$(1).so $$(1)/usr/lib/libplugin_ucollect_$(1)_$(2).so
 	$$(INSTALL_DIR) $$(1)/usr/share/ucollect/configs
-	$$(CP) $$(PKG_BUILD_DIR)/src/plugins/$(1)/$(1).cfg $$(1)/usr/share/ucollect/configs/99-$(1).cfg
+	echo 'config plugin' >$$(1)/usr/share/ucollect/configs/99-$(1).cfg
+	echo "	option libname 'libplugin_ucollect_$(1)_$(2).so'" >>$$(1)/usr/share/ucollect/configs/99-$(1).cfg
 endef
 
 endef
