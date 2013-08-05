@@ -1,0 +1,7 @@
+The layout of this package's Makefile is slightly unusual. The reason is, we
+want to be able to split the ucollect into multiple packages with independent
+versioning. But much of the compilation is identical.
+
+So, we have a generic part (Makefile.common), and a top-level Makefile. The
+top-level one uses the common parts. The same Makefile.common is referred from
+the plugins.
