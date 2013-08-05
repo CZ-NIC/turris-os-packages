@@ -4,7 +4,10 @@
 START=50
 
 start() {
-    mkdir -p /var/spool/
+    mkdir -p /var/spool/cron/
+    if [ -e /var/spool/cron/crontabs ] ; then
+        rm -rf /var/spool/cron/crontabs
+    fi
     ln -sf /etc/crontabs /var/spool/cron
     cron
 }
