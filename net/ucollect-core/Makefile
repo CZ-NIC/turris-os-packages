@@ -5,22 +5,13 @@
 # See /LICENSE for more information.
 # #
 #
-include $(TOPDIR)/rules.mk
 
-PKG_NAME:=ucollect
-PKG_VERSION:=17
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/ucollect
-PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=e25e045328b501756350c5d58eabf8946eacf973
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
-include $(INCLUDE_DIR)/package.mk
+include $(TOPDIR)/package/packages/net/ucollect-core/Makefile.common
 
-define Package/ucollect
+$(eval $(call UCOLLECT_BASE,ucollect-core,1))
+
+define Package/ucollect-core
 	SECTION:=net
 	CATEGORY:=Network
 	DEFAULT:=y
@@ -28,27 +19,21 @@ define Package/ucollect
 	DEPENDS:=+libpcap +librt +libopenssl +libuci
 endef
 
-define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 MAX_LOG_LEVEL:=LLOG_INFO RELEASE:=1
-endef
-
-define Package/ucollect/conffiles
+define Package/ucollect-core/conffiles
 /etc/config/ucollect
 endef
 
-define Package/ucollect/postinst
+define Package/ucollect-core/postinst
 /etc/init.d/ucollect enable
 /etc/init.d/ucollect restart
 endef
 
-define Package/ucollect/install
+define Package/ucollect-core/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/ucollect $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/etc/init.d/
 	$(INSTALL_BIN) ./files/ucollect.init $(1)/etc/init.d/ucollect
 	$(INSTALL_DIR) $(1)/usr/lib/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libplugin_buckets.so $(1)/usr/lib/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libplugin_count.so $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libucollect_core.so $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ucollect/ucollect.cfg $(1)/etc/config/ucollect
@@ -56,4 +41,4 @@ define Package/ucollect/install
 	$(CP) $(PKG_BUILD_DIR)/src/ucollect/main.cfg $(1)/usr/share/ucollect/configs
 endef
 
-$(eval $(call BuildPackage,ucollect))
+$(eval $(call BuildPackage,ucollect-core))
