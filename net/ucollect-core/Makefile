@@ -38,7 +38,7 @@ define Package/ucollect-core/install
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ucollect/ucollect.cfg $(1)/etc/config/ucollect
 	$(INSTALL_DIR) $(1)/usr/share/ucollect/configs
-	$(CP) $(PKG_BUILD_DIR)/src/ucollect/main.cfg $(1)/usr/share/ucollect/configs
+	$(CP) $(PKG_BUILD_DIR)/src/ucollect/main.cfg $(1)/usr/share/ucollect/configs/00-main.cfg
 endef
 
 $(eval $(call BuildPackage,ucollect-core))

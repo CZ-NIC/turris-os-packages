@@ -46,7 +46,7 @@ define Package/ucollect-$(1)/install
 	$$(INSTALL_DIR) $$(1)/usr/lib/
 	$$(INSTALL_BIN) $$(PKG_BUILD_DIR)/lib/libplugin_$(1).so $$(1)/usr/lib/
 	$$(INSTALL_DIR) $$(1)/usr/share/ucollect/configs
-	$$(CP) $$(PKG_BUILD_DIR)/src/plugins/$(1)/$(1).cfg $$(1)/usr/share/ucollect/configs
+	$$(CP) $$(PKG_BUILD_DIR)/src/plugins/$(1)/$(1).cfg $$(1)/usr/share/ucollect/configs/99-$(1).cfg
 endef
 
 endef

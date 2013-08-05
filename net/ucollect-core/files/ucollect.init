@@ -7,7 +7,7 @@ PID_FILE=/var/run/ucollect.pid
 build_config() {
     mkdir -p /tmp/ucollect/
     cat /etc/config/ucollect >/tmp/ucollect/ucollect
-    cat /usr/share/ucollect/configs/* >>/tmp/ucollect/ucollect
+    cat $(ls /usr/share/ucollect/configs/* | sort) >>/tmp/ucollect/ucollect
 }
 
 status() {
