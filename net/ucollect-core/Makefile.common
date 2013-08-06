@@ -15,10 +15,10 @@ PKG_VERSION:=$(2)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/ucollect
 PKG_SOURCE:=$$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=ec2b3cdf166331419b81fa1587e63397d669f458
+PKG_SOURCE_VERSION:=d4ae40adc3aeaa554d01cf88ec4d9ea732465192
 PKG_SOURCE:=$$(PKG_NAME)-$$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$$(PKG_NAME)
-PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
+PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 PKG_BUILD_DIR:=$$(BUILD_DIR)/$$(PKG_NAME)
 
 include $$(INCLUDE_DIR)/package.mk
