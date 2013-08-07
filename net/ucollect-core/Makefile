@@ -10,7 +10,7 @@
 
 include $(TOPDIR)/package/packages/net/ucollect-core/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,ucollect-core,3))
+$(eval $(call UCOLLECT_BASE,ucollect-core,4))
 
 define Package/ucollect-core
 	SECTION:=net
@@ -25,8 +25,15 @@ define Package/ucollect-core/conffiles
 endef
 
 define Package/ucollect-core/postinst
+#!/bin/sh
 /etc/init.d/ucollect enable
 /etc/init.d/ucollect restart
+endef
+
+define Package/ucollect-core/prerm
+#!/bin/sh
+/etc/init.d/ucollect disable
+/etc/init.d/ucollect stop
 endef
 
 define Package/ucollect-core/install

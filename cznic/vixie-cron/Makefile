@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=vixie-cron
-PKG_VERSION:=4
+PKG_VERSION:=5
 PKG_SOURCE_URL:=ftp://ftp.isc.org/isc/cron/
 PKG_SOURCE_VERSION:=4.1
 PKG_SOURCE:=cron_$(PKG_SOURCE_VERSION).shar
@@ -35,6 +35,12 @@ define Package/vixie-cron/postinst
 [ -d /etc/cron.d ] || mkdir -p /etc/cron.d
 /etc/init.d/cron enable
 /etc/init.d/cron restart
+endef
+
+define Package/vixie-cron/prerm
+#!/bin/sh
+/etc/init.d/cron disable
+/etc/init.d/cron stop
 endef
 
 define Package/vixie-cron/conffiles
