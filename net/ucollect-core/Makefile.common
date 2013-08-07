@@ -40,6 +40,12 @@ define Package/ucollect-$(1)
 endef
 
 define Package/ucollect-$(1)/postinst
+#!/bin/sh
+/etc/init.d/ucollect reload
+endef
+
+define Package/ucollect-$(1)/postrm
+#!/bin/sh
 /etc/init.d/ucollect reload
 endef
 
