@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=logsend
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/misc
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=e1b1a831cd2c62af9c3873216b7fb557b4162233
+PKG_SOURCE_VERSION:=1b2c1c93e1e35ff85775edca4aada4c2a9aa12fc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -22,18 +22,17 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/logsend
 	TITLE:=logsend
-	DEPENDS:=+vixie-cron
+	DEPENDS:=+vixie-cron +libopenssl
 endef
 
-# The built is empty. But as there's no makefile in the git repo, we need to
-# override the default that runs "make".
 define Build/Compile
-	true
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR)/logsend $(MAKE_FLAGS)
 endef
 
 define Package/logsend/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/logsend/logsend.sh $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/logsend/whatsnew $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(CP) $(PKG_BUILD_DIR)/logsend/logsend.cron $(1)/etc/cron.d/logsend
