@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=6
+PKG_VERSION:=7
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/misc
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=583e185abbbe4f4bf63337a9f109bb09e3965468
+PKG_SOURCE_VERSION:=0c254e3f2716653448021fefe34541ec80883003
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/updater
 	TITLE:=updater
-	DEPENDS:=+vixie-cron
+	DEPENDS:=+vixie-cron +openssl-util
 endef
 
 # The built is empty. But as there's no makefile in the git repo, we need to
