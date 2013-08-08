@@ -29,7 +29,7 @@ define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_EMULATION CONFIG_PATH=/etc/atsha204
 endef
 
-define Package/updater/install
+define Package/libatsha204/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/atsha204cmd $(1)/usr/bin/
 
@@ -37,7 +37,7 @@ define Package/updater/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libatsha204.so $(1)/usr/lib/
 endef
 
-define Package/updater/postinst
+define Package/libatsha204/postinst
 #!/bin/sh
 
 if [ -f /etc/atsha.sw ] ; then
