@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2008-2012 OpenWrt.org
+# Copyright (C) 2008-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor-alpha
-PKG_VERSION:=0.2.4.6-alpha
+PKG_VERSION:=0.2.4.15-rc
 PKG_RELEASE:=1
 
 PKG_SOURCE:=tor-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.torproject.org/dist \
 	https://archive.torproject.org/tor-package-archive
-PKG_MD5SUM:=49a70a45e082739a1ed484d5f9d8759b
+PKG_MD5SUM:=d05da33b2c99978adc55c78ead8b25d2
 
 PKG_BUILD_DEPENDS:=libminiupnpc libnatpmp
 PKG_BUILD_DIR:=$(BUILD_DIR)/tor-$(PKG_VERSION)
@@ -80,7 +80,8 @@ CONFIGURE_ARGS += \
 	--with-libminiupnpc-dir="$(STAGING_DIR)/usr" \
 	--enable-nat-pmp \
 	--with-libnatpmp-dir="$(STAGING_DIR)/usr" \
-	--disable-asciidoc
+	--disable-asciidoc \
+	--disable-threads
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
