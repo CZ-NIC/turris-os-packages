@@ -15,6 +15,7 @@ PKG_SOURCE_URL:=http://fedorahosted.org/releases/e/l/$(PKG_NAME)/$(PKG_VERSION)
 PKG_MD5SUM:=163a5712b86f6bdfebdf233cc6e2192d
 
 PKG_INSTALL:=1
+PKG_USE_MIPS16:=0
 
 PKG_BUILD_DEPENDS:=USE_UCLIBC:argp-standalone
 
