@@ -21,6 +21,7 @@ PKG_LICENSE_FILE:=COPYING aserver/COPYING
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
+PKG_USE_MIPS16:=0
 
 include $(INCLUDE_DIR)/package.mk
 
