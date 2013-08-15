@@ -44,6 +44,14 @@ define Build/Configure
 	$(Build/Configure/Default)
 endef
 
+define Package/syslog-ng3/postinst
+#!/bin/sh
+[ -L /sbin/logread ] && rm /sbin/logread
+[ -L /sbin/klogd ] && rm /sbin/klogd && killall klogd
+[ -L /sbin/syslogd] && rm /sbin/syslogd && killall syslogd
+/etc/init.d/syslog-ng restart
+endef
+
 CONFIGURE_ARGS +=  \
 	$(call autoconf_bool,CONFIG_IPV6,ipv6) \
 	--disable-dependency-tracking \
