@@ -31,10 +31,10 @@ endef
 
 define Package/vixie-cron/postinst
 #!/bin/sh
-[ -d /etc/crontabs ] || mkdir -p /etc/crontabs
-[ -d /etc/cron.d ] || mkdir -p /etc/cron.d
-/etc/init.d/cron enable
-/etc/init.d/cron restart
+[ -d $${IPKG_INSTROOT}/etc/crontabs ] || mkdir -p $${IPKG_INSTROOT}/etc/crontabs
+[ -d $${IPKG_INSTROOT}/etc/cron.d ] || $${IPKG_INSTROOT}mkdir -p /etc/cron.d
+$${IPKG_INSTROOT}/etc/init.d/cron enable
+$${IPKG_INSTROOT}/etc/init.d/cron restart
 endef
 
 define Package/vixie-cron/prerm

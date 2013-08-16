@@ -46,10 +46,11 @@ endef
 
 define Package/syslog-ng3/postinst
 #!/bin/sh
-[ -L /sbin/logread ] && rm /sbin/logread
-[ -L /sbin/klogd ] && rm /sbin/klogd && killall klogd
-[ -L /sbin/syslogd] && rm /sbin/syslogd && killall syslogd
-/etc/init.d/syslog-ng restart
+[ -L $${IPKG_INSTROOT}/sbin/logread ] && rm $${IPKG_INSTROOT}/sbin/logread
+[ -L $${IPKG_INSTROOT}/sbin/klogd ] && rm $${IPKG_INSTROOT}/sbin/klogd
+[ -L $${IPKG_INSTROOT}/sbin/syslogd ] && rm $${IPKG_INSTROOT}/sbin/syslogd
+
+return 0
 endef
 
 CONFIGURE_ARGS +=  \

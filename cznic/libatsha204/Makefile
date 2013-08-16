@@ -58,7 +58,7 @@ for i in `seq 1 15` ; do
 done
 chmod 0400 /tmp/atsha.sw
 
-mv /tmp/atsha.sw /etc
+mv /tmp/atsha.sw $${IPKG_INSTROOT}/etc
 endef
 
 $(eval $(call BuildPackage,libatsha204))
