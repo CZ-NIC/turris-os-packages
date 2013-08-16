@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
-PKG_VERSION:=1
+PKG_VERSION:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/libatsha204
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=5ef0af304346f5184dd31fe7a45de364f3681018
+PKG_SOURCE_VERSION:=1318e149f0e6e2c5aebba5f89c5fce922622d016
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -40,6 +40,11 @@ endef
 define Package/libatsha204/postinst
 #!/bin/sh
 
+# Delete version 1 config, it is no longer supported, and generate new one.
+if head -n1 /etc/atsha.sw | grep -q '00 00 00 00' ; then
+	rm /etc/atsha.sw
+fi
+
 if [ -f /etc/atsha.sw ] ; then
 	exit
 fi
@@ -47,7 +52,6 @@ fi
 MAC=$$(ifconfig | head -n1 | sed -e 's/.* HWaddr //')
 touch /tmp/atsha.sw
 chmod 0600 /tmp/atsha.sw
-echo "00 00 00 $$MAC" >/tmp/atsha.sw
 for i in `seq 1 16` ; do
 	KEY=$$(dd if=/dev/urandom bs=1 count=32 | hexdump -C | sed -e 's/^[^ ]*//;s/|.*//;s/ //g' | tr '\n' ' ' | tr '[a-z]' '[A-Z]' | sed -e 's/ //g')
 	echo "$$KEY" >>/tmp/atsha.sw
@@ -56,6 +60,7 @@ echo 00 00 00 00 >>/tmp/atsha.sw
 for i in `seq 1 15` ; do
 	echo FF FF FF FF >>/tmp/atsha.sw
 done
+echo "00 00 00 $$MAC" >>/tmp/atsha.sw
 chmod 0400 /tmp/atsha.sw
 
 mv /tmp/atsha.sw $${IPKG_INSTROOT}/etc
