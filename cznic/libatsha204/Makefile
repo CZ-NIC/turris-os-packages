@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
-PKG_VERSION:=2
+PKG_VERSION:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/libatsha204
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -60,7 +60,7 @@ echo 00 00 00 00 >>/tmp/atsha.sw
 for i in `seq 1 15` ; do
 	echo FF FF FF FF >>/tmp/atsha.sw
 done
-echo "00 00 00 $$MAC" >/tmp/atsha.sw
+echo "00 00 00 $$MAC" >>/tmp/atsha.sw
 chmod 0400 /tmp/atsha.sw
 
 mv /tmp/atsha.sw /etc
