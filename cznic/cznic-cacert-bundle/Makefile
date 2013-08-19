@@ -7,8 +7,8 @@
 #
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=logsend
-PKG_VERSION:=5
+PKG_NAME:=cznic-cacert-bundle
+PKG_VERSION:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/misc
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -20,23 +20,19 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/logsend
-	TITLE:=logsend
-	DEPENDS:=+vixie-cron +curl +libopenssl +libatsha204 +cznic-cacert-bundle
+define Package/cznic-cacert-bundle
+	TITLE:=cznic-cacert-bundle
 endef
 
+# The built is empty. But as there's no makefile in the git repo, we need to
+# override the default that runs "make".
 define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR)/logsend $(MAKE_FLAGS)
+	true
 endef
 
-define Package/logsend/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/logsend/logsend.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/logsend/whatsnew $(1)/usr/bin/
-
-	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(CP) $(PKG_BUILD_DIR)/logsend/logsend.cron $(1)/etc/cron.d/logsend
-	chmod 0600 $(1)/etc/cron.d/logsend
+define Package/cznic-cacert-bundle/install
+	$(INSTALL_DIR) $(1)/etc/ssl/
+	$(CP) $(PKG_BUILD_DIR)/cacerts/*.pem $(1)/etc/ssl/
 endef
 
-$(eval $(call BuildPackage,logsend))
+$(eval $(call BuildPackage,cznic-cacert-bundle))

@@ -12,7 +12,7 @@ PKG_VERSION:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/nikola
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=10702a1604b82556bd077455a03226bdacb62d9a
+PKG_SOURCE_VERSION:=7b8c8a85bf6f82dc814e2272d80e3fabae6d83f2
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -45,7 +45,7 @@ define Package/nikola/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/logrotate.d/iptables $(1)/etc/logrotate.d/iptables
 	$(INSTALL_DIR) $(1)/usr/share/nikola/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/conf/cron/nikola.sh $(1)/usr/share/nikola/bin/nikola.sh
-	$(INSTALL_DIR) $(1)/etc/cron.d/nikola
+	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/cron/nikola $(1)/etc/cron.d/nikola
 	$(INSTALL_DIR) $(1)/etc/syslog-ng.d/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/syslog/syslog-ng.conf $(1)/etc/syslog-ng.d/nikola.conf
