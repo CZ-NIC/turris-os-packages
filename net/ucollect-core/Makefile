@@ -26,8 +26,10 @@ endef
 
 define Package/ucollect-core/postinst
 #!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
 /etc/init.d/ucollect enable
 /etc/init.d/ucollect restart
+}
 endef
 
 define Package/ucollect-core/prerm

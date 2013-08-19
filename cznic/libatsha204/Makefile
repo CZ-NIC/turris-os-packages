@@ -41,11 +41,11 @@ define Package/libatsha204/postinst
 #!/bin/sh
 
 # Delete version 1 config, it is no longer supported, and generate new one.
-if head -n1 /etc/atsha.sw | grep -q '00 00 00 00' ; then
-	rm /etc/atsha.sw
+if head -n1 $${IPKG_INSTROOT}/etc/atsha.sw | grep -q '00 00 00 00' ; then
+	rm $${IPKG_INSTROOT}/etc/atsha.sw
 fi
 
-if [ -f /etc/atsha.sw ] ; then
+if [ -f $${IPKG_INSTROOT}/etc/atsha.sw ] ; then
 	exit
 fi
 

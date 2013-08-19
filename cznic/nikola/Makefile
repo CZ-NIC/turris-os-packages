@@ -29,7 +29,7 @@ define Build/Compile
 	cd $(PKG_BUILD_DIR)/Nikola ; $(CONFIGURE_VARS) python ./setup.py install --prefix="$(PKG_INSTALL_DIR)/usr"
 endef
 
-define Package/mpdas/conffiles
+define Package/nikola/conffiles
 /etc/config/nikola
 /etc/logrotate.d/iptables
 /etc/cron.d/nikola
