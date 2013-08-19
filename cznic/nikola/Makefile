@@ -45,7 +45,7 @@ define Package/nikola/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/logrotate.d/iptables $(1)/etc/logrotate.d/iptables
 	$(INSTALL_DIR) $(1)/usr/share/nikola/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/conf/cron/nikola.sh $(1)/usr/share/nikola/bin/nikola.sh
-	$(INSTALL_DIR) $(1)/etc/cron.d/nikola
+	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/cron/nikola $(1)/etc/cron.d/nikola
 	$(INSTALL_DIR) $(1)/etc/syslog-ng.d/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/syslog/syslog-ng.conf $(1)/etc/syslog-ng.d/nikola.conf
