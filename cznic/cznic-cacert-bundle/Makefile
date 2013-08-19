@@ -30,7 +30,7 @@ define Build/Compile
 	true
 endef
 
-define Package/updater/install
+define Package/cznic-cacert-bundle/install
 	$(INSTALL_DIR) $(1)/etc/ssl/
 	$(CP) $(PKG_BUILD_DIR)/cacerts/*.pem $(1)/etc/ssl/
 endef
