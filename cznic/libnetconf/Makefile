@@ -20,7 +20,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/libnetconf
+define Package/$(PKG_NAME)
 	TITLE:=libnetconf
 	DEPENDS:= +libevent +libxml2
 endef
@@ -38,16 +38,16 @@ define Build/InstallDev
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/transapi/*.h $(1)/usr/include/libnetconf/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/datastore/custom/*.h $(1)/usr/include/libnetconf/
 
-	$(INSTALL_DIR) $(1)/usr/lib 
+	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_BUILD_DIR)/libnetconf.{so*,a} $(1)/usr/lib/
 
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/libnetconf.pc $(1)/usr/lib/pkgconfig/
 endef
 
-define Package/libnetconf/install
+define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/lib/
 	$(CP) $(PKG_BUILD_DIR)/libnetconf.{a,so*} $(1)/usr/lib/
 endef
 
-$(eval $(call BuildPackage,libnetconf))
+$(eval $(call BuildPackage,$(PKG_NAME)))

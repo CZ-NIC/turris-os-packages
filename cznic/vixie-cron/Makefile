@@ -18,8 +18,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/vixie-cron
-	TITLE:=vixie-cron
+define Package/$(PKG_NAME)
+	TITLE:=$(PKG_NAME)
 	DEPENDS:=@BUSYBOX_CONFIG_SYSLOGD @(!BUSYBOX_CONFIG_CROND&&!BUSYBOX_CONFIG_CRONTAB)
 endef
 
@@ -29,7 +29,7 @@ define Build/Prepare
 	patch -p1 -d $(PKG_BUILD_DIR) < $(PATCH_DIR)/002*
 endef
 
-define Package/vixie-cron/postinst
+define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -d $${IPKG_INSTROOT}/etc/crontabs ] || mkdir -p $${IPKG_INSTROOT}/etc/crontabs
 [ -d $${IPKG_INSTROOT}/etc/cron.d ] || mkdir -p /etc/cron.d
@@ -40,18 +40,18 @@ define Package/vixie-cron/postinst
 }
 endef
 
-define Package/vixie-cron/prerm
+define Package/$(PKG_NAME)/prerm
 #!/bin/sh
 /etc/init.d/cron disable
 /etc/init.d/cron stop
 endef
 
-define Package/vixie-cron/conffiles
+define Package/$(PKG_NAME)/conffiles
 /etc/cron.d/
 /etc/crontabs
 endef
 
-define Package/vixie-cron/install
+define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -60,4 +60,4 @@ define Package/vixie-cron/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/crontab  $(1)/usr/bin
 endef
 
-$(eval $(call BuildPackage,vixie-cron))
+$(eval $(call BuildPackage,$(PKG_NAME)))

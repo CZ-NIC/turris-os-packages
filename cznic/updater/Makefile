@@ -20,8 +20,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/updater
-	TITLE:=updater
+define Package/$(PKG_NAME)
+	TITLE:=$(PKG_NAME)
 	DEPENDS:=+vixie-cron +openssl-util +libatsha204 +curl +cznic-cacert-bundle
 endef
 
@@ -31,7 +31,7 @@ define Build/Compile
 	true
 endef
 
-define Package/updater/install
+define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater.sh $(1)/usr/bin/
 
@@ -40,4 +40,4 @@ define Package/updater/install
 	chmod 0600 $(1)/etc/cron.d/updater
 endef
 
-$(eval $(call BuildPackage,updater))
+$(eval $(call BuildPackage,$(PKG_NAME)))

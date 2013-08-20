@@ -20,8 +20,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/nikola
-	TITLE:=nikola
+define Package/$(PKG_NAME)
+	TITLE:=$(PKG_NAME)
 	DEPENDS:=+python +logrotate +syslog-ng3
 endef
 
@@ -29,14 +29,14 @@ define Build/Compile
 	cd $(PKG_BUILD_DIR)/Nikola ; $(CONFIGURE_VARS) python ./setup.py install --prefix="$(PKG_INSTALL_DIR)/usr"
 endef
 
-define Package/nikola/conffiles
+define Package/$(PKG_NAME)/conffiles
 /etc/config/nikola
 /etc/logrotate.d/iptables
 /etc/cron.d/nikola
 /etc/syslog-ng.d/nikola.conf
 endef
 
-define Package/nikola/install
+define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)
 	$(CP) $(PKG_INSTALL_DIR)/* $(1)/
 	$(INSTALL_DIR) $(1)/etc/config/
@@ -51,4 +51,4 @@ define Package/nikola/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/syslog/syslog-ng.conf $(1)/etc/syslog-ng.d/nikola.conf
 endef
 
-$(eval $(call BuildPackage,nikola))
+$(eval $(call BuildPackage,$(PKG_NAME)))

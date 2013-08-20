@@ -20,8 +20,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/daemon-watchdog
-	TITLE:=daemon-watchdog
+define Package/$(PKG_NAME)
+	TITLE:=$(PKG_NAME)
 	DEPENDS:=+vixie-cron
 endef
 
@@ -31,7 +31,7 @@ define Build/Compile
 	true
 endef
 
-define Package/daemon-watchdog/install
+define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/watchdog/watchdog.sh $(1)/usr/bin/
 
@@ -40,4 +40,4 @@ define Package/daemon-watchdog/install
 	chmod 0600 $(1)/etc/cron.d/watchdog
 endef
 
-$(eval $(call BuildPackage,daemon-watchdog))
+$(eval $(call BuildPackage,$(PKG_NAME)))

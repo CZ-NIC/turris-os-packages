@@ -20,8 +20,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/libatsha204
-	TITLE:=libatsha204
+define Package/$(PKG_NAME)
+	TITLE:=$(PKG_NAME)
 	DEPENDS:=+libopenssl +libunbound
 endef
 
@@ -29,7 +29,7 @@ define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_EMULATION CONFIG_PATH=/etc/atsha.sw
 endef
 
-define Package/libatsha204/install
+define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/atsha204cmd $(1)/usr/bin/
 
@@ -37,7 +37,7 @@ define Package/libatsha204/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libatsha204.so $(1)/usr/lib/
 endef
 
-define Package/libatsha204/postinst
+define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 
 # Delete version 1 config, it is no longer supported, and generate new one.
@@ -66,4 +66,4 @@ chmod 0400 /tmp/atsha.sw
 mv /tmp/atsha.sw $${IPKG_INSTROOT}/etc
 endef
 
-$(eval $(call BuildPackage,libatsha204))
+$(eval $(call BuildPackage,$(PKG_NAME)))

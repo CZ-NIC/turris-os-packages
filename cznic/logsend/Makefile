@@ -20,8 +20,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/logsend
-	TITLE:=logsend
+define Package/$(PKG_NAME)
+	TITLE:=$(PKG_NAME)
 	DEPENDS:=+vixie-cron +curl +libopenssl +libatsha204 +cznic-cacert-bundle
 endef
 
@@ -29,7 +29,7 @@ define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR)/logsend $(MAKE_FLAGS)
 endef
 
-define Package/logsend/install
+define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/logsend/logsend.sh $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/logsend/whatsnew $(1)/usr/bin/
@@ -39,4 +39,4 @@ define Package/logsend/install
 	chmod 0600 $(1)/etc/cron.d/logsend
 endef
 
-$(eval $(call BuildPackage,logsend))
+$(eval $(call BuildPackage,$(PKG_NAME)))

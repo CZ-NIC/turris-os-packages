@@ -20,7 +20,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/nuci
+define Package/$(PKG_NAME)
 	TITLE:=nuci
 	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua
 endef
@@ -30,7 +30,7 @@ define Build/Compile
 endef
 
 
-define Package/nuci/install
+define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libxmlwrap.so $(1)/usr/lib/
 
@@ -45,4 +45,4 @@ define Package/nuci/install
 	$(CP) $(PKG_BUILD_DIR)/src/lua_lib/* $(1)/usr/share/nuci/lua_lib/
 endef
 
-$(eval $(call BuildPackage,nuci))
+$(eval $(call BuildPackage,$(PKG_NAME)))
