@@ -7,12 +7,16 @@ start() {
 	if head -n1 /etc/atsha.sw | grep -q '00 00 00 00' ; then
 		rm /etc/atsha.sw
 	fi
+	# As well for the version 3 config
+	if head -n18 /etc/atsha.sw | tail -n1 | grep -q 'FF FF FF FF' ; then
+		rm /etc/atsha.sw
+	fi
 
 	if [ -f /etc/atsha.sw ] ; then
 		exit
 	fi
 
-	MAC=$(ifconfig | head -n1 | sed -e 's/.* HWaddr //')
+	MAC=$(ifconfig | head -n1 | sed -e 's/.* HWaddr //;s/^..:..//')
 	touch /tmp/atsha.sw
 	chmod 0600 /tmp/atsha.sw
 	for i in `seq 1 16` ; do
@@ -20,7 +24,8 @@ start() {
 		echo "$KEY" >>/tmp/atsha.sw
 	done
 	echo 00 00 00 00 >>/tmp/atsha.sw
-	for i in `seq 1 15` ; do
+	echo "$MAC" >>/tmp/atsha.sw
+	for i in `seq 1 14` ; do
 		echo FF FF FF FF >>/tmp/atsha.sw
 	done
 	echo "00 00 00 $MAC" >>/tmp/atsha.sw
