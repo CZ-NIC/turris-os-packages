@@ -35,35 +35,26 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libatsha204.so $(1)/usr/lib/
+
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/libatsha204.init $(1)/etc/init.d/libatsha204
 endef
 
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 
-# Delete version 1 config, it is no longer supported, and generate new one.
-if head -n1 $${IPKG_INSTROOT}/etc/atsha.sw | grep -q '00 00 00 00' ; then
-	rm $${IPKG_INSTROOT}/etc/atsha.sw
+# If we are directly on the device, the variable is empty. Generate the
+# config right away. If it is non-empty, it is in the buildroot and we
+# need to schedule the generation for the first start of the device.
+if [ -z "$${IPKG_INSTROOT}" ] ; then
+	/etc/init.d/libatsha204 start
 fi
+# Else - we hope it gets started by default if its in the buildroot.
+endef
 
-if [ -f $${IPKG_INSTROOT}/etc/atsha.sw ] ; then
-	exit
-fi
-
-MAC=$$(ifconfig | head -n1 | sed -e 's/.* HWaddr //')
-touch /tmp/atsha.sw
-chmod 0600 /tmp/atsha.sw
-for i in `seq 1 16` ; do
-	KEY=$$(dd if=/dev/urandom bs=1 count=32 | hexdump -C | sed -e 's/^[^ ]*//;s/|.*//;s/ //g' | tr '\n' ' ' | tr '[a-z]' '[A-Z]' | sed -e 's/ //g')
-	echo "$$KEY" >>/tmp/atsha.sw
-done
-echo 00 00 00 00 >>/tmp/atsha.sw
-for i in `seq 1 15` ; do
-	echo FF FF FF FF >>/tmp/atsha.sw
-done
-echo "00 00 00 $$MAC" >>/tmp/atsha.sw
-chmod 0400 /tmp/atsha.sw
-
-mv /tmp/atsha.sw $${IPKG_INSTROOT}/etc
+define Package/$(PKG_NAME)/prerm
+# Remove the script if it is there.
+/etc/init.d/libatsha204 disable
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
