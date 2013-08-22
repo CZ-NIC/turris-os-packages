@@ -40,6 +40,14 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/libatsha204.init $(1)/etc/init.d/libatsha204
 endef
 
+define Build/InstallDev
+	$(INSTALL_DIR) $(1)/usr/include
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/libatsha204/atsha204.h $(1)/usr/include
+
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libatsha204.so $(1)/usr/lib/
+endef
+
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 
