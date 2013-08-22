@@ -15,7 +15,7 @@ PKG_VERSION:=$(2)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/ucollect
 PKG_SOURCE:=$$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=d4ae40adc3aeaa554d01cf88ec4d9ea732465192
+PKG_SOURCE_VERSION:=d491e1bec56d90f0021f1eeca55cbf0129c3851d
 PKG_SOURCE:=$$(PKG_NAME)-$$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -24,7 +24,7 @@ PKG_BUILD_DIR:=$$(BUILD_DIR)/$$(PKG_NAME)
 include $$(INCLUDE_DIR)/package.mk
 
 define Build/Compile
-	$$(MAKE_VARS) $$(MAKE) -C $$(PKG_BUILD_DIR) $$(MAKE_FLAGS) NO_DOC=1 MAX_LOG_LEVEL:=LLOG_INFO RELEASE:=1
+	$$(MAKE_VARS) $$(MAKE) -C $$(PKG_BUILD_DIR) $$(MAKE_FLAGS) NO_DOC=1 MAX_LOG_LEVEL:=LLOG_INFO RELEASE:=1 `test -e $$$$$$$$HOME/ucollect-password && echo LOGIN_PASSWD_HALF=$$$$$$$$HOME/ucollect-password` VERBOSE=1
 endef
 endef
 

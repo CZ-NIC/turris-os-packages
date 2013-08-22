@@ -10,14 +10,14 @@
 
 include $(TOPDIR)/package/packages/net/ucollect-core/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,ucollect-core,4))
+$(eval $(call UCOLLECT_BASE,ucollect-core,5))
 
 define Package/ucollect-core
 	SECTION:=net
 	CATEGORY:=Network
 	DEFAULT:=y
 	TITLE:=Netflow data collecting daemon
-	DEPENDS:=+libpcap +librt +libopenssl +libuci
+	DEPENDS:=+libpcap +librt +libopenssl +libuci +libatsha204
 endef
 
 define Package/ucollect-core/conffiles
