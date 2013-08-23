@@ -8,6 +8,6 @@
 
 include $(TOPDIR)/package/packages/net/ucollect-core/Makefile.common
 
-$(eval $(call UCOLLECT_PLUGIN,count,3))
+$(eval $(call UCOLLECT_PLUGIN,count,4))
 
 $(eval $(call BuildPackage,ucollect-count))
