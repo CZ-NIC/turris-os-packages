@@ -8,9 +8,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lispmob
-PKG_REV:=45ebcfc06097c039351b3bf6f1b3ae7bf66990e2
-PKG_VERSION:=0.3.0
-PKG_RELEASE:=3
+PKG_REV:=79d14028286c3f3a84283c461c85916a10dff4cb
+PKG_VERSION:=0.3
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=git://github.com/LISPmob/lispmob.git
@@ -33,21 +33,24 @@ define Package/lispd
   CATEGORY:=Network
   TITLE:=Locator/ID separation protocol (using TUN)
   URL:=https://github.com/LISPmob
-  DEPENDS:= +librt +libopenssl +confuse +kmod-tun +uci
+  DEPENDS:= +librt +libopenssl +confuse +kmod-tun +uci +kmod-ipv6
   $(call Package/lispd/default)
 endef
 
 define Package/lispd/description
-  This packet provides support for the Locator-ID support protocol.
+  This packet provides support for the Locator-ID Seperation Protocol.
 endef
+
+MAKE_FLAGS += \
+	platform=openwrt
 
 define Package/lispd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lispd/lispd $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/lispd/lispd.uci.example $(1)/etc/config/lispd
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/openWRT/lispd.uci.example $(1)/etc/config/lispd
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lispd/openwrt.init.script $(1)/etc/init.d/lisp
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/openWRT/openwrt.init.script $(1)/etc/init.d/lisp
 endef
 
 $(eval $(call BuildPackage,lispd))
