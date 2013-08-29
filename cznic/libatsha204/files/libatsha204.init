@@ -25,7 +25,8 @@ start() {
 	done
 	echo 00 00 00 00 >>/tmp/atsha.sw
 	echo "$MAC" >>/tmp/atsha.sw
-	for i in `seq 1 14` ; do
+	echo 00 00 00 00 >>/tmp/atsha.sw
+	for i in `seq 1 13` ; do
 		echo FF FF FF FF >>/tmp/atsha.sw
 	done
 	echo "00 00 00 $MAC" >>/tmp/atsha.sw
