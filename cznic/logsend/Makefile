@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=logsend
-PKG_VERSION:=8
+PKG_VERSION:=9
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/misc
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=3647e64d05bc0ba5e74ad3f649ae52001e067698
+PKG_SOURCE_VERSION:=ff83aa1002f7c7701e57958c12657f89422a5cb1
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+vixie-cron +curl +libopenssl +libatsha204 +cznic-cacert-bundle
+	DEPENDS:=+vixie-cron +curl +libopenssl +libatsha204 +cznic-cacert-bundle +syslog-ng3
 endef
 
 define Build/Compile
