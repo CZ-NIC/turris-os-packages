@@ -47,8 +47,8 @@ define Package/ucollect-core/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libucollect_core.so $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ucollect/ucollect.cfg $(1)/etc/config/ucollect
-	$(INSTALL_DIR) $(1)/etc/ssl/certs
-	$(CP) $(PKG_BUILD_DIR)/src/ucollect/ucollect.pem $(1)/etc/ssl/certs
+	$(INSTALL_DIR) $(1)/etc/ssl
+	$(CP) $(PKG_BUILD_DIR)/src/ucollect/ucollect.pem $(1)/etc/ssl
 	$(INSTALL_DIR) $(1)/usr/share/ucollect/configs
 	$(CP) $(PKG_BUILD_DIR)/src/ucollect/main.cfg $(1)/usr/share/ucollect/configs/00-main.cfg
 endef
