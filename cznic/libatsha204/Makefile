@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
-PKG_VERSION:=6
+PKG_VERSION:=7
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/libatsha204
-PKG_SOURCE_VERSION:=7651aa6eb7ef293966423a40b40edd3459d834fb
+PKG_SOURCE_VERSION:=a22ce83204c3ca8b3df5d253770807d7d96acc6a
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -37,6 +37,7 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/libatsha204.init $(1)/etc/init.d/libatsha204
+	$(INSTALL_BIN) ./files/dnssec-root.key $(1)/etc/dnssec-root.key
 endef
 
 define Build/InstallDev
