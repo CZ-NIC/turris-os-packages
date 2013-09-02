@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=socat
-PKG_VERSION:=1.7.2.1
+PKG_VERSION:=1.7.2.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://www.dest-unreach.org/socat/download
-PKG_MD5SUM:=7ddfea7e9e85f868670f94d3ea08358b
+PKG_MD5SUM:=39231e512d8052f328552865df15d42f
 
 PKG_INSTALL:=1
 
@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/socat
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libpthread
+  DEPENDS:=+libpthread +libopenssl
   TITLE:=A multipurpose relay (SOcket CAT)
   URL:=http://www.dest-unreach.org/socat/
 endef
@@ -39,7 +39,6 @@ endef
 CONFIGURE_ARGS += \
 	--disable-libwrap \
 	--disable-readline \
-	--disable-openssl \
 	--enable-termios
 
 CONFIGURE_VARS += \

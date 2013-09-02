@@ -10,14 +10,14 @@
 
 include $(TOPDIR)/package/packages/net/ucollect-core/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,ucollect-core,9))
+$(eval $(call UCOLLECT_BASE,ucollect-core,10))
 
 define Package/ucollect-core
 	SECTION:=net
 	CATEGORY:=Network
 	DEFAULT:=y
 	TITLE:=Netflow data collecting daemon
-	DEPENDS:=+libpcap +librt +libopenssl +libuci +libatsha204
+	DEPENDS:=+libpcap +librt +libopenssl +libuci +libatsha204 +socat
 endef
 
 define Package/ucollect-core/conffiles
@@ -47,6 +47,8 @@ define Package/ucollect-core/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libucollect_core.so $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ucollect/ucollect.cfg $(1)/etc/config/ucollect
+	$(INSTALL_DIR) $(1)/etc/ssl
+	$(CP) $(PKG_BUILD_DIR)/src/ucollect/ucollect.pem $(1)/etc/ssl
 	$(INSTALL_DIR) $(1)/usr/share/ucollect/configs
 	$(CP) $(PKG_BUILD_DIR)/src/ucollect/main.cfg $(1)/usr/share/ucollect/configs/00-main.cfg
 endef
