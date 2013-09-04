@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=libnetconf
-	DEPENDS:= +libevent +libxml2 +libxslt
+	DEPENDS:= +libevent +libxml2 +libxslt +libcurl
 endef
 
 define Build/Configure
@@ -39,7 +39,7 @@ define Build/InstallDev
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/datastore/custom/*.h $(1)/usr/include/libnetconf/
 
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_BUILD_DIR)/libnetconf.{so*,a} $(1)/usr/lib/
+	$(CP) $(PKG_BUILD_DIR)/.libs/libnetconf.{so*,a} $(1)/usr/lib/
 
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/libnetconf.pc $(1)/usr/lib/pkgconfig/
@@ -47,7 +47,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/lib/
-	$(CP) $(PKG_BUILD_DIR)/libnetconf.{a,so*} $(1)/usr/lib/
+	$(CP) $(PKG_BUILD_DIR)/.libs/libnetconf.{a,so*} $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
