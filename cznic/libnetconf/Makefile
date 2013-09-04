@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=libnetconf
-	DEPENDS:= +libevent +libxml2
+	DEPENDS:= +libevent +libxml2 +libxslt
 endef
 
 define Build/Configure
