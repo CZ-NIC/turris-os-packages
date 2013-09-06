@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
-PKG_VERSION:=7
+PKG_VERSION:=8
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/libatsha204
 PKG_SOURCE_VERSION:=ee03aeddb3464fe2ed73484bfc00ba46fa04458b

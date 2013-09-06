@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libnetconf
-PKG_VERSION:=5
+PKG_VERSION:=6
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/libnetconf
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -26,7 +26,7 @@ define Package/$(PKG_NAME)
 endef
 
 define Build/Configure
-	$(call Build/Configure/Default, --disable-libssh2 --disable-notifications  --prefix=/usr/ --exec-prefix=/usr)
+	$(call Build/Configure/Default, --disable-libssh2 --disable-notifications  --prefix=/usr/ --exec-prefix=/usr --with-ncworkingdirpath=/tmp/)
 endef
 
 define Build/InstallDev
