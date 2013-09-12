@@ -94,12 +94,8 @@ endef
 
 define Package/lirctools/install
 	$(INSTALL_DIR) $(1)/usr/sbin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/ircat $(1)/usr/sbin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/irexec $(1)/usr/sbin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/irpty $(1)/usr/sbin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/irsend $(1)/usr/sbin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/irw $(1)/usr/sbin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/lircrcd $(1)/usr/sbin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/mode2 $(1)/usr/sbin/
 endef
 
