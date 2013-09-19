@@ -8,18 +8,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=peervpn
-PKG_VERSION:=0-023
+PKG_VERSION:=0-036
 PKG_RELEASE:=1
 
 PKG_BUILD_DIR :=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL :=http://www.peervpn.net/files
+PKG_MD5SUM:=38fe86fed7ec341887220626cd102ec1
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/peervpn
   SECTION:=net
   CATEGORY:=Network
+  SUBMENU:=VPN
   TITLE:=PeerVPN the open source peer-to-peer VPN
   URL:=http://www.peervpn.net/
   DEPENDS:=+libopenssl +ip
