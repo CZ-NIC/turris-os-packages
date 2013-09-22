@@ -1,8 +1,8 @@
 #!/bin/sh /etc/rc.common
 # Copyright (C) 2011 OpenWrt.org
 
-START=99
-STOP=60
+START=65
+STOP=65
 
 USE_PROCD=1
 PROG=/usr/bin/pulseaudio
