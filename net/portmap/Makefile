@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=portmap
 PKG_VERSION:=6.0
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tgz
 PKG_SOURCE_URL:=http://neil.brown.name/portmap/
@@ -37,7 +37,7 @@ endef
 
 MAKE_FLAGS += \
 	CFLAGS="$(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -DHOSTS_ACCESS -DFACILITY=LOG_DAEMON -DIGNORE_SIGCHLD" \
-	RPCUSER="nobody" \
+	RPCUSER="rpc" \
 	LDLIBS="$(TARGET_LDFLAGS) -lwrap $(LIBRPC)" \
 	all
 
