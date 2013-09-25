@@ -1,0 +1,25 @@
+--- a/src/lxc/lxc_snapshot.c
++++ b/src/lxc/lxc_snapshot.c
+@@ -32,6 +32,8 @@
+ #include "arguments.h"
+ #include "utils.h"
+ 
++#include <../include/getline.h>
++
+ lxc_log_define(lxc_snapshot, lxc);
+ 
+ char *newname;
+--- a/src/lxc/lxc_user_nic.c
++++ b/src/lxc/lxc_user_nic.c
+@@ -43,11 +43,7 @@
+ #include <linux/sockios.h>
+ #include "config.h"
+ 
+-#ifndef HAVE_GETLINE
+-#ifdef HAVE_FGETLN
+ #include <../include/getline.h>
+-#endif
+-#endif
+ 
+ #if ISTEST
+ #define CONF_FILE "/tmp/lxc-usernet"

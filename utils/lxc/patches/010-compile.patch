@@ -1,6 +1,6 @@
 --- a/configure.ac
 +++ b/configure.ac
-@@ -11,29 +11,6 @@
+@@ -11,29 +11,6 @@ AC_CANONICAL_HOST
  AM_PROG_CC_C_O
  AC_GNU_SOURCE
  

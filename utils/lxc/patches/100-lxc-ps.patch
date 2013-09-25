@@ -1,6 +1,6 @@
 --- a/src/lxc/lxc-ps.in
 +++ b/src/lxc/lxc-ps.in
-@@ -91,7 +91,7 @@
+@@ -93,7 +93,7 @@ while true; do
  done
  
  if [ "$list_container_processes" -eq "1" ]; then
