@@ -1,0 +1,1 @@
+12     0       *       *       *       root	/usr/sbin/logrotate -s /tmp/logrotate.state /etc/logrotatet.conf
