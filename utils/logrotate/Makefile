@@ -56,6 +56,7 @@ define Package/logrotate/install
 	$(INSTALL_BIN) ${PKG_BUILD_DIR}/logrotate $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_DATA) ./files/logrotate.conf $(1)/etc/
+	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/logrotate.cron $(1)/etc/cron.d/logrotate
 	$(INSTALL_DIR) $(1)/etc/logrotate.d
 endef
