@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-libatsha204
-PKG_VERSION:=2
+PKG_VERSION:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/libatsha204
 PKG_ORIG_NAME:=libatsha204
-PKG_SOURCE_VERSION:=dce379bd4c9b7f60b9335b1c19645d1927e02500
+PKG_SOURCE_VERSION:=4ded30ba5cd5a4c0c90aad1482da9985e3c27fca
 PKG_SOURCE:=$(PKG_ORIG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_ORIG_NAME)
 PKG_MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
