@@ -12,6 +12,9 @@ start() {
 
 stop() {
 	service_stop /usr/sbin/syslog-ng
+	# For some reason, the above was leaving processes around.
+	# When we say stop, we really do mean stop.
+	killall syslog-ng
 }
 
 reload() {
