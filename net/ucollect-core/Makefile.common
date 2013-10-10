@@ -41,7 +41,10 @@ endef
 
 define Package/ucollect-$(1)/postinst
 #!/bin/sh
-/etc/init.d/ucollect reload
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/ucollect enable
+/etc/init.d/ucollect restart
+}
 endef
 
 define Package/ucollect-$(1)/postrm
