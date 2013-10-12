@@ -1,0 +1,80 @@
+--- a/net80211/ieee80211_skb.c
++++ b/net80211/ieee80211_skb.c
+@@ -108,7 +108,7 @@ static void skb_print_message(
+ {
+ 	va_list args;
+ 	char skb_count[32] = { '\0' };
+-	char expanded_message[1024] = { '\0' };
++	char *expanded_message;
+ 	if (show_counter) {
+ #ifdef IEEE80211_DEBUG_REFCNT
+ 		snprintf(skb_count, 
+@@ -125,6 +125,7 @@ static void skb_print_message(
+ 
+ 	}
+ 	va_start(args, message);
++	expanded_message = kzalloc(1024, GFP_KERNEL);
+ 	vsnprintf(expanded_message, sizeof(expanded_message), message, args);
+ #ifdef IEEE80211_DEBUG_REFCNT
+ 	printk(KERN_DEBUG "%s: %s%s:%d -> %s:%d %s\n",
+@@ -138,6 +139,7 @@ static void skb_print_message(
+ #endif
+ 		func2, line2,
+ 		expanded_message);
++	kfree(expanded_message);
+ 	va_end(args);
+ }
+ 
+--- a/net80211/ieee80211_wireless.c
++++ b/net80211/ieee80211_wireless.c
+@@ -1647,17 +1647,21 @@ ieee80211_ioctl_iwaplist(struct net_devi
+ {
+ 	struct ieee80211vap *vap = netdev_priv(dev);
+ 	struct ieee80211com *ic = vap->iv_ic;
+-	struct waplistreq req;		/* XXX off stack */
++	struct waplistreq *req;
+ 
+-	req.vap = vap;
+-	req.i = 0;
+-	ieee80211_scan_iterate(ic, waplist_cb, &req);
++	req = kmalloc(sizeof(struct waplistreq), GFP_KERNEL);
++	if (!req)
++		return -ENOMEM;
++	req->vap = vap;
++	req->i = 0;
++	ieee80211_scan_iterate(ic, waplist_cb, req);
+ 
+-	data->length = req.i;
+-	memcpy(extra, &req.addr, req.i * sizeof(req.addr[0]));
++	data->length = req->i;
++	memcpy(extra, &req->addr, req->i * sizeof(req->addr[0]));
+ 	data->flags = 1;		/* signal quality present (sort of) */
+-	memcpy(extra + req.i * sizeof(req.addr[0]), &req.qual,
+-		req.i * sizeof(req.qual[0]));
++	memcpy(extra + req->i * sizeof(req->addr[0]), &req->qual,
++		req->i * sizeof(req->qual[0]));
++	kfree(req);
+ 
+ 	return 0;
+ }
+--- a/net80211/ieee80211_linux.c
++++ b/net80211/ieee80211_linux.c
+@@ -312,8 +312,9 @@ ieee80211_notify_sta_stats(struct ieee80
+ 	static const char *tag = "STA-TRAFFIC-STAT";
+ 	struct net_device *dev = vap->iv_dev;
+ 	union iwreq_data wreq;
+-	char buf[1024];
++	char *buf;
+ 
++	buf = kmalloc(1024, GFP_KERNEL);
+ 	snprintf(buf, sizeof(buf), "%s\nmac=" MAC_FMT "\nrx_packets=%u\nrx_bytes=%llu\n"
+ 			"tx_packets=%u\ntx_bytes=%llu\n", tag,
+ 			MAC_ADDR(ni->ni_macaddr), ni->ni_stats.ns_rx_data,
+@@ -323,6 +324,7 @@ ieee80211_notify_sta_stats(struct ieee80
+ 	memset(&wreq, 0, sizeof(wreq));
+ 	wreq.data.length = strlen(buf);
+ 	wireless_send_event(dev, IWEVCUSTOM, &wreq, buf);
++	kfree(buf);
+ }
+ 
+ void

@@ -1,0 +1,11 @@
+--- a/ath/if_ath.c
++++ b/ath/if_ath.c
+@@ -2560,7 +2560,7 @@ static int ath_setintmit(struct ath_soft
+ 
+ 	switch(sc->sc_intmit) {
+ 		case -1:
+-			if (sc->sc_opmode != IEEE80211_M_MONITOR)
++			if (sc->sc_opmode != HAL_M_MONITOR)
+ 				val = 1;
+ 			else
+ 				val = 0;
