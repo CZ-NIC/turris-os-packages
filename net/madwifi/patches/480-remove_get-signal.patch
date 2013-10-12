@@ -1,0 +1,30 @@
+--- a/net80211/ieee80211_scan.c
++++ b/net80211/ieee80211_scan.c
+@@ -107,17 +107,6 @@ struct channel_inuse {
+ 	u8 bw;
+ };
+ 
+-static inline u32
+-get_signal(u8 bw, u8 distance)
+-{
+-	u32 v;
+-
+-	/* signal = 1 - (distance / bw)^2 [scale: 100] */
+-	v = 100 * distance / bw;
+-	v = (100 - ((v * v) / 100));
+-	return v;
+-}
+-
+ static u32
+ get_overlap(u16 f1, u16 f2, u8 b1, u8 b2)
+ {
+@@ -137,7 +126,8 @@ get_overlap(u16 f1, u16 f2, u8 b1, u8 b2
+ 
+ 	d = f2 - f1;
+ 	c = d * b1 / (b1 + b2);
+-	v = get_signal(b1, c);
++	v = 100 * c / b1;
++	v = (100 - ((v * v) / 100));
+ 
+ 	return v * v / 100;
+ }
