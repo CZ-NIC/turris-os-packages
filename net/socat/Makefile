@@ -39,7 +39,7 @@ endef
 CONFIGURE_ARGS += \
 	--disable-libwrap \
 	--disable-readline \
-	--enable-termios
+	--disable-termios
 
 CONFIGURE_VARS += \
 	sc_cv_termios_ispeed="no" \
