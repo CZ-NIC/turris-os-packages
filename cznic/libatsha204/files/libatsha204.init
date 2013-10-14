@@ -23,7 +23,7 @@ start() {
 		KEY=$(dd if=/dev/urandom bs=1 count=32 | hexdump -C | sed -e 's/^[^ ]*//;s/|.*//;s/ //g' | tr '\n' ' ' | tr '[a-z]' '[A-Z]' | sed -e 's/ //g')
 		echo "$KEY" >>/tmp/atsha.sw
 	done
-	echo 00 00 00 00 >>/tmp/atsha.sw
+	echo 00 00 00 02 >>/tmp/atsha.sw
 	echo "$MAC" >>/tmp/atsha.sw
 	echo 00 00 00 00 >>/tmp/atsha.sw
 	for i in `seq 1 13` ; do
