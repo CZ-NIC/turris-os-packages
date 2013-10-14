@@ -52,7 +52,7 @@
  		while (tmp) {
  			if (tmp->entry) {
 +#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)
-+				proc_remove(vap->iv_proc);
++				proc_remove(tmp->entry);
 +#else
  				remove_proc_entry(tmp->name, vap->iv_proc);
 +#endif
@@ -61,13 +61,13 @@
  			tmp = tmp->next;
  		}
 +#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)
-+		proc_remove(proc_madwifi);
++		proc_remove(vap->iv_proc);
 +#else
  		remove_proc_entry(vap->iv_proc->name, proc_madwifi);
 +#endif
  		if (proc_madwifi_count == 1) {
 +#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)
-+			proc_remove(proc_net);
++			proc_remove(proc_madwifi);
 +#else
  			remove_proc_entry("madwifi", proc_net);
 +#endif
