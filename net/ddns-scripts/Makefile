@@ -37,6 +37,8 @@ endef
 define Package/ddns-scripts/install
 	$(INSTALL_DIR) $(1)
 	$(CP) ./files/* $(1)/
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/etc/init.d/ddns $(1)/etc/init.d/
 endef
 
 $(eval $(call BuildPackage,ddns-scripts))
