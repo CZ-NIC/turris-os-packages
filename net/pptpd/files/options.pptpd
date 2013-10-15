@@ -1,6 +1,5 @@
 #debug
 #logfile /tmp/pptp-server.log
-172.16.1.1:
 auth
 name "pptp-server"
 lcp-echo-failure 3
