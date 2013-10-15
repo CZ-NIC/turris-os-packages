@@ -37,7 +37,7 @@ endef
 
 define Package/libgphoto2-drivers
   $(call Package/libgphoto2/Default)
-  DEPENDS:=libgphoto2 +libusb-1.0 +libgd
+  DEPENDS:=libgphoto2 +libusb-compat +libgd
   TITLE:=Gphoto2 drivers for various cameras
 endef
 
