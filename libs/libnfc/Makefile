@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libnfc
-PKG_VERSION:=1.4.2
+PKG_VERSION:=1.7.0
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://libnfc.googlecode.com/files
-PKG_MD5SUM:=c99b2b9212b1a1b064055a199779bdd8
+PKG_MD5SUM:=8d8aced79cc0859c605c04d59e4484b3
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
