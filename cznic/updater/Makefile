@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+vixie-cron +openssl-util +libatsha204 +curl +cznic-cacert-bundle
+	DEPENDS:=+vixie-cron +openssl-util +libatsha204 +curl
 endef
 
 # The built is empty. But as there's no makefile in the git repo, we need to
