@@ -43,7 +43,7 @@ define Package/$(PKG_NAME)/install
 	$(CP) $(PKG_BUILD_DIR)/updater/updater.cron $(1)/etc/cron.d/updater
 	chmod 0600 $(1)/etc/cron.d/updater
 
-	$(INCLUDE_DIR) $(1)/etc/ssl
+	$(INSTALL_DIR) $(1)/etc/ssl
 	$(CP) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/updater.pem
 endef
 
