@@ -1,5 +1,5 @@
-# 
-# Copyright (C) 2007-2011 OpenWrt.org
+#
+# Copyright (C) 2007-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=curl
-PKG_VERSION:=7.29.0
+PKG_VERSION:=7.33.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
@@ -19,7 +19,7 @@ PKG_SOURCE_URL:=http://curl.haxx.se/download/ \
 	ftp://ftp.planetmirror.com/pub/curl/ \
 	http://www.mirrormonster.com/curl/download/ \
 	http://curl.mirrors.cyberservers.net/download/
-PKG_MD5SUM:=fa5f37f38a8042020e292ce7ec5341ce
+PKG_MD5SUM:=57409d6bf0bd97053b8378dbe0cadcef
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=COPYING
@@ -33,6 +33,7 @@ define Package/curl/Default
   SECTION:=net
   CATEGORY:=Network
   URL:=http://curl.haxx.se/
+  MAINTAINER:=Imre Kaloz <kaloz@openwrt.org>
 endef
 
 define Package/curl
