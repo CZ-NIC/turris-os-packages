@@ -17,7 +17,7 @@ define Package/ucollect-core
 	CATEGORY:=Network
 	DEFAULT:=y
 	TITLE:=Netflow data collecting daemon
-	DEPENDS:=+libpcap +librt +libopenssl +libuci +libatsha204 +socat
+	DEPENDS:=+libpcap +librt +libopenssl +libuci +libatsha204 +socat +cznic-cacert-bundle
 endef
 
 define Package/ucollect-core/conffiles
