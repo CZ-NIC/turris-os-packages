@@ -1,10 +1,24 @@
 
 config dhcrelay ipv4
-    option dhcpserver '192.0.2.10'
+	option 'enabled' '0'
+
+	# IP address of the server
+	option 'dhcpserver' '192.0.2.10'
+
+	# network interfaces to listen on (e.g. lan or wan)
+	option 'interfaces' ''
+
+	# What to do about packets that already have a relay option:
+	# 'append': Forward and append our own relay option
+	# 'replace': Forward, but replace theirs with ours (default)
+	# 'forward': Forward without changes
+	# 'discard': Don't forward
+	option 'relay_mode' ''
+
 
 config dhcrelay ipv6
-#    option dhcpserver '2001:db8:1::1'
-    option upper 'eth1'
-    list lower 'eth0.2'
-    list lower 'eth0.3'
+#	option dhcpserver '2001:db8:1::1'
+	option upper 'eth1'
+	list lower 'eth0.2'
+	list lower 'eth0.3'
 

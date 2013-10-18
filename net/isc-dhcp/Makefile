@@ -55,9 +55,17 @@ $(call Package/isc-dhcp-relay-ipv6/description)
  This package is compiled with IPv4 support only.
 endef
 
+define Package/isc-dhcp-relay-ipv4/conffiles
+/etc/config/dhcrelay
+endef
+
 define Package/isc-dhcp-relay-ipv6/description
 $(call Package/isc-dhcp-relay/description)
  This package is compiled with IPv4 and IPv6 support.
+endef
+
+define Package/isc-dhcp-relay-ipv6/conffiles
+/etc/config/dhcrelay
 endef
 
 define Package/isc-dhcp-client-ipv4
