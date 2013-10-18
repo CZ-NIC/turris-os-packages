@@ -26,6 +26,13 @@ start() {
 		fi
 	done
 
+	# link selection sub-option (RFC3527)
+	local link_selection
+	config_get link_selection ipv4 link_selection
+	if network_get_device ifname "$link_selection"; then
+		append args "-l $ifname"
+	fi
+
 	# relay mode
 	local relay_mode
 	config_get relay_mode ipv4 relay_mode
