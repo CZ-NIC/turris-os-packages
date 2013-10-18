@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
 PKG_VERSION:=1.4.17
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.unbound.net/downloads
@@ -115,6 +115,7 @@ CONFIGURE_ARGS += \
 
 define Package/unbound/conffiles
 /etc/unbound/unbound.conf
+/etc/config/unbound
 endef
 
 define Build/InstallDev
@@ -137,6 +138,26 @@ define Package/unbound/install
 	$(INSTALL_BIN) ./files/unbound-init $(1)/etc/init.d/unbound
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_BIN) ./files/unbound-config $(1)/etc/config/unbound
+endef
+
+define Package/unbound/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+uci set dhcp.@dnsmasq[0].port=0
+uci commit
+/etc/init.d/dnsmasq restart
+/etc/init.d/unbound enable
+/etc/init.d/unbound restart
+}
+endef
+
+define Package/unbound/prerm
+#!/bin/sh
+/etc/init.d/unbound disable
+/etc/init.d/unbound stop
+uci delete dhcp.@dnsmasq[0].port
+uci commit
+/etc/init.d/dnsmasq restart
 endef
 
 define Package/unbound-anchor/install
