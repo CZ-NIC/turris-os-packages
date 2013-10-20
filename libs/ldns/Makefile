@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ldns
-PKG_VERSION:=1.6.13
+PKG_VERSION:=1.6.16
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.nlnetlabs.nl/downloads/ldns
-PKG_MD5SUM:=bcada4f2e62aa40fcdd5d73aec46f284
+PKG_MD5SUM:=9ab2b402127cf24dffefaacbb727cad7
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
