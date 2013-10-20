@@ -9,12 +9,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mosquitto
-PKG_VERSION:=1.1.2
+PKG_VERSION:=1.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://mosquitto.org/files/source/
-PKG_MD5SUM:=a9e1e9965b729911e643cfa55ab157c3
+PKG_MD5SUM:=424bfd84a7c923ccc2ea36c8bee558b2
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
 
@@ -28,6 +28,7 @@ define Package/$(PKG_NAME)/default
   TITLE:=mosquitto - an MQTT message broker
   URL:=http://www.mosquitto.org/
   MAINTAINER:=Karl Palsson <karlp@remake.is>
+  DEPENDS:= +librt
 endef
 
 define Package/$(PKG_NAME)
@@ -97,7 +98,7 @@ define Package/libmosquitto/default
     $(Package/mosquitto/default)
     SECTION:=libs
     CATEGORY:=Libraries
-    DEPENDS:=+libpthread
+    DEPENDS:=+libpthread +librt
     TITLE:= mosquitto - client library
 endef
 
@@ -164,14 +165,15 @@ define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include
 	$(CP) $(PKG_BUILD_DIR)/lib/mosquitto.h $(1)/usr/include
 	$(INSTALL_DIR) $(1)/usr/lib
-	# This should just get symlinked, but I can't work out the magic syntax :(
 	$(CP) $(PKG_BUILD_DIR)/lib/libmosquitto.so.1 $(1)/usr/lib/
+	$(LN) libmosquitto.so.1 $(1)/usr/lib/libmosquitto.so
 endef
 
 # This installs files on the target.  Compare with Build/InstallDev
 define Package/libmosquitto/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libmosquitto.so.1 $(1)/usr/lib/libmosquitto.so.1
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libmosquitto.so.1 $(1)/usr/lib/
+	$(LN) libmosquitto.so.1 $(1)/usr/lib/libmosquitto.so
 endef
 Package/libmosquitto-nossl/install = $(Package/libmosquitto/install)
 
