@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=remotefs
-PKG_REV:=1297
+PKG_REV:=a4c25cee1e677c30acd559ff36ed1cfdc4b99c91
 PKG_VERSION:=$(PKG_REV)
 PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=svn
+PKG_SOURCE_PROTO:=git
 PKG_SOURCE_VERSION:=$(PKG_REV)
 PKG_SOURCE_SUBDIR:=remotefs-$(PKG_VERSION)
-PKG_SOURCE_URL:=http://remotefs.svn.sourceforge.net/svnroot/remotefs/trunk
+PKG_SOURCE_URL:=git://git.code.sf.net/p/remotefs/git
 PKG_SOURCE:=$(PKG_SOURCE_SUBDIR).tar.gz
 include $(INCLUDE_DIR)/package.mk
 
