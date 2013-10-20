@@ -60,7 +60,7 @@ define Package/libavahi
   $(call Package/avahi/Default)
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=+libdaemon +libpthread +libgdbm +SSP_SUPPORT:libssp
+  DEPENDS:=+libpthread +SSP_SUPPORT:libssp
   TITLE+= (library)
 endef
 
@@ -97,9 +97,9 @@ define Package/avahi-daemon
   $(call Package/avahi/Default)
   SUBMENU:=IP Addresses and Names
   ifeq ($(BUILD_VARIANT),dbus)
-  DEPENDS:=+libavahi +libexpat +librt +libdbus
+  DEPENDS:=+libavahi +libexpat +librt +libdaemon +libdbus
   else
-  DEPENDS:=+libavahi +libexpat +librt
+  DEPENDS:=+libavahi +libexpat +librt +libdaemon
   endif
   TITLE+= (daemon)
 endef
@@ -119,7 +119,7 @@ endef
 define Package/avahi-dnsconfd
   $(call Package/avahi/Default)
   SUBMENU:=IP Addresses and Names
-  DEPENDS:=+libavahi
+  DEPENDS:=+libavahi +libdaemon
   TITLE:=A Unicast DNS server from mDNS/DNS-SD configuration daemon
 endef
 
@@ -174,7 +174,7 @@ endef
 define Package/avahi-utils
   $(call Package/avahi/Default)
   SUBMENU:=IP Addresses and Names
-  DEPENDS:=+libavahi-client
+  DEPENDS:=+libavahi-client +libgdbm
   TITLE+= (utilities)
 endef
 
