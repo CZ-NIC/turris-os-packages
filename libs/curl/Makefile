@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=curl
 PKG_VERSION:=7.33.0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://curl.haxx.se/download/ \
@@ -73,7 +73,7 @@ define Package/libcurl
   $(call Package/curl/Default)
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=+LIBCURL_POLARSSL:libpolarssl +LIBCURL_OPENSSL:libopenssl +LIBCURL_GNUTLS:libgnutls +LIBCURL_ZLIB:zlib
+  DEPENDS:=+LIBCURL_POLARSSL:libpolarssl +LIBCURL_OPENSSL:libopenssl +LIBCURL_GNUTLS:libgnutls +LIBCURL_ZLIB:zlib +LIBCURL_THREADED_RESOLVER:libpthread
   TITLE:=A client-side URL transfer library using $(if $(CONFIG_LIBCURL_POLARSSL),PolarSSL)$(if $(CONFIG_LIBCURL_OPENSSL),OpenSSL)$(if $(CONFIG_LIBCURL_GNUTLS),GNUTLS)$(if $(CONFIG_LIBCURL_NOSSL),no SSL)
   MENU:=1
 endef
