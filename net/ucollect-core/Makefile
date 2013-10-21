@@ -15,7 +15,6 @@ $(eval $(call UCOLLECT_BASE,ucollect-core,19))
 define Package/ucollect-core
 	SECTION:=net
 	CATEGORY:=Network
-	DEFAULT:=y
 	TITLE:=Netflow data collecting daemon
 	DEPENDS:=+libpcap +librt +libopenssl +libuci +libatsha204 +socat +cznic-cacert-bundle
 endef
