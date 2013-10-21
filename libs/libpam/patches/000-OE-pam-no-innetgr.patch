@@ -4,7 +4,7 @@ then we inform about it and not use it.
 -Khem
 --- a/modules/pam_group/pam_group.c
 +++ b/modules/pam_group/pam_group.c
-@@ -659,7 +659,11 @@ static int check_account(pam_handle_t *p
+@@ -656,7 +656,11 @@ static int check_account(pam_handle_t *p
  	}
  	/* If buffer starts with @, we are using netgroups */
  	if (buffer[0] == '@')
@@ -66,7 +66,7 @@ then we inform about it and not use it.
  	return PAM_AUTH_ERR;
  }
  
-@@ -361,14 +370,14 @@ evaluate(pam_handle_t *pamh, int debug,
+@@ -387,14 +396,14 @@ evaluate(pam_handle_t *pamh, int debug,
  		const void *rhost;
  		if (pam_get_item(pamh, PAM_RHOST, &rhost) != PAM_SUCCESS)
  			rhost = NULL;
