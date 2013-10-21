@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
 PKG_VERSION:=1.4.17
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.unbound.net/downloads
@@ -142,26 +142,30 @@ endef
 
 define Package/unbound/postinst
 #!/bin/sh
+set -x
 [ -n "$$IPKG_INSTROOT" ] || {
 uci set dhcp.@dnsmasq[0].port=0
 # Make sure we can set time for resolution to work, before the resolution works.
 uci show system.ntp.server | grep -q '217\.31\.205\.226' || uci add_list system.ntp.server=217.31.205.226
 uci commit
-/etc/init.d/dnsmasq restart
-sleep 2 # Cooldown for above (problems in times of reinstall)
 /etc/init.d/unbound enable
+sleep 2
+/etc/init.d/dnsmasq restart
+sleep 20 # Cooldown for above (problems in times of reinstall)
 /etc/init.d/unbound restart
 }
 endef
 
 define Package/unbound/prerm
 #!/bin/sh
+set -x
 /etc/init.d/unbound disable
 /etc/init.d/unbound stop
 uci delete dhcp.@dnsmasq[0].port
 uci commit
+sleep 2
 /etc/init.d/dnsmasq restart
-sleep 2 # Cooldown for above (problems in times of reinstall)
+sleep 20 # Cooldown for above (problems in times of reinstall)
 endef
 
 define Package/unbound-anchor/install
