@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libpam
 PKG_VERSION:=1.1.8
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=Linux-PAM-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://www.linux-pam.org/library/
@@ -49,8 +49,6 @@ define Build/Configure
 	)
 endef
 
-
-
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/lib
 	$(INSTALL_DIR) $(1)/usr/include
@@ -59,11 +57,14 @@ define Build/InstallDev
 endef
 
 define Package/libpam/install
-	$(INSTALL_DIR) $(1)/lib
-	$(INSTALL_DIR) $(1)/etc
+	$(INSTALL_DIR) $(1)/lib $(1)/lib/security $(1)/lib/security/pam_filter 
+	$(INSTALL_DIR) $(1)/etc $(1)/etc/pam.d
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(CP) $(PKG_INSTALL_DIR)/lib/* $(1)/lib/
+	$(CP) $(PKG_INSTALL_DIR)/lib/*.so* $(1)/lib/
+	$(CP) $(PKG_INSTALL_DIR)/lib/security/*.so* $(1)/lib/security/
+	$(CP) $(PKG_INSTALL_DIR)/lib/security/pam_filter/* $(1)/lib/security/pam_filter/
 	$(CP) $(PKG_INSTALL_DIR)/etc/* $(1)/etc/
+	$(CP) ./files/* $(1)/etc/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/* $(1)/usr/sbin/
 endef
 
