@@ -205,7 +205,6 @@ define Package/openssh-keygen/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/ssh-keygen $(1)/usr/bin/
 endef
 
-
 define Package/openssh-server/install
 	$(INSTALL_DIR) $(1)/etc/ssh
 	chmod 0700 $(1)/etc/ssh
@@ -217,19 +216,13 @@ define Package/openssh-server/install
 endef
 
 define Package/openssh-server-pam/install
-	$(INSTALL_DIR) $(1)/etc/ssh
-	chmod 0700 $(1)/etc/ssh
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/etc/ssh/sshd_config $(1)/etc/ssh/
+	$(call Package/openssh-server/install,$(1))
 	sed -i 's,#PasswordAuthentication yes,PasswordAuthentication no,g' $(1)/etc/ssh/sshd_config
 	sed -i 's,#UsePAM no,UsePAM yes,g' $(1)/etc/ssh/sshd_config
 	$(INSTALL_DIR) $(1)/etc/pam.d
 	$(INSTALL_DATA) ./files/sshd.pam $(1)/etc/pam.d/sshd
 	$(INSTALL_DIR) $(1)/etc/security
 	$(INSTALL_DATA) ./files/sshd.pam-access $(1)/etc/security/access-sshd-local.conf
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/sshd.init $(1)/etc/init.d/sshd
-	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/sshd $(1)/usr/sbin/
 endef
 
 define Package/openssh-sftp-client/install
