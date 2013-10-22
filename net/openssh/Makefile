@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openssh
 PKG_VERSION:=6.3p1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
@@ -220,6 +220,8 @@ define Package/openssh-server-pam/install
 	$(INSTALL_DIR) $(1)/etc/ssh
 	chmod 0700 $(1)/etc/ssh
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/etc/ssh/sshd_config $(1)/etc/ssh/
+	sed -i 's,#PasswordAuthentication yes,PasswordAuthentication no,g' $(1)/etc/ssh/sshd_config
+	sed -i 's,#UsePAM no,UsePAM yes,g' $(1)/etc/ssh/sshd_config
 	$(INSTALL_DIR) $(1)/etc/pam.d
 	$(INSTALL_DATA) ./files/sshd.pam $(1)/etc/pam.d/sshd
 	$(INSTALL_DIR) $(1)/etc/security
