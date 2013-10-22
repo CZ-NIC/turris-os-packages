@@ -34,7 +34,6 @@ $$(eval $$(call UCOLLECT_BASE,ucollect-$(1),$(2)))
 define Package/ucollect-$(1)
 	SECTION:=net
 	CATEGORY:=Network
-	DEFAULT:=y
 	TITLE:=The $(1) plugin for ucollect
 	DEPENDS:=+ucollect-core
 endef
