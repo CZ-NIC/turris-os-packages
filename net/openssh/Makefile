@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openssh
 PKG_VERSION:=6.3p1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
@@ -17,6 +17,9 @@ PKG_SOURCE_URL:=ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
 		ftp://ftp.belnet.be/packages/openbsd/OpenSSH/portable/ \
 		ftp://ftp.de.openbsd.org/pub/unix/OpenBSD/OpenSSH/portable/
 PKG_MD5SUM:=225e75c9856f76011966013163784038
+
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_BUILD_DEPENDS:=libopenssl
 
@@ -30,18 +33,18 @@ define Package/openssh/Default
   MAINTAINER:=Peter Wagner <tripolar@gmx.at>
   URL:=http://www.openssh.com/
   SUBMENU:=SSH
+  VARIANT:=without-pam
 endef
 
 define Package/openssh-moduli
   $(call Package/openssh/Default)
-  DEPENDS+= +openssh-server
+  DEPENDS+= +openssh-keygen
   TITLE+= moduli file
 endef
 
 define Package/openssh-moduli/description
 OpenSSH server moduli file.
 endef
-
 
 define Package/openssh-client
   $(call Package/openssh/Default)
@@ -89,6 +92,23 @@ define Package/openssh-server/conffiles
 /etc/ssh/sshd_config
 endef
 
+define Package/openssh-server-pam
+  $(call Package/openssh/Default)
+  DEPENDS+= +libpthread +openssh-keygen +libpam
+  TITLE+= server (with PAM support)
+  VARIANT:=with-pam
+endef
+
+define Package/openssh-server-pam/description
+OpenSSH server (with PAM support).
+endef
+
+define Package/openssh-server-pam/conffiles
+/etc/pam.d/sshd
+/etc/security/access-sshd-local.conf
+/etc/ssh/sshd_config
+endef
+
 define Package/openssh-sftp-client
   $(call Package/openssh/Default)
   TITLE+= SFTP client
@@ -124,8 +144,15 @@ CONFIGURE_ARGS+= \
 	--disable-wtmpx \
 	--without-bsd-auth \
 	--without-kerberos5 \
-	--without-pam \
 	--without-x
+
+ifeq ($(BUILD_VARIANT),with-pam)
+CONFIGURE_ARGS += \
+	--with-pam
+else
+CONFIGURE_ARGS += \
+	--without-pam
+endif
 
 ifeq ($(CONFIG_OPENSSL_ENGINE),y)
 CONFIGURE_ARGS+= \
@@ -138,6 +165,10 @@ CONFIGURE_ARGS += \
 endif
 
 CONFIGURE_VARS += LD="$(TARGET_CC)"
+
+ifeq ($(BUILD_VARIANT),with-pam)
+TARGET_LDFLAGS += -lpthread
+endif
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
@@ -152,7 +183,7 @@ endef
 
 define Package/openssh-moduli/install
 	$(INSTALL_DIR) $(1)/etc/ssh
-	$(CP) $(PKG_INSTALL_DIR)/etc/ssh/moduli $(1)/etc/ssh/
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/etc/ssh/moduli $(1)/etc/ssh/
 endef
 
 define Package/openssh-client/install
@@ -178,7 +209,21 @@ endef
 define Package/openssh-server/install
 	$(INSTALL_DIR) $(1)/etc/ssh
 	chmod 0700 $(1)/etc/ssh
-	$(CP) $(PKG_INSTALL_DIR)/etc/ssh/sshd_config $(1)/etc/ssh/
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/etc/ssh/sshd_config $(1)/etc/ssh/
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/sshd.init $(1)/etc/init.d/sshd
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/sshd $(1)/usr/sbin/
+endef
+
+define Package/openssh-server-pam/install
+	$(INSTALL_DIR) $(1)/etc/ssh
+	chmod 0700 $(1)/etc/ssh
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/etc/ssh/sshd_config $(1)/etc/ssh/
+	$(INSTALL_DIR) $(1)/etc/pam.d
+	$(INSTALL_DATA) ./files/sshd.pam $(1)/etc/pam.d/sshd
+	$(INSTALL_DIR) $(1)/etc/security
+	$(INSTALL_DATA) ./files/sshd.pam-access $(1)/etc/security/access-sshd-local.conf
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/sshd.init $(1)/etc/init.d/sshd
 	$(INSTALL_DIR) $(1)/usr/sbin
@@ -202,5 +247,6 @@ $(eval $(call BuildPackage,openssh-moduli))
 $(eval $(call BuildPackage,openssh-client-utils))
 $(eval $(call BuildPackage,openssh-keygen))
 $(eval $(call BuildPackage,openssh-server))
+$(eval $(call BuildPackage,openssh-server-pam))
 $(eval $(call BuildPackage,openssh-sftp-client))
 $(eval $(call BuildPackage,openssh-sftp-server))
