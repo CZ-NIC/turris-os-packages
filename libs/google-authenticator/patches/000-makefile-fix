@@ -1,0 +1,22 @@
+--- a/libpam/Makefile
++++ b/libpam/Makefile
+@@ -18,16 +18,9 @@
+ 
+ .SUFFIXES: .so
+ 
+-ifeq ($(origin CC), default)
+-  CC := gcc
+-endif
+-
+-DEF_CFLAGS := $(shell [ `uname` = SunOS ] &&                                  \
+-                echo ' -D_POSIX_PTHREAD_SEMANTICS -D_REENTRANT')              \
+-              -fvisibility=hidden $(CFLAGS)
+-DEF_LDFLAGS := $(shell [ `uname` = SunOS ] && echo ' -mimpure-text') $(LDFLAGS)
+-LDL_LDFLAGS := $(shell $(CC) -shared -ldl -xc -o /dev/null /dev/null          \
+-                       >/dev/null 2>&1 && echo ' -ldl')
++DEF_CFLAGS  := -fvisibility=hidden $(CFLAGS)
++DEF_LDFLAGS := $(LDFLAGS)
++LDL_LDFLAGS := '-ldl'
+ 
+ all: google-authenticator pam_google_authenticator.so demo                    \
+      pam_google_authenticator_unittest
