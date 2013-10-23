@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=oneshot
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/misc
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -35,7 +35,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/oneshot/oneshot.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/share/oneshot/scripts
-	$(INSTALL_DIR) $(1)/usr/share/oneshot/done
+	$(INSTALL_DIR) $(1)/usr/share/oneshot/completed
 	for s in $(PKG_BUILD_DIR)/oneshot/scripts/* ; do $(INSTALL_BIN) "$$$$s" $(1)/usr/share/oneshot/scripts ; done
 endef
 
@@ -49,7 +49,7 @@ else
 	# If it's on the device, then we already set up everything as it should be.
 	# Pretend all the scripts available now were already run.
 	for s in "$${IPKG_INSTROOT}"/usr/share/oneshot/scripts ; do
-		touch "$${IPKG_INSTROOT}"/usr/share/oneshot/done/$$(basename "$$s")
+		touch "$${IPKG_INSTROOT}"/usr/share/oneshot/completed/$$(basename "$$s")
 	done
 fi
 endef
