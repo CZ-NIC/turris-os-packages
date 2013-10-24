@@ -36,8 +36,8 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater.sh $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-wipe.sh $(1)/usr/bin/
 
-	$(INSTALL_DIR) $(1)/usr/share/updater/
-	$(CP) $(PKG_BUILD_DIR)/updater/updater.pub.pem $(1)/usr/share/updater/
+	$(INSTALL_DIR) $(1)/usr/share/updater/keys
+	$(CP) $(PKG_BUILD_DIR)/updater/updater.pub.pem $(1)/usr/share/updater/keys
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(CP) $(PKG_BUILD_DIR)/updater/updater.cron $(1)/etc/cron.d/updater
