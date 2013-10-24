@@ -30,13 +30,11 @@ endef
 
 define Package/libpam/description
 	Linux-PAM is a free implementation of the following DCE-RFC from Sunsoft. 
-
 endef
 
 TARGET_CFLAGS += $(FPIC)
 
 define Build/Configure
-	(cd $(PKG_BUILD_DIR); autoreconf -v -f --install || exit 1)
 	$(call Build/Configure/Default, \
 		--enable-shared \
 		--enable-static \
