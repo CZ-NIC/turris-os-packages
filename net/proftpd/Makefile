@@ -43,6 +43,7 @@ MAKE_FLAGS += \
 CONFIGURE_ARGS += \
 	--disable-cap \
 	--enable-devel \
+	--disable-auth-pam \
 	ac_cv_header_curses_h=no \
 	ac_cv_header_ncurses_h=no
 
