@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libpam
 PKG_VERSION:=1.1.8
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=Linux-PAM-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://www.linux-pam.org/library/
@@ -29,7 +29,7 @@ define Package/libpam
 endef
 
 define Package/libpam/description
-	Linux-PAM is a free implementation of the following DCE-RFC from Sunsoft. 
+	Linux-PAM is a free implementation of the following DCE-RFC from Sunsoft.
 endef
 
 TARGET_CFLAGS += $(FPIC)
@@ -44,6 +44,7 @@ define Build/Configure
 		--disable-selinux \
 		--disable-nls \
 		--disable-rpath \
+		--enable-db=no \
 	)
 endef
 
