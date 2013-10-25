@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=syslog-ng
 PKG_VERSION:=3.0.5
-PKG_RELEASE:=8
+PKG_RELEASE:=9
 
 PKG_SOURCE_URL:=http://www.balabit.com/downloads/files/syslog-ng/open-source-edition/$(PKG_VERSION)/source/
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION).tar.gz
@@ -77,6 +77,21 @@ define Package/syslog-ng3/install
 	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_DATA) ./files/syslog-ng.conf $(1)/etc
 	$(INSTALL_DIR) $(1)/etc/syslog-ng.d
+endef
+
+define Package/syslog-ng3/postinst
+#!/bin/sh
+
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/syslog-ng enable
+/etc/init.d/syslog-ng restart
+}
+endef
+
+define Package/syslog-ng3/prerm
+#!/bin/sh
+/etc/init.d/syslog-ng disable
+/etc/init.d/syslog-ng stop
 endef
 
 $(eval $(call BuildPackage,syslog-ng3))
