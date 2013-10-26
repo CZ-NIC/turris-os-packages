@@ -44,14 +44,7 @@ endef
 
 define Package/grep/prerm
 $${IPKG_INSTROOT}/bin/busybox grep -h 2>&1 | grep -q BusyBox && \
-touch $${IPKG_INSTROOT}/tmp/bb_with_grep
-endef
-
-define Package/grep/postrm
-#!/bin/sh
-[ -f $${IPKG_INSTROOT}/tmp/bb_with_grep ] && \
-ln -sf busybox $${IPKG_INSTROOT}/bin/grep && \
-rm $${IPKG_INSTROOT}/tmp/bb_with_grep
+ln -sf busybox $${IPKG_INSTROOT}/bin/grep
 exit 0
 endef
 
