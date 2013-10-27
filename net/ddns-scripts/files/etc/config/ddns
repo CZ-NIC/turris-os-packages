@@ -65,11 +65,13 @@
 config service "myddns"
 	option enabled		"0"
 	option interface	"wan"
+	option use_syslog	"1"
 
 	option service_name	"dyndns.org"
 	option domain		"mypersonaldomain.dyndns.org"
 	option username		"myusername"
 	option password		"mypassword"	
+	option use_https	"0"
 
 	option force_interval	"72"
 	option force_unit	"hours"
