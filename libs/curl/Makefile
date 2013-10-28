@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=curl
 PKG_VERSION:=7.33.0
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://curl.haxx.se/download/ \
@@ -27,8 +27,10 @@ PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 
 PKG_CONFIG_DEPENDS := \
+  LIBCURL_AXTLS \
   LIBCURL_COOKIES \
   LIBCURL_CRYPTO_AUTH \
+  LIBCURL_CYASSL \
   LIBCURL_DICT \
   LIBCURL_FILE \
   LIBCURL_FTP \
@@ -73,7 +75,7 @@ define Package/libcurl
   $(call Package/curl/Default)
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=+LIBCURL_POLARSSL:libpolarssl +LIBCURL_OPENSSL:libopenssl +LIBCURL_GNUTLS:libgnutls +LIBCURL_ZLIB:zlib +LIBCURL_THREADED_RESOLVER:libpthread
+  DEPENDS:=+LIBCURL_POLARSSL:libpolarssl +LIBCURL_CYASSL:libcyassl +LIBCURL_AXTLS:libaxtls +LIBCURL_OPENSSL:libopenssl +LIBCURL_GNUTLS:libgnutls +LIBCURL_ZLIB:zlib +LIBCURL_THREADED_RESOLVER:libpthread
   TITLE:=A client-side URL transfer library using $(if $(CONFIG_LIBCURL_POLARSSL),PolarSSL)$(if $(CONFIG_LIBCURL_OPENSSL),OpenSSL)$(if $(CONFIG_LIBCURL_GNUTLS),GNUTLS)$(if $(CONFIG_LIBCURL_NOSSL),no SSL)
   MENU:=1
 endef
@@ -100,8 +102,10 @@ CONFIGURE_ARGS += \
 	--without-nss \
 	--without-libssh2 \
 	$(call autoconf_bool,CONFIG_IPV6,ipv6) \
+	$(if $(CONFIG_LIBCURL_AXTLS),--with-axtls="$(STAGING_DIR)/usr",--without-axtls) \
 	$(if $(CONFIG_LIBCURL_COOKIES),--enable,--disable)-cookies \
 	$(if $(CONFIG_LIBCURL_CRYPTO-AUTH),--enable,--disable)-crypto-auth \
+	$(if $(CONFIG_LIBCURL_CYASSL),--with-cyassl="$(STAGING_DIR)/usr",--without-cyassl) \
 	$(if $(CONFIG_LIBCURL_DICT),--enable,--disable)-dict \
 	$(if $(CONFIG_LIBCURL_FILE),--enable,--disable)-file \
 	$(if $(CONFIG_LIBCURL_FTP),--enable,--disable)-ftp \
