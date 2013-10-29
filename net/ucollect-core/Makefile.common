@@ -40,9 +40,8 @@ endef
 
 define Package/ucollect-$(1)/postinst
 #!/bin/sh
-[ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/ucollect enable
-/etc/init.d/ucollect restart
+[ -n "$$$$IPKG_INSTROOT" ] || {
+/etc/init.d/ucollect reload
 }
 endef
 
