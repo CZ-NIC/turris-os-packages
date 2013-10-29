@@ -138,16 +138,16 @@ define Package/unbound/install
 	$(INSTALL_BIN) ./files/unbound-init $(1)/etc/init.d/unbound
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_BIN) ./files/unbound-config $(1)/etc/config/unbound
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(INSTALL_BIN) ./files/unbound.defaults $(1)/etc/uci-defaults/unbound
 endef
 
 define Package/unbound/postinst
 #!/bin/sh
 set -x
 [ -n "$$IPKG_INSTROOT" ] || {
-uci set dhcp.@dnsmasq[0].port=0
-# Make sure we can set time for resolution to work, before the resolution works.
-uci show system.ntp.server | grep -q '217\.31\.205\.226' || uci add_list system.ntp.server=217.31.205.226
-uci commit
+/etc/uci-defaults/unbound && rm /etc/uci-defaults/unbound
+
 /etc/init.d/unbound enable
 sleep 2
 /etc/init.d/dnsmasq restart
