@@ -17,7 +17,6 @@ PKG_MD5SUM:=c03025069d376049eee8af4fbaf4d9cf
 PKG_BUILD_DIR:=$(BUILD_DIR)/loudmouth-$(PKG_VERSION)
 
 PKG_INSTALL:=1
-#PKG_FIXUP:=libtool
 
 PKG_BUILD_DEPENDS:=libopenssl
 
@@ -30,6 +29,7 @@ define Package/libloudmouth1
 	DEPENDS:=+libopenssl +glib2
 	TITLE:=Lightweight C Jabber library
 	URL:=http://mcabber.com
+	MAINTAINER:=Peter Wagner <tripolar@gmx.at>
 endef
 
 define Package/libloudmouth1/description

@@ -27,6 +27,7 @@ define Package/mcabber
   DEPENDS:=+libncursesw +libloudmouth1 +libcharset +libidn +libgpgme +libotr
   TITLE:=Jabber console client
   URL:=http://mcabber.com
+  MAINTAINER:=Peter Wagner <tripolar@gmx.at>
 endef
 
 define Package/mcabber/description
