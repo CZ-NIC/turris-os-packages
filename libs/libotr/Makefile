@@ -13,17 +13,13 @@ PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/libotr/Default
+define Package/libotr
   SECTION:=libs
   CATEGORY:=Libraries
-  URL:=http://www.cypherpunks.ca/otr/
-endef
-
-define Package/libotr
-  $(call Package/libotr/Default)
-  DEPENDS:=+libgcrypt
   TITLE:=OTR Messaging Library
-  MENU:=1
+  URL:=http://www.cypherpunks.ca/otr/
+  DEPENDS:=+libgcrypt
+  MAINTAINER:=Peter Wagner <tripolar@gmx.at>
 endef
 
 define Package/libotr/description
