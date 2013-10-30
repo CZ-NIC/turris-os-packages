@@ -23,7 +23,7 @@ define Package/libgpgme
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=GnuPG Made Easy library
-  DEPENDS:=+libassuan +libpthread
+  DEPENDS:=+gnupg +libassuan +libpthread
   URL:=http://www.gnupg.org/
 endef
 
