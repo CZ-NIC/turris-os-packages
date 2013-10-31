@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
-PKG_VERSION:=11
+PKG_VERSION:=12
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/libatsha204
-PKG_SOURCE_VERSION:=36febc424d3077b64ec87f5809fb7faeb9964475
+PKG_SOURCE_VERSION:=f7e8cd21a63fb1fc7b4646f0c2562f14a2038cec
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -21,7 +21,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+libopenssl +libunbound
+	DEPENDS:=+libopenssl +libunbound +unbound
 endef
 
 define Build/Compile
@@ -36,8 +36,6 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libatsha204.so $(1)/usr/lib/
 
 	if [ "$$$$TARGET_BOARD" != turris ] ; then $(INSTALL_DIR) $(1)/etc/init.d ; $(INSTALL_BIN) ./files/libatsha204.init $(1)/etc/init.d/libatsha204 ; fi
-	$(INSTALL_DIR) $(1)/etc
-	$(INSTALL_BIN) ./files/dnssec-root.key $(1)/etc/dnssec-root.key
 endef
 
 define Build/InstallDev
