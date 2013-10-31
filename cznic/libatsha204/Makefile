@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
-PKG_VERSION:=10
+PKG_VERSION:=11
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/libatsha204
 PKG_SOURCE_VERSION:=36febc424d3077b64ec87f5809fb7faeb9964475
@@ -25,7 +25,7 @@ define Package/$(PKG_NAME)
 endef
 
 define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_EMULATION CONFIG_PATH=/etc/atsha.sw
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=`if [ "$$$$TARGET_BOARD" = turris ] ; then echo USE_LAYER_NI2C ; else echo USE_LAYER_EMULATION ; fi` CONFIG_PATH=/etc/atsha.sw VERBOSE=1
 endef
 
 define Package/$(PKG_NAME)/install
@@ -35,8 +35,8 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libatsha204.so $(1)/usr/lib/
 
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/libatsha204.init $(1)/etc/init.d/libatsha204
+	if [ "$$$$TARGET_BOARD" != turris ] ; then $(INSTALL_DIR) $(1)/etc/init.d ; $(INSTALL_BIN) ./files/libatsha204.init $(1)/etc/init.d/libatsha204 ; fi
+	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_BIN) ./files/dnssec-root.key $(1)/etc/dnssec-root.key
 endef
 
@@ -54,7 +54,9 @@ define Package/$(PKG_NAME)/postinst
 # If we are directly on the device, the variable is empty. Generate the
 # config right away. If it is non-empty, it is in the buildroot and we
 # need to schedule the generation for the first start of the device.
-if [ -z "$${IPKG_INSTROOT}" ] ; then
+
+# If it doesn't exist, it means we have real atsha chip, so no need to generate anything
+if [ -z "$${IPKG_INSTROOT}" ] && [ -e /etc/init.d/libatsha204 ] ; then
 	/etc/init.d/libatsha204 start
 fi
 # Else - we hope it gets started by default if its in the buildroot.
@@ -62,7 +64,7 @@ endef
 
 define Package/$(PKG_NAME)/prerm
 # Remove the script if it is there.
-/etc/init.d/libatsha204 disable
+if [ -e /etc/init.d/libatsha204 ] ; then /etc/init.d/libatsha204 disable ; fi
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
