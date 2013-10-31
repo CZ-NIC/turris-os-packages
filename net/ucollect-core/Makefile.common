@@ -24,7 +24,7 @@ PKG_BUILD_DIR:=$$(BUILD_DIR)/$$(PKG_NAME)
 include $$(INCLUDE_DIR)/package.mk
 
 define Build/Compile
-	$$(MAKE_VARS) $$(MAKE) -C $$(PKG_BUILD_DIR) $$(MAKE_FLAGS) NO_MASTER=1 NO_DOC=1 MAX_LOG_LEVEL:=LLOG_INFO PLUGIN_PATH=/usr/lib `test -e $$$$$$$$HOME/ucollect-password && echo LOGIN_PASSWD_HALF=$$$$$$$$HOME/ucollect-password`
+	$$(MAKE_VARS) $$(MAKE) -C $$(PKG_BUILD_DIR) $$(MAKE_FLAGS) NO_MASTER=1 NO_DOC=1 MAX_LOG_LEVEL:=`if [ "$$$$$$$$TARGET_BOARD" = ar71xx ] ; then echo LLOG_DEBUG_VERBOSE ; else echo LLOG_INFO ; fi` PLUGIN_PATH=/usr/lib `test -e $$$$$$$$HOME/ucollect-password && echo LOGIN_PASSWD_HALF=$$$$$$$$HOME/ucollect-password`
 endef
 endef
 
