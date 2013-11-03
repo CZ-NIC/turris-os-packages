@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dovecot
-PKG_VERSION:=2.2.6
+PKG_VERSION:=2.2.7
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.dovecot.org/releases/2.2
-PKG_MD5SUM:=db65988ef2e6889dd8b49c132b21fc8f
+PKG_MD5SUM:=d2c7c83acc21f3dcab652868d40522e0
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
