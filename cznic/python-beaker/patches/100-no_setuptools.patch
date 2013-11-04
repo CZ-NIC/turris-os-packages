@@ -1,0 +1,20 @@
+--- a/setup.py
++++ b/setup.py
+@@ -2,7 +2,7 @@
+ import sys
+ import re
+ 
+-from setuptools import setup, find_packages
++from distutils.core import setup
+ 
+ v = open(os.path.join(os.path.dirname(__file__), 'beaker', '__init__.py'))
+ VERSION = re.compile(r".*__version__ = '(.*?)'", re.S).match(v.read()).group(1)
+@@ -103,7 +103,7 @@
+       author_email='ben@groovie.org, pjenvey@groovie.org',
+       url='http://beaker.rtfd.org/',
+       license='BSD',
+-      packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
++      packages=['beaker', 'beaker.crypto', 'beaker.ext'],
+       zip_safe=False,
+       install_requires=[],
+       extras_require={
