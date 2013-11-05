@@ -1,0 +1,8 @@
+#!/bin/sh
+
+echo Run scripts 
+
+for i in /etc/rc.d/$1*; do
+        [ -x $i ] && $i $2 2>&1
+done
+
