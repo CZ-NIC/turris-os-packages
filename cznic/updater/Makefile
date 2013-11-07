@@ -47,7 +47,7 @@ define Package/$(PKG_NAME)/install
 	$(CP) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/updater.pem
 endef
 
-define Package/updater-teskey
+define Package/updater-testkey
 	TITLE:=updater-testkey
 endef
 
