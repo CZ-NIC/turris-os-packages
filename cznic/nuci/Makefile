@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=nuci
-	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua +ip +socat +nethist
+	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua +ip +socat +nethist +libatsha204
 endef
 
 define Build/Compile
