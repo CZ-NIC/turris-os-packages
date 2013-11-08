@@ -84,14 +84,15 @@ CONFIGURE_ARGS += \
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
 		--disable-gcc-hardening
+	MAKE_FLAGS += \
+		CFLAGS="$(TARGET_CFLAGS)"
+else
+	MAKE_FLAGS += \
+		CFLAGS="$(TARGET_CFLAGS) -fPIC"	
 endif
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes"
-
-# pass CFLAGS again to override -O2 set by configure
-MAKE_FLAGS += \
-	CFLAGS="$(TARGET_CFLAGS)"
 
 define Package/tor/install
 	$(INSTALL_DIR) $(1)/usr/sbin
