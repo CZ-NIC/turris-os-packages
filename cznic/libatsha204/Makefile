@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
-PKG_VERSION:=12
+PKG_VERSION:=13
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/libatsha204
 PKG_SOURCE_VERSION:=f7e8cd21a63fb1fc7b4646f0c2562f14a2038cec
@@ -25,7 +25,7 @@ define Package/$(PKG_NAME)
 endef
 
 define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=`if [ "$$$$TARGET_BOARD" = turris ] ; then echo USE_LAYER_NI2C ; else echo USE_LAYER_EMULATION ; fi` CONFIG_PATH=/etc/atsha.sw VERBOSE=1
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=`if [ $(PROFILE) == TURRIS ] || [ $(PROFILE) == TURRISNAND ] ; then echo USE_LAYER_NI2C ; else echo USE_LAYER_EMULATION ; fi` CONFIG_PATH=/etc/atsha.sw VERBOSE=1
 endef
 
 define Package/$(PKG_NAME)/install
