@@ -1,8 +1,6 @@
-diff --git a/mac.c b/mac.c
-index 3f2dc6f..73d2d4e 100644
 --- a/mac.c
 +++ b/mac.c
-@@ -68,8 +68,10 @@ struct {
+@@ -70,8 +70,10 @@ static const struct macalg macs[] = {
  #endif
  	{ "hmac-md5",				SSH_EVP, EVP_md5, 0, 0, 0, 0 },
  	{ "hmac-md5-96",			SSH_EVP, EVP_md5, 96, 0, 0, 0 },
@@ -13,7 +11,7 @@ index 3f2dc6f..73d2d4e 100644
  	{ "umac-64@openssh.com",		SSH_UMAC, NULL, 0, 128, 64, 0 },
  	{ "umac-128@openssh.com",		SSH_UMAC128, NULL, 0, 128, 128, 0 },
  
-@@ -82,7 +84,9 @@ struct {
+@@ -84,7 +86,9 @@ static const struct macalg macs[] = {
  #endif
  	{ "hmac-md5-etm@openssh.com",		SSH_EVP, EVP_md5, 0, 0, 0, 1 },
  	{ "hmac-md5-96-etm@openssh.com",	SSH_EVP, EVP_md5, 96, 0, 0, 1 },

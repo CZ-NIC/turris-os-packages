@@ -9,7 +9,7 @@
 +#IPQoS AF21 AF11
 --- a/sshd_config
 +++ b/sshd_config
-@@ -120,6 +120,9 @@ UsePrivilegeSeparation sandbox		# Default for new installations.
+@@ -120,6 +120,9 @@ UsePrivilegeSeparation sandbox		# Defaul
  # no default banner path
  #Banner none
  
