@@ -24,9 +24,15 @@ define Package/$(PKG_NAME)
 	DEPENDS:=+libopenssl +libunbound +unbound
 endef
 
+ifeq ($(CONFIG_TARGET_mpc85xx_p2020_TURRISNAND),y)
 define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=`if [ $$(PROFILE) == TURRIS ] || [ $$(PROFILE) == TURRISNAND ] ; then echo USE_LAYER_NI2C ; else echo USE_LAYER_EMULATION ; fi` CONFIG_PATH=/etc/atsha.sw VERBOSE=1
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C CONFIG_PATH=/etc/atsha.sw VERBOSE=1
 endef
+else
+define Build/Compile
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_EMULATION CONFIG_PATH=/etc/atsha.sw VERBOSE=1
+endef
+endif
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
