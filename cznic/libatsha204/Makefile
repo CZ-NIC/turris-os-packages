@@ -25,7 +25,7 @@ define Package/$(PKG_NAME)
 endef
 
 define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=`if [ $(PROFILE) == TURRIS ] || [ $(PROFILE) == TURRISNAND ] ; then echo USE_LAYER_NI2C ; else echo USE_LAYER_EMULATION ; fi` CONFIG_PATH=/etc/atsha.sw VERBOSE=1
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=`if [ $$(PROFILE) == TURRIS ] || [ $$(PROFILE) == TURRISNAND ] ; then echo USE_LAYER_NI2C ; else echo USE_LAYER_EMULATION ; fi` CONFIG_PATH=/etc/atsha.sw VERBOSE=1
 endef
 
 define Package/$(PKG_NAME)/install
