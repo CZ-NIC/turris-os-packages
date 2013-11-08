@@ -1,5 +1,5 @@
 menu "Configuration"
-	depends PACKAGE_libffmpeg-custom
+	depends on PACKAGE_libffmpeg-custom
 
 config FFMPEG_CUSTOM_PATENTED
 	bool "Include patented codecs and technologies"
@@ -16,7 +16,7 @@ config FFMPEG_CUSTOM_FFSERVER_SUPPORT
 
 config FFMPEG_CUSTOM_LIBDLNA_SUPPORT
 	bool "Include support for libdlna/ushare"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 	select FFMPEG_CUSTOM_DECODER_ac3
 	select FFMPEG_CUSTOM_DECODER_atrac3
 	select FFMPEG_CUSTOM_DECODER_h264
@@ -36,7 +36,7 @@ config FFMPEG_CUSTOM_LIBDLNA_SUPPORT
 
 config FFMPEG_CUSTOM_MINIDLNA_SUPPORT
 	bool "Include support for minidlna"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 	select FFMPEG_CUSTOM_DECODER_aac
 	select FFMPEG_CUSTOM_DECODER_ac3
 	select FFMPEG_CUSTOM_DECODER_flac
@@ -65,7 +65,7 @@ comment "Encoders ---"
 
 config FFMPEG_CUSTOM_ENCODER_ac3
 	bool "AC3"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 	select FFMPEG_CUSTOM_PARSER_ac3
 
 config FFMPEG_CUSTOM_ENCODER_jpegls
@@ -76,11 +76,11 @@ config FFMPEG_CUSTOM_ENCODER_mpeg1video
 
 config FFMPEG_CUSTOM_ENCODER_mpeg2video
 	bool "MPEG-2 Video"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 
 config FFMPEG_CUSTOM_ENCODER_mpeg4
 	bool "MPEG-4"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 
 config FFMPEG_CUSTOM_ENCODER_pcm_s16be
 	bool "PCM signed 16-bit big-endian"
@@ -102,17 +102,17 @@ comment "Decoders ---"
 
 config FFMPEG_CUSTOM_DECODER_aac
 	bool "AAC (Advanced Audio Coding)"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 	select FFMPEG_CUSTOM_PARSER_aac
 
 config FFMPEG_CUSTOM_DECODER_ac3
 	bool "AC3"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 	select FFMPEG_CUSTOM_PARSER_ac3
 
 config FFMPEG_CUSTOM_DECODER_atrac3
 	bool "ATRAC3"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 
 config FFMPEG_CUSTOM_DECODER_flac
 	bool "FLAC"
@@ -122,18 +122,18 @@ config FFMPEG_CUSTOM_DECODER_gif
 
 config FFMPEG_CUSTOM_DECODER_h264
 	bool "H.264"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 
 config FFMPEG_CUSTOM_DECODER_jpegls
 	bool "JPEG-LS"
 
 config FFMPEG_CUSTOM_DECODER_mp2
 	bool "MP2 (MPEG Audio Layer 2)"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 
 config FFMPEG_CUSTOM_DECODER_mp3
 	bool "MP3 (MPEG Audio Layer 2)"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 
 config FFMPEG_CUSTOM_DECODER_mpegvideo
 	bool "MPEG Video"
@@ -143,11 +143,11 @@ config FFMPEG_CUSTOM_DECODER_mpeg1video
 
 config FFMPEG_CUSTOM_DECODER_mpeg2video
 	bool "MPEG-2 Video"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 
 config FFMPEG_CUSTOM_DECODER_mpeg4
 	bool "MPEG-4"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 
 config FFMPEG_CUSTOM_DECODER_pcm_s16be
 	bool "PCM signed 16-bit big-endian"
@@ -164,11 +164,11 @@ config FFMPEG_CUSTOM_DECODER_vorbis
 
 config FFMPEG_CUSTOM_DECODER_wmav1
 	bool "WMAv1"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 
 config FFMPEG_CUSTOM_DECODER_wmav2
 	bool "WMAv2"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 
 config FFMPEG_CUSTOM_DECODER_zlib
 	bool "Zlib"
@@ -177,14 +177,14 @@ comment "Muxers ---"
 
 config FFMPEG_CUSTOM_MUXER_ac3
 	bool "AC3"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 
 config FFMPEG_CUSTOM_MUXER_ffm
 	bool "FFM (ffserver live feed)"
 
 config FFMPEG_CUSTOM_MUXER_h264
 	bool "H.264"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 
 config FFMPEG_CUSTOM_MUXER_mp3
 	bool "MP3 (MPEG Audio Layer 3)"
@@ -226,7 +226,7 @@ config FFMPEG_CUSTOM_DEMUXER_ffm
 
 config FFMPEG_CUSTOM_DEMUXER_h264
 	bool "H.264"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 
 config FFMPEG_CUSTOM_DEMUXER_matroska
 	bool "Matroska (MKA,MKV)"
@@ -270,14 +270,14 @@ comment "Parsers ---"
 
 config FFMPEG_CUSTOM_PARSER_aac
 	bool "AAC (Advanced Audio Coding)"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 
 config FFMPEG_CUSTOM_PARSER_ac3
 	bool "AC3"
 
 config FFMPEG_CUSTOM_PARSER_h264
 	bool "H.264"
-	depends FFMPEG_CUSTOM_PATENTED
+	depends on FFMPEG_CUSTOM_PATENTED
 	select FFMPEG_CUSTOM_DECODER_h264
 
 config FFMPEG_CUSTOM_PARSER_mpegaudio
