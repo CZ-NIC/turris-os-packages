@@ -239,7 +239,7 @@
  	const char **user_argv;
 --- a/upload-pack.c
 +++ b/upload-pack.c
-@@ -747,7 +747,7 @@ static int upload_pack_config(const char
+@@ -786,7 +786,7 @@ static int upload_pack_config(const char
  	return parse_hide_refs_config(var, value, "uploadpack");
  }
  
