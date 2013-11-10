@@ -1,7 +1,6 @@
-diff -Nur libnids-1.18/configure libnids-1.18.patched/configure
---- libnids-1.18/configure	2003-10-15 01:40:09.000000000 +0200
-+++ libnids-1.18.patched/configure	2005-06-09 12:37:42.000000000 +0200
-@@ -3253,7 +3253,7 @@
+--- a/configure
++++ b/configure
+@@ -3640,7 +3640,7 @@ presetting ac_cv_c_bigendian=no (or yes)
  esac
  
  
@@ -10,7 +9,7 @@ diff -Nur libnids-1.18/configure libnids-1.18.patched/configure
  
  for ac_func in gettimeofday
  do
-@@ -3489,17 +3489,21 @@
+@@ -3917,17 +3917,21 @@ if test "${with_libpcap+set}" = set; the
  echo "${ECHO_T}no" >&6
       ;;
    *)
@@ -38,7 +37,7 @@ diff -Nur libnids-1.18/configure libnids-1.18.patched/configure
       fi
       ;;
    esac
-@@ -3605,10 +3609,10 @@
+@@ -4399,10 +4403,10 @@ echo "${ECHO_T}no" >&6
    *)
       echo "$as_me:$LINENO: result: $withval" >&5
  echo "${ECHO_T}$withval" >&6
@@ -51,12 +50,12 @@ diff -Nur libnids-1.18/configure libnids-1.18.patched/configure
  	LNETLIB="-L$withval/lib -lnet"
       elif test -f $withval/include/libnet.h -a -f $withval/src/libnet.a; then
          owd=`pwd`
-@@ -3861,7 +3865,7 @@
- else
+@@ -4684,7 +4688,7 @@ else
    echo "$as_me: failed program was:" >&5
- cat conftest.$ac_ext >&5
+ sed 's/^/| /' conftest.$ac_ext >&5
+ 
 -HAVE_BSD_UDPHDR=0
 +HAVE_BSD_UDPHDR=1
  fi
- rm -f conftest.$ac_objext conftest.$ac_ext
+ rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
  
