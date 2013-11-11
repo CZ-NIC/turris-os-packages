@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
-PKG_VERSION:=13
+PKG_VERSION:=14
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/libatsha204
 PKG_SOURCE_VERSION:=f7e8cd21a63fb1fc7b4646f0c2562f14a2038cec
@@ -24,7 +24,7 @@ define Package/$(PKG_NAME)
 	DEPENDS:=+libopenssl +libunbound +unbound
 endef
 
-ifeq ($(CONFIG_TARGET_mpc85xx_p2020_TURRISNAND),y)
+ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
 define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C CONFIG_PATH=/etc/atsha.sw VERBOSE=1
 endef
