@@ -96,7 +96,7 @@ define Package/openssh-server/config
 	config PACKAGE_openssh_server_nuci_support
   	bool "OpenSSH Server support for nuci"
 	default n
-	depends PACKAGE_openssh-server
+	depends on PACKAGE_openssh-server
 	select PACKAGE_nuci
 endef
 
