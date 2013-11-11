@@ -165,6 +165,7 @@ set -ex
 [ -n "$$IPKG_INSTROOT" ] || {
 /usr/share/unbound/postinst
 }
+endef
 endif
 
 define Package/unbound/prerm
