@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
 PKG_VERSION:=1.4.17
-PKG_RELEASE:=7
+PKG_RELEASE:=8
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.unbound.net/downloads
@@ -28,13 +28,18 @@ define Package/unbound/Default
   DEPENDS:=+libldns
 endef
 
+ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
+
+TURRIS_DEPS:=+cert-backup
+endif
+
 define Package/unbound
   $(call Package/unbound/Default)
   SECTION:=net
   CATEGORY:=Network
   SUBMENU:=IP Addresses and Names
   TITLE+= (daemon)
-  DEPENDS+= +libunbound
+  DEPENDS+= +libunbound $(TURRIS_DEPS)
 endef
 
 define Package/unbound/description
@@ -140,29 +145,32 @@ define Package/unbound/install
 	$(INSTALL_BIN) ./files/unbound-config $(1)/etc/config/unbound
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/unbound.defaults $(1)/etc/uci-defaults/unbound
+	$(INSTALL_DIR) $(1)/usr/share/unbound/
+	$(INSTALL_BIN) ./files/unbound.postinst $(1)/usr/share/unbound/postinst
 endef
 
+ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
 define Package/unbound/postinst
 #!/bin/sh
-set -x
+set -ex
 [ -n "$$IPKG_INSTROOT" ] || {
-/etc/uci-defaults/unbound && rm /etc/uci-defaults/unbound
-
-/etc/init.d/unbound enable
-sleep 2
-/etc/init.d/dnsmasq restart
-sleep 20 # Cooldown for above (problems in times of reinstall)
-# Also in case we fail to restart because the kernel did not have time to clean
-# up the sockets, try to wait a little and try it again.
-/etc/init.d/unbound restart || \
-	( sleep 10 ; /etc/init.d/unbound restart ) || \
-	( sleep 30 ; /etc/init.d/unbound restart )
+/usr/sbin/cert-backup /etc/unbound/root.key
+/usr/share/unbound/postinst
 }
 endef
+else
+define Package/unbound/postinst
+#!/bin/sh
+set -ex
+[ -n "$$IPKG_INSTROOT" ] || {
+/usr/share/unbound/postinst
+}
+endef
+endif
 
 define Package/unbound/prerm
 #!/bin/sh
-set -x
+set -ex
 /etc/init.d/unbound disable
 /etc/init.d/unbound stop
 uci delete dhcp.@dnsmasq[0].port
