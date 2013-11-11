@@ -125,12 +125,12 @@ config LCD4LINUX_CUSTOM_DRIVER_GLCD2USB
 config LCD4LINUX_CUSTOM_DRIVER_HD44780
 	bool
 	prompt "HD44780"
-	depends BROKEN
+	depends on BROKEN
 
 config LCD4LINUX_CUSTOM_DRIVER_HD44780-I2C
 	bool
 	prompt "HD44780-I2C"
-	depends BROKEN
+	depends on BROKEN
 
 config LCD4LINUX_CUSTOM_DRIVER_IRLCD
 	bool
@@ -146,7 +146,7 @@ config LCD4LINUX_CUSTOM_DRIVER_LCD2USB
 config LCD4LINUX_CUSTOM_DRIVER_LCDLinux
 	bool
 	prompt "LCDLinux"
-	depends BROKEN
+	depends on BROKEN
 
 config LCD4LINUX_CUSTOM_DRIVER_LCDTerm
 	bool
@@ -167,7 +167,7 @@ config LCD4LINUX_CUSTOM_DRIVER_LUIse
 	prompt "LUIse"
 	select LCD4LINUX_CUSTOM_NEEDS_libgd
 	#select LCD4LINUX_CUSTOM_NEEDS_libluise
-	depends BROKEN
+	depends on BROKEN
 
 config LCD4LINUX_CUSTOM_DRIVER_LW_ABP
 	bool
@@ -492,7 +492,7 @@ config LCD4LINUX_CUSTOM_PLUGIN_w1retap
 config LCD4LINUX_CUSTOM_PLUGIN_wireless
 	bool
 	prompt "wireless"
-	depends BROKEN
+	depends on BROKEN
 
 config LCD4LINUX_CUSTOM_PLUGIN_xmms
 	bool
