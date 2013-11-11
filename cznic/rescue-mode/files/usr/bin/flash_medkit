@@ -26,8 +26,17 @@ echo "Erased"
 echo "Flash new images"
 
 nandwrite -pq /dev/mtd7 openwrt-mpc85xx-p2020-turris-nand-*m.fdt
+echo "FDT flashed."
+
 nandwrite -pq /dev/mtd8 openwrt-mpc85xx-p2020-zImage
-nandwrite -pq /dev/mtd9 openwrt-mpc85xx-p2020-jffs2-nand-2048-128k.img
+echo "Kernel flashed."
+
+mkdir ./rootfs
+mount -t jffs2 /dev/mtdblock9 ./rootfs
+tar -xfp openwrt-mpc85xx-p2020-nand-rootfs.tar -C ./rootfs
+umount ./rootfs
+sync
+echo "Root filesystem flashed."
 
 echo Done! 
 
