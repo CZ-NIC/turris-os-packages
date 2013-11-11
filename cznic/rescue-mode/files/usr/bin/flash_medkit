@@ -25,10 +25,10 @@ flash_erase -q /dev/mtd9 0 0
 echo "Erased"
 echo "Flash new images"
 
-nandwrite -pq /dev/mtd7 openwrt-mpc85xx-p2020-turris-nand-*m.fdt
+nandwrite -pq /dev/mtd7 openwrt-mpc85xx-p2020-nand-turris-nand-*m.fdt
 echo "FDT flashed."
 
-nandwrite -pq /dev/mtd8 openwrt-mpc85xx-p2020-zImage
+nandwrite -pq /dev/mtd8 openwrt-mpc85xx-p2020-nand-zImage
 echo "Kernel flashed."
 
 mkdir ./rootfs
