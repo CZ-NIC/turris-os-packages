@@ -35,6 +35,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 
 	$(INSTALL_BIN) ./files/etc/rc.d/S00boot $(1)/etc/rc.d/S00boot
+	$(INSTALL_BIN) ./files/etc/rc.d/S01flash $(1)/etc/rc.d/S01flash
 	$(INSTALL_BIN) ./files/etc/rc.d/K99umount $(1)/etc/rc.d/K99umount
 	$(INSTALL_BIN) ./files/etc/init.d/rcS $(1)/etc/init.d/rcS
 	$(INSTALL_BIN) ./files/usr/share/udhcpc/default.script $(1)/usr/share/udhcpc/default.script
