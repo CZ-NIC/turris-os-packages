@@ -1,5 +1,5 @@
-#!/bin/sh -e
-set -e
+#!/bin/sh 
+set -ex
 
 echo "Unpack medkit files"
 [ -d /tmp/rescue ] && rm -rf /tmp/rescue
@@ -32,9 +32,13 @@ nandwrite -pq /dev/mtd8 openwrt-mpc85xx-p2020-nand-zImage
 echo "Kernel flashed."
 
 mkdir ./rootfs
+mkdir ./certs
 mount -t jffs2 /dev/mtdblock9 ./rootfs
+mount -t jffs2 /dev/mtdblock4 ./certs
 tar -xf openwrt-mpc85xx-p2020-nand-rootfs.tar -C ./rootfs
+cp -a ./certs/* ./rootfs/
 umount ./rootfs
+umount ./certs
 sync
 echo "Root filesystem flashed."
 

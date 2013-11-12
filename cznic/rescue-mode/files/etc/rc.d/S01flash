@@ -13,3 +13,5 @@ echo
 
 /usr/bin/flash_medkit /dev/mtdblock3
 
+sync
+reboot
