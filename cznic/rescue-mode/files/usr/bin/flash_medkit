@@ -20,7 +20,7 @@ echo
 
 flash_erase -q /dev/mtd7 0 0
 flash_erase -q /dev/mtd8 0 0
-flash_erase -qj /dev/mtd9 0 0
+flash_erase -q /dev/mtd9 0 0
 
 echo "Erased"
 echo "Flash new images"
