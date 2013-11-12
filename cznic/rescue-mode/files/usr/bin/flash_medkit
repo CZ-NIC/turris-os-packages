@@ -33,7 +33,7 @@ echo "Kernel flashed."
 
 mkdir ./rootfs
 mount -t jffs2 /dev/mtdblock9 ./rootfs
-tar -xfp openwrt-mpc85xx-p2020-nand-rootfs.tar -C ./rootfs
+tar -xf openwrt-mpc85xx-p2020-nand-rootfs.tar -C ./rootfs
 umount ./rootfs
 sync
 echo "Root filesystem flashed."
