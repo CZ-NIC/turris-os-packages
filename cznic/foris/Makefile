@@ -21,7 +21,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/foris
 	TITLE:=foris
-	DEPENDS:=+python +python-bottle +python-bottle-i18n +python-beaker +python-flup +python-ncclient +nuci +lighttpd +lighttpd-mod-fastcgi +luci
+	DEPENDS:=+python +python-bottle +python-bottle-i18n +python-beaker +python-flup +python-ncclient +nuci +lighttpd +lighttpd-mod-fastcgi +luci +python-pbkdf2
 	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
 endef
 
