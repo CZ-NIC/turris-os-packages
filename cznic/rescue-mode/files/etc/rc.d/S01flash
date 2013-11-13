@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+echo "Welcome in rescue mode."
+echo "If you want to break auto-flash prcoedure press ctrl+c."
+
+i=5
+while [ $i != 0 ]; do
+	echo -n "$i "
+	i=$(($i - 1))
+	sleep 1
+done
+echo
+
+/usr/bin/flash_medkit /dev/mtdblock3
+
+sync
+reboot
