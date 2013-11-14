@@ -11,7 +11,7 @@ while [ "x$keypress" == "x" ] && [ $i != 0 ]; do
 	i=$(($i - 1))
 	read -t1 keypress || true
 done
-[ -n $keypress ] && return 0
+[ "x$keypress" != "x" ] && return 0
 echo
 
 /usr/bin/flash_medkit /dev/mtdblock3
