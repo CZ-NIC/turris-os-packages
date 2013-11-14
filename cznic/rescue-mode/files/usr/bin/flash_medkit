@@ -36,7 +36,7 @@ mkdir ./certs
 mount -t jffs2 /dev/mtdblock9 ./rootfs
 mount -t jffs2 /dev/mtdblock4 ./certs
 tar -xf openwrt-mpc85xx-p2020-nand-rootfs.tar -C ./rootfs
-cp -a ./certs/* ./rootfs/
+[ "$(ls -A ./certs)" ] && cp -a ./certs/* ./rootfs/
 umount ./rootfs
 umount ./certs
 sync
