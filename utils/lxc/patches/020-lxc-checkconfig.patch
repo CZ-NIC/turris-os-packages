@@ -1,9 +1,9 @@
 --- a/src/lxc/lxc-checkconfig.in
 +++ b/src/lxc/lxc-checkconfig.in
-@@ -3,6 +3,17 @@
- # Allow environment variables to override grep and config
+@@ -4,6 +4,17 @@
  : ${CONFIG:=/proc/config.gz}
  : ${GREP:=zgrep}
+ : ${MODNAME:=configs}
 +: ${ZGREP:=zgrep}
 +: ${GUNZIP:=gunzip}
 +

@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lxc
-PKG_VERSION:=2013-09-24
+PKG_VERSION:=2013-11-13
 PKG_RELEASE=$(PKG_SOURCE_VERSION)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=git://github.com/lxc/lxc.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=9d0cda4f22f76d693e2ceef0f77f2ba24227433c
+PKG_SOURCE_VERSION:=a9a0ed90dd1cdadd412576a45af16419efc0e939
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 
 PKG_BUILD_PARALLEL:=1
@@ -23,20 +23,16 @@ PKG_INSTALL:=1
 include $(INCLUDE_DIR)/package.mk
 
 LXC_APPLETS += \
-	attach cgroup checkpoint console execute freeze info kill monitor \
-	restart start stop unfreeze unshare wait
+	attach cgroup checkpoint clone config console create destroy execute \
+	freeze info kill monitor monitord restart snapshot start stop unfreeze \
+	unshare user-nic wait
 
 LXC_SCRIPTS += \
-	checkconfig clone create destroy ls netstat ps shutdown version
+	checkconfig ls netstat ps top version
 
 DEPENDS_APPLETS = +libpthread +libcap +liblxc
 
-DEPENDS_checkpoint = @BROKEN
-DEPENDS_clone = @BROKEN
-DEPENDS_create = @BROKEN
-DEPENDS_destroy = @BROKEN
-DEPENDS_restart = @BROKEN
-DEPENDS_shutdown = +lxc-info +lxc-wait @BROKEN
+DEPENDS_top = @BROKEN
 
 
 define Package/lxc/Default

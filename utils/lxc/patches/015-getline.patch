@@ -11,15 +11,12 @@
  char *newname;
 --- a/src/lxc/lxc_user_nic.c
 +++ b/src/lxc/lxc_user_nic.c
-@@ -43,11 +43,7 @@
- #include <linux/sockios.h>
+@@ -49,6 +49,8 @@
  #include "config.h"
+ #include "utils.h"
  
--#ifndef HAVE_GETLINE
--#ifdef HAVE_FGETLN
- #include <../include/getline.h>
--#endif
--#endif
- 
++#include <../include/getline.h>
++
  #if ISTEST
  #define CONF_FILE "/tmp/lxc-usernet"
+ #define DB_FILE "/tmp/nics"
