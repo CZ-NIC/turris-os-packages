@@ -11,7 +11,7 @@ PKG_NAME:=libatsha204
 PKG_VERSION:=14
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/libatsha204
-PKG_SOURCE_VERSION:=ee2d8a1128e5cc90f4b3416eddadd71a36aeab7a
+PKG_SOURCE_VERSION:=1e7806772ce1a466eb72ce955dfea0e8da001c53
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -26,7 +26,7 @@ endef
 
 ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
 define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C CONFIG_PATH=/etc/atsha.sw VERBOSE=1
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C VERBOSE=1
 endef
 else
 define Build/Compile
