@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=send
 PKG_VERSION:=0.2-5.4
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)d_$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://mobisend.org/debian-mobisend/pool/main/s/sendd/
