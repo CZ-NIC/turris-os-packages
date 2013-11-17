@@ -12,7 +12,7 @@ PKG_VERSION:=1.1.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=ftp://ftp.digifail.com/downloads/software/bluelog
+PKG_SOURCE_URL:=ftp://ftp.digifail.com/software/bluelog
 PKG_MD5SUM:=a5327d64731cd45debb57ab1edbe6e43
 
 PKG_INSTALL:=1
