@@ -15,6 +15,8 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.dovecot.org/releases/2.2
 PKG_MD5SUM:=d2c7c83acc21f3dcab652868d40522e0
 
+PKG_BUILD_DEPENDS:=libiconv
+
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
