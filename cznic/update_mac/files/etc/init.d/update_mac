@@ -1,0 +1,26 @@
+#!/bin/sh /etc/rc.common
+
+START=12
+
+start() {
+        MAC_ADDRS=`atsha204cmd mac 3 2>/dev/null`
+        MAC_ETH0=`echo $MAC_ADDRS | cut -d ' ' -f 1`
+        MAC_ETH1=`echo $MAC_ADDRS | cut -d ' ' -f 2`
+        MAC_ETH2=`echo $MAC_ADDRS | cut -d ' ' -f 3`
+
+        ifconfig eth0 down
+        ifconfig eth1 down
+        ifconfig eth2 down
+
+        echo "Set $MAC_ETH0 to eth0"
+        ifconfig eth0 hw ether $MAC_ETH0
+        echo "Set $MAC_ETH1 to eth1"
+        ifconfig eth1 hw ether $MAC_ETH1
+        echo "Set $MAC_ETH2 to eth2"
+        ifconfig eth2 hw ether $MAC_ETH2
+
+        ifconfig eth0 up              
+        ifconfig eth1 up
+        ifconfig eth2 up
+}
+
