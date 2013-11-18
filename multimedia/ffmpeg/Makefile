@@ -292,7 +292,8 @@ FFMPEG_CONFIGURE:= \
 	--enable-small \
 	--disable-stripping \
 	--enable-zlib \
-	--disable-outdevs
+	--disable-outdevs \
+	--disable-altivec
 
 ifeq ($(BUILD_VARIANT),custom)
 
