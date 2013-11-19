@@ -1,0 +1,11 @@
+--- a/Makefile
++++ b/Makefile
+@@ -1,6 +1,6 @@
+ CFLAGS?=-Os -g
+ SFLAGS:=-std=c99 -D_GNU_SOURCE
+-WFLAGS:=-Wall -Werror -pedantic
++WFLAGS:=-Wall -Werror
+ LDFLAGS?=
+ DESTDIR?=
+ LIBRARY:=libzstream.so
+
