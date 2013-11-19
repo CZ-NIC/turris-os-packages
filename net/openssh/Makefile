@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openssh
 PKG_VERSION:=6.4p1
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
@@ -179,6 +179,24 @@ define Build/Compile
 		DESTDIR="$(PKG_INSTALL_DIR)" \
 		STRIP_OPT="" \
 		all install
+endef
+
+define Package/openssh-client/preinst
+#!/bin/sh
+if [ -L $${IPKG_INSTROOT}/usr/bin/ssh ] && [ -L $${IPKG_INSTROOT}/usr/bin/scp ]; then
+  rm -f $${IPKG_INSTROOT}/usr/bin/ssh $${IPKG_INSTROOT}/usr/bin/scp;
+fi
+exit 0
+endef
+
+define Package/openssh-client/postrm
+#!/bin/sh
+rm -f $${IPKG_INSTROOT}/usr/bin/ssh $${IPKG_INSTROOT}/usr/bin/scp;
+if [ -x $${IPKG_INSTROOT}/usr/sbin/dropbear ] ; then
+  ln -s /usr/sbin/dropbear $${IPKG_INSTROOT}/usr/bin/ssh;
+  ln -s /usr/sbin/dropbear $${IPKG_INSTROOT}/usr/bin/scp;
+fi
+exit 0
 endef
 
 define Package/openssh-moduli/install
