@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cznic-cacert-bundle
-PKG_VERSION:=7
+PKG_VERSION:=8
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/misc
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=f629fbb71d3e64a3b142a7241f1a39a3bf527c11
+PKG_SOURCE_VERSION:=1d25bd1d4ae4c65198dc05da76bd08da069a6774
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -51,6 +51,10 @@ define Package/$(PKG_NAME)/install
 	$(CP) $(PKG_BUILD_DIR)/cacerts/api.turris.pem $(1)/etc/ssl/
 	$(CP) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/
 	$(CP) $(PKG_BUILD_DIR)/cacerts/ucollect-server.pem $(1)/etc/ssl/
+
+	$(INSTALL_DIR) $(1)/etc/ssl/certs
+	$(CP) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/certs
+	c_rehash $(1)/etc/ssl/certs
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
