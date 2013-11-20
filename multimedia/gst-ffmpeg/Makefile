@@ -134,6 +134,7 @@ GST_VERSION:=0.10
 
 CONFIGURE_ARGS += \
 	--with-ffmpeg-extra-configure="--target-os=linux \
+		--disable-altivec \
 		--disable-bsfs \
 		--disable-devices \
 		--disable-encoders \
