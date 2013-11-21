@@ -26,7 +26,7 @@ define Package/snort/Default
   SUBMENU:=Firewall
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libpcap +libpcre +libdnet +libdaq +libpthread +zlib
+  DEPENDS:=+libpcap +libpcre +libdnet +libdaq +libpthread +zlib +libuuid
   TITLE:=Lightweight Network Intrusion Detection System
   URL:=http://www.snort.org/
 endef
