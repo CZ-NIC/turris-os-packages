@@ -1,0 +1,15 @@
+#!/bin/sh /etc/rc.common
+
+START=13
+
+start() {
+	if [ -c /dev/rtc0 ]; then
+	        hwclock -u -s -f /dev/rtc0
+	fi
+}
+
+stop() {
+	if [ -c /dev/rtc0 ] ; then
+		hwclock -u -w -f /dev/rtc0
+	fi
+}
