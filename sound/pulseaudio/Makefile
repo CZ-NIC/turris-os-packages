@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pulseaudio
-PKG_VERSION:=2.1
-PKG_RELEASE:=1
+PKG_VERSION:=4.0
+PKG_RELEASE:=4
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://freedesktop.org/software/pulseaudio/releases/
-PKG_MD5SUM:=33e85023259d530f0a763d5204e8bad9
+PKG_MD5SUM:=591f211db2790a7e4d222f2dc6858db3
 
 PKG_BUILD_DIR=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=intltool/host
@@ -30,8 +30,9 @@ define Package/pulseaudio/Default
   SECTION:=sound
   CATEGORY:=Sound
   DEPENDS:=+libspeexdsp +libsndfile +libltdl +libpthread \
-	+librt +alsa-lib +libjson +libopenssl +udev $(ICONV_DEPENDS) $(INTL_DEPENDS)
+	+librt +alsa-lib +libjson +libopenssl +libwrap +libcap $(ICONV_DEPENDS) $(INTL_DEPENDS)
   TITLE:=Network sound server
+  MAINTAINER:=Peter Wagner <tripolar@gmx.at>
   URL:=http://www.pulseaudio.org
   PROVIDES:=pulseaudio
 endef
@@ -100,7 +101,6 @@ CONFIGURE_ARGS += \
 	--enable-alsa \
 	--disable-hal \
 	--disable-gconf \
-	--disable-tcpwrap \
 	--disable-nls \
 	--disable-manpages \
 	--enable-oss-output \
@@ -114,7 +114,7 @@ CONFIGURE_ARGS += \
 	--disable-asyncns \
 	--disable-lirc \
 	--disable-bluez \
-	--without-caps \
+	--disable-udev \
 	--without-fftw
 
 ifeq ($(BUILD_VARIANT),avahi)
@@ -139,7 +139,8 @@ define Build/InstallDev
 	$(INSTALL_DIR) \
 		$(1)/usr/lib/pkgconfig \
 		$(1)/usr/include/pulse \
-		$(1)/usr/lib
+		$(1)/usr/lib \
+		$(1)/usr/lib/pulseaudio
 	$(CP) \
 		$(PKG_INSTALL_DIR)/usr/include/pulse/* \
 		$(1)/usr/include/pulse
@@ -149,6 +150,9 @@ define Build/InstallDev
 	$(CP) \
 		$(PKG_INSTALL_DIR)/usr/lib/*.so* \
 		$(1)/usr/lib/
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/lib/pulseaudio/* \
+		$(1)/usr/lib/pulseaudio/
 endef
 
 define Package/pulseaudio-daemon/install
