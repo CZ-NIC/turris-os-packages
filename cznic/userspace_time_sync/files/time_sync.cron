@@ -1,0 +1,2 @@
+MAILTO=""
+33	2	*	*	*	root	/sbin/hwclock -u -w -f /dev/rtc0
