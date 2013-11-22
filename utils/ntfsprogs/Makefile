@@ -29,6 +29,7 @@ define Package/ntfsprogs
   TITLE:=Linux-NTFS
   URL:=http://www.linux-ntfs.org/
   MAINTAINER:=Gianluigi Tiesi <sherpya@netfarm.it>
+  DEPENDS+= +libuuid
 endef
 
 define Package/ntfsprogs/description
