@@ -59,7 +59,7 @@ endef
 
 define Package/ntfs-3g
   $(call Package/ntfs-3g/common)
-  DEPENDS+= +kmod-fuse +PACKAGE_NTFS-3G_USE_LIBFUSE:libfuse +libpthread
+  DEPENDS+= +kmod-fuse +PACKAGE_NTFS-3G_USE_LIBFUSE:libfuse +libpthread +libuuid
 endef
 
 define Package/ntfs-3g/description
