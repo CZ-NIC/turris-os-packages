@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=coova-chilli
 PKG_VERSION:=1.3.0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://ap.coova.org/chilli
@@ -22,7 +22,11 @@ PKG_CONFIG_DEPENDS := \
   COOVACHILLI_REDIR \
   COOVACHILLI_USERAGENT \
   COOVACHILLI_DNSLOG \
-  COOVACHILLI_UAMDOMAINFILE
+  COOVACHILLI_UAMDOMAINFILE \
+  COOVACHILLI_NOSSL \
+  COOVACHILLI_MATRIXSSL \
+  COOVACHILLI_CYASSL \
+  COOVACHILLI_OPENSSL
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -30,7 +34,7 @@ define Package/coova-chilli
   SUBMENU:=Captive Portals
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+kmod-tun +librt
+  DEPENDS:=+kmod-tun +librt +COOVACHILLI_MATRIXSSL:libmatrixssl +COOVACHILLI_CYASSL:libcyassl +COOVACHILLI_OPENSSL:libopenssl
   TITLE:=Wireless LAN HotSpot controller (Coova Chilli Version)
   URL:=http://www.coova.org/CoovaChilli
   MAINTAINER:=Imre Kaloz <kaloz@openwrt.org>
@@ -58,6 +62,9 @@ define Build/Configure
 	$(if $(CONFIG_COOVACHILLI_MINIPORTAL),--enable,--disable)-miniportal \
 	$(if $(CONFIG_COOVACHILLI_USERAGENT),--enable,--disable)-useragent \
 	$(if $(CONFIG_COOVACHILLI_UAMDOMAINFILE),--enable,--disable)-uamdomainfile \
+	$(if $(CONFIG_COOVACHILLI_MATRIXSSL),--with,--without)-matrixssl \
+	$(if $(CONFIG_COOVACHILLI_CYASSL),--with,--without)-cyaxssl \
+	$(if $(CONFIG_COOVACHILLI_OPENSSL),--with,--without)-openssl \
 	)
 endef
 
