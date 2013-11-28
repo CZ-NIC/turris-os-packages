@@ -194,6 +194,8 @@ define Package/openssh-server/install
 	$(INSTALL_BIN) ./files/sshd.nuci.config $(1)/etc/config/sshd
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/sshd $(1)/usr/sbin/
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(INSTALL_BIN) ./files/sshd.defaults $(1)/etc/uci-defaults/sshd
 endef
 else
 define Package/openssh-server/install
@@ -203,9 +205,28 @@ define Package/openssh-server/install
 	$(INSTALL_BIN) ./files/sshd.config $(1)/etc/config/sshd
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/sshd $(1)/usr/sbin/
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(INSTALL_BIN) ./files/sshd.defaults $(1)/etc/uci-defaults/sshd
 endef
-endif 
+endif
 
+define Package/openssh-server/postinst
+[ -n "$$IPKG_INSTROOT" ] || {
+# Make sure we don't fail on disabling dropbear, it may not be present or already disabled
+/etc/init.d/dropbear stop || true
+/etc/init.d/dropbear disable || true
+/etc/init.d/sshd restart
+/etc/init.d/sshd enable
+rm /etc/uci-defaults/sshd
+}
+endif
+
+define Package/openssh-server/prerm
+/etc/init.d/sshd stop || true
+/etc/init.d/sshd disable || true
+/etc/init.d/dropbear enable || true
+/etc/init.d/dropbear start || true
+endif
 
 define Package/openssh-sftp-client/install
 	$(INSTALL_DIR) $(1)/usr/bin
