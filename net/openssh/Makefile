@@ -225,14 +225,14 @@ fi
 /etc/init.d/sshd enable
 rm /etc/uci-defaults/sshd
 }
-endif
+endef
 
 define Package/openssh-server/prerm
 /etc/init.d/sshd stop || true
 /etc/init.d/sshd disable || true
 /etc/init.d/dropbear enable || true
 /etc/init.d/dropbear start || true
-endif
+endef
 
 define Package/openssh-sftp-client/install
 	$(INSTALL_DIR) $(1)/usr/bin
