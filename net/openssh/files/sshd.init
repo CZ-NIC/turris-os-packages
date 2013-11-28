@@ -180,7 +180,7 @@ init_sshd() {
 start() {
     init_sshd
 
-	for type in rsa dsa; do {
+	for type in rsa dsa ecdsa; do {
 		# check for keys
 		key=/etc/ssh/ssh_host_${type}_key
 		[ ! -f $key ] && {

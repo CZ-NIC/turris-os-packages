@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openssh
 PKG_VERSION:=6.1p1
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
@@ -216,7 +216,7 @@ if [ -e /etc/dropbear/authorized_keys -a '!' -e /root/.ssh/authorized_keys ] ; t
 	# Copy keys from dropbear
 	mkdir -p /root/.ssh
 	chmod 0755 /root/.ssh
-	cp /etc/dropbear/autorized_keys /root/.ssh/
+	cp /etc/dropbear/authorized_keys /root/.ssh/
 fi
 # Make sure we don't fail on disabling dropbear, it may not be present or already disabled
 /etc/init.d/dropbear stop || true
