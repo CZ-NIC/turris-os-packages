@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2013 CZ.NIC z.s.p.o. <stepan.henek@nic.cz>
+# Copyright (C) 2013 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 # Copyright (C) 2006-2011 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
