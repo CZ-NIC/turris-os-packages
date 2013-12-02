@@ -25,7 +25,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/cups
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+zlib +libpthread +libpng +libjpeg +libstdcpp +libusb
+  DEPENDS:=+zlib +libpthread +libpng +libjpeg +libstdcpp +libusb-compat
   TITLE:=Common UNIX Printing System
   URL:=http://www.cups.org/
 endef

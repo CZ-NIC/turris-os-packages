@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2013 CZ.NIC z.s.p.o. <stepan.henek@nic.cz>
+# Copyright (C) 2013 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 # Copyright (C) 2006-2011 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openssh
 PKG_VERSION:=6.1p1
-PKG_RELEASE:=3
+PKG_RELEASE:=6
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
@@ -194,6 +194,8 @@ define Package/openssh-server/install
 	$(INSTALL_BIN) ./files/sshd.nuci.config $(1)/etc/config/sshd
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/sshd $(1)/usr/sbin/
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(INSTALL_BIN) ./files/sshd.defaults $(1)/etc/uci-defaults/sshd
 endef
 else
 define Package/openssh-server/install
@@ -203,9 +205,34 @@ define Package/openssh-server/install
 	$(INSTALL_BIN) ./files/sshd.config $(1)/etc/config/sshd
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/sshd $(1)/usr/sbin/
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(INSTALL_BIN) ./files/sshd.defaults $(1)/etc/uci-defaults/sshd
 endef
-endif 
+endif
 
+define Package/openssh-server/postinst
+[ -n "$$IPKG_INSTROOT" ] || {
+if [ -e /etc/dropbear/authorized_keys -a '!' -e /root/.ssh/authorized_keys ] ; then
+	# Copy keys from dropbear
+	mkdir -p /root/.ssh
+	chmod 0755 /root/.ssh
+	cp /etc/dropbear/authorized_keys /root/.ssh/
+fi
+# Make sure we don't fail on disabling dropbear, it may not be present or already disabled
+/etc/init.d/dropbear stop || true
+/etc/init.d/dropbear disable || true
+/etc/init.d/sshd restart
+/etc/init.d/sshd enable
+rm /etc/uci-defaults/sshd
+}
+endef
+
+define Package/openssh-server/prerm
+/etc/init.d/sshd stop || true
+/etc/init.d/sshd disable || true
+/etc/init.d/dropbear enable || true
+/etc/init.d/dropbear start || true
+endef
 
 define Package/openssh-sftp-client/install
 	$(INSTALL_DIR) $(1)/usr/bin

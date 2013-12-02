@@ -1,0 +1,29 @@
+--- a/kernel/wctdm.c
++++ b/kernel/wctdm.c
+@@ -2262,7 +2262,7 @@
+ 	outb(0x00, wc->ioaddr + WC_MASK1);
+ }
+ 
+-static int __devinit wctdm_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
++static int wctdm_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	int res;
+ 	struct wctdm *wc;
+@@ -2392,7 +2392,7 @@
+ 	printk("Freed a Wildcard\n");
+ }
+ 
+-static void __devexit wctdm_remove_one(struct pci_dev *pdev)
++static void wctdm_remove_one(struct pci_dev *pdev)
+ {
+ 	struct wctdm *wc = pci_get_drvdata(pdev);
+ 	if (wc) {
+@@ -2444,7 +2444,7 @@
+ 	name: 	"wctdm",
+ 	probe: 	wctdm_init_one,
+ #ifdef LINUX26
+-	remove:	__devexit_p(wctdm_remove_one),
++	remove:	wctdm_remove_one,
+ #else
+ 	remove:	wctdm_remove_one,
+ #endif

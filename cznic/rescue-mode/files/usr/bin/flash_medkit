@@ -1,5 +1,11 @@
-#!/bin/sh -e
-set -e
+#!/bin/sh 
+set -ex
+
+CERTS_DEVNUM="4"
+
+FDT_DEVNUM="6"
+KERNEL_DEVNUM="7"
+ROOTFS_DEVNUM="8"
 
 echo "Unpack medkit files"
 [ -d /tmp/rescue ] && rm -rf /tmp/rescue
@@ -18,23 +24,27 @@ while [ $i != 0 ]; do
 done
 echo
 
-flash_erase -q /dev/mtd7 0 0
-flash_erase -q /dev/mtd8 0 0
-flash_erase -q /dev/mtd9 0 0
+flash_erase -q /dev/mtd$FDT_DEVNUM 0 0
+flash_erase -q /dev/mtd$KERNEL_DEVNUM 0 0
+flash_erase -q /dev/mtd$ROOTFS_DEVNUM 0 0
 
 echo "Erased"
 echo "Flash new images"
 
-nandwrite -pq /dev/mtd7 openwrt-mpc85xx-p2020-nand-turris-nand-*m.fdt
+nandwrite -pq /dev/mtd$FDT_DEVNUM openwrt-mpc85xx-p2020-nand-turris-nand-*m.fdt
 echo "FDT flashed."
 
-nandwrite -pq /dev/mtd8 openwrt-mpc85xx-p2020-nand-zImage
+nandwrite -pq /dev/mtd$KERNEL_DEVNUM openwrt-mpc85xx-p2020-nand-zImage
 echo "Kernel flashed."
 
 mkdir ./rootfs
-mount -t jffs2 /dev/mtdblock9 ./rootfs
-tar -xfp openwrt-mpc85xx-p2020-nand-rootfs.tar -C ./rootfs
+mkdir ./certs
+mount -t jffs2 /dev/mtdblock$ROOTFS_DEVNUM ./rootfs
+mount -t jffs2 /dev/mtdblock$CERTS_DEVNUM ./certs
+tar -xf openwrt-mpc85xx-p2020-nand-rootfs.tar -C ./rootfs
+[ "$(ls -A ./certs)" ] && cp -a ./certs/* ./rootfs/
 umount ./rootfs
+umount ./certs
 sync
 echo "Root filesystem flashed."
 

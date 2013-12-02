@@ -20,7 +20,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/usb-modeswitch
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libusb
+  DEPENDS:=+libusb-compat
   TITLE:=USB ModeSwitch
   URL:=http://www.draisberghof.de/usb_modeswitch/
 endef

@@ -1,0 +1,20 @@
+#!/bin/sh -e
+exec < /dev/ttyS0
+
+echo "Welcome in rescue mode."
+echo "If you want to break auto-flash procedure press [f]+Enter."
+
+i=5
+keypress=''
+while [ "x$keypress" == "x" ] && [ $i != 0 ]; do
+	echo -n "$i "
+	i=$(($i - 1))
+	read -t1 keypress || true
+done
+[ "x$keypress" != "x" ] && return 0
+echo
+
+/usr/bin/flash_medkit /dev/mtdblock3
+
+sync
+reboot

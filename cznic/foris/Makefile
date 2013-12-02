@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2013 CZ.NIC z.s.p.o. <jan.cermak@nic.cz>
+# Copyright (C) 2013 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=daily-131011
-PKG_RELEASE:=1
+PKG_VERSION:=10
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/foris
-PKG_SOURCE_VERSION:=aba707c0276c877e0e66afe3912296fad30ea15e
+PKG_SOURCE_VERSION:=f19aad61d9a25681c11b45512a1ed7ade139c882
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -21,7 +20,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/foris
 	TITLE:=foris
-	DEPENDS:=+python +python-bottle +python-bottle-i18n +python-beaker +python-flup +python-ncclient +nuci +lighttpd +lighttpd-mod-fastcgi +luci
+	DEPENDS:=+python +python-bottle +python-bottle-i18n +python-beaker +python-flup +python-ncclient +nuci +lighttpd +lighttpd-mod-fastcgi +luci +python-pbkdf2
 	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
 endef
 
@@ -61,6 +60,7 @@ define Package/foris/postinst
 set -x
 [ -n "$$IPKG_INSTROOT" ] || {
 # save old uhttpd listen address to our config
+# TODO: What will this do on update? Will it overwrite the backup?
 old_listen_http=`uci get uhttpd.main.listen_http`
 uci set foris.uhttpd=backup
 uci set foris.uhttpd.old_listen_http=$$old_listen_http
@@ -71,7 +71,7 @@ uci commit
 # TODO: port is related to lighttpd, not Foris...
 /etc/init.d/uhttpd restart
 /etc/init.d/lighttpd enable
-/etc/init.d/lighttpd start
+/etc/init.d/lighttpd restart
 }
 endef
 

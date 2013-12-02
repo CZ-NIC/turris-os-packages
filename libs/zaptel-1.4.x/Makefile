@@ -28,7 +28,7 @@ endef
 define KernelPackage/zaptel14/Default
   TITLE:=Zaptel (kernel module)
   SUBMENU:=Voice over IP
-  DEPENDS:=
+  DEPENDS:=+kmod-lib-crc-ccitt
 endef
 
 define KernelPackage/zaptel14
@@ -59,7 +59,7 @@ endef
 
 define KernelPackage/zaptel14-wcusb
   $(call KernelPackage/zaptel14/Default)
-  DEPENDS += +kmod-zaptel14
+  DEPENDS += +kmod-zaptel14 +kmod-usb-core
   FILES:=$(PKG_BUILD_DIR)/kernel/wcusb.$(LINUX_KMOD_SUFFIX)
   AUTOLOAD:=$(call AutoLoad,72,wcusb)
 endef

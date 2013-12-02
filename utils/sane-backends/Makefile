@@ -47,7 +47,7 @@ define Package/sane-libs
   $(call Package/sane-backends/Default)
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=+libjpeg +libtiff +libusb +libv4l
+  DEPENDS:=+libjpeg +libtiff +libusb-compat +libv4l
   TITLE+= (libraries)
 endef
 
