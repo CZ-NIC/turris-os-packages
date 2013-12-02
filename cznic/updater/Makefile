@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2013 CZ.NIC z.s.p.o. <michal.vaner@nic.cz>
+## Copyright (C) 2013 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=45
+PKG_VERSION:=46
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/misc
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=30daddf59f943ea3681d8718e7c0f4705089cf7b
+PKG_SOURCE_VERSION:=67307a6759d5556f1ec0cd5a25eba8a39fa79671
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>

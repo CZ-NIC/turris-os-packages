@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2013 CZ.NIC z.s.p.o. <martin.strbacka@nic.cz>
+## Copyright (C) 2013 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nikola
-PKG_VERSION:=7
+PKG_VERSION:=9
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/nikola
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=cbfd20b41217d735a1524d05d18505f9dd3becb4
+PKG_SOURCE_VERSION:=21056c6de6e13f737345672204fe3ceb8e87e050
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>

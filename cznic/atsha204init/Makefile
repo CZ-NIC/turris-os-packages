@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2013 CZ.NIC z.s.p.o. <robin.oburka@nic.cz>
+## Copyright (C) 2013 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=atsha204init
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/libatsha204
-PKG_SOURCE_VERSION:=1e7806772ce1a466eb72ce955dfea0e8da001c53
+PKG_SOURCE_VERSION:=61e463d557692f2131f5fdaa8a55e0aedcc6b03a
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Robin Obůrka <robin.oburka@nic.cz>
