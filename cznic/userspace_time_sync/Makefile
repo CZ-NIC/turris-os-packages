@@ -28,7 +28,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/time_sync.init $(1)/etc/init.d/time_sync
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(INSTALL_BIN) ./files/time_sync.cron $(1)/etc/cron.d/time_sync
+	$(CP) ./files/time_sync.cron $(1)/etc/cron.d/time_sync
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
