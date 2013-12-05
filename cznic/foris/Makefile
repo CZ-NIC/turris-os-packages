@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=11
+PKG_VERSION:=12
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/foris
-PKG_SOURCE_VERSION:=1dac7e96066842f9bcd9e3744d2a90aba181c04a
+PKG_SOURCE_VERSION:=91b12d9dc985119d95b2e769df6380a83ce44c15
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -20,7 +20,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/foris
 	TITLE:=foris
-	DEPENDS:=+python +python-bottle +python-bottle-i18n +python-beaker +python-flup +python-ncclient +nuci +lighttpd +lighttpd-mod-fastcgi +luci +python-pbkdf2
+	DEPENDS:=+python +python-bottle +python-bottle-i18n +python-beaker +python-flup +python-ncclient +nuci +lighttpd +lighttpd-mod-fastcgi +luci
 	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
 endef
 
