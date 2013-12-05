@@ -37,7 +37,6 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(CP) $(PKG_BUILD_DIR)/watchdog/watchdog.cron $(1)/etc/cron.d/watchdog
-	chmod 0600 $(1)/etc/cron.d/watchdog
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
