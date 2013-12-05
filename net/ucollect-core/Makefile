@@ -55,11 +55,11 @@ define Package/ucollect-core/install
 endef
 
 define Package/ucollect-config/install
-	ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
-		$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ucollect/ucollect-turris.cfg $(1)/etc/config/ucollect
-	else
-		$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ucollect/ucollect.cfg $(1)/etc/config/ucollect
-	endif
+ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ucollect/ucollect-turris.cfg $(1)/etc/config/ucollect
+else
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ucollect/ucollect.cfg $(1)/etc/config/ucollect
+endif
 endef
 
 $(eval $(call BuildPackage,ucollect-core))
