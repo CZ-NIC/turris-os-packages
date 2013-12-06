@@ -49,17 +49,18 @@ define Package/ucollect-core/install
 	$(INSTALL_BIN) ./files/ucollect.init $(1)/etc/init.d/ucollect
 	$(INSTALL_DIR) $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libucollect_core.so $(1)/usr/lib/
-	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_DIR) $(1)/usr/share/ucollect/configs
 	$(CP) $(PKG_BUILD_DIR)/src/ucollect/main.cfg $(1)/usr/share/ucollect/configs/00-main.cfg
 endef
 
 ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
 define Package/ucollect-config/install
+	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ucollect/ucollect-turris.cfg $(1)/etc/config/ucollect
 endef
 else
 define Package/ucollect-config/install
+	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ucollect/ucollect.cfg $(1)/etc/config/ucollect
 endef
 endif
