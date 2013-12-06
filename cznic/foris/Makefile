@@ -36,6 +36,7 @@ FORIS_DIR=/www2
 
 define Package/foris/conffiles
 /etc/foris/foris-lighttpd-inc.conf
+/etc/config/foris
 endef
 
 define Package/foris/install
