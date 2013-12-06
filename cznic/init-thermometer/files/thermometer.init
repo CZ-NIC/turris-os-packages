@@ -1,0 +1,21 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2013 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+
+START=10
+
+status() {
+    return 0
+}
+
+start() {
+    /usr/bin/init_thermometer
+}
+
+stop() {
+    :
+}
+
+restart() {
+    stop
+    start
+}
