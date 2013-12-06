@@ -60,17 +60,6 @@ define Package/foris/postinst
 #!/bin/sh
 set -x
 [ -n "$$IPKG_INSTROOT" ] || {
-# save old uhttpd listen address to our config
-# TODO: What will this do on update? Will it overwrite the backup?
-old_listen_http=`uci get uhttpd.main.listen_http`
-uci set foris.uhttpd=backup
-uci set foris.uhttpd.old_listen_http=$$old_listen_http
-host=`echo $$old_listen_http | sed -r "s/([^:]*):.*/\1/"`
-# redirect uhttpd to port 8080
-uci set uhttpd.main.listen_http=$$host:8080
-uci commit
-# TODO: port is related to lighttpd, not Foris...
-/etc/init.d/uhttpd restart
 /etc/init.d/lighttpd enable
 /etc/init.d/lighttpd restart
 }
@@ -79,13 +68,8 @@ endef
 define Package/foris/prerm
 #!/bin/sh
 set -x
-# restore uhttpd listen address
-old_listen_http=`uci get foris.uhttpd.old_listen_http`
-uci set uhttpd.main.listen_http=$$old_listen_http
-uci commit
 /etc/init.d/lighttpd disable
 /etc/init.d/lighttpd stop
-/etc/init.d/uhttpd restart
 endef
 
 $(eval $(call BuildPackage,foris))
