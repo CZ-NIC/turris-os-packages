@@ -37,7 +37,12 @@ setwifi() {
 
         config_load wireless
         config_foreach save_wireless wifi-device
-        wifi
+
+        if ubus list network.wireless >/dev/null 2>/dev/null; then
+                ubus call network reload
+        else
+                wifi
+        fi
 }
 
 
