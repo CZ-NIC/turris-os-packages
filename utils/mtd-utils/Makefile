@@ -10,14 +10,15 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=mtd-utils
 PKG_REV:=ab8c6fb93ce9db0f09401c4b819b0b277dc00340
 PKG_VERSION:=1.5.0
-PKG_RELEASE:=1
-PKG_INSTALL:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=git://git.infradead.org/mtd-utils.git
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=$(PKG_REV)
+
+PKG_INSTALL:=1
 
 PKG_BUILD_DEPENDS:=util-linux
 
@@ -37,7 +38,7 @@ FILES:= \
 	ftl_check \
 	ftl_format \
 	jffs2dump \
-	jffs2reader \
+	jffs2reader:+zlib \
 	mkfs.jffs2:+zlib \
 	mkfs.ubifs:+libuuid:+liblzo:+zlib \
 	mtd_debug \
