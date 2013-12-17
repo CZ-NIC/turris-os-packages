@@ -94,7 +94,7 @@ endef
 
 define Package/openssh-server/config
 	config PACKAGE_openssh_server_nuci_support
-  	bool "OpenSSH Server support for nuci"
+	bool "OpenSSH Server support for nuci"
 	default n
 	depends on PACKAGE_openssh-server
 	select PACKAGE_nuci
@@ -191,7 +191,7 @@ define Package/openssh-server/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/sshd.init $(1)/etc/init.d/sshd
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_BIN) ./files/sshd.nuci.config $(1)/etc/config/sshd
+	$(CP) ./files/sshd.nuci.config $(1)/etc/config/sshd
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/sshd $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
@@ -202,7 +202,7 @@ define Package/openssh-server/install
         $(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/sshd.init $(1)/etc/init.d/sshd
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_BIN) ./files/sshd.config $(1)/etc/config/sshd
+	$(CP) ./files/sshd.config $(1)/etc/config/sshd
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/sshd $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
