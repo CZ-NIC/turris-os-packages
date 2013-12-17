@@ -142,7 +142,7 @@ define Package/unbound/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/unbound-init $(1)/etc/init.d/unbound
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_BIN) ./files/unbound-config $(1)/etc/config/unbound
+	$(CP) ./files/unbound-config $(1)/etc/config/unbound
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/unbound.defaults $(1)/etc/uci-defaults/unbound
 	$(INSTALL_DIR) $(1)/usr/share/unbound/
