@@ -62,20 +62,15 @@ define Package/knot-tests/description
   This package contains tests for the Knot server.
 endef
 
-#CONFIGURE_ARGS += \
-#	--disable-ecdsa \
-#	--disable-gost \
-#	--enable-allsymbols \
-#	--with-ldns="$(STAGING_DIR)/usr" \
-#	--with-libexpat="$(STAGING_DIR)/usr" \
-#	--with-ssl="$(STAGING_DIR)/usr" \
-#	--without-pthreads
+CONFIGURE_ARGS += \
+	--enable-recvmmsg=no \
+	--disable-fastparser \
 
 define Package/knot/conffiles
 	/etc/knot/knot.conf
 endef
 
-TARGET_CFLAGS += -std=gnu99
+TARGET_CFLAGS += -std=gnu99 -DPSELECT_COMPAT
 
 #define Build/InstallDev
 	#$(INSTALL_DIR) $(1)/usr/lib
@@ -114,6 +109,7 @@ define Package/knot-tests/install
 		[[ "$$$${f}" =~ TAP$  ]] && continue ; \
 		[[ "$$$${f}" =~ tap$  ]] && continue ; \
 		[[ "$$$${f}" =~ data$  ]] && continue ; \
+		[[ "$$$${f}" =~ resource.sh$  ]] && continue ; \
 		$(INSTALL_BIN) "$$$${f}" $(1)/usr/share/knot/tests/ ; \
 	done
 	$(INSTALL_DIR) $(1)/usr/share/knot/tests/data/
