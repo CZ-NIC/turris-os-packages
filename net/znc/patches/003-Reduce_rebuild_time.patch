@@ -10,7 +10,7 @@ Subject: [PATCH] Don't rebuild everything when the Makefile's timestamp changed
 
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -96,7 +96,7 @@ clean:
+@@ -104,7 +104,7 @@ clean:
  distclean: clean
  	rm -rf $(DISTCLEAN)
  
@@ -21,7 +21,7 @@ Subject: [PATCH] Don't rebuild everything when the Makefile's timestamp changed
  	$(Q)$(CXX) $(CXXFLAGS) -c -o $@ $< -MD -MF .depend/$*.dep -MT $@
 --- a/modules/Makefile.in
 +++ b/modules/Makefile.in
-@@ -114,12 +114,12 @@ install_datadir:
+@@ -117,12 +117,12 @@ install_datadir:
  clean:
  	rm -rf $(CLEAN)
  
@@ -33,6 +33,6 @@ Subject: [PATCH] Don't rebuild everything when the Makefile's timestamp changed
  
 -%.so: %.o Makefile
 +%.so: %.o
- 	$(E) Linking module $(notdir $(basename $@))...
+ 	$(E) "Linking  module" $(notdir $(basename $@))...
  	$(Q)$(CXX) $(MODFLAGS) $(LDFLAGS) $(MODLINK) -o $@ $< $($(notdir $(basename $@))LDFLAGS) $(LIBS)
  

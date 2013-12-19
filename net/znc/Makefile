@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=znc
-PKG_VERSION:=1.0
+PKG_VERSION:=1.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://znc.in/releases \
 		http://znc.in/releases/archive
-PKG_MD5SUM:=23807ca830c27392cccb6774f542df6e
+PKG_MD5SUM:=ef18e5402a82cc3fcab5c2ac5c2e6f3b
 
 PKG_BUILD_PARALLEL:=1
 
@@ -25,7 +25,7 @@ define Package/znc/default
   CATEGORY:=Network
   TITLE:=ZNC
   URL:=http://en.znc.in/
-  MAINTAINER:=Jonas Gorski <jonas.gorski+openwrt@gmail.com>
+  MAINTAINER:=Jonas Gorski <jogo@openwrt.org>
 endef
 
 define Package/znc
@@ -204,6 +204,9 @@ $(eval $(call module,listsockets,This module displays a list of all open \
 	sockets in ZNC.))
 
 $(eval $(call module,log,Log conversations to file.))
+
+$(eval $(call module,modules_online,This module fakes the online status of \
+	ZNC-*users.))
 
 $(eval $(call module,nickserv,Auths you with NickServ.))
 
