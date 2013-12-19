@@ -43,7 +43,8 @@ define Build/Compile
 		$(TARGET_CONFIGURE_OPTS) \
 		CPPFLAGS="$(TARGET_CPPFLAGS)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
-		LDFLAGS="$(TARGET_LDFLAGS)"
+		LDFLAGS="$(TARGET_LDFLAGS)" \
+		WFLAGS="-Wall -Werror"
 endef
 
 define Build/InstallDev
