@@ -4,6 +4,8 @@ exec < /dev/ttyS0
 echo "Welcome in rescue mode."
 echo "If you want to break auto-flash procedure press [f]+Enter."
 
+rainbow all green || true
+
 i=5
 keypress=''
 while [ "x$keypress" == "x" ] && [ $i != 0 ]; do
@@ -14,7 +16,11 @@ done
 [ "x$keypress" != "x" ] && return 0
 echo
 
+rainbow all green || true
+
 /usr/bin/flash_medkit /dev/mtdblock3
+
+rainbow all white || true
 
 sync
 reboot
