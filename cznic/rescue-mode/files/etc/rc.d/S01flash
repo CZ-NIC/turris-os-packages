@@ -4,7 +4,7 @@ exec < /dev/ttyS0
 echo "Welcome in rescue mode."
 echo "If you want to break auto-flash procedure press [f]+Enter."
 
-rainbow all green || true
+rainbow all enable green || true
 
 i=5
 keypress=''
@@ -16,11 +16,11 @@ done
 [ "x$keypress" != "x" ] && return 0
 echo
 
-rainbow all red || true
+rainbow all enable red || true
 
 /usr/bin/flash_medkit /dev/mtdblock3
 
-rainbow all white || true
+rainbow all auto white || true
 
 sync
 reboot
