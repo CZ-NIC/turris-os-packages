@@ -16,7 +16,7 @@ done
 [ "x$keypress" != "x" ] && return 0
 echo
 
-rainbow all green || true
+rainbow all red || true
 
 /usr/bin/flash_medkit /dev/mtdblock3
 
