@@ -26,6 +26,7 @@ setup_config() {
 	config_get enabled "$section" enabled
 	[ "$enabled" -eq 0 ] && return 1
 
+	mkdir -p /var/etc
 	cp /etc/pptpd.conf $CONFIG
 
 	config_get localip "$section" localip
