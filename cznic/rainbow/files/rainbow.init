@@ -7,10 +7,17 @@ start() {
 	# Set some nice colors.
 	# TODO: Read from some UCI config. Hardcoded for now, to at least
 	# signal the boot is done.
-	rainbow pwr ff0066 lan green wan blue wifi ffff00
+	rainbow all enable blue
+	sleep 1
+	rainbow all enable green
+	sleep 1
+	rainbow all auto pwr ff0066 lan green wan blue wifi ffff00
+	# TODO store PID somehow
+	rainbow -D
 }
 
 stop() {
 	# Reset to the default, so a reboot can be recognized.
-	rainbow all white
+	rainbow all enable white
+	killall rainbow
 }
