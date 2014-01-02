@@ -1,0 +1,16 @@
+#!/bin/sh /etc/rc.common
+
+# Start at the end, so the colors change after the boot is done.
+START=99
+
+start() {
+	# Set some nice colors.
+	# TODO: Read from some UCI config. Hardcoded for now, to at least
+	# signal the boot is done.
+	rainbow pwr ff0066 lan green wan blue wifi ffff00
+}
+
+stop() {
+	# Reset to the default, so a reboot can be recognized.
+	rainbow all white
+}

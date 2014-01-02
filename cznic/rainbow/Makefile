@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rainbow
-PKG_VERSION:=3
+PKG_VERSION:=4
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/rainbow
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -32,6 +32,16 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/rainbow $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/etc/init.d/
+	$(INSTALL_BIN) ./files/rainbow.init $(1)/etc/init.d/rainbow
+endef
+
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/rainbow enable
+/etc/init.d/rainbow start
+}
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
