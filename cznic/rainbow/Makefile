@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rainbow
-PKG_VERSION:=6
+PKG_VERSION:=7
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/rainbow
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=9c7b269a3d7f42161d1c16d5b74eb12625ade11c
+PKG_SOURCE_VERSION:=a0a4ef837bda7c6dafa3bfbfe77953a994aac292
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -34,6 +34,12 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/rainbow $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/etc/init.d/
 	$(INSTALL_BIN) ./files/rainbow.init $(1)/etc/init.d/rainbow
+	$(INSTALL_DIR) $(1)/etc/config/
+	$(CP) ./files/rainbow.config $(1)/etc/config/rainbow
+endef
+
+define Package/$(PKG_NAME)/conffiles
+/etc/config/rainbow
 endef
 
 define Package/$(PKG_NAME)/postinst

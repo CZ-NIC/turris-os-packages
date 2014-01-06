@@ -2,22 +2,34 @@
 
 # Start at the end, so the colors change after the boot is done.
 START=99
+STOP=00
+
+PID_FILE="/var/run/rainbow.pid"
 
 start() {
-	# Set some nice colors.
-	# TODO: Read from some UCI config. Hardcoded for now, to at least
-	# signal the boot is done.
+	set -x
+	# Signal the boot is finished
 	rainbow all enable blue
 	sleep 1
 	rainbow all enable green
 	sleep 1
-	rainbow all auto pwr ff0066 lan green wan blue wifi ffff00
-	# TODO store PID somehow
-	rainbow -D
+	# Set the colors based on user preferrences
+	uci show rainbow | sed -ne 's/rainbow\.\([^.]*\)=led/\1/p' | sort | while read SECTION ; do
+		STATUS=$(uci get rainbow.$SECTION.status)
+		COLOR=$(uci get rainbow.$SECTION.color)
+		rainbow $SECTION $STATUS $COLOR
+	done
+	# Start the daemon
+	if [ -s $PID_FILE ]; then
+		echo "Daemon is alredy running..."
+	else
+		rainbow --daemonize
+	fi
 }
 
 stop() {
 	# Reset to the default, so a reboot can be recognized.
 	rainbow all enable white
-	killall rainbow
+	kill $(cat $PID_FILE)
+	rm $PID_FILE
 }
