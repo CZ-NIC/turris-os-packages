@@ -87,7 +87,7 @@ define Package/updater-consolidator
 	DEPENDS:=python updater
 endef
 
-define Package/updater-consolidator
+define Package/updater-consolidator/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-remove-pkg.sh
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-consolidate.py
