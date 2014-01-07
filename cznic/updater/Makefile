@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=49
+PKG_VERSION:=50
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/misc
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -48,10 +48,9 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater.sh $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-wipe.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-remove-pkg.sh $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-resume.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-utils.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-worker.sh $(1)/usr/bin/
+	$(CP) $(PKG_BUILD_DIR)/updater/updater-utils.sh $(1)/usr/bin/
+	$(CP) $(PKG_BUILD_DIR)/updater/updater-worker.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/share/updater/keys
 	$(CP) $(PKG_BUILD_DIR)/updater/updater-standby.pub.pem $(1)/usr/share/updater/keys/release.pem
@@ -62,6 +61,25 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/etc/ssl
 	$(CP) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/updater.pem
+
+	$(INSTALL_DIR) $(1)/etc/config
+	$(CP) ./files/updater.config $(1)/etc/config/updater
+
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater.init $(1)/etc/init.d/updater
+endef
+
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/updater enable
+# No need to start here, it is not a daemon, just a start-up check
+}
+endef
+
+define Package/$(PKG_NAME)/prerm
+#!/bin/sh
+/etc/init.d/updater disable
 endef
 
 # TODO: The consolidator
