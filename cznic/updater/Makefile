@@ -82,7 +82,16 @@ define Package/$(PKG_NAME)/prerm
 /etc/init.d/updater disable
 endef
 
-# TODO: The consolidator
+define Package/updater-consolidator
+	TITLE:=updater-consolidator
+	DEPENDS:=python updater
+endef
+
+define Package/updater-consolidator
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-remove-pkg.sh
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-consolidate.py
+endef
 
 define Package/updater-testkey
 	TITLE:=updater-testkey
@@ -95,3 +104,4 @@ endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
 $(eval $(call BuildPackage,updater-testkey))
+$(eval $(call BuildPackage,updater-consolidator))
