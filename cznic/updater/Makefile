@@ -73,6 +73,7 @@ define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 /etc/init.d/updater enable
+true # The previous sometimes returns 1 without any reason. Ignore it.
 # No need to start here, it is not a daemon, just a start-up check
 }
 endef
