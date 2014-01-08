@@ -89,8 +89,8 @@ endef
 
 define Package/updater-consolidator/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-remove-pkg.sh
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-consolidate.py
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-remove-pkg.sh $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-consolidate.py $(1)/usr/bin
 endef
 
 define Package/updater-testkey
