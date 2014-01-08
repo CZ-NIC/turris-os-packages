@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rainbow
-PKG_VERSION:=8
+PKG_VERSION:=9
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/rainbow
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -46,7 +46,7 @@ define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 /etc/init.d/rainbow enable
-/etc/init.d/rainbow start
+/etc/init.d/rainbow restart
 }
 endef
 
