@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=49
+PKG_VERSION:=51
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/misc
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -48,10 +48,9 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater.sh $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-wipe.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-remove-pkg.sh $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-resume.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-utils.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-worker.sh $(1)/usr/bin/
+	$(CP) $(PKG_BUILD_DIR)/updater/updater-utils.sh $(1)/usr/bin/
+	$(CP) $(PKG_BUILD_DIR)/updater/updater-worker.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/share/updater/keys
 	$(CP) $(PKG_BUILD_DIR)/updater/updater-standby.pub.pem $(1)/usr/share/updater/keys/release.pem
@@ -62,9 +61,38 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/etc/ssl
 	$(CP) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/updater.pem
+
+	$(INSTALL_DIR) $(1)/etc/config
+	$(CP) ./files/updater.config $(1)/etc/config/updater
+
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater.init $(1)/etc/init.d/updater
 endef
 
-# TODO: The consolidator
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/updater enable
+true # The previous sometimes returns 1 without any reason. Ignore it.
+# No need to start here, it is not a daemon, just a start-up check
+}
+endef
+
+define Package/$(PKG_NAME)/prerm
+#!/bin/sh
+/etc/init.d/updater disable
+endef
+
+define Package/updater-consolidator
+	TITLE:=updater-consolidator
+	DEPENDS:=python updater
+endef
+
+define Package/updater-consolidator/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-remove-pkg.sh $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-consolidate.py $(1)/usr/bin
+endef
 
 define Package/updater-testkey
 	TITLE:=updater-testkey
@@ -77,3 +105,4 @@ endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
 $(eval $(call BuildPackage,updater-testkey))
+$(eval $(call BuildPackage,updater-consolidator))
