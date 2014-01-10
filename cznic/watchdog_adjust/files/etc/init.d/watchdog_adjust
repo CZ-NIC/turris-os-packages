@@ -1,10 +1,12 @@
 #!/bin/sh /etc/rc.common
 
-START=99
+START=11
 
 start() {
-	ubus call system watchdog '{ "frequency": '2' }'
+	# The command is splitted into two commands for safety reasons. 
+	# It is safer to setup faster frequency at first, then wait some time and after that shorten the timeout.
+	ubus call system watchdog '{ "frequency": 2 }'
 	sleep 3	
-	ubus call system watchdog '{ "timeout": '7' }'
+	ubus call system watchdog '{ "timeout": 12 }'
 }
 

@@ -23,9 +23,16 @@ define Build/Compile
 	echo Building OK
 endef
 
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/watchdog_adjust disable
+/etc/init.d/watchdog_adjust enable
+}
+endef
+
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/init.d
-
 	$(INSTALL_BIN) ./files/etc/init.d/watchdog_adjust $(1)/etc/init.d/watchdog_adjust
 endef
 
