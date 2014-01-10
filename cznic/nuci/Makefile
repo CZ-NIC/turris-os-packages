@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=nuci
-	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua +ip +socat +nethist +libatsha204 +coreutils-base64 +bzip2
+	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua +ip +socat +nethist +libatsha204 +coreutils-base64 +bzip2 +libxml2 +libxslt
 endef
 
 define Build/Compile
@@ -47,4 +47,4 @@ define Package/$(PKG_NAME)/install
 	$(CP) $(PKG_BUILD_DIR)/src/lua_lib/* $(1)/usr/share/nuci/lua_lib/
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,$(PKG_NAME),+libnetconf))
