@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=watchdog_adjust
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -27,7 +27,7 @@ define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 /etc/init.d/watchdog_adjust disable
-/etc/init.d/watchdog_adjust enable
+/etc/init.d/watchdog_adjust enable || true
 }
 endef
 
