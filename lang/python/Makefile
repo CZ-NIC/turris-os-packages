@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python
-PKG_VERSION:=2.7.3
-PKG_RELEASE:=2
+PKG_VERSION:=2.7.6
+PKG_RELEASE:=1
 
 PKG_SOURCE:=Python-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://www.python.org/ftp/python/$(PKG_VERSION)
-PKG_MD5SUM:=62c4c1699170078c469f79ddfed21bc0
+PKG_MD5SUM:=bcf93efa8eaf383c98ed3ce40b763497
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
@@ -164,6 +164,8 @@ define Build/Configure
 		ac_cv_py_format_size_t=no \
 		ac_cv_have_long_long_format=yes \
 		ac_cv_buggy_getaddrinfo=no \
+		ac_cv_file__dev_ptmx=no \
+		ac_cv_file__dev_ptc=no \
 		OPT="$(TARGET_CFLAGS)" \
 	)
 endef
