@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=38
+PKG_VERSION:=39
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/nuci
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=caeb88b42480f81807b1b236be33da68b63fd6c1
+PKG_SOURCE_VERSION:=f12f68d519610bf43e64cbbf29b0560b04fa94aa
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
