@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=16
+PKG_VERSION:=17
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/foris
-PKG_SOURCE_VERSION:=e38bb536b066f639ba488652a1b1af47b91f790f
+PKG_SOURCE_VERSION:=e4a81753fb766b22153bdbab27df924ccd921749
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -51,7 +51,7 @@ define Package/foris/install
 	$(CP) $(PKG_BUILD_DIR)/templates/ $(1)$(FORIS_DIR)/templates/
 	$(CP) $(PKG_BUILD_DIR)/utils/ $(1)$(FORIS_DIR)/utils/
 	$(INSTALL_DIR) $(1)$(FORIS_DIR)/static/
-	$(RM) -f $(PKG_BUILD_DIR)/static/js/wizard.js
+	$(RM) $(PKG_BUILD_DIR)/static/js/{wizard,parsley.foris-extend,parsley.messages.cs}.js
 	$(CP) $(PKG_BUILD_DIR)/static/{css,fonts,img,js} $(1)$(FORIS_DIR)/static/
 	$(CP) $(PKG_BUILD_DIR)/*.py $(1)$(FORIS_DIR)/
 	$(CP) $(PKG_BUILD_DIR)/LICENSE $(1)$(FORIS_DIR)/LICENSE
