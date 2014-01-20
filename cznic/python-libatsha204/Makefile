@@ -17,8 +17,10 @@ PKG_SOURCE:=$(PKG_ORIG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_ORIG_NAME)
 PKG_MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_ORIG_NAME)
+PKG_BUILD_DEPENDS:=python
 
 include $(INCLUDE_DIR)/package.mk
+$(call include_mk, python-package.mk)
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
@@ -26,7 +28,7 @@ define Package/$(PKG_NAME)
 endef
 
 define Build/Compile
-	cd $(PKG_BUILD_DIR)/src/python; $(CONFIGURE_VARS) python ./setup.py install --prefix="$(PKG_INSTALL_DIR)/usr"
+	$(call Build/Compile/PyMod,./src/python/, install --prefix="$(PKG_INSTALL_DIR)/usr")
 endef
 
 define Package/$(PKG_NAME)/install
@@ -34,4 +36,5 @@ define Package/$(PKG_NAME)/install
 	$(CP) $(PKG_INSTALL_DIR)/* $(1)/
 endef
 
+$(eval $(call PyPackage,$(PKG_NAME)))
 $(eval $(call BuildPackage,$(PKG_NAME)))
