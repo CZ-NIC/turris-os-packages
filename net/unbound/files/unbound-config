@@ -26,6 +26,8 @@ config unbound server
     option key_cache_size 100k
     option key_cache_slabs 1
     option neg_cache_size 10k
+    # Send queries through upstream servers (0 to send them directly)
+    option forward_upstream 1
 
 config unbound python
     #list python_script "/etc/unbound/ubmodule-tst.py"
