@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=40
+PKG_VERSION:=44
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/nuci
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=95dfcea4090c8bca8379cae461143d3f8fb84ed1
+PKG_SOURCE_VERSION:=33d0cb1c69fe6af2118864ef542e9e746fa52db4
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -37,6 +37,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/nuci $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/nuci-helper-config-restore $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/nuci-helper-config-backup $(1)/usr/bin/
 	$(CP) $(PKG_BUILD_DIR)/tools/nucipty $(1)/usr/bin/nucipty
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
