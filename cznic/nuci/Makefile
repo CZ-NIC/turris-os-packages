@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=44
+PKG_VERSION:=45
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/nuci
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=33d0cb1c69fe6af2118864ef542e9e746fa52db4
+PKG_SOURCE_VERSION:=fe169b45078c94821127a06207ff4eb78c8911d6
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=nuci
-	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua +ip +socat +nethist +libatsha204 +coreutils +coreutils-base64 +bzip2
+	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua +ip +socat +nethist +libatsha204 +coreutils +coreutils-base64 +bzip2 +thermometer
 endef
 
 define Build/Compile
