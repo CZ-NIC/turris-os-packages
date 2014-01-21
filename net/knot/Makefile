@@ -99,17 +99,17 @@ endef
 define Package/knot-tests/install
 	$(INSTALL_DIR) $(1)/usr/share/knot/tests
 	for f in $(PKG_BUILD_DIR)/tests/* ; do \
-		[[ "$$$${f}" =~ \.o$  ]] && continue ; \
-		[[ "$$$${f}" =~ \.c$  ]] && continue ; \
-		[[ "$$$${f}" =~ \.h$  ]] && continue ; \
-		[[ "$$$${f}" =~ README$  ]] && continue ; \
-		[[ "$$$${f}" =~ TESTS$  ]] && continue ; \
-		[[ "$$$${f}" =~ TODO$  ]] && continue ; \
-		[[ "$$$${f}" =~ Makefile.inc$  ]] && continue ; \
-		[[ "$$$${f}" =~ TAP$  ]] && continue ; \
-		[[ "$$$${f}" =~ tap$  ]] && continue ; \
-		[[ "$$$${f}" =~ data$  ]] && continue ; \
-		[[ "$$$${f}" =~ resource.sh$  ]] && continue ; \
+		[[ "$$$${f}" =~ \.o$$$$  ]] && continue ; \
+		[[ "$$$${f}" =~ \.c$$$$  ]] && continue ; \
+		[[ "$$$${f}" =~ \.h$$$$  ]] && continue ; \
+		[[ "$$$${f}" =~ README$$$$  ]] && continue ; \
+		[[ "$$$${f}" =~ TESTS$$$$  ]] && continue ; \
+		[[ "$$$${f}" =~ TODO$$$$  ]] && continue ; \
+		[[ "$$$${f}" =~ Makefile.inc$$$$  ]] && continue ; \
+		[[ "$$$${f}" =~ TAP$$$$  ]] && continue ; \
+		[[ "$$$${f}" =~ tap$$$$  ]] && continue ; \
+		[[ "$$$${f}" =~ data$$$$  ]] && continue ; \
+		[[ "$$$${f}" =~ resource.sh$$$$  ]] && continue ; \
 		$(INSTALL_BIN) "$$$${f}" $(1)/usr/share/knot/tests/ ; \
 	done
 	$(INSTALL_DIR) $(1)/usr/share/knot/tests/data/
