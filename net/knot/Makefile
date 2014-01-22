@@ -34,7 +34,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/knot/Default
   TITLE:=High-performance authoritative-only DNS server
-  URL:=http://www.unbound.net/
+  URL:=https://www.knot-dns.cz/
   DEPENDS:=+liburcu +libopenssl
   SUBMENU:=IP Addresses and Names
 endef
