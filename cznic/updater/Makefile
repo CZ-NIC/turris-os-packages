@@ -10,9 +10,9 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=updater
 PKG_VERSION:=56
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/misc
+PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/updater
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=7e191ce974b794f8abde3f283729eac7f3e0f9cc
+PKG_SOURCE_VERSION:=f6156ef9759fec472731e1c6726f71a97874b0f2
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
