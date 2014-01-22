@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
 PKG_VERSION:=1.4.17
-PKG_RELEASE:=8
+PKG_RELEASE:=9
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.unbound.net/downloads
@@ -141,6 +141,8 @@ define Package/unbound/install
 	$(INSTALL_CONF) ./files/named.cache $(1)/etc/unbound/
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/unbound-init $(1)/etc/init.d/unbound
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
+	$(CP) ./files/unbound-reload $(1)/etc/hotplug.d/iface/40-unbound-reload
 	$(INSTALL_DIR) $(1)/etc/config
 	$(CP) ./files/unbound-config $(1)/etc/config/unbound
 	$(INSTALL_DIR) $(1)/etc/uci-defaults

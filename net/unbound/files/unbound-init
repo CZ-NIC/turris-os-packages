@@ -101,6 +101,23 @@ init_unbound() {
     #Includes
     config_list_foreach includes include_path add_inculde
 
+    local do_forward
+    config_get_bool do_forward server forward_upstream 1
+
+    if [ "$do_forward" = "1" ] ; then
+        local SERVERS
+        SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' /tmp/resolv.conf.auto | sort)
+        if [ "$SERVERS" ] ; then
+            (
+            echo 'forward-zone:'
+            echo '	name: "."'
+            for SERVER in $SERVERS ; do
+                echo "	forward-addr: $SERVER"
+            done
+            ) >> "$CONFIGFILE"
+        fi
+        md5sum /tmp/resolv.conf.auto | cut -f1 -d\ >/tmp/resolv.conf.auto.last.md5
+    fi
 }
 
 start() {

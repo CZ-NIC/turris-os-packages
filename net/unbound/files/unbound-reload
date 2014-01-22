@@ -1,0 +1,6 @@
+MD5=$(md5sum /tmp/resolv.conf.auto | cut -f1 -d\ )
+PREVIOUS=$(cat /tmp/resolv.conf.auto.last.md5 || true)
+DO_FORWARD=$(uci -q get unbound.server.forward_upstream || echo 1)
+if /etc/init.d/unbound enabled && [ "$MD5" != "$PREVIOUS" ] && [ "DO_FORWARD" = "1" ] ; then
+	/etc/init.d/unbound reload
+fi
