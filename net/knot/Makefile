@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot
-PKG_VERSION:=1.4.0
+PKG_VERSION:=1.4.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-dns/
-PKG_MD5SUM:=1f3d54d0d9290553aa02811ba73e962e
+PKG_MD5SUM:=8673d343b93815cb0ba0ad83104e2f54
 
 
 #PKG_VERSION:=1
@@ -51,7 +51,6 @@ define Package/knot-tests
   SECTION:=net
   CATEGORY:=Network
   TITLE+= (tests)
-  DEPENDS+= +knot
 endef
 
 define Package/knot/description

@@ -1,0 +1,24 @@
+diff --git a/src/libknot/dnssec/key.c b/src/libknot/dnssec/key.c
+index 918d7be..29f6d99 100644
+--- a/src/libknot/dnssec/key.c
++++ b/src/libknot/dnssec/key.c
+@@ -257,8 +257,18 @@ static int key_param_time(const void *save_to, char *value)
+ 	time_t *parameter = (time_t *)save_to;
+ 
+ 	struct tm parsed = { 0 };
+-	if (!strptime(value, "%Y%m%d%H%M%S", &parsed))
++
++	if (strlen(value) != 14) {
+ 		return KNOT_EINVAL;
++	}
++
++	char *v = value;
++	char buf[32] = "";
++	int ret = sprintf(buf, "%.4s %.2s %.2s %.2s %.2s %.2s",
++	                  v, v + 4, v + 6, v + 8, v + 10, v + 12);
++	if (ret != 19 || !strptime(buf, "%Y %m %d %H %M %S", &parsed)) {
++		return KNOT_EINVAL;
++	}
+ 
+ 	*parameter = timegm(&parsed);
+ 	return KNOT_EOK;
