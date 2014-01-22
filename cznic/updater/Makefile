@@ -12,7 +12,7 @@ PKG_VERSION:=56
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=f6156ef9759fec472731e1c6726f71a97874b0f2
+PKG_SOURCE_VERSION:=05df5c0aefd1d4dcf8562e9fab50acee739c88f2
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -46,27 +46,27 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-wipe.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-resume.sh $(1)/usr/bin/
-	$(CP) $(PKG_BUILD_DIR)/updater/updater-utils.sh $(1)/usr/bin/
-	$(CP) $(PKG_BUILD_DIR)/updater/updater-worker.sh $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater.sh $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-wipe.sh $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-resume.sh $(1)/usr/bin/
+	$(CP) $(PKG_BUILD_DIR)/updater-utils.sh $(1)/usr/bin/
+	$(CP) $(PKG_BUILD_DIR)/updater-worker.sh $(1)/usr/bin/
 
-	$(INSTALL_DIR) $(1)/usr/share/updater/keys
-	$(CP) $(PKG_BUILD_DIR)/updater/updater-standby.pub.pem $(1)/usr/share/updater/keys/release.pem
+	$(INSTALL_DIR) $(1)/usr/share/keys
+	$(CP) $(PKG_BUILD_DIR)/updater-standby.pub.pem $(1)/usr/share/keys/release.pem
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(CP) $(PKG_BUILD_DIR)/updater/updater.cron $(1)/etc/cron.d/updater
+	$(CP) $(PKG_BUILD_DIR)/updater.cron $(1)/etc/cron.d/updater
 	chmod 0600 $(1)/etc/cron.d/updater
 
 	$(INSTALL_DIR) $(1)/etc/ssl
-	$(CP) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/updater.pem
+	$(CP) $(PKG_BUILD_DIR)/startcom.pem $(1)/etc/ssl/updater.pem
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(CP) ./files/updater.config $(1)/etc/config/updater
 
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater.init $(1)/etc/init.d/updater
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater.init $(1)/etc/init.d/updater
 endef
 
 define Package/$(PKG_NAME)/postinst
@@ -90,8 +90,8 @@ endef
 
 define Package/updater-consolidator/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-remove-pkg.sh $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater/updater-consolidate.py $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-remove-pkg.sh $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-consolidate.py $(1)/usr/bin
 endef
 
 define Package/updater-testkey
@@ -100,7 +100,7 @@ endef
 
 define Package/updater-testkey/install
 	$(INSTALL_DIR) $(1)/usr/share/updater/keys
-	$(CP) $(PKG_BUILD_DIR)/updater/updater.pub.pem $(1)/usr/share/updater/keys/test.pem
+	$(CP) $(PKG_BUILD_DIR)/updater.pub.pem $(1)/usr/share/updater/keys/test.pem
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
