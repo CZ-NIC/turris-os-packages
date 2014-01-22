@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rainbow
-PKG_VERSION:=10
+PKG_VERSION:=11
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/rainbow
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=a0a4ef837bda7c6dafa3bfbfe77953a994aac292
+PKG_SOURCE_VERSION:=6a07ea225aef75376c551a741d9818680c7f7c0d
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -36,6 +36,10 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/rainbow.init $(1)/etc/init.d/rainbow
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(CP) ./files/rainbow.config $(1)/etc/config/rainbow
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(CP) ./files/rainbow.cron $(1)/etc/cron.d/rainbow
+	$(INSTALL_BIN) ./files/rainbow_button_sync.sh $(1)/usr/bin/rainbow_button_sync.sh
+	$(CP) ./files/rainbow.magic $(1)/etc/rainbow.magic
 endef
 
 define Package/$(PKG_NAME)/conffiles

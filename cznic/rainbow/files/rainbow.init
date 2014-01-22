@@ -7,7 +7,6 @@ STOP=00
 PID_FILE="/var/run/rainbow.pid"
 
 start() {
-	set -x
 	# Signal the boot is finished
 	rainbow all enable blue
 	sleep 1
@@ -19,6 +18,9 @@ start() {
 		COLOR=$(uci get rainbow.$SECTION.color)
 		rainbow $SECTION $STATUS $COLOR
 	done
+	# Resume last intensity settings
+	rainbow intensity $(cat /etc/rainbow.magic)
+
 	# Start the daemon
 	if [ -s $PID_FILE ]; then
 		echo "Daemon is alredy running..."
