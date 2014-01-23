@@ -8,24 +8,22 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot
+PKG_MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+
 PKG_VERSION:=1.4.1
 PKG_RELEASE:=1
-
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-dns/
 PKG_MD5SUM:=8673d343b93815cb0ba0ad83104e2f54
-
 
 #PKG_VERSION:=1
 #PKG_SOURCE_PROTO:=git
 #PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/labs/knot.git
 #PKG_SOURCE_VERSION:=168b53199c11b34c1ef19fc3dccb6ccf3ea93b31
 #PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
-#PKG_BUILD_DEPENDS:=libexpat
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -59,6 +57,7 @@ endef
 
 define Package/knot-tests/description
   This package contains tests for the Knot server.
+  Usage: ./runtests -l TESTS -b /tmp
 endef
 
 CONFIGURE_ARGS += \
@@ -71,19 +70,10 @@ endef
 
 TARGET_CFLAGS += -std=gnu99 -DPSELECT_COMPAT
 
-#define Build/InstallDev
-	#$(INSTALL_DIR) $(1)/usr/lib
-	#$(CP) $(PKG_INSTALL_DIR)/usr/lib/libknot.{so*,a,la} $(1)/usr/lib/
-#endef
-
-#MAKEFLAGS += 
-
-define Build/Compile	
+define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR)
 	$(MAKE) -C $(PKG_BUILD_DIR) check-compile-only
 endef
-
-
 
 define Package/knot/install
 	$(INSTALL_DIR) $(1)/usr/sbin
@@ -102,7 +92,6 @@ define Package/knot-tests/install
 		[[ "$$$${f}" =~ \.c$$$$  ]] && continue ; \
 		[[ "$$$${f}" =~ \.h$$$$  ]] && continue ; \
 		[[ "$$$${f}" =~ README$$$$  ]] && continue ; \
-		[[ "$$$${f}" =~ TESTS$$$$  ]] && continue ; \
 		[[ "$$$${f}" =~ TODO$$$$  ]] && continue ; \
 		[[ "$$$${f}" =~ Makefile.inc$$$$  ]] && continue ; \
 		[[ "$$$${f}" =~ TAP$$$$  ]] && continue ; \
