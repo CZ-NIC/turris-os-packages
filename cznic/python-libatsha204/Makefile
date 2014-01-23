@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=python-libatsha204
 PKG_VERSION:=3
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/libatsha204
+PKG_SOURCE_URL:=https://git.nic.cz/turris/libatsha204
 PKG_ORIG_NAME:=libatsha204
 PKG_SOURCE_VERSION:=3284972e0064d6d3dc0d173f436f920763ebab54
 PKG_SOURCE:=$(PKG_ORIG_NAME)-$(PKG_SOURCE_VERSION).tar.gz

@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=turris-firewall-rules
 PKG_VERSION:=1
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/fw-rules.git
+PKG_SOURCE_URL:=https://git.nic.cz/turris/fw-rules.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
 PKG_SOURCE_VERSION:=6d78579a14cf0b12aaf202eda9940a111d5ea997
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz

@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=libatsha204
 PKG_VERSION:=16
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=ssh://git@git.nic.cz/router/libatsha204
+PKG_SOURCE_URL:=https://git.nic.cz/turris/libatsha204
 PKG_SOURCE_VERSION:=48e234e74967a7988551a46a7680179f226c4f40
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
