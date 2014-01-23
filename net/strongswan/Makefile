@@ -1,5 +1,5 @@
 # 
-# Copyright (C) 2012-2013 OpenWrt.org
+# Copyright (C) 2012-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=strongswan
-PKG_VERSION:=5.0.4
+PKG_VERSION:=5.1.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://download.strongswan.org/ http://download2.strongswan.org/
-PKG_MD5SUM:=0ab0397b44b197febfd0f89148344035
+PKG_MD5SUM:=e3af3d493d22286be3cd794533a8966a
 
 PKG_MOD_AVAILABLE:= \
 	addrblock \
@@ -45,8 +45,10 @@ PKG_MOD_AVAILABLE:= \
 	ha \
 	hmac \
 	kernel-klips \
+	kernel-libipsec \
 	kernel-netlink \
 	kernel-pfkey \
+	kernel-pfroute \
 	ldap \
 	led \
 	load-tester \
@@ -81,7 +83,7 @@ PKG_MOD_AVAILABLE:= \
 	x509 \
 	xauth-eap \
 	xauth-generic \
-	xcbc \
+	xcbc
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_STRONGSWAN_DEVICE_RANDOM \
@@ -201,8 +203,9 @@ endef
 define Package/strongswan-full/description
 $(call Package/strongswan/description/Default)
  This meta-package contains dependencies for all of the strongswan plugins
- except kernel-klips, kernel-pfkey, socket-dynamic and which are
- ommitted in favor of the kernel-netlink and socket-default plugins.
+ except kernel-klips, kernel-libipsec, kernel-pfkey, kernel-pfroute,
+ socket-dynamic and which are ommitted in favor of the kernel-netlink and
+ socket-default plugins.
 endef
 
 
@@ -386,8 +389,10 @@ endef
 define Package/strongswan-utils/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/ipsec $(1)/usr/sbin/
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/pki $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/lib/ipsec
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/ipsec/{openac,pki,scepclient} $(1)/usr/lib/ipsec/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/ipsec/{openac,scepclient} $(1)/usr/lib/ipsec/
 endef
 
 define Plugin/duplicheck/install
@@ -474,8 +479,10 @@ $(eval $(call BuildPlugin,gmp,libgmp,+PACKAGE_strongswan-mod-gmp:libgmp))
 $(eval $(call BuildPlugin,ha,high availability cluster,))
 $(eval $(call BuildPlugin,hmac,HMAC crypto,))
 $(eval $(call BuildPlugin,kernel-klips,KLIPS kernel interface,))
+$(eval $(call BuildPlugin,kernel-libipsec,libipsec kernel interface,))
 $(eval $(call BuildPlugin,kernel-netlink,netlink kernel interface,))
 $(eval $(call BuildPlugin,kernel-pfkey,PK_KEY kernel interface,))
+$(eval $(call BuildPlugin,kernel-pfroute,PF_ROUTE kernel interface,))
 $(eval $(call BuildPlugin,ldap,LDAP,+PACKAGE_strongswan-mod-ldap:libopenldap))
 $(eval $(call BuildPlugin,led,LED blink on IKE activity,))
 $(eval $(call BuildPlugin,load-tester,load testing,))
