@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=libnetconf
 PKG_VERSION:=7
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://git.nic.cz/turris/libnetconf
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/libnetconf.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
 PKG_SOURCE_VERSION:=30847a8cc7e8603c89822f8dfa95c5229dd310b3
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz

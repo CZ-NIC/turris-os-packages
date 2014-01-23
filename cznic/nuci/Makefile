@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=nuci
 PKG_VERSION:=45
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://git.nic.cz/turris/nuci
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci
 PKG_SOURCE:=$(PKG_NAME).tar.gz
 PKG_SOURCE_VERSION:=fe169b45078c94821127a06207ff4eb78c8911d6
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz

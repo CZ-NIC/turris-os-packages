@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=rainbow
 PKG_VERSION:=11
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://git.nic.cz/turris/rainbow
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/rainbow.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
 PKG_SOURCE_VERSION:=6a07ea225aef75376c551a741d9818680c7f7c0d
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz

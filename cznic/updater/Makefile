@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=updater
 PKG_VERSION:=56
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://git.nic.cz/turris/updater
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
 PKG_SOURCE_VERSION:=f6156ef9759fec472731e1c6726f71a97874b0f2
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
