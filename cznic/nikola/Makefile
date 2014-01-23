@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=nikola
 PKG_VERSION:=14
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nikola
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nikola.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
 PKG_SOURCE_VERSION:=b449aa62aeda1a04c74d5c6410ac35d5d7a58e41
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
