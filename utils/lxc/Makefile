@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2013 OpenWrt.org
+# Copyright (C) 2013-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,31 +8,34 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lxc
-PKG_VERSION:=2013-11-13
+PKG_VERSION:=2014-01-23
 PKG_RELEASE=$(PKG_SOURCE_VERSION)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=git://github.com/lxc/lxc.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=a9a0ed90dd1cdadd412576a45af16419efc0e939
+PKG_SOURCE_VERSION:=0b3a6504e51795e738de8e017c22d209a93bc169
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 
+PKG_BUILD_DEPENDS:=lua
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-LXC_APPLETS += \
-	attach cgroup checkpoint clone config console create destroy execute \
-	freeze info kill monitor monitord restart snapshot start stop unfreeze \
-	unshare user-nic wait
+LXC_APPLETS_BIN += \
+	attach autostart cgroup clone config console create destroy execute \
+	freeze info monitor snapshot start stop unfreeze unshare usernsexec wait
+
+LXC_APPLETS_LIB += \
+	init monitord user-nic
 
 LXC_SCRIPTS += \
-	checkconfig ls netstat ps top version
+	checkconfig ls top
 
 DEPENDS_APPLETS = +libpthread +libcap +liblxc
 
-DEPENDS_top = @BROKEN
+DEPENDS_top = +lxc-lua +luafilesystem @BROKEN
 
 
 define Package/lxc/Default
@@ -45,9 +48,7 @@ endef
 
 define Package/lxc
   $(call Package/lxc/Default)
-  DEPENDS:= \
-	+lxc-common +lxc-hooks +lxc-init +lxc-templates +liblxc \
-	$(foreach u,$(LXC_APPLETS),+lxc-$(u)) $(foreach u,$(LXC_SCRIPTS),+lxc-$(u))
+  MENU:=1
 endef
 
 define Package/lxc/description
@@ -58,23 +59,19 @@ endef
 define Package/lxc-common
   $(call Package/lxc/Default)
   TITLE:=LXC common files
+  DEPENDS:= lxc
 endef
 
 define Package/lxc-hooks
   $(call Package/lxc/Default)
   TITLE:=LXC virtual machine hooks
-endef
-
-define Package/lxc-init
-  $(call Package/lxc/Default)
-  TITLE:=Utility lxc-init from the LXC userspace tools
-  DEPENDS:= $(DEPENDS_APPLETS)
+  DEPENDS:= lxc
 endef
 
 define Package/lxc-templates
   $(call Package/lxc/Default)
   TITLE:=LXC virtual machine templates
-  DEPENDS:= @BROKEN
+  DEPENDS:= lxc @BROKEN
 endef
 
 define Package/liblxc
@@ -82,15 +79,26 @@ define Package/liblxc
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=LXC userspace library
-  DEPENDS:= +libpthread +libcap
+  DEPENDS:= lxc +libcap +libpthread
 endef
 
+define Package/lxc-lua
+  $(call Package/lxc/Default)
+  TITLE:=LXC Lua bindings
+  DEPENDS:= lxc +liblua +liblxc
+endef
 
-CONFIGURE_ARGS+= \
+CONFIGURE_ARGS += \
 	--disable-apparmor \
 	--disable-doc \
 	--disable-examples \
 	--disable-seccomp
+	--enable-lua=yes \
+	--with-lua-pc="$(STAGING_DIR)/usr/lib/pkgconfig/lua.pc" \
+
+MAKE_FLAGS += \
+	LUA_INSTALL_CMOD="/usr/lib/lua" \
+	LUA_INSTALL_LMOD="/usr/lib/lua"
 
 define Build/Configure
 	( cd $(PKG_BUILD_DIR); ./autogen.sh );
@@ -142,13 +150,6 @@ define Package/lxc-common/install
 		$(1)/etc/lxc/
 endef
 
-define Package/lxc-init/install
-	$(INSTALL_DIR) $(1)/usr/lib/lxc
-	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/lxc/lxc-init \
-		$(1)/usr/lib/lxc/
-endef
-
 define Package/lxc-hooks/install
 	$(INSTALL_DIR) $(1)/usr/share/lxc/hooks
 	$(CP) \
@@ -173,19 +174,29 @@ define Package/liblxc/install
 		$(1)/usr/lib/
 endef
 
+define Package/lxc-lua/install
+	$(INSTALL_DIR) $(1)/usr/lib/lua
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/lib/lua/lxc.lua \
+		$(1)/usr/lib/lua/
+	$(INSTALL_DIR) $(1)/usr/lib/lua/lxc
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/lib/lua/lxc/core.so \
+		$(1)/usr/lib/lua/lxc/
+endef
 
 define GenPlugin
   define Package/lxc-$(1)
     $(call Package/lxc/Default)
     TITLE:=Utility lxc-$(1) from the LXC userspace tools
-    DEPENDS:= +lxc-common $(2) $(DEPENDS_$(1))
+    DEPENDS:= lxc +lxc-common $(2) $(DEPENDS_$(1))
   endef
 
   define Package/lxc-$(1)/install
-	$(INSTALL_DIR) $$(1)/usr/bin
+	$(INSTALL_DIR) $$(1)$(3)
 	$(INSTALL_BIN) \
-		$(PKG_INSTALL_DIR)/usr/bin/lxc-$(1) \
-		$$(1)/usr/bin/
+		$(PKG_INSTALL_DIR)$(3)/lxc-$(1) \
+		$$(1)$(3)/
   endef
 
   $$(eval $$(call BuildPackage,lxc-$(1)))
@@ -195,8 +206,9 @@ endef
 $(eval $(call BuildPackage,lxc))
 $(eval $(call BuildPackage,lxc-common))
 $(eval $(call BuildPackage,lxc-hooks))
-$(eval $(call BuildPackage,lxc-init))
 $(eval $(call BuildPackage,lxc-templates))
 $(eval $(call BuildPackage,liblxc))
-$(foreach u,$(LXC_APPLETS),$(eval $(call GenPlugin,$(u),$(DEPENDS_APPLETS))))
-$(foreach u,$(LXC_SCRIPTS),$(eval $(call GenPlugin,$(u))))
+$(eval $(call BuildPackage,lxc-lua))
+$(foreach u,$(LXC_APPLETS_BIN),$(eval $(call GenPlugin,$(u),$(DEPENDS_APPLETS),"/usr/bin")))
+$(foreach u,$(LXC_APPLETS_LIB),$(eval $(call GenPlugin,$(u),$(DEPENDS_APPLETS),"/usr/lib/lxc")))
+$(foreach u,$(LXC_SCRIPTS),$(eval $(call GenPlugin,$(u),,"/usr/bin")))
