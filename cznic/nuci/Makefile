@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=46
+PKG_VERSION:=47
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=2efce29f6880f9eb9cf783be2ae9f56f52ab2cac
+PKG_SOURCE_VERSION:=83fa864b6848989bc14419d88744622c21ea45fd
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -22,13 +22,17 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=nuci
-	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua +ip +socat +nethist +libatsha204 +coreutils +coreutils-base64 +bzip2 +thermometer
+	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua +ip +socat +libatsha204 +coreutils +coreutils-base64 +bzip2 +thermometer
+endef
+
+define Package/nuci-nethist
+	TITLE:=nethist plugin for nuci
+	DEPENDS:=+nuci +nethist
 endef
 
 define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) PLUGIN_PATH=/usr/share/nuci/ NO_DOC=1  MAX_LOG_LEVEL:=LOG_DEBUG LUA_COMPILE:=no
 endef
-
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/lib/
@@ -43,9 +47,17 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
 	$(CP) $(PKG_BUILD_DIR)/src/lua_plugins/*.yin $(1)/usr/share/nuci/lua_plugins/
 	$(CP) $(PKG_BUILD_DIR)/src/lua_plugins/*.lua $(1)/usr/share/nuci/lua_plugins/
+	rm $(1)/usr/share/nuci/lua_plugins/nethist.*
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_lib
 	$(CP) $(PKG_BUILD_DIR)/src/lua_lib/* $(1)/usr/share/nuci/lua_lib/
 endef
 
+define Package/nuci-nethist/install
+	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
+	$(CP) $(PKG_BUILD_DIR)/src/lua_plugins/nethist.yin $(1)/usr/share/nuci/lua_plugins/
+	$(CP) $(PKG_BUILD_DIR)/src/lua_plugins/nethist.lua $(1)/usr/share/nuci/lua_plugins/
+endef
+
 $(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,nuci-nethist))
