@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+python +logrotate +syslog-ng3 +python-libatsha204 +python-openssl
+	DEPENDS:=+python +logrotate +syslog-ng3 +python-libatsha204 +python-openssl +firewall
 endef
 
 define Build/Compile
