@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lxc
-PKG_VERSION:=2014-01-23
+PKG_VERSION:=2014-01-25
 PKG_RELEASE=$(PKG_SOURCE_VERSION)
 
 PKG_SOURCE_PROTO:=git
@@ -85,7 +85,7 @@ endef
 define Package/lxc-lua
   $(call Package/lxc/Default)
   TITLE:=LXC Lua bindings
-  DEPENDS:= lxc +liblua +liblxc
+  DEPENDS:= lxc +liblua +liblxc +luafilesystem
 endef
 
 CONFIGURE_ARGS += \
