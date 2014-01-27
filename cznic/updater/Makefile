@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=56
+PKG_VERSION:=57
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -52,8 +52,8 @@ define Package/$(PKG_NAME)/install
 	$(CP) $(PKG_BUILD_DIR)/updater-utils.sh $(1)/usr/bin/
 	$(CP) $(PKG_BUILD_DIR)/updater-worker.sh $(1)/usr/bin/
 
-	$(INSTALL_DIR) $(1)/usr/share/keys
-	$(CP) $(PKG_BUILD_DIR)/updater-standby.pub.pem $(1)/usr/share/keys/release.pem
+	$(INSTALL_DIR) $(1)/usr/share/updater/keys
+	$(CP) $(PKG_BUILD_DIR)/updater-standby.pub.pem $(1)/usr/share/updater/keys/release.pem
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(CP) $(PKG_BUILD_DIR)/updater.cron $(1)/etc/cron.d/updater
