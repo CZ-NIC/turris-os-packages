@@ -8,14 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bottle-i18n
-PKG_VERSION:=0.1.1
+PKG_VERSION:=0.1.4
 PKG_RELEASE:=1
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/iocast/bottle-i18n.git
-PKG_SOURCE_VERSION:=2f69e1deea985f4f9d631c5085a36fb8ca95aeab
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+
+PKG_SOURCE:=bottle-i18n-0.1.4.tar.gz
+PKG_SOURCE_URL:=https://pypi.python.org/packages/source/b/bottle-i18n/
+PKG_MD5SUM:=65fa164cf51b4c1f3852a9b24ba60b84
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_BUILD_DEPENDS:=python
 
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python-package.mk)
