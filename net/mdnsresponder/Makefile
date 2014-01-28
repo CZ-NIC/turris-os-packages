@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mDNSResponder
 PKG_VERSION:=379.37
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=mDNSResponder-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://opensource.apple.com/tarballs/mDNSResponder/
@@ -39,6 +39,7 @@ endef
 define Package/mdns-utils
 $(call Package/mDNSResponder/Default)
   TITLE+= client utilities
+  DEPENDS+= +mdnsd
 endef
 
 define Package/mdns-utils/description
@@ -110,9 +111,6 @@ define Build/Compile
 	mkdir -p $(PKG_INSTALL_DIR)/etc/rc.d/rc5.d/
 	mkdir -p $(PKG_INSTALL_DIR)/etc/rc.d/rc0.d/
 	mkdir -p $(PKG_INSTALL_DIR)/etc/rc.d/rc6.d/
-	# XXX: mDNSResponder's makefile creates absolute link
-	rm -f $(PKG_INSTALL_DIR)/usr/lib/libdns_sd.so
-	ln -fs libdns_sd.so.1 $(PKG_INSTALL_DIR)/usr/lib/libdns_sd.so
 endef
 
 define Build/InstallDev
@@ -134,8 +132,6 @@ define Package/mdns-utils/install
 	$(CP) $(PKG_BUILD_DIR)/mDNSPosix/build/prod/mDNSNetMonitor $(1)/usr/bin/mDNSNetMonitor
 	$(CP) $(PKG_BUILD_DIR)/mDNSPosix/build/prod/mDNSProxyResponderPosix $(1)/usr/bin/mDNSProxyResponder
 	$(CP) $(PKG_BUILD_DIR)/mDNSPosix/build/prod/mDNSResponderPosix $(1)/usr/bin/mDNSResponder
-	$(INSTALL_DIR) $(1)/usr/lib/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libdns_sd.so* $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_DATA) ./files/mDNSResponder.conf $(1)/etc/
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -151,6 +147,9 @@ define Package/mdnsd/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/sbin/mdnsd $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/mdnsd.init $(1)/etc/init.d/mdnsd
+	$(INSTALL_DIR) $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libdns_sd.so.1 $(1)/usr/lib/
+	$(LN) -s libdns_sd.so.1 $(1)/usr/lib/libdns_sd.so
 endef
 
 define Package/mdnsresponder/install
