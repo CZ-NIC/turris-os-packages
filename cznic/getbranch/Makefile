@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=getbranch
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -26,7 +26,7 @@ endef
 define Package/getbranch-$(1)/install
 	$$(INSTALL_DIR) $$(1)/usr/bin
 	echo '#!/bin/sh' >$$(1)/usr/bin/getbranch
-	echo $(1) >>$$(1)/usr/bin/getbranch
+	echo 'echo $(1)' >>$$(1)/usr/bin/getbranch
 	chmod 0555 $$(1)/usr/bin/getbranch
 endef
 $$(eval $$(call BuildPackage,getbranch-$(1)))
