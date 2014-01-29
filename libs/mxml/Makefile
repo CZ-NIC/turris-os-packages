@@ -13,7 +13,7 @@ PKG_VERSION:=2.6
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://ftp.easysw.com/pub/mxml/$(PKG_VERSION)/
+PKG_SOURCE_URL:=http://www.msweet.org/files/project3/$(PKG_VERSION)/
 PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
