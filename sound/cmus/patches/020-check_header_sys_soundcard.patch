@@ -1,0 +1,11 @@
+--- a/configure	2011-04-23 22:35:36.000000000 +0200
++++ b/configure	2014-01-23 15:50:42.139304856 +0100
+@@ -247,7 +247,7 @@
+ 	OSS_CFLAGS=""
+ 	OSS_LIBS=""
+ 	msg_checking "for header <sys/soundcard.h>"
+-	if test -f /usr/include/sys/soundcard.h
++	if check_header sys/soundcard.h
+ 	then
+ 		msg_result "yes"
+ 		makefile_vars OSS_CFLAGS OSS_LIBS
