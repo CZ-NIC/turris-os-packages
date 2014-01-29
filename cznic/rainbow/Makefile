@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rainbow
-PKG_VERSION:=11
+PKG_VERSION:=12
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/rainbow.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -37,7 +37,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(CP) ./files/rainbow.config $(1)/etc/config/rainbow
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(CP) ./files/rainbow.cron $(1)/etc/cron.d/rainbow
+	$(INSTALL_DATA) ./files/rainbow.cron $(1)/etc/cron.d/rainbow
 	$(INSTALL_BIN) ./files/rainbow_button_sync.sh $(1)/usr/bin/rainbow_button_sync.sh
 	$(CP) ./files/rainbow.magic $(1)/etc/rainbow.magic
 endef
