@@ -37,6 +37,7 @@ endef
 
 CONFIGURE_ARGS += \
 	--with-ssl-include-dir=$(STAGING_DIR)/usr/include/openssl/. \
+	--with-ssl-lib-dir=$(STAGING_DIR)/usr/lib \
 	--without-tcl \
 	--without-ldap \
 	--without-krb5 \
