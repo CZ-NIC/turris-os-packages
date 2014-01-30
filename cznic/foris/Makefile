@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=19
+PKG_VERSION:=18
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
@@ -45,16 +45,16 @@ define Package/foris/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./files/foris $(1)/etc/config/foris
 	$(INSTALL_DIR) $(1)$(FORIS_DIR)
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/config_handlers/ $(1)$(FORIS_DIR)/config_handlers/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/locale/ $(1)$(FORIS_DIR)/locale/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/nuci/ $(1)$(FORIS_DIR)/nuci/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/templates/ $(1)$(FORIS_DIR)/templates/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/utils/ $(1)$(FORIS_DIR)/utils/
+	$(CP) $(PKG_BUILD_DIR)/config_handlers/ $(1)$(FORIS_DIR)/config_handlers/
+	$(CP) $(PKG_BUILD_DIR)/locale/ $(1)$(FORIS_DIR)/locale/
+	$(CP) $(PKG_BUILD_DIR)/nuci/ $(1)$(FORIS_DIR)/nuci/
+	$(CP) $(PKG_BUILD_DIR)/templates/ $(1)$(FORIS_DIR)/templates/
+	$(CP) $(PKG_BUILD_DIR)/utils/ $(1)$(FORIS_DIR)/utils/
 	$(INSTALL_DIR) $(1)$(FORIS_DIR)/static/
 	$(RM) $(PKG_BUILD_DIR)/static/js/{wizard,parsley.foris-extend,parsley.messages.cs}.js
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/static/{css,fonts,img,js} $(1)$(FORIS_DIR)/static/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/*.py $(1)$(FORIS_DIR)/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/LICENSE $(1)$(FORIS_DIR)/LICENSE
+	$(CP) $(PKG_BUILD_DIR)/static/{css,fonts,img,js} $(1)$(FORIS_DIR)/static/
+	$(CP) $(PKG_BUILD_DIR)/*.py $(1)$(FORIS_DIR)/
+	$(CP) $(PKG_BUILD_DIR)/LICENSE $(1)$(FORIS_DIR)/LICENSE
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/foris.py $(1)$(FORIS_DIR)/foris.py
 endef
 
