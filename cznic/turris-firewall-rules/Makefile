@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-firewall-rules
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/fw-rules.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -34,7 +34,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/firewall
-	$(CP) $(PKG_BUILD_DIR)/firewall.turris $(1)/usr/share/firewall/turris
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/firewall.turris $(1)/usr/share/firewall/turris
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

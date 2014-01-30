@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=52
+PKG_VERSION:=53
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -46,18 +46,18 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/nucipty $(1)/usr/bin/nucipty
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
-	$(CP) $(PKG_BUILD_DIR)/src/lua_plugins/*.yin $(1)/usr/share/nuci/lua_plugins/
-	$(CP) $(PKG_BUILD_DIR)/src/lua_plugins/*.lua $(1)/usr/share/nuci/lua_plugins/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/*.yin $(1)/usr/share/nuci/lua_plugins/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/*.lua $(1)/usr/share/nuci/lua_plugins/
 	rm $(1)/usr/share/nuci/lua_plugins/nethist.*
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_lib
-	$(CP) $(PKG_BUILD_DIR)/src/lua_lib/* $(1)/usr/share/nuci/lua_lib/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_lib/* $(1)/usr/share/nuci/lua_lib/
 endef
 
 define Package/nuci-nethist/install
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
-	$(CP) $(PKG_BUILD_DIR)/src/lua_plugins/nethist.yin $(1)/usr/share/nuci/lua_plugins/
-	$(CP) $(PKG_BUILD_DIR)/src/lua_plugins/nethist.lua $(1)/usr/share/nuci/lua_plugins/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/nethist.yin $(1)/usr/share/nuci/lua_plugins/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/nethist.lua $(1)/usr/share/nuci/lua_plugins/
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

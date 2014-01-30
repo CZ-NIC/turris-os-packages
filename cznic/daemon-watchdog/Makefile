@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=daemon-watchdog
-PKG_VERSION:=11
+PKG_VERSION:=12
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -36,7 +36,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/watchdog/watchdog.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(CP) $(PKG_BUILD_DIR)/watchdog/watchdog.cron $(1)/etc/cron.d/watchdog
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/watchdog/watchdog.cron $(1)/etc/cron.d/watchdog
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=logsend
-PKG_VERSION:=28
+PKG_VERSION:=29
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -35,8 +35,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/logsend/whatsnew $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(CP) $(PKG_BUILD_DIR)/logsend/logsend.cron $(1)/etc/cron.d/logsend
-	chmod 0600 $(1)/etc/cron.d/logsend
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/logsend/logsend.cron $(1)/etc/cron.d/logsend
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
