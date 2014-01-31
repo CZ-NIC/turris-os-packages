@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
 PKG_VERSION:=1.4.17
-PKG_RELEASE:=10
+PKG_RELEASE:=11
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.unbound.net/downloads
@@ -149,6 +149,7 @@ define Package/unbound/install
 	$(INSTALL_BIN) ./files/unbound.defaults $(1)/etc/uci-defaults/unbound
 	$(INSTALL_DIR) $(1)/usr/share/unbound/
 	$(INSTALL_BIN) ./files/unbound.postinst $(1)/usr/share/unbound/postinst
+	$(LN) /var/etc/unbound/unbound.conf /etc/unbound/unbound.conf
 endef
 
 ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)

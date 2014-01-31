@@ -125,7 +125,7 @@ start() {
     mkdir -p $(dirname "$CONFIGFILE")
 
     init_unbound
-    unbound -c "$CONFIGFILE"
+    unbound
 }
 
 reload() {
