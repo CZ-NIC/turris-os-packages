@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openssh
 PKG_VERSION:=6.1p1
-PKG_RELEASE:=7
+PKG_RELEASE:=8
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
@@ -164,13 +164,13 @@ endef
 
 define Package/openssh-moduli/install
 	$(INSTALL_DIR) $(1)/etc/ssh
-	$(CP) $(PKG_INSTALL_DIR)/etc/ssh/moduli $(1)/etc/ssh/
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/etc/ssh/moduli $(1)/etc/ssh/
 endef
 
 define Package/openssh-client/install
 	$(INSTALL_DIR) $(1)/etc/ssh
 	chmod 0700 $(1)/etc/ssh
-	$(CP) $(PKG_INSTALL_DIR)/etc/ssh/ssh_config $(1)/etc/ssh/
+	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/etc/ssh/ssh_config $(1)/etc/ssh/
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/ssh $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/scp $(1)/usr/bin/
@@ -191,7 +191,7 @@ define Package/openssh-server/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/sshd.init $(1)/etc/init.d/sshd
 	$(INSTALL_DIR) $(1)/etc/config
-	$(CP) ./files/sshd.nuci.config $(1)/etc/config/sshd
+	$(INSTALL_CONF) ./files/sshd.nuci.config $(1)/etc/config/sshd
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/sshd $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
@@ -202,7 +202,7 @@ define Package/openssh-server/install
         $(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/sshd.init $(1)/etc/init.d/sshd
 	$(INSTALL_DIR) $(1)/etc/config
-	$(CP) ./files/sshd.config $(1)/etc/config/sshd
+	$(INSTALL_CONF) ./files/sshd.config $(1)/etc/config/sshd
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/sshd $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
@@ -241,7 +241,7 @@ endef
 
 define Package/openssh-sftp-server/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/sftp-server $(1)/usr/lib/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/sftp-server $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/libexec
 	ln -sf ../lib/sftp-server $(1)/usr/libexec/sftp-server
 endef

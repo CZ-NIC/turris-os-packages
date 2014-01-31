@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cznic-cacert-bundle
-PKG_VERSION:=8
+PKG_VERSION:=9
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -48,12 +48,12 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/ssl/
 	# TODO: If anything is modified here, it needs to be updated in the postinst too
-	$(CP) $(PKG_BUILD_DIR)/cacerts/api.turris.pem $(1)/etc/ssl/
-	$(CP) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/
-	$(CP) $(PKG_BUILD_DIR)/cacerts/ucollect-server.pem $(1)/etc/ssl/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/api.turris.pem $(1)/etc/ssl/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/ucollect-server.pem $(1)/etc/ssl/
 
 	$(INSTALL_DIR) $(1)/etc/ssl/certs
-	$(CP) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/certs
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/certs
 	c_rehash $(1)/etc/ssl/certs
 endef
 

@@ -50,7 +50,7 @@ define Package/ucollect-core/install
 	$(INSTALL_DIR) $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libucollect_core.so $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/share/ucollect/configs
-	$(CP) $(PKG_BUILD_DIR)/src/ucollect/main.cfg $(1)/usr/share/ucollect/configs/00-main.cfg
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ucollect/main.cfg $(1)/usr/share/ucollect/configs/00-main.cfg
 endef
 
 ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)

@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=59
+PKG_VERSION:=61
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -49,22 +49,21 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater.sh $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-wipe.sh $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-resume.sh $(1)/usr/bin/
-	$(CP) $(PKG_BUILD_DIR)/updater-utils.sh $(1)/usr/bin/
-	$(CP) $(PKG_BUILD_DIR)/updater-worker.sh $(1)/usr/bin/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-utils.sh $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-worker.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/share/updater/keys
-	$(CP) $(PKG_BUILD_DIR)/updater-standby.pub.pem $(1)/usr/share/updater/keys/standby.pem
-	$(CP) $(PKG_BUILD_DIR)/updater-release.pub.pem $(1)/usr/share/updater/keys/release.pem
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-standby.pub.pem $(1)/usr/share/updater/keys/standby.pem
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-release.pub.pem $(1)/usr/share/updater/keys/release.pem
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(CP) $(PKG_BUILD_DIR)/updater.cron $(1)/etc/cron.d/updater
-	chmod 0600 $(1)/etc/cron.d/updater
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/updater.cron $(1)/etc/cron.d/updater
 
 	$(INSTALL_DIR) $(1)/etc/ssl
-	$(CP) $(PKG_BUILD_DIR)/startcom.pem $(1)/etc/ssl/updater.pem
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/startcom.pem $(1)/etc/ssl/updater.pem
 
 	$(INSTALL_DIR) $(1)/etc/config
-	$(CP) ./files/updater.config $(1)/etc/config/updater
+	$(INSTALL_CONF) ./files/updater.config $(1)/etc/config/updater
 
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater.init $(1)/etc/init.d/updater
@@ -101,7 +100,7 @@ endef
 
 define Package/updater-testkey/install
 	$(INSTALL_DIR) $(1)/usr/share/updater/keys
-	$(CP) $(PKG_BUILD_DIR)/updater.pub.pem $(1)/usr/share/updater/keys/test.pem
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater.pub.pem $(1)/usr/share/updater/keys/test.pem
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
