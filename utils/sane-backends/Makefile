@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2012 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,16 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sane-backends
-PKG_VERSION:=1.0.23
+PKG_VERSION:=1.0.24
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://fossies.org/linux/misc \
-	ftp://ftp.sane-project.org/pub/sane/$(PKG_NAME)-$(PKG_VERSION) \
-	https://alioth.debian.org/frs/download.php/3503
-PKG_MD5SUM:=e226a89c54173efea80e91e9a5eb6573
+	https://alioth.debian.org/frs/download.php/3958
+PKG_MD5SUM:=1ca68e536cd7c1852322822f5f6ac3a4
 
 PKG_FIXUP:=autoreconf
+PKG_REMOVE_FILES:=aclocal.m4
+
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
