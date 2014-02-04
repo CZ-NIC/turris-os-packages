@@ -1,0 +1,2 @@
+MAILTO=""
+33	2	*	*	*	root	if [ ! -f /tmp/opkg-update.flag ]; then touch /tmp/opkg-update.flag; while ! opkg update; do sleep 30; done; rm /tmp/opkg-update.flag; fi
