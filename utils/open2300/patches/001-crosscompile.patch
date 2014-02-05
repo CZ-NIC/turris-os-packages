@@ -1,6 +1,6 @@
 --- a/Makefile
 +++ b/Makefile
-@@ -15,91 +15,91 @@
+@@ -15,87 +15,82 @@
  prefix = /usr/local
  exec_prefix = ${prefix}
  bindir = ${exec_prefix}/bin
@@ -44,8 +44,7 @@
  ####### Build rules
  
 -all: open2300 dump2300 log2300 fetch2300 wu2300 cw2300 history2300 histlog2300 bin2300 xml2300 light2300 interval2300 minmax2300 mysql2300 mysqlhistlog2300
-+all: open2300 dump2300 log2300 fetch2300 wu2300 cw2300 history2300 histlog2300 bin2300 xml2300 light2300 interval2300 minmax2300 
-+#mysql2300 mysqlhistlog2300
++all: open2300 dump2300 log2300 fetch2300 wu2300 cw2300 history2300 histlog2300 bin2300 xml2300 light2300 interval2300 minmax2300 #mysql2300 mysqlhistlog2300
  
 -open2300 : $(OBJ)
 -	$(CC) $(CFLAGS) -o $@ $(OBJ) $(CC_LDFLAGS)
@@ -138,31 +137,3 @@
  
  
  install:
- 	mkdir -p $(bindir)
-+	mkdir -p $(libdir)
-+	$(INSTALL) $(LIB).so.$(VERSION) $(libdir)
-+	ln -sf $(libdir)/$(LIB).so.$(VERSION) $(libdir)/$(LIB).so
-+	$(INSTALL) srv2300 $(bindir)
- 	$(INSTALL) open2300 $(bindir)
- 	$(INSTALL) dump2300 $(bindir)
- 	$(INSTALL) log2300 $(bindir)
-@@ -111,14 +111,11 @@
- 	$(INSTALL) light2300 $(bindir)
- 	$(INSTALL) interval2300 $(bindir)
- 	$(INSTALL) minmax2300 $(bindir)
--	$(INSTALL) mysql2300 $(bindir)
--	$(INSTALL) mysqlhistlog2300 $(bindir)
-+#	$(INSTALL) mysql2300 $(bindir)
-+#	$(INSTALL) mysqlhistlog2300 $(bindir)
- 	
- uninstall:
--	rm -f $(bindir)/open2300 $(bindir)/dump2300 $(bindir)/log2300 $(bindir)/fetch2300 $(bindir)/wu2300 $(bindir)/cw2300 $(bindir)/xml2300 $(bindir)/light2300 $(bindir)/interval2300 $(bindir)/minmax2300 $(bindir)/mysql2300 $(bindir)/mysqlhistlog2300
-+	rm -f $(libdir)/$(LIB).* $(bindir)/open2300 $(bindir)/dump2300 $(bindir)/log2300  $(bindir)/fetch2300 $(bindir)/srv2300 $(bindir)/wu2300 $(bindir)/cw2300 $(bindir)/xml2300 $(bindir)/light2300 $(bindir)/interval2300 $(bindir)/minmax2300 $(bindir)/histlog2300 $(bindir)/mysql2300 $(bindir)/mysqlhistlog2300
- 
- clean:
--	rm -f *~ *.o open2300 dump2300 log2300 fetch2300 wu2300 cw2300 history2300 histlog2300 bin2300 xml2300 mysql2300 pgsql2300 light2300 interval2300 minmax2300 mysql2300 mysqlhistlog2300
--
--cleanexe:
--	rm -f *~ *.o open2300.exe dump2300.exe log2300.exe fetch2300.exe wu2300.exe cw2300.exe history2300.exe histlog2300.exe bin2300.exe xml2300.exe mysql2300.exe pgsql2300.exe light2300.exe interval2300.exe minmax2300.exe
-\ No newline at end of file
-+	rm -f *~ *.o *.so* open2300 dump2300 log2300 fetch2300 wu2300 cw2300 history2300 histlog2300 bin2300 xml2300 mysql2300 pgsql2300 light2300 interval2300 minmax2300 mysql2300 mysqlhistlog2300
