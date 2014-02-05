@@ -1,6 +1,6 @@
 --- a/storage/innodb_plugin/plug.in
 +++ b/storage/innodb_plugin/plug.in
-@@ -56,10 +56,8 @@
+@@ -56,10 +56,8 @@ MYSQL_PLUGIN_ACTIONS(innodb_plugin,  [
    esac
    AC_SUBST(INNODB_DYNAMIC_CFLAGS)
  
@@ -13,7 +13,7 @@
        int main()
        {
  	long	x;
-@@ -96,21 +94,18 @@
+@@ -96,21 +94,18 @@ MYSQL_PLUGIN_ACTIONS(innodb_plugin,  [
  
  	return(0);
        }
@@ -46,7 +46,7 @@
        #include <pthread.h>
        #include <string.h>
  
-@@ -127,16 +122,14 @@
+@@ -127,16 +122,14 @@ MYSQL_PLUGIN_ACTIONS(innodb_plugin,  [
  
          return(0);
        }
@@ -71,7 +71,7 @@
  
    AC_MSG_CHECKING(whether Solaris libc atomic functions are available)
    # Define HAVE_IB_SOLARIS_ATOMICS if _all_ of the following
-@@ -156,7 +149,6 @@
+@@ -156,7 +149,6 @@ MYSQL_PLUGIN_ACTIONS(innodb_plugin,  [
      AC_DEFINE([HAVE_IB_SOLARIS_ATOMICS], [1],
        [Define to 1 if Solaris libc atomic functions are available]
      )
@@ -79,7 +79,7 @@
  
    AC_MSG_CHECKING(whether pthread_t can be used by Solaris libc atomic functions)
    # either define HAVE_IB_ATOMIC_PTHREAD_T_SOLARIS or not
-@@ -230,6 +222,8 @@
+@@ -230,6 +222,8 @@ MYSQL_PLUGIN_ACTIONS(innodb_plugin,  [
        AC_MSG_RESULT(no)
      ]
    )
@@ -90,7 +90,7 @@
  # vim: set ft=config:
 --- a/sql/gen_lex_hash.cc
 +++ b/sql/gen_lex_hash.cc
-@@ -344,55 +344,6 @@
+@@ -344,55 +344,6 @@ void print_find_structs()
  }
  
  
@@ -146,7 +146,7 @@
  int check_dup_symbols(SYMBOL *s1, SYMBOL *s2)
  {
    if (s1->length!=s2->length || strncmp(s1->name,s2->name,s1->length))
-@@ -443,12 +394,6 @@
+@@ -443,12 +394,6 @@ int check_duplicates()
  
  int main(int argc,char **argv)
  {
@@ -159,7 +159,7 @@
    /* Broken up to indicate that it's not advice to you, gentle reader. */
    printf("/*\n\n  Do " "not " "edit " "this " "file " "directly!\n\n*/\n");
  
-@@ -549,7 +494,6 @@
+@@ -549,7 +494,6 @@ static SYMBOL *get_hash_symbol(const cha
    }\n\
  }\n"
  );
@@ -169,7 +169,7 @@
  
 --- a/sql/Makefile.am
 +++ b/sql/Makefile.am
-@@ -26,7 +26,6 @@
+@@ -26,7 +26,6 @@ INCLUDES =		@ZLIB_INCLUDES@ \
  WRAPLIBS=		@WRAPLIBS@
  SUBDIRS =		share
  libexec_PROGRAMS =	mysqld

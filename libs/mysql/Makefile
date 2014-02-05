@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/uclibc++.mk
 
 PKG_NAME:=mysql
-PKG_VERSION:=5.1.68
+PKG_VERSION:=5.1.73
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -20,7 +20,7 @@ PKG_SOURCE_URL:=\
 	http://mirror.switch.ch/ftp/mirror/mysql/Downloads/MySQL-5.1/ \
 	http://downloads.mysql.com/archives/mysql-5.1/
 
-PKG_MD5SUM:=3a4a627d0865ce7660504728a15b0fb9
+PKG_MD5SUM:=887f869bcc757957067b9198f707f32f
 
 PKG_BUILD_DEPENDS:=libncurses libreadline
 PKG_BUILD_PARALLEL:=1
@@ -68,20 +68,15 @@ CONFIGURE_ARGS += \
 	--with-pthread \
 	--with-server \
 	--without-mysqlmanager \
-	--without-raid \
 	--with-mysqld-user=root \
 	--with-unix-socket-path=/tmp \
 	--without-libwrap \
-	--without-pstack \
 	--with-low-memory \
 	--without-embedded-server \
 	--without-query-cache \
-	--without-mysqlfs \
-	--without-vio \
 	--without-ssl \
 	--without-docs \
 	--without-man \
-	--without-bench \
 	--without-readline \
 	--without-debug \
 	--with-named-thread-libs=-lpthread
