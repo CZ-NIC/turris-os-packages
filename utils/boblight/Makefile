@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=boblight
-PKG_REV:=412
+PKG_REV:=478
 PKG_VERSION:=$(PKG_REV)
 PKG_RELEASE:=2
 
@@ -61,7 +61,7 @@ define Package/boblight-daemon
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE+= (daemon)
-  DEPENDS+= +libboblight
+  DEPENDS+= +libboblight +libusb-1.0
 endef
 
 define Package/boblight-daemon/conffiles
