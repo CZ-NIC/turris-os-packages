@@ -12,13 +12,14 @@ PKG_NAME:=wifitoggle
 PKG_VERSION:=1
 PKG_RELEASE:=4
 
+PKG_MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/wifitoggle
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=Script to toggle Wi-Fi with a button and UCI config
-  MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
 endef
 
 define Package/wifitoggle/description

@@ -14,6 +14,8 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://lpccomp.bc.ca/remserial/
 PKG_MD5SUM:=b19b57fd118329c5ea3aaf9887f946a6
 
+PKG_MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/remserial

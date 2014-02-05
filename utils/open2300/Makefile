@@ -18,6 +18,8 @@ PKG_SOURCE_VERSION:=r12
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
+PKG_MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/open2300
@@ -25,7 +27,6 @@ define Package/open2300
   CATEGORY:=Utilities
   TITLE:=WS23XX weather station utilities
   URL:=http://www.lavrsen.dk/foswiki/bin/view/Open2300
-  MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
 endef
 
 define Package/open2300/description

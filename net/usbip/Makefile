@@ -18,6 +18,9 @@ PKG_VERSION:=$(shell  sed -n -e '/^AC_INIT/s/.*\[\([[:digit:]\.]*\)\].*/\1/gp' $
 PKG_SOURCE:=
 PKG_SOURCE_URL:=
 PKG_MD5SUM:=unknown
+
+PKG_MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
+
 PATCH_DIR:=./patches-$(PKG_VERSION)
 
 define prepare_source_directory
@@ -37,7 +40,6 @@ define Package/usbip/Common
   TITLE:=USB-over-IP
   URL:=http://usbip.sourceforge.net/
   DEPENDS:=@USB_SUPPORT
-  MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
 endef
 
 define Package/usbip/Default

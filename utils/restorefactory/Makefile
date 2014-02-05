@@ -11,13 +11,14 @@ PKG_NAME:=restorefactory
 PKG_VERSION:=1
 PKG_RELEASE:=6
 
+PKG_MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/restorefactory
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=Mimic original functionality of the reset button
-  MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
 endef
 
 define Package/restorefactory/description

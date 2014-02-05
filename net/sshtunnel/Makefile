@@ -12,6 +12,8 @@ PKG_NAME:=sshtunnel
 PKG_VERSION:=3
 PKG_RELEASE:=3
 
+PKG_MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/sshtunnel
@@ -19,7 +21,6 @@ define Package/sshtunnel
   CATEGORY:=Network
   SUBMENU:=SSH
   TITLE:=Manages Local and Remote openssh ssh(1) tunnels
-  MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
   DEPENDS:=+openssh-client
 endef
 
