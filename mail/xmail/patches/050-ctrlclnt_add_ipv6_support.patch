@@ -1,0 +1,56 @@
+--- a/CTRLClient.cpp
++++ b/CTRLClient.cpp
+@@ -53,7 +53,7 @@ struct CClnChannelCfg {
+ /* Needed by library functions ( START ) */
+ bool bServerDebug = false;
+ int iLogRotateHours = 24;
+-int iAddrFamily = AF_INET;
++int iAddrFamily = SYS_INET64;
+ static char const * const pszCClnErrors[] = {
+ 	"Wrong command line usage",
+ 	"Either none or both private key and certificate file must be supplied"
+@@ -349,7 +349,7 @@ int CClnLogError(int iError)
+ void CClnShowUsage(char const *pszProgName)
+ {
+ 	fprintf(stderr,
+-		"use :  %s  [-snuptfSLcKCXHD]  ...\n"
++		"use :  %s  [-snuptfSLcKCXHD4657]  ...\n"
+ 		"options :\n"
+ 		"       -s server        = set server address\n"
+ 		"       -n port          = set server port [%d]\n"
+@@ -364,7 +364,11 @@ void CClnShowUsage(char const *pszProgNa
+ 		"       -X filename      = set the SSL certificate-list file\n"
+ 		"       -H dir           = set the SSL certificate-store directory\n"
+ 		"       -c               = disable MD5 authentication\n"
+-		"       -D               = enable debug\n",
++		"       -D               = enable debug\n"
++		"       -4               = connect only to IPv4 addresses\n"
++		"       -6               = connect only to IPv6 addresses\n"
++		"       -5               = prefer IPv4 addresses over IPv6 addresses\n"
++		"       -7               = prefer IPv6 addresses over IPv4 addresses\n",
+ 		pszProgName, STD_CTRL_PORT, STD_CTRL_TIMEOUT);
+ }
+ 
+@@ -467,6 +471,22 @@ int CClnExec(int iArgCount, char *pszArg
+ 			bServerDebug = true;
+ 			break;
+ 
++		case '4':
++			iAddrFamily = AF_INET;
++			break;
++
++		case '6':
++			iAddrFamily = AF_INET6;
++			break;
++
++		case '5':
++			iAddrFamily = SYS_INET46;
++			break;
++
++		case '7':
++			iAddrFamily = SYS_INET64;
++			break;
++
+ 		default:
+ 			return CCLN_ERR_BAD_USAGE;
+ 		}
