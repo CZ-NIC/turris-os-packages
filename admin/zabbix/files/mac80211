@@ -7,7 +7,7 @@
 # mac80211 phy discovery (like 'phy0')
 # exemple: {"data":[{"{#PHY}":"phy0"}]}
 #
-UserParameter=mac80211.phydiscovery,for phy in $(ls /sys/kernel/debug/ieee80211/); do list="$list,"'{"{#PHY}":"'$phy'"}'; done; echo '{"data":['${list#,}']}'
+UserParameter=mac80211.phydiscovery,zabbix_helper_mac80211 discovery
 
 #phy statistics (you need {#PHY} as parameter)
 #
