@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zabbix
-PKG_VERSION:=2.0.8
+PKG_VERSION:=2.2.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@SF/zabbix
-PKG_MD5SUM:=8fef9e6f499295211dd9b2a9db96464b
+PKG_MD5SUM:=558497839b13a548f533eb2fc951a4e3
 
 PKG_INSTALL:=1
 
@@ -97,12 +97,6 @@ define Package/zabbix-extra-wifi/description
 An extra package for zabbix-agentd that adds a discovery rule for wifi interfaces and many userparameters.
 As it uses libiwinfo, it works with all wifi devices supported by openwrt.
 See http://wiki.openwrt.org/doc/howto/zabbix for ready to use zabbix templates.
-endef
-
-
-define Package/zabbix-agentd/config
-  select BUSYBOX_CONFIG_HOSTNAME if !PACKAGE_net-tools-hostname
-  select BUSYBOX_CONFIG_UNAME if !PACKAGE_coreutils-uname
 endef
 
 CONFIGURE_ARGS+= \

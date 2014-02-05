@@ -1,6 +1,6 @@
---- a/configure.in	2013-02-14 18:29:28.145419003 +0100
-+++ b/configure.in	2013-02-14 18:28:42.873418092 +0100
-@@ -149,6 +149,10 @@
+--- a/configure.in
++++ b/configure.in
+@@ -151,6 +151,10 @@ if test "x$found_resolv" != "xyes"; then
  	AC_MSG_ERROR([Unable to do DNS lookups (libresolv check failed)])
  fi
  LIBS="${LIBS} ${RESOLV_LIBS}"
@@ -11,9 +11,9 @@
  
  dnl *****************************************************************
  dnl *                                                               *
---- a/src/libs/zbxsysinfo/common/net.c	2012-06-21 19:49:46.610567432 +0000
-+++ b/src/libs/zbxsysinfo/common/net.c	2012-06-21 19:50:35.816628541 +0000
-@@ -418,6 +418,7 @@
+--- a/src/libs/zbxsysinfo/common/net.c
++++ b/src/libs/zbxsysinfo/common/net.c
+@@ -421,6 +421,7 @@ static int	dns_query(AGENT_REQUEST *requ
  #else	/* not _WINDOWS */
  	res_init();	/* initialize always, settings might have changed */
  
@@ -21,7 +21,7 @@
  	if (-1 == (res = res_mkquery(QUERY, zone, C_IN, type, NULL, 0, NULL, buf, sizeof(buf))))
  		return SYSINFO_RET_FAIL;
  
-@@ -436,6 +437,11 @@
+@@ -439,6 +440,11 @@ static int	dns_query(AGENT_REQUEST *requ
  	_res.retry = retry;
  
  	res = res_send(buf, res, answer.buffer, sizeof(answer.buffer));

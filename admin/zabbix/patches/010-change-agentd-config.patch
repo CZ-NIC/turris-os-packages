@@ -24,7 +24,7 @@
  ### Option: LogFileSize
  #	Maximum size of log file in MB.
  #	0 - disable automatic log rotation.
-@@ -105,6 +99,7 @@ Server=127.0.0.1
+@@ -104,6 +98,7 @@ Server=127.0.0.1
  # Range: 0-100
  # Default:
  # StartAgents=3
@@ -32,7 +32,7 @@
  
  ##### Active checks related
  
-@@ -120,8 +115,6 @@ Server=127.0.0.1
+@@ -119,8 +114,6 @@ Server=127.0.0.1
  # Default:
  # ServerActive=
  
@@ -41,7 +41,7 @@
  ### Option: Hostname
  #	Unique, case sensitive hostname.
  #	Required for active checks and must match hostname as configured on the server.
-@@ -131,8 +124,6 @@ ServerActive=127.0.0.1
+@@ -130,8 +123,6 @@ ServerActive=127.0.0.1
  # Default:
  # Hostname=
  
@@ -50,7 +50,7 @@
  ### Option: HostnameItem
  #	Item used for generating Hostname if it is undefined.
  #	Ignored if Hostname is defined.
-@@ -213,7 +204,7 @@ Hostname=Zabbix server
+@@ -240,7 +231,7 @@ Hostname=Zabbix server
  # Include=
  
  # Include=/usr/local/etc/zabbix_agentd.userparams.conf
