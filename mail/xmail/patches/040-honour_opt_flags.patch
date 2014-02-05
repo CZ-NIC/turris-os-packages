@@ -1,6 +1,6 @@
 --- a/Makefile.common
 +++ b/Makefile.common
-@@ -24,10 +24,10 @@
+@@ -24,10 +24,10 @@ ifeq ($(DEBUG_OSSL), 1)
  endif
  
  ifeq ($(XMAIL_DEBUG), 1)

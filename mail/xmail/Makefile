@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=xmail
-PKG_VERSION:=1.26
-PKG_RELEASE:=4
+PKG_VERSION:=1.27
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.xmailserver.org/
-PKG_MD5SUM:=26d35c2fc104d79ebb6397c7dece5b15
+PKG_MD5SUM:=73c9d95012709d7b11511dfb6dd6ab3d
 
 include $(INCLUDE_DIR)/uclibc++.mk
 include $(INCLUDE_DIR)/package.mk
@@ -43,7 +43,7 @@ endef
 
 define Package/xmail/install
 	$(INSTALL_DIR) $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/* $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/{CtrlClnt,MkUsers,XMCrypt,XMail,sendmail} $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/MailRoot.tar.bz2 $(1)/etc/
 	$(INSTALL_DIR) $(1)/etc/config
