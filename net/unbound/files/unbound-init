@@ -102,7 +102,7 @@ init_unbound() {
     config_list_foreach includes include_path add_inculde
 
     local do_forward
-    config_get_bool do_forward server forward_upstream 0
+    config_get_bool do_forward server forward_upstream 1
 
     if [ "$do_forward" = "1" ] ; then
         local SERVERS
