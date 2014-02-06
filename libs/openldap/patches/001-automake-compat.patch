@@ -121,7 +121,7 @@
 +SHELL = @SHELL@
 +
  PROGRAMS = slapd-tester slapd-search slapd-read slapd-addel slapd-modrdn \
- 		slapd-modify slapd-bind ldif-filter
+ 		slapd-modify slapd-bind slapd-mtread ldif-filter
  
 --- a/servers/slapd/back-bdb/Makefile.in
 +++ b/servers/slapd/back-bdb/Makefile.in
@@ -178,6 +178,17 @@
  SRCS = ldif.c
  OBJS = ldif.lo
  
+--- a/servers/slapd/back-mdb/Makefile.in
++++ b/servers/slapd/back-mdb/Makefile.in
+@@ -13,6 +13,8 @@
+ ## top-level directory of the distribution or, alternatively, at
+ ## <http://www.OpenLDAP.org/license.html>.
+ 
++SHELL = @SHELL@
++
+ SRCS = init.c tools.c config.c \
+ 	add.c bind.c compare.c delete.c modify.c modrdn.c search.c \
+ 	extended.c operational.c \
 --- a/servers/slapd/back-meta/Makefile.in
 +++ b/servers/slapd/back-meta/Makefile.in
 @@ -13,6 +13,8 @@
