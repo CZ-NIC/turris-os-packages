@@ -22,7 +22,7 @@ define Package/avrdude
   CATEGORY:=Utilities
   TITLE:=AVR Downloader/UploaDEr
   URL:=http://www.bsdhome.com/avrdude/
-  DEPENDS:=+libncurses +libreadline +libusb-compat
+  DEPENDS:=+libncurses +libreadline +libusb-compat +libftdi
 endef
 
 define Package/avrdude/description
@@ -37,6 +37,9 @@ endef
 CONFIGURE_ARGS+= \
 	--disable-doc \
 	--disable-parport \
+
+CONFIGURE_VARS += \
+	ac_cv_lib_elf_elf_begin=no \
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
