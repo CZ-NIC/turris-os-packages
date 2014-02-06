@@ -1,6 +1,6 @@
 --- a/raddb/dictionary.in
 +++ b/raddb/dictionary.in
-@@ -23,7 +23,7 @@
+@@ -11,7 +11,7 @@
  #
  #	The filename given here should be an absolute path. 
  #
@@ -62,7 +62,7 @@
  
  		## EAP-TLS
  		#
-@@ -205,7 +205,7 @@
+@@ -215,7 +215,7 @@
  			#  In these cases, fragment size should be
  			#  1024 or less.
  			#
@@ -71,7 +71,7 @@
  
  			#  include_length is a flag which is
  			#  by default set to yes If set to
-@@ -215,7 +215,7 @@
+@@ -225,7 +225,7 @@
  			#  message is included ONLY in the
  			#  First packet of a fragment series.
  			#
@@ -80,7 +80,7 @@
  
  			#  Check the Certificate Revocation List
  			#
-@@ -281,7 +281,7 @@
+@@ -297,7 +297,7 @@
  			# for the server to print out an error message,
  			# and refuse to start.
  			#
@@ -89,7 +89,7 @@
  
  			#
  			#  Elliptical cryptography configuration
-@@ -316,7 +316,7 @@
+@@ -332,7 +332,7 @@
  			#  You probably also want "use_tunneled_reply = yes"
  			#  when using fast session resumption.
  			#
@@ -98,7 +98,7 @@
  			      #
  			      #  Enable it.  The default is "no".
  			      #  Deleting the entire "cache" subsection
-@@ -332,14 +332,14 @@
+@@ -348,14 +348,14 @@
  			      #  enable resumption for just one user
  			      #  by setting the above attribute to "yes".
  			      #
@@ -115,7 +115,7 @@
  
  			      #
  			      #  The maximum number of entries in the
-@@ -348,8 +348,8 @@
+@@ -364,8 +364,8 @@
  			      #  This could be set to the number of users
  			      #  who are logged in... which can be a LOT.
  			      #
@@ -126,7 +126,7 @@
  
  			#
  			#  As of version 2.1.10, client certificates can be
-@@ -449,7 +449,7 @@
+@@ -503,7 +503,7 @@
  		#
  		#  in the control items for a request.
  		#
@@ -135,7 +135,7 @@
  			#  The tunneled EAP session needs a default
  			#  EAP type which is separate from the one for
  			#  the non-tunneled EAP module.  Inside of the
-@@ -457,7 +457,7 @@
+@@ -511,7 +511,7 @@
  			#  If the request does not contain an EAP
  			#  conversation, then this configuration entry
  			#  is ignored.
@@ -144,7 +144,7 @@
  
  			#  The tunneled authentication request does
  			#  not usually contain useful attributes
-@@ -473,7 +473,7 @@
+@@ -527,7 +527,7 @@
  			#  is copied to the tunneled request.
  			#
  			# allowed values: {no, yes}
@@ -153,7 +153,7 @@
  
  			#  The reply attributes sent to the NAS are
  			#  usually based on the name of the user
-@@ -486,7 +486,7 @@
+@@ -540,7 +540,7 @@
  			#  the tunneled request.
  			#
  			# allowed values: {no, yes}
@@ -162,7 +162,7 @@
  
  			#
  			#  The inner tunneled request can be sent
-@@ -498,13 +498,13 @@
+@@ -552,13 +552,13 @@
  			#  the virtual server that processed the
  			#  outer requests.
  			#
@@ -178,7 +178,7 @@
  
  		##################################################
  		#
-@@ -573,14 +573,14 @@
+@@ -627,14 +627,14 @@
  
  			#  the PEAP module also has these configuration
  			#  items, which are the same as for TTLS.
@@ -196,7 +196,7 @@
  
  			#
  			#  The inner tunneled request can be sent
-@@ -592,7 +592,8 @@
+@@ -646,7 +646,8 @@
  			#  the virtual server that processed the
  			#  outer requests.
  			#
@@ -297,10 +297,10 @@
  
  	#
  	#  The expression module doesn't do authorization,
-@@ -752,15 +752,15 @@ instantiate {
- 	#  listed in any other section.  See 'doc/rlm_expr' for
- 	#  more information.
+@@ -756,15 +756,15 @@ instantiate {
+ 	#  other xlat functions such as md5, sha1 and lc.
  	#
+ 	#  We do not recommend removing it's listing here.
 -	expr
 +#	expr
  
@@ -316,7 +316,7 @@
  
  	# subsections here can be thought of as "virtual" modules.
  	#
-@@ -784,7 +784,7 @@ instantiate {
+@@ -788,7 +788,7 @@ instantiate {
  #	to multiple times.
  #
  ######################################################################
@@ -325,7 +325,7 @@
  
  ######################################################################
  #
-@@ -794,9 +794,9 @@ $INCLUDE policy.conf
+@@ -798,9 +798,9 @@ $INCLUDE policy.conf
  #	match the regular expression: /[a-zA-Z0-9_.]+/
  #
  #	It allows you to define new virtual servers simply by placing
@@ -337,7 +337,7 @@
  
  ######################################################################
  #
-@@ -804,7 +804,7 @@ $INCLUDE sites-enabled/
+@@ -808,7 +808,7 @@ $INCLUDE sites-enabled/
  #	"authenticate {}", "accounting {}", have been moved to the
  #	the file:
  #
@@ -493,7 +493,7 @@
  
  	#
  	#  Calculate the various WiMAX keys.  In order for this to work,
-@@ -558,12 +558,12 @@ post-auth {
+@@ -572,12 +572,12 @@ post-auth {
  	#  Add the ldap module name (or instance) if you have set 
  	#  'edir_account_policy_check = yes' in the ldap module configuration
  	#
@@ -511,7 +511,7 @@
  
  #
  #  When the server decides to proxy a request to a home server,
-@@ -573,7 +573,7 @@ post-auth {
+@@ -587,7 +587,7 @@ post-auth {
  #
  #  Only a few modules currently have this method.
  #
@@ -520,7 +520,7 @@
  #	attr_rewrite
  
  	#  Uncomment the following line if you want to change attributes
-@@ -589,14 +589,14 @@ pre-proxy {
+@@ -603,14 +603,14 @@ pre-proxy {
  	#  server, un-comment the following line, and the
  	#  'detail pre_proxy_log' section, above.
  #	pre_proxy_log
@@ -537,7 +537,7 @@
  
  	#  If you want to have a log of replies from a home server,
  	#  un-comment the following line, and the 'detail post_proxy_log'
-@@ -620,7 +620,7 @@ post-proxy {
+@@ -634,7 +634,7 @@ post-proxy {
  	#  hidden inside of the EAP packet, and the end server will
  	#  reject the EAP request.
  	#
@@ -546,7 +546,7 @@
  
  	#
  	#  If the server tries to proxy a request and fails, then the
-@@ -642,5 +642,5 @@ post-proxy {
+@@ -656,5 +656,5 @@ post-proxy {
  #	Post-Proxy-Type Fail {
  #			detail
  #	}
