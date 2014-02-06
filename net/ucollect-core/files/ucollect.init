@@ -1,12 +1,47 @@
 #!/bin/sh /etc/rc.common
-# Copyright (C) 2013 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2013-2014 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 
 START=50
 PID_FILE=/var/run/ucollect.pid
 
+get_wan() {
+    IFACES="$1"
+    IGNORE="$2"
+    FOUND=false
+    echo "$IFACES" | while read iface ; do
+        if echo "$IGNORE" | grep -qwF "$iface" ; then
+            continue;
+        fi
+        FOUND=true
+        echo 'config interface'
+        echo "    option ifname '$iface'"
+    done
+    $FOUND
+}
+
 build_config() {
     mkdir -p /tmp/ucollect/
-    cat /etc/config/ucollect >/tmp/ucollect/ucollect
+    autodetect=$(uci get -q ucollect.wan.autodetect || echo '1')
+    if [ "$autodetect" = 1 ] ; then
+        # Look into the routing tables to guess WAN interfaces
+        V4=$(route -n | sed -ne 's/ *$//;/^0\.0\.0\.0  *[0-9.][0-9.]*  *0\.0\.0\.0/s/.* //p')
+        V6=$(route -n -A inet6 | sed -ne 's/ *$//;/^::\/0  /s/.* //p')
+        # Unify them and remove duplicates
+        ALL=$(echo "$V4" "$V6" | sed -e 's/  */ /g;s/ /\n/g' | sort -u)
+        IGNORE=$(uci -X show network | sed -ne 's/^network\.\([^.]*\)=interface$/\1/p' | while read iface ; do
+            proto=$(uci get -q network.$iface.proto)
+            name=$(uci get -q network.$iface.ifname || echo "$proto-$iface")
+            # TODO: What about L2TP? #3093
+            if [ "$proto" = "6in4" -o "$proto" = "6to4" -o "$proto" = "6rd" -o "$proto" = "dslite" ] ; then
+                # These are tunnels. We can look into them (and do) and they'll travel through the
+                # WAN interface, so we don't need these. Ignore them.
+		echo "$name"
+            fi
+        done)
+        get_wan "$ALL" "$IGNORE" >/tmp/ucollect/ucollect || get_wan "$ALL" "" >/tmp/ucollect/ucollect
+    else
+	    cat /etc/config/ucollect >/tmp/ucollect/ucollect
+    fi
     cat $(ls /usr/share/ucollect/configs/* | sort) >>/tmp/ucollect/ucollect
 }
 

@@ -9,7 +9,7 @@
 
 include $(TOPDIR)/package/packages/net/ucollect-core/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,ucollect-core,39))
+$(eval $(call UCOLLECT_BASE,ucollect-core,40))
 
 define Package/ucollect-core
 	SECTION:=net
@@ -51,6 +51,8 @@ define Package/ucollect-core/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libucollect_core.so $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/share/ucollect/configs
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ucollect/main.cfg $(1)/usr/share/ucollect/configs/00-main.cfg
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
+	$(INSTALL_DATA) ./files/ucollect.hotplug $(1)/etc/hotplug.d/iface/50-ucollect
 endef
 
 ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
