@@ -27,7 +27,7 @@ endchoice
 
 config LIBCURL_COOKIES
 	bool "Enable cookies support"
-	default n
+	default y
 
 config LIBCURL_CRYPTO_AUTH
 	bool "Enable cryptographic authentication"
