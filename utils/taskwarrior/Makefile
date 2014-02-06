@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=taskwarrior
-PKG_VERSION:=2.0.0
+PKG_VERSION:=2.3.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=task-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.taskwarrior.org/download/
-PKG_MD5SUM:=b850b49f8b69bb4049c07d0914a0f7af
+PKG_MD5SUM:=2c1d2c64311855f3519ad038ebd372ac
 
 PKG_INSTALL:=1
 
@@ -26,10 +26,12 @@ define Package/taskwarrior
   TITLE:=taskwarrior
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libncurses +libstdcpp
+  DEPENDS:=+libncurses +libstdcpp +liblua +libuuid +libreadline
   URL:=http://taskwarrior.org/projects/show/taskwarrior
   MAINTAINER:=Xiangfu Liu <xiangfu@sharism.cc>
 endef
+
+TARGET_LDFLAGS += -ldl
 
 define Package/taskwarrior/description
  taskwarrior is a command-line todo list manager
