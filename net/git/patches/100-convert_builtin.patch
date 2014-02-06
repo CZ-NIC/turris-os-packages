@@ -1,6 +1,6 @@
 --- a/Makefile
 +++ b/Makefile
-@@ -537,16 +537,7 @@ EXTRA_PROGRAMS =
+@@ -534,16 +534,7 @@ EXTRA_PROGRAMS =
  # ... and all the rest that could be moved out of bindir to gitexecdir
  PROGRAMS += $(EXTRA_PROGRAMS)
  
@@ -18,7 +18,7 @@
  
  # Binary suffix, set to .exe for Windows builds
  X =
-@@ -993,6 +984,12 @@ BUILTIN_OBJS += builtin/var.o
+@@ -994,6 +985,12 @@ BUILTIN_OBJS += builtin/var.o
  BUILTIN_OBJS += builtin/verify-pack.o
  BUILTIN_OBJS += builtin/verify-tag.o
  BUILTIN_OBJS += builtin/write-tree.o
@@ -31,7 +31,7 @@
  
  GITLIBS = $(LIB_FILE) $(XDIFF_LIB)
  EXTLIBS =
-@@ -1156,7 +1153,7 @@ endif
+@@ -1157,7 +1154,7 @@ endif
  EXTLIBS += -lz
  
  ifndef NO_OPENSSL
@@ -40,7 +40,7 @@
  	ifdef OPENSSLDIR
  		BASIC_CFLAGS += -I$(OPENSSLDIR)/include
  		OPENSSL_LINK = -L$(OPENSSLDIR)/$(lib) $(CC_LD_DYNPATH)$(OPENSSLDIR)/$(lib)
-@@ -2040,10 +2037,6 @@ endif
+@@ -2039,10 +2036,6 @@ endif
  git-%$X: %.o GIT-LDFLAGS $(GITLIBS)
  	$(QUIET_LINK)$(CC) $(ALL_CFLAGS) -o $@ $(ALL_LDFLAGS) $(filter %.o,$^) $(LIBS)
  
@@ -51,7 +51,7 @@
  git-http-fetch$X: revision.o http.o http-walker.o http-fetch.o GIT-LDFLAGS $(GITLIBS)
  	$(QUIET_LINK)$(CC) $(ALL_CFLAGS) -o $@ $(ALL_LDFLAGS) $(filter %.o,$^) \
  		$(LIBS) $(CURL_LIBCURL)
-@@ -2355,24 +2348,22 @@ endif
+@@ -2351,24 +2344,22 @@ endif
  	bindir=$$(cd '$(DESTDIR_SQ)$(bindir_SQ)' && pwd) && \
  	execdir=$$(cd '$(DESTDIR_SQ)$(gitexec_instdir_SQ)' && pwd) && \
  	{ test "$$bindir/" = "$$execdir/" || \
@@ -80,7 +80,7 @@
  	done && \
 --- a/builtin.h
 +++ b/builtin.h
-@@ -134,5 +134,11 @@ extern int cmd_verify_pack(int argc, con
+@@ -135,5 +135,11 @@ extern int cmd_verify_pack(int argc, con
  extern int cmd_show_ref(int argc, const char **argv, const char *prefix);
  extern int cmd_pack_refs(int argc, const char **argv, const char *prefix);
  extern int cmd_replace(int argc, const char **argv, const char *prefix);
@@ -129,7 +129,7 @@
  	struct string_list listen_addr = STRING_LIST_INIT_NODUP;
 --- a/fast-import.c
 +++ b/fast-import.c
-@@ -3347,7 +3347,7 @@ static void parse_argv(void)
+@@ -3365,7 +3365,7 @@ static void parse_argv(void)
  		read_marks();
  }
  
@@ -140,7 +140,7 @@
  
 --- a/git.c
 +++ b/git.c
-@@ -252,11 +252,11 @@ static int handle_alias(int *argcp, cons
+@@ -275,11 +275,11 @@ static int handle_alias(int *argcp, cons
  
  struct cmd_struct {
  	const char *cmd;
@@ -154,7 +154,7 @@
  {
  	int status, help;
  	struct stat st;
-@@ -309,7 +309,7 @@ static int run_builtin(struct cmd_struct
+@@ -332,7 +332,7 @@ static int run_builtin(struct cmd_struct
  	return 0;
  }
  
@@ -163,7 +163,7 @@
  {
  	const char *cmd = argv[0];
  	static struct cmd_struct commands[] = {
-@@ -338,6 +338,7 @@ static void handle_internal_command(int
+@@ -361,6 +361,7 @@ static void handle_internal_command(int
  		{ "commit-tree", cmd_commit_tree, RUN_SETUP },
  		{ "config", cmd_config, RUN_SETUP_GENTLY },
  		{ "count-objects", cmd_count_objects, RUN_SETUP },
@@ -171,7 +171,7 @@
  		{ "credential", cmd_credential, RUN_SETUP_GENTLY },
  		{ "describe", cmd_describe, RUN_SETUP },
  		{ "diff", cmd_diff },
-@@ -345,6 +346,7 @@ static void handle_internal_command(int
+@@ -368,6 +369,7 @@ static void handle_internal_command(int
  		{ "diff-index", cmd_diff_index, RUN_SETUP },
  		{ "diff-tree", cmd_diff_tree, RUN_SETUP },
  		{ "fast-export", cmd_fast_export, RUN_SETUP },
@@ -179,7 +179,7 @@
  		{ "fetch", cmd_fetch, RUN_SETUP },
  		{ "fetch-pack", cmd_fetch_pack, RUN_SETUP },
  		{ "fmt-merge-msg", cmd_fmt_merge_msg, RUN_SETUP },
-@@ -357,6 +359,8 @@ static void handle_internal_command(int
+@@ -380,6 +382,8 @@ static void handle_internal_command(int
  		{ "grep", cmd_grep, RUN_SETUP_GENTLY },
  		{ "hash-object", cmd_hash_object },
  		{ "help", cmd_help },
@@ -188,7 +188,7 @@
  		{ "index-pack", cmd_index_pack, RUN_SETUP_GENTLY },
  		{ "init", cmd_init_db },
  		{ "init-db", cmd_init_db },
-@@ -405,6 +409,7 @@ static void handle_internal_command(int
+@@ -429,6 +433,7 @@ static void handle_internal_command(int
  		{ "revert", cmd_revert, RUN_SETUP | NEED_WORK_TREE },
  		{ "rm", cmd_rm, RUN_SETUP },
  		{ "send-pack", cmd_send_pack, RUN_SETUP },
@@ -196,7 +196,7 @@
  		{ "shortlog", cmd_shortlog, RUN_SETUP_GENTLY | USE_PAGER },
  		{ "show", cmd_show, RUN_SETUP },
  		{ "show-branch", cmd_show_branch, RUN_SETUP },
-@@ -422,6 +427,7 @@ static void handle_internal_command(int
+@@ -446,6 +451,7 @@ static void handle_internal_command(int
  		{ "update-server-info", cmd_update_server_info, RUN_SETUP },
  		{ "upload-archive", cmd_upload_archive },
  		{ "upload-archive--writer", cmd_upload_archive_writer },
@@ -217,7 +217,7 @@
  	char *dir;
 --- a/imap-send.c
 +++ b/imap-send.c
-@@ -1376,7 +1376,7 @@ static int git_imap_config(const char *k
+@@ -1362,7 +1362,7 @@ static int git_imap_config(const char *k
  	return 0;
  }
  
