@@ -9,7 +9,7 @@
  "
  if test "x$ac_cv_header_linux_if_h" = x""yes; then :
    cat >>confdefs.h <<_ACEOF
-@@ -3675,10 +3675,10 @@ done
+@@ -3675,10 +3675,11 @@ done
  for ac_header in linux/if_pppox.h
  do :
    ac_fn_c_check_header_compile "$LINENO" "linux/if_pppox.h" "ac_cv_header_linux_if_pppox_h" "
@@ -21,10 +21,11 @@
 +#include <net/ethernet.h>
 +#include <linux/if.h>
 +#include <linux/in.h>
++#include <linux/in6.h>
  
  "
  if test "x$ac_cv_header_linux_if_pppox_h" = x""yes; then :
-@@ -4611,7 +4611,7 @@ esac
+@@ -4611,7 +4612,7 @@ esac
  $as_echo_n "checking packing order of bit fields... " >&6; }
  if test "${rpppoe_cv_pack_bitfields+set}" != set ; then
  if test "$cross_compiling" = yes; then :
