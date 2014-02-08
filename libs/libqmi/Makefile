@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libqmi
-PKG_VERSION:=1.0
+PKG_VERSION:=1.8.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=libqmi-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=@GNOME/libqmi/1.0/
-PKG_MD5SUM:=1e00d300616efc1bf8d3e8e541a69f73
+PKG_SOURCE_URL:=http://www.freedesktop.org/software/libqmi
+PKG_MD5SUM:=1c4c64c0894f691632727363abec32b8
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -19,6 +19,7 @@ define Package/libqmi
   CATEGORY:=Libraries
   DEPENDS:=+glib2 +zlib +kmod-usb-net-qmi-wwan
   TITLE:=Helper library and utils to talk to QMI enabled modems
+  URL:=http://www.freedesktop.org/wiki/Software/libqmi
 endef
 
 define Package/libqmi/description
