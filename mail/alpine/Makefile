@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/alpine
   SECTION:=mail
   CATEGORY:=Mail
-  DEPENDS:=+libopenssl +libncurses +libpthread
+  DEPENDS:=+libopenssl +libncurses +libpthread +libpam
   TITLE:=Alternatively Licensed Program for Internet News and Email
   URL:=http://www.washington.edu/alpine
 endef
