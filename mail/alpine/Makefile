@@ -8,14 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=alpine
-PKG_VERSION:=2.10
+PKG_VERSION:=2.11
 PKG_RELEASE:=1
 
-PKG_SOURCE_URL:=http://patches.freeiz.com/alpine/patches/alpine-2.10/
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).clean.tar.lzma
-PKG_MD5SUM:=727a6eaa577857b98ea74fac6ea42a25
+PKG_SOURCE_URL:=http://patches.freeiz.com/alpine/release/src/
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_MD5SUM:=a3bba218787691080d706b36215eec06
 
-PKG_CAT:=lzcat
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
