@@ -8,7 +8,7 @@ get_wan() {
     IFACES="$1"
     IGNORE="$2"
     FOUND=false
-    echo "$IFACES" | while read iface ; do
+    for iface in $IFACES ; do
         if echo "$IGNORE" | grep -qwF "$iface" ; then
             continue;
         fi

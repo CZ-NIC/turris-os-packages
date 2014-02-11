@@ -19,7 +19,7 @@
  	common
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -444,7 +444,7 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-gtk
+@@ -468,7 +468,7 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-gtk
  aclocaldir = $(datadir)/aclocal
  aclocal_DATA = gst-element-check-@GST_MAJORMINOR@.m4
  SUBDIRS = pkgconfig \
@@ -28,7 +28,7 @@
  	po \
  	m4 \
  	common
-@@ -452,7 +452,7 @@ SUBDIRS = pkgconfig \
+@@ -476,7 +476,7 @@ SUBDIRS = pkgconfig \
  
  # These are all the possible subdirs
  DIST_SUBDIRS = pkgconfig \

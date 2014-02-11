@@ -15,18 +15,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ruby
-PKG_VERSION:=1.9.2-p0
+PKG_VERSION:=1.9.3-p484
 PKG_RELEASE:=1
 
 PKG_LIBVER:=1.9
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=ftp://ftp.ruby-lang.org/pub/ruby/$(PKG_LIBVER)/
-PKG_MD5SUM:=d8a02cadf57d2571cd4250e248ea7e4b
+PKG_MD5SUM:=03f5b08804927ceabe5122cb90f5d0a9
 
 PKG_BUILD_DEPENDS:=ruby/host
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
+PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
@@ -216,13 +217,6 @@ TARGET_LDFLAGS += -L$(PKG_BUILD_DIR)
 MAKE_FLAGS += \
 	DESTDIR="$(PKG_INSTALL_DIR)" \
 	SHELL="/bin/bash"
-
-define Build/Prepare
-$(call Build/Prepare/Default)
-	( cd $(PKG_BUILD_DIR) ; \
-		autoconf ; \
-	)
-endef
 
 define Package/ruby/install
 	$(INSTALL_DIR) $(1)/usr/bin
