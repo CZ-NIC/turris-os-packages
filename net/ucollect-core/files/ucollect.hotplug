@@ -1,7 +1,7 @@
 MD5=$(
 (
-	route -n
-	route -n -A inet6
+	route -n | sed -ne 's/ *$//;/^0\.0\.0\.0  *[0-9.][0-9.]*  *0\.0\.0\.0/s/.* //p'
+	route -n -A inet6 | sed -ne 's/ *$//;/^::\/0  /s/.* //p'
 ) | md5sum | cut -f1 -d\ )
 PREVIOUS=$(cat /tmp/route.md5 || true)
 if [ "$MD5" != "$PREVIOUS" ] ; then

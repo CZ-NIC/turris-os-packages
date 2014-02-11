@@ -9,7 +9,7 @@
 
 include $(TOPDIR)/package/packages/net/ucollect-core/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,ucollect-core,41))
+$(eval $(call UCOLLECT_BASE,ucollect-core,42))
 
 define Package/ucollect-core
 	SECTION:=net
