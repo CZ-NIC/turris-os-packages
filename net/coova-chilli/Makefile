@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2007-2010 OpenWrt.org
+# Copyright (C) 2007-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,15 +8,25 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=coova-chilli
-PKG_VERSION:=1.2.9
-PKG_RELEASE:=1
+PKG_VERSION:=1.3.0
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://ap.coova.org/chilli
-PKG_MD5SUM:=a493d0562fc3b05fe86d8ad65f7f2dc0
+PKG_MD5SUM:=dc0037e3cdebcb60508081b4e42e984a
 
-PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
+
+PKG_CONFIG_DEPENDS := \
+  COOVACHILLI_MINIPORTAL \
+  COOVACHILLI_REDIR \
+  COOVACHILLI_USERAGENT \
+  COOVACHILLI_DNSLOG \
+  COOVACHILLI_UAMDOMAINFILE \
+  COOVACHILLI_NOSSL \
+  COOVACHILLI_MATRIXSSL \
+  COOVACHILLI_CYASSL \
+  COOVACHILLI_OPENSSL
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -24,9 +34,11 @@ define Package/coova-chilli
   SUBMENU:=Captive Portals
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+kmod-tun +librt
+  DEPENDS:=+kmod-tun +librt +COOVACHILLI_MATRIXSSL:libmatrixssl +COOVACHILLI_CYASSL:libcyassl +COOVACHILLI_OPENSSL:libopenssl
   TITLE:=Wireless LAN HotSpot controller (Coova Chilli Version)
   URL:=http://www.coova.org/CoovaChilli
+  MAINTAINER:=Imre Kaloz <kaloz@openwrt.org>
+  MENU:=1
 endef
 
 define Package/coova-chilli/description
@@ -37,6 +49,23 @@ define Package/coova-chilli/description
 	Protected Access (WPA) which is the standard of the future.
 	Authentication,	authorization and accounting (AAA) is handled by your
 	favorite radius server.
+endef
+
+define Package/coova-chilli/config
+  source "$(SOURCE)/Config.in"
+endef
+
+define Build/Configure
+	$(call Build/Configure/Default, \
+	$(if $(CONFIG_COOVACHILLI_REDIR),--enable,--disable)-chilliredir \
+	$(if $(CONFIG_COOVACHILLI_DNSLOG),--enable,--disable)-dnslog \
+	$(if $(CONFIG_COOVACHILLI_MINIPORTAL),--enable,--disable)-miniportal \
+	$(if $(CONFIG_COOVACHILLI_USERAGENT),--enable,--disable)-useragent \
+	$(if $(CONFIG_COOVACHILLI_UAMDOMAINFILE),--enable,--disable)-uamdomainfile \
+	$(if $(CONFIG_COOVACHILLI_MATRIXSSL),--with,--without)-matrixssl \
+	$(if $(CONFIG_COOVACHILLI_CYASSL),--with,--without)-cyaxssl \
+	$(if $(CONFIG_COOVACHILLI_OPENSSL),--with,--without)-openssl \
+	)
 endef
 
 define Package/coova-chilli/conffiles
