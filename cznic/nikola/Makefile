@@ -25,6 +25,10 @@ define Package/$(PKG_NAME)
 	DEPENDS:=+python +logrotate +syslog-ng3 +python-libatsha204 +python-openssl +firewall
 endef
 
+define Package/$(PKG_NAME)/description
+	Collects firewall logs and sends it to the api server.
+endef
+
 define Build/Compile
 	cd $(PKG_BUILD_DIR)/Nikola ; $(CONFIGURE_VARS) python ./setup.py install --prefix="$(PKG_INSTALL_DIR)/usr"
 endef
