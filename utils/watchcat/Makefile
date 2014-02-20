@@ -11,13 +11,14 @@ PKG_NAME:=watchcat
 PKG_VERSION:=1
 PKG_RELEASE:=5
 
+PKG_MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/watchcat
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=Enable the configuration of programed reboots
-  MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
 endef
 
 define Package/watchcat/description

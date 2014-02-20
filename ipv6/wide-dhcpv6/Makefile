@@ -18,8 +18,8 @@ PKG_MD5SUM:=1011e165850fe40d3e332dad2bfd30b3
 include $(INCLUDE_DIR)/package.mk
 
 define Package/wide-dhcpv6/Default
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   TITLE:=WIDE-DHCPv6
   SUBMENU:=wide-dhcpv6
   DEPENDS:=+kmod-ipv6 

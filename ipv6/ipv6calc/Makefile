@@ -21,8 +21,8 @@ PKG_INSTALL:=1
 include $(INCLUDE_DIR)/package.mk
 
 define Package/ipv6calc/Default
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   URL:=http://www.deepspace6.net/projects/ipv6calc.html
 endef
 

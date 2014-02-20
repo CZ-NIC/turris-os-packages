@@ -1,25 +1,23 @@
 --- a/Makefile
 +++ b/Makefile
-@@ -1,7 +1,7 @@
+@@ -3,7 +3,7 @@
  
- # -*- sh -*-
+ VERSION = 1.5.0
  
--CPPFLAGS += -I./include $(ZLIBCPPFLAGS) $(LZOCPPFLAGS)
-+CPPFLAGS += -I./include $(ZLIBCPPFLAGS) $(LZOCPPFLAGS) -I./include/linux/lzma
+-CPPFLAGS += -D_GNU_SOURCE -I./include -I$(BUILDDIR)/include -I./ubi-utils/include $(ZLIBCPPFLAGS) $(LZOCPPFLAGS)
++CPPFLAGS += -D_GNU_SOURCE -I./include -I$(BUILDDIR)/include -I./ubi-utils/include $(ZLIBCPPFLAGS) $(LZOCPPFLAGS) -I./include/linux/lzma
  
  ifeq ($(WITHOUT_XATTR), 1)
    CPPFLAGS += -DWITHOUT_XATTR
-@@ -50,7 +50,9 @@ $(SYMLINKS):
- 	ln -sf ../fs/jffs2/$@ $@
- 
- $(BUILDDIR)/mkfs.jffs2: $(addprefix $(BUILDDIR)/,\
--	compr_rtime.o mkfs.jffs2.o compr_zlib.o compr_lzo.o \
-+	compr_rtime.o mkfs.jffs2.o compr_zlib.o \
-+	$(if $(WITHOUT_LZO),,compr_lzo.o) \
-+	compr_lzma.o lzma/LzFind.o lzma/LzmaEnc.o lzma/LzmaDec.o \
- 	compr.o rbtree.o)
+@@ -84,7 +84,7 @@
+ #
+ # Utils in top level
+ #
+-obj-mkfs.jffs2 = compr_rtime.o compr_zlib.o compr_lzo.o compr.o rbtree.o
++obj-mkfs.jffs2 = compr_rtime.o compr_zlib.o $(if $(WITHOUT_LZO),,compr_lzo.o) compr_lzma.o lzma/LzFind.o lzma/LzmaEnc.o lzma/LzmaDec.o compr.o rbtree.o
  LDFLAGS_mkfs.jffs2 = $(ZLIBLDFLAGS) $(LZOLDFLAGS)
  LDLIBS_mkfs.jffs2  = -lz $(LZOLDLIBS)
+ 
 --- a/compr.c
 +++ b/compr.c
 @@ -520,6 +520,9 @@ int jffs2_compressors_init(void)
@@ -27,7 +25,7 @@
  	jffs2_lzo_init();
  #endif
 +#ifdef CONFIG_JFFS2_LZMA
-+        jffs2_lzma_init();
++	jffs2_lzma_init();
 +#endif
  	return 0;
  }
@@ -37,7 +35,7 @@
  	jffs2_lzo_exit();
  #endif
 +#ifdef CONFIG_JFFS2_LZMA
-+        jffs2_lzma_exit();
++	jffs2_lzma_exit();
 +#endif
  	return 0;
  }
@@ -120,7 +118,7 @@
 +		return -1;
 +	}
 +
-+        return 0;
++	return 0;
 +}
 +
 +STATIC int jffs2_lzma_compress(unsigned char *data_in, unsigned char *cpage_out,
@@ -176,26 +174,26 @@
 +
 +int INIT jffs2_lzma_init(void)
 +{
-+        int ret;
++	int ret;
 +	CLzmaEncProps props;
 +	LzmaEncProps_Init(&props);
 +
-+        props.dictSize = LZMA_BEST_DICT(0x2000);
-+        props.level = LZMA_BEST_LEVEL;
-+        props.lc = LZMA_BEST_LC;
-+        props.lp = LZMA_BEST_LP;
-+        props.pb = LZMA_BEST_PB;
-+        props.fb = LZMA_BEST_FB;
++	props.dictSize = LZMA_BEST_DICT(0x2000);
++	props.level = LZMA_BEST_LEVEL;
++	props.lc = LZMA_BEST_LC;
++	props.lp = LZMA_BEST_LP;
++	props.pb = LZMA_BEST_PB;
++	props.fb = LZMA_BEST_FB;
 +
 +	ret = lzma_alloc_workspace(&props);
-+        if (ret < 0)
-+                return ret;
++	if (ret < 0)
++	return ret;
 +
 +	ret = jffs2_register_compressor(&jffs2_lzma_comp);
 +	if (ret)
 +		lzma_free_workspace();
 +	
-+        return ret;
++	return ret;
 +}
 +
 +void jffs2_lzma_exit(void)
@@ -262,16 +260,16 @@
 +
 +static void *p_lzma_malloc(void *p, size_t size)
 +{
-+        if (size == 0)
-+                return NULL;
++	if (size == 0)
++		return NULL;
 +
-+        return LZMA_MALLOC(size);
++	return LZMA_MALLOC(size);
 +}
 +
 +static void p_lzma_free(void *p, void *address)
 +{
-+        if (address != NULL)
-+                LZMA_FREE(address);
++	if (address != NULL)
++		LZMA_FREE(address);
 +}
 +
 +static ISzAlloc lzma_alloc = {p_lzma_malloc, p_lzma_free};

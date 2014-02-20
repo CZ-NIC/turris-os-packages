@@ -1,0 +1,8 @@
+diff -Nur uClibc++-0.2.4.orig/Makefile uClibc++-0.2.4/Makefile
+--- uClibc++-0.2.4.orig/Makefile	2012-05-25 23:15:31.000000000 +0200
++++ uClibc++-0.2.4/Makefile	2013-03-11 11:50:03.000000000 +0100
+@@ -1,4 +1,3 @@
+-MAKE    = make
+ SUBDIRS = bin include src
+ 
+ # User defines:

@@ -108,6 +108,14 @@ verbose_echo()
 	fi
 }
 
+syslog_echo()
+{
+	if [ "$use_syslog" = 1 ]
+	then
+		echo $1|logger -t ddns-scripts-$service_id
+	fi
+}
+
 start_daemon_for_all_ddns_sections()
 {
 	local event_interface="$1"

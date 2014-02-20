@@ -16,6 +16,9 @@ PKG_SOURCE_URL:=@SF/mad \
 	ftp://ftp.mars.org/pub/mpeg/
 PKG_MD5SUM:=1be543bc30c56fb6bea1d7bf6a64e66c
 
+PKG_LICENSE:=GPLv2
+PKG_LICENSE_FILES:=COPYING
+
 PKG_FIXUP:=autoreconf
 
 PKG_INSTALL:=1
@@ -57,13 +60,6 @@ CONFIGURE_ARGS+= \
 	--disable-debugging \
 	--enable-speed \
 
-# XXX: configure is parsing and "optimizing" CFLAGS, adding unsupported 
-# XXX: compiler args to it (like -fforce-mem)
-# XXX: so pass an empty one to configure
-CONFIGURE_VARS+= \
-	CFLAGS="" \
-
-# XXX: and pass our own to make
 MAKE_FLAGS+= \
 	CFLAGS="$(TARGET_CFLAGS)" \
 

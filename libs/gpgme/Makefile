@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2011 OpenWrt.org
+# Copyright (C) 2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,14 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gpgme
-PKG_VERSION:=1.3.1
+PKG_VERSION:=1.4.3
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=ftp://ftp.gnupg.org/gcrypt/gpgme/
-PKG_MD5SUM:=90afa8436ce2b2683c001c824bd22601
+PKG_MD5SUM:=334e524cffa8af4e2f43ae8afe585672
 
-PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -24,17 +23,22 @@ define Package/libgpgme
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=GnuPG Made Easy library
-  URL:=http://www.gnupg.org/
   DEPENDS:=+gnupg +libassuan +libpthread
+  URL:=http://www.gnupg.org/
 endef
 
 define Package/libgpgme/description
- GPGME (GnuPG Made Easy) is a C language library that allows to add
- support for cryptography to a program. It is designed to make access to
- public key crypto engines like GnuPG or GpgSM easier for applications.
- GPGME provides a high-level crypto API for encryption, decryption,
- signing, signature verification and key management.
+  GnuPG Made Easy (GPGME) is a library designed to make access to GnuPG easier for 
+  applications. It provides a High-Level Crypto API for encryption, decryption, signing, 
+  signature verification and key management. Currently it uses GnuPG as its backend but 
+  the API isn't restricted to this engine; in fact we have already developed a backend 
+  for CMS (S/MIME).
 endef
+
+ifdef CONFIG_USE_UCLIBC
+CONFIGURE_VARS += \
+    LIBS="-largp"
+endif
 
 CONFIGURE_ARGS += \
 	--enable-shared \

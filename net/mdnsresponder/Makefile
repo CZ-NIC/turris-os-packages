@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mDNSResponder
-PKG_VERSION:=379.37
-PKG_RELEASE:=2
+PKG_VERSION:=544
+PKG_RELEASE:=1
 
 PKG_SOURCE:=mDNSResponder-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://opensource.apple.com/tarballs/mDNSResponder/
-PKG_MD5SUM:=dd557e1058b51ac2f29cd01d67be0145
+PKG_MD5SUM:=39142ab70bd82a096801ce346f86cbab
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/mDNSResponder-$(PKG_VERSION)
 
@@ -145,6 +145,8 @@ endef
 define Package/mdnsd/install
 	$(INSTALL_DIR) $(1)/usr/sbin/
 	$(CP) $(PKG_INSTALL_DIR)/usr/sbin/mdnsd $(1)/usr/sbin/
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface
+	$(INSTALL_DATA) ./files/mdnsd.hotplug $(1)/etc/hotplug.d/iface
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/mdnsd.init $(1)/etc/init.d/mdnsd
 	$(INSTALL_DIR) $(1)/usr/lib/

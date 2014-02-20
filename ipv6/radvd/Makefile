@@ -21,8 +21,8 @@ PKG_INSTALL:=1
 include $(INCLUDE_DIR)/package.mk
 
 define Package/radvd/Default
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   TITLE:=IPv6 Routing Advertisement
   URL:=http://v6web.litech.org/radvd/
   DEPENDS:=+kmod-ipv6 +libdaemon

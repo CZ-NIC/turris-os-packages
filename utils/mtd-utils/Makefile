@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2009-2010 OpenWrt.org
+# Copyright (C) 2009-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,16 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mtd-utils
-PKG_REV:=5319b84974fcb71504aed2d1b8285e9c0a4a4bb8
-PKG_VERSION:=1.4.5
-PKG_RELEASE:=1
-PKG_INSTALL:=1
+PKG_REV:=ab8c6fb93ce9db0f09401c4b819b0b277dc00340
+PKG_VERSION:=1.5.0
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=git://git.infradead.org/mtd-utils.git
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=$(PKG_REV)
+
+PKG_INSTALL:=1
 
 PKG_BUILD_DEPENDS:=util-linux
 
@@ -27,18 +28,19 @@ FILES:= \
 	doc_loadbios \
 	docfdisk \
 	flash_erase \
-	flash_eraseall \
-	flash_info \
+	flash_eraseall:+mtd-utils-flash-erase \
 	flash_lock \
 	flash_otp_dump \
-	flash_otp_info \
+	flash_otp_lock \
+	flash_otp_write \
 	flash_unlock \
 	flashcp \
 	ftl_check \
 	ftl_format \
 	jffs2dump \
+	jffs2reader:+zlib \
 	mkfs.jffs2:+zlib \
-	mkfs.ubifs:+libuuid:+zlib \
+	mkfs.ubifs:+libuuid:+liblzo:+zlib \
 	mtd_debug \
 	mtdinfo \
 	nanddump \
@@ -100,9 +102,7 @@ MAKE_FLAGS += \
 
 define PartInstall
 define Package/mtd-utils-$(subst _,-,$(firstword $(subst :, ,$(1))))/install
-	$(INSTALL_DIR) \
-		$$(1)/usr/sbin
-
+	$(INSTALL_DIR) $$(1)/usr/sbin
 	$(INSTALL_BIN) \
 		$(PKG_INSTALL_DIR)/usr/sbin/$(firstword $(subst :, ,$(1))) \
 		$$(1)/usr/sbin/

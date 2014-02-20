@@ -1,0 +1,22 @@
+--- a/configure.in
++++ b/configure.in
+@@ -243,7 +243,7 @@ AC_SUBST(pkglibdir)
+ 
+ if test "$enable_maintainer_mode" = "yes"; then
+ 	DISABLE_DEPRECATED_CFLAGS=" \
+-		-DG_DISABLE_DEPRECATED -DG_DISABLE_SINGLE_INCLUDES"
++		-DG_DISABLE_SINGLE_INCLUDES"
+ 	AC_SUBST(DISABLE_DEPRECATED_CFLAGS)
+ fi
+ 
+--- a/linc2/src/Makefile.am
++++ b/linc2/src/Makefile.am
+@@ -13,7 +13,7 @@ INCLUDES =                         \
+ 	-I$(top_srcdir)/linc2/include    \
+ 	$(LINC_CFLAGS)             \
+ 	$(WARN_CFLAGS)             \
+-	-DG_DISABLE_DEPRECATED
++	$(DISABLE_DEPRECATED_CFLAGS)
+ 
+ if OS_WIN32
+ else

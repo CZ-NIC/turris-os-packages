@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2009-2012 OpenWrt.org
+# Copyright (C) 2009-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=transmission
-PKG_VERSION:=2.71
-PKG_RELEASE:=1
+PKG_VERSION:=2.82
+PKG_RELEASE:=2
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://mirrors.m0k.org/transmission/files
-PKG_MD5SUM:=902393c5a054b4ed4953f7a16d13801a
+PKG_MD5SUM:=a5ef870c0410b12d10449c2d36fa4661
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -81,7 +81,7 @@ CONFIGURE_VARS += \
 CONFIGURE_ARGS += \
 	--enable-daemon \
 	--enable-cli \
-	--disable-gtk \
+	--without-gtk \
 	--enable-largefile \
 	--enable-lightweight
 

@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=shflags
 PKG_REV:=133
 PKG_VERSION:=2012-06-11_r$(PKG_REV)
-PKG_RELEASE=$(PKG_SOURCE_VERSION)
+PKG_RELEASE=1.0.x
 
 PKG_SOURCE_PROTO:=svn
 PKG_SOURCE_URL:=http://shflags.googlecode.com/svn/trunk

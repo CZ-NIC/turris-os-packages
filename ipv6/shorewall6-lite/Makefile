@@ -25,8 +25,8 @@ PKG_MD5SUM:=3ad7ba3790388bb562d3c937ba02fa31
 include $(INCLUDE_DIR)/package.mk
 
 define Package/shorewall6-lite
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   DEPENDS:=+ip +ip6tables
   TITLE:=Shorewall6 Lite
   URL:=http://www.shorewall.net/

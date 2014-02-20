@@ -28,7 +28,7 @@ define Package/libxapian
   CATEGORY:=Libraries
   TITLE:=xapian
   URL:=http://xapian.org
-  DEPENDS:=+libstdcpp +zlib +libuuid
+  DEPENDS:=+libstdcpp +libuuid +zlib
 endef
 
 MAKE_FLAGS += \

@@ -8,17 +8,22 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libffi
-PKG_VERSION:=3.0.10
+PKG_VERSION:=3.0.11
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=ftp://sourceware.org/pub/libffi/
-PKG_MD5SUM:=79390673f5d07a8fb342bc09b5055b6f
+PKG_MD5SUM:=f69b9693227d976835b4857b1ba7d0e3
+
+PKG_LICENSE:=MIT
+PKG_LICENSE_FILES:=LICENSE
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
+PKG_USE_MIPS16:=0
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/host-build.mk
 
 define Package/libffi
   SECTION:=libs
@@ -71,4 +76,5 @@ define Package/libffi/install
 		$(1)/usr/lib/
 endef
 
+$(eval $(call HostBuild))
 $(eval $(call BuildPackage,libffi))

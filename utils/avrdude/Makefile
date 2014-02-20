@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=avrdude
-PKG_VERSION:=5.8
+PKG_VERSION:=6.0.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://download.savannah.gnu.org/releases/avrdude
-PKG_MD5SUM:=d459dcf47fa7fc2a29a70d68ebff4886
+PKG_MD5SUM:=346ec2e46393a54ac152b95abf1d9850
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -22,7 +22,7 @@ define Package/avrdude
   CATEGORY:=Utilities
   TITLE:=AVR Downloader/UploaDEr
   URL:=http://www.bsdhome.com/avrdude/
-  DEPENDS:=+libncurses +libreadline +libusb-compat
+  DEPENDS:=+libncurses +libreadline +libusb-compat +libftdi
 endef
 
 define Package/avrdude/description
@@ -35,9 +35,11 @@ define Build/Prepare
 endef
 
 CONFIGURE_ARGS+= \
-	--enable-shared \
-	--disable-static \
+	--disable-doc \
 	--disable-parport \
+
+CONFIGURE_VARS += \
+	ac_cv_lib_elf_elf_begin=no \
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \

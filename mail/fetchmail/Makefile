@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fetchmail
-PKG_VERSION:=6.3.20
+PKG_VERSION:=6.3.26
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://download.berlios.de/fetchmail
-PKG_MD5SUM:=76406dbb37471f911cbb483830afe068
+PKG_MD5SUM:=61b66faad044afa26e142bb1791aa2b3
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_INSTALL:=1
@@ -24,6 +24,7 @@ define Package/fetchmail/Default
   SECTION:=mail
   CATEGORY:=Mail
   TITLE:=Remote mail retriever
+  MAINTAINER:=Peter Wagner <tripolar@gmx.at>
   URL:=http://fetchmail.berlios.de/
 endef
 

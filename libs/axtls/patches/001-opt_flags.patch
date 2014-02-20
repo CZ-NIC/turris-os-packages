@@ -1,6 +1,6 @@
 --- a/config/makefile.conf
 +++ b/config/makefile.conf
-@@ -105,20 +105,23 @@ endif
+@@ -110,20 +110,23 @@ endif
  endif
  
  ifdef CONFIG_DEBUG

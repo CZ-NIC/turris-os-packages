@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=send
 PKG_VERSION:=0.2-5.4
-PKG_RELEASE:=1
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)d_$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://mobisend.org/debian-mobisend/pool/main/s/sendd/
@@ -21,8 +21,8 @@ PKG_BUILD_PARALLEL:=0
 include $(INCLUDE_DIR)/package.mk
 
 define Package/send
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   TITLE:=Secure Neighbor Discovery implementation
   URL:=http://mobisend.org/debian-mobisend.html
   DEPENDS:=+kmod-ipv6 +ip6tables +libnetfilter-queue +libopenssl +libreadline +libncurses

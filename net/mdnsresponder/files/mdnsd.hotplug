@@ -1,0 +1,5 @@
+#!/bin/sh
+/etc/init.d/mdnsd enabled || exit 0
+[ "$ACTION" = ifupdate -a -z "$IFUPDATE_ADDRESSES" ] && exit 0
+logger -t mdnsd "Restarting mdnsd due to $ACTION of $INTERFACE ($DEVICE)"
+/etc/init.d/mdnsd restart

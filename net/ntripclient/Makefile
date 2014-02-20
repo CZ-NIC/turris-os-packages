@@ -15,6 +15,8 @@ PKG_SOURCE:=$(PKG_NAME).zip
 PKG_SOURCE_URL:=http://igs.bkg.bund.de/root_ftp/NTRIP/software/
 PKG_MD5SUM:=4b357fa648d74e4e13c4b5a2a39f5624
 
+PKG_MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/ntripclient
@@ -23,7 +25,6 @@ define Package/ntripclient
   SUBMENU:=NTRIP
   TITLE:=Ntrip Version 2.0 Command Line Client
   URL:=http://igs.bkg.bund.de/ntrip/download
-  MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
 endef
 
 define Package/ntripclient/description

@@ -1,5 +1,5 @@
 # 
-# Copyright (C) 2006-2012 OpenWrt.org
+# Copyright (C) 2006-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mc
-PKG_VERSION:=4.7.5.3
-PKG_RELEASE:=2
+PKG_VERSION:=4.8.10
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://www.midnight-commander.org/downloads/
-PKG_MD5SUM:=6a67e139e0032d8a871455a80d490941
+PKG_MD5SUM:=eb4bdc23abd4fdfa14911d53d65c8186
 
 PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf
@@ -28,7 +28,6 @@ define Package/mc
   TITLE:=midnight commander - a powerful file manager
   URL:=http://www.midnight-commander.org/
   SUBMENU:=filemanager
-  MAINTAINER:=Luka Perkov <openwrt@lukaperkov.net>
   MENU:=1
 endef
 

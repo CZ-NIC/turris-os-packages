@@ -8,18 +8,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glib2
-PKG_VERSION:=2.26.1
-PKG_RELEASE:=3
+PKG_VERSION:=2.37.7
+PKG_RELEASE:=1
 
-PKG_SOURCE:=glib-$(PKG_VERSION).tar.bz2
+PKG_SOURCE:=glib-$(PKG_VERSION).tar.xz
 PKG_BUILD_DIR:=$(BUILD_DIR)/glib-$(PKG_VERSION)
-PKG_SOURCE_URL:=@GNOME/glib/2.26
-PKG_MD5SUM:=17535accceef55bcb17a74d73f9c2aef
+PKG_SOURCE_URL:=@GNOME/glib/2.37
+PKG_MD5SUM:=17a9493e3e2efebc8ab81ec8d4480bfb
 
-PKG_FIXUP:=autoreconf
-PKG_BUILD_DEPENDS:=glib2/host libpthread zlib libintl
-HOST_BUILD_DEPENDS:=gettext/host libiconv/host
+PKG_BUILD_DEPENDS:=glib2/host libpthread zlib libintl libffi
+HOST_BUILD_DEPENDS:=libintl/host libiconv/host libffi/host
 PKG_INSTALL:=1
+PKG_USE_MIPS16:=0
 
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/glib-$(PKG_VERSION)
 
@@ -30,7 +30,7 @@ include $(INCLUDE_DIR)/nls.mk
 define Package/glib2
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread
+  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi
   TITLE:=glib 2.0
   URL:=http://www.gtk.org/
 endef

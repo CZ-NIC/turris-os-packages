@@ -57,3 +57,6 @@
 
 # easydns.com dynamic DNS
 "easydns.com"		"http://[USERNAME]:[PASSWORD]@api.cp.easydns.com/dyn/tomato.php?hostname=[DOMAIN]&myip=[IP]"
+
+# Winco DDNS
+"ddns.com.br"	"http://[DOMAIN]:[PASSWORD]@members.ddns.com.br/nic/update?hostname=[DOMAIN]&myip=[IP]"

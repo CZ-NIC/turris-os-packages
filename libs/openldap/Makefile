@@ -8,15 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openldap
-PKG_VERSION:=2.4.23
-PKG_RELEASE:=4
+PKG_VERSION:=2.4.39
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tgz
 PKG_SOURCE_URL:=ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/ \
 	ftp://sunsite.cnlab-switch.ch/mirror/OpenLDAP/openldap-release/ \
 	ftp://ftp.nl.uu.net/pub/unix/db/openldap/openldap-release/ \
 	ftp://ftp.plig.org/pub/OpenLDAP/openldap-release/
-PKG_MD5SUM:=90150b8c0d0192e10b30157e68844ddf
+PKG_MD5SUM:=b0d5ee4b252c841dec6b332d679cf943
 
 PKG_FIXUP:=autoreconf
 
@@ -37,7 +37,7 @@ define Package/libopenldap
   $(call Package/openldap/Default)
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=+libopenssl +libsasl2
+  DEPENDS:=+libopenssl +libsasl2 +libpthread
   TITLE+= (libraries)
 endef
 
@@ -80,7 +80,7 @@ define Package/openldap-server/conffiles
 /etc/openldap/slapd.conf
 endef
 
-TARGET_CFLAGS += $(FPIC)
+TARGET_CFLAGS += $(FPIC) -lpthread
 
 CONFIGURE_ARGS += \
 	--enable-shared \

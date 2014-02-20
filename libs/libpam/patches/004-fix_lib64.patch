@@ -1,6 +1,6 @@
 --- a/configure.in
 +++ b/configure.in
-@@ -26,12 +26,7 @@ dnl If we use /usr as prefix, use /etc f
+@@ -28,12 +28,7 @@ dnl If we use /usr as prefix, use /etc f
          fi
  	if test ${libdir} = '${exec_prefix}/lib'
  	then

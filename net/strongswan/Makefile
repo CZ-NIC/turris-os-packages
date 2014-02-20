@@ -1,5 +1,5 @@
 # 
-# Copyright (C) 2012 OpenWrt.org
+# Copyright (C) 2012-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=strongswan
-PKG_VERSION:=5.0.0
+PKG_VERSION:=5.1.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=http://download.strongswan.org/
-PKG_MD5SUM:=c8b861305def7c0abae04f7bbefec212
+PKG_SOURCE_URL:=http://download.strongswan.org/ http://download2.strongswan.org/
+PKG_MD5SUM:=e3af3d493d22286be3cd794533a8966a
 
 PKG_MOD_AVAILABLE:= \
 	addrblock \
@@ -36,6 +36,7 @@ PKG_MOD_AVAILABLE:= \
 	eap-identity \
 	eap-md5 \
 	eap-mschapv2 \
+	eap-radius \
 	farp \
 	fips-prf \
 	gcm \
@@ -44,8 +45,10 @@ PKG_MOD_AVAILABLE:= \
 	ha \
 	hmac \
 	kernel-klips \
+	kernel-libipsec \
 	kernel-netlink \
 	kernel-pfkey \
+	kernel-pfroute \
 	ldap \
 	led \
 	load-tester \
@@ -69,18 +72,18 @@ PKG_MOD_AVAILABLE:= \
 	smp \
 	socket-default \
 	socket-dynamic \
-	socket-raw \
 	sql \
 	sqlite \
 	stroke \
 	test-vectors \
+	unity \
 	uci \
 	updown \
 	whitelist \
 	x509 \
 	xauth-eap \
 	xauth-generic \
-	xcbc \
+	xcbc
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_STRONGSWAN_DEVICE_RANDOM \
@@ -150,6 +153,7 @@ $(call Package/strongswan/Default)
 	+strongswan-mod-eap-identity \
 	+strongswan-mod-eap-md5 \
 	+strongswan-mod-eap-mschapv2 \
+	+strongswan-mod-eap-radius \
 	+strongswan-mod-farp \
 	+strongswan-mod-fips-prf \
 	+strongswan-mod-gcm \
@@ -185,6 +189,7 @@ $(call Package/strongswan/Default)
 	+strongswan-mod-stroke \
 	+strongswan-mod-test-vectors \
 	+strongswan-mod-uci \
+	+strongswan-mod-unity \
 	+strongswan-mod-updown \
 	+strongswan-mod-whitelist \
 	+strongswan-mod-x509 \
@@ -198,8 +203,9 @@ endef
 define Package/strongswan-full/description
 $(call Package/strongswan/description/Default)
  This meta-package contains dependencies for all of the strongswan plugins
- except kernel-klips, kernel-pfkey, socket-dynamic and socket-raw which are
- ommitted in favor of the kernel-netlink and socket-default plugins.
+ except kernel-klips, kernel-libipsec, kernel-pfkey, kernel-pfroute,
+ socket-dynamic and which are ommitted in favor of the kernel-netlink and
+ socket-default plugins.
 endef
 
 
@@ -343,6 +349,7 @@ EXTRA_LDFLAGS+= -Wl,-rpath-link,$(STAGING_DIR)/usr/lib
 define Package/strongswan/conffiles
 /etc/ipsec.conf
 /etc/ipsec.secrets
+/etc/ipsec.user
 /etc/strongswan.conf
 endef
 
@@ -352,6 +359,8 @@ define Package/strongswan/install
 	$(INSTALL_DIR) $(1)/usr/lib/ipsec
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ipsec/{libstrongswan.so.*,libhydra.so.*} $(1)/usr/lib/ipsec/
 	$(INSTALL_CONF) ./files/ipsec.secrets $(1)/etc/
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/ipsec.init $(1)/etc/init.d/ipsec
 endef
 
 define Package/strongswan-default/install
@@ -380,14 +389,22 @@ endef
 define Package/strongswan-utils/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/ipsec $(1)/usr/sbin/
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/pki $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/lib/ipsec
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/ipsec/{openac,pki,scepclient} $(1)/usr/lib/ipsec/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/ipsec/{openac,scepclient} $(1)/usr/lib/ipsec/
 endef
 
 define Plugin/duplicheck/install
 	$(INSTALL_DIR) $(1)/usr/lib/ipsec/plugins
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ipsec/duplicheck $(1)/usr/lib/ipsec/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ipsec/plugins/libstrongswan-duplicheck.so $(1)/usr/lib/ipsec/plugins/
+endef
+
+define Plugin/eap-radius/install
+	$(INSTALL_DIR) $(1)/usr/lib/ipsec/plugins
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ipsec/libradius.so.* $(1)/usr/lib/ipsec/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ipsec/plugins/libstrongswan-eap-radius.so $(1)/usr/lib/ipsec/plugins/
 endef
 
 define Plugin/attr-sql/install
@@ -416,6 +433,8 @@ define Plugin/updown/install
 	$(INSTALL_DIR) $(1)/usr/lib/ipsec/plugins
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ipsec/{_updown,_updown_espmark} $(1)/usr/lib/ipsec/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ipsec/plugins/libstrongswan-updown.so $(1)/usr/lib/ipsec/plugins/
+	$(INSTALL_DIR) $(1)/etc
+	$(INSTALL_CONF) ./files/ipsec.user $(1)/etc/
 endef
 
 define Plugin/whitelist/install
@@ -451,6 +470,7 @@ $(eval $(call BuildPlugin,duplicheck,advanced duplicate checking,))
 $(eval $(call BuildPlugin,eap-identity,EAP identity helper,))
 $(eval $(call BuildPlugin,eap-md5,EAP MD5 (CHAP) EAP auth,))
 $(eval $(call BuildPlugin,eap-mschapv2,EAP MS-CHAPv2 EAP auth,))
+$(eval $(call BuildPlugin,eap-radius,EAP RADIUS auth,))
 $(eval $(call BuildPlugin,farp,fake arp respsonses,))
 $(eval $(call BuildPlugin,fips-prf,FIPS PRF crypto,+strongswan-mod-sha1))
 $(eval $(call BuildPlugin,gcm,GCM AEAD wrapper crypto,))
@@ -459,8 +479,10 @@ $(eval $(call BuildPlugin,gmp,libgmp,+PACKAGE_strongswan-mod-gmp:libgmp))
 $(eval $(call BuildPlugin,ha,high availability cluster,))
 $(eval $(call BuildPlugin,hmac,HMAC crypto,))
 $(eval $(call BuildPlugin,kernel-klips,KLIPS kernel interface,))
+$(eval $(call BuildPlugin,kernel-libipsec,libipsec kernel interface,))
 $(eval $(call BuildPlugin,kernel-netlink,netlink kernel interface,))
 $(eval $(call BuildPlugin,kernel-pfkey,PK_KEY kernel interface,))
+$(eval $(call BuildPlugin,kernel-pfroute,PF_ROUTE kernel interface,))
 $(eval $(call BuildPlugin,ldap,LDAP,+PACKAGE_strongswan-mod-ldap:libopenldap))
 $(eval $(call BuildPlugin,led,LED blink on IKE activity,))
 $(eval $(call BuildPlugin,load-tester,load testing,))
@@ -484,12 +506,12 @@ $(eval $(call BuildPlugin,sha2,SHA2 crypto,))
 $(eval $(call BuildPlugin,smp,SMP configuration and control interface,+PACKAGE_strongswan-mod-smp:libxml2))
 $(eval $(call BuildPlugin,socket-default,default socket implementation for charon,))
 $(eval $(call BuildPlugin,socket-dynamic,dynamic socket implementation for charon,))
-$(eval $(call BuildPlugin,socket-raw,raw socket implementation for charon,))
 $(eval $(call BuildPlugin,sql,SQL database interface,))
 $(eval $(call BuildPlugin,sqlite,SQLite database interface,+strongswan-mod-sql +PACKAGE_strongswan-mod-sqlite:libsqlite3))
 $(eval $(call BuildPlugin,stroke,Stroke,+strongswan-utils))
 $(eval $(call BuildPlugin,test-vectors,crypto test vectors,))
 $(eval $(call BuildPlugin,uci,UCI config interface,+PACKAGE_strongswan-mod-uci:libuci))
+$(eval $(call BuildPlugin,unity,Cisco Unity extension,))
 $(eval $(call BuildPlugin,updown,updown firewall,))
 $(eval $(call BuildPlugin,whitelist,peer identity whitelisting,))
 $(eval $(call BuildPlugin,x509,x509 certificate,))

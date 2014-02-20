@@ -11,7 +11,7 @@
  #ifdef HAVE_LIBAUDIT
 --- a/modules/pam_unix/pam_unix_passwd.c
 +++ b/modules/pam_unix/pam_unix_passwd.c
-@@ -74,18 +74,18 @@
+@@ -79,18 +79,18 @@
  #include "passverify.h"
  #include "bigcrypt.h"
  
@@ -44,7 +44,7 @@
  #include <rpcsvc/ypclnt.h>
  #endif
  
-@@ -285,7 +285,7 @@ int _unix_getpwnam(pam_handle_t *pamh, c
+@@ -402,7 +402,7 @@ int _unix_getpwnam(pam_handle_t *pamh, c
  		}
  	}
  
@@ -55,8 +55,8 @@
  		int len = 0, i;
 --- a/modules/pam_unix/yppasswd_xdr.c
 +++ b/modules/pam_unix/yppasswd_xdr.c
-@@ -13,6 +13,10 @@
- #include "config.h"
+@@ -15,6 +15,10 @@
+ #ifdef HAVE_RPC_RPC_H
  
  #include <rpc/rpc.h>
 +#ifdef USE_NIS

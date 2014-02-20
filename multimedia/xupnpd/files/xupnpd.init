@@ -1,0 +1,23 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2013 OpenWrt.org
+
+START=99
+STOP=99
+
+SERVICE_DAEMONIZE=1
+SERVICE_WRITE_PID=1
+
+XUPNPDROOTDIR=/usr/share/xupnpd
+XUPNPD=/usr/bin/xupnpd
+
+start() {
+        service_start $XUPNPD
+}
+
+stop() {
+        service_stop $XUPNPD
+}
+
+reload() {
+        service_reload $XUPNPD
+}

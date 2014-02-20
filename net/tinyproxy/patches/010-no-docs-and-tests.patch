@@ -1,30 +1,6 @@
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -2,9 +2,7 @@ SUBDIRS = \
- 	src \
- 	data \
- 	etc \
--	docs \
- 	m4macros \
--	tests
- 
- # tools want this on a single line
- ACLOCAL_AMFLAGS = -I m4macros
---- a/Makefile.in
-+++ b/Makefile.in
-@@ -222,9 +222,7 @@ SUBDIRS = \
- 	src \
- 	data \
- 	etc \
--	docs \
- 	m4macros \
--	tests
- 
- 
- # tools want this on a single line
 --- a/configure
 +++ b/configure
-@@ -6816,59 +6816,8 @@ fi
+@@ -6815,59 +6815,8 @@ fi
  
  
  
@@ -79,8 +55,32 @@
 -fi
 -
 -if test x"$A2X" = x"no"; then
--  as_fn_error "Test for asciidoc failed. See the file 'INSTALL' for help." "$LINENO" 5
+-  as_fn_error $? "Test for asciidoc failed. See the file 'INSTALL' for help." "$LINENO" 5
 -fi
  
  ac_config_files="$ac_config_files Makefile src/Makefile data/Makefile data/templates/Makefile etc/Makefile docs/Makefile docs/man5/Makefile docs/man5/tinyproxy.conf.txt docs/man8/Makefile docs/man8/tinyproxy.txt m4macros/Makefile tests/Makefile tests/scripts/Makefile"
  
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -2,9 +2,7 @@ SUBDIRS = \
+ 	src \
+ 	data \
+ 	etc \
+-	docs \
+ 	m4macros \
+-	tests
+ 
+ # tools want this on a single line
+ ACLOCAL_AMFLAGS = -I m4macros
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -222,9 +222,7 @@ SUBDIRS = \
+ 	src \
+ 	data \
+ 	etc \
+-	docs \
+ 	m4macros \
+-	tests
+ 
+ 
+ # tools want this on a single line

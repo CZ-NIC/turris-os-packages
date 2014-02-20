@@ -1,7 +1,6 @@
-diff -urN zabbix-1.6/src/libs/zbxsysinfo/linux/cpu.c zabbix-1.6.new/src/libs/zbxsysinfo/linux/cpu.c
---- zabbix-1.6/src/libs/zbxsysinfo/linux/cpu.c	2008-09-18 22:15:26.000000000 +0200
-+++ zabbix-1.6.new/src/libs/zbxsysinfo/linux/cpu.c	2008-09-30 19:32:54.000000000 +0200
-@@ -22,6 +22,45 @@
+--- a/src/libs/zbxsysinfo/linux/cpu.c
++++ b/src/libs/zbxsysinfo/linux/cpu.c
+@@ -21,6 +21,45 @@
  #include "sysinfo.h"
  #include "stats.h"
  
@@ -44,6 +43,6 @@ diff -urN zabbix-1.6/src/libs/zbxsysinfo/linux/cpu.c zabbix-1.6.new/src/libs/zbx
 +}
 +#endif
 +
- int	SYSTEM_CPU_NUM(const char *cmd, const char *param, unsigned flags, AGENT_RESULT *result)
+ int	SYSTEM_CPU_NUM(AGENT_REQUEST *request, AGENT_RESULT *result)
  {
- 	char	mode[128];
+ 	char	*type;

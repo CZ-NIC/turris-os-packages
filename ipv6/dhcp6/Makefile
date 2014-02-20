@@ -20,8 +20,8 @@ include $(INCLUDE_DIR)/package.mk
 PKG_UNPACK:=unzip -d $(PKG_BUILD_DIR)/ $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/dhcp6/Default
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   DEPENDS:=+libncurses
   TITLE:=IPv6 DHCP
   URL:=http://sourceforge.net/projects/dhcpv6-linux

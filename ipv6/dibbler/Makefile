@@ -19,8 +19,8 @@ include $(INCLUDE_DIR)/uclibc++.mk
 include $(INCLUDE_DIR)/package.mk
 
 define Package/dibbler/Default
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   DEPENDS:=$(CXX_DEPENDS) +libpthread
   TITLE:=Dibbler, a portable DHCPv6 implementation
   URL:=http://klub.com.pl/dhcpv6/

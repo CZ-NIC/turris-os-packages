@@ -8,9 +8,9 @@ HAVEGED_DCACHE=32
 HAVEGED_ICACHE=32
 
 start() {
-	service_start /sbin/haveged -w $HAVEGED_THRESHOLD -d $HAVEGED_DCACHE -i $HAVEGED_ICACHE -v 1
+	service_start /usr/sbin/haveged -w $HAVEGED_THRESHOLD -d $HAVEGED_DCACHE -i $HAVEGED_ICACHE -v 1
 }
 
 stop() {
-	service_stop /sbin/haveged
+	service_stop /usr/sbin/haveged
 }

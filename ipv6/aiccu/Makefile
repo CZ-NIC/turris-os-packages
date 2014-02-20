@@ -20,8 +20,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 include $(INCLUDE_DIR)/package.mk
 
 define Package/aiccu
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   DEPENDS:=+libpthread +ip +kmod-sit +kmod-tun
   TITLE:=SixXS Automatic IPv6 Connectivity Client Utility
   URL:=http://www.sixxs.net/tools/aiccu/

@@ -46,6 +46,7 @@ fi
 #
 #
 #config_get use_https $service_id use_https
+#config_get use_syslog $service_id use_syslog
 #config_get cacert $service_id cacert
 #
 #config_get ip_source $service_id ip_source
@@ -78,7 +79,6 @@ then
 	check_unit="seconds"
 fi
 
-
 if [ -z "$force_interval" ]
 then
 	force_interval=72
@@ -89,28 +89,44 @@ then
 	force_unit="hours"
 fi
 
+if [ -z $use_syslog ]
+then
+	use_syslog=0
+fi
+
 if [ -z "$use_https" ]
 then
 	use_https=0
 fi
 
 
-
 #some constants
 
+retrieve_prog="/usr/bin/wget -O - ";
 if [ "x$use_https" = "x1" ]
 then
-	retrieve_prog="/usr/bin/curl "
-	if [ -f "$cacert" ]
+	/usr/bin/wget --version 2>&1 |grep -q "\+ssl"
+	if [ $? -eq 0 ]
 	then
-		retrieve_prog="${retrieve_prog}--cacert $cacert "
-	elif [ -d "$cacert" ]
-	then
-		retrieve_prog="${retrieve_prog}--capath $cacert "
+		if [ -f "$cacert" ]
+		then
+			retrieve_prog="${retrieve_prog}--ca-certificate=${cacert} "
+		elif [ -d "$cacert" ]
+		then
+			retrieve_prog="${retrieve_prog}--ca-directory=${cacert} "
+		fi
+	else
+		retrieve_prog="/usr/bin/curl "
+		if [ -f "$cacert" ]
+		then
+			retrieve_prog="${retrieve_prog}--cacert $cacert "
+		elif [ -d "$cacert" ]
+		then
+			retrieve_prog="${retrieve_prog}--capath $cacert "
+		fi
 	fi
-else
-	retrieve_prog="/usr/bin/wget -O - ";
 fi
+
 
 service_file="/usr/lib/ddns/services"
 
@@ -118,7 +134,6 @@ ip_regex="[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}"
 
 NEWLINE_IFS='
 '
-
 
 #determine what update url we're using if the service_name is supplied
 if [ -n "$service_name" ]
@@ -149,20 +164,13 @@ then
 	update_url=$(echo $update_url | sed -e 's/^http:/https:/')
 fi
 
-
 verbose_echo "update_url=$update_url"
-
-
 
 #if this service isn't enabled then quit
 if [ "$enabled" != "1" ] 
 then
 	return 0
 fi
-
-
-
-
 
 #compute update interval in seconds
 case "$force_unit" in
@@ -183,7 +191,6 @@ case "$force_unit" in
 		force_interval_seconds=$(($force_interval*60*60))
 		;;
 esac
-
 
 
 #compute check interval in seconds
@@ -207,7 +214,6 @@ case "$check_unit" in
 esac
 
 
-
 #compute retry interval in seconds
 case "$retry_unit" in
 	"days" )
@@ -227,7 +233,6 @@ case "$retry_unit" in
 		retry_interval_seconds=$retry_interval
 		;;
 esac
-
 
 
 verbose_echo "force seconds = $force_interval_seconds"
@@ -283,7 +288,7 @@ do
 	current_time=$(monotonic_time)
 	time_since_update=$(($current_time - $last_update))
 
-
+	syslog_echo "Running IP check ..."
 	verbose_echo "Running IP check..."
 	verbose_echo "current system ip = $current_ip"
 	verbose_echo "registered domain ip = $registered_ip"
@@ -315,11 +320,12 @@ do
 		update_output=$( $retrieve_prog "$final_url" )
 		if [ $? -gt 0 ]
 		then
+			syslog_echo "update failed, retrying in $retry_interval_seconds seconds"
 			verbose_echo "update failed"
 			sleep $retry_interval_seconds
 			continue
 		fi
-
+		syslog_echo "Update successful"
 		verbose_echo "Update Output:"
 		verbose_echo "$update_output"
 		verbose_echo ""

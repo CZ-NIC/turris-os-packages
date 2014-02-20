@@ -1,0 +1,10 @@
+--- a/Makefile.config
++++ b/Makefile.config
+@@ -17,6 +17,7 @@ OS=linux
+ 
+ # Edit this if your gcc cannot be found at the usual address
+ #CC=gcc-4.0
++LEX=flex
+ 
+ # Where to install
+ prefix=$(DESTDIR)/usr

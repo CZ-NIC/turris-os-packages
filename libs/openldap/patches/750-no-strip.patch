@@ -11,7 +11,7 @@
  	)
 --- a/servers/slapd/Makefile.in
 +++ b/servers/slapd/Makefile.in
-@@ -377,7 +377,7 @@ install-local-srv: install-slapd install
+@@ -380,7 +380,7 @@ install-local-srv: install-slapd install
  install-slapd: FORCE
  	-$(MKDIR) $(DESTDIR)$(libexecdir)
  	-$(MKDIR) $(DESTDIR)$(localstatedir)/run

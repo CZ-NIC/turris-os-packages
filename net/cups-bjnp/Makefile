@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cups-bjnp
-PKG_VERSION:=0.5.4
+PKG_VERSION:=1.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@SF/cups-bjnp
-PKG_MD5SUM:=4f29dd69a487a90ac7603b5be5cb030f
+PKG_MD5SUM:=8672b4585b71dee6dcefa00fbbbe7698
 
 PKG_BUILD_DEPENDS:=cups
 
@@ -22,6 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/cups-bjnp
   SECTION:=net
   CATEGORY:=Network
+  SUBMENU:=Printing
   TITLE:=BJNP protocol backend for CUPS
   URL:=http://sourceforge.net/projects/cups-bjnp/
   DEPENDS:=cups

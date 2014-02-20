@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2008-2012 OpenWrt.org
+# Copyright (C) 2008-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor-alpha
-PKG_VERSION:=0.2.3.22-rc
+PKG_VERSION:=0.2.4.15-rc
 PKG_RELEASE:=1
 
 PKG_SOURCE:=tor-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.torproject.org/dist \
 	https://archive.torproject.org/tor-package-archive
-PKG_MD5SUM:=c07431ee40a0e16dc1b4d1e8d266680c
+PKG_MD5SUM:=d05da33b2c99978adc55c78ead8b25d2
 
 PKG_BUILD_DEPENDS:=libminiupnpc libnatpmp
 PKG_BUILD_DIR:=$(BUILD_DIR)/tor-$(PKG_VERSION)
@@ -39,7 +39,7 @@ endef
 define Package/tor-alpha
 $(call Package/tor-alpha/Default)
   TITLE:=An anonymous Internet communication system
-  DEPENDS:=+libevent2 +libevent2-openssl +libpthread +librt
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +SSP_SUPPORT:libssp
 endef
 
 define Package/tor-alpha/description
@@ -80,19 +80,22 @@ CONFIGURE_ARGS += \
 	--with-libminiupnpc-dir="$(STAGING_DIR)/usr" \
 	--enable-nat-pmp \
 	--with-libnatpmp-dir="$(STAGING_DIR)/usr" \
-	--disable-asciidoc
+	--disable-asciidoc \
+	--disable-threads
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
 		--disable-gcc-hardening
+	MAKE_FLAGS += \
+		CFLAGS="$(TARGET_CFLAGS)"
+else
+	MAKE_FLAGS += \
+		CFLAGS="$(TARGET_CFLAGS) -fPIC"
+
 endif
 
 CONFIGURE_VARS += \
 	CROSS_COMPILE="yes"
-
-# pass CFLAGS again to override -O2 set by configure
-MAKE_FLAGS += \
-	CFLAGS="$(TARGET_CFLAGS)"
 
 define Package/tor-alpha/install
 	$(INSTALL_DIR) $(1)/usr/sbin
