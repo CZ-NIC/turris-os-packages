@@ -26,7 +26,7 @@ define Package/taskwarrior
   TITLE:=taskwarrior
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libncurses +libstdcpp +liblua +libuuid +libreadline
+  DEPENDS:=+libncurses +libstdcpp +liblua +libuuid +libreadline +libgnutls
   URL:=http://taskwarrior.org/projects/show/taskwarrior
   MAINTAINER:=Xiangfu Liu <xiangfu@sharism.cc>
 endef
