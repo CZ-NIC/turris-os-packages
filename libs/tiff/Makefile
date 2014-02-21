@@ -63,6 +63,7 @@ define Build/Configure
 			--enable-cxx, \
 			--disable-cxx \
 		) \
+		--disable-lzma \
 		--enable-ccitt \
 		--enable-packbits \
 		--enable-lzw \
