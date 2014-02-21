@@ -28,7 +28,7 @@ endef
 
 define Build/Compile
 	$(call Build/Compile/Default, \
-		CFLAGS="$(TARGET_CFLAGS) -I$(LINUX_DIR)/include" \
+		CFLAGS="$(TARGET_CFLAGS) -I$(LINUX_DIR)/$(LINUX_UAPI_DIR)include" \
 	)
 endef
 
