@@ -13,7 +13,8 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=tor-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.torproject.org/dist \
-	https://archive.torproject.org/tor-package-archive
+	https://archive.torproject.org/tor-package-archive \
+	http://tor.mirror.tn/dist
 PKG_MD5SUM:=d05da33b2c99978adc55c78ead8b25d2
 
 PKG_BUILD_DEPENDS:=libminiupnpc libnatpmp
