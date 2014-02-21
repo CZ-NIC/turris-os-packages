@@ -45,9 +45,6 @@ CONFIGURE_ARGS+= \
 	--disable-lvs-syncd \
 	--with-kernel-dir="$(LINUX_DIR)/$(LINUX_UAPI_DIR)"
 
-CONFIGURE_VARS+= \
-	ac_cv_file_$(call acvar,$(LINUX_DIR)/net/core/link_watch.c)=yes
-
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 		DESTDIR="$(PKG_INSTALL_DIR)" \
