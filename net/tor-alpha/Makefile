@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor-alpha
-PKG_VERSION:=0.2.4.15-rc
+PKG_VERSION:=0.2.4.20
 PKG_RELEASE:=1
 
 PKG_SOURCE:=tor-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.torproject.org/dist \
 	https://archive.torproject.org/tor-package-archive \
 	http://tor.mirror.tn/dist
-PKG_MD5SUM:=d05da33b2c99978adc55c78ead8b25d2
+PKG_MD5SUM:=a8cd8e3b3a3f6a7770f2c22d280f19b8
 
 PKG_BUILD_DEPENDS:=libminiupnpc libnatpmp
 PKG_BUILD_DIR:=$(BUILD_DIR)/tor-$(PKG_VERSION)
