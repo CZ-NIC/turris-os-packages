@@ -86,7 +86,6 @@ CONFIGURE_ARGS += \
 	$(call GST_COND_SELECT,gio) \
 	--disable-gnome_vfs \
 	--disable-gst_v4l \
-	--disable-ivorbis \
 	--disable-libvisual \
 	$(call GST_COND_SELECT,ogg) \
 	--disable-oggtest \
