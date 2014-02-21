@@ -76,7 +76,6 @@ define Build/Configure
 		--disable-old-jpeg \
 		--disable-jbig \
 		--without-x \
-		--with-apple-opengl-framework \
 	)
 endef
 
