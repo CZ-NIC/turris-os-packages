@@ -63,6 +63,7 @@ define Build/Configure
 			--enable-cxx, \
 			--disable-cxx \
 		) \
+		--disable-lzma \
 		--enable-ccitt \
 		--enable-packbits \
 		--enable-lzw \
@@ -75,7 +76,6 @@ define Build/Configure
 		--disable-old-jpeg \
 		--disable-jbig \
 		--without-x \
-		--with-apple-opengl-framework \
 	)
 endef
 

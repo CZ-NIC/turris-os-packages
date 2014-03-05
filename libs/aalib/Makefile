@@ -36,8 +36,8 @@ define Build/Configure
 		--enable-shared \
 		--enable-static \
 		--without-x \
-		--without-x11-driver \
-		--without-slang-driver \
+		--with-x11-driver=no \
+		--with-slang-driver=no \
 		--with-ncurses=$(STAGING_DIR)/usr \
 	)
 endef

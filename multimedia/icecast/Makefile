@@ -25,7 +25,7 @@ TREMOR_DIR=$(TREMOR_BUILD_DIR)/ipkg-install/usr
 define Package/icecast
   SECTION:=multimedia
   CATEGORY:=Multimedia
-  DEPENDS:=+libcurl +libxml2 +libxslt +libogg
+  DEPENDS:=+libcurl +libxml2 +libxslt +libogg +libopenssl
   TITLE:=A streaming media server for Ogg/Vorbis and MP3 audio streams
   URL:=http://www.icecast.org/
 endef

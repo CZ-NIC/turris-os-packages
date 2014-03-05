@@ -51,7 +51,8 @@ CONFIGURE_VARS += \
 endif
 
 CONFIGURE_ARGS += \
-	--disable-werror
+	--disable-werror \
+	--without-lzma
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include

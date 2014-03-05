@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libfreefare
-PKG_VERSION:=0.2.3
+PKG_VERSION:=0.4.0
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://nfc-tools.googlecode.com/files
-PKG_MD5SUM:=10af7796c16ec738c1b01501a7f68fae
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+PKG_SOURCE_URL:=https://libfreefare.googlecode.com/files/
+PKG_MD5SUM:=98db0c9aea71bda1cdf99dc119987c8c
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1

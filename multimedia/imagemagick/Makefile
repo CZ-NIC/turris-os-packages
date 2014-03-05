@@ -94,7 +94,8 @@ CONFIGURE_ARGS += \
 	--without-fftw \
 	--without-xml \
 	--without-x \
-	--without-magick-plus-plus
+	--without-magick-plus-plus \
+	--without-lzma
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
