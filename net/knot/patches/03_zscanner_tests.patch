@@ -1,0 +1,37 @@
+diff --git a/src/zscanner/tests/zscanner-TESTS b/src/zscanner/tests/zscanner-TESTS
+index c88aef1..4e2148f 100644
+--- a/src/zscanner/tests/zscanner-TESTS
++++ b/src/zscanner/tests/zscanner-TESTS
+@@ -18,10 +18,8 @@
+ 05-2_TTL
+ 05-3_TTL
+ 05-4_TTL
+-06-0_INCLUDE
+ 06-1_INCLUDE
+ 06-2_INCLUDE
+-06-3_INCLUDE
+ 06-4_INCLUDE
+ 06-5_INCLUDE
+ 06-6_INCLUDE
+diff --git a/src/zscanner/tests/zscanner.sh b/src/zscanner/tests/zscanner.sh
+index ac3ce92..c133f0c 100755
+--- a/src/zscanner/tests/zscanner.sh
++++ b/src/zscanner/tests/zscanner.sh
+@@ -1,5 +1,8 @@
+ #!/bin/sh
+ 
++SOURCE="."
++BUILD="."
++
+ . "$SOURCE"/tap/libtap.sh
+ cd "$BUILD"
+ 
+@@ -7,7 +10,7 @@ TMPDIR=$(test_tmpdir)
+ TESTS_DIR="$SOURCE"/data
+ ZSCANNER_TOOL="$BUILD"/zscanner-tool
+ 
+-plan 68
++plan 66
+ 
+ mkdir -p "$TMPDIR"/includes/
+ for a in 1 2 3 4 5 6; do

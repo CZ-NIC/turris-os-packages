@@ -111,6 +111,17 @@ define Package/php5-cgi/description
   This package contains the CGI version of the PHP5 interpreter.
 endef
 
+define Package/php5-fpm
+  $(call Package/php5/Default)
+  TITLE+= php-fpm
+endef
+
+define Package/php5-fpm/description
+  $(call Package/php5/Default/description)
+  This package contains the FPM.
+endef
+
+
 define Package/php5-fastcgi
   $(call Package/php5/Default)
   DEPENDS+= +php5-cgi
@@ -125,6 +136,7 @@ endef
 CONFIGURE_ARGS+= \
 	--enable-cli \
 	--enable-cgi \
+	--enable-fpm \
 	--enable-shared \
 	--disable-static \
 	--disable-rpath \
@@ -440,6 +452,13 @@ define Package/php5-cgi/install
 	ln -sf php-cgi $(1)/usr/bin/php-fcgi
 endef
 
+define Package/php5-fpm/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(CP) $(PKG_BUILD_DIR)/sapi/fpm/php-fpm $(1)/usr/bin/php-fpm
+	$(INSTALL_DIR) $(1)/etc/php5
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/sapi/fpm/php-fpm.conf $(1)/etc/php-fpm.conf
+endef
+
 define Package/php5-fastcgi/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./files/php5-fastcgi.config $(1)/etc/config/php5-fastcgi
@@ -490,6 +509,7 @@ $(eval $(call BuildPackage,php5))
 $(eval $(call BuildPackage,php5-cli))
 $(eval $(call BuildPackage,php5-cgi))
 $(eval $(call BuildPackage,php5-fastcgi))
+$(eval $(call BuildPackage,php5-fpm))
 
 #$(eval $(call BuildModule,NAME,TITLE[,PKG DEPENDS]))
 $(eval $(call BuildModule,calendar,Calendar))
