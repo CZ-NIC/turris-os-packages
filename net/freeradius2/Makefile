@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2008-2012 OpenWrt.org
+# Copyright (C) 2008-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=freeradius2
 PKG_VERSION:=2.2.3
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=freeradius-server-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=ftp://ftp.freeradius.org/pub/freeradius/
@@ -28,7 +28,7 @@ endef
 
 define Package/freeradius2
   $(call Package/freeradius2/Default)
-  DEPENDS:=+libltdl +libopenssl +libpthread +libreadline
+  DEPENDS:=+libltdl +libreadline +freeradius2-common
   TITLE:=A flexible RADIUS server (version 2)
   MENU:=1
 endef
@@ -43,6 +43,12 @@ define Package/freeradius2-democerts
   $(call Package/freeradius2/Default)
   DEPENDS:=freeradius2
   TITLE:=Demo certificates to test the server
+endef
+
+define Package/freeradius2-common
+  $(call Package/freeradius2/Default)
+  TITLE:=common files
+  DEPENDS:=+libpthread +freeradius2-mod-eap
 endef
 
 define Package/freeradius2-mod-chap
@@ -67,7 +73,7 @@ endef
 
 define Package/freeradius2-mod-eap
   $(call Package/freeradius2/Default)
-  DEPENDS:=freeradius2
+  DEPENDS:=freeradius2 +libopenssl
   TITLE:=Base EAP module
 endef
 
@@ -312,7 +318,7 @@ endef
 
 define Package/freeradius2-utils
   $(call Package/freeradius2/Default)
-  DEPENDS:=freeradius2
+  DEPENDS:=+freeradius2-common
   TITLE:=Misc. client utilities
 endef
 
@@ -518,15 +524,12 @@ define Build/Compile
 		all certs install
 endef
 
-define Package/freeradius2/install
+define Package/freeradius2-common/install
 	$(INSTALL_DIR) $(1)/etc/freeradius2
-	$(INSTALL_DIR) $(1)/etc/freeradius2/modules
-	$(INSTALL_DIR) $(1)/etc/freeradius2/sites
 	chmod 771 $(1)/etc/freeradius2
-	for f in clients.conf dictionary radiusd.conf policy.conf; do \
-		$(CP) $(PKG_INSTALL_DIR)/etc/freeradius2/$$$${f} $(1)/etc/freeradius2/ ; \
-	done
-	$(CP) $(PKG_INSTALL_DIR)/etc/freeradius2/sites-available/default $(1)/etc/freeradius2/sites/default
+	$(CP) $(PKG_INSTALL_DIR)/etc/freeradius2/dictionary $(1)/etc/freeradius2/ ; \
+	$(INSTALL_DIR) $(1)/usr/lib/freeradius2
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/freeradius2/libfreeradius-radius{,-*}.so $(1)/usr/lib/freeradius2
 	$(INSTALL_DIR) $(1)/usr/share/freeradius2
 	$(CP) $(PKG_INSTALL_DIR)/usr/share/freeradius/dictionary $(1)/usr/share/freeradius2/
 	$(SED) "s,^\(\$$$$INCLUDE\),#\1,g" $(1)/usr/share/freeradius2/dictionary
@@ -534,10 +537,15 @@ define Package/freeradius2/install
 		$(CP) $(PKG_INSTALL_DIR)/usr/share/freeradius/dictionary.$$$${f} $(1)/usr/share/freeradius2/ ; \
 		$(SED) "s,^#\(\$$$$INCLUDE dictionary\.$$$${f}\),\1,g" $(1)/usr/share/freeradius2/dictionary ; \
 	done
-	$(INSTALL_DIR) $(1)/usr/lib/freeradius2
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/freeradius2/libfreeradius-radius{,-*}.so $(1)/usr/lib/freeradius2
-	ln -s freeradius2/libfreeradius-radius-$(PKG_VERSION).so $(1)/usr/lib/
-	ln -s freeradius2/libfreeradius-eap-$(PKG_VERSION).so $(1)/usr/lib/
+endef
+
+define Package/freeradius2/install
+	$(INSTALL_DIR) $(1)/etc/freeradius2/modules
+	$(INSTALL_DIR) $(1)/etc/freeradius2/sites
+	for f in clients.conf radiusd.conf policy.conf; do \
+		$(CP) $(PKG_INSTALL_DIR)/etc/freeradius2/$$$${f} $(1)/etc/freeradius2/ ; \
+	done
+	$(CP) $(PKG_INSTALL_DIR)/etc/freeradius2/sites-available/default $(1)/etc/freeradius2/sites/default
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/radiusd $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -578,6 +586,7 @@ define BuildPlugin
 endef
 
 $(eval $(call BuildPackage,freeradius2))
+$(eval $(call BuildPackage,freeradius2-common))
 $(eval $(call BuildPackage,freeradius2-democerts))
 $(eval $(call BuildPlugin,freeradius2-mod-chap,rlm_chap,modules/chap,modules,))
 $(eval $(call BuildPlugin,freeradius2-mod-detail,rlm_detail,modules/detail,modules,))
