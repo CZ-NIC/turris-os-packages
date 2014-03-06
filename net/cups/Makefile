@@ -656,6 +656,7 @@ define Package/cups-locale-id/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/share/locale/id $(1)/usr/share/locale/
 	$(CP) $(PKG_INSTALL_DIR)/usr/share/cups/templates/id \
 		$(1)/usr/share/cups/templates/
+endef
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(2)/bin
