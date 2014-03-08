@@ -8,15 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openssh
-PKG_VERSION:=6.4p1
-PKG_RELEASE:=5
+PKG_VERSION:=6.5p1
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
 		ftp://openbsd.wiretapped.net/pub/OpenBSD/OpenSSH/portable/ \
 		ftp://ftp.belnet.be/packages/openbsd/OpenSSH/portable/ \
 		ftp://ftp.de.openbsd.org/pub/unix/OpenBSD/OpenSSH/portable/
-PKG_MD5SUM:=a62b88b884df0b09b8a8c5789ac9e51b
+PKG_MD5SUM:=a084e7272b8cbd25afe0f5dce4802fef
 
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
@@ -26,20 +26,20 @@ PKG_BUILD_DEPENDS:=libopenssl
 include $(INCLUDE_DIR)/package.mk
 
 define Package/openssh/Default
-  SECTION:=net
-  CATEGORY:=Network
-  DEPENDS:=+libopenssl +zlib +SSP_SUPPORT:libssp
-  TITLE:=OpenSSH
-  MAINTAINER:=Peter Wagner <tripolar@gmx.at>
-  URL:=http://www.openssh.com/
-  SUBMENU:=SSH
-  VARIANT:=without-pam
+	SECTION:=net
+	CATEGORY:=Network
+	DEPENDS:=+libopenssl +zlib +SSP_SUPPORT:libssp
+	TITLE:=OpenSSH
+	MAINTAINER:=Peter Wagner <tripolar@gmx.at>
+	URL:=http://www.openssh.com/
+	SUBMENU:=SSH
+	VARIANT:=without-pam
 endef
 
 define Package/openssh-moduli
-  $(call Package/openssh/Default)
-  DEPENDS+= +openssh-keygen
-  TITLE+= moduli file
+	$(call Package/openssh/Default)
+	DEPENDS+= +openssh-keygen
+	TITLE+= moduli file
 endef
 
 define Package/openssh-moduli/description
@@ -47,8 +47,8 @@ OpenSSH server moduli file.
 endef
 
 define Package/openssh-client
-  $(call Package/openssh/Default)
-  TITLE+= client
+	$(call Package/openssh/Default)
+	TITLE+= client
 endef
 
 define Package/openssh-client/description
@@ -60,9 +60,9 @@ define Package/openssh-client/conffiles
 endef
 
 define Package/openssh-client-utils
-  $(call Package/openssh/Default)
-  DEPENDS+= +openssh-client +openssh-keygen
-  TITLE+= client utilities
+	$(call Package/openssh/Default)
+	DEPENDS+= +openssh-client +openssh-keygen
+	TITLE+= client utilities
 endef
 
 define Package/openssh-client-utils/description
@@ -70,8 +70,8 @@ OpenSSH client utilities.
 endef
 
 define Package/openssh-keygen
-  $(call Package/openssh/Default)
-  TITLE+= keygen
+	$(call Package/openssh/Default)
+	TITLE+= keygen
 endef
 
 define Package/openssh-keygen/description
@@ -79,9 +79,9 @@ OpenSSH keygen.
 endef
 
 define Package/openssh-server
-  $(call Package/openssh/Default)
-  DEPENDS+= +openssh-keygen
-  TITLE+= server
+	$(call Package/openssh/Default)
+	DEPENDS+= +openssh-keygen
+	TITLE+= server
 endef
 
 define Package/openssh-server/description
@@ -93,10 +93,10 @@ define Package/openssh-server/conffiles
 endef
 
 define Package/openssh-server-pam
-  $(call Package/openssh/Default)
-  DEPENDS+= +libpthread +openssh-keygen +libpam
-  TITLE+= server (with PAM support)
-  VARIANT:=with-pam
+	$(call Package/openssh/Default)
+	DEPENDS+= +libpthread +openssh-keygen +libpam
+	TITLE+= server (with PAM support)
+	VARIANT:=with-pam
 endef
 
 define Package/openssh-server-pam/description
@@ -110,8 +110,8 @@ define Package/openssh-server-pam/conffiles
 endef
 
 define Package/openssh-sftp-client
-  $(call Package/openssh/Default)
-  TITLE+= SFTP client
+	$(call Package/openssh/Default)
+	TITLE+= SFTP client
 endef
 
 define Package/openssh-sftp-client/description
@@ -119,8 +119,8 @@ OpenSSH SFTP client.
 endef
 
 define Package/openssh-sftp-server
-  $(call Package/openssh/Default)
-  TITLE+= SFTP server
+	$(call Package/openssh/Default)
+	TITLE+= SFTP server
 endef
 
 define Package/openssh-sftp-server/description
@@ -184,7 +184,7 @@ endef
 define Package/openssh-client/preinst
 #!/bin/sh
 if [ -L $${IPKG_INSTROOT}/usr/bin/ssh ] && [ -L $${IPKG_INSTROOT}/usr/bin/scp ]; then
-  rm -f $${IPKG_INSTROOT}/usr/bin/ssh $${IPKG_INSTROOT}/usr/bin/scp;
+	rm -f $${IPKG_INSTROOT}/usr/bin/ssh $${IPKG_INSTROOT}/usr/bin/scp;
 fi
 exit 0
 endef
@@ -193,8 +193,8 @@ define Package/openssh-client/postrm
 #!/bin/sh
 rm -f $${IPKG_INSTROOT}/usr/bin/ssh $${IPKG_INSTROOT}/usr/bin/scp;
 if [ -x $${IPKG_INSTROOT}/usr/sbin/dropbear ] ; then
-  ln -s /usr/sbin/dropbear $${IPKG_INSTROOT}/usr/bin/ssh;
-  ln -s /usr/sbin/dropbear $${IPKG_INSTROOT}/usr/bin/scp;
+	ln -s /usr/sbin/dropbear $${IPKG_INSTROOT}/usr/bin/ssh;
+	ln -s /usr/sbin/dropbear $${IPKG_INSTROOT}/usr/bin/scp;
 fi
 exit 0
 endef
