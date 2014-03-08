@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2008 OpenWrt.org
+# Copyright (C) 2008-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ftplib
 PKG_VERSION:=3.1-1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://nbpfaus.net/~pfau/ftplib/
@@ -31,6 +31,9 @@ ftplib is a set of routines that implement the FTP protocol. They allow
 applications to create and access remote files through function calls instead
 of needing to fork and exec an interactive ftp client program.
 endef
+
+MAKE_FLAGS += \
+	DEFINES="$(TARGET_CFLAGS)"
 
 define Build/Compile
 	$(call Build/Compile/Default,all)
