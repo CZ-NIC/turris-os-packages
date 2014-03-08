@@ -1,0 +1,11 @@
+--- a/configure
++++ b/configure
+@@ -1662,7 +1662,7 @@ INSTALL_STRIP_PROGRAM="\${SHELL} \$(inst
+ 
+ 
+ 
+-CFLAGS="-g -Wall"
++CFLAGS="${CFLAGS} -g -Wall"
+ 
+ ac_ext=c
+ ac_cpp='$CPP $CPPFLAGS'
