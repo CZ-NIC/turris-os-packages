@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2009 OpenWrt.org
+# Copyright (C) 2009-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bonnie++
 PKG_VERSION:=1.96
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tgz
 PKG_SOURCE_URL:=http://www.coker.com.au/bonnie++/experimental/
@@ -36,6 +36,7 @@ define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 		TARGET_CXX="$(TARGET_CXX)" \
 		TARGET_LINK="$(TARGET_CXX)" \
+		MORECFLAGS="$(TARGET_CPPFLAGS) $(TARGET_CXXFLAGS)" \
 		DESTDIR="$(PKG_INSTALL_DIR)" \
 		all
 endef
