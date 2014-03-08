@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2011 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=amwall
 PKG_VERSION:=0.1.0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=ftp://ftp.amselinux.net/source/
@@ -32,6 +32,7 @@ define Build/Compile
 		V= \
 		LDIR="$(PKG_BUILD_DIR)" \
 		AMSEL_INCLUDE="$(STAGING_DIR)/usr/include" \
+		OPT_CFLAGS="$(TARGET_CFLAGS)" \
 		OPT_LDFLAGS="$(TARGET_LDFLAGS)" \
 		PREFIX="/usr" \
 		CONFIG="$(PKG_BUILD_DIR)/etc/amsel" \
