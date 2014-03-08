@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2010 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mgen
 PKG_VERSION:=5.01b
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=src-$(PKG_NAME)-$(PKG_VERSION).tgz
 PKG_SOURCE_URL:=http://downloads.pf.itd.nrl.navy.mil/mgen/
@@ -38,9 +38,10 @@ endef
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR)/unix \
+		$(TARGET_CONFIGURE_OPTS) \
 		CC="$(TARGET_CXX)" \
-		CPPFLAGS="$(TARGET_CPPFLAGS)"  \
-		LDFLAGS="$(TARGET_LDFLAGS)" \
+		SYSTEM_INCLUDES="$(TARGET_CFLAGS) $(TARGET_CPPFLAGS)" \
+		SYSTEM_LDFLAGS="$(TARGET_LDFLAGS)" \
 		SYSTEM_LIBS="-ldl -lpthread" \
 		-f Makefile.linux mgen
 endef
