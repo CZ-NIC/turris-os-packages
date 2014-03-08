@@ -56,11 +56,11 @@ endef
 define Build/Compile
 	rm -rf $(PKG_INSTALL_DIR)
 	mkdir -p $(PKG_INSTALL_DIR)
-	$(MAKE) -C $(PKG_BUILD_DIR)/app/convbin/gcc CC="$(TARGET_CC)"
-	$(MAKE) -C $(PKG_BUILD_DIR)/app/pos2kml/gcc CC="$(TARGET_CC)"
-	$(MAKE) -C $(PKG_BUILD_DIR)/app/rnx2rtkp/gcc CC="$(TARGET_CC)"
-	$(MAKE) -C $(PKG_BUILD_DIR)/app/rtkrcv/gcc CC="$(TARGET_CC)"
-	$(MAKE) -C $(PKG_BUILD_DIR)/app/str2str/gcc CC="$(TARGET_CC)"
+	$(MAKE) -C $(PKG_BUILD_DIR)/app/convbin/gcc CC="$(TARGET_CC) $(TARGET_CFLAGS)"
+	$(MAKE) -C $(PKG_BUILD_DIR)/app/pos2kml/gcc CC="$(TARGET_CC) $(TARGET_CFLAGS)"
+	$(MAKE) -C $(PKG_BUILD_DIR)/app/rnx2rtkp/gcc CC="$(TARGET_CC) $(TARGET_CFLAGS)"
+	$(MAKE) -C $(PKG_BUILD_DIR)/app/rtkrcv/gcc CC="$(TARGET_CC) $(TARGET_CFLAGS)"
+	$(MAKE) -C $(PKG_BUILD_DIR)/app/str2str/gcc CC="$(TARGET_CC) $(TARGET_CFLAGS)"
 endef
 
 define Package/convbin/install
