@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ntripclient
 PKG_VERSION:=1.5.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME).zip
 PKG_SOURCE_URL:=http://igs.bkg.bund.de/root_ftp/NTRIP/software/
@@ -35,6 +35,9 @@ define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
 	unzip $(DL_DIR)/$(PKG_SOURCE) -d $(PKG_BUILD_DIR)
 endef
+
+MAKE_FLAGS += \
+	OPTS="$(TARGET_CFLAGS)"
 
 define Package/ntripclient/install
 	$(INSTALL_DIR) $(1)/usr/bin
