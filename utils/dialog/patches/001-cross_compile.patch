@@ -1,0 +1,11 @@
+--- a/configure
++++ b/configure
+@@ -11827,7 +11827,7 @@ linux*)
+ 		if test -d /lib64
+ 		then
+ 
+-if test -n "/lib64" ; then
++if test -n "/lib64" -a test $cross_compiling = "no"; then
+   for cf_add_libdir in /lib64
+   do
+     if test $cf_add_libdir = /usr/lib ; then

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2008-2011 OpenWrt.org
+# Copyright (C) 2008-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=avrusbboot
 PKG_VERSION:=2006-06-25
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE:=$(PKG_NAME).$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.fischl.de/avrusbboot/
@@ -42,8 +42,8 @@ endef
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR)/software \
 		CXX="$(TARGET_CXX)" \
-		CPPFLAGS="$(TARGET_CPPFLAGS) -fno-rtti" \
-		LFLAGS="$(TARGET_LDFLAGS) -lusb" \
+		CPPFLAGS="$(TARGET_CPPFLAGS) $(TARGET_CFLAGS) -fno-rtti" \
+		LFLAGS="$(TARGET_LDFLAGS) $(TARGET_CFLAGS) -lusb" \
 		all
 endef
 

@@ -73,6 +73,7 @@ $(foreach a,$(OPEN_PLC_UTILS_APPS),$(eval $(call GenPlugin,$(a))))
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 		EXTRA_CFLAGS="$(TARGET_CPPFLAGS) $(TARGET_CFLAGS)" \
+		LDFLAGS="$(TARGET_CFLAGS) $(TARGET_LDFLAGS)" \
 		CROSS="$(TARGET_CROSS)" \
 		ROOTFS="$(PKG_INSTALL_DIR)" \
 		OWNER="$(shell id -u $(shell whoami))" \

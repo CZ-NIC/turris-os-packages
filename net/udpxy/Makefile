@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2011 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -11,7 +11,7 @@ PKG_NAME:=udpxy
 PKG_REV:=1.0.23
 PKG_TAG:=9
 PKG_VERSION:=$(PKG_REV)-$(PKG_TAG)
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME).$(PKG_REV)-$(patsubst %,%-prod,$(PKG_TAG)).tar.gz
 PKG_SOURCE_URL:=http://www.udpxy.com/download/1_23
@@ -39,7 +39,8 @@ define Package/udpxy/description
 endef
 
 MAKE_FLAGS += \
-	INSTALLROOT="$(PKG_INSTALL_DIR)/usr"
+	INSTALLROOT="$(PKG_INSTALL_DIR)/usr" \
+	ALL_CFLAGS="$(TARGET_CFLAGS) $(TARGET_CPPFLAGS)"
 
 define Package/udpxy/install
 	$(INSTALL_DIR) $(1)/etc/init.d

@@ -2,8 +2,8 @@
  Makefile |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- mdk3-v6.orig/Makefile
-+++ mdk3-v6/Makefile
+--- a/Makefile
++++ b/Makefile
 @@ -18,8 +18,8 @@ osd:
  $(LIBOSD):
  	$(MAKE) -C $(OSD)

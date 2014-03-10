@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2007-2010 OpenWrt.org
+# Copyright (C) 2007-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=poco
 PKG_VERSION:=1.3.6p2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://downloads.sourceforge.net/project/poco/sources/poco-1.3.6
@@ -41,6 +41,11 @@ CONFIGURE_ARGS += \
 	--no-fpenvironment \
 	--no-sharedmemory \
 	--no-wstring
+
+MAKE_FLAGS += \
+	CXXFLAGS32="$(TARGET_CXXFLAGS)" \
+	CFLAGS32="$(TARGET_CFLAGS)" \
+	LINKFLAGS32="$(TARGET_LDFLAGS)"
 
 define Package/poco/install
 	$(INSTALL_DIR) $(1)/usr/lib

@@ -202,6 +202,10 @@ $(call Package/ruby/Default)
   DEPENDS:=ruby +zlib
 endef
 
+HOST_CONFIGURE_ARGS += \
+	--disable-install-doc \
+	--disable-install-rdoc \
+	--disable-install-capi
 
 CONFIGURE_ARGS += \
 	--enable-shared \

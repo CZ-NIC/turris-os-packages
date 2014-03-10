@@ -1,4 +1,4 @@
-# Copyright (C) 2008 OpenWrt.org
+# Copyright (C) 2008-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libptmalloc3
 PKG_VERSION:=20060531
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_BUILD_DIR:=$(BUILD_DIR)/ptmalloc3
 
 PKG_SOURCE:=ptmalloc3-current.tar.gz
@@ -32,7 +32,7 @@ endef
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 		$(TARGET_CONFIGURE_OPTS) \
-		SYS_FLAGS="$(TARGET_CFLAGS)" \
+		OPT_FLAGS="$(TARGET_CFLAGS)" \
 		linux-shared-nothreads
 endef
 
