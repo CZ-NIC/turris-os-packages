@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=vncrepeater
 PKG_VERSION:=0.12
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.rit.edu/~reh5586/openwrt/packages/vncrepeater/src
@@ -44,7 +44,7 @@ endef
 define Build/Compile
 	$(call Build/Compile/Default, \
 		CC="$(TARGET_CXX)" \
-		CFLAGS="$(TARGET_CPPFLAGS) -fno-rtti" \
+		CFLAGS="$(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -fno-rtti" \
 		repeater \
 	)
 endef

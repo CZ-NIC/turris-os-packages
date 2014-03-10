@@ -1,5 +1,5 @@
 # 
-# Copyright (C) 2008-2011 OpenWrt.org
+# Copyright (C) 2008-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=stund
 PKG_VERSION:=0.96
-PKG_RELEASE:=6
+PKG_RELEASE:=7
 
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION)_Aug13.tgz
 PKG_SOURCE_URL:=@SF/stun
@@ -58,7 +58,7 @@ define Build/Compile
 		CXX="$(TARGET_CXX)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
 		DESTDIR="$(PKG_INSTALL_DIR)" \
-		CXXFLAGS="$$$$CXXFLAGS -fno-rtti"  \
+		CXXFLAGS="$(TARGET_CFLAGS) -fno-rtti"  \
 		CPPFLAGS="$$$$CPPFLAGS $(TARGET_CPPFLAGS)" \
 		LDFLAGS="$$$$LDFLAGS $(TARGET_LDFLAGS)" \
 		all

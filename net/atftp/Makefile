@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=atftp
 PKG_VERSION:=0.7
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.mirrorservice.org/sites/www.ibiblio.org/gentoo/distfiles/
@@ -40,6 +40,8 @@ endef
 
 CONFIGURE_ARGS += \
 	--disable-libwrap
+CONFIGURE_VARS += \
+	LDFLAGS="$(TARGET_LDFLAGS) $(TARGET_CFLAGS)"
 
 ifdef CONFIG_USE_EGLIBC
   TARGET_CFLAGS += -DHAVE_ARGZ=1

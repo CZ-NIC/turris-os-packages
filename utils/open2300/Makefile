@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=open2300
 PKG_VERSION:=1.12
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=svn
 PKG_SOURCE_URL:=http://www.lavrsen.dk/svn/open2300/trunk
@@ -32,6 +32,9 @@ endef
 define Package/open2300/description
   This is an utility suite used to communicate with and collect data from a WS23XX wheather station.
 endef
+
+MAKE_FLAGS += \
+	CFLAGS="$(TARGET_CFLAGS) -DVERSION=\"$(PKG_VERSION)\""
 
 define Package/open2300/install
 	$(INSTALL_DIR) $(1)/usr/bin

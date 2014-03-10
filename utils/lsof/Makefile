@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2007-2012 OpenWrt.org
+# Copyright (C) 2007-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -10,7 +10,7 @@ include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=lsof
 PKG_VERSION:=4.86
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION)+dfsg.orig.tar.gz
 PKG_SOURCE_URL:=http://ftp2.de.debian.org/debian/pool/main/l/lsof
@@ -36,7 +36,7 @@ define Build/Configure
 		LSOF_CC="$(TARGET_CC)" \
 		LSOF_INCLUDE="-I$(STAGING_DIR)/usr/include" \
 		LSOF_VSTR="$(LINUX_VERSION)" \
-		LSOF_CFGC="$(TARGET_CFLAGS)" \
+		LSOF_CFGF="$(TARGET_CFLAGS)" \
 		LSOF_CFGL="$(TARGET_LDFLAGS)" \
 		LSOF_AR="$(TARGET_CROSS)ar cr" \
 		LSOF_RANLIB="$(TARGET_CROSS)ranlib" \

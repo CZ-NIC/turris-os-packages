@@ -1,8 +1,18 @@
-diff -Nur tspc2/conf/Makefile tspc2.owrt/conf/Makefile
---- tspc2/conf/Makefile	2004-03-29 17:37:56.000000000 +0200
-+++ tspc2.owrt/conf/Makefile	2007-02-19 16:07:05.000000000 +0100
-@@ -42,7 +42,7 @@
- 	 sed -e "s+@ifname_tun@+$(ifname_tun)+" -e "s+@ifname@+$(ifname)+" -e "s+@target@+$(target)+" -e "s+@tsp_dir@+$(configdir)+" tspc.conf.in >$(BIN)/tspc.conf.sample; \
+--- a/conf/Makefile
++++ b/conf/Makefile
+@@ -34,15 +34,15 @@ tspc.conf.sample:
+ 	fi
+ 	@if [ -z "$(configdir)" ]; then \
+ 	 if [ -z "$(installdir)" ]; then \
+-	   sed -e "s+@ifname_tun@+$(ifname_tun)+" -e "s+@ifname@+$(ifname)+" -e "s+@target@+$(target)+" -e "s+@tsp_dir@+`cd ..;pwd`+"  tspc.conf.in>$(BIN)/tspc.conf.sample; \
++	   $(SED) -e "s+@ifname_tun@+$(ifname_tun)+" -e "s+@ifname@+$(ifname)+" -e "s+@target@+$(target)+" -e "s+@tsp_dir@+`cd ..;pwd`+"  tspc.conf.in>$(BIN)/tspc.conf.sample; \
+ 	 else \
+-	   sed -e "s+@ifname_tun@+$(ifname_tun)+" -e "s+@ifname@+$(ifname)+" -e "s+@target@+$(target)+" -e "s+@tsp_dir@+$(installdir)+" tspc.conf.in >$(BIN)/tspc.conf.sample; \
++	   $(SED) -e "s+@ifname_tun@+$(ifname_tun)+" -e "s+@ifname@+$(ifname)+" -e "s+@target@+$(target)+" -e "s+@tsp_dir@+$(installdir)+" tspc.conf.in >$(BIN)/tspc.conf.sample; \
+ 	 fi \
+ 	else \
+-	 sed -e "s+@ifname_tun@+$(ifname_tun)+" -e "s+@ifname@+$(ifname)+" -e "s+@target@+$(target)+" -e "s+@tsp_dir@+$(configdir)+" tspc.conf.in >$(BIN)/tspc.conf.sample; \
++	 $(SED) -e "s+@ifname_tun@+$(ifname_tun)+" -e "s+@ifname@+$(ifname)+" -e "s+@target@+$(target)+" -e "s+@tsp_dir@+$(configdir)+" tspc.conf.in >$(BIN)/tspc.conf.sample; \
  	fi
  
 -	chmod 700 $(BIN)/tspc.conf.sample
@@ -10,9 +20,8 @@ diff -Nur tspc2/conf/Makefile tspc2.owrt/conf/Makefile
  	
  
  clean:
-diff -Nur tspc2/conf/tspc.conf.in tspc2.owrt/conf/tspc.conf.in
---- tspc2/conf/tspc.conf.in	2004-06-15 17:01:01.000000000 +0200
-+++ tspc2.owrt/conf/tspc.conf.in	2007-02-19 16:07:05.000000000 +0100
+--- a/conf/tspc.conf.in
++++ b/conf/tspc.conf.in
 @@ -18,13 +18,6 @@
  # to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
  # MA 02111-1307 USA
@@ -27,7 +36,7 @@ diff -Nur tspc2/conf/tspc.conf.in tspc2.owrt/conf/tspc.conf.in
  
  #
  # authentication method:
-@@ -66,28 +59,19 @@
+@@ -66,28 +59,19 @@ passwd=
  
  #
  # Name of the script:
@@ -59,9 +68,8 @@ diff -Nur tspc2/conf/tspc.conf.in tspc2.owrt/conf/tspc.conf.in
  
  #
  # 'server' is the tunnel broker identifier
-diff -Nur tspc2/platform/linux/tsp_local.c tspc2.owrt/platform/linux/tsp_local.c
---- tspc2/platform/linux/tsp_local.c	2004-07-07 21:25:47.000000000 +0200
-+++ tspc2.owrt/platform/linux/tsp_local.c	2007-02-19 16:07:18.000000000 +0100
+--- a/platform/linux/tsp_local.c
++++ b/platform/linux/tsp_local.c
 @@ -59,13 +59,13 @@
  
  /* these globals are defined by US used by alot of things in  */
@@ -80,7 +88,7 @@ diff -Nur tspc2/platform/linux/tsp_local.c tspc2.owrt/platform/linux/tsp_local.c
  char DirSeparator = '/';
  
  int Verbose = 0;
-@@ -143,7 +143,7 @@
+@@ -143,7 +143,7 @@ int tspStartLocal(SOCKET socket, tConf *
  	{
  		  int tunfd;
  
@@ -89,10 +97,9 @@ diff -Nur tspc2/platform/linux/tsp_local.c tspc2.owrt/platform/linux/tsp_local.c
  
  		  if (daemon(0,0) == -1) {
  			  Display(1, ELError, "tspStartLocal", "Unable to fork.");
-diff -Nur tspc2/src/lib/config.c tspc2.owrt/src/lib/config.c
---- tspc2/src/lib/config.c	2004-06-29 17:06:13.000000000 +0200
-+++ tspc2.owrt/src/lib/config.c	2007-02-19 16:07:11.000000000 +0100
-@@ -474,14 +474,17 @@
+--- a/src/lib/config.c
++++ b/src/lib/config.c
+@@ -474,14 +474,17 @@ int tspVerifyConfig(tConf *Conf)
    if(IsPresent(Conf->dns_server)) {
       char *Server;
       char *dns = strdup(Conf->dns_server);
@@ -111,10 +118,9 @@ diff -Nur tspc2/src/lib/config.c tspc2.owrt/src/lib/config.c
          }
       }
       free(dns);
-diff -Nur tspc2/src/tsp/tsp_client.c tspc2.owrt/src/tsp/tsp_client.c
---- tspc2/src/tsp/tsp_client.c	2004-04-20 17:10:58.000000000 +0200
-+++ tspc2.owrt/src/tsp/tsp_client.c	2007-02-19 16:07:18.000000000 +0100
-@@ -275,7 +275,7 @@
+--- a/src/tsp/tsp_client.c
++++ b/src/tsp/tsp_client.c
+@@ -275,7 +275,7 @@ int tspSetupTunnel(tConf *conf, net_tool
  
  start_show:
  
@@ -123,7 +129,7 @@ diff -Nur tspc2/src/tsp/tsp_client.c tspc2.owrt/src/tsp/tsp_client.c
  
  	/* and start the show */
  	ret = tspStartLocal(socket, conf, &t, nt[conf->transport]);
-@@ -337,8 +337,8 @@
+@@ -337,8 +337,8 @@ int tspMain(int argc, char *argv[]) 
  	LogInit("tspc", LogFile);
  
  	Display( 1, ELInfo, "tspMain", "----- TSP Client Version %s Initializing -------------------------", TSP_CLIENT_VERSION);
@@ -134,7 +140,7 @@ diff -Nur tspc2/src/tsp/tsp_client.c tspc2.owrt/src/tsp/tsp_client.c
  
  	if((status = tspInitialize(argc, argv, &c)) != 0) {	// *** we have no uninitialize
  		if (status == -1) {
-@@ -361,12 +361,12 @@
+@@ -361,12 +361,12 @@ int tspMain(int argc, char *argv[]) 
  
  	/* first try with RUDP */
  	c.transport = NET_TOOLS_T_RUDP;
@@ -149,10 +155,9 @@ diff -Nur tspc2/src/tsp/tsp_client.c tspc2.owrt/src/tsp/tsp_client.c
  
  	Display( 1, ELInfo, "tspMain", "Using TSP protocol version %s",
  		TspProtocolVersionStrings[version_index]); 
-diff -Nur tspc2/template/linux.sh tspc2.owrt/template/linux.sh
---- tspc2/template/linux.sh	2004-06-23 23:29:20.000000000 +0200
-+++ tspc2.owrt/template/linux.sh	2007-02-19 16:08:39.000000000 +0100
-@@ -135,9 +135,7 @@
+--- a/template/linux.sh
++++ b/template/linux.sh
+@@ -135,9 +135,7 @@ if [ X"${TSP_HOST_TYPE}" = X"host" ] || 
     # 
     # Default route  
     Display 1 "Adding default route"
@@ -162,7 +167,7 @@ diff -Nur tspc2/template/linux.sh tspc2.owrt/template/linux.sh
     Exec $route -A inet6 add 2000::/3 dev $TSP_TUNNEL_INTERFACE
  fi
  
-@@ -147,9 +145,10 @@
+@@ -147,9 +145,10 @@ if [ X"${TSP_HOST_TYPE}" = X"router" ]; 
     Display 1 "Kernel setup"
     if [ X"${TSP_PREFIXLEN}" != X"64" ]; then
        #Better way on linux to avoid loop with the remaining /48?
@@ -175,7 +180,7 @@ diff -Nur tspc2/template/linux.sh tspc2.owrt/template/linux.sh
     Display 1 "Adding prefix to $TSP_HOME_INTERFACE"
     OLDADDR=`$ifconfig $TSP_HOME_INTERFACE | grep "inet6.* $PREF" | sed -e "s/^.*inet6 addr: //" -e "s/ Scope.*\$//"`
     if [ ! -z $OLDADDR ]; then
-@@ -157,28 +156,28 @@
+@@ -157,28 +156,28 @@ if [ X"${TSP_HOST_TYPE}" = X"router" ]; 
        Exec $ifconfig $TSP_HOME_INTERFACE inet6 del $OLDADDR
     fi
     Exec $ifconfig $TSP_HOME_INTERFACE add $TSP_PREFIX::1/64
