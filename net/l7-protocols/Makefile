@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=l7-protocols
 PKG_VERSION:=2009-05-28
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@SF/l7-filter
@@ -42,7 +42,7 @@ endef
 
 ifneq ($(SDK)$(CONFIG_PACKAGE_l7-protocols-testing),)
   define Build/Compile
-	cd $(PKG_BUILD_DIR)/testing && $(MAKE) $(TARGET_CONFIGURE_OPTS)
+	cd $(PKG_BUILD_DIR)/testing && $(MAKE) $(CONFIGURE_VARS)
   endef
 else
   define Build/Compile
