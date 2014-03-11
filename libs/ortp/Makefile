@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ortp
-PKG_VERSION:=0.16.3
+PKG_VERSION:=0.22.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:= \
 	http://download.savannah.gnu.org/releases-noredirect/linphone/ortp/sources/ \
 	http://www.very-clever.com/download/nongnu/linphone/ortp/sources/
-PKG_MD5SUM:=2b0281600cb958d1c94e318a86b62fe3
+PKG_MD5SUM:=119357e1d904be0289e57c80e5ad90ba
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -27,7 +27,7 @@ define Package/libortp
   CATEGORY:=Libraries
   TITLE:=Real-time Transport Protocol (RTP) library
   URL:=http://www.linphone.org/index.php/eng/code_review/ortp
-  DEPENDS:= +libpthread
+  DEPENDS:= +libpthread +librt
 endef
 
 ifneq ($(CONFIG_avr32),)
@@ -41,6 +41,7 @@ CONFIGURE_ARGS += \
 	--disable-ssl-hmac \
 	--disable-so-reuseaddr \
 	--without-srtp \
+	--enable-static
 
 CONFIGURE_VARS += \
 	ac_cv_header_srtp_srtp_h=no \
