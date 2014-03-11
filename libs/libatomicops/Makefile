@@ -20,6 +20,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/libatomic_ops-$(PKG_VERSION)
 
 PKG_INSTALL:=1
 
+PKG_USE_MIPS16:=0
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/libatomicops

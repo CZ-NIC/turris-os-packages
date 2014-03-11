@@ -12,6 +12,8 @@ PKG_NAME:=perf
 PKG_VERSION:=$(LINUX_VERSION)
 PKG_RELEASE:=2
 
+PKG_USE_MIPS16:=0
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/perf

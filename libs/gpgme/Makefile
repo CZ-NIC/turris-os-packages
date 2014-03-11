@@ -17,6 +17,8 @@ PKG_MD5SUM:=334e524cffa8af4e2f43ae8afe585672
 
 PKG_INSTALL:=1
 
+PKG_USE_MIPS16:=0
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/libgpgme

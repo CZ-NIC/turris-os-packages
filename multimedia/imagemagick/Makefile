@@ -20,6 +20,7 @@ PKG_MD5SUM:=c66bea4710370b2e115aed512fbe4601
 PKG_FIXUP:=autoreconf
 PKG_REMOVE_FILES:=aclocal.m4 m4/libtool.m4
 PKG_BUILD_PARALLEL:=1
+PKG_USE_MIPS16:=0
 
 include $(INCLUDE_DIR)/package.mk
 
