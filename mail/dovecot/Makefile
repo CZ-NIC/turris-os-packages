@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2011 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dovecot
 PKG_VERSION:=2.2.12
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.dovecot.org/releases/2.2
@@ -39,7 +39,9 @@ CONFIGURE_ARGS += \
 	--without-gssapi \
 	--without-pam \
 	--with-moduledir=/usr/lib/dovecot/modules \
-	--with-notify=dnotify
+	--with-notify=dnotify \
+	--without-lzma \
+	--without-lz4
 
 CONFIGURE_VARS += \
 	RPCGEN= \
