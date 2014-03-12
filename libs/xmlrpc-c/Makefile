@@ -13,7 +13,7 @@ PKG_VERSION:=advanced_r$(PKG_REV)
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://xmlrpc-c.svn.sourceforge.net/svnroot/xmlrpc-c/advanced
+PKG_SOURCE_URL:=http://svn.code.sf.net/p/xmlrpc-c/code/advanced
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=$(PKG_REV)
 PKG_SOURCE_PROTO:=svn
