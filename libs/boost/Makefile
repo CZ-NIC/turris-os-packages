@@ -20,7 +20,7 @@ HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)_$(PKG_VERSION)
 PKG_MD5SUM:=6a1f32d902203ac70fbec78af95b3cf8
 
 PKG_BUILD_DEPENDS:=boost/host
-PKG_BUILD_PARALLEL:=1
+PKG_BUILD_PARALLEL:=0
 
 PKG_CONFIG_DEPENDS := \
 	CONFIG_PACKAGE_boost-date_time \
@@ -185,7 +185,7 @@ CONFIGURE_PREFIX:=$(PKG_INSTALL_DIR)
 TARGET_LDFLAGS += -pthread -lrt
 
 define Build/Compile
-	+( cd $(PKG_BUILD_DIR) ; \
+	( cd $(PKG_BUILD_DIR) ; \
 		echo "using gcc : $(ARCH) : $(GNU_TARGET_NAME)-gcc : <compileflags>\"$(TARGET_CFLAGS)\" <cxxflags>\"$(TARGET_CXXFLAGS)\" <linkflags>\"$(TARGET_LDFLAGS)\" ;" > tools/build/v2/user-config.jam ; \
 		$(if $(CONFIG_PACKAGE_boost-python), \
 			echo "using python : : $(STAGING_DIR_ROOT)/usr/bin/python :	$(STAGING_DIR)/usr/include/python2.7/ ;" >> \
@@ -193,7 +193,6 @@ define Build/Compile
 		) \
 		bjam \
 			'-sBUILD=release <optimization>space <inlining>on <debug-symbols>off' \
-			$(filter -j%,$(PKG_JOBS)) \
 			--toolset=gcc-$(ARCH) --build-type=minimal --layout=system \
 			--disable-long-double \
 			$(CONFIGURE_ARGS) \
