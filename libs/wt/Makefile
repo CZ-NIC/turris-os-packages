@@ -15,6 +15,8 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://downloads.sourceforge.net/project/witty/wt/$(PKG_VERSION)
 PKG_MD5SUM:=ee9490d5f24a47766e54f630ba0da2bb
 
+PKG_USE_MIPS16:=0
+
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
 
