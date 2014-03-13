@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-libatsha204
-PKG_VERSION:=3
+PKG_VERSION:=4
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/libatsha204.git
 PKG_ORIG_NAME:=libatsha204
@@ -28,13 +28,14 @@ define Package/$(PKG_NAME)
 endef
 
 define Build/Compile
-	$(call Build/Compile/PyMod,./src/python/, install --prefix="$(PKG_INSTALL_DIR)/usr")
+	$(call Build/Compile/PyMod,./src/python/, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)")
 endef
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)
-	$(CP) $(PKG_INSTALL_DIR)/* $(1)/
+	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)
+	$(INSTALL_DATA) \
+		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
+		$(1)$(PYTHON_PKG_DIR)
 endef
 
-$(eval $(call PyPackage,$(PKG_NAME)))
 $(eval $(call BuildPackage,$(PKG_NAME)))
