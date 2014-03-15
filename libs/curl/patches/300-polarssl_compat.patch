@@ -1,0 +1,36 @@
+--- a/lib/urldata.h
++++ b/lib/urldata.h
+@@ -117,6 +117,9 @@
+ #include <polarssl/entropy.h>
+ #include <polarssl/ctr_drbg.h>
+ #endif /* POLARSSL_VERSION_NUMBER<0x01010000 */
++#if POLARSSL_VERSION_NUMBER>=0x01030000
++#include <polarssl/compat-1.2.h>
++#endif
+ #endif /* USE_POLARSSL */
+ 
+ #ifdef USE_CYASSL
+--- a/lib/vtls/polarssl.c
++++ b/lib/vtls/polarssl.c
+@@ -37,6 +37,10 @@
+ #include <polarssl/x509.h>
+ #include <polarssl/version.h>
+ 
++#if POLARSSL_VERSION_NUMBER >= 0x01030000
++#include <polarssl/compat-1.2.h>
++#endif
++
+ #if POLARSSL_VERSION_NUMBER >= 0x01000000
+ #include <polarssl/error.h>
+ #endif /* POLARSSL_VERSION_NUMBER >= 0x01000000 */
+@@ -311,8 +315,8 @@ polarssl_connect_step1(struct connectdat
+                    &connssl->crl,
+                    conn->host.name);
+ 
+-  ssl_set_own_cert(&connssl->ssl,
+-                   &connssl->clicert, &connssl->rsa);
++  ssl_set_own_cert_rsa(&connssl->ssl,
++                       &connssl->clicert, &connssl->rsa);
+ 
+   if(!Curl_inet_pton(AF_INET, conn->host.name, &addr) &&
+ #ifdef ENABLE_IPV6
