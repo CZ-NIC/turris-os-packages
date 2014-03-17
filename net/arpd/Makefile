@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2009 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=arpd
 PKG_VERSION:=0.2
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_MD5SUM:=e2911fa9de1b92ef50deda1489ae944d
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -39,12 +39,9 @@ define Build/Configure
 	)
 endef
 
-define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR) \
-		CCOPT="$(TARGET_CFLAGS)" \
-		INCLS="-I. $(TARGET_CPPFLAGS)" \
-		LIBS="$(TARGET_LDFLAGS) -lpcap -ldnet -levent"
-endef
+MAKE_FLAGS += \
+	INCLUDES="$(TARGET_CFLAGS) $(TARGET_CPPFLAGS)" \
+	LIBS="$(TARGET_LDFLAGS) -lpcap -ldnet -levent"
 
 define Package/arpd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
