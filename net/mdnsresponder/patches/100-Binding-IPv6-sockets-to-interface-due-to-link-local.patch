@@ -9,30 +9,24 @@ places and mdnsd is quite confused.
 ---
  .../patches/003-ipv6-bind-to-interface.patch       |   22 ++++++++++++++++++++
  1 file changed, 22 insertions(+)
- create mode 100644 net/mdnsresponder/patches/003-ipv6-bind-to-interface.patch
 
---- /dev/null
-+++ b/net/mdnsresponder/patches/003-ipv6-bind-to-interface.patch
-@@ -0,0 +1,22 @@
-+diff -ur mDNSResponder-544.source/mDNSPosix/mDNSPosix.c mDNSResponder-544/mDNSPosix/mDNSPosix.c
-+--- mDNSResponder-544.source/mDNSPosix/mDNSPosix.c	2013-12-14 22:54:24.000000000 +0200
-++++ mDNSResponder-544/mDNSPosix/mDNSPosix.c	2014-02-19 18:59:55.000000000 +0200
-+@@ -784,6 +784,17 @@
-+             if (err < 0) { err = errno; perror("setsockopt - IPV6_MULTICAST_HOPS"); }
-+         }
-+ 
-++#ifdef __linux__
-++#ifdef SO_BINDTODEVICE
-++        if (err == 0)
-++        {
-++            char ifname[IFNAMSIZ];
-++            if (if_indextoname(interfaceIndex, ifname))
-++                err = setsockopt(*sktPtr, SOL_SOCKET, SO_BINDTODEVICE, ifname, strlen(ifname));
-++        }
-++#endif /* SO_BINDTODEVICE */
-++#endif /* __linux__ */
-++
-+         // And start listening for packets
-+         if (err == 0)
-+         {
-+Only in mDNSResponder-544/mDNSPosix: mDNSPosix.c~
+--- mDNSResponder-544.source/mDNSPosix/mDNSPosix.c	2013-12-14 22:54:24.000000000 +0200
++++ mDNSResponder-544/mDNSPosix/mDNSPosix.c	2014-02-19 18:59:55.000000000 +0200
+@@ -784,6 +784,17 @@
+             if (err < 0) { err = errno; perror("setsockopt - IPV6_MULTICAST_HOPS"); }
+         }
+ 
++#ifdef __linux__
++#ifdef SO_BINDTODEVICE
++        if (err == 0)
++        {
++            char ifname[IFNAMSIZ];
++            if (if_indextoname(interfaceIndex, ifname))
++                err = setsockopt(*sktPtr, SOL_SOCKET, SO_BINDTODEVICE, ifname, strlen(ifname));
++        }
++#endif /* SO_BINDTODEVICE */
++#endif /* __linux__ */
++
+         // And start listening for packets
+         if (err == 0)
+         {
