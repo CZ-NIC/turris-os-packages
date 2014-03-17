@@ -1,12 +1,12 @@
 # 
-# Copyright (C) 2008-2011 OpenWrt.org
+# Copyright (C) 2008-2014 OpenWrt.org
 #
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gw6c
 PKG_VERSION:=5.1
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://openwrt.linux-appliance.net/sources
@@ -33,6 +33,7 @@ GW6C_OPTS:= \
 	C_COMPILER="$(TARGET_CC) -c -DNO_STDLIBCXX" \
 	COMPILER="$(TARGET_CXX) -c -DNO_STDLIBCXX" \
 	CPP_FLAGS="$(TARGET_CFLAGS) -I. -Wall -DNDEBUG  $(TARGET_CPPFLAGS)" \
+	C_FLAGS="$(TARGET_CFLAGS) -I. -Wall -DNDEBUG $(TARGET_CPPFLAGS)" \
 	RANLIB="$(TARGET_CROSS)ranlib" \
 	ARCHIVER="$(TARGET_CROSS)ar" \
 	C_LINKER="$(TARGET_CC)" \
