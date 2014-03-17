@@ -1,6 +1,6 @@
---- a/Makefile	2011-08-16 20:28:19.968069040 +0200
-+++ b/Makefile	2011-08-16 20:27:57.968069032 +0200
-@@ -106,10 +106,10 @@
+--- a/Makefile
++++ b/Makefile
+@@ -106,10 +106,10 @@ BINDIR?=$(DESTDIR)${PREFIX}/bin
  MANDIR?=$(DESTDIR)${PREFIX}/share/man
  
  
@@ -13,7 +13,7 @@
  
  $(EXEC): $(OBJS) $(HDRS)
  	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
-@@ -117,14 +117,10 @@
+@@ -117,14 +117,10 @@ $(EXEC): $(OBJS) $(HDRS)
  $(CONTROL_EXEC): $(CONTROL_SRCS)
  	$(CC) $(CONTROL_SRCS) -o $@
  
@@ -29,7 +29,7 @@
  	install -d -m 0755 ${SBINDIR}
  	install -m 0755 $(EXEC) ${SBINDIR}/$(EXEC)
  	install -d -m 0755 ${MANDIR}/man5
-@@ -132,11 +128,6 @@
+@@ -132,11 +128,6 @@ install: ${EXEC} pfc ${CONTROL_EXEC}
  	install -m 0644 doc/xl2tpd.8 ${MANDIR}/man8/
  	install -m 0644 doc/xl2tpd.conf.5 doc/l2tp-secrets.5 \
  		 ${MANDIR}/man5/
