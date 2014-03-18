@@ -1,5 +1,5 @@
 # 
-# Copyright (C) 2010 OpenWrt.org
+# Copyright (C) 2010-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cwiid
 PKG_VERSION:=0.6.00
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tgz
 PKG_SOURCE_URL:=http://abstrakraft.org/cwiid/downloads/
@@ -69,8 +69,7 @@ endef
 
 define Build/Compile
 	$(MAKE) -C "$(PKG_BUILD_DIR)" \
-		CC="$(TARGET_CC)" \
-		OFLAGS="$(TARGET_CFLAGS)" \
+		CC="$(TARGET_CC) $(TARGET_CFLAGS)" \
 		CPPFLAGS="$(TARGET_CPPFLAGS)" \
 		LDFLAGS="$(TARGET_LDFLAGS) -L../libcwiid/" \
 		all

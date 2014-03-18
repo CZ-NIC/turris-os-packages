@@ -1,0 +1,11 @@
+--- a/src/stun.c
++++ b/src/stun.c
+@@ -399,7 +399,7 @@ stunParseMessage( char* buf, unsigned in
+    char* body;
+    unsigned int size;
+ 	 ortp_debug("stun: Received stun message: %i bytes\n", bufLen);
+-   memset(msg, 0, sizeof(msg));
++   memset(msg, 0, sizeof(*msg));
+ 	
+    if (sizeof(StunMsgHdr) > bufLen)
+    {

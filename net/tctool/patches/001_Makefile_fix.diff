@@ -1,7 +1,6 @@
-diff -ur tctool.old/src/Makefile tctool/src/Makefile
---- tctool.old/src/Makefile	2007-01-03 02:32:24.000000000 +0100
-+++ tctool/src/Makefile	2007-09-18 19:15:03.068155702 +0200
-@@ -31,16 +31,16 @@
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -31,16 +31,16 @@ MAINOBJ  := if.o interface.o etherStream
  EXAMPLE  := example
  EXOBJ    := if.o interface.o etherStream.o etherStreambuf.o tcStream.o tcStreambuf.o tcRtsDump.o tcRtsDumpbuf.o
  

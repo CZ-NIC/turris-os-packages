@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2007-2013 OpenWrt.org
+# Copyright (C) 2007-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=coova-chilli
 PKG_VERSION:=1.3.0
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://ap.coova.org/chilli
@@ -23,6 +23,7 @@ PKG_CONFIG_DEPENDS := \
   COOVACHILLI_USERAGENT \
   COOVACHILLI_DNSLOG \
   COOVACHILLI_UAMDOMAINFILE \
+  COOVACHILLI_LARGELIMITS \
   COOVACHILLI_NOSSL \
   COOVACHILLI_MATRIXSSL \
   COOVACHILLI_CYASSL \
@@ -61,6 +62,7 @@ define Build/Configure
 	$(if $(CONFIG_COOVACHILLI_DNSLOG),--enable,--disable)-dnslog \
 	$(if $(CONFIG_COOVACHILLI_MINIPORTAL),--enable,--disable)-miniportal \
 	$(if $(CONFIG_COOVACHILLI_USERAGENT),--enable,--disable)-useragent \
+	$(if $(CONFIG_COOVACHILLI_LARGELIMITS),--enable,--disable)-largelimits \
 	$(if $(CONFIG_COOVACHILLI_UAMDOMAINFILE),--enable,--disable)-uamdomainfile \
 	$(if $(CONFIG_COOVACHILLI_MATRIXSSL),--with,--without)-matrixssl \
 	$(if $(CONFIG_COOVACHILLI_CYASSL),--with,--without)-cyaxssl \

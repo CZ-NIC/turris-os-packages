@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2012 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lm-sensors
 PKG_VERSION:=3.3.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=lm_sensors-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://dl.lm-sensors.org/lm-sensors/releases
@@ -70,6 +70,8 @@ define Build/Compile
 		KERNELVERSION="$(LINUX_VERSION)" \
 		LINUX="$(LINUX_DIR)" \
 		CC="$(TARGET_CC)" \
+		CFLAGS="$(TARGET_CFLAGS)" \
+		CPPFLAGS="$(TARGET_CPPFLAGS)" \
 		STAGING_DIR="$(STAGING_DIR)" \
 		PREFIX="/usr" \
 		MACHINE="$(ARCH)" \

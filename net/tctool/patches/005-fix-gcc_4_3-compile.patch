@@ -1,5 +1,3 @@
-diff --git a/src/tctool.cpp b/src/tctool.cpp
-index bbab13f..9ce8e5c 100644
 --- a/src/tctool.cpp
 +++ b/src/tctool.cpp
 @@ -33,6 +33,7 @@

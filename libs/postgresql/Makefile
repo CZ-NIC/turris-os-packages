@@ -18,6 +18,7 @@ PKG_SOURCE_URL:=\
 	ftp://ftp-archives.postgresql.org/pub/source/v$(PKG_VERSION)
 PKG_MD5SUM:=1bd7f659c4f68e5fc23511c6952b494b
 PKG_BUILD_PARALLEL:=1
+PKG_USE_MIPS16:=0
 PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
