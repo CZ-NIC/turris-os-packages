@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nethist
-PKG_VERSION:=6
+PKG_VERSION:=8
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
-PKG_SOURCE_VERSION:=283effbe40d9bee5bcdb6727882adf2414c0134b
+PKG_SOURCE_VERSION:=292fe638f0e256e0d177676dd6828564d8c66d2a
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -31,9 +31,13 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/nethist/nethist $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/nethist/nethist_stats.lua $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/nethist.init $(1)/etc/init.d/nethist
+
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_DATA) ./files/nethist.cron $(1)/etc/cron.d/nethist
 endef
 
 define Package/$(PKG_NAME)/postinst
