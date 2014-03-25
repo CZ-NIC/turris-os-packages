@@ -35,6 +35,8 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) ./files/user_notify.config $(1)/etc/config/user_notify
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mail_notifier/notifier $(1)/usr/bin/notifier
+	$(INSTALL_DIR) $(1)/etc/cron.d/
+	$(INSTALL_DATA) ./files/user_notify.cron $(1)/etc/cron.d/notifier
 endef
 
 define Package/$(PKG_NAME)/conffiles
