@@ -9,12 +9,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pv
-PKG_VERSION:=1.2.0
+PKG_VERSION:=1.5.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=http://pipeviewer.googlecode.com/files
-PKG_MD5SUM:=67aedf6dbcd068d5feeaa76156153f4f
+PKG_SOURCE_URL:=http://www.ivarch.com/programs/sources/
+PKG_MD5SUM:=fdcd0be1e333602f82a70921b87976b8
 
 PKG_INSTALL:=1
 
