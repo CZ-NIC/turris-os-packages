@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=user_notify
-PKG_VERSION:=7
+PKG_VERSION:=8
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 
 PKG_SOURCE_PROTO:=git
@@ -41,7 +41,7 @@ define Package/$(PKG_NAME)/install
 endef
 
 define Package/$(PKG_NAME)/conffiles
-	/etc/config/user_notify
+/etc/config/user_notify
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
