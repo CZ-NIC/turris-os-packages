@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=63
+PKG_VERSION:=64
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=nuci
-	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua +ip +socat +libatsha204 +coreutils +coreutils-base64 +bzip2 +thermometer +user-notify
+	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua +ip +socat +libatsha204 +coreutils +coreutils-base64 +bzip2 +thermometer +user_notify
 endef
 
 define Package/nuci-nethist
