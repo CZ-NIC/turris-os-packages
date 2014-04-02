@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=user_notify
-PKG_VERSION:=10
+PKG_VERSION:=13
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 
 PKG_SOURCE_PROTO:=git
@@ -23,7 +23,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+at
+	DEPENDS:=+at +msmtp
 endef
 
 define Build/Compile
@@ -34,8 +34,10 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./files/user_notify.config $(1)/etc/config/user_notify
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mail_notifier/notifier $(1)/usr/bin/notifier
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mail_notifier/create_notification $(1)/usr/bin/create_notification
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mail_notifier/notifier $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mail_notifier/create_notification $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mail_notifier/user-notify-cleaner $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mail_notifier/user-notify-display $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/etc/cron.d/
 	$(INSTALL_DATA) ./files/user_notify.cron $(1)/etc/cron.d/notifier
 endef
