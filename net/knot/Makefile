@@ -20,7 +20,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
-
+PKG_BUILD_DEPENDS:=+liburcu
 include $(INCLUDE_DIR)/package.mk
 
 define Package/knot/Default
@@ -30,7 +30,7 @@ define Package/knot/Default
 	URL:=https://www.knot-dns.cz
 	MAINTAINER:=daniel.salzman@nic.cz
 	SUBMENU:=IP Addresses and Names
-	DEPENDS:=+libopenssl +liburcu
+	DEPENDS:=+liburcu +libopenssl
 endef
 
 define Package/knot
