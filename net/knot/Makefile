@@ -30,7 +30,7 @@ define Package/knot/Default
 	URL:=https://www.knot-dns.cz
 	MAINTAINER:=daniel.salzman@nic.cz
 	SUBMENU:=IP Addresses and Names
-	DEPENDS:=+liburcu +libopenssl
+	DEPENDS:=+liburcu +libopenssl +libidn
 endef
 
 define Package/knot
