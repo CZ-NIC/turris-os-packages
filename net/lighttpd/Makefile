@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd
 PKG_VERSION:=1.4.30
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://download.lighttpd.net/lighttpd/releases-1.4.x
@@ -274,6 +274,7 @@ endef
 
 define Package/lighttpd/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd
+	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
 	$(INSTALL_DATA) ./files/lighttpd.conf $(1)/etc/lighttpd/
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/lighttpd.init $(1)/etc/init.d/lighttpd
