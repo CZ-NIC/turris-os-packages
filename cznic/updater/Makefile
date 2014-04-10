@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=77
+PKG_VERSION:=78
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -38,7 +38,7 @@ endif
 # without it.
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+vixie-cron +openssl-util +libatsha204 +curl $(TURRIS_DEPS) +opkg +bzip2
+	DEPENDS:=+vixie-cron +openssl-util +libatsha204 +curl $(TURRIS_DEPS) +opkg +bzip2 +cznic-cacert-bundle
 endef
 
 # The built is empty. But as there's no makefile in the git repo, we need to
