@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nikola
-PKG_VERSION:=14
+PKG_VERSION:=15
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nikola.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=b449aa62aeda1a04c74d5c6410ac35d5d7a58e41
+PKG_SOURCE_VERSION:=d7c47b35de3d876f17c097d30793fe5b3d865b45
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+python +logrotate +syslog-ng3 +python-libatsha204 +python-openssl +firewall
+	DEPENDS:=+python +logrotate +syslog-ng3 +python-libatsha204 +python-openssl +firewall +cznic-cacert-bundle
 endef
 
 define Package/$(PKG_NAME)/description
