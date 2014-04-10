@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cznic-cacert-bundle
-PKG_VERSION:=11
+PKG_VERSION:=12
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=7c35a3fa6c9d0ef112ec992aa54c3c7128c1a7a8
+PKG_SOURCE_VERSION:=1426f8cc82d60621971d5f818f9f1b22b7696204
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -51,6 +51,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/api.turris.pem $(1)/etc/ssl/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/ucollect-server.pem $(1)/etc/ssl/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/crl.pem $(1)/etc/ssl/
 
 	$(INSTALL_DIR) $(1)/etc/ssl/certs
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/certs
