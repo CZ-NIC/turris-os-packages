@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cznic-cacert-bundle
-PKG_VERSION:=16
+PKG_VERSION:=17
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=b1f5b7756067c1a75463f731b98e9dc5e04eb90a
+PKG_SOURCE_VERSION:=2e63ee068bb3b7d504b9d28b1d53568dc681bb41
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
