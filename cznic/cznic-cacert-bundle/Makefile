@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cznic-cacert-bundle
-PKG_VERSION:=14
+PKG_VERSION:=15
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -59,6 +59,14 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/cacerts/get-api-crl $(1)/usr/bin/
+endef
+
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh
+
+if [ -z "$${IPKG_INSTROOT}" ] ; then
+	get-api-crl
+fi
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
