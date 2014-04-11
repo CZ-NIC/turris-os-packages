@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cznic-cacert-bundle
-PKG_VERSION:=12
+PKG_VERSION:=16
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=1426f8cc82d60621971d5f818f9f1b22b7696204
+PKG_SOURCE_VERSION:=b1f5b7756067c1a75463f731b98e9dc5e04eb90a
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -36,7 +36,7 @@ endif
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:= $(TURRIS_DEPS)
+	DEPENDS:= $(TURRIS_DEPS) +vixie-cron
 endef
 
 # The built is empty. But as there's no makefile in the git repo, we need to
@@ -51,11 +51,25 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/api.turris.pem $(1)/etc/ssl/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/ucollect-server.pem $(1)/etc/ssl/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/crl.pem $(1)/etc/ssl/
+	ln -s /tmp/crl.pem $(1)/etc/ssl/crl.pem
 
 	$(INSTALL_DIR) $(1)/etc/ssl/certs
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/certs
 	c_rehash $(1)/etc/ssl/certs
+
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/cacerts/get-api-crl $(1)/usr/bin/
+
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_DATA) ./files/get-crl.cron $(1)/etc/cron.d/get-api
+endef
+
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh
+
+if [ -z "$${IPKG_INSTROOT}" ] ; then
+	get-api-crl
+fi
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
