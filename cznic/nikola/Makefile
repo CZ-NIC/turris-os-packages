@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nikola
-PKG_VERSION:=15
+PKG_VERSION:=16
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nikola.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -35,9 +35,6 @@ endef
 
 define Package/$(PKG_NAME)/conffiles
 /etc/config/nikola
-/etc/logrotate.d/iptables
-/etc/cron.d/nikola
-/etc/syslog-ng.d/nikola.conf
 endef
 
 define Package/$(PKG_NAME)/install
