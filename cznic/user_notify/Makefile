@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=user_notify
-PKG_VERSION:=20
+PKG_VERSION:=21
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=1a876852c0103ea4e0025e85b8db45f1ac00d151
+PKG_SOURCE_VERSION:=2a49db1a077d07b494dee56a2b58b02d8abfcaaa
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -46,7 +46,7 @@ define Package/user_notify/conffiles
 endef
 
 define Package/create_notification
-	TITLE:=create_notify
+	TITLE:=create_notification
 endef
 
 define Package/create_notification/install
