@@ -30,7 +30,7 @@ build_config() {
         ALL=$(echo "$V4" "$V6" | sed -e 's/  */ /g;s/ /\n/g' | sort -u)
         IGNORE=$(uci -X show network | sed -ne 's/^network\.\([^.]*\)=interface$/\1/p' | while read iface ; do
             proto=$(uci get -q network.$iface.proto)
-            name=$(uci get -q network.$iface.ifname || echo "$proto-$iface")
+            name=$(echo "$proto-$iface" | head -c 15)
             # TODO: What about L2TP? #3093
             if [ "$proto" = "6in4" -o "$proto" = "6to4" -o "$proto" = "6rd" -o "$proto" = "dslite" ] ; then
                 # These are tunnels. We can look into them (and do) and they'll travel through the
