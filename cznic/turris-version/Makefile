@@ -24,6 +24,16 @@ endef
 define Build/Compile
 endef
 
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+    create_notification -s news "• Konfigurační prostředí luci změnilo své umístění z portu 8080 na cgi-bin/luci."
+    create_notification -s news "• Nově je možné nastavit si v průvodci Foris zasílání oznámení o aktualizacích a novinkách emailem."
+    create_notification -s news "• V případě aktualizace jádra operačního systému, systém naplánuje automatický restart dle vašich preferencí."
+}
+endef
+
+
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc
 	echo $(PKG_VERSION) > $(1)/etc/turris-version
