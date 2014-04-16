@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=35
+PKG_VERSION:=36
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
-PKG_SOURCE_VERSION:=8defa3ed675302cc0b3f37aef7543841806e0547
+PKG_SOURCE_VERSION:=7d27be63094a2db0ab27e02d4ffc18c715149c56
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -35,7 +35,7 @@ endef
 FORIS_DIR=/www2
 
 define Package/foris/conffiles
-/etc/foris/foris-lighttpd-inc.conf
+/etc/lighttpd/conf.d/foris.conf
 /etc/config/foris
 endef
 
