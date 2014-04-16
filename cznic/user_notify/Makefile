@@ -23,7 +23,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/user_notify
 	TITLE:=user_notify
-	DEPENDS:=+at +msmtp +create_notify
+	DEPENDS:=+at +msmtp +create_notification
 endef
 
 define Build/Compile
@@ -45,14 +45,14 @@ define Package/user_notify/conffiles
 /etc/config/user_notify
 endef
 
-define Package/create_notify
+define Package/create_notification
 	TITLE:=create_notify
 endef
 
-define Package/create_notify/install
+define Package/create_notification/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mail_notifier/create_notification $(1)/usr/bin/
 endef
 
 $(eval $(call BuildPackage,user_notify))
-$(eval $(call BuildPackage,create_notify))
+$(eval $(call BuildPackage,create_notification))
