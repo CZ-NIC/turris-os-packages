@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=80
+PKG_VERSION:=81
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -84,6 +84,10 @@ endef
 define Package/$(PKG_NAME)/prerm
 #!/bin/sh
 /etc/init.d/updater disable
+endef
+
+define Package/$(PKG_NAME)/conffiles
+/etc/config/updater
 endef
 
 define Package/updater-consolidator
