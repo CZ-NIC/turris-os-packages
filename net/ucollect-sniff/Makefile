@@ -17,7 +17,7 @@ define Package/ucollect-sniff/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libplugin_sniff.so $(1)/usr/lib/libplugin_ucollect_sniff_$(VERSION).so
 	$(INSTALL_DIR) $(1)/usr/share/ucollect/configs
 	echo 'config plugin' >$(1)/usr/share/ucollect/configs/99-sniff.cfg
-	echo "	option libname 'libplugin_ucollect_sniff_$(VERSION).so'" >>$$(1)/usr/share/ucollect/configs/99-sniff.cfg
+	echo "	option libname 'libplugin_ucollect_sniff_$(VERSION).so'" >>$(1)/usr/share/ucollect/configs/99-sniff.cfg
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/sniff/sniff-ping $(1)/usr/bin/ucollect-sniff-ping
 endef
