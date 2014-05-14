@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=81
+PKG_VERSION:=82
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -75,6 +75,16 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
+if uci get -q updater.pkglists.configured || uci get -q updater.pkglists.lists | grep -q . ; then
+	:
+else
+	uci add_list updater.pkglists.lists=luci-controls
+	uci add_list updater.pkglists.lists=nas
+	uci add_list updater.pkglists.lists=printserver
+	uci add_list updater.pkglists.lists=netutils
+fi
+uci set updater.pkglists.configured=1
+uci commit updater
 /etc/init.d/updater enable
 true # The previous sometimes returns 1 without any reason. Ignore it.
 # No need to start here, it is not a daemon, just a start-up check
