@@ -8,7 +8,7 @@
 
 include $(TOPDIR)/package/packages/net/ucollect-core/Makefile.common
 
-VERSION:=1
+VERSION:=2
 
 $(eval $(call UCOLLECT_PLUGIN,sniff,$(VERSION)))
 
