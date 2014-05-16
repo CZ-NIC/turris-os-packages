@@ -125,7 +125,10 @@ start() {
     mkdir -p $(dirname "$CONFIGFILE")
 
     init_unbound
-    unbound
+    unbound || (
+        sleep 2 # There are temporary failures with ports in unbound sometimes, try again after a while
+	unbound
+    )
 }
 
 reload() {
@@ -149,6 +152,7 @@ stop() {
     config_get pidfile server pidfile
 
     if [ -f "$pidfile" ] ; then
-        kill $(cat $pidfile) && rm "$pidfile"
+        kill $(cat $pidfile) ; rm "$pidfile"
     fi
+    sleep 1 # For cleanup of ports and such
 }
