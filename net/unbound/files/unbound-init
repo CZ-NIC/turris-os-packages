@@ -152,7 +152,7 @@ stop() {
     config_get pidfile server pidfile
 
     if [ -f "$pidfile" ] ; then
-        kill $(cat $pidfile) && rm "$pidfile"
+        kill $(cat $pidfile) ; rm "$pidfile"
     fi
     sleep 1 # For cleanup of ports and such
 }
