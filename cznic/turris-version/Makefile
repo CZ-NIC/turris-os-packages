@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=1.1
+PKG_VERSION:=1.2
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
@@ -27,9 +27,11 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news "• Konfigurační prostředí luci změnilo své umístění z portu 8080 na cgi-bin/luci."
-    create_notification -s news "• Nově je možné nastavit si v průvodci Foris zasílání oznámení o aktualizacích a novinkách emailem."
-    create_notification -s news "• V případě aktualizace jádra operačního systému, systém naplánuje automatický restart dle vašich preferencí."
+    create_notification -s news "• Opraveny balíčky rrdtool a usbip. Aktualizován balíček git na verzi 1.9.3."
+    create_notification -s news "• Opraveny chyby v zasílání oznámení o aktualizacích. Maximální prodleva pro plánované restarty byla omezena na 10 dní."
+    create_notification -s news "• Aktualizován český překlad rozhraní Luci."
+    create_notification -s news "• Přidán watchdog kontrolující správnou funkci unbound démona."
+    create_notification -s news "• Aktualizovány balíčky Foris a Ucollect."
 }
 endef
 
