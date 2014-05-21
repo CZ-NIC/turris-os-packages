@@ -27,11 +27,11 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news "• Opraveny balíčky rrdtool a usbip. Aktualizován balíček git na verzi 1.9.3."
-    create_notification -s news "• Opraveny chyby v zasílání oznámení o aktualizacích. Maximální prodleva pro plánované restarty byla omezena na 10 dní."
-    create_notification -s news "• Aktualizován český překlad rozhraní Luci."
-    create_notification -s news "• Přidán watchdog kontrolující správnou funkci unbound démona."
-    create_notification -s news "• Aktualizovány balíčky Foris a Ucollect."
+    create_notification -s news " • Opraveny balíčky rrdtool a usbip. Aktualizován balíček git na verzi 1.9.3.
+ • Opraveny chyby v zasílání oznámení o aktualizacích. Maximální prodleva pro plánované restarty byla omezena na 10 dní.
+ • Aktualizován český překlad rozhraní Luci.
+ • Přidán watchdog kontrolující správnou funkci unbound démona.
+ • Aktualizovány balíčky Foris a Ucollect."
 }
 endef
 
