@@ -26,7 +26,7 @@ define Package/$(PKG_NAME)
 endef
 
 define Build/Configure
-	$(call Build/Configure/Default, --disable-libssh2 --disable-notifications  --prefix=/usr/ --exec-prefix=/usr --with-ncworkingdirpath=/tmp/)
+	$(call Build/Configure/Default, --disable-libssh2 --disable-notifications  --prefix=/usr/ --exec-prefix=/usr --with-ncworkingdirpath=/tmp/ --with-workingdir=/tmp/)
 endef
 
 define Build/InstallDev
