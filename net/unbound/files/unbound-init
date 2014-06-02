@@ -111,6 +111,7 @@ init_unbound() {
             (
             echo 'forward-zone:'
             echo '	name: "."'
+            echo '	forward-first: yes'
             for SERVER in $SERVERS ; do
                 echo "	forward-addr: $SERVER"
             done
