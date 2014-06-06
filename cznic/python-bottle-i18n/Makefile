@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bottle-i18n
-PKG_VERSION:=0.1.4
+PKG_VERSION:=0.1.5
 PKG_RELEASE:=1
 
-PKG_SOURCE:=bottle-i18n-0.1.4.tar.gz
+PKG_SOURCE:=bottle-i18n-0.1.5.tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/b/bottle-i18n/
-PKG_MD5SUM:=65fa164cf51b4c1f3852a9b24ba60b84
+PKG_MD5SUM:=f0942f05fec0f4a3c45765623863cb68
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=python
