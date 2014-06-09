@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=https-cert
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_MAINTAINER:=Robin Obůrka <robin.oburka@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -30,9 +30,8 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-openssl req -new -x509 -keyout /etc/lighttpd-self-signed.pem -out /etc/lighttpd-self-signed.pem -days 1825 -nodes -subj "/C=CZ/ST=Prague/L=Prague/O=Turris"
+[ -f /etc/lighttpd-self-signed.pem ] || openssl req -new -x509 -keyout /etc/lighttpd-self-signed.pem -out /etc/lighttpd-self-signed.pem -days 1825 -nodes -subj "/C=CZ/ST=Prague/L=Prague/O=Turris"
 /etc/init.d/lighttpd restart
-create_notification -s news 'Součástí poslední aktualizace byl balíček https-cert, který vám povolil HTTPS spojení a na vašem routeru vygenerovat self-signed certifikát. Od této chvíle se tedy můžete připojit i na adrese https://ip.adresa.vaseho.routeru/ jak do rozhraní Foris, tak do rozhraní LuCI. Je nutné počítat s tím, že vám váš prohlížeč bude hlásit chybu certifikátu. Více informací na: https://www.turris.cz/doc/navody/pristup_z_vnejsi_site'
 }
 endef
 
