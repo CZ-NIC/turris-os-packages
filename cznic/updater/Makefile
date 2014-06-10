@@ -34,6 +34,19 @@ echo 'MAILTO=""' >"$$IPKG_INSTROOT"/etc/cron.d/updater
 echo "$$TIME	*       *       *       *       root	/usr/bin/updater.sh >/dev/null 2>&1 &" >>"$$IPKG_INSTROOT"/etc/cron.d/updater
 [ -n "$$IPKG_INSTROOT" ] || {
 /usr/sbin/cert-backup /usr/share/updater/keys/standby.pem /usr/share/updater/keys/release.pem /etc/ssl/updater.pem
+if uci get -q updater.pkglists.configured || uci get -q updater.pkglists.lists | grep -q . ; then
+	:
+else
+	uci add_list updater.pkglists.lists=luci-controls
+	uci add_list updater.pkglists.lists=nas
+	uci add_list updater.pkglists.lists=printserver
+	uci add_list updater.pkglists.lists=netutils
+fi
+uci set updater.pkglists.configured=1
+uci commit updater
+/etc/init.d/updater enable
+true # The previous sometimes returns 1 without any reason. Ignore it.
+# No need to start here, it is not a daemon, just a start-up check
 }
 endef
 
@@ -75,25 +88,6 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater.init $(1)/etc/init.d/updater
-endef
-
-define Package/$(PKG_NAME)/postinst
-#!/bin/sh
-[ -n "$$IPKG_INSTROOT" ] || {
-if uci get -q updater.pkglists.configured || uci get -q updater.pkglists.lists | grep -q . ; then
-	:
-else
-	uci add_list updater.pkglists.lists=luci-controls
-	uci add_list updater.pkglists.lists=nas
-	uci add_list updater.pkglists.lists=printserver
-	uci add_list updater.pkglists.lists=netutils
-fi
-uci set updater.pkglists.configured=1
-uci commit updater
-/etc/init.d/updater enable
-true # The previous sometimes returns 1 without any reason. Ignore it.
-# No need to start here, it is not a daemon, just a start-up check
-}
 endef
 
 define Package/$(PKG_NAME)/prerm
