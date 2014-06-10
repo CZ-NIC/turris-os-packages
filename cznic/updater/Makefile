@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=85
+PKG_VERSION:=86
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=6a3640302326cdd53bce6d3b5ad9eb910ea0ca17
+PKG_SOURCE_VERSION:=b0f1ec4f67f3117a7268f3931509f986625e03d3
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -26,6 +26,12 @@ TURRIS_DEPS:=+cert-backup
 
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
+TIME=$$(( $$(tr -cd 0-9 </dev/urandom | head -c 8 | sed -e 's/^0*//' ) % 60 ))
+if [ -z "$$TIME" ] ; then
+	TIME=0
+fi
+echo 'MAILTO=""' >"$$IPKG_INSTROOT"/etc/cron.d/updater
+echo "$$TIME	*       *       *       *       root	/usr/bin/updater.sh >/dev/null 2>&1 &" >>"$$IPKG_INSTROOT"/etc/cron.d/updater
 [ -n "$$IPKG_INSTROOT" ] || {
 /usr/sbin/cert-backup /usr/share/updater/keys/standby.pem /usr/share/updater/keys/release.pem /etc/ssl/updater.pem
 }
@@ -60,7 +66,6 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-release.pub.pem $(1)/usr/share/updater/keys/release.pem
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/updater.cron $(1)/etc/cron.d/updater
 
 	$(INSTALL_DIR) $(1)/etc/ssl
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/startcom.pem $(1)/etc/ssl/updater.pem
