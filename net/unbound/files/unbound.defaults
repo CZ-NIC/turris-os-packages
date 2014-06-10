@@ -1,6 +1,8 @@
 #!/bin/sh
 
-uci set dhcp.@dnsmasq[0].port=0
+if [ "$(uci get -q dhcp.@dnsmasq[0].port || echo 53)" = 53 ] ; then
+	uci set dhcp.@dnsmasq[0].port=0
+fi
 # Make sure we can set time for resolution to work, before the resolution works.
 uci show system.ntp.server | grep -q '217\.31\.205\.226' || uci add_list system.ntp.server=217.31.205.226
 # Also, when we have turned the dnsmasq DNS off, ask dnsmasq to advertise us as DNS server
