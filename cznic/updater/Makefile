@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=86
+PKG_VERSION:=87
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -24,6 +24,8 @@ ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
 
 TURRIS_DEPS:=+cert-backup
 
+endif
+
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 TIME=$$(( $$(tr -cd 0-9 </dev/urandom | head -c 8 | sed -e 's/^0*//' ) % 60 ))
@@ -33,7 +35,9 @@ fi
 echo 'MAILTO=""' >"$$IPKG_INSTROOT"/etc/cron.d/updater
 echo "$$TIME	*       *       *       *       root	/usr/bin/updater.sh >/dev/null 2>&1 &" >>"$$IPKG_INSTROOT"/etc/cron.d/updater
 [ -n "$$IPKG_INSTROOT" ] || {
-/usr/sbin/cert-backup /usr/share/updater/keys/standby.pem /usr/share/updater/keys/release.pem /etc/ssl/updater.pem
+if [ -x /usr/sbin/cert-backup ] ; then
+	/usr/sbin/cert-backup /usr/share/updater/keys/standby.pem /usr/share/updater/keys/release.pem /etc/ssl/updater.pem
+fi
 if uci get -q updater.pkglists.configured || uci get -q updater.pkglists.lists | grep -q . ; then
 	:
 else
@@ -49,8 +53,6 @@ true # The previous sometimes returns 1 without any reason. Ignore it.
 # No need to start here, it is not a daemon, just a start-up check
 }
 endef
-
-endif
 
 # It also uses the notifier. But if there's no package that depends on it
 # (to send notification) and it is not installed therefore, we can live
