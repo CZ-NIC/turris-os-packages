@@ -49,24 +49,11 @@ add_parameter() {
     echo -e "\t$opt: $val" >> "$CONFIGFILE"
 }
 
-add_quoted_parameter() {
-    val="$1"
-    opt="$2"
-    echo -e "\t$opt: \"$val\"" >> "$CONFIGFILE"
-}
-
 set_multiple_parameters() {
     local var="$1"
     local opt="$2"
-
+    
     config_list_foreach "$section" "$var" add_parameter "$opt"
-}
-
-set_quoted_multiple_parameters() {
-    local var="$1"
-    local opt="$2"
-
-    config_list_foreach "$section" "$var" add_quoted_parameter "$opt"
 }
 
 #initialize everything 
@@ -103,8 +90,6 @@ init_unbound() {
     set_parameter key_cache_size key-cache-size 100k
     set_parameter key_cache_slabs key-cache-slabs 1
     set_parameter neg_cache_size neg-cache-size 10k
-    set_parameter local_zone local-zone ""
-    set_quoted_multiple_parameters local_data local-data
 
     #Python section
     add_section python
