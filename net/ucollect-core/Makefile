@@ -9,7 +9,7 @@
 
 include $(TOPDIR)/package/packages/net/ucollect-core/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,ucollect-core,59))
+$(eval $(call UCOLLECT_BASE,ucollect-core,60))
 
 define Package/ucollect-core
 	SECTION:=net
@@ -31,6 +31,7 @@ endef
 define Package/ucollect-core/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
+rm -f /usr/share/ucollect/configs/99-bandwidth.cfg
 /etc/init.d/ucollect enable
 /etc/init.d/ucollect restart
 }
