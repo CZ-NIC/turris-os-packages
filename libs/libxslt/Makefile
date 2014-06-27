@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libxslt
-PKG_VERSION:=1.1.26
+PKG_VERSION:=1.1.28
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://xmlsoft.org/sources/ \
 	ftp://fr.rpmfind.net/pub/libxml/
-PKG_MD5SUM:=e61d0364a30146aaa3001296f853b2b9
+PKG_MD5SUM:=9667bf6f9310b957254fdcf6596600b7
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
