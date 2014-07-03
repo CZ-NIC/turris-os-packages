@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=1.2
+PKG_VERSION:=1.3
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
@@ -27,11 +27,12 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Opraveny balíčky rrdtool a usbip. Aktualizován balíček git na verzi 1.9.3.
- • Opraveny chyby v zasílání oznámení o aktualizacích. Maximální prodleva pro plánované restarty byla omezena na 10 dní.
- • Aktualizován český překlad rozhraní Luci.
- • Přidán watchdog kontrolující správnou funkci unbound démona.
- • Aktualizovány balíčky Foris a Ucollect."
+    create_notification -s news " • Nová funkce firewallu pro stahování IPv6 pravidel ze serveru.
+ • Firewall používá IPset pro nastavování pravidel, což přispívá k vyššímu výkonu filtrování.
+ • Oprava chyby firewallu, která způsobovala neaplikování pravidel z UCI.
+ • Oprava pluginu ucollect-bandwidth, který způsoboval vytížení CPU.
+ • Automatické ukončení Ucollectu po mnoha nevydařených pokusech o připojení.
+ • Oprava balíčku https-cert, která řeší problém s konfiguračním souborem lighttpd."
 }
 endef
 
