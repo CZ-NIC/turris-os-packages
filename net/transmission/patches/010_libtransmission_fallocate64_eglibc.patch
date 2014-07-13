@@ -1,6 +1,6 @@
---- a/libtransmission/fdlimit.c
-+++ b/libtransmission/fdlimit.c
-@@ -25,7 +25,8 @@
+--- a/libtransmission/fdlimit.c	2014-07-01 20:08:59.000000000 +0300
++++ b/libtransmission/fdlimit.c	2014-07-13 13:30:17.000000000 +0300
+@@ -22,7 +22,8 @@
   #include <fcntl.h>
  #endif
  
