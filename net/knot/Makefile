@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot
 PKG_VERSION:=1.5.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
@@ -73,9 +73,14 @@ define Package/knot-tests/description
 	Usage: /usr/share/knot/runtests.sh
 endef
 
+define Package/knot/conffiles
+/etc/knot/knot.conf
+endef
+
 CONFIGURE_ARGS += 			\
 	--enable-recvmmsg=no		\
 	--disable-fastparser		\
+	--without-libidn		\
 	--with-rundir=/var/run		\
 	--with-storage=/etc/knot
 
@@ -101,7 +106,7 @@ define Package/knot/install
 
 	$(INSTALL_DIR) 							$(1)/etc/knot
 	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/etc/knot/knot.sample.conf	$(1)/etc/knot/knot.conf
-	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/etc/knot/example.com.zone	$(1)/etc/knot/
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/etc/knot/example.com.zone	$(1)/etc/knot/
 
 	$(INSTALL_DIR)				$(1)/etc/init.d
 	$(INSTALL_BIN) ./files/knotd.init	$(1)/etc/init.d/knotd
@@ -117,7 +122,7 @@ endef
 
 define Package/knot-tests/install
 	$(INSTALL_DIR) 						$(1)/usr/share/knot
-	$(INSTALL_BIN) ./files/runtests.sh			$(1)/usr/share/knot
+	$(INSTALL_BIN) ./files/runtests.sh			$(1)/usr/share/knot/
 
 	$(INSTALL_DIR) 						$(1)/usr/share/knot/tap
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/libtap/runtests		$(1)/usr/share/knot/tap/
@@ -129,11 +134,11 @@ define Package/knot-tests/install
 		xargs -I{} $(INSTALL_BIN) -T $(PKG_BUILD_DIR)/tests/.libs/{}	$(1)/usr/share/knot/tests/test_{}
 
 	$(INSTALL_DIR)						$(1)/usr/share/knot/tests/data
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/tests/data/sample_conf	$(1)/usr/share/knot/tests/data/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/tests/data/sample_conf	$(1)/usr/share/knot/tests/data/
 
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/zscanner/tests/.libs/zscanner-tool	$(1)/usr/share/knot/tests/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/zscanner/tests/unittests		$(1)/usr/share/knot/tests/test_zscanner
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/zscanner/tests/TESTS		$(1)/usr/share/knot/tests/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/zscanner/tests/TESTS		$(1)/usr/share/knot/tests/
 	cp -a $(PKG_BUILD_DIR)/src/zscanner/tests/data				$(1)/usr/share/knot/tests/
 endef
 
