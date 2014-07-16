@@ -50,13 +50,6 @@ $(call Package/cmus/Default)
 	+pulseaudio-daemon
 endef
 
-define Package/cmus-plugin-oss
-$(call Package/cmus/Default)
-  TITLE:=cmus oss plugin
-  DEPENDS:= \
-	+cmus
-endef
-
 define Package/cmus/Default/description
 	C* Music Player is a modular and very configurable ncurses-based
 	audio player. It has some interesting features like configurable
@@ -72,11 +65,6 @@ endef
 define Package/cmus-plugin-pulse/description
 $(call Package/cmus/Default/description)
 	This package adds the Pulseaudio plugin.
-endef
-
-define Package/cmus-plugin-oss/description
-$(call Package/cmus/Default/description)
-	This package adds the OSS plugin.
 endef
 
 define Build/Configure
@@ -105,7 +93,6 @@ define Build/Configure
 		CONFIG_ALSA=$(if $(CONFIG_AUDIO_SUPPORT),a,n) \
 		CONFIG_AO=n \
 		CONFIG_ARTS=n \
-		CONFIG_OSS=a \
 		CONFIG_SUN=n \
 		CONFIG_WAVEOUT=n \
 		DEBUG=0 \
@@ -136,13 +123,7 @@ define Package/cmus-plugin-pulse/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/cmus/op/pulse.so $(1)/usr/lib/cmus/op/
 endef
 
-define Package/cmus-plugin-oss/install
-	$(INSTALL_DIR) $(1)/usr/lib/cmus/op
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/cmus/op/oss.so $(1)/usr/lib/cmus/op/
-endef
-
 
 $(eval $(call BuildPackage,cmus))
 $(eval $(call BuildPackage,cmus-plugin-pulse))
-$(eval $(call BuildPackage,cmus-plugin-oss))
 
