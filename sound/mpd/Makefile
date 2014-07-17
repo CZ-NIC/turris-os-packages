@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mpd
-PKG_VERSION:=0.16.5
+PKG_VERSION:=0.16.8
 PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=@SF/musicpd
-PKG_MD5SUM:=f7564cff12035f6a1112cce770655df7
+PKG_SOURCE_URL:=http://www.musicpd.org/download/mpd/0.16/
+PKG_MD5SUM:=b412a9d0b3457bea1bb87904a8f80c04
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_BUILD_PARALLEL:=1
@@ -36,9 +36,9 @@ define Package/mpd/Default
 endef
 
 define Package/mpd/Default/description
- Music Player Daemon (MPD) is a flexible, powerful, server-side 
- application for playing music. It is typically controlled over a 
- network using one of it's many clients including mpc (console), 
+ Music Player Daemon (MPD) is a flexible, powerful, server-side
+ application for playing music. It is typically controlled over a
+ network using one of it's many clients including mpc (console),
  gmpc (gnome), phpmp (php), etc...
 endef
 
@@ -76,7 +76,7 @@ endef
 define Package/mpd-mini/description
 $(call Package/mpd/Default/description)
  .
- This package contains a minimal Music Player Daemon, with support for 
+ This package contains a minimal Music Player Daemon, with support for
  only Flac, MP3 & OGG media types & only file: & http: protocols.
 endef
 
