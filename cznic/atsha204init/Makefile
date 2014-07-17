@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=atsha204init
 PKG_VERSION:=2
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/atsha204.git
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/libatsha204.git
 PKG_SOURCE_VERSION:=61e463d557692f2131f5fdaa8a55e0aedcc6b03a
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
