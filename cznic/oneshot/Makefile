@@ -43,6 +43,12 @@ define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 
 if [ -z "$${IPKG_INSTROOT}" ] ; then
+	if -f /usr/share/oneshot/completed/scripts ; then
+		# Workaround. We didn't create the right scripts when it was being distributed.
+		# So add them now
+		cd /usr/share/oneshot/completed
+		touch 0000-opkg-uri 0002-opkg-https 0001-opkg-no-testing 0003-reset-updater-pkgs
+	fi
 	# If we are directly on the device, the variable is empty. Run right away.
 	/usr/bin/oneshot.sh
 else
