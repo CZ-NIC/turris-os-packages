@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=oneshot
-PKG_VERSION:=10
+PKG_VERSION:=11
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -48,7 +48,7 @@ if [ -z "$${IPKG_INSTROOT}" ] ; then
 else
 	# If it's on the device, then we already set up everything as it should be.
 	# Pretend all the scripts available now were already run.
-	for s in "$${IPKG_INSTROOT}"/usr/share/oneshot/scripts ; do
+	for s in "$${IPKG_INSTROOT}"/usr/share/oneshot/scripts/* ; do
 		touch "$${IPKG_INSTROOT}"/usr/share/oneshot/completed/$$(basename "$$s")
 	done
 fi
