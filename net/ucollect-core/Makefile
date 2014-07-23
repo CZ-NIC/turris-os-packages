@@ -15,10 +15,17 @@ define Package/ucollect-lib
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Netflow data collecting daemon
-	DEPENDS:=+libpcap +librt +libopenssl +libuci +libatsha204 +socat +cznic-cacert-bundle +ucollect-config +zlib
+	DEPENDS:=+libpcap +librt +libopenssl +libuci +libatsha204 +socat +zlib
 endef
 
 define Package/ucollect-core
+	SECTION:=net
+	CATEGORY:=Network
+	TITLE:=Netflow data collecting daemon
+	DEPENDS:=+ucollect-lib +ucollect-config +cznic-cacert-bundle
+endef
+
+define Package/lcollect
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Netflow data collecting daemon
@@ -77,6 +84,12 @@ define Package/ucollect-lib/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libucollect_core.so $(1)/usr/lib/
 endef
 
+define Package/lcollect/install
+	$(INSTALL_DIR) $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/lcollect $(1)/usr/bin/
+endef
+
 $(eval $(call BuildPackage,ucollect-lib))
 $(eval $(call BuildPackage,ucollect-core))
 $(eval $(call BuildPackage,ucollect-config))
+$(eval $(call BuildPackage,lcollect))
