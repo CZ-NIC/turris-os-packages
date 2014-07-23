@@ -30,7 +30,11 @@ define Package/$(PKG_NAME)/postinst
     create_notification -s news " • Spojení ucollectu se serverem je nyní komprimované.
  • Přidán plugin flow určený ke sledování délek a velikostí podezřelých spojení.
  • Zprovozněna možnost použít smtp server CZ.NICu k odesílání novinek. Výhodou této možnosti je jednodušší konfigurace (nastavuje se v uživatelském rozhraní Foris).
- • Možnost nainstalovat si DNS server Knot 1.5"
+ • Možnost nainstalovat si DNS server Knot 1.5
+ • Optimalizace posílání logů firewallu.
+ • Podpora aktualizací vyžadující restart v průběhu instalace.
+ • Přidána podpora pro SATA multiplikátory.
+ • Povolen prefetch v unboundu, občas snižující latenci."
 }
 endef
 
