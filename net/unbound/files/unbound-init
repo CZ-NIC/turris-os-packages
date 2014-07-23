@@ -90,6 +90,8 @@ init_unbound() {
     set_parameter key_cache_size key-cache-size 100k
     set_parameter key_cache_slabs key-cache-slabs 1
     set_parameter neg_cache_size neg-cache-size 10k
+    set_parameter prefetch prefetch yes
+    set_parameter prefetch_key prefetch-key yes
 
     #Python section
     add_section python
