@@ -9,13 +9,20 @@
 
 include $(TOPDIR)/package/packages/net/ucollect-core/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,ucollect-core,68))
+$(eval $(call UCOLLECT_BASE,ucollect-core,69))
+
+define Package/ucollect-lib
+	SECTION:=net
+	CATEGORY:=Network
+	TITLE:=Netflow data collecting daemon
+	DEPENDS:=+libpcap +librt +libopenssl +libuci +libatsha204 +socat +cznic-cacert-bundle +ucollect-config +zlib
+endef
 
 define Package/ucollect-core
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Netflow data collecting daemon
-	DEPENDS:=+libpcap +librt +libopenssl +libuci +libatsha204 +socat +cznic-cacert-bundle +ucollect-config +zlib
+	DEPENDS:=+ucollect-lib
 endef
 
 define Package/ucollect-config
@@ -47,8 +54,6 @@ define Package/ucollect-core/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/ucollect $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/etc/init.d/
 	$(INSTALL_BIN) ./files/ucollect.init $(1)/etc/init.d/ucollect
-	$(INSTALL_DIR) $(1)/usr/lib/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libucollect_core.so $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/share/ucollect/configs
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ucollect/main.cfg $(1)/usr/share/ucollect/configs/00-main.cfg
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
@@ -67,5 +72,11 @@ define Package/ucollect-config/install
 endef
 endif
 
+define Package/ucollect-lib/install
+	$(INSTALL_DIR) $(1)/usr/lib/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libucollect_core.so $(1)/usr/lib/
+endef
+
+$(eval $(call BuildPackage,ucollect-lib))
 $(eval $(call BuildPackage,ucollect-core))
 $(eval $(call BuildPackage,ucollect-config))
