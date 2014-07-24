@@ -20,6 +20,8 @@ endef
 define Package/lcollect-majordomo/install
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo.conf $(1)/etc/config/majordomo
+	$(INSTALL_DIR) $(1)/etc/cron.d/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo-cron $(1)/etc/cron.d/majordomo
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_db.sh $(1)/usr/bin/majordomo_db.sh
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_merge.lua $(1)/usr/bin/majordomo_merge.lua
