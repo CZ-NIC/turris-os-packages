@@ -85,8 +85,26 @@ define Package/ucollect-lib/install
 endef
 
 define Package/lcollect/install
+	$(INSTALL_DIR) $(1)/etc/init.d/
+	$(INSTALL_BIN) ./files/lcollect.init $(1)/etc/init.d/lcollect
+	$(INSTALL_DIR) $(1)/etc/config/
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/lcollect/lcollect-turris.cfg $(1)/etc/config/lcollect
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/lcollect $(1)/usr/bin/
+endef
+
+define Package/lcollect/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/lcollect enable
+/etc/init.d/lcollect restart
+}
+endef
+
+define Package/lcollect/prerm
+#!/bin/sh
+/etc/init.d/lcollect disable
+/etc/init.d/lcollect stop
 endef
 
 $(eval $(call BuildPackage,ucollect-lib))

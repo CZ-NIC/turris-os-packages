@@ -32,6 +32,16 @@ define Package/lcollect-majordomo/install
 	echo "	option libname 'libplugin_lcollect_majordomo_$(PKG_VERSION).so'" >>$(1)/usr/share/lcollect/configs/99-lcollect-majordomo.cfg
 endef
 
-# TODO: Postinst and postrm scripts to reload lcollect, once it has init script
+define Package/lcollect-majordomo/postinst
+#!/bin/sh
+[ -n "$$$$IPKG_INSTROOT" ] || {
+/etc/init.d/lcollect reload
+}
+endef
+
+define Package/lcollect-majordomo/postrm
+#!/bin/sh
+/etc/init.d/lcollect reload
+endef
 
 $(eval $(call BuildPackage,lcollect-majordomo))
