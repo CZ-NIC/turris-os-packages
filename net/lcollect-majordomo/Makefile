@@ -27,7 +27,7 @@ define Package/lcollect-majordomo/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_merge.lua $(1)/usr/bin/majordomo_merge.lua
 	$(INSTALL_DIR) $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libplugin_majordomo.so $(1)/usr/lib/libplugin_lcollect_majordomo_$(PKG_VERSION).so
-	$(INSTALL_DIR) $(1)/usr/share/lcollect/configs
+	$(INSTALL_DIR) $(1)/usr/share/lcollect/configs/
 	echo 'config plugin' >$(1)/usr/share/lcollect/configs/99-lcollect-majordomo.cfg
 	echo "	option libname 'libplugin_lcollect_majordomo_$(PKG_VERSION).so'" >>$(1)/usr/share/lcollect/configs/99-lcollect-majordomo.cfg
 endef
