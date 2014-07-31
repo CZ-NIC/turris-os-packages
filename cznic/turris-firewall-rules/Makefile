@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+firewall +cznic-cacert-bundle +curl +openssl-util +ipset +iptables +ip6tables +nfacct
+	DEPENDS:=+firewall +cznic-cacert-bundle +curl +openssl-util +ipset +iptables +ip6tables +ulogd +ulogd-mod-pcap
 endef
 
 define Build/Compile
