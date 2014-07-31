@@ -8,15 +8,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ulogd
-PKG_VERSION:=1.24
-PKG_RELEASE:=2
+PKG_VERSION:=2.0.4
+PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=ftp://ftp.netfilter.org/pub/ulogd/ \
+PKG_SOURCE:=ulogd-$(PKG_VERSION).tar.bz2
+PKG_SOURCE_URL:=\
+	ftp://ftp.netfilter.org/pub/ulogd/ \
 	ftp://ftp.be.netfilter.org/pub/netfilter/ulogd/ \
 	ftp://ftp.de.netfilter.org/pub/netfilter/ulogd/ \
 	ftp://ftp.no.netfilter.org/pub/netfilter/ulogd/
-PKG_MD5SUM:=05b4ed2926b9a22aaeaf642917bbf8ff
+PKG_MD5SUM:=7c71ec460dfea5287eba27472c521ebc
 
 define Package/ulogd/Default
   SECTION:=net
@@ -26,7 +27,7 @@ endef
 
 define Package/ulogd
   $(call Package/ulogd/Default)
-  DEPENDS:=+iptables-mod-ulog 
+  DEPENDS:=+libnfnetlink +libmnl +libnetfilter-log +libnetfilter-acct +libnetfilter-conntrack libpthread
   TITLE:=Netfilter userspace logging daemon
   MENU:=1
 endef
@@ -116,11 +117,28 @@ endef
 
 define Package/ulogd/install	
 	$(INSTALL_DIR) $(1)/etc
-	$(CP) $(PKG_INSTALL_DIR)/etc/ulogd.conf $(1)/etc/
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/ulogd.conf $(1)/etc/
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/ulogd $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/usr/lib/ulogd
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_BASE.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_inppkt_UNIXSOCK.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_output_XML.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_inpflow_NFACCT.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_inpflow_NFCT.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_output_GRAPHITE.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_PRINTFLOW.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_output_NACCT.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_MARK.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_IP2STR.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_inppkt_NFLOG.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_HWHDR.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_PRINTPKT.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_inppkt_ULOG.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_IP2HBIN.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_output_GPRINT.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_IP2BIN.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_IFINDEX.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_raw2packet_BASE.so $(1)/usr/lib/ulogd/
 	$(INSTALL_DIR) $(1)/etc/default
 	$(INSTALL_DATA) ./files/ulogd.default $(1)/etc/default/ulogd
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -139,8 +157,8 @@ define BuildPlugin
 endef
 
 $(eval $(call BuildPackage,ulogd))
-$(eval $(call BuildPlugin,ulogd-mod-mysql,MYSQL))
-$(eval $(call BuildPlugin,ulogd-mod-pcap,PCAP))
-$(eval $(call BuildPlugin,ulogd-mod-pgsql,PGSQL))
-$(eval $(call BuildPlugin,ulogd-mod-sqlite,SQLITE3))
-$(eval $(call BuildPlugin,ulogd-mod-extra,LOCAL LOGEMU OPRINT PWSNIFF SYSLOG))
+$(eval $(call BuildPlugin,ulogd-mod-mysql,output_MYSQL))
+$(eval $(call BuildPlugin,ulogd-mod-pcap,output_PCAP))
+$(eval $(call BuildPlugin,ulogd-mod-pgsql,output_PGSQL))
+$(eval $(call BuildPlugin,ulogd-mod-sqlite,output_SQLITE3))
+$(eval $(call BuildPlugin,ulogd-mod-extra,output_LOGEMU output_OPRINT filter_PWSNIFF output_SYSLOG))
