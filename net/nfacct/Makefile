@@ -29,7 +29,7 @@ define Package/nfacct
 $(call Package/nfacct/Default)
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS+=+libnetfilter-acct +libmnl
+  DEPENDS+=+libnetfilter-acct +libmnl +iptables-mod-nfacct
   TITLE:=command line tool to create/retrieve/delete accounting objects
   URL:=http://netfilter.org/projects/nfacct/index.html
 endef
