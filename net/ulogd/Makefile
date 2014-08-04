@@ -117,7 +117,9 @@ endef
 
 define Package/ulogd/install	
 	$(INSTALL_DIR) $(1)/etc
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/ulogd.conf $(1)/etc/
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/ulogd.config $(1)/etc/config/ulogd
+	$(LN) /var/etc/ulogd.conf $(1)/etc/ulogd.conf
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/ulogd $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/usr/lib/ulogd
