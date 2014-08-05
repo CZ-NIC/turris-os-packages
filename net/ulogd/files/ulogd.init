@@ -254,6 +254,31 @@ graphite_section() {
     set_quoted_parameter prefix prefix
 }
 
+process_global_include() {
+    local path="$1"
+    # This will use only the content of [global] section
+    sed -n -e '/^\[global\]/,/^\[/p' "$path" | sed -e '$d' -e '/\[global\]/d' >> "$CONFIGFILE"
+}
+
+
+global_include_section() {
+    section="include"
+    config_list_foreach "$section" file process_global_include file
+}
+
+
+process_include() {
+    local path="$1"
+    # This will remove the [global] section
+    sed -n -e '1,/\[global\]/p' -e '/^\[global\]/d' -e '/^\[/,$p' "$path" | sed -e '/\[global\]/d' >> "$CONFIGFILE"
+}
+
+include_section() {
+    section="include"
+
+    config_list_foreach "$section" file process_include file
+}
+
 init_ulogd() {
     mkdir -p $(dirname "$CONFIGFILE")
 
@@ -264,6 +289,9 @@ init_ulogd() {
 
     # global section
     global_section
+
+    # process plugin and stack from includes
+    global_include_section
 
     # ct sections
     config_foreach ct_section ct
@@ -321,6 +349,9 @@ init_ulogd() {
 
     # graphite sections
     config_foreach graphite_section graphite
+
+    # include section
+    include_section
 
 }
 
