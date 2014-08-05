@@ -75,13 +75,13 @@ set_section_name() {
     echo -e "[$val]" >> "$CONFIGFILE"
 }
 
-server_section() {
-    section="server"
+global_section() {
+    section="global"
     echo '[global]' >> "$CONFIGFILE"
     set_quoted_parameter logfile logfile "/var/log/ulogd.log"
     set_parameter loglevel loglevel 5
-    set_multiple_quoted_parameters plugin plugin ""
-    set_multiple_parameters stack stack ""
+    set_multiple_quoted_parameters plugin plugin
+    set_multiple_parameters stack stack
 }
 
 ct_section() {
@@ -262,8 +262,8 @@ init_ulogd() {
 
     config_load ulogd
 
-    # server section
-    server_section
+    # global section
+    global_section
 
     # ct sections
     config_foreach ct_section ct
