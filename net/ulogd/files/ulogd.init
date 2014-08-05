@@ -296,14 +296,31 @@ init_ulogd() {
     config_foreach pcap_section pcap
 
     # mysql sections
+    config_foreach mysql_section mysql
+
     # postgres sections
+    config_foreach psql_section psql
+
     # dbi sections
+    config_foreach dbi_section dbi
+
     # sqlite3 sections
+    config_foreach sqlite3_section sqlite3
+
     # sys sections
+    config_foreach sys_section sys
+
     # nacct sections
+    config_foreach nacct_section nacct
+
     # mark sections
+    config_foreach mark_section mark
+
     # acct sections
+    config_foreach acct_section acct
+
     # graphite sections
+    config_foreach graphite_section graphite
 
 }
 
