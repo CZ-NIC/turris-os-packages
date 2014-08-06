@@ -260,10 +260,17 @@ process_global_include() {
     sed -n -e '/^\[global\]/,/^\[/p' "$path" | sed -e '$d' -e '/\[global\]/d' >> "$CONFIGFILE"
 }
 
+process_global_directory_include() {
+    local directory="$1"
+    for file in $(ls "$directory"); do
+        process_global_include "$file"
+    done
+}
 
 global_include_section() {
     section="include"
     config_list_foreach "$section" file process_global_include file
+    config_list_foreach "$section" directory process_global_directory_include directory
 }
 
 
@@ -273,10 +280,18 @@ process_include() {
     sed -n -e '1,/\[global\]/p' -e '/^\[global\]/d' -e '/^\[/,$p' "$path" | sed -e '/\[global\]/d' >> "$CONFIGFILE"
 }
 
+process_directory_include() {
+    local directory="$1"
+    for file in $(ls "$directory"); do
+        process_include "$file"
+    done
+}
+
 include_section() {
     section="include"
 
     config_list_foreach "$section" file process_include file
+    config_list_foreach "$section" directory process_directory_include directory
 }
 
 init_ulogd() {

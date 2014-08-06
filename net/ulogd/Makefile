@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ulogd
 PKG_VERSION:=2.0.4
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE:=ulogd-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=\
@@ -118,6 +118,7 @@ endef
 define Package/ulogd/install	
 	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_DIR) $(1)/etc/ulogd.d/
 	$(INSTALL_CONF) ./files/ulogd.config $(1)/etc/config/ulogd
 	$(LN) /var/etc/ulogd.conf $(1)/etc/ulogd.conf
 	$(INSTALL_DIR) $(1)/usr/sbin
