@@ -61,6 +61,13 @@ define Package/ulogd-mod-sqlite
   TITLE:=Output plugin for logging to an SQLite database
 endef
 
+
+define Package/ulogd-mod-dbi
+  $(call Package/ulogd/Default)
+  DEPENDS:=ulogd +libdbi
+  TITLE:=Output plugin for logging using DBI interface
+endef
+
 define Package/ulogd-mod-extra
   $(call Package/ulogd/Default)
   DEPENDS:=ulogd
@@ -91,11 +98,18 @@ ifneq ($(Package/ulogd-mod-sqlite),)
   ULOGD_SQLITE_OPTION:= --with-sqlite3="$(STAGING_DIR)/usr"
 endif
 
+ifneq ($(Package/ulogd-mod-dbi),)
+  ULOGD_DBI_OPTION:= --with-dbi="$(STAGING_DIR)/usr"
+  ULOGD_DBI_OPTION+= --with-dbi-inc="$(STAGING_DIR)/usr/include/dbi"
+  ULOGD_DBI_OPTION+= --with-dbi-lib="$(STAGING_DIR)/usr/lib"
+endif
+
 define Build/Configure
 	$(call Build/Configure/Default, \
 		$(ULOGD_MYSQL_OPTION) \
 		$(ULOGD_PGSQL_OPTION) \
 		$(ULOGD_SQLITE_OPTION) \
+		$(ULOGD_DBI_OPTION) \
 		, \
 		ac_cv_header_pcap_h=$(ULOGD_PCAP_HEADER) \
 	)
@@ -164,4 +178,5 @@ $(eval $(call BuildPlugin,ulogd-mod-mysql,output_MYSQL))
 $(eval $(call BuildPlugin,ulogd-mod-pcap,output_PCAP))
 $(eval $(call BuildPlugin,ulogd-mod-pgsql,output_PGSQL))
 $(eval $(call BuildPlugin,ulogd-mod-sqlite,output_SQLITE3))
+$(eval $(call BuildPlugin,ulogd-mod-dbi,output_DBI))
 $(eval $(call BuildPlugin,ulogd-mod-extra,output_LOGEMU output_OPRINT filter_PWSNIFF output_SYSLOG))
