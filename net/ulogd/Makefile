@@ -27,7 +27,7 @@ endef
 
 define Package/ulogd
   $(call Package/ulogd/Default)
-  DEPENDS:=+libnfnetlink +libmnl +libnetfilter-log +libnetfilter-acct +libnetfilter-conntrack libpthread
+  DEPENDS:=+libnfnetlink +libmnl +libnetfilter-log +libnetfilter-acct +libnetfilter-conntrack
   TITLE:=Netfilter userspace logging daemon
   MENU:=1
 endef
@@ -74,6 +74,24 @@ define Package/ulogd-mod-json
   TITLE:=Output plugin for logging to JSON
 endef
 
+define Package/ulogd-mod-xml
+  $(call Package/ulogd/Default)
+  DEPENDS:=ulogd
+  TITLE:=Output plugin for logging to XML
+endef
+
+define Package/ulogd-mod-acct
+  $(call Package/ulogd/Default)
+  DEPENDS:=ulogd
+  TITLE:=Plugins related to accounting objects
+endef
+
+define Package/ulogd-mod-filters
+  $(call Package/ulogd/Default)
+  DEPENDS:=ulogd
+  TITLE:=Extra filter plugins
+endef
+
 define Package/ulogd-mod-extra
   $(call Package/ulogd/Default)
   DEPENDS:=ulogd
@@ -81,7 +99,15 @@ define Package/ulogd-mod-extra
 endef
 
 define Package/ulogd-mod-extra/description
-	This package contains the LOCAL, LOGEMU, OPRINT, PWSNIFF and SYSLOG plugins.
+	This package contains LOCAL, LOGEMU, GRAPHITE, GPRINT, OPRINT, PWSNIFF, SYSLOG and UNIXSOCKET plugins.
+endef
+
+define Package/ulogd-mod-filters/description
+	This package contains PRINTFLOW, MARK, IP2STR, HWHDR, PRINTPKT, IP2HBIN, IP2BIN, IFINDEX filter plugins.
+endef
+
+define Package/ulogd-mod-acct/description
+	This package contains NFACCT and NACCT plugins.
 endef
 
 include $(INCLUDE_DIR)/package.mk
@@ -98,10 +124,6 @@ endif
 
 ifneq ($(Package/ulogd-mod-pgsql),)
   ULOGD_PGSQL_OPTION:= --with-pgsql="$(STAGING_DIR)/usr"
-endif
-
-ifneq ($(Package/ulogd-mod-sqlite),)
-  ULOGD_SQLITE_OPTION:= --with-sqlite3="$(STAGING_DIR)/usr"
 endif
 
 ifneq ($(Package/ulogd-mod-dbi),)
@@ -149,23 +171,9 @@ define Package/ulogd/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/ulogd $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/usr/lib/ulogd
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_inppkt_UNIXSOCK.so $(1)/usr/lib/ulogd/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_output_XML.so $(1)/usr/lib/ulogd/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_inpflow_NFACCT.so $(1)/usr/lib/ulogd/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_inpflow_NFCT.so $(1)/usr/lib/ulogd/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_output_GRAPHITE.so $(1)/usr/lib/ulogd/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_PRINTFLOW.so $(1)/usr/lib/ulogd/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_output_NACCT.so $(1)/usr/lib/ulogd/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_MARK.so $(1)/usr/lib/ulogd/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_IP2STR.so $(1)/usr/lib/ulogd/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_inppkt_NFLOG.so $(1)/usr/lib/ulogd/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_HWHDR.so $(1)/usr/lib/ulogd/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_PRINTPKT.so $(1)/usr/lib/ulogd/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_inppkt_ULOG.so $(1)/usr/lib/ulogd/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_IP2HBIN.so $(1)/usr/lib/ulogd/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_output_GPRINT.so $(1)/usr/lib/ulogd/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_IP2BIN.so $(1)/usr/lib/ulogd/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_filter_IFINDEX.so $(1)/usr/lib/ulogd/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_inpflow_NFCT.so $(1)/usr/lib/ulogd/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/ulogd/ulogd_raw2packet_BASE.so $(1)/usr/lib/ulogd/
 	$(INSTALL_DIR) $(1)/etc/default
 	$(INSTALL_DATA) ./files/ulogd.default $(1)/etc/default/ulogd
@@ -191,4 +199,7 @@ $(eval $(call BuildPlugin,ulogd-mod-pgsql,output_PGSQL))
 $(eval $(call BuildPlugin,ulogd-mod-sqlite,output_SQLITE3))
 $(eval $(call BuildPlugin,ulogd-mod-dbi,output_DBI))
 $(eval $(call BuildPlugin,ulogd-mod-json,output_JSON))
-$(eval $(call BuildPlugin,ulogd-mod-extra,output_LOGEMU output_OPRINT filter_PWSNIFF output_SYSLOG))
+$(eval $(call BuildPlugin,ulogd-mod-xml,output_XML))
+$(eval $(call BuildPlugin,ulogd-mod-acct,inpflow_NFACCT output_NACCT))
+$(eval $(call BuildPlugin,ulogd-mod-extra,output_LOGEMU output_OPRINT output_GPRINT filter_PWSNIFF output_SYSLOG output_GRAPHITE inppkt_UNIXSOCK))
+$(eval $(call BuildPlugin,ulogd-mod-filters,filter_PRINTFLOW filter_MARK filter_IP2STR filter_HWHDR filter_PRINTPKT filter_IP2HBIN filter_IP2BIN filter_IFINDEX))
