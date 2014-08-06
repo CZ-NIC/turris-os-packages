@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=jansson
 PKG_VERSION:=2.2.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.digip.org/jansson/releases/
@@ -33,6 +33,8 @@ define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/{lib,include}
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libjansson* $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/* $(1)/usr/include/
+	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/jansson.pc $(1)/usr/lib/pkgconfig/
 endef
 
 define Package/jansson/install
