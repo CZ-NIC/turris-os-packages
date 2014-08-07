@@ -263,7 +263,7 @@ process_global_include() {
 process_global_directory_include() {
     local directory="$1"
     for file in $(ls "$directory"); do
-        process_global_include "$file"
+        process_global_include "$directory/$file"
     done
 }
 
@@ -283,7 +283,7 @@ process_include() {
 process_directory_include() {
     local directory="$1"
     for file in $(ls "$directory"); do
-        process_include "$file"
+        process_include "$directory/$file"
     done
 }
 
