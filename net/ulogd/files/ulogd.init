@@ -380,3 +380,7 @@ start() {
 stop() {
 	service_stop $COMMAND
 }
+
+reload() {
+	service_reload $COMMAND
+}

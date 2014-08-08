@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ulogd
 PKG_VERSION:=2.0.4
-PKG_RELEASE:=6
+PKG_RELEASE:=7
 
 PKG_SOURCE:=ulogd-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=\
@@ -34,7 +34,7 @@ endef
 
 define Package/ulogd/conffiles
 /etc/default/ulogd
-/etc/ulogd.conf
+/etc/config/ulogd
 endef
 
 define Package/ulogd-mod-mysql
@@ -164,9 +164,11 @@ endef
 
 define Package/ulogd/install	
 	$(INSTALL_DIR) $(1)/etc
+	$(INSTALL_DIR) $(1)/etc/ulogd.d
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_DIR) $(1)/etc/ulogd.d/
 	$(INSTALL_CONF) ./files/ulogd.config $(1)/etc/config/ulogd
+	$(INSTALL_DIR) $(1)/etc/logrotate.d
+	$(INSTALL_CONF) ./files/ulogd.logrotate $(1)/etc/logrotate.d/ulogd
 	$(LN) /var/etc/ulogd.conf $(1)/etc/ulogd.conf
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/ulogd $(1)/usr/sbin/
