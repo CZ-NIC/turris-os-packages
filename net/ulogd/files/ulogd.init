@@ -373,14 +373,16 @@ init_ulogd() {
 start() {
     init_ulogd
 
-	[ -f $DEFAULT ] && . $DEFAULT
-	service_start $COMMAND $OPTIONS
+    [ -f $DEFAULT ] && . $DEFAULT
+    service_start $COMMAND $OPTIONS
 }
 
 stop() {
-	service_stop $COMMAND
+    service_stop $COMMAND
 }
 
 reload() {
-	service_reload $COMMAND
+    init_ulogd
+
+    service_reload $COMMAND
 }
