@@ -9,27 +9,29 @@
 
 include $(TOPDIR)/package/packages/net/ucollect-core/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,ucollect-core,69))
+$(eval $(call UCOLLECT_BASE,ucollect-core,70))
+
+BASE_LIB_DEPS:=+libpcap +librt +libopenssl +libuci +libatsha204 +socat +zlib
 
 define Package/ucollect-lib
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Netflow data collecting daemon
-	DEPENDS:=+libpcap +librt +libopenssl +libuci +libatsha204 +socat +zlib
+	DEPENDS:=$(BASE_LIB_DEPS)
 endef
 
 define Package/ucollect-core
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Netflow data collecting daemon
-	DEPENDS:=+ucollect-lib +ucollect-config +cznic-cacert-bundle
+	DEPENDS:=+ucollect-lib +ucollect-config +cznic-cacert-bundle $(BASE_LIB_DEPS)
 endef
 
 define Package/lcollect
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Netflow data collecting daemon
-	DEPENDS:=+ucollect-lib
+	DEPENDS:=+ucollect-lib $(BASE_LIB_DEPS)
 endef
 
 define Package/ucollect-config
