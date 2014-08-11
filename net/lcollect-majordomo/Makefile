@@ -6,7 +6,7 @@
 # #
 #
 
-include $(TOPDIR)/package/packages/net/ucollect-core/Makefile.common
+include $(TOPDIR)/package/packages/net/ucollect-prog/Makefile.common
 
 $(eval $(call UCOLLECT_BASE,lcollect-majordomo,1))
 

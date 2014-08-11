@@ -34,7 +34,7 @@ define Package/ucollect-$(1)
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=The $(1) plugin for ucollect
-	DEPENDS:=+ucollect-core
+	DEPENDS:=+ucollect-prog
 endef
 
 define Package/ucollect-$(1)/postinst
