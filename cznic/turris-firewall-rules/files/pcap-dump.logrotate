@@ -1,0 +1,9 @@
+/var/log/turris-pcap/*.pcap {
+    rotate 2
+    missingok
+    sharedscripts
+    minsize 50M
+    postrotate
+        /etc/init.d/ulogd reload
+    endscript
+}

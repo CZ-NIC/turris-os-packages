@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=1.2
+PKG_VERSION:=1.4
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
@@ -27,11 +27,14 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Opraveny balíčky rrdtool a usbip. Aktualizován balíček git na verzi 1.9.3.
- • Opraveny chyby v zasílání oznámení o aktualizacích. Maximální prodleva pro plánované restarty byla omezena na 10 dní.
- • Aktualizován český překlad rozhraní Luci.
- • Přidán watchdog kontrolující správnou funkci unbound démona.
- • Aktualizovány balíčky Foris a Ucollect."
+    create_notification -s news " • Spojení ucollectu se serverem je nyní komprimované.
+ • Přidán plugin flow určený ke sledování délek a velikostí podezřelých spojení.
+ • Zprovozněna možnost použít smtp server CZ.NICu k odesílání novinek. Výhodou této možnosti je jednodušší konfigurace (nastavuje se v uživatelském rozhraní Foris).
+ • Možnost nainstalovat si DNS server Knot 1.5
+ • Optimalizace posílání logů firewallu.
+ • Podpora aktualizací vyžadující restart v průběhu instalace.
+ • Přidána podpora pro SATA multiplikátory.
+ • Povolen prefetch v unboundu, občas snižující latenci."
 }
 endef
 

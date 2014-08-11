@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-firewall-rules
-PKG_VERSION:=17
+PKG_VERSION:=25
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/fw-rules.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=e1078aaed4c9f8066b8f8579ec17ffd3487b5d35
+PKG_SOURCE_VERSION:=9a7ddfed753e148598b4e20c7d40426d7e94a78c
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
@@ -22,13 +22,23 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+firewall +cznic-cacert-bundle +curl +openssl-util +ipset +iptables +ip6tables
+	DEPENDS:=+firewall +cznic-cacert-bundle +curl +openssl-util +ipset +iptables +ip6tables +ulogd +ulogd-mod-pcap +iptables-mod-nflog
 endef
 
 define Build/Compile
 endef
 
+define Package/$(PKG_NAME)/conffiles
+/etc/config/pcap-dumps
+endef
+
 define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)/etc/config/
+	$(INSTALL_CONF) ./files/pcap-dump.config $(1)/etc/config/pcap-dumps
+	$(INSTALL_DIR) $(1)/etc/logrotate.d/
+	$(INSTALL_CONF) ./files/pcap-dump.logrotate $(1)/etc/logrotate.d/pcap-dumps
+	$(INSTALL_DIR) $(1)/etc/ulogd.d/
+	$(LN) /var/etc/ulogd-turris.conf $(1)/etc/ulogd.d/
 	$(INSTALL_DIR) $(1)/usr/share/firewall
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/firewall.turris $(1)/usr/share/firewall/turris
 	$(INSTALL_DIR) $(1)/etc/cron.d

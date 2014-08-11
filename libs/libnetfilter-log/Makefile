@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libnetfilter_log
-PKG_VERSION:=1.0.0
+PKG_VERSION:=1.0.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
@@ -16,7 +16,7 @@ PKG_SOURCE_URL:= \
 	http://www.netfilter.org/projects/libnetfilter_log/files/ \
 	ftp://ftp.netfilter.org/pub/libnetfilter_log/ \
 	http://mirrors.evolva.ro/netfilter.org/libnetfilter_log/
-PKG_MD5SUM:=acdb188a1e7504e95636d0770ade393c
+PKG_MD5SUM:=2a4bb0654ae675a52d2e8d1c06090b94
 
 PKG_FIXUP:=autoreconf
 

@@ -1,0 +1,17 @@
+/var/log/ulogd.log {
+    missingok
+    sharedscripts
+    postrotate
+        /etc/init.d/ulogd reload
+    endscript
+}
+
+/var/log/ulogd.pcap {
+    rotate 2
+    missingok
+    sharedscripts
+    minsize 10M
+    postrotate
+        /etc/init.d/ulogd reload
+    endscript
+}

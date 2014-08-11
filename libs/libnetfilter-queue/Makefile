@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libnetfilter_queue
-PKG_VERSION:=1.0.0
+PKG_VERSION:=1.0.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
@@ -16,7 +16,7 @@ PKG_SOURCE_URL:= \
 	http://www.netfilter.org/projects/libnetfilter_queue/files/ \
 	ftp://ftp.netfilter.org/pub/libnetfilter_queue/ \
 	http://mirrors.evolva.ro/netfilter.org/libnetfilter_queue/
-PKG_MD5SUM:=af6a9ea350f63a13609bc3b47b5c395c
+PKG_MD5SUM:=df09befac35cb215865b39a36c96a3fa
 
 PKG_FIXUP:=autoreconf
 
@@ -27,7 +27,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/libnetfilter-queue
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=+libnfnetlink +kmod-nfnetlink-queue
+  DEPENDS:=+libnfnetlink +libmnl +kmod-nfnetlink-queue
   TITLE:=API to packets queued by the kernel packet filter
   URL:=http://www.netfilter.org/projects/libnetfilter_queue/
 endef
