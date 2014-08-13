@@ -3,7 +3,8 @@
 
 SERVICE_USE_PID=1
 
-START=50
+# Start after the updater resume
+START=86
 
 start() {
 	mkdir -m 0755 -p /var/log/lighttpd

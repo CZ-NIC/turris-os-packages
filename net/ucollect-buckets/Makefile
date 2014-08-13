@@ -7,8 +7,8 @@
 #
 
 
-include $(TOPDIR)/package/packages/net/ucollect-core/Makefile.common
+include $(TOPDIR)/package/packages/net/ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_PLUGIN,buckets,21))
+$(eval $(call UCOLLECT_PLUGIN,buckets,22))
 
 $(eval $(call BuildPackage,ucollect-buckets))

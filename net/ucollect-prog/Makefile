@@ -7,29 +7,31 @@
 #
 
 
-include $(TOPDIR)/package/packages/net/ucollect-core/Makefile.common
+include $(TOPDIR)/package/packages/net/ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,ucollect-core,69))
+$(eval $(call UCOLLECT_BASE,ucollect-prog,72))
+
+BASE_LIB_DEPS:=+libpcap +librt +libopenssl +libuci +libatsha204 +socat +zlib
 
 define Package/ucollect-lib
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Netflow data collecting daemon
-	DEPENDS:=+libpcap +librt +libopenssl +libuci +libatsha204 +socat +zlib
+	DEPENDS:=$(BASE_LIB_DEPS)
 endef
 
-define Package/ucollect-core
+define Package/ucollect-prog
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Netflow data collecting daemon
-	DEPENDS:=+ucollect-lib +ucollect-config +cznic-cacert-bundle
+	DEPENDS:=+ucollect-lib +ucollect-config +cznic-cacert-bundle $(BASE_LIB_DEPS)
 endef
 
 define Package/lcollect
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Netflow data collecting daemon
-	DEPENDS:=+ucollect-lib
+	DEPENDS:=+ucollect-lib $(BASE_LIB_DEPS)
 endef
 
 define Package/ucollect-config
@@ -42,7 +44,7 @@ define Package/ucollect-config/conffiles
 /etc/config/ucollect
 endef
 
-define Package/ucollect-core/postinst
+define Package/ucollect-prog/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 /etc/init.d/ucollect enable
@@ -50,13 +52,13 @@ define Package/ucollect-core/postinst
 }
 endef
 
-define Package/ucollect-core/prerm
+define Package/ucollect-prog/prerm
 #!/bin/sh
 /etc/init.d/ucollect disable
 /etc/init.d/ucollect stop
 endef
 
-define Package/ucollect-core/install
+define Package/ucollect-prog/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/ucollect $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/etc/init.d/
@@ -108,6 +110,6 @@ define Package/lcollect/prerm
 endef
 
 $(eval $(call BuildPackage,ucollect-lib))
-$(eval $(call BuildPackage,ucollect-core))
+$(eval $(call BuildPackage,ucollect-prog))
 $(eval $(call BuildPackage,ucollect-config))
 $(eval $(call BuildPackage,lcollect))

@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd
 PKG_VERSION:=1.4.30
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://download.lighttpd.net/lighttpd/releases-1.4.x
@@ -32,6 +32,16 @@ define Package/lighttpd
   MENU:=1
   DEPENDS:=+LIGHTTPD_SSL:libopenssl +libpcre +libpthread
   TITLE:=A flexible and lightweight web server
+endef
+
+define Package/lighttpd/postinst
+#!/bin/sh
+
+if [ -e /etc/rc.d/S50lighttpd ] ; then
+	/etc/init.d/lighttpd disable
+	/etc/init.d/lighttpd enable
+fi
+/etc/init.d/lighttpd restart || ( sleep 5 ; /etc/init.d/lighttpd restart )
 endef
 
 define Package/lighttpd/config
