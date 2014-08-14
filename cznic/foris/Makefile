@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=41
+PKG_VERSION:=42
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
-PKG_SOURCE_VERSION:=1c19182e45ff7805d9f769ee173b9c62bfd1055b
+PKG_SOURCE_VERSION:=3a20b42c0f0dad526b442ca75d3ad5323e7e80bf
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -64,6 +64,14 @@ set -x
 [ -n "$$IPKG_INSTROOT" ] || {
 /etc/init.d/lighttpd enable
 /etc/init.d/lighttpd restart
+# set wizard finished flag, can be removed after propagation
+max_step=`uci get -q foris.wizard.allowed_step_max`
+if [ "$$?" = 0 ]; then
+	wizard_finished=`uci get -q foris.wizard.finished`
+	if [ "$$?" = 1 ] && [ "$$max_step" -ge 8 ]; then
+		uci set foris.wizard.finished=1
+	fi
+fi
 }
 endef
 
