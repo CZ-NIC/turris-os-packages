@@ -1,0 +1,168 @@
+--- a/setup.py
++++ b/setup.py
+@@ -645,11 +645,11 @@
+         exts.append( Extension('audioop', ['audioop.c']) )
+ 
+         # Disabled on 64-bit platforms
+-        if sys.maxint != 9223372036854775807L:
+-            # Operations on images
+-            exts.append( Extension('imageop', ['imageop.c']) )
+-        else:
+-            missing.extend(['imageop'])
++#        if sys.maxint != 9223372036854775807L:
++#            # Operations on images
++#            exts.append( Extension('imageop', ['imageop.c']) )
++#        else:
++#            missing.extend(['imageop'])
+ 
+         # readline
+         do_readline = self.compiler.find_library_file(lib_dirs, 'readline')
+@@ -1137,24 +1137,24 @@
+                 sysroot = macosx_sdk_root()
+                 f = os.path.join(sysroot, f[1:])
+ 
+-        if os.path.exists(f) and not db_incs:
+-            data = open(f).read()
+-            m = re.search(r"#s*define\s+HASHVERSION\s+2\s*", data)
+-            if m is not None:
+-                # bingo - old version used hash file format version 2
+-                ### XXX this should be fixed to not be platform-dependent
+-                ### but I don't have direct access to an osf1 platform and
+-                ### seemed to be muffing the search somehow
+-                libraries = host_platform == "osf1" and ['db'] or None
+-                if libraries is not None:
+-                    exts.append(Extension('bsddb185', ['bsddbmodule.c'],
+-                                          libraries=libraries))
+-                else:
+-                    exts.append(Extension('bsddb185', ['bsddbmodule.c']))
+-            else:
+-                missing.append('bsddb185')
+-        else:
+-            missing.append('bsddb185')
++#        if os.path.exists(f) and not db_incs:
++#            data = open(f).read()
++#            m = re.search(r"#s*define\s+HASHVERSION\s+2\s*", data)
++#            if m is not None:
++#                # bingo - old version used hash file format version 2
++#                ### XXX this should be fixed to not be platform-dependent
++#                ### but I don't have direct access to an osf1 platform and
++#                ### seemed to be muffing the search somehow
++#                libraries = host_platform == "osf1" and ['db'] or None
++#                if libraries is not None:
++#                    exts.append(Extension('bsddb185', ['bsddbmodule.c'],
++#                                          libraries=libraries))
++#                else:
++#                    exts.append(Extension('bsddb185', ['bsddbmodule.c']))
++#            else:
++#                missing.append('bsddb185')
++#        else:
++#           missing.append('bsddb185')
+ 
+         dbm_order = ['gdbm']
+         # The standard Unix dbm module:
+@@ -1250,16 +1250,16 @@
+                 missing.append('resource')
+ 
+             # Sun yellow pages. Some systems have the functions in libc.
+-            if (host_platform not in ['cygwin', 'atheos', 'qnx6'] and
+-                find_file('rpcsvc/yp_prot.h', inc_dirs, []) is not None):
+-                if (self.compiler.find_library_file(lib_dirs, 'nsl')):
+-                    libs = ['nsl']
+-                else:
+-                    libs = []
+-                exts.append( Extension('nis', ['nismodule.c'],
+-                                       libraries = libs) )
+-            else:
+-                missing.append('nis')
++#            if (host_platform not in ['cygwin', 'atheos', 'qnx6'] and
++#                find_file('rpcsvc/yp_prot.h', inc_dirs, []) is not None):
++#                if (self.compiler.find_library_file(lib_dirs, 'nsl')):
++#                    libs = ['nsl']
++#                else:
++#                    libs = []
++#                exts.append( Extension('nis', ['nismodule.c'],
++#                                       libraries = libs) )
++#            else:
++#                missing.append('nis')
+         else:
+             missing.extend(['nis', 'resource', 'termios'])
+ 
+@@ -1450,15 +1450,15 @@
+                 missing.append('_codecs_%s' % loc)
+ 
+         # Dynamic loading module
+-        if sys.maxint == 0x7fffffff:
++#        if sys.maxint == 0x7fffffff:
+             # This requires sizeof(int) == sizeof(long) == sizeof(char*)
+-            dl_inc = find_file('dlfcn.h', [], inc_dirs)
+-            if (dl_inc is not None) and (host_platform not in ['atheos']):
+-                exts.append( Extension('dl', ['dlmodule.c']) )
+-            else:
+-                missing.append('dl')
+-        else:
+-            missing.append('dl')
++#            dl_inc = find_file('dlfcn.h', [], inc_dirs)
++#            if (dl_inc is not None) and (host_platform not in ['atheos']):
++#                exts.append( Extension('dl', ['dlmodule.c']) )
++#            else:
++#                missing.append('dl')
++#        else:
++#            missing.append('dl')
+ 
+         # Thomas Heller's _ctypes module
+         self.detect_ctypes(inc_dirs, lib_dirs)
+@@ -1521,24 +1521,24 @@
+ 
+ 
+         # Platform-specific libraries
+-        if host_platform == 'linux2':
+-            # Linux-specific modules
+-            exts.append( Extension('linuxaudiodev', ['linuxaudiodev.c']) )
+-        else:
+-            missing.append('linuxaudiodev')
++ #       if host_platform == 'linux2':
++ #           # Linux-specific modules
++ #           exts.append( Extension('linuxaudiodev', ['linuxaudiodev.c']) )
++ #       else:
++ #           missing.append('linuxaudiodev')
++
++ #       if (host_platform in ('linux2', 'freebsd4', 'freebsd5', 'freebsd6',
++ #                       'freebsd7', 'freebsd8')
++ #           or host_platform.startswith("gnukfreebsd")):
++ #           exts.append( Extension('ossaudiodev', ['ossaudiodev.c']) )
++ #       else:
++ #           missing.append('ossaudiodev')
+ 
+-        if (host_platform in ('linux2', 'freebsd4', 'freebsd5', 'freebsd6',
+-                        'freebsd7', 'freebsd8')
+-            or host_platform.startswith("gnukfreebsd")):
+-            exts.append( Extension('ossaudiodev', ['ossaudiodev.c']) )
+-        else:
+-            missing.append('ossaudiodev')
+-
+-        if host_platform == 'sunos5':
++ #       if host_platform == 'sunos5':
+             # SunOS specific modules
+-            exts.append( Extension('sunaudiodev', ['sunaudiodev.c']) )
+-        else:
+-            missing.append('sunaudiodev')
++ #           exts.append( Extension('sunaudiodev', ['sunaudiodev.c']) )
++ #       else:
++ #           missing.append('sunaudiodev')
+ 
+         if host_platform == 'darwin':
+             # _scproxy
+@@ -1649,10 +1649,10 @@
+         self.extensions.extend(exts)
+ 
+         # Call the method for detecting whether _tkinter can be compiled
+-        self.detect_tkinter(inc_dirs, lib_dirs)
++#        self.detect_tkinter(inc_dirs, lib_dirs)
+ 
+-        if '_tkinter' not in [e.name for e in self.extensions]:
+-            missing.append('_tkinter')
++#        if '_tkinter' not in [e.name for e in self.extensions]:
++#            missing.append('_tkinter')
+ 
+ ##         # Uncomment these lines if you want to play with xxmodule.c
+ ##         ext = Extension('xx', ['xxmodule.c'])

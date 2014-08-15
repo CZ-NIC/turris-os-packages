@@ -1,22 +1,20 @@
----
- setup.py |   15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
-
 --- a/setup.py
 +++ b/setup.py
-@@ -368,11 +368,6 @@ class PyBuildExt(build_ext):
+@@ -436,13 +436,6 @@
              os.unlink(tmpfile)
  
      def detect_modules(self):
 -        # Ensure that /usr/local is always used
--        add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
--        add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
+-        if not cross_compiling:
+-            add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
+-            add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
+-        if cross_compiling:
+-            self.add_gcc_paths()
 -        self.add_multiarch_paths()
--
+ 
          # Add paths specified in the environment variables LDFLAGS and
          # CPPFLAGS for header and library files.
-         # We must get the values from the Makefile and not the environment
-@@ -407,17 +402,6 @@ class PyBuildExt(build_ext):
+@@ -478,17 +471,6 @@
                      for directory in reversed(options.dirs):
                          add_dir_to_list(dir_list, directory)
  
@@ -34,17 +32,3 @@
          try:
              have_unicode = unicode
          except NameError:
-@@ -426,11 +410,8 @@ class PyBuildExt(build_ext):
-         # lib_dirs and inc_dirs are used to search for files;
-         # if a file is found in one of those directories, it can
-         # be assumed that no additional -I,-L directives are needed.
--        lib_dirs = self.compiler.library_dirs + [
--            '/lib64', '/usr/lib64',
--            '/lib', '/usr/lib',
--            ]
--        inc_dirs = self.compiler.include_dirs + ['/usr/include']
-+        lib_dirs = self.compiler.library_dirs
-+        inc_dirs = self.compiler.include_dirs
-         exts = []
-         missing = []
- 
