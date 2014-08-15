@@ -21,7 +21,6 @@ endef
 
 define Build/Compile
 	true
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR)/logsend $(MAKE_FLAGS)
 endef
 
 define Package/$(PKG_NAME)/install
