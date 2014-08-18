@@ -4,7 +4,7 @@
 
 --- a/setup.py
 +++ b/setup.py
-@@ -788,8 +7,7 @@ class PyBuildExt(build_ext):
+@@ -704,8 +704,7 @@ class PyBuildExt(build_ext):
  
          min_openssl_ver = 0x00907000
          have_any_openssl = ssl_incs is not None and ssl_libs is not None
@@ -14,7 +14,7 @@
  
          if have_any_openssl:
              if have_usable_openssl:
-@@ -814,7 +814,7 @@ class PyBuildExt(build_ext):
+@@ -730,7 +729,7 @@ class PyBuildExt(build_ext):
                              depends = ['md5.h']) )
  
          min_sha2_openssl_ver = 0x00908000

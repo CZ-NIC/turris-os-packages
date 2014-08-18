@@ -42,13 +42,13 @@ define PyPackage
 			  dperm=`stat -c "%a" $(PKG_INSTALL_DIR)$$$$$$$$dpath`; \
 			fi; \
 			mkdir -p $$$$$$$$$dperm $$(1)$$$$$$$$dpath; \
-			echo "copying: '$$$$$$$$fspec' to: '$$(1)'"; \
+			echo "copying: '$$$$$$$$fspec'"; \
 			cp -fpR $(PKG_INSTALL_DIR)$$$$$$$$fspec $$(1)$$$$$$$$dpath/; \
 			if [ -n "$$$$$$$$fperm" ]; then \
 			  chmod -R $$$$$$$$fperm $$(1)$$$$$$$$fspec; \
 			fi; \
 		  elif [ "$$$$$$$$fop" = "-" ]; then \
-			echo "removing: '$$$$$$$$fspec from: $$(1)'"; \
+			echo "removing: '$$$$$$$$fspec'"; \
 			rm -fR $$(1)$$$$$$$$fspec; \
 		  elif [ "$$$$$$$$fop" = "=" ]; then \
 			echo "setting permissions: '$$$$$$$$fperm' on '$$$$$$$$fspec'"; \
@@ -69,8 +69,6 @@ define Build/Compile/PyMod
 		CFLAGS="$(TARGET_CFLAGS)" \
 		CPPFLAGS="$(TARGET_CPPFLAGS)" \
 		LDFLAGS="$(TARGET_LDFLAGS)" \
-		CC="$(TARGET_CC)" \
-		LDSHARED="$(TARGET_CC) -shared" \
 		$(3) \
 		, \
 		./setup.py $(2) \
