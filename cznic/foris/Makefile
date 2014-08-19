@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=42
+PKG_VERSION:=43
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
@@ -70,6 +70,7 @@ if [ "$$?" = 0 ]; then
 	wizard_finished=`uci get -q foris.wizard.finished`
 	if [ "$$?" = 1 ] && [ "$$max_step" -ge 8 ]; then
 		uci set foris.wizard.finished=1
+		uci commit
 	fi
 fi
 }
