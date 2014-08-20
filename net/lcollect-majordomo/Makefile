@@ -8,13 +8,13 @@
 
 include $(TOPDIR)/package/packages/net/ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,lcollect-majordomo,7))
+$(eval $(call UCOLLECT_BASE,lcollect-majordomo,8))
 
 define Package/lcollect-majordomo
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=The majordomo plugin for lcollect
-	DEPENDS:=+lcollect
+	DEPENDS:=+lcollect +ip
 endef
 
 define Package/lcollect-majordomo/install
@@ -23,6 +23,7 @@ define Package/lcollect-majordomo/install
 	$(INSTALL_DIR) $(1)/etc/cron.d/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo-cron $(1)/etc/cron.d/majordomo
 	$(INSTALL_DIR) $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/majordomo_subnetfilter $(1)/usr/bin/majordomo_subnetfilter
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_db.sh $(1)/usr/bin/majordomo_db.sh
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_merge.lua $(1)/usr/bin/majordomo_merge.lua
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_cache.lua $(1)/usr/bin/majordomo_cache.lua
