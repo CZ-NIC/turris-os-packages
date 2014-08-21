@@ -34,6 +34,10 @@ define Package/lcollect
 	DEPENDS:=+ucollect-lib $(BASE_LIB_DEPS)
 endef
 
+define Package/lcollect/conffiles
+/etc/config/lcollect
+endef
+
 define Package/ucollect-config
 	SECTION:=net
 	CATEGORY:=Network

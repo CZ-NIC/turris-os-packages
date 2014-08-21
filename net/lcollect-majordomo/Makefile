@@ -17,6 +17,10 @@ define Package/lcollect-majordomo
 	DEPENDS:=+lcollect +ip
 endef
 
+define Package/lcollect-majordomo/conffiles
+/etc/config/majordomo
+endef
+
 define Package/lcollect-majordomo/install
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo.conf $(1)/etc/config/majordomo
