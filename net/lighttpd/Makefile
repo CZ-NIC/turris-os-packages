@@ -44,7 +44,8 @@ if [ -e /etc/rc.d/S50lighttpd ] ; then
 	/etc/init.d/lighttpd disable
 	/etc/init.d/lighttpd enable
 fi
-/etc/init.d/lighttpd restart || ( sleep 5 ; /etc/init.d/lighttpd restart )
+# During initial installation, there are still some modules missing. It'll be started by something else later.
+/etc/init.d/lighttpd restart || ( sleep 5 ; /etc/init.d/lighttpd restart ) || true
 endef
 
 define Package/lighttpd/config

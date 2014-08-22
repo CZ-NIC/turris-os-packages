@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=1.4
+PKG_VERSION:=1.5
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
@@ -27,14 +27,11 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Spojení ucollectu se serverem je nyní komprimované.
- • Přidán plugin flow určený ke sledování délek a velikostí podezřelých spojení.
- • Zprovozněna možnost použít smtp server CZ.NICu k odesílání novinek. Výhodou této možnosti je jednodušší konfigurace (nastavuje se v uživatelském rozhraní Foris).
- • Možnost nainstalovat si DNS server Knot 1.5
- • Optimalizace posílání logů firewallu.
- • Podpora aktualizací vyžadující restart v průběhu instalace.
- • Přidána podpora pro SATA multiplikátory.
- • Povolen prefetch v unboundu, občas snižující latenci."
+    create_notification -s news " • Drobné opravy ve Forisu.
+ • Firewall je schopen ukládat pcap soubory pro další analýzu.
+ • Přidán detektor NATu do ucollectu.
+ • Přidána volba 'bind' pro p910nd.
+ • Autoritativní server Knot povýšen na verzi 1.5.1."
 }
 endef
 
