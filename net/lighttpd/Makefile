@@ -37,6 +37,16 @@ define Package/lighttpd
   TITLE:=A flexible and lightweight web server
 endef
 
+define Package/lighttpd/postinst
+#!/bin/sh
+
+if [ -e /etc/rc.d/S50lighttpd ] ; then
+	/etc/init.d/lighttpd disable
+	/etc/init.d/lighttpd enable
+fi
+/etc/init.d/lighttpd restart || ( sleep 5 ; /etc/init.d/lighttpd restart )
+endef
+
 define Package/lighttpd/config
 config LIGHTTPD_SSL
 	bool "SSL support"
@@ -110,6 +120,7 @@ endef
 
 define Package/lighttpd/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd
+	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
 	$(INSTALL_DATA) ./files/lighttpd.conf $(1)/etc/lighttpd/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/doc/config/conf.d/mime.conf $(1)/etc/lighttpd/
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d

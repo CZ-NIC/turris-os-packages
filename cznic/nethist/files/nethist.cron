@@ -1,0 +1,3 @@
+MAILTO=""
+*/2 * * * *			root	nethist_stats.lua
+1 0,6,12,18 * * *	root	cat /tmp/nethist.stats | sort | logger -p info -t nethist ; rm /tmp/nethist.stats

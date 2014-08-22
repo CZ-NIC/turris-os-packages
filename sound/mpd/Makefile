@@ -36,9 +36,9 @@ define Package/mpd/Default
 endef
 
 define Package/mpd/Default/description
- Music Player Daemon (MPD) is a flexible, powerful, server-side 
- application for playing music. It is typically controlled over a 
- network using one of it's many clients including mpc (console), 
+ Music Player Daemon (MPD) is a flexible, powerful, server-side
+ application for playing music. It is typically controlled over a
+ network using one of it's many clients including mpc (console),
  gmpc (gnome), phpmp (php), etc...
 endef
 
@@ -76,7 +76,7 @@ endef
 define Package/mpd-mini/description
 $(call Package/mpd/Default/description)
  .
- This package contains a minimal Music Player Daemon, with support for 
+ This package contains a minimal Music Player Daemon, with support for
  only Flac, MP3 & OGG media types & only file: & http: protocols.
 endef
 

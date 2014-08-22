@@ -90,6 +90,8 @@ init_unbound() {
     set_parameter key_cache_size key-cache-size 100k
     set_parameter key_cache_slabs key-cache-slabs 1
     set_parameter neg_cache_size neg-cache-size 10k
+    set_parameter prefetch prefetch yes
+    set_parameter prefetch_key prefetch-key yes
 
     #Python section
     add_section python
@@ -111,6 +113,7 @@ init_unbound() {
             (
             echo 'forward-zone:'
             echo '	name: "."'
+            echo '	forward-first: yes'
             for SERVER in $SERVERS ; do
                 echo "	forward-addr: $SERVER"
             done
@@ -125,7 +128,10 @@ start() {
     mkdir -p $(dirname "$CONFIGFILE")
 
     init_unbound
-    unbound
+    unbound || (
+        sleep 2 # There are temporary failures with ports in unbound sometimes, try again after a while
+	unbound
+    )
 }
 
 reload() {
@@ -149,6 +155,7 @@ stop() {
     config_get pidfile server pidfile
 
     if [ -f "$pidfile" ] ; then
-        kill $(cat $pidfile) && rm "$pidfile"
+        kill $(cat $pidfile) ; rm "$pidfile"
     fi
+    sleep 1 # For cleanup of ports and such
 }

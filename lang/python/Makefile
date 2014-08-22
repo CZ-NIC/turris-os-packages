@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python
-PKG_VERSION:=2.7.3
-PKG_RELEASE:=2
+PKG_VERSION:=2.7.8
+PKG_RELEASE:=1
 
 PKG_SOURCE:=Python-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://www.python.org/ftp/python/$(PKG_VERSION)
-PKG_MD5SUM:=62c4c1699170078c469f79ddfed21bc0
+PKG_MD5SUM:=d235bdfa75b8396942e360a70487ee00
 
 PKG_LICENSE:=PSF
 PKG_LICENSE_FILES:=LICENSE Modules/_ctypes/libffi_msvc/LICENSE Modules/_ctypes/darwin/LICENSE Modules/_ctypes/libffi/LICENSE Modules/_ctypes/libffi_osx/LICENSE Tools/pybench/LICENSE
@@ -25,7 +25,7 @@ HOST_BUILD_PARALLEL:=1
 PKG_BUILD_DIR:=$(BUILD_DIR)/Python-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/Python-$(PKG_VERSION)
 
-PKG_BUILD_DEPENDS:=python/host
+PKG_BUILD_DEPENDS:=python/host tcl
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
@@ -51,7 +51,7 @@ endef
 define Package/python
 $(call Package/python/Default)
   TITLE+= (full)
-  DEPENDS:=+libpthread +zlib +libffi +python-mini
+  DEPENDS:=+libpthread +zlib +libffi +python-mini 
 endef
 
 define Package/python/description
@@ -124,7 +124,7 @@ endef
 define Package/python-readline
 $(call Package/python/Default)
  TITLE:=Python support for readline
- DEPENDS+=+python-mini +libreadline +libncurses @BROKEN
+ DEPENDS+=+python-mini +libreadline +libncurses 
 endef
 
 define Package/python-ncurses
@@ -149,6 +149,7 @@ ifeq ($(CONFIG_IPV6),y)
 endif
 
 define Build/Configure
+	patch -p1 -d $(PKG_BUILD_DIR) < $(PATCH_DIR)/target/000*
 	-$(MAKE) -C $(PKG_BUILD_DIR) distclean
 	(cd $(PKG_BUILD_DIR); autoreconf --force --install || exit 0)
 	# The python executable needs to stay in the rootdir since its location will
@@ -167,6 +168,8 @@ define Build/Configure
 		ac_cv_py_format_size_t=no \
 		ac_cv_have_long_long_format=yes \
 		ac_cv_buggy_getaddrinfo=no \
+		ac_cv_file__dev_ptmx=y \
+		ac_cv_file__dev_ptc=n \
 		OPT="$(TARGET_CFLAGS)" \
 	)
 endef

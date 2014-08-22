@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2012 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,14 +8,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libxml2
-PKG_VERSION:=2.7.8
-PKG_RELEASE:=2
+PKG_VERSION:=2.9.1
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://gd.tuwien.ac.at/languages/libxml/ \
 	http://xmlsoft.org/sources/ \
 	ftp://fr.rpmfind.net/pub/libxml/
-PKG_MD5SUM:=8127a65e8c3b08856093099b52599c86
+PKG_MD5SUM:=9c0cfef285d5c4a5c80d00904ddab380
+
+PKG_LICENSE:=MIT
+PKG_LICENSE_FILES:=COPYING
+
+PKG_MAINTAINER:=Michael Heimpold <mhei@heimpold.de>
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=COPYING
@@ -70,6 +75,7 @@ CONFIGURE_ARGS += \
 	--with-xpath \
 	--with-xptr \
 	--with-zlib \
+	--without-lzma
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(2)/bin
@@ -77,32 +83,21 @@ define Build/InstallDev
 	$(SED) 's,^\(prefix\|exec_prefix\)=.*,\1=$(STAGING_DIR)/usr,g' $(2)/bin/xml2-config
 
 	$(INSTALL_DIR) $(1)/usr/include
-	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/include/libxml2 \
-		$(1)/usr/include/
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/libxml2 $(1)/usr/include/
 
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/libxml2.{la,a,so*} \
-		$(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libxml2.{la,a,so*} $(1)/usr/lib/
 
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(INSTALL_DATA) \
-		$(PKG_INSTALL_DIR)/usr/lib/pkgconfig/libxml-2.0.pc \
-		$(1)/usr/lib/pkgconfig/
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/libxml-2.0.pc $(1)/usr/lib/pkgconfig/
 
 	$(INSTALL_DIR) $(2)/share/aclocal/
-	$(INSTALL_DATA) \
-		$(PKG_INSTALL_DIR)/usr/share/aclocal/* \
-		$(2)/share/aclocal
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/aclocal/* $(2)/share/aclocal
 endef
 
 define Package/libxml2/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/libxml2.so.* \
-		$(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libxml2.so* $(1)/usr/lib/
 endef
-
 
 $(eval $(call BuildPackage,libxml2))

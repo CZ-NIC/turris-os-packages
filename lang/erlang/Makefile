@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=otp_src_$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:= http://www.erlang.org/download/ \
-	http://erlang.mirror.su.se/	
+	http://erlang.mirror.su.se/
 PKG_MD5SUM:= ca63bcde0e5ae0f2df9457f97b3115a4
 
 PKG_BUILD_DEPENDS:=erlang/host openssl
@@ -33,8 +33,8 @@ define Package/erlang/Default
 endef
 
 define Package/erlang/Default/description
- Erlang/OTP is a general-purpose programming language and runtime 
- environment. Erlang has built-in support for concurrency, distribution 
+ Erlang/OTP is a general-purpose programming language and runtime
+ environment. Erlang has built-in support for concurrency, distribution
  and fault tolerance.
 endef
 
@@ -47,7 +47,7 @@ endef
 define Package/erlang/description
 $(call Package/erlang/Default/description)
  .
- This package contains the runtime implementation and a minimal set of 
+ This package contains the runtime implementation and a minimal set of
  modules (erts, kernel, sasl & stdlib).
 endef
 
@@ -62,7 +62,7 @@ endef
 define Package/erlang-asn1/description
 $(call Package/erlang/Default/description)
  .
- This Erlang/OTP package provides Abstract Syntax Notation One (ASN.1) 
+ This Erlang/OTP package provides Abstract Syntax Notation One (ASN.1)
  support.
 endef
 
@@ -77,7 +77,7 @@ endef
 define Package/erlang-compiler/description
 $(call Package/erlang/Default/description)
  .
- This Erlang/OTP package provides a byte code compiler for Erlang which 
+ This Erlang/OTP package provides a byte code compiler for Erlang which
  produces highly compact code.
 endef
 
@@ -92,7 +92,7 @@ endef
 define Package/erlang-crypto/description
 $(call Package/erlang/Default/description)
  .
- This Erlang/OTP package provides functions for computation of message 
+ This Erlang/OTP package provides functions for computation of message
  digests, and encryption and decryption functions.
 endef
 
@@ -107,7 +107,7 @@ endef
 define Package/erlang-hipe/description
 $(call Package/erlang/Default/description)
  .
- This Erlang/OTP package provides HiPE (High Performance Erlang) 
+ This Erlang/OTP package provides HiPE (High Performance Erlang)
  support.
 endef
 
@@ -122,8 +122,8 @@ endef
 define Package/erlang-inets/description
 $(call Package/erlang/Default/description)
  .
- This Erlang/OTP package provides a container for Internet clients and 
- servers. Currently a FTP client, a HTTP client and server, and a tftp 
+ This Erlang/OTP package provides a container for Internet clients and
+ servers. Currently a FTP client, a HTTP client and server, and a tftp
  client and server have been incorporated in Inets.
 endef
 
@@ -138,9 +138,9 @@ endef
 define Package/erlang-mnesia/description
 $(call Package/erlang/Default/description)
  .
- This Erlang/OTP package provides a distributed DataBase Management 
- System (DBMS), appropriate for telecommunications applications and 
- other Erlang applications which require continuous operation and 
+ This Erlang/OTP package provides a distributed DataBase Management
+ System (DBMS), appropriate for telecommunications applications and
+ other Erlang applications which require continuous operation and
  exhibit soft real-time properties.
 endef
 
@@ -148,7 +148,6 @@ endef
 define Package/erlang-runtime-tools
 $(call Package/erlang/Default)
   TITLE:=Low-profile debugging/tracing tools
-  VERSION:=1.8.7
   VERSION:=1.8.12
   DEPENDS+= +erlang
 endef
@@ -156,7 +155,7 @@ endef
 define Package/erlang-runtime-tools/description
 $(call Package/erlang/Default/description)
  .
- This Erlang/OTP package provides low footprint tracing/debugging tools 
+ This Erlang/OTP package provides low footprint tracing/debugging tools
  suitable for inclusion in a production system.
 endef
 
@@ -171,8 +170,8 @@ endef
 define Package/erlang-snmp/description
 $(call Package/erlang/Default/description)
  .
- This Erlang/OTP package provides Simple Network Management Protocol 
- (SNMP) support including a MIB compiler and tools for creating SNMP 
+ This Erlang/OTP package provides Simple Network Management Protocol
+ (SNMP) support including a MIB compiler and tools for creating SNMP
  agents.
 endef
 
@@ -187,7 +186,7 @@ endef
 define Package/erlang-ssh/description
 $(call Package/erlang/Default/description)
  .
- This Erlang/OTP package provides an implementation of the Secure Shell 
+ This Erlang/OTP package provides an implementation of the Secure Shell
  protocol, with SSH & SFTP support.
 endef
 
@@ -202,8 +201,8 @@ endef
 define Package/erlang-ssl/description
 $(call Package/erlang/Default/description)
  .
- This Erlang/OTP package provides support for secure communication over 
- sockets. 
+ This Erlang/OTP package provides support for secure communication over
+ sockets.
 endef
 
 
@@ -217,7 +216,7 @@ endef
 define Package/erlang-syntax-tools/description
 $(call Package/erlang/Default/description)
  .
- This Erlang/OTP package provides support for handling abstract Erlang 
+ This Erlang/OTP package provides support for handling abstract Erlang
  syntax trees.
 endef
 
@@ -227,7 +226,7 @@ endef
 HOST_CONFIGURE_ARGS += \
 	--disable-hipe \
 	--disable-smp-support \
-	--without-javac 
+	--without-javac
 
 define Host/Compile
 	$(MAKE) -C $(HOST_BUILD_DIR) all

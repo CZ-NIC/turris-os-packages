@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bottle
-PKG_VERSION:=0.11.6
+PKG_VERSION:=0.12.7
 PKG_RELEASE:=1
 
-PKG_SOURCE:=bottle-0.11.6.tar.gz
+PKG_SOURCE:=bottle-0.12.7.tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/b/bottle/
-PKG_MD5SUM:=0bafdc4e13ea2b1a3bddf36b5af108c4
+PKG_MD5SUM:=ed0b83c9dbbdbde784e7c652d61c59f4
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=python

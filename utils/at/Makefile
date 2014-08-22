@@ -53,4 +53,19 @@ define Package/at/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/atd $(1)/usr/sbin
 endef
 
+define Package/at/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/atd enable
+/etc/init.d/atd restart
+}
+endef
+
+define Package/at/prerm
+#!/bin/sh
+/etc/init.d/atd disable
+/etc/init.d/atd stop
+endef
+
+
 $(eval $(call BuildPackage,at))

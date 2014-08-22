@@ -13,4 +13,3 @@ sleep 20 # Cooldown for above (problems in times of reinstall)
 /etc/init.d/unbound restart || \
 	( sleep 10 ; /etc/init.d/unbound restart ) || \
 	( sleep 30 ; /etc/init.d/unbound restart )
-rm -f /usr/share/unbound/postinst

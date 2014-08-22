@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=oneshot
-PKG_VERSION:=9
+PKG_VERSION:=11
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=9aa98a9b69f3e796b973e9541141519b234c8c60
+PKG_SOURCE_VERSION:=3fbb9d55df0133305db8be387b749bc9d46a8979
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -43,12 +43,18 @@ define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 
 if [ -z "$${IPKG_INSTROOT}" ] ; then
+	if -f /usr/share/oneshot/completed/scripts ; then
+		# Workaround. We didn't create the right scripts when it was being distributed.
+		# So add them now
+		cd /usr/share/oneshot/completed
+		touch 0000-opkg-uri 0002-opkg-https 0001-opkg-no-testing 0003-reset-updater-pkgs
+	fi
 	# If we are directly on the device, the variable is empty. Run right away.
 	/usr/bin/oneshot.sh
 else
 	# If it's on the device, then we already set up everything as it should be.
 	# Pretend all the scripts available now were already run.
-	for s in "$${IPKG_INSTROOT}"/usr/share/oneshot/scripts ; do
+	for s in "$${IPKG_INSTROOT}"/usr/share/oneshot/scripts/* ; do
 		touch "$${IPKG_INSTROOT}"/usr/share/oneshot/completed/$$(basename "$$s")
 	done
 fi

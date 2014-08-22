@@ -28,6 +28,7 @@ start_service() {
 	append_string "$section" device "-f "
 	append_string "$section" bind "-i "
 	append_string "$section" port ""
+        append_string "$section" bind "-i "
 	config_get_bool "enabled" "$section" "enabled" '1'
 	[ "$enabled" -gt 0 ] && /usr/sbin/p910nd $args
 }

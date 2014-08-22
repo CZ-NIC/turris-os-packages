@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=71
+PKG_VERSION:=93
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=e9ecc2a091a7ab8a439f94cee679a0153c5dec5f
+PKG_SOURCE_VERSION:=986b1ca3278980aadc9b0d8ef7ab798c14e325bc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -24,18 +24,42 @@ ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
 
 TURRIS_DEPS:=+cert-backup
 
+endif
+
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
+TIME=$$(( $$(tr -cd 0-9 </dev/urandom | head -c 8 | sed -e 's/^0*//' ) % 60 ))
+if [ -z "$$TIME" ] ; then
+	TIME=0
+fi
+echo 'MAILTO=""' >"$$IPKG_INSTROOT"/etc/cron.d/updater
+echo "$$TIME	*       *       *       *       root	/usr/bin/updater.sh >/dev/null 2>&1 &" >>"$$IPKG_INSTROOT"/etc/cron.d/updater
 [ -n "$$IPKG_INSTROOT" ] || {
-/usr/sbin/cert-backup /usr/share/updater/keys/standby.pem /usr/share/updater/keys/release.pem /etc/ssl/updater.pem
+if [ -x /usr/sbin/cert-backup ] ; then
+	/usr/sbin/cert-backup /usr/share/updater/keys/standby.pem /usr/share/updater/keys/release.pem /etc/ssl/updater.pem
+fi
+if uci get -q updater.pkglists.configured || uci get -q updater.pkglists.lists | grep -q . ; then
+	:
+else
+	uci add_list updater.pkglists.lists=luci-controls
+	uci add_list updater.pkglists.lists=nas
+	uci add_list updater.pkglists.lists=printserver
+	uci add_list updater.pkglists.lists=netutils
+fi
+uci set updater.pkglists.configured=1
+uci commit updater
+/etc/init.d/updater enable
+true # The previous sometimes returns 1 without any reason. Ignore it.
+# No need to start here, it is not a daemon, just a start-up check
 }
 endef
 
-endif
-
+# It also uses the notifier. But if there's no package that depends on it
+# (to send notification) and it is not installed therefore, we can live
+# without it.
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+vixie-cron +openssl-util +libatsha204 +curl $(TURRIS_DEPS) +opkg
+	DEPENDS:=+vixie-cron +openssl-util +libatsha204 +curl $(TURRIS_DEPS) +opkg +bzip2 +cznic-cacert-bundle
 endef
 
 # The built is empty. But as there's no makefile in the git repo, we need to
@@ -57,7 +81,6 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-release.pub.pem $(1)/usr/share/updater/keys/release.pem
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/updater.cron $(1)/etc/cron.d/updater
 
 	$(INSTALL_DIR) $(1)/etc/ssl
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/startcom.pem $(1)/etc/ssl/updater.pem
@@ -69,18 +92,13 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater.init $(1)/etc/init.d/updater
 endef
 
-define Package/$(PKG_NAME)/postinst
-#!/bin/sh
-[ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/updater enable
-true # The previous sometimes returns 1 without any reason. Ignore it.
-# No need to start here, it is not a daemon, just a start-up check
-}
-endef
-
 define Package/$(PKG_NAME)/prerm
 #!/bin/sh
 /etc/init.d/updater disable
+endef
+
+define Package/$(PKG_NAME)/conffiles
+/etc/config/updater
 endef
 
 define Package/updater-consolidator

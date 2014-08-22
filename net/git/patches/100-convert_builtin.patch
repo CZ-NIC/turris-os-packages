@@ -1,8 +1,6 @@
-diff --git a/Makefile b/Makefile
-index dddaf4f..3db3aa9 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -533,16 +533,7 @@ EXTRA_PROGRAMS =
+@@ -536,16 +536,7 @@ EXTRA_PROGRAMS =
  # ... and all the rest that could be moved out of bindir to gitexecdir
  PROGRAMS += $(EXTRA_PROGRAMS)
  
@@ -20,7 +18,7 @@ index dddaf4f..3db3aa9 100644
  
  # Binary suffix, set to .exe for Windows builds
  X =
-@@ -990,6 +981,12 @@ BUILTIN_OBJS += builtin/var.o
+@@ -993,6 +984,12 @@ BUILTIN_OBJS += builtin/var.o
  BUILTIN_OBJS += builtin/verify-pack.o
  BUILTIN_OBJS += builtin/verify-tag.o
  BUILTIN_OBJS += builtin/write-tree.o
@@ -33,7 +31,7 @@ index dddaf4f..3db3aa9 100644
  
  GITLIBS = $(LIB_FILE) $(XDIFF_LIB)
  EXTLIBS =
-@@ -1153,7 +1150,7 @@ endif
+@@ -1156,7 +1153,7 @@ endif
  EXTLIBS += -lz
  
  ifndef NO_OPENSSL
@@ -42,7 +40,7 @@ index dddaf4f..3db3aa9 100644
  	ifdef OPENSSLDIR
  		BASIC_CFLAGS += -I$(OPENSSLDIR)/include
  		OPENSSL_LINK = -L$(OPENSSLDIR)/$(lib) $(CC_LD_DYNPATH)$(OPENSSLDIR)/$(lib)
-@@ -2046,10 +2043,6 @@ endif
+@@ -2054,10 +2051,6 @@ endif
  git-%$X: %.o GIT-LDFLAGS $(GITLIBS)
  	$(QUIET_LINK)$(CC) $(ALL_CFLAGS) -o $@ $(ALL_LDFLAGS) $(filter %.o,$^) $(LIBS)
  
@@ -53,7 +51,7 @@ index dddaf4f..3db3aa9 100644
  git-http-fetch$X: http.o http-walker.o http-fetch.o GIT-LDFLAGS $(GITLIBS)
  	$(QUIET_LINK)$(CC) $(ALL_CFLAGS) -o $@ $(ALL_LDFLAGS) $(filter %.o,$^) \
  		$(LIBS) $(CURL_LIBCURL)
-@@ -2358,24 +2351,22 @@ endif
+@@ -2366,24 +2359,22 @@ endif
  	bindir=$$(cd '$(DESTDIR_SQ)$(bindir_SQ)' && pwd) && \
  	execdir=$$(cd '$(DESTDIR_SQ)$(gitexec_instdir_SQ)' && pwd) && \
  	{ test "$$bindir/" = "$$execdir/" || \
@@ -80,11 +78,9 @@ index dddaf4f..3db3aa9 100644
  		ln -s "git$X" "$$execdir/$$p" 2>/dev/null || \
  		cp "$$execdir/git$X" "$$execdir/$$p" || exit; \
  	done && \
-diff --git a/builtin.h b/builtin.h
-index c47c110..39b019a 100644
 --- a/builtin.h
 +++ b/builtin.h
-@@ -136,5 +136,11 @@ extern int cmd_verify_pack(int argc, const char **argv, const char *prefix);
+@@ -136,5 +136,11 @@ extern int cmd_verify_pack(int argc, con
  extern int cmd_show_ref(int argc, const char **argv, const char *prefix);
  extern int cmd_pack_refs(int argc, const char **argv, const char *prefix);
  extern int cmd_replace(int argc, const char **argv, const char *prefix);
@@ -96,9 +92,6 @@ index c47c110..39b019a 100644
 +extern int cmd_upload_pack(int argc, char **argv, const char *prefix);
  
  #endif
-diff --git a/builtin/daemon.c b/builtin/daemon.c
-new file mode 100644
-index 0000000..b1d8113
 --- /dev/null
 +++ b/builtin/daemon.c
 @@ -0,0 +1 @@
@@ -138,11 +131,9 @@ index 0000000..14d020a
 +++ b/builtin/upload-pack.c
 @@ -0,0 +1 @@
 +#include "../upload-pack.c"
-diff --git a/daemon.c b/daemon.c
-index 503e039..2fb4ce6 100644
 --- a/daemon.c
 +++ b/daemon.c
-@@ -1148,7 +1148,7 @@ static int serve(struct string_list *listen_addr, int listen_port,
+@@ -1148,7 +1148,7 @@ static int serve(struct string_list *lis
  	return service_loop(&socklist);
  }
  
@@ -164,11 +155,9 @@ index 4fd18a3..57b80c0 100644
  {
  	unsigned int i;
  
-diff --git a/git.c b/git.c
-index 7cf2953..b44b014 100644
 --- a/git.c
 +++ b/git.c
-@@ -275,11 +275,11 @@ static int handle_alias(int *argcp, const char ***argv)
+@@ -275,11 +275,11 @@ static int handle_alias(int *argcp, cons
  
  struct cmd_struct {
  	const char *cmd;
@@ -215,8 +204,6 @@ index 7cf2953..b44b014 100644
  	{ "var", cmd_var, RUN_SETUP_GENTLY },
  	{ "verify-pack", cmd_verify_pack },
  	{ "verify-tag", cmd_verify_tag, RUN_SETUP },
-diff --git a/http-backend.c b/http-backend.c
-index d2c0a62..2e080da 100644
 --- a/http-backend.c
 +++ b/http-backend.c
 @@ -563,7 +563,7 @@ static struct service_cmd {
@@ -232,7 +219,7 @@ diff --git a/imap-send.c b/imap-send.c
 index 0bc6f7f..686cfe6 100644
 --- a/imap-send.c
 +++ b/imap-send.c
-@@ -1362,7 +1362,7 @@ static int git_imap_config(const char *key, const char *val, void *cb)
+@@ -1362,7 +1362,7 @@ static int git_imap_config(const char *k
  	return 0;
  }
  
@@ -241,8 +228,6 @@ index 0bc6f7f..686cfe6 100644
  {
  	struct strbuf all_msgs = STRBUF_INIT;
  	struct strbuf msg = STRBUF_INIT;
-diff --git a/shell.c b/shell.c
-index 5c0d47a..9a78b57 100644
 --- a/shell.c
 +++ b/shell.c
 @@ -142,7 +142,7 @@ static struct commands {
@@ -258,7 +243,7 @@ diff --git a/upload-pack.c b/upload-pack.c
 index 0c44f6b..6c2e1fd 100644
 --- a/upload-pack.c
 +++ b/upload-pack.c
-@@ -786,7 +786,7 @@ static int upload_pack_config(const char *var, const char *value, void *unused)
+@@ -781,7 +781,7 @@ static int upload_pack_config(const char
  	return parse_hide_refs_config(var, value, "uploadpack");
  }
  

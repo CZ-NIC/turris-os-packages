@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libnetconf
-PKG_VERSION:=8
+PKG_VERSION:=10
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/libnetconf.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=30847a8cc7e8603c89822f8dfa95c5229dd310b3
+PKG_SOURCE_VERSION:=666626f016531a3a657c83406a14e736ec26eb41
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -22,11 +22,11 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=libnetconf
-	DEPENDS:= +libevent +libxml2 +libxslt +libcurl +zlib +libpthread
+	DEPENDS:= +libevent +libxml2 +libxslt +libcurl +zlib +libpthread +libopenssl
 endef
 
 define Build/Configure
-	$(call Build/Configure/Default, --disable-libssh2 --disable-notifications  --prefix=/usr/ --exec-prefix=/usr --with-ncworkingdirpath=/tmp/)
+	$(call Build/Configure/Default, --disable-libssh2 --disable-notifications  --prefix=/usr/ --exec-prefix=/usr --with-ncworkingdirpath=/tmp/ --with-workingdir=/tmp/)
 endef
 
 define Build/InstallDev

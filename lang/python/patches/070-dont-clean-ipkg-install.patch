@@ -4,7 +4,7 @@
 
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -1169,12 +1169,12 @@ TAGS::
+@@ -1251,12 +1251,12 @@ TAGS::
  # Sanitation targets -- clean leaves libraries, executables and tags
  # files, which clobber removes as well
  pycremoval:
