@@ -13,9 +13,9 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
-		ftp://openbsd.wiretapped.net/pub/OpenBSD/OpenSSH/portable/ \
-		ftp://ftp.belnet.be/packages/openbsd/OpenSSH/portable/ \
-		ftp://ftp.de.openbsd.org/pub/unix/OpenBSD/OpenSSH/portable/
+		http://mirror.steadynet.cz/pub/OpenBSD/OpenSSH/portable/ \
+		http://ftp.spline.de/pub/OpenBSD/OpenSSH/portable/
+
 PKG_CONFIG_DEPENDS:=PACKAGE_openssh_server_nuci_support
 PKG_MD5SUM:=a62b88b884df0b09b8a8c5789ac9e51b
 
