@@ -42,7 +42,9 @@ build_config() {
     else
 	    cat /etc/config/ucollect >/tmp/ucollect/ucollect
     fi
-    cat $(ls /usr/share/ucollect/configs/* | sort) >>/tmp/ucollect/ucollect
+    if ls /usr/share/ucollect/configs/* >/dev/null 2>&1 ; then
+	    cat $(ls /usr/share/ucollect/configs/* | sort) >>/tmp/ucollect/ucollect
+    fi
 }
 
 status() {
