@@ -17,7 +17,7 @@ PKG_SOURCE_URL:=ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
 		http://ftp.spline.de/pub/OpenBSD/OpenSSH/portable/
 
 PKG_CONFIG_DEPENDS:=PACKAGE_openssh_server_nuci_support
-PKG_MD5SUM:=a62b88b884df0b09b8a8c5789ac9e51b
+PKG_MD5SUM:=a084e7272b8cbd25afe0f5dce4802fef
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
 
