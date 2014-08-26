@@ -8,12 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wget
-PKG_VERSION:=1.14
+PKG_VERSION:=1.15
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
-PKG_MD5SUM:=316f6f59292c9098ad81fd54f658c579
+PKG_MD5SUM:=7a279d5ac5594919124d5526e7143e28
+PKG_MAINTAINER:=Maxim Storchak <m.storchak@gmail.com>
+PKG_LICENSE:=GPL-3.0+
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
 
@@ -76,6 +78,7 @@ endif
 
 ifeq ($(BUILD_VARIANT),nossl)
 	CONFIGURE_ARGS+= \
+		--disable-ntlm \
 		--without-ssl
 endif
 
