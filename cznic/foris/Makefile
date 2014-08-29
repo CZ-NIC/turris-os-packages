@@ -83,4 +83,18 @@ set -x
 /etc/init.d/lighttpd stop
 endef
 
+define Package/foris-oldconfig
+	TITLE:=foris old config
+endef
+
+define Package/foris-oldconfig/description
+	A hack to go through installation from original Certuma image to something far newer without crashing the wizard step. Should not be needed during normal operation.
+endef
+
+define Package/foris-oldconfig/install
+	$(INSTALL_DIR) $(1)/etc/foris
+	$(INSTALL_DATA) ./files/foris.conf $(1)/etc/foris/foris-lighttpd-inc.conf
+endef
+
 $(eval $(call BuildPackage,foris))
+$(eval $(call BuildPackage,foris-oldconfig))
