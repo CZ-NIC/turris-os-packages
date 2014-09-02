@@ -11,5 +11,5 @@ mount -t sysfs none /sys
 echo /sbin/mdev > /proc/sys/kernel/hotplug
 mdev -s
 mount -t devpts none /dev/pts
-mount -t tmpfs -o size=100M,mode=0755 tmpfs /tmp
+mount -t tmpfs -o size=300M,mode=0755 tmpfs /tmp
 
