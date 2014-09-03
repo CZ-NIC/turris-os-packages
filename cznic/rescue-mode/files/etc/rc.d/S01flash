@@ -18,7 +18,7 @@ echo
 
 rainbow all enable red || true
 
-/usr/bin/flash_medkit /dev/mtdblock3
+/usr/bin/flash_medkit 
 
 rainbow all auto white || true
 

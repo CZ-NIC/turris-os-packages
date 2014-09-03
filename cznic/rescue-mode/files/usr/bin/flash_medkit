@@ -10,10 +10,16 @@ ROOTFS_DEVNUM="8"
 echo "Unpack medkit files"
 [ -d /tmp/rescue ] && rm -rf /tmp/rescue
 mkdir /tmp/rescue
-dd if=$1 of=/tmp/rescue/medkit.tar.xz 2>&1 >/dev/null
+
+if [ -d /tmp/mnt ]; then
+    umount -f /tmp/mnt
+    rm -rf /tmp/mnt
+fi
+mkdir /tmp/mnt
+mount -t squashfs /dev/mtdblock3 /tmp/mnt
+
 cd /tmp/rescue
-unxz ./medkit.tar.xz
-tar xf ./medkit.tar
+unxz -c /tmp/mnt/medkit.tar.xz | tar xf -
 
 echo "Erase mtd devices"
 i=3

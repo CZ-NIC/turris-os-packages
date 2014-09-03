@@ -35,6 +35,12 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/udhcpc
 	$(INSTALL_DIR) $(1)/usr/bin
 
+	$(INSTALL_DIR) $(1)/proc
+	$(INSTALL_DIR) $(1)/dev
+	$(INSTALL_DIR) $(1)/dev/pts
+	$(INSTALL_DIR) $(1)/sys
+	$(INSTALL_DIR) $(1)/mnt
+
 	$(INSTALL_BIN) ./files/etc/rc.d/S00boot $(1)/etc/rc.d/S00boot
 	$(INSTALL_BIN) ./files/etc/rc.d/S01flash $(1)/etc/rc.d/S01flash
 	$(INSTALL_BIN) ./files/etc/rc.d/K99umount $(1)/etc/rc.d/K99umount
