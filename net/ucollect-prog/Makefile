@@ -9,7 +9,7 @@
 
 include $(TOPDIR)/package/packages/net/ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,ucollect-prog,77))
+$(eval $(call UCOLLECT_BASE,ucollect-prog,78))
 
 BASE_LIB_DEPS:=+libpcap +librt +libopenssl +libuci +libatsha204 +socat +zlib
 
@@ -93,6 +93,8 @@ endef
 define Package/lcollect/install
 	$(INSTALL_DIR) $(1)/etc/init.d/
 	$(INSTALL_BIN) ./files/lcollect.init $(1)/etc/init.d/lcollect
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
+	$(INSTALL_DATA) ./files/lcollect.hotplug $(1)/etc/hotplug.d/iface/50-lcollect
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/lcollect/lcollect-turris.cfg $(1)/etc/config/lcollect
 	$(INSTALL_DIR) $(1)/usr/bin/
