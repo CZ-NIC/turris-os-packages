@@ -6,8 +6,10 @@ PID_FILE=/var/run/lcollect.pid
 
 build_config() {
     mkdir -p /tmp/lcollect/
-	cat /etc/config/lcollect >/tmp/lcollect/lcollect
-    cat $(ls /usr/share/lcollect/configs/* | sort) >>/tmp/lcollect/lcollect
+    cat /etc/config/lcollect >/tmp/lcollect/lcollect
+    if ls /usr/share/lcollect/configs/* >/dev/null 2>&1 ; then
+	cat $(ls /usr/share/lcollect/configs/* | sort) >>/tmp/lcollect/lcollect
+    fi
 }
 
 status() {
