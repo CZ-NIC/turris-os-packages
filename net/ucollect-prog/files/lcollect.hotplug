@@ -8,6 +8,6 @@ MD5=$(
 
 PREVIOUS=$(cat /tmp/lcollect.md5 || true)
 if [ "$MD5" != "$PREVIOUS" ] ; then
-	/etc/init.d/ucollect reload
+	/etc/init.d/lcollect reload
 	echo "$MD5" >/tmp/lcollect.md5
 fi
