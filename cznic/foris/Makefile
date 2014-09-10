@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=43
+PKG_VERSION:=44
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
-PKG_SOURCE_VERSION:=3a20b42c0f0dad526b442ca75d3ad5323e7e80bf
+PKG_SOURCE_VERSION:=b0dc79cc2e6ec2c49944199d14c4c2bcf2a91ccb
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -83,4 +83,18 @@ set -x
 /etc/init.d/lighttpd stop
 endef
 
+define Package/foris-oldconfig
+	TITLE:=foris old config
+endef
+
+define Package/foris-oldconfig/description
+	A hack to go through installation from original Certuma image to something far newer without crashing the wizard step. Should not be needed during normal operation.
+endef
+
+define Package/foris-oldconfig/install
+	$(INSTALL_DIR) $(1)/etc/foris
+	$(INSTALL_DATA) ./files/foris.conf $(1)/etc/foris/foris-lighttpd-inc.conf
+endef
+
 $(eval $(call BuildPackage,foris))
+$(eval $(call BuildPackage,foris-oldconfig))

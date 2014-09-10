@@ -1,0 +1,13 @@
+MD5=$(
+		(
+			for iface in $(uci -q -X show lcollect | sed -n 's/^lcollect\.cfg[0-9a-zA-Z]*\.ifname=\(.*\)$/\1/p'); do
+				ip --oneline addr show dev $iface | sed -n 's/.*inet[0-9]* \([^\/]*\)\/\([0-9]*\).*/\1\/\2/p'
+			done
+		) | md5sum | cut -d" " -f1
+	)
+
+PREVIOUS=$(cat /tmp/lcollect.md5 || true)
+if [ "$MD5" != "$PREVIOUS" ] ; then
+	/etc/init.d/lcollect reload
+	echo "$MD5" >/tmp/lcollect.md5
+fi
