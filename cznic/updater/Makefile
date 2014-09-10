@@ -74,7 +74,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-wipe.sh $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-resume.sh $(1)/usr/bin/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-utils.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-worker.sh $(1)/usr/bin/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-worker.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/share/updater/keys
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-standby.pub.pem $(1)/usr/share/updater/keys/standby.pem
