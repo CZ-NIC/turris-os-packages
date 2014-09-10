@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd
 PKG_VERSION:=1.4.32
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://download.lighttpd.net/lighttpd/releases-1.4.x
@@ -124,7 +124,6 @@ define Package/lighttpd/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
 	$(INSTALL_DATA) ./files/lighttpd.conf $(1)/etc/lighttpd/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/doc/config/conf.d/mime.conf $(1)/etc/lighttpd/
-	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/lighttpd.init $(1)/etc/init.d/lighttpd
 	$(INSTALL_DIR) $(1)/usr/lib/lighttpd
@@ -148,12 +147,6 @@ define BuildPlugin
   define Package/lighttpd-mod-$(1)/install
 	$(INSTALL_DIR) $$(1)/usr/lib/lighttpd
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lighttpd/mod_$(1).so $$(1)/usr/lib/lighttpd
-	$(INSTALL_DIR) $$(1)/etc/lighttpd/conf.d
-	if [ -f $(PKG_BUILD_DIR)/doc/config/conf.d/$(1).conf ]; then \
-		$(CP) $(PKG_BUILD_DIR)/doc/config/conf.d/$(1).conf $$(1)/etc/lighttpd/conf.d/$(4)-$(1).conf ; \
-	else \
-		echo 'server.modules += ( "mod_$(1)" )' > $$(1)/etc/lighttpd/conf.d/$(4)-$(1).conf ; \
-	fi
   endef
 
   $$(eval $$(call BuildPackage,lighttpd-mod-$(1)))
