@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=97
+PKG_VERSION:=101
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=925cb99a6148c20fcf0006a7ead557ce5753b7f4
+PKG_SOURCE_VERSION:=c7e3720519ed87a09f4336bd4c9f6717000840d5
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -74,7 +74,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-wipe.sh $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-resume.sh $(1)/usr/bin/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-utils.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-worker.sh $(1)/usr/bin/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-worker.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/share/updater/keys
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-standby.pub.pem $(1)/usr/share/updater/keys/standby.pem

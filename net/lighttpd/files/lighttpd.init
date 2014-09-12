@@ -15,3 +15,10 @@ stop() {
 	service_stop /usr/sbin/lighttpd
 }
 
+restart() {
+	/usr/sbin/lighttpd -t -f /etc/lighttpd/lighttpd.conf || exit 1
+	ls /usr/lib/lighttpd/mod_alias.so || exit 1
+	ls /usr/lib/lighttpd/mod_cgi.so || exit 1
+	stop
+	start
+}
