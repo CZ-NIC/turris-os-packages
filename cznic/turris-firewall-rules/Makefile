@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-firewall-rules
-PKG_VERSION:=29
+PKG_VERSION:=30
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/fw-rules.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=8a7fc326f4f1d6d1749f53bb0023370e3c393c42
+PKG_SOURCE_VERSION:=46cd3a0b4c9a656454ebcbf438934470f074988c
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
@@ -29,12 +29,12 @@ define Build/Compile
 endef
 
 define Package/$(PKG_NAME)/conffiles
-/etc/config/pcap-dumps
+/etc/config/firewall-turris
 endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/config/
-	$(INSTALL_CONF) ./files/pcap-dump.config $(1)/etc/config/pcap-dumps
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/firewall-turris.config $(1)/etc/config/firewall-turris
 	$(INSTALL_DIR) $(1)/etc/logrotate.d/
 	$(INSTALL_CONF) ./files/pcap-dump.logrotate $(1)/etc/logrotate.d/pcap-dumps
 	$(INSTALL_DIR) $(1)/etc/ulogd.d/
