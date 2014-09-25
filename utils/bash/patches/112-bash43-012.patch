@@ -1,0 +1,22 @@
+diff -ur a/jobs.c b/jobs.c
+--- a/jobs.c	2014-09-25 13:08:31.423147030 +0200
++++ b/jobs.c	2014-09-25 13:08:31.466480363 +0200
+@@ -3597,6 +3597,7 @@
+   unwind_protect_int (jobs_list_frozen);
+   unwind_protect_pointer (the_pipeline);
+   unwind_protect_pointer (subst_assign_varlist);
++  unwind_protect_pointer (this_shell_builtin);
+ 
+   /* We have to add the commands this way because they will be run
+      in reverse order of adding.  We don't want maybe_set_sigchld_trap ()
+diff -ur a/patchlevel.h b/patchlevel.h
+--- a/patchlevel.h	2014-09-25 13:08:31.423147030 +0200
++++ b/patchlevel.h	2014-09-25 13:08:31.466480363 +0200
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 11
++#define PATCHLEVEL 12
+ 
+ #endif /* _PATCHLEVEL_H_ */

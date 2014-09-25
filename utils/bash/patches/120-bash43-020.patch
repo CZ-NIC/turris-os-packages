@@ -1,0 +1,80 @@
+diff -ur a/parse.y b/parse.y
+--- a/parse.y	2014-09-25 13:08:32.353147019 +0200
++++ b/parse.y	2014-09-25 13:08:32.396480352 +0200
+@@ -2642,7 +2642,7 @@
+   int r;
+ 
+   r = 0;
+-  while (need_here_doc)
++  while (need_here_doc > 0)
+     {
+       parser_state |= PST_HEREDOC;
+       make_here_document (redir_stack[r++], line_number);
+@@ -6075,6 +6075,7 @@
+ 
+   ps->expand_aliases = expand_aliases;
+   ps->echo_input_at_read = echo_input_at_read;
++  ps->need_here_doc = need_here_doc;
+ 
+   ps->token = token;
+   ps->token_buffer_size = token_buffer_size;
+@@ -6123,6 +6124,7 @@
+ 
+   expand_aliases = ps->expand_aliases;
+   echo_input_at_read = ps->echo_input_at_read;
++  need_here_doc = ps->need_here_doc;
+ 
+   FREE (token);
+   token = ps->token;
+diff -ur a/patchlevel.h b/patchlevel.h
+--- a/patchlevel.h	2014-09-25 13:08:32.353147019 +0200
++++ b/patchlevel.h	2014-09-25 13:08:32.399813685 +0200
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 19
++#define PATCHLEVEL 20
+ 
+ #endif /* _PATCHLEVEL_H_ */
+diff -ur a/shell.h b/shell.h
+--- a/shell.h	2014-09-25 13:08:32.353147019 +0200
++++ b/shell.h	2014-09-25 13:08:32.396480352 +0200
+@@ -168,7 +168,8 @@
+   /* flags state affecting the parser */
+   int expand_aliases;
+   int echo_input_at_read;
+-  
++  int need_here_doc;
++
+ } sh_parser_state_t;
+ 
+ typedef struct _sh_input_line_state_t {
+diff -ur a/y.tab.c b/y.tab.c
+--- a/y.tab.c	2014-09-25 13:08:32.353147019 +0200
++++ b/y.tab.c	2014-09-25 13:08:32.399813685 +0200
+@@ -4954,7 +4954,7 @@
+   int r;
+ 
+   r = 0;
+-  while (need_here_doc)
++  while (need_here_doc > 0)
+     {
+       parser_state |= PST_HEREDOC;
+       make_here_document (redir_stack[r++], line_number);
+@@ -8387,6 +8387,7 @@
+ 
+   ps->expand_aliases = expand_aliases;
+   ps->echo_input_at_read = echo_input_at_read;
++  ps->need_here_doc = need_here_doc;
+ 
+   ps->token = token;
+   ps->token_buffer_size = token_buffer_size;
+@@ -8435,6 +8436,7 @@
+ 
+   expand_aliases = ps->expand_aliases;
+   echo_input_at_read = ps->echo_input_at_read;
++  need_here_doc = ps->need_here_doc;
+ 
+   FREE (token);
+   token = ps->token;

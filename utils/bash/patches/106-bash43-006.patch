@@ -1,0 +1,23 @@
+diff -ur a/jobs.c b/jobs.c
+--- a/jobs.c	2014-09-25 13:08:30.736480371 +0200
++++ b/jobs.c	2014-09-25 13:08:30.779813704 +0200
+@@ -4374,7 +4374,7 @@
+ void
+ end_job_control ()
+ {
+-  if (interactive_shell)		/* XXX - should it be interactive? */
++  if (interactive_shell || job_control)		/* XXX - should it be just job_control? */
+     {
+       terminate_stopped_jobs ();
+ 
+diff -ur a/patchlevel.h b/patchlevel.h
+--- a/patchlevel.h	2014-09-25 13:08:30.739813704 +0200
++++ b/patchlevel.h	2014-09-25 13:08:30.779813704 +0200
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 5
++#define PATCHLEVEL 6
+ 
+ #endif /* _PATCHLEVEL_H_ */
