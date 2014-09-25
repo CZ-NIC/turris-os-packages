@@ -1,0 +1,30 @@
+diff -ur a/lib/readline/misc.c b/lib/readline/misc.c
+--- a/lib/readline/misc.c	2014-09-25 13:08:32.486480351 +0200
++++ b/lib/readline/misc.c	2014-09-25 13:08:32.513147017 +0200
+@@ -461,6 +461,7 @@
+ 	    saved_undo_list = 0;
+ 	  /* Set up rl_line_buffer and other variables from history entry */
+ 	  rl_replace_from_history (entry, 0);	/* entry->line is now current */
++	  entry->data = 0;			/* entry->data is now current undo list */
+ 	  /* Undo all changes to this history entry */
+ 	  while (rl_undo_list)
+ 	    rl_do_undo ();
+@@ -468,7 +469,6 @@
+ 	     the timestamp. */
+ 	  FREE (entry->line);
+ 	  entry->line = savestring (rl_line_buffer);
+-	  entry->data = 0;
+ 	}
+       entry = previous_history ();
+     }
+diff -ur a/patchlevel.h b/patchlevel.h
+--- a/patchlevel.h	2014-09-25 13:08:32.473147018 +0200
++++ b/patchlevel.h	2014-09-25 13:08:32.513147017 +0200
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 20
++#define PATCHLEVEL 21
+ 
+ #endif /* _PATCHLEVEL_H_ */

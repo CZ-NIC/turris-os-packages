@@ -1,0 +1,108 @@
+diff -ur a/lib/glob/glob.c b/lib/glob/glob.c
+--- a/lib/glob/glob.c	2014-09-25 13:08:31.896480358 +0200
++++ b/lib/glob/glob.c	2014-09-25 13:08:31.926480357 +0200
+@@ -123,6 +123,8 @@
+ extern char *glob_patscan __P((char *, char *, int));
+ extern wchar_t *glob_patscan_wc __P((wchar_t *, wchar_t *, int));
+ 
++extern char *glob_dirscan __P((char *, int));
++
+ /* Compile `glob_loop.c' for single-byte characters. */
+ #define CHAR	unsigned char
+ #define INT	int
+@@ -187,6 +189,9 @@
+   se = pp + strlen (pp) - 1;		/* end of string */
+   pe = glob_patscan (pp, se, 0);	/* end of extglob pattern (( */
+   /* we should check for invalid extglob pattern here */
++  if (pe == 0)
++    return 0;
++
+   /* if pe != se we have more of the pattern at the end of the extglob
+      pattern. Check the easy case first ( */
+   if (pe == se && *pe == ')' && (t = strchr (pp, '|')) == 0)
+@@ -1015,7 +1020,7 @@
+ {
+   char **result;
+   unsigned int result_size;
+-  char *directory_name, *filename, *dname;
++  char *directory_name, *filename, *dname, *fn;
+   unsigned int directory_len;
+   int free_dirname;			/* flag */
+   int dflags;
+@@ -1031,6 +1036,18 @@
+ 
+   /* Find the filename.  */
+   filename = strrchr (pathname, '/');
++#if defined (EXTENDED_GLOB)
++  if (filename && extended_glob)
++    {
++      fn = glob_dirscan (pathname, '/');
++#if DEBUG_MATCHING
++      if (fn != filename)
++	fprintf (stderr, "glob_filename: glob_dirscan: fn (%s) != filename (%s)\n", fn ? fn : "(null)", filename);
++#endif
++      filename = fn;
++    }
++#endif
++
+   if (filename == NULL)
+     {
+       filename = pathname;
+diff -ur a/lib/glob/gmisc.c b/lib/glob/gmisc.c
+--- a/lib/glob/gmisc.c	2014-09-25 13:08:31.896480358 +0200
++++ b/lib/glob/gmisc.c	2014-09-25 13:08:31.926480357 +0200
+@@ -42,6 +42,8 @@
+ #define WLPAREN         L'('
+ #define WRPAREN         L')'
+ 
++extern char *glob_patscan __P((char *, char *, int));
++
+ /* Return 1 of the first character of WSTRING could match the first
+    character of pattern WPAT.  Wide character version. */
+ int
+@@ -375,3 +377,34 @@
+ 
+   return matlen;
+ }
++
++/* Skip characters in PAT and return the final occurrence of DIRSEP.  This
++   is only called when extended_glob is set, so we have to skip over extglob
++   patterns x(...) */
++char *
++glob_dirscan (pat, dirsep)
++     char *pat;
++     int dirsep;
++{
++  char *p, *d, *pe, *se;
++
++  d = pe = se = 0;
++  for (p = pat; p && *p; p++)
++    {
++      if (extglob_pattern_p (p))
++	{
++	  if (se == 0)
++	    se = p + strlen (p) - 1;
++	  pe = glob_patscan (p + 2, se, 0);
++	  if (pe == 0)
++	    continue;
++	  else if (*pe == 0)
++	    break;
++	  p = pe - 1;	/* will do increment above */
++	  continue;
++	}
++      if (*p ==  dirsep)
++	d = p;
++    }
++  return d;
++}
+diff -ur a/patchlevel.h b/patchlevel.h
+--- a/patchlevel.h	2014-09-25 13:08:31.883147025 +0200
++++ b/patchlevel.h	2014-09-25 13:08:31.926480357 +0200
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 15
++#define PATCHLEVEL 16
+ 
+ #endif /* _PATCHLEVEL_H_ */

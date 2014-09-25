@@ -1,0 +1,26 @@
+diff -ur a/patchlevel.h b/patchlevel.h
+--- a/patchlevel.h	2014-09-25 13:08:32.013147023 +0200
++++ b/patchlevel.h	2014-09-25 13:08:32.056480355 +0200
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 16
++#define PATCHLEVEL 17
+ 
+ #endif /* _PATCHLEVEL_H_ */
+diff -ur a/variables.c b/variables.c
+--- a/variables.c	2014-09-25 13:08:32.009813690 +0200
++++ b/variables.c	2014-09-25 13:08:32.056480355 +0200
+@@ -2197,10 +2197,7 @@
+   /* local foo; local foo;  is a no-op. */
+   old_var = find_variable (name);
+   if (old_var && local_p (old_var) && old_var->context == variable_context)
+-    {
+-      VUNSETATTR (old_var, att_invisible);	/* XXX */
+-      return (old_var);
+-    }
++    return (old_var);
+ 
+   was_tmpvar = old_var && tempvar_p (old_var);
+   /* If we're making a local variable in a shell function, the temporary env

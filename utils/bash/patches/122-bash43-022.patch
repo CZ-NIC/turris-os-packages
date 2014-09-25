@@ -1,0 +1,32 @@
+diff -ur a/execute_cmd.c b/execute_cmd.c
+--- a/execute_cmd.c	2014-09-25 13:08:32.583147016 +0200
++++ b/execute_cmd.c	2014-09-25 13:08:32.626480350 +0200
+@@ -2409,7 +2409,16 @@
+ #endif
+       lstdin = wait_for (lastpid);
+ #if defined (JOB_CONTROL)
+-      exec_result = job_exit_status (lastpipe_jid);
++      /* If wait_for removes the job from the jobs table, use result of last
++	 command as pipeline's exit status as usual.  The jobs list can get
++	 frozen and unfrozen at inconvenient times if there are multiple pipelines
++	 running simultaneously. */
++      if (INVALID_JOB (lastpipe_jid) == 0)
++	exec_result = job_exit_status (lastpipe_jid);
++      else if (pipefail_opt)
++	exec_result = exec_result | lstdin;	/* XXX */
++      /* otherwise we use exec_result */
++        
+ #endif
+       unfreeze_jobs_list ();
+     }
+diff -ur a/patchlevel.h b/patchlevel.h
+--- a/patchlevel.h	2014-09-25 13:08:32.583147016 +0200
++++ b/patchlevel.h	2014-09-25 13:08:32.626480350 +0200
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 21
++#define PATCHLEVEL 22
+ 
+ #endif /* _PATCHLEVEL_H_ */

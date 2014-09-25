@@ -1,0 +1,38 @@
+diff -ur a/lib/readline/display.c b/lib/readline/display.c
+--- a/lib/readline/display.c	2014-09-25 13:08:31.556480361 +0200
++++ b/lib/readline/display.c	2014-09-25 13:08:31.583147028 +0200
+@@ -1637,7 +1637,7 @@
+   /* If we are changing the number of invisible characters in a line, and
+      the spot of first difference is before the end of the invisible chars,
+      lendiff needs to be adjusted. */
+-  if (current_line == 0 && !_rl_horizontal_scroll_mode &&
++  if (current_line == 0 && /* !_rl_horizontal_scroll_mode && */
+       current_invis_chars != visible_wrap_offset)
+     {
+       if (MB_CUR_MAX > 1 && rl_byte_oriented == 0)
+@@ -1825,8 +1825,13 @@
+ 	      else
+ 		_rl_last_c_pos += bytes_to_insert;
+ 
++	      /* XXX - we only want to do this if we are at the end of the line
++		 so we move there with _rl_move_cursor_relative */
+ 	      if (_rl_horizontal_scroll_mode && ((oe-old) > (ne-new)))
+-		goto clear_rest_of_line;
++		{
++		  _rl_move_cursor_relative (ne-new, new);
++		  goto clear_rest_of_line;
++		}
+ 	    }
+ 	}
+       /* Otherwise, print over the existing material. */
+diff -ur a/patchlevel.h b/patchlevel.h
+--- a/patchlevel.h	2014-09-25 13:08:31.543147028 +0200
++++ b/patchlevel.h	2014-09-25 13:08:31.583147028 +0200
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 12
++#define PATCHLEVEL 13
+ 
+ #endif /* _PATCHLEVEL_H_ */
