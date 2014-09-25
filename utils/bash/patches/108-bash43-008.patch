@@ -1,0 +1,134 @@
+diff -ur a/lib/glob/glob.c b/lib/glob/glob.c
+--- a/lib/glob/glob.c	2014-09-25 13:08:30.976480369 +0200
++++ b/lib/glob/glob.c	2014-09-25 13:08:31.006480368 +0200
+@@ -179,42 +179,50 @@
+      char *pat, *dname;
+      int flags;
+ {
+-  char *pp, *pe, *t;
+-  int n, r;
++  char *pp, *pe, *t, *se;
++  int n, r, negate;
+ 
++  negate = *pat == '!';
+   pp = pat + 2;
+-  pe = pp + strlen (pp) - 1;	/*(*/
+-  if (*pe != ')')
+-    return 0;
+-  if ((t = strchr (pp, '|')) == 0)	/* easy case first */
++  se = pp + strlen (pp) - 1;		/* end of string */
++  pe = glob_patscan (pp, se, 0);	/* end of extglob pattern (( */
++  /* we should check for invalid extglob pattern here */
++  /* if pe != se we have more of the pattern at the end of the extglob
++     pattern. Check the easy case first ( */
++  if (pe == se && *pe == ')' && (t = strchr (pp, '|')) == 0)
+     {
+       *pe = '\0';
++#if defined (HANDLE_MULTIBYTE)
++      r = mbskipname (pp, dname, flags);
++#else
+       r = skipname (pp, dname, flags);	/*(*/
++#endif
+       *pe = ')';
+       return r;
+     }
++
++  /* check every subpattern */
+   while (t = glob_patscan (pp, pe, '|'))
+     {
+       n = t[-1];
+       t[-1] = '\0';
++#if defined (HANDLE_MULTIBYTE)
++      r = mbskipname (pp, dname, flags);
++#else
+       r = skipname (pp, dname, flags);
++#endif
+       t[-1] = n;
+       if (r == 0)	/* if any pattern says not skip, we don't skip */
+         return r;
+       pp = t;
+     }	/*(*/
+ 
+-  if (pp == pe)		/* glob_patscan might find end of pattern */
++  /* glob_patscan might find end of pattern */
++  if (pp == se)
+     return r;
+ 
+-  *pe = '\0';
+-#  if defined (HANDLE_MULTIBYTE)
+-  r = mbskipname (pp, dname, flags);	/*(*/
+-#  else
+-  r = skipname (pp, dname, flags);	/*(*/
+-#  endif
+-  *pe = ')';
+-  return r;
++  /* but if it doesn't then we didn't match a leading dot */
++  return 0;
+ }
+ #endif
+ 
+@@ -277,20 +285,23 @@
+      int flags;
+ {
+ #if EXTENDED_GLOB
+-  wchar_t *pp, *pe, *t, n;
+-  int r;
++  wchar_t *pp, *pe, *t, n, *se;
++  int r, negate;
+ 
++  negate = *pat == L'!';
+   pp = pat + 2;
+-  pe = pp + wcslen (pp) - 1;	/*(*/
+-  if (*pe != L')')
+-    return 0;
+-  if ((t = wcschr (pp, L'|')) == 0)
++  se = pp + wcslen (pp) - 1;	/*(*/
++  pe = glob_patscan_wc (pp, se, 0);
++
++  if (pe == se && *pe == ')' && (t = wcschr (pp, L'|')) == 0)
+     {
+       *pe = L'\0';
+       r = wchkname (pp, dname); /*(*/
+       *pe = L')';
+       return r;
+     }
++
++  /* check every subpattern */
+   while (t = glob_patscan_wc (pp, pe, '|'))
+     {
+       n = t[-1];
+@@ -305,10 +316,8 @@
+   if (pp == pe)		/* glob_patscan_wc might find end of pattern */
+     return r;
+ 
+-  *pe = L'\0';
+-  r = wchkname (pp, dname);	/*(*/
+-  *pe = L')';
+-  return r;
++  /* but if it doesn't then we didn't match a leading dot */
++  return 0;
+ #else
+   return (wchkname (pat, dname));
+ #endif
+diff -ur a/lib/glob/gmisc.c b/lib/glob/gmisc.c
+--- a/lib/glob/gmisc.c	2014-09-25 13:08:30.976480369 +0200
++++ b/lib/glob/gmisc.c	2014-09-25 13:08:31.006480368 +0200
+@@ -210,6 +210,7 @@
+     case '+':
+     case '!':
+     case '@':
++    case '?':
+       return (pat[1] == LPAREN);
+     default:
+       return 0;
+diff -ur a/patchlevel.h b/patchlevel.h
+--- a/patchlevel.h	2014-09-25 13:08:30.963147036 +0200
++++ b/patchlevel.h	2014-09-25 13:08:31.006480368 +0200
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 7
++#define PATCHLEVEL 8
+ 
+ #endif /* _PATCHLEVEL_H_ */

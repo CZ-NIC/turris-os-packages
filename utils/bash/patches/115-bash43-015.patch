@@ -1,0 +1,33 @@
+diff -ur a/bashline.c b/bashline.c
+--- a/bashline.c	2014-09-25 13:08:31.769813693 +0200
++++ b/bashline.c	2014-09-25 13:08:31.813147025 +0200
+@@ -4167,9 +4167,16 @@
+   int qc;
+ 
+   qc = rl_dispatching ? rl_completion_quote_character : 0;  
+-  dfn = bash_dequote_filename ((char *)text, qc);
++  /* If rl_completion_found_quote != 0, rl_completion_matches will call the
++     filename dequoting function, causing the directory name to be dequoted
++     twice. */
++  if (rl_dispatching && rl_completion_found_quote == 0)
++    dfn = bash_dequote_filename ((char *)text, qc);
++  else
++    dfn = (char *)text;
+   m1 = rl_completion_matches (dfn, rl_filename_completion_function);
+-  free (dfn);
++  if (dfn != text)
++    free (dfn);
+ 
+   if (m1 == 0 || m1[0] == 0)
+     return m1;
+diff -ur a/patchlevel.h b/patchlevel.h
+--- a/patchlevel.h	2014-09-25 13:08:31.769813693 +0200
++++ b/patchlevel.h	2014-09-25 13:08:31.813147025 +0200
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 14
++#define PATCHLEVEL 15
+ 
+ #endif /* _PATCHLEVEL_H_ */

@@ -1,0 +1,29 @@
+diff -ur a/patchlevel.h b/patchlevel.h
+--- a/patchlevel.h	2014-09-25 13:08:32.813147014 +0200
++++ b/patchlevel.h	2014-09-25 13:08:32.856480347 +0200
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 23
++#define PATCHLEVEL 24
+ 
+ #endif /* _PATCHLEVEL_H_ */
+diff -ur a/subst.c b/subst.c
+--- a/subst.c	2014-09-25 13:08:32.813147014 +0200
++++ b/subst.c	2014-09-25 13:08:32.856480347 +0200
+@@ -7374,7 +7374,13 @@
+     }
+ 
+   if (want_indir)
+-    tdesc = parameter_brace_expand_indir (name + 1, var_is_special, quoted, quoted_dollar_atp, contains_dollar_at);
++    {
++      tdesc = parameter_brace_expand_indir (name + 1, var_is_special, quoted, quoted_dollar_atp, contains_dollar_at);
++      /* Turn off the W_ARRAYIND flag because there is no way for this function
++	 to return the index we're supposed to be using. */
++      if (tdesc && tdesc->flags)
++	tdesc->flags &= ~W_ARRAYIND;
++    }
+   else
+     tdesc = parameter_brace_expand_word (name, var_is_special, quoted, PF_IGNUNBOUND|(pflags&(PF_NOSPLIT2|PF_ASSIGNRHS)), &ind);
+ 

@@ -1,0 +1,26 @@
+diff -ur a/arrayfunc.c b/arrayfunc.c
+--- a/arrayfunc.c	2014-09-25 13:08:30.849813703 +0200
++++ b/arrayfunc.c	2014-09-25 13:08:30.893147036 +0200
+@@ -597,6 +597,11 @@
+       if (assoc_p (var))
+ 	{
+ 	  val = expand_assignment_string_to_string (val, 0);
++	  if (val == 0)
++	    {
++	      val = (char *)xmalloc (1);
++	      val[0] = '\0';	/* like do_assignment_internal */
++	    }
+ 	  free_val = 1;
+ 	}
+ 
+diff -ur a/patchlevel.h b/patchlevel.h
+--- a/patchlevel.h	2014-09-25 13:08:30.849813703 +0200
++++ b/patchlevel.h	2014-09-25 13:08:30.893147036 +0200
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 6
++#define PATCHLEVEL 7
+ 
+ #endif /* _PATCHLEVEL_H_ */

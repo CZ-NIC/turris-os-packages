@@ -1,0 +1,64 @@
+diff -ur a/patchlevel.h b/patchlevel.h
+--- a/patchlevel.h	2014-09-25 13:08:32.696480348 +0200
++++ b/patchlevel.h	2014-09-25 13:08:32.743147015 +0200
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 22
++#define PATCHLEVEL 23
+ 
+ #endif /* _PATCHLEVEL_H_ */
+diff -ur a/subst.c b/subst.c
+--- a/subst.c	2014-09-25 13:08:32.699813682 +0200
++++ b/subst.c	2014-09-25 13:08:32.739813682 +0200
+@@ -1192,12 +1192,18 @@
+    Start extracting at (SINDEX) as if we had just seen "<(".
+    Make (SINDEX) get the position of the matching ")". */ /*))*/
+ char *
+-extract_process_subst (string, starter, sindex)
++extract_process_subst (string, starter, sindex, xflags)
+      char *string;
+      char *starter;
+      int *sindex;
++     int xflags;
+ {
++#if 0
+   return (extract_delimited_string (string, sindex, starter, "(", ")", SX_COMMAND));
++#else
++  xflags |= (no_longjmp_on_fatal_error ? SX_NOLONGJMP : 0);
++  return (xparse_dolparen (string, string+*sindex, sindex, xflags));
++#endif
+ }
+ #endif /* PROCESS_SUBSTITUTION */
+ 
+@@ -1785,7 +1791,7 @@
+ 	  si = i + 2;
+ 	  if (string[si] == '\0')
+ 	    CQ_RETURN(si);
+-	  temp = extract_process_subst (string, (c == '<') ? "<(" : ">(", &si);
++	  temp = extract_process_subst (string, (c == '<') ? "<(" : ">(", &si, 0);
+ 	  free (temp);		/* no SX_ALLOC here */
+ 	  i = si;
+ 	  if (string[i] == '\0')
+@@ -8249,7 +8255,7 @@
+ 	    else
+ 	      t_index = sindex + 1; /* skip past both '<' and LPAREN */
+ 
+-	    temp1 = extract_process_subst (string, (c == '<') ? "<(" : ">(", &t_index); /*))*/
++	    temp1 = extract_process_subst (string, (c == '<') ? "<(" : ">(", &t_index, 0); /*))*/
+ 	    sindex = t_index;
+ 
+ 	    /* If the process substitution specification is `<()', we want to
+diff -ur a/subst.h b/subst.h
+--- a/subst.h	2014-09-25 13:08:32.696480348 +0200
++++ b/subst.h	2014-09-25 13:08:32.739813682 +0200
+@@ -82,7 +82,7 @@
+ /* Extract the <( or >( construct in STRING, and return a new string.
+    Start extracting at (SINDEX) as if we had just seen "<(".
+    Make (SINDEX) get the position just after the matching ")". */
+-extern char *extract_process_subst __P((char *, char *, int *));
++extern char *extract_process_subst __P((char *, char *, int *, int));
+ #endif /* PROCESS_SUBSTITUTION */
+ 
+ /* Extract the name of the variable to bind to from the assignment string. */
