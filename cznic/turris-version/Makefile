@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=1.6
+PKG_VERSION:=1.7
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
@@ -27,12 +27,10 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Opravy pádů updateru a další drobné úpravy.
- • Ucollect - optimalizován systém aktualizace pravidel pluginu flows ze serveru.
- • U flows se zaznamenává, kdo započal komunikaci.
- • Ve firewallu se zaznamenávané a blokované adresy spravují již pouze pomocí ipsets.
- • Foris pro zrychlení odezvy udržuje persistentní připojení k backendu.
- • Notifier zasílá emaily kompletně s diakritikou."
+    create_notification -s news " • Drobné opravy v ucollect & ucollect-flow.
+ • Nový plugin ucollect-spoof na testování zasílání packetů s podvrženou zdrojovou adresou.
+ • Možnost nastavit, která pravidla firewallu se mají aplikovat a která ne, v /etc/config/firewall-turris.
+ • Přidán seznam balíčků 'majordomo'."
 }
 endef
 
