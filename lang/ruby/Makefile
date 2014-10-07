@@ -29,6 +29,9 @@ PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf
 
+GEM_LIST:=compass
+GEM_compass_VERSION:=1.0.1
+
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/nls.mk
@@ -452,6 +455,13 @@ define Build/InstallDev
 		. \
 	) | ( cd $(1); $(TAR) -xf - )
 endef
+
+define Host/Install
+	$(call Host/Install/Default)
+
+	$(foreach gem,$(GEM_LIST), $(STAGING_DIR_HOST)/bin/gem install $(gem) -v $(GEM_$(gem)_VERSION))
+endef
+
 
 $(eval $(call BuildPackage,ruby))
 $(eval $(call BuildPackage,libruby))
