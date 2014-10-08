@@ -27,7 +27,7 @@ endef
 
 define Package/ulogd
   $(call Package/ulogd/Default)
-  DEPENDS:=+libnfnetlink +libmnl +libnetfilter-log +libnetfilter-acct +libnetfilter-conntrack libpthread
+  DEPENDS:=+libnfnetlink +libmnl +libnetfilter-log +libnetfilter-acct +libnetfilter-conntrack +libpthread
   TITLE:=Netfilter userspace logging daemon
   MENU:=1
 endef
