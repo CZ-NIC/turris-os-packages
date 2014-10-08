@@ -137,8 +137,8 @@ MAKE_FLAGS:=\
 	CFLAGS="$(TARGET_CFLAGS) -DNDEBUG -fno-inline" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
 	LD="$(TARGET_CC)" \
-	HOSTPYTHON=$(HOST_PYTHON_BIN) \
-	HOSTPGEN=$(STAGING_DIR_HOST)/bin/pgen
+	HOSTPYTHON=./hostpython \
+	HOSTPGEN=./hostpgen
 
 ENABLE_IPV6:=
 ifeq ($(CONFIG_IPV6),y)
@@ -149,6 +149,10 @@ define Build/Configure
 	patch -p1 -d $(PKG_BUILD_DIR) < $(PATCH_DIR)/target/000*
 	-$(MAKE) -C $(PKG_BUILD_DIR) distclean
 	(cd $(PKG_BUILD_DIR); autoreconf --force --install || exit 0)
+	# The python executable needs to stay in the rootdir since its location will
+	# be used to compute the path of the config files.
+	$(CP) $(STAGING_DIR_HOST)/bin/pgen $(PKG_BUILD_DIR)/hostpgen
+	$(CP) $(STAGING_DIR_HOST)/bin/python$(PYTHON_VERSION) $(PKG_BUILD_DIR)/hostpython
 	$(call Build/Configure/Default, \
 		--sysconfdir=/etc \
 		--disable-shared \
@@ -181,6 +185,13 @@ define Build/InstallDev
 	$(CP) \
 		$(PKG_INSTALL_DIR)/usr/lib/python$(PYTHON_VERSION)/config \
 		$(1)/usr/lib/python$(PYTHON_VERSION)/
+
+	$(CP) \
+		$(STAGING_DIR_HOST)/bin/python$(PYTHON_VERSION) \
+		$(1)/usr/bin/hostpython
+	(cd $(2)/bin; \
+	ln -sf ../../usr/bin/hostpython python$(PYTHON_VERSION); \
+	ln -sf python$(PYTHON_VERSION) python)
 
 	$(CP) \
 		$(STAGING_DIR_HOST)/bin/python$(PYTHON_VERSION)-config \

@@ -30,7 +30,7 @@ define HostPython
 		export PYTHONOPTIMIZE=""; \
 		export PYTHONDONTWRITEBYTECODE=1; \
 		$(1) \
-		$(HOST_PYTHON_BIN) $(2); \
+		$(3) $(2); \
 	)
 endef
 
@@ -80,7 +80,8 @@ define Build/Compile/PyMod
 		LDSHARED="$(TARGET_CC) -shared" \
 		$(3) \
 		, \
-		./setup.py $(2) \
+		./setup.py $(2), \
+		$(STAGING_DIR)/usr/bin/hostpython \
 	)
 	find $(PKG_INSTALL_DIR) -name "*\.pyc" -o -name "*\.pyo" | xargs rm -f
 endef
@@ -94,7 +95,8 @@ define Build/Compile/Host/PyMod
 		LDFLAGS="$(HOST_LDFLAGS)" \
 		$(3) \
 		, \
-		./setup.py $(2) \
+		./setup.py $(2), \
+		$(HOST_PYTHON_BIN) \
 	)
 endef
 
