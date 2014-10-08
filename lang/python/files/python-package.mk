@@ -12,14 +12,21 @@ PYTHON_BIN_DIR:=$(PYTHON_DIR)/bin
 PYTHON_INC_DIR:=$(PYTHON_DIR)/include/python$(PYTHON_VERSION)
 PYTHON_LIB_DIR:=$(PYTHON_DIR)/lib/python$(PYTHON_VERSION)
 
+HOST_PYTHON_DIR:=$(STAGING_DIR_HOST)
+HOST_PYTHON_BIN_DIR:=$(HOST_PYTHON_DIR)/bin
+HOST_PYTHON_INC_DIR:=$(HOST_PYTHON_DIR)/include/python$(PYTHON_VERSION)
+HOST_PYTHON_LIB_DIR:=$(HOST_PYTHON_DIR)/lib/python$(PYTHON_VERSION)
+
 PYTHON_PKG_DIR:=/usr/lib/python$(PYTHON_VERSION)/site-packages
 
 PYTHON:=python$(PYTHON_VERSION)
 
-HOST_PYTHON_BIN:=$(STAGING_DIR)/usr/bin/hostpython
+HOST_PYTHON_BIN:=$(HOST_PYTHON_BIN_DIR)/$(PYTHON)
+
+HOST_PYTHONPATH:=$(PYTHON_LIB_DIR):$(STAGING_DIR)/$(PYTHON_PKG_DIR)
 
 define HostPython
-	(	export PYTHONPATH="$(PYTHON_LIB_DIR):$(STAGING_DIR)/$(PYTHON_PKG_DIR)"; \
+	(	export PYTHONPATH="$(HOST_PYTHONPATH)"; \
 		export PYTHONOPTIMIZE=""; \
 		export PYTHONDONTWRITEBYTECODE=1; \
 		$(1) \
@@ -77,3 +84,17 @@ define Build/Compile/PyMod
 	)
 	find $(PKG_INSTALL_DIR) -name "*\.pyc" -o -name "*\.pyo" | xargs rm -f
 endef
+
+define Build/Compile/Host/PyMod
+	$(call HostPython, \
+		cd $(HOST_BUILD_DIR)/$(strip $(1)); \
+		CC="$(HOSTCC)" \
+		CFLAGS="$(HOST_CFLAGS)" \
+		CPPFLAGS="$(HOST_CPPFLAGS)" \
+		LDFLAGS="$(HOST_LDFLAGS)" \
+		$(3) \
+		, \
+		./setup.py $(2) \
+	)
+endef
+
