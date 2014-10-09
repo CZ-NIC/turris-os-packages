@@ -66,6 +66,7 @@ init_unbound() {
 
     #Server Section
     add_section server
+    echo '	chroot: ""' >> "$CONFIGFILE"
     set_parameter verbosity verbosity 1
     set_multiple_parameters interface interface
     set_parameter port port 53
