@@ -16,7 +16,7 @@ PKG_SOURCE_URL:=https://pypi.python.org/packages/source/p/ply/
 PKG_MD5SUM:=ffdc95858819347bf92d7c2acc074894
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python
+HOST_BUILD_DEPENDS:=python/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
