@@ -15,14 +15,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ruby
-PKG_VERSION:=1.9.3-p484
+PKG_VERSION:=1.9.3-p547
 PKG_RELEASE:=1
 
 PKG_LIBVER:=1.9
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://cache.ruby-lang.org/pub/ruby/$(PKG_LIBVER)/
-PKG_MD5SUM:=8ac0dee72fe12d75c8b2d0ef5d0c2968
+PKG_MD5SUM:=7531f9b1b35b16f3eb3d7bea786babfd
 
 PKG_BUILD_DEPENDS:=ruby/host
 PKG_INSTALL:=1
@@ -459,9 +459,13 @@ endef
 define Host/Install
 	$(call Host/Install/Default)
 
-	$(foreach gem,$(GEM_LIST), $(STAGING_DIR_HOST)/bin/gem install $(gem) -v $(GEM_$(gem)_VERSION))
+	$(foreach gem,$(GEM_LIST),$(STAGING_DIR_HOST)/bin/gem install $(gem) -v $(GEM_$(gem)_VERSION))
 endef
 
+define Host/Clean
+	$(RM) -rf $(STAGING_DIR_HOST)/lib/ruby
+	$(RM) -rf $(STAGING_DIR_HOST)/share/ri
+endef
 
 $(eval $(call BuildPackage,ruby))
 $(eval $(call BuildPackage,libruby))
