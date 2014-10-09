@@ -16,7 +16,7 @@ PKG_SOURCE_URL:=https://pypi.python.org/packages/source/s/slimit/
 PKG_MD5SUM:=5f5f86e98940a1e71a6a30d501e0d733
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python python-ply/host
+HOST_BUILD_DEPENDS:=python/host python-ply/host
 
 
 include $(INCLUDE_DIR)/package.mk
