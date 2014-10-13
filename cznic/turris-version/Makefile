@@ -30,8 +30,9 @@ define Package/$(PKG_NAME)/postinst
     create_notification -s news " • Drobné opravy v ucollect & ucollect-flow.
  • Nový plugin ucollect-spoof na testování zasílání packetů s podvrženou zdrojovou adresou.
  • Nový plugin ucollect-refused na sledování odchozích odmítnutých spojení.
- • Možnost nastavit, která pravidla firewallu se mají aplikovat a která ne, v /etc/config/firewall-turris.
+ • Možnost v /etc/config/firewall-turris nastavit, která pravidla firewallu se mají aplikovat a která ne.
  • Přidán seznam balíčků 'majordomo'.
+ • Opravena chyba ve forisu, ke které mohlo docházet při současném přístupu více uživatelů.
  • Python aktualizován na 2.7.8."
 }
 endef
