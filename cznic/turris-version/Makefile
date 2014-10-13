@@ -29,8 +29,10 @@ define Package/$(PKG_NAME)/postinst
 [ -n "$$IPKG_INSTROOT" ] || {
     create_notification -s news " • Drobné opravy v ucollect & ucollect-flow.
  • Nový plugin ucollect-spoof na testování zasílání packetů s podvrženou zdrojovou adresou.
+ • Nový plugin ucollect-refused na sledování odchozích odmítnutých spojení.
  • Možnost nastavit, která pravidla firewallu se mají aplikovat a která ne, v /etc/config/firewall-turris.
- • Přidán seznam balíčků 'majordomo'."
+ • Přidán seznam balíčků 'majordomo'.
+ • Python aktualizován na 2.7.8."
 }
 endef
 
