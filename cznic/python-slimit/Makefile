@@ -52,10 +52,6 @@ define Host/Install
 endef
 
 define Package/python-slimit/install
-	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)
-	$(INSTALL_DATA) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
-		$(1)$(PYTHON_PKG_DIR)
 endef
 
 $(eval $(call BuildPackage,python-slimit))
