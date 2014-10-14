@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2011 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,13 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=screen
-PKG_VERSION:=4.0.3
-PKG_RELEASE:=3
+PKG_VERSION:=4.2.1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=ftp://ftp.uni-erlangen.de/pub/utilities/screen \
-	@GNU/screen
-PKG_MD5SUM:=8506fd205028a96c741e4037de6e3c42
+PKG_SOURCE_URL:=@GNU/screen
+PKG_MD5SUM:=419a0594e2b25039239af8b90eda7d92
+
+PKG_LICENSE:=GPL-3.0+
+PKG_LICENSE_FILES:=
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -24,6 +26,7 @@ define Package/screen
   DEPENDS:=+libncurses
   TITLE:=Full-screen terminal window manager
   URL:=http://www.gnu.org/software/screen/
+  MAINTAINER:=Etienne CHAMPETIER <champetier.etienne@gmail.com>
 endef
 
 define Package/screen/description
@@ -33,9 +36,10 @@ endef
 
 define Build/Configure
 	$(call Build/Configure/Default,\
-		--with-sys-screenrc=/etc/screenrc,\
-		LIBS="-lcrypt" \
+		--with-sys-screenrc=/etc/screenrc \
 	)
+	# XXX: memmove() works well with overlapped memory areas
+	echo "#define USEMEMMOVE 1" >>$(PKG_BUILD_DIR)/config.h
 endef
 
 define Package/screen/install
