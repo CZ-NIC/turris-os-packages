@@ -1,7 +1,41 @@
-diff -ur a/externs.h b/externs.h
---- a/externs.h	2014-09-25 13:08:31.193147033 +0200
-+++ b/externs.h	2014-09-25 13:08:31.236480365 +0200
-@@ -324,6 +324,7 @@
+			     BASH PATCH REPORT
+			     =================
+
+Bash-Release:	4.3
+Patch-ID:	bash43-010
+
+Bug-Reported-by:	Albert Shih <Albert.Shih@obspm.fr>
+Bug-Reference-ID:	Wed, 5 Mar 2014 23:01:40 +0100
+Bug-Reference-URL:	http://lists.gnu.org/archive/html/bug-bash/2014-03/msg00028.html
+
+Bug-Description:
+
+Patch (apply with `patch -p0'):
+
+This patch changes the behavior of programmable completion to compensate
+for two assumptions made by the bash-completion package.  Bash-4.3 changed
+to dequote the argument to programmable completion only under certain
+circumstances, to make the behavior of compgen more consistent when run
+from the command line -- closer to the behavior when run by a shell function
+run as part of programmable completion.  Bash-completion can pass quoted
+arguments to compgen when the original word to be completed was not quoted,
+expecting programmable completion to dequote the word before attempting
+completion.
+
+This patch fixes two cases:
+
+1.  An empty string that bash-completion passes to compgen as a quoted null
+    string ('').
+
+2.  An unquoted word that bash-completion quotes using single quotes or
+    backslashes before passing it to compgen.
+
+In these cases, since readline did not detect a quote character in the original
+word to be completed, bash-4.3 
+
+--- a/externs.h
++++ b/externs.h
+@@ -324,6 +324,7 @@ extern char *sh_un_double_quote __P((cha
  extern char *sh_backslash_quote __P((char *, const char *, int));
  extern char *sh_backslash_quote_for_double_quotes __P((char *));
  extern int sh_contains_shell_metas __P((char *));
@@ -9,10 +43,9 @@ diff -ur a/externs.h b/externs.h
  
  /* declarations for functions defined in lib/sh/spell.c */
  extern int spname __P((char *, char *));
-diff -ur a/lib/sh/shquote.c b/lib/sh/shquote.c
---- a/lib/sh/shquote.c	2014-09-25 13:08:31.213147032 +0200
-+++ b/lib/sh/shquote.c	2014-09-25 13:08:31.236480365 +0200
-@@ -311,3 +311,17 @@
+--- a/lib/sh/shquote.c
++++ b/lib/sh/shquote.c
+@@ -311,3 +311,17 @@ sh_contains_shell_metas (string)
  
    return (0);
  }
@@ -30,21 +63,9 @@ diff -ur a/lib/sh/shquote.c b/lib/sh/shquote.c
 +    }
 +  return 0;
 +}
-diff -ur a/patchlevel.h b/patchlevel.h
---- a/patchlevel.h	2014-09-25 13:08:31.193147033 +0200
-+++ b/patchlevel.h	2014-09-25 13:08:31.239813699 +0200
-@@ -25,6 +25,6 @@
-    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
-    looks for to find the patch level (for the sccs version string). */
- 
--#define PATCHLEVEL 9
-+#define PATCHLEVEL 10
- 
- #endif /* _PATCHLEVEL_H_ */
-diff -ur a/pcomplete.c b/pcomplete.c
---- a/pcomplete.c	2014-09-25 13:08:31.193147033 +0200
-+++ b/pcomplete.c	2014-09-25 13:08:31.239813699 +0200
-@@ -183,6 +183,7 @@
+--- a/pcomplete.c
++++ b/pcomplete.c
+@@ -183,6 +183,7 @@ ITEMLIST it_variables = { LIST_DYNAMIC,
  
  COMPSPEC *pcomp_curcs;
  const char *pcomp_curcmd;
@@ -52,7 +73,7 @@ diff -ur a/pcomplete.c b/pcomplete.c
  
  #ifdef DEBUG
  /* Debugging code */
-@@ -753,6 +754,32 @@
+@@ -753,6 +754,32 @@ pcomp_filename_completion_function (text
  	     quoted strings. */
  	  dfn = (*rl_filename_dequoting_function) ((char *)text, rl_completion_quote_character);
  	}
@@ -85,7 +106,7 @@ diff -ur a/pcomplete.c b/pcomplete.c
        else
  	dfn = savestring (text);
      }
-@@ -1522,7 +1549,7 @@
+@@ -1522,7 +1549,7 @@ gen_progcomp_completions (ocmd, cmd, wor
       COMPSPEC **lastcs;
  {
    COMPSPEC *cs, *oldcs;
@@ -94,7 +115,7 @@ diff -ur a/pcomplete.c b/pcomplete.c
    STRINGLIST *ret;
  
    cs = progcomp_search (ocmd);
-@@ -1545,14 +1572,17 @@
+@@ -1545,14 +1572,17 @@ gen_progcomp_completions (ocmd, cmd, wor
  
    oldcs = pcomp_curcs;
    oldcmd = pcomp_curcmd;
@@ -112,3 +133,13 @@ diff -ur a/pcomplete.c b/pcomplete.c
  
    /* We need to conditionally handle setting *retryp here */
    if (retryp)
+--- a/patchlevel.h
++++ b/patchlevel.h
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 9
++#define PATCHLEVEL 10
+ 
+ #endif /* _PATCHLEVEL_H_ */

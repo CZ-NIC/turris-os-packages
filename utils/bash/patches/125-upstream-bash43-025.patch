@@ -1,6 +1,22 @@
-diff -ur a/builtins/common.h b/builtins/common.h
---- a/builtins/common.h	2014-09-25 13:08:32.929813680 +0200
-+++ b/builtins/common.h	2014-09-25 13:08:32.969813679 +0200
+			     BASH PATCH REPORT
+			     =================
+
+Bash-Release:	4.3
+Patch-ID:	bash43-025
+
+Bug-Reported-by:	Stephane Chazelas <stephane.chazelas@gmail.com>
+Bug-Reference-ID:
+Bug-Reference-URL:
+
+Bug-Description:
+
+Under certain circumstances, bash will execute user code while processing the
+environment for exported function definitions.
+
+Patch (apply with `patch -p0'):
+
+--- a/builtins/common.h
++++ b/builtins/common.h
 @@ -33,6 +33,8 @@
  #define SEVAL_RESETLINE	0x010
  #define SEVAL_PARSEONLY	0x020
@@ -10,10 +26,9 @@ diff -ur a/builtins/common.h b/builtins/common.h
  
  /* Flags for describe_command, shared between type.def and command.def */
  #define CDESC_ALL		0x001	/* type -a */
-diff -ur a/builtins/evalstring.c b/builtins/evalstring.c
---- a/builtins/evalstring.c	2014-09-25 13:08:32.929813680 +0200
-+++ b/builtins/evalstring.c	2014-09-25 13:08:32.969813679 +0200
-@@ -308,6 +308,14 @@
+--- a/builtins/evalstring.c
++++ b/builtins/evalstring.c
+@@ -308,6 +308,14 @@ parse_and_execute (string, from_file, fl
  	    {
  	      struct fd_bitmap *bitmap;
  
@@ -28,7 +43,7 @@ diff -ur a/builtins/evalstring.c b/builtins/evalstring.c
  	      bitmap = new_fd_bitmap (FD_BITMAP_SIZE);
  	      begin_unwind_frame ("pe_dispose");
  	      add_unwind_protect (dispose_fd_bitmap, bitmap);
-@@ -368,6 +376,9 @@
+@@ -368,6 +376,9 @@ parse_and_execute (string, from_file, fl
  	      dispose_command (command);
  	      dispose_fd_bitmap (bitmap);
  	      discard_unwind_frame ("pe_dispose");
@@ -38,35 +53,9 @@ diff -ur a/builtins/evalstring.c b/builtins/evalstring.c
  	    }
  	}
        else
-diff -ur a/patchlevel.h b/patchlevel.h
---- a/patchlevel.h	2014-09-25 13:08:32.926480346 +0200
-+++ b/patchlevel.h	2014-09-25 13:08:32.973147012 +0200
-@@ -25,6 +25,6 @@
-    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
-    looks for to find the patch level (for the sccs version string). */
- 
--#define PATCHLEVEL 24
-+#define PATCHLEVEL 25
- 
- #endif /* _PATCHLEVEL_H_ */
-diff -ur a/subst.c b/subst.c
---- a/subst.c	2014-09-25 13:08:32.929813680 +0200
-+++ b/subst.c	2014-09-25 13:08:32.973147012 +0200
-@@ -8047,7 +8047,9 @@
- 
- 	  goto return0;
- 	}
--      else if (var = find_variable_last_nameref (temp1))
-+      else if (var && (invisible_p (var) || var_isset (var) == 0))
-+	temp = (char *)NULL;
-+      else if ((var = find_variable_last_nameref (temp1)) && var_isset (var) && invisible_p (var) == 0)
- 	{
- 	  temp = nameref_cell (var);
- #if defined (ARRAY_VARS)
-diff -ur a/variables.c b/variables.c
---- a/variables.c	2014-09-25 13:08:32.926480346 +0200
-+++ b/variables.c	2014-09-25 13:08:32.969813679 +0200
-@@ -358,13 +358,11 @@
+--- a/variables.c
++++ b/variables.c
+@@ -358,13 +358,11 @@ initialize_shell_variables (env, privmod
  	  temp_string[char_index] = ' ';
  	  strcpy (temp_string + char_index + 1, string);
  
@@ -85,7 +74,7 @@ diff -ur a/variables.c b/variables.c
  
  	  if (temp_var = find_function (name))
  	    {
-@@ -381,10 +379,6 @@
+@@ -381,10 +379,6 @@ initialize_shell_variables (env, privmod
  	      last_command_exit_value = 1;
  	      report_error (_("error importing function definition for `%s'"), name);
  	    }
@@ -96,3 +85,26 @@ diff -ur a/variables.c b/variables.c
  	}
  #if defined (ARRAY_VARS)
  #  if ARRAY_EXPORT
+--- a/subst.c
++++ b/subst.c
+@@ -8047,7 +8047,9 @@ comsub:
+ 
+ 	  goto return0;
+ 	}
+-      else if (var = find_variable_last_nameref (temp1))
++      else if (var && (invisible_p (var) || var_isset (var) == 0))
++	temp = (char *)NULL;
++      else if ((var = find_variable_last_nameref (temp1)) && var_isset (var) && invisible_p (var) == 0)
+ 	{
+ 	  temp = nameref_cell (var);
+ #if defined (ARRAY_VARS)
+--- a/patchlevel.h
++++ b/patchlevel.h
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 24
++#define PATCHLEVEL 25
+ 
+ #endif /* _PATCHLEVEL_H_ */

@@ -1,7 +1,23 @@
-diff -ur a/lib/readline/readline.c b/lib/readline/readline.c
---- a/lib/readline/readline.c	2014-09-25 13:08:30.526480374 +0200
-+++ b/lib/readline/readline.c	2014-09-25 13:08:30.549813707 +0200
-@@ -965,7 +965,7 @@
+			     BASH PATCH REPORT
+			     =================
+
+Bash-Release:	4.3
+Patch-ID:	bash43-004
+
+Bug-Reported-by:	Daan van Rossum <daan@flash.uchicago.edu>
+Bug-Reference-ID:	<20140307072523.GA14250@flash.uchicago.edu>
+Bug-Reference-URL:	
+
+Bug-Description:
+
+The `.' command in vi mode cannot undo multi-key commands beginning with
+`c', `d', and `y' (command plus motion specifier).
+
+Patch (apply with `patch -p0'):
+
+--- a/lib/readline/readline.c
++++ b/lib/readline/readline.c
+@@ -965,7 +965,7 @@ _rl_dispatch_subseq (key, map, got_subse
  #if defined (VI_MODE)
    if (rl_editing_mode == vi_mode && _rl_keymap == vi_movement_keymap &&
        key != ANYOTHERKEY &&
@@ -10,10 +26,8 @@ diff -ur a/lib/readline/readline.c b/lib/readline/readline.c
        _rl_vi_textmod_command (key))
      _rl_vi_set_last (key, rl_numeric_arg, rl_arg_sign);
  #endif
-Only in b/lib/readline: readline.c.orig
-diff -ur a/patchlevel.h b/patchlevel.h
---- a/patchlevel.h	2014-09-25 13:08:30.509813706 +0200
-+++ b/patchlevel.h	2014-09-25 13:08:30.549813707 +0200
+--- a/patchlevel.h
++++ b/patchlevel.h
 @@ -25,6 +25,6 @@
     regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
     looks for to find the patch level (for the sccs version string). */

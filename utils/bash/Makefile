@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2007-2012 OpenWrt.org
+# Copyright (C) 2007-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -7,14 +7,22 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=bash
-PKG_VERSION:=4.3
-PKG_RELEASE:=2
+BASE_VERSION:=4.3
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_NAME:=bash
+PKG_VERSION:=$(BASE_VERSION).30
+PKG_RELEASE:=3
+
+PKG_SOURCE:=$(PKG_NAME)-$(BASE_VERSION).tar.gz
 PKG_SOURCE_URL:=@GNU/bash
 PKG_MD5SUM:=81348932d5da294953e15d4814c74dd1
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BASE_VERSION)
 
+PKG_LICENSE:=GPL-3.0+
+PKG_LICENSE_FILES:=COPYING
+PKG_MAINTAINER:=Marcel Denia <naoir@gmx.net>
+
+PKG_CHECK_FORMAT_SECURITY:=0
 include $(INCLUDE_DIR)/package.mk
 
 define Package/bash
@@ -26,9 +34,9 @@ define Package/bash
 endef
 
 define Package/bash/description
-	Bash is an sh-compatible command language interpreter that executes 
-	commands read from the standard input or from a file. Bash also 
-	incorporates useful features from the Korn and C shells (ksh and csh).
+  Bash is an sh-compatible command language interpreter that executes
+  commands read from the standard input or from a file. Bash also
+  incorporates useful features from the Korn and C shells (ksh and csh).
 endef
 
 
@@ -61,5 +69,5 @@ define Package/bash/install
 	ln -sf bash $(1)/bin/rbash
 endef
 
-$(eval $(call BuildPackage,bash))
 
+$(eval $(call BuildPackage,bash))

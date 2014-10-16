@@ -1,7 +1,24 @@
-diff -ur a/parse.y b/parse.y
---- a/parse.y	2014-09-25 13:08:30.619813705 +0200
-+++ b/parse.y	2014-09-25 13:08:30.663147038 +0200
-@@ -3398,7 +3398,7 @@
+			     BASH PATCH REPORT
+			     =================
+
+Bash-Release:	4.3
+Patch-ID:	bash43-005
+
+Bug-Reported-by:	David Sines <dave.gma@googlemail.com>
+Bug-Reference-ID:	<CAO3BAa_CK_Rgkhdfzs+NJ4KFYdB9qW3pvXQK0xLCi6GMmDU8bw@mail.gmail.com>
+Bug-Reference-URL:	http://lists.gnu.org/archive/html/bug-bash/2014-03/msg00037.html
+
+Bug-Description:
+
+When in Posix mode, bash did not correctly interpret the ANSI-C-style
+$'...' quoting mechanism when performing pattern substitution word
+expansions within double quotes.
+
+Patch (apply with `patch -p0'):
+
+--- a/parse.y
++++ b/parse.y
+@@ -3398,7 +3398,7 @@ parse_matched_pair (qc, open, close, len
           within a double-quoted ${...} construct "an even number of
           unescaped double-quotes or single-quotes, if any, shall occur." */
        /* This was changed in Austin Group Interp 221 */
@@ -10,9 +27,19 @@ diff -ur a/parse.y b/parse.y
  	continue;
  
        /* Could also check open == '`' if we want to parse grouping constructs
-diff -ur a/patchlevel.h b/patchlevel.h
---- a/patchlevel.h	2014-09-25 13:08:30.623147039 +0200
-+++ b/patchlevel.h	2014-09-25 13:08:30.666480372 +0200
+--- a/y.tab.c
++++ b/y.tab.c
+@@ -5710,7 +5710,7 @@ parse_matched_pair (qc, open, close, len
+          within a double-quoted ${...} construct "an even number of
+          unescaped double-quotes or single-quotes, if any, shall occur." */
+       /* This was changed in Austin Group Interp 221 */
+-      if MBTEST(posixly_correct && shell_compatibility_level > 41 && dolbrace_state != DOLBRACE_QUOTE && (flags & P_DQUOTE) && (flags & P_DOLBRACE) && ch == '\'')
++      if MBTEST(posixly_correct && shell_compatibility_level > 41 && dolbrace_state != DOLBRACE_QUOTE && dolbrace_state != DOLBRACE_QUOTE2 && (flags & P_DQUOTE) && (flags & P_DOLBRACE) && ch == '\'')
+ 	continue;
+ 
+       /* Could also check open == '`' if we want to parse grouping constructs
+--- a/patchlevel.h
++++ b/patchlevel.h
 @@ -25,6 +25,6 @@
     regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
     looks for to find the patch level (for the sccs version string). */
@@ -21,15 +48,3 @@ diff -ur a/patchlevel.h b/patchlevel.h
 +#define PATCHLEVEL 5
  
  #endif /* _PATCHLEVEL_H_ */
-diff -ur a/y.tab.c b/y.tab.c
---- a/y.tab.c	2014-09-25 13:08:30.623147039 +0200
-+++ b/y.tab.c	2014-09-25 13:08:30.666480372 +0200
-@@ -5710,7 +5710,7 @@
-          within a double-quoted ${...} construct "an even number of
-          unescaped double-quotes or single-quotes, if any, shall occur." */
-       /* This was changed in Austin Group Interp 221 */
--      if MBTEST(posixly_correct && shell_compatibility_level > 41 && dolbrace_state != DOLBRACE_QUOTE && (flags & P_DQUOTE) && (flags & P_DOLBRACE) && ch == '\'')
-+      if MBTEST(posixly_correct && shell_compatibility_level > 41 && dolbrace_state != DOLBRACE_QUOTE && dolbrace_state != DOLBRACE_QUOTE2 && (flags & P_DQUOTE) && (flags & P_DOLBRACE) && ch == '\'')
- 	continue;
- 
-       /* Could also check open == '`' if we want to parse grouping constructs

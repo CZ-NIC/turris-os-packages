@@ -1,7 +1,33 @@
-diff -ur a/lib/glob/glob.c b/lib/glob/glob.c
---- a/lib/glob/glob.c	2014-09-25 13:08:30.976480369 +0200
-+++ b/lib/glob/glob.c	2014-09-25 13:08:31.006480368 +0200
-@@ -179,42 +179,50 @@
+			     BASH PATCH REPORT
+			     =================
+
+Bash-Release:	4.3
+Patch-ID:	bash43-008
+
+Bug-Reported-by:	Stephane Chazelas <stephane.chazelas@gmail.com>
+Bug-Reference-ID:	<20140318135901.GB22158@chaz.gmail.com>
+Bug-Reference-URL:	http://lists.gnu.org/archive/html/bug-bash/2014-03/msg00098.html
+
+Bug-Description:
+
+Some extended glob patterns incorrectly matched filenames with a leading
+dot, regardless of the setting of the `dotglob' option.
+
+Patch (apply with `patch -p0'):
+
+--- a/lib/glob/gmisc.c
++++ b/lib/glob/gmisc.c
+@@ -210,6 +210,7 @@ extglob_pattern_p (pat)
+     case '+':
+     case '!':
+     case '@':
++    case '?':
+       return (pat[1] == LPAREN);
+     default:
+       return 0;
+--- a/lib/glob/glob.c
++++ b/lib/glob/glob.c
+@@ -179,42 +179,50 @@ extglob_skipname (pat, dname, flags)
       char *pat, *dname;
       int flags;
  {
@@ -67,7 +93,7 @@ diff -ur a/lib/glob/glob.c b/lib/glob/glob.c
  }
  #endif
  
-@@ -277,20 +285,23 @@
+@@ -277,20 +285,23 @@ wextglob_skipname (pat, dname, flags)
       int flags;
  {
  #if EXTENDED_GLOB
@@ -97,7 +123,7 @@ diff -ur a/lib/glob/glob.c b/lib/glob/glob.c
    while (t = glob_patscan_wc (pp, pe, '|'))
      {
        n = t[-1];
-@@ -305,10 +316,8 @@
+@@ -305,10 +316,8 @@ wextglob_skipname (pat, dname, flags)
    if (pp == pe)		/* glob_patscan_wc might find end of pattern */
      return r;
  
@@ -110,20 +136,8 @@ diff -ur a/lib/glob/glob.c b/lib/glob/glob.c
  #else
    return (wchkname (pat, dname));
  #endif
-diff -ur a/lib/glob/gmisc.c b/lib/glob/gmisc.c
---- a/lib/glob/gmisc.c	2014-09-25 13:08:30.976480369 +0200
-+++ b/lib/glob/gmisc.c	2014-09-25 13:08:31.006480368 +0200
-@@ -210,6 +210,7 @@
-     case '+':
-     case '!':
-     case '@':
-+    case '?':
-       return (pat[1] == LPAREN);
-     default:
-       return 0;
-diff -ur a/patchlevel.h b/patchlevel.h
---- a/patchlevel.h	2014-09-25 13:08:30.963147036 +0200
-+++ b/patchlevel.h	2014-09-25 13:08:31.006480368 +0200
+--- a/patchlevel.h
++++ b/patchlevel.h
 @@ -25,6 +25,6 @@
     regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
     looks for to find the patch level (for the sccs version string). */

@@ -1,7 +1,23 @@
-diff -ur a/bashline.c b/bashline.c
---- a/bashline.c	2014-09-25 13:08:31.769813693 +0200
-+++ b/bashline.c	2014-09-25 13:08:31.813147025 +0200
-@@ -4167,9 +4167,16 @@
+			     BASH PATCH REPORT
+			     =================
+
+Bash-Release:	4.3
+Patch-ID:	bash43-015
+
+Bug-Reported-by:	Clark Wang <dearvoid@gmail.com>
+Bug-Reference-ID:	<CADv8-og2TOSoabXeNVXVGaXN3tEMHnYVq1rwOLe5meaRPSGRig@mail.gmail.com>
+Bug-Reference-URL:	http://lists.gnu.org/archive/html/bug-bash/2014-04/msg00095.html
+
+Bug-Description:
+
+When completing directory names, the directory name is dequoted twice.
+This causes problems for directories with single and double quotes in
+their names.
+
+Patch (apply with `patch -p0'):
+--- a/bashline.c
++++ b/bashline.c
+@@ -4167,9 +4167,16 @@ bash_directory_completion_matches (text)
    int qc;
  
    qc = rl_dispatching ? rl_completion_quote_character : 0;  
@@ -20,9 +36,8 @@ diff -ur a/bashline.c b/bashline.c
  
    if (m1 == 0 || m1[0] == 0)
      return m1;
-diff -ur a/patchlevel.h b/patchlevel.h
---- a/patchlevel.h	2014-09-25 13:08:31.769813693 +0200
-+++ b/patchlevel.h	2014-09-25 13:08:31.813147025 +0200
+--- a/patchlevel.h
++++ b/patchlevel.h
 @@ -25,6 +25,6 @@
     regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
     looks for to find the patch level (for the sccs version string). */

@@ -1,18 +1,22 @@
-diff -ur a/patchlevel.h b/patchlevel.h
---- a/patchlevel.h	2014-09-25 13:08:31.656480361 +0200
-+++ b/patchlevel.h	2014-09-25 13:08:31.699813693 +0200
-@@ -25,6 +25,6 @@
-    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
-    looks for to find the patch level (for the sccs version string). */
- 
--#define PATCHLEVEL 13
-+#define PATCHLEVEL 14
- 
- #endif /* _PATCHLEVEL_H_ */
-diff -ur a/subst.c b/subst.c
---- a/subst.c	2014-09-25 13:08:31.653147028 +0200
-+++ b/subst.c	2014-09-25 13:08:31.696480360 +0200
-@@ -3248,8 +3248,10 @@
+			     BASH PATCH REPORT
+			     =================
+
+Bash-Release:	4.3
+Patch-ID:	bash43-014
+
+Bug-Reported-by:	Greg Wooledge <wooledg@eeg.ccf.org>
+Bug-Reference-ID:	<20140418202123.GB7660@eeg.ccf.org>
+Bug-Reference-URL:	http://lists.gnu.org/archive/html/help-bash/2014-04/msg00004.html
+
+Bug-Description:
+
+Under certain circumstances, $@ is expanded incorrectly in contexts where
+word splitting is not performed.
+
+Patch (apply with `patch -p0'):
+--- a/subst.c
++++ b/subst.c
+@@ -3248,8 +3248,10 @@ cond_expand_word (w, special)
    if (w->word == 0 || w->word[0] == '\0')
      return ((char *)NULL);
  
@@ -23,7 +27,7 @@ diff -ur a/subst.c b/subst.c
    if (l)
      {
        if (special == 0)			/* LHS */
-@@ -7847,6 +7849,10 @@
+@@ -7847,6 +7849,10 @@ param_expand (string, sindex, quoted, ex
  	 We also want to make sure that splitting is done no matter what --
  	 according to POSIX.2, this expands to a list of the positional
  	 parameters no matter what IFS is set to. */
@@ -34,7 +38,7 @@ diff -ur a/subst.c b/subst.c
        temp = string_list_dollar_at (list, (pflags & PF_ASSIGNRHS) ? (quoted|Q_DOUBLE_QUOTES) : quoted);
  
        tflag |= W_DOLLARAT;
-@@ -8816,6 +8822,7 @@
+@@ -8816,6 +8822,7 @@ finished_with_string:
    else
      {
        char *ifs_chars;
@@ -42,7 +46,7 @@ diff -ur a/subst.c b/subst.c
  
        ifs_chars = (quoted_dollar_at || has_dollar_at) ? ifs_value : (char *)NULL;
  
-@@ -8830,11 +8837,36 @@
+@@ -8830,11 +8837,36 @@ finished_with_string:
  	 regardless of what else has happened to IFS since the expansion. */
        if (split_on_spaces)
  	list = list_string (istring, " ", 1);	/* XXX quoted == 1? */
@@ -79,3 +83,13 @@ diff -ur a/subst.c b/subst.c
  	  if ((quoted & (Q_DOUBLE_QUOTES|Q_HERE_DOCUMENT)) || (quoted_state == WHOLLY_QUOTED))
  	    tword->flags |= W_QUOTED;
  	  if (word->flags & W_ASSIGNMENT)
+--- a/patchlevel.h
++++ b/patchlevel.h
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 13
++#define PATCHLEVEL 14
+ 
+ #endif /* _PATCHLEVEL_H_ */
