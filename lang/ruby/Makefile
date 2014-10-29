@@ -20,9 +20,9 @@ PKG_RELEASE:=1
 
 PKG_LIBVER:=1.9
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=ftp://ftp.ruby-lang.org/pub/ruby/$(PKG_LIBVER)/
-PKG_MD5SUM:=03f5b08804927ceabe5122cb90f5d0a9
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=http://cache.ruby-lang.org/pub/ruby/$(PKG_LIBVER)/
+PKG_MD5SUM:=7531f9b1b35b16f3eb3d7bea786babfd
 
 PKG_BUILD_DEPENDS:=ruby/host
 PKG_INSTALL:=1
