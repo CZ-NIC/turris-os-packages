@@ -15,7 +15,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ruby
-PKG_VERSION:=1.9.3-p484
+PKG_VERSION:=1.9.3-p547
 PKG_RELEASE:=1
 
 PKG_LIBVER:=1.9
@@ -28,6 +28,9 @@ PKG_BUILD_DEPENDS:=ruby/host
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf
+
+GEM_LIST:=compass
+GEM_compass_VERSION:=1.0.1
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
@@ -455,6 +458,17 @@ define Build/InstallDev
 	( cd $(PKG_INSTALL_DIR); $(TAR) -cf - \
 		. \
 	) | ( cd $(1); $(TAR) -xf - )
+endef
+
+define Host/Install
+	$(call Host/Install/Default)
+
+	$(foreach gem,$(GEM_LIST),$(STAGING_DIR_HOST)/bin/gem install $(gem) -v $(GEM_$(gem)_VERSION))
+endef
+
+define Host/Clean
+	$(RM) -rf $(STAGING_DIR_HOST)/lib/ruby
+	$(RM) -rf $(STAGING_DIR_HOST)/share/ri
 endef
 
 $(eval $(call BuildPackage,ruby))

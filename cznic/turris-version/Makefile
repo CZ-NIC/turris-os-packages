@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=1.5
+PKG_VERSION:=1.7
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
@@ -27,11 +27,13 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Drobné opravy ve Forisu.
- • Firewall je schopen ukládat pcap soubory pro další analýzu.
- • Přidán detektor NATu do ucollectu.
- • Přidána volba 'bind' pro p910nd.
- • Autoritativní server Knot povýšen na verzi 1.5.1."
+    create_notification -s news " • Drobné opravy v ucollect & ucollect-flow.
+ • Nový plugin ucollect-spoof na testování zasílání packetů s podvrženou zdrojovou adresou.
+ • Nový plugin ucollect-refused na sledování odchozích odmítnutých spojení.
+ • Možnost v /etc/config/firewall-turris nastavit, která pravidla firewallu se mají aplikovat a která ne.
+ • Přidán seznam balíčků 'majordomo'.
+ • Opravena chyba ve forisu, ke které mohlo docházet při současném přístupu více uživatelů.
+ • Python aktualizován na 2.7.8."
 }
 endef
 

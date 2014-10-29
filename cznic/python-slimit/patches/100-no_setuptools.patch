@@ -1,0 +1,19 @@
+--- a/setup.py
++++ b/setup.py
+@@ -1,6 +1,6 @@
+ import os, sys
+ 
+-from setuptools import setup, find_packages
++from distutils.core import setup
+ try:
+    from distutils.command.build_py import build_py_2to3 as build_py
+ except ImportError:
+@@ -42,7 +42,7 @@
+     description='SlimIt - JavaScript minifier',
+     author='Ruslan Spivak',
+     author_email='ruslan.spivak@gmail.com',
+-    packages=find_packages('src'),
++    packages=['slimit', 'slimit.visitors'],
+     package_dir={'': 'src'},
+     install_requires=requirements,
+     zip_safe=False,
