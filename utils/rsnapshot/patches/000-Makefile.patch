@@ -1,0 +1,34 @@
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -16,12 +16,10 @@
+ man: $(man_MANS)
+ rsnapshot.1 : rsnapshot
+ 	@# perl 5.8 for this
+-	/usr/bin/pod2man -c '' -n 'rsnapshot' -r '' rsnapshot > rsnapshot.1
+-	
++	echo "pod2man"	
+ rsnapshot-diff.1 : rsnapshot-diff
+ 	@# perl 5.8 for this
+-	/usr/bin/pod2man -c '' -n 'rsnapshot-diff' -r '' rsnapshot-diff > rsnapshot-diff.1
+-	
++	echo "pod2man"
+ html: rsnapshot.html
+ rsnapshot.html: rsnapshot
+ 	pod2html rsnapshot | grep -v 'link rev' > rsnapshot.html
+--- a/Makefile.in
++++ Makefile.in
+@@ -549,12 +549,10 @@
+ man: $(man_MANS)
+ rsnapshot.1 : rsnapshot
+ 	@# perl 5.8 for this
+-	/usr/bin/pod2man -c '' -n 'rsnapshot' -r '' rsnapshot > rsnapshot.1
+-
++	echo pod2man
+ rsnapshot-diff.1 : rsnapshot-diff
+ 	@# perl 5.8 for this
+-	/usr/bin/pod2man -c '' -n 'rsnapshot-diff' -r '' rsnapshot-diff > rsnapshot-diff.1
+-
++	echo pod2man
+ html: rsnapshot.html
+ rsnapshot.html: rsnapshot
+ 	pod2html rsnapshot | grep -v 'link rev' > rsnapshot.html

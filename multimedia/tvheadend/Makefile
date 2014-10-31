@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tvheadend
-PKG_VERSION:=3.2
-PKG_RELEASE:=0.1
+PKG_VERSION:=3.4patch1
+PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/downloads/tvheadend/tvheadend/
-PKG_MD5SUM:=4f7faa75c4ea24942c5a12a77ebdcdf0
+PKG_SOURCE:=$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://github.com/tvheadend/tvheadend/archive/
+PKG_MD5SUM:=86d1be0ad6e02bd2aecd3d529a026797
 
 PKG_USE_MIPS16:=0
 
@@ -23,7 +23,7 @@ define Package/tvheadend
   SECTION:=multimedia
   CATEGORY:=Multimedia
   TITLE:=Tvheadend is a TV streaming server for Linux
-  DEPENDS:=+libopenssl +librt +zlib +TVHEADEND_AVAHI_SUPPORT:libavahi-client
+  DEPENDS:=+libopenssl +librt +zlib +TVHEADEND_AVAHI_SUPPORT:libavahi-client +libcurl
   URL:=http://www.lonelycoder.com/hts/tvheadend_overview.html
 endef
 
