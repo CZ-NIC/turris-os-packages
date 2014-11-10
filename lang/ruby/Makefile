@@ -29,8 +29,9 @@ PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf
 
-GEM_LIST:=compass
+GEM_LIST:=compass breakpoint
 GEM_compass_VERSION:=1.0.1
+GEM_breakpoint_VERSION:=2.5.0
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
@@ -463,7 +464,7 @@ endef
 define Host/Install
 	$(call Host/Install/Default)
 
-	$(foreach gem,$(GEM_LIST),$(STAGING_DIR_HOST)/bin/gem install $(gem) -v $(GEM_$(gem)_VERSION))
+	$(foreach gem,$(GEM_LIST),$(STAGING_DIR_HOST)/bin/gem install $(gem) -v $(GEM_$(gem)_VERSION);)
 endef
 
 define Host/Clean
