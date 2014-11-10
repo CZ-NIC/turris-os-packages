@@ -53,7 +53,7 @@ define Package/foris/install
 	$(CP) $(PKG_BUILD_DIR)/utils/ $(1)$(FORIS_DIR)/utils/
 	$(INSTALL_DIR) $(1)$(FORIS_DIR)/static/
 	$(RM) $(PKG_BUILD_DIR)/static/js/{foris,foris.cs,parsley.foris-extend,parsley.messages.cs}.js
-	$(CP) $(PKG_BUILD_DIR)/static/{css,fonts,img,js} $(1)$(FORIS_DIR)/static/
+	$(CP) $(PKG_BUILD_DIR)/static/{css,img,js} $(1)$(FORIS_DIR)/static/
 	$(CP) $(PKG_BUILD_DIR)/*.py $(1)$(FORIS_DIR)/
 	$(CP) $(PKG_BUILD_DIR)/LICENSE $(1)$(FORIS_DIR)/LICENSE
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/foris.py $(1)$(FORIS_DIR)/foris.py
