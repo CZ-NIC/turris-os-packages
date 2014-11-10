@@ -1,0 +1,11 @@
+--- a/lispd/lispd_config.c
++++ b/lispd/lispd_config.c
+@@ -37,7 +37,7 @@
+ #ifdef ANDROID
+ #include "../android/jni/confuse_android/src/confuse.h"
+ #else
+-#ifndef OPEWNRT
++#ifndef OPENWRT
+ #include "confuse.h"
+ #endif
+ #endif
