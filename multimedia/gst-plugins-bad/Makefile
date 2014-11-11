@@ -76,7 +76,6 @@ CONFIGURE_ARGS += \
 	--disable-resindvd \
 	--disable-metadata \
 	--disable-faac \
-	--disable-faad \
 	--disable-fbdev \
 	--disable-flite \
 	--disable-gsm \
