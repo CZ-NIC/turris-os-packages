@@ -1,18 +1,6 @@
 menu "Configuration"
 	depends on PACKAGE_strongswan
 
-# --with-random-device
-config STRONGSWAN_DEVICE_RANDOM
-	string
-	prompt "Set the device to read real random data from"
-	default "/dev/random"
-
-# --with-urandom-device
-config STRONGSWAN_DEVICE_URANDOM
-	string
-	prompt "Set the device to read pseudo random data from"
-	default "/dev/urandom"
-
 # --with-routing-table
 config STRONGSWAN_ROUTING_TABLE
 	string
