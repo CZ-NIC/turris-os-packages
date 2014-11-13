@@ -16,7 +16,8 @@ start() {
 	if [ "`uci get -q smrtd.@global[0].enabled`" = 1 ] ; then
 		PARAMS="-f '$FIRMWARE' -v '$VERSION'"
 		for IFACE in $(uci show smrtd | sed -ne 's/^smrtd\.\([^.]*\)=interface$/\1/p') ; do
-			PARAMS="$PARAMS -i '$IFACE'"
+			NAME=$(uci get smrtd."$IFACE".name)
+			PARAMS="$PARAMS -i '$NAME'"
 			for CONN in $(uci -d: get smrtd."$IFACE".connections | sed -e 's/  */_/g;s/:/ /g') ; do
 				PARAMS="$PARAMS -c "$(echo $CONN | tr _ ' ')
 			done
