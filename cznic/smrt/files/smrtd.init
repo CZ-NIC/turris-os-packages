@@ -13,7 +13,7 @@ start() {
 		echo "SMRTd already running"
 		exit 1
 	fi
-	if [ `uci get -q smrtd.@global[0].enabled` = 1 ] ; then
+	if [ "`uci get -q smrtd.@global[0].enabled`" = 1 ] ; then
 		PARAMS="-f '$FIRMWARE' -v '$VERSION'"
 		for IFACE in $(uci show smrtd | sed -ne 's/^smrtd\.\([^.]*\)=interface$/\1/p') ; do
 			PARAMS="$PARAMS -i '$IFACE'"
