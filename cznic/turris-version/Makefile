@@ -27,7 +27,7 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Oprava v ucollect-spoof, aby nedocházelo k přepisu adresy v NATu.
+    create_notification -s news " • Nová verze ucollect-spoof.
  • Firewall obsahuje drobné opravy načítání pravidel přes ipsets.
  • Ucollect-bandwidth počítá statistiky vytížení linky.
  • Autoritativní DNS server Knot povýšen na verzi 1.6.0.
