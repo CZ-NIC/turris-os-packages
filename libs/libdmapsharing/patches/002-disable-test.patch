@@ -1,0 +1,11 @@
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -310,7 +310,7 @@
+ top_build_prefix = @top_build_prefix@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+-SUBDIRS = libdmapsharing vala tests doc
++SUBDIRS = libdmapsharing vala doc
+ DIST_SUBDIRS = $(SUBDIRS) m4 media
+ 
+ # pcfiles = libdmapsharing-@LIBDMAPSHARING_MAJORMINOR@.pc
