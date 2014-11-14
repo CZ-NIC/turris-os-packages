@@ -31,7 +31,8 @@ define Package/$(PKG_NAME)/postinst
  • Firewall obsahuje drobné opravy načítání pravidel přes ipsets.
  • Ucollect-bandwidth počítá statistiky vytížení linky.
  • Autoritativní DNS server Knot povýšen na verzi 1.6.0.
- • Dolší opravy shellu bash."
+ • Další opravy shellu bash.
+ • Další přípravy na přechod k novější verzi OpenWRT."
 }
 endef
 
