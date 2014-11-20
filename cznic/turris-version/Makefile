@@ -32,7 +32,8 @@ define Package/$(PKG_NAME)/postinst
  • Ucollect-bandwidth počítá statistiky vytížení linky.
  • Autoritativní DNS server Knot povýšen na verzi 1.6.0.
  • Další opravy shellu bash.
- • Další přípravy na přechod k novější verzi OpenWRT."
+ • Další přípravy na přechod k novější verzi OpenWRT.
+ • Možnost pojmenovat zařízení zobrazovaná v nástroji Majordomo."
 }
 endef
 
