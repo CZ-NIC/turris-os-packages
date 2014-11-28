@@ -23,7 +23,7 @@ define Package/sslstrip
   CATEGORY:=Network
   TITLE:=sslstrip
   URL:=http://www.thoughtcrime.org/software/sslstrip/index.html
-  DEPENDS:=+python +twisted +twisted-web +pyopenssl
+  DEPENDS:=+python +python-twisted +pyopenssl
 endef
 
 define Package/sslstrip/description
