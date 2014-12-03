@@ -14,7 +14,8 @@ start() {
 		exit 1
 	fi
 	if [ "`uci get -q smrtd.@global[0].enabled`" = 1 ] ; then
-		PARAMS="-f '$FIRMWARE' -v '$VERSION'"
+		mkdir -p /tmp/smrtd
+		PARAMS="-f '$FIRMWARE' -v '$VERSION' -s /tmp/smrtd"
 		for IFACE in $(uci show smrtd | sed -ne 's/^smrtd\.\([^.]*\)=interface$/\1/p') ; do
 			NAME=$(uci get smrtd."$IFACE".name)
 			PARAMS="$PARAMS -i '$NAME'"
