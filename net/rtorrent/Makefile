@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2007-2011 OpenWrt.org
+# Copyright (C) 2007-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rtorrent
-PKG_VERSION:=0.8.6
-PKG_RELEASE:=1
+PKG_VERSION:=0.9.3-git
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://libtorrent.rakshasa.no/downloads
-PKG_MD5SUM:=b804c45c01c40312926bcea6b55bb084
+PKG_RELEASE:=$(PKG_SOURCE_VERSION)-1
+
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/rakshasa/rtorrent.git
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_VERSION:=7689059dbc1ee05f855eb28883cbe59d162d4431
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
@@ -28,7 +31,6 @@ define Package/rtorrent
   TITLE:=BitTorrent client for ncurses
   URL:=http://libtorrent.rakshasa.no/
   DEPENDS:=+libcurl +libtorrent +libncursesw +libsigcxx +xmlrpc-c-server +libpthread
-  MAINTAINER:=Luka Perkov <openwrt@lukaperkov.net>
 endef
 
 define Package/rtorrent/description
@@ -38,7 +40,6 @@ define Package/rtorrent/description
  clients in an ncurses client. 
 endef
 
-TARGET_CPPFLAGS += -fno-strict-aliasing -fno-inline
 TARGET_LDFLAGS += -lpthread -Wl,-rpath-link=$(STAGING_DIR)/usr/lib
 
 CONFIGURE_ARGS+= \

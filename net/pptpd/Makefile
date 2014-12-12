@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/pptpd
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+kmod-ppp +kmod-gre +ppp
+  DEPENDS:=+kmod-ppp +kmod-gre +kmod-mppe +ppp
   TITLE:=PopTop pptp server
   URL:=http://www.poptop.org/
   SUBMENU:=VPN
@@ -41,6 +41,7 @@ MAKE_FLAGS += \
 define Package/pptpd/conffiles
 /etc/pptpd.conf
 /etc/ppp/options.pptpd
+/etc/config/pptpd
 endef
 
 define Package/pptpd/install
@@ -58,6 +59,8 @@ define Package/pptpd/install
 	$(INSTALL_BIN) ./files/pptpd.init $(1)/etc/init.d/pptpd
 	$(INSTALL_DIR) $(1)/etc/ppp
 	$(INSTALL_DATA) ./files/options.pptpd $(1)/etc/ppp/
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_DATA) ./files/pptpd.config $(1)/etc/config/pptpd
 endef
 
 $(eval $(call BuildPackage,pptpd))

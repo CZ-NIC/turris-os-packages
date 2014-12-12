@@ -1,6 +1,6 @@
 --- a/configure.in
 +++ b/configure.in
-@@ -67,7 +67,10 @@
+@@ -67,7 +67,10 @@ dnl Get link-layer interface type
  dnl
  AC_MSG_CHECKING(link-layer packet interface type)
  

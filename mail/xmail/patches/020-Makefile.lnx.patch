@@ -11,5 +11,5 @@
 +LD = $(CXX)
 +#STRIP = strip
  
- ifneq ("$(WITH_SSL_INCLUDE)", "")
-     CFLAGS := $(CFLAGS) -I$(WITH_SSL_INCLUDE)
+ ifeq ("$(XMAIL_FILE_OFF_BITS)", "")
+     CFLAGS := $(CFLAGS) -D_FILE_OFFSET_BITS=64

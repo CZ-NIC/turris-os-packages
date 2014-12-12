@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2011 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=udpxy
-PKG_REV:=1.0.21
-PKG_TAG:=2
+PKG_REV:=1.0.23
+PKG_TAG:=9
 PKG_VERSION:=$(PKG_REV)-$(PKG_TAG)
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
-PKG_SOURCE:=$(PKG_NAME).$(PKG_REV)-$(patsubst %,%-prod,$(PKG_TAG)).tgz
-PKG_SOURCE_URL:=@SF/udpxy
-PKG_MD5SUM:=d969fc34604b3abcc8ef62510967f2b0
+PKG_SOURCE:=$(PKG_NAME).$(PKG_REV)-$(patsubst %,%-prod,$(PKG_TAG)).tar.gz
+PKG_SOURCE_URL:=http://www.udpxy.com/download/1_23
+PKG_MD5SUM:=0c953f7dd80329c1a062997afb9b6744
 
 PKG_INSTALL:=1
 
@@ -25,7 +25,7 @@ define Package/udpxy
   SECTION:=net
   CATEGORY:=Network
   TITLE:=convert UDP IPTV streams into http stream
-  URL:=http://sourceforge.net/projects/udpxy
+  URL:=http://www.udpxy.com/index-en.html
 endef
 
 define Package/udpxy/description
@@ -39,7 +39,8 @@ define Package/udpxy/description
 endef
 
 MAKE_FLAGS += \
-	INSTALLROOT="$(PKG_INSTALL_DIR)/usr"
+	INSTALLROOT="$(PKG_INSTALL_DIR)/usr" \
+	ALL_CFLAGS="$(TARGET_CFLAGS) $(TARGET_CPPFLAGS)"
 
 define Package/udpxy/install
 	$(INSTALL_DIR) $(1)/etc/init.d

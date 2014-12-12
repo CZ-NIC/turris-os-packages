@@ -27,9 +27,9 @@ define Package/ntfsprogs
   CATEGORY:=Utilities
   SUBMENU:=Filesystem
   TITLE:=Linux-NTFS
+  DEPENDS:=+libuuid
   URL:=http://www.linux-ntfs.org/
   MAINTAINER:=Gianluigi Tiesi <sherpya@netfarm.it>
-  DEPENDS+= +libuuid
 endef
 
 define Package/ntfsprogs/description
@@ -39,6 +39,7 @@ endef
 CONFIGURE_ARGS += \
 	--enable-shared \
 	--enable-static \
+	--with-uuid \
 	--disable-crypto \
 	--disable-gnome-vfs \
 	--disable-ntfsmount

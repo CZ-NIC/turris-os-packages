@@ -9,12 +9,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=haproxy
-PKG_VERSION:=1.4.22
-PKG_RELEASE:=1
+PKG_VERSION:=1.4.24
+PKG_RELEASE:=11
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://haproxy.1wt.eu/download/1.4/src
-PKG_MD5SUM:=a0b007c76f6a78524f3b3dd5e704979c
+PKG_MD5SUM:=86422620faa9759907563d5e0524b98c
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -37,13 +37,14 @@ define Package/haproxy/description
 endef
 
 define Build/Compile
-	$(MAKE) TARGET=linux26 -C $(PKG_BUILD_DIR) \
+	$(MAKE) TARGET=linux2628 -C $(PKG_BUILD_DIR) \
 		DESTDIR="$(PKG_INSTALL_DIR)" \
 		CC="$(TARGET_CC)" \
 		CFLAGS="$(TARGET_CFLAGS)" \
 		LD="$(TARGET_CC)" \
 		LDFLAGS="$(TARGET_LDFLAGS)" \
 		SMALL_OPTS="-DBUFSIZE=16384 -DMAXREWRITE=8192 -DSYSTEM_MAXCONN=65530" USE_LINUX_TPROXY=1 USE_LINUX_SPLICE=1 \
+		VERSION="$(PKG_VERSION)-patch$(PKG_RELEASE)" \
 		all install
 endef
 

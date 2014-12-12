@@ -15,6 +15,8 @@ PKG_SOURCE:=$(PKG_NAME)$(PKG_VERSION).zip
 PKG_SOURCE_URL:=http://igs.bkg.bund.de/root_ftp/NTRIP/software/
 PKG_MD5SUM:=8c85a6c31d8c5cdf2638fe103207a1fd
 
+PKG_MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/ntripcaster
@@ -23,7 +25,6 @@ define Package/ntripcaster
   SUBMENU:=NTRIP
   TITLE:=Standard Ntrip Broadcaster
   URL:=http://igs.bkg.bund.de/ntrip/download
-  MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
   DEPENDS:=+libpthread
 endef
 

@@ -24,7 +24,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/logrotate
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libpopt +vixie-cron +syslog-ng3
+  DEPENDS:=+libpopt
   TITLE:=rotates, compresses, and mails system logs
   URL:=http://packages.debian.org/unstable/admin/logrotate
 endef
@@ -51,13 +51,11 @@ define Build/Compile
 	)
 endef
 
-define Package/logrotate/install
+define Package/logrotate/install	
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) ${PKG_BUILD_DIR}/logrotate $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_DATA) ./files/logrotate.conf $(1)/etc/
-	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(INSTALL_DATA) ./files/logrotate.cron $(1)/etc/cron.d/logrotate
 	$(INSTALL_DIR) $(1)/etc/logrotate.d
 endef
 

@@ -15,6 +15,9 @@ PKG_SOURCE:=Python-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://www.python.org/ftp/python/$(PKG_VERSION)
 PKG_MD5SUM:=d235bdfa75b8396942e360a70487ee00
 
+PKG_LICENSE:=PSF
+PKG_LICENSE_FILES:=LICENSE Modules/_ctypes/libffi_msvc/LICENSE Modules/_ctypes/darwin/LICENSE Modules/_ctypes/libffi/LICENSE Modules/_ctypes/libffi_osx/LICENSE Tools/pybench/LICENSE
+
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 HOST_BUILD_PARALLEL:=1

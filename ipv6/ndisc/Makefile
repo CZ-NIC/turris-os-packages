@@ -20,8 +20,8 @@ PKG_INSTALL:=1
 include $(INCLUDE_DIR)/package.mk
 
 define Package/ndisc
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   SUBMENU:=IPv6 discovery tools
   TITLE:=IPv6 discovery tools
   URL:=http://www.remlab.net/ndisc6/

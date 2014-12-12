@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=xdelta3
 PKG_VERSION:=3.0.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=xdelta$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://xdelta.googlecode.com/files
@@ -33,6 +33,9 @@ define Package/xdelta3/description
  the changes between files. The "delta files" that Xdelta3 manages are
  stored in RFC3284 (VCDIFF) format.
 endef
+
+MAKE_FLAGS += \
+	CFLAGS="$(TARGET_CFLAGS)"
 
 define Package/xdelta3/install
 	$(INSTALL_DIR) $(1)/usr/bin

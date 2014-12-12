@@ -5,16 +5,16 @@ Upstream-Status: Pending
 Signed-off-by: Kang Kai <kai.kang@windriver.com>
 --- a/xtests/Makefile.am
 +++ b/xtests/Makefile.am
-@@ -7,7 +7,7 @@
- AM_LDFLAGS = -L$(top_builddir)/libpam -lpam \
- 	-L$(top_builddir)/libpam_misc -lpam_misc
+@@ -7,7 +7,7 @@ AM_CFLAGS = -DLIBPAM_COMPILE -I$(top_src
+ LDADD = $(top_builddir)/libpam/libpam.la \
+ 	$(top_builddir)/libpam_misc/libpam_misc.la
  
 -CLEANFILES = *~ $(XTESTS)
 +CLEANFILES = *~
  
  EXTRA_DIST = run-xtests.sh tst-pam_dispatch1.pamd tst-pam_dispatch2.pamd \
  	tst-pam_dispatch3.pamd tst-pam_dispatch4.pamd \
-@@ -51,3 +51,18 @@
+@@ -51,3 +51,18 @@ EXTRA_PROGRAMS = $(XTESTS)
  
  xtests: $(XTESTS) run-xtests.sh
  	"$(srcdir)"/run-xtests.sh "$(srcdir)" ${XTESTS} ${NOSRCTESTS}

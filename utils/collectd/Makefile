@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2012 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=collectd
-PKG_VERSION:=4.10.7
-PKG_RELEASE:=2
+PKG_VERSION:=4.10.8
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://collectd.org/files/
-PKG_MD5SUM:=f4193fdb5002ddac8159c88032a726bc
+PKG_MD5SUM:=7a60495208b9383225493c6dd6abb2f0
 
 PKG_FIXUP:=autoreconf
 PKG_REMOVE_FILES:=aclocal.m4 libltdl/aclocal.m4
@@ -132,7 +132,7 @@ endef
 
 define Package/collectd
 $(call Package/collectd/Default)
-  DEPENDS:= +libpthread +zlib +libltdl +libip4tc +libiptc
+  DEPENDS:= +libpthread +zlib +libltdl +libip4tc
   MENU:=1
 endef
 
@@ -283,7 +283,7 @@ $(eval $(call BuildPlugin,netlink,netlink input,netlink,+PACKAGE_collectd-mod-ne
 $(eval $(call BuildPlugin,network,network input/output,network))
 $(eval $(call BuildPlugin,nginx,nginx status input,nginx,+PACKAGE_collectd-mod-nginx:libcurl))
 $(eval $(call BuildPlugin,ntpd,NTP daemon status input,ntpd,))
-$(eval $(call BuildPlugin,nut,UPS monitoring input,nut,@BROKEN))
+$(eval $(call BuildPlugin,nut,UPS monitoring input,nut,+PACKAGE_collectd-mod-nut:nut))
 $(eval $(call BuildPlugin,olsrd,OLSRd status input,olsrd,))
 $(eval $(call BuildPlugin,onewire,onewire sensor input,onewire,+PACKAGE_collectd-mod-onewire:libow-capi @BROKEN))
 $(eval $(call BuildPlugin,openvpn,OpenVPN traffic/compression input,openvpn,))

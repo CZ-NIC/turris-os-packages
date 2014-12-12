@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2012 OpenWrt.org
+# Copyright (C) 2006-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=zabbix
-PKG_VERSION:=2.0.0
+PKG_VERSION:=2.2.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@SF/zabbix
-PKG_MD5SUM:=d34d398beddee0eaa999789100cf74e3
+PKG_MD5SUM:=558497839b13a548f533eb2fc951a4e3
 
 PKG_INSTALL:=1
 
@@ -41,6 +41,24 @@ define Package/zabbix-agentd
   TITLE+= agentd
 endef
 
+define Package/zabbix-extra-mac80211
+  $(call Package/zabbix/Default)
+  TITLE+= discovery/userparameters for mac80211
+  DEPENDS += +zabbix-agentd @PACKAGE_MAC80211_DEBUGFS @KERNEL_DEBUG_FS
+endef
+
+define Package/zabbix-extra-network
+  $(call Package/zabbix/Default)
+  TITLE+= discovery/userparameters for network
+  DEPENDS += +zabbix-agentd +libuci-lua +lua
+endef
+
+define Package/zabbix-extra-wifi
+  $(call Package/zabbix/Default)
+  TITLE+= discovery/userparameters for wifi
+  DEPENDS += +zabbix-agentd +libiwinfo-lua +libuci-lua +lua
+endef
+
 define Package/zabbix-sender
   $(call Package/zabbix/Default)
   TITLE+= sender
@@ -61,6 +79,24 @@ define Package/zabbix-proxy
   $(call Package/zabbix/Default)
   TITLE+= proxy
   DEPENDS += +libsqlite3
+endef
+
+define Package/zabbix-extra-mac80211/description
+An extra package for zabbix-agentd that adds a discovery rule for mac80211 wifi phy and many userparameters.
+It contains an suid helper to allow zabbix-agentd to still run as zabbix user and not as root.
+See http://wiki.openwrt.org/doc/howto/zabbix for ready to use zabbix templates.
+endef
+
+define Package/zabbix-extra-network/description
+An extra package for zabbix-agentd that adds a discovery rule for openwrt network interfaces.
+The idea here is to discover only interfaces listed in /etc/config/network (discover br-lan and not eth0.1 and wlan0)
+See http://wiki.openwrt.org/doc/howto/zabbix for ready to use zabbix templates.
+endef
+
+define Package/zabbix-extra-wifi/description
+An extra package for zabbix-agentd that adds a discovery rule for wifi interfaces and many userparameters.
+As it uses libiwinfo, it works with all wifi devices supported by openwrt.
+See http://wiki.openwrt.org/doc/howto/zabbix for ready to use zabbix templates.
 endef
 
 CONFIGURE_ARGS+= \
@@ -108,8 +144,47 @@ define Package/zabbix/install/init.d
 		$(1)/etc/init.d/zabbix_$(2)
 endef
 
-define Package/zabbix-$(1)/conffiles
-  /etc/zabbix/zabbix_$(1).conf
+define Package/zabbix/install/zabbix.conf.d
+	$(INSTALL_DIR) \
+		$(1)/etc/zabbix_$(2).conf.d
+
+	$(INSTALL_BIN) \
+		./files/$(3) \
+		$(1)/etc/zabbix_$(2).conf.d/$(3)
+endef
+
+define Package/zabbix-agent/conffiles
+/etc/zabbix_agent.conf
+endef
+define Package/zabbix-agentd/conffiles
+/etc/zabbix_agentd.conf
+endef
+define Package/zabbix-server/conffiles
+/etc/zabbix_server.conf
+endef
+define Package/zabbix-proxy/conffiles
+/etc/zabbix_proxy.conf
+endef
+
+ifdef CONFIG_PACKAGE_zabbix-extra-mac80211
+define Build/Prepare/zabbix-extra-mac80211
+	mkdir -p $(PKG_BUILD_DIR)/zabbix-extra-mac80211
+	$(CP) ./files/zabbix_helper_mac80211.c $(PKG_BUILD_DIR)/zabbix-extra-mac80211/
+endef
+
+define Build/Compile/zabbix-extra-mac80211
+	$(TARGET_CC) $(TARGET_CFLAGS) $(PKG_BUILD_DIR)/zabbix-extra-mac80211/zabbix_helper_mac80211.c -o $(PKG_BUILD_DIR)/zabbix-extra-mac80211/zabbix_helper_mac80211
+endef
+endif
+
+define Build/Prepare
+	$(call Build/Prepare/Default)
+	$(call Build/Prepare/zabbix-extra-mac80211)
+endef
+
+define Build/Compile
+	$(call Build/Compile/Default)
+	$(call Build/Compile/zabbix-extra-mac80211)
 endef
 
 define Package/zabbix-agent/install
@@ -121,6 +196,21 @@ define Package/zabbix-agentd/install
 	$(call Package/zabbix/install/sbin,$(1),agentd)
 	$(call Package/zabbix/install/etc,$(1),agentd)
 	$(call Package/zabbix/install/init.d,$(1),agentd)
+endef
+
+define Package/zabbix-extra-mac80211/install
+	$(call Package/zabbix/install/zabbix.conf.d,$(1),agentd,mac80211)
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/zabbix-extra-mac80211/zabbix_helper_mac80211 $(1)/usr/bin/
+	chmod 4755 $(1)/usr/bin/zabbix_helper_mac80211
+endef
+
+define Package/zabbix-extra-network/install
+	$(call Package/zabbix/install/zabbix.conf.d,$(1),agentd,network)
+endef
+
+define Package/zabbix-extra-wifi/install
+	$(call Package/zabbix/install/zabbix.conf.d,$(1),agentd,wifi)
 endef
 
 define Package/zabbix-sender/install
@@ -143,6 +233,9 @@ endef
 
 $(eval $(call BuildPackage,zabbix-agent))
 $(eval $(call BuildPackage,zabbix-agentd))
+$(eval $(call BuildPackage,zabbix-extra-mac80211))
+$(eval $(call BuildPackage,zabbix-extra-network))
+$(eval $(call BuildPackage,zabbix-extra-wifi))
 $(eval $(call BuildPackage,zabbix-sender))
 $(eval $(call BuildPackage,zabbix-server))
 $(eval $(call BuildPackage,zabbix-proxy))

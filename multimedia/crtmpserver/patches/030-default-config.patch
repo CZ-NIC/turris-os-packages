@@ -1,7 +1,5 @@
-Index: crtmpserver-r726/builders/cmake/crtmpserver/crtmpserver.lua
-===================================================================
---- crtmpserver-r726.orig/builders/cmake/crtmpserver/crtmpserver.lua
-+++ crtmpserver-r726/builders/cmake/crtmpserver/crtmpserver.lua
+--- a/builders/cmake/crtmpserver/crtmpserver.lua
++++ b/builders/cmake/crtmpserver/crtmpserver.lua
 @@ -44,7 +44,7 @@ configuration=
  	{
  		-- this is the root directory of all applications

@@ -22,8 +22,8 @@ include $(INCLUDE_DIR)/uclibc++.mk
 include $(INCLUDE_DIR)/package.mk
 
 define Package/miredo/Default
-  SECTION:=ipv6
-  CATEGORY:=IPv6
+  SECTION:=net
+  CATEGORY:=Network
   SUBMENU:=miredo: Teredo (IPv6 tunneling over UDP through NAT)
   URL:=http://www.remlab.net/miredo/
 endef

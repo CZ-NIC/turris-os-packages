@@ -1,0 +1,177 @@
+--- a/net80211/ieee80211_linux.c
++++ b/net80211/ieee80211_linux.c
+@@ -476,8 +476,12 @@ static int
+ proc_ieee80211_open(struct inode *inode, struct file *file)
+ {
+ 	struct proc_ieee80211_priv *pv = NULL;
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)
++	struct ieee80211vap *vap = PDE_DATA(inode);
++#else
+ 	struct proc_dir_entry *dp = PDE(inode);
+ 	struct ieee80211vap *vap = dp->data;
++#endif
+ 
+ 	if (!(file->private_data = kmalloc(sizeof(struct proc_ieee80211_priv), GFP_KERNEL)))
+ 		return -ENOMEM;
+@@ -842,10 +846,16 @@ ieee80211_virtfs_latevattach(struct ieee
+ 		tmp = vap->iv_proc_entries;
+ 		while (tmp) {
+ 			if (!tmp->entry) {
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)
++				tmp->entry = proc_create_data(tmp->name,
++				PROC_IEEE80211_PERM, vap->iv_proc,
++				tmp->fileops, vap);
++#else
+ 				tmp->entry = create_proc_entry(tmp->name,
+ 				PROC_IEEE80211_PERM, vap->iv_proc);
+ 				tmp->entry->data = vap;
+ 				tmp->entry->proc_fops = tmp->fileops;
++#endif
+ 			}
+ 			tmp = tmp->next;
+ 		}
+@@ -913,10 +923,16 @@ ieee80211_proc_vcreate(struct ieee80211v
+ 
+ 	/* Create the actual proc entry */
+ 	if (vap->iv_proc) {
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)
++		entry->entry = proc_create_data(entry->name,
++				PROC_IEEE80211_PERM, vap->iv_proc,
++				entry->fileops, vap);
++#else
+ 		entry->entry = create_proc_entry(entry->name,
+ 				PROC_IEEE80211_PERM, vap->iv_proc);
+ 		entry->entry->data = vap;
+ 		entry->entry->proc_fops = entry->fileops;
++#endif
+ 	}
+ 
+ 	/* Add it to the list */
+@@ -953,14 +969,26 @@ ieee80211_virtfs_vdetach(struct ieee8021
+ 		tmp = vap->iv_proc_entries;
+ 		while (tmp) {
+ 			if (tmp->entry) {
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)
++				proc_remove(tmp->entry);
++#else
+ 				remove_proc_entry(tmp->name, vap->iv_proc);
++#endif
+ 				tmp->entry = NULL;
+ 			}
+ 			tmp = tmp->next;
+ 		}
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)
++		proc_remove(vap->iv_proc);
++#else
+ 		remove_proc_entry(vap->iv_proc->name, proc_madwifi);
++#endif
+ 		if (proc_madwifi_count == 1) {
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)
++			proc_remove(proc_madwifi);
++#else
+ 			remove_proc_entry("madwifi", proc_net);
++#endif
+ 			proc_madwifi = NULL;
+ 		}
+ 		proc_madwifi_count--;
+--- a/ath_rate/minstrel/minstrel.c
++++ b/ath_rate/minstrel/minstrel.c
+@@ -835,8 +835,12 @@ static int
+ ath_proc_ratesample_open(struct inode *inode, struct file *file)
+ {
+ 		struct proc_ieee80211_priv *pv = NULL;
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0))
++		struct ieee80211vap *vap = PDE_DATA(inode);
++#else
+ 		struct proc_dir_entry *dp = PDE(inode);
+ 		struct ieee80211vap *vap = dp->data;
++#endif
+ 
+ 		if (!(file->private_data = kmalloc(sizeof(struct proc_ieee80211_priv),
+ 			                            GFP_KERNEL)))
+--- a/ath_rate/sample/sample.c
++++ b/ath_rate/sample/sample.c
+@@ -923,12 +923,15 @@ proc_read_nodes(struct ieee80211vap *vap
+ }
+ 
+ static int
+-proc_ratesample_open(struct inode *inode, struct file *file)
++proc_ratesample_open_common(struct inode *inode, struct file *file, const unsigned long size)
+ {
+ 	struct proc_ieee80211_priv *pv;
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,10,0)
++	struct ieee80211vap *vap = PDE_DATA(inode);
++#else
+ 	struct proc_dir_entry *dp = PDE(inode);
+ 	struct ieee80211vap *vap = dp->data;
+-	unsigned long size;
++#endif
+ 
+ 	if (!(file->private_data = kmalloc(sizeof(struct proc_ieee80211_priv),
+ 					GFP_KERNEL)))
+@@ -953,18 +956,47 @@ proc_ratesample_open(struct inode *inode
+ 	pv->max_wlen = MAX_PROC_IEEE80211_SIZE;
+ 	pv->max_rlen = MAX_PROC_IEEE80211_SIZE;
+ 
+-	/* Determine what size packets to get stats for based on proc filename */
+-	size = simple_strtoul(dp->name + 10, NULL, 0);
+-
+ 	/* now read the data into the buffer */
+ 	pv->rlen = proc_read_nodes(vap, size, pv->rbuf, MAX_PROC_IEEE80211_SIZE);
+ 	return 0;
+ }
+ 
+-static struct file_operations proc_ratesample_ops = {
++static int
++proc_ratesample_stats250_open(struct inode *inode, struct file *file)
++{
++	return proc_ratesample_open_common(inode, file, 250);
++}
++
++static int
++proc_ratesample_stats1600_open(struct inode *inode, struct file *file)
++{
++	return proc_ratesample_open_common(inode, file, 1600);
++}
++
++static int
++proc_ratesample_stats3000_open(struct inode *inode, struct file *file)
++{
++	return proc_ratesample_open_common(inode, file, 3000);
++}
++
++static struct file_operations proc_ratesample_stats250_ops = {
++	.read = NULL,
++	.write = NULL,
++	.open = proc_ratesample_stats250_open,
++	.release = NULL,
++};
++
++static struct file_operations proc_ratesample_stats1600_ops = {
++	.read = NULL,
++	.write = NULL,
++	.open = proc_ratesample_stats1600_open,
++	.release = NULL,
++};
++
++static struct file_operations proc_ratesample_stats3000_ops = {
+ 	.read = NULL,
+ 	.write = NULL,
+-	.open = proc_ratesample_open,
++	.open = proc_ratesample_stats3000_open,
+ 	.release = NULL,
+ };
+ 
+@@ -972,9 +1004,9 @@ static void
+ ath_rate_dynamic_proc_register(struct ieee80211vap *vap)
+ {
+ 	/* Create proc entries for the rate control algorithm */
+-	ieee80211_proc_vcreate(vap, &proc_ratesample_ops, "ratestats_250");
+-	ieee80211_proc_vcreate(vap, &proc_ratesample_ops, "ratestats_1600");
+-	ieee80211_proc_vcreate(vap, &proc_ratesample_ops, "ratestats_3000");
++	ieee80211_proc_vcreate(vap, &proc_ratesample_stats250_ops, "ratestats_250");
++	ieee80211_proc_vcreate(vap, &proc_ratesample_stats1600_ops, "ratestats_1600");
++	ieee80211_proc_vcreate(vap, &proc_ratesample_stats3000_ops, "ratestats_3000");
+ }
+ 
+ static struct ieee80211_rate_ops ath_rate_ops = {

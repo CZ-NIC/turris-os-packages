@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=48
+PKG_VERSION:=49
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
-PKG_SOURCE_VERSION:=64021a5a32c9597730d4551cb4240c6f7f744dd8
+PKG_SOURCE_VERSION:=0baf9125c757fb09fb73ca41d89a496a3a426168
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_BUILD_DEPENDS:=ruby/host python-slimit/host
@@ -53,7 +53,7 @@ define Package/foris/install
 	$(CP) $(PKG_BUILD_DIR)/utils/ $(1)$(FORIS_DIR)/utils/
 	$(INSTALL_DIR) $(1)$(FORIS_DIR)/static/
 	$(RM) $(PKG_BUILD_DIR)/static/js/{foris,foris.cs,parsley.foris-extend,parsley.messages.cs}.js
-	$(CP) $(PKG_BUILD_DIR)/static/{css,fonts,img,js} $(1)$(FORIS_DIR)/static/
+	$(CP) $(PKG_BUILD_DIR)/static/{css,img,js} $(1)$(FORIS_DIR)/static/
 	$(CP) $(PKG_BUILD_DIR)/*.py $(1)$(FORIS_DIR)/
 	$(CP) $(PKG_BUILD_DIR)/LICENSE $(1)$(FORIS_DIR)/LICENSE
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/foris.py $(1)$(FORIS_DIR)/foris.py

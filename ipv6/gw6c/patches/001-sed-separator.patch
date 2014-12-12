@@ -1,0 +1,18 @@
+--- a/tspc-advanced/conf/Makefile
++++ b/tspc-advanced/conf/Makefile
+@@ -21,12 +21,12 @@ gw6c.conf.sample:
+ 	fi
+ 	@if [ -z "$(configdir)" ]; then \
+ 	 if [ -z "$(installdir)" ]; then \
+-	   sed -e "s+@ifname_v4v6@+$(ifname_v4v6)+" -e "s+@ifname_tun@+$(ifname_tun)+" -e "s+@ifname@+$(ifname)+" -e "s+@conf_template@+$(conf_template)+" -e "s+@conf_gw6_dir@+`cd ..;pwd`+"  gw6c.conf.in>$(BIN)/gw6c.conf.sample; \
++	   sed -e "s|@ifname_v4v6@|$(ifname_v4v6)|" -e "s|@ifname_tun@|$(ifname_tun)|" -e "s|@ifname@|$(ifname)|" -e "s|@conf_template@|$(conf_template)|" -e "s|@conf_gw6_dir@|`cd ..;pwd`|"  gw6c.conf.in>$(BIN)/gw6c.conf.sample; \
+ 	 else \
+-	   sed -e "s+@ifname_v4v6@+$(ifname_v4v6)+" -e "s+@ifname_tun@+$(ifname_tun)+" -e "s+@ifname@+$(ifname)+" -e "s+@conf_template@+$(conf_template)+" -e "s+@conf_gw6_dir@+$(installdir)+" gw6c.conf.in >$(BIN)/gw6c.conf.sample; \
++	   sed -e "s|@ifname_v4v6@|$(ifname_v4v6)|" -e "s|@ifname_tun@|$(ifname_tun)|" -e "s|@ifname@|$(ifname)|" -e "s|@conf_template@|$(conf_template)|" -e "s|@conf_gw6_dir@|$(installdir)|" gw6c.conf.in >$(BIN)/gw6c.conf.sample; \
+ 	 fi \
+ 	else \
+-	 sed -e "s+@ifname_v4v6@+$(ifname_v4v6)+" -e "s+@ifname_tun@+$(ifname_tun)+" -e "s+@ifname@+$(ifname)+" -e "s+@conf_template@+$(conf_template)+" -e "s+@conf_gw6_dir@+$(configdir)+" gw6c.conf.in >$(BIN)/gw6c.conf.sample; \
++	 sed -e "s|@ifname_v4v6@|$(ifname_v4v6)|" -e "s|@ifname_tun@|$(ifname_tun)|" -e "s|@ifname@|$(ifname)|" -e "s|@conf_template@|$(conf_template)|" -e "s|@conf_gw6_dir@|$(configdir)|" gw6c.conf.in >$(BIN)/gw6c.conf.sample; \
+ 	fi
+ 	chmod 700 $(BIN)/gw6c.conf.sample
+ 

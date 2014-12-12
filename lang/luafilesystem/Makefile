@@ -8,12 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luafilesystem
-PKG_VERSION:=1.5.0
+PKG_VERSION:=1.6.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://github.com/downloads/keplerproject/luafilesystem/
-PKG_MD5SUM:=3cf4882bbce956e7a0b010f148f194a3
+PKG_SOURCE_URL:=https://github.com/keplerproject/luafilesystem.git
+PKG_SOURCE_VERSION:=2fd989cd6c777583be1c93616018c55b2cbb1bcf
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 

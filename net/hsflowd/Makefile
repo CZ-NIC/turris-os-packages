@@ -14,6 +14,8 @@ PKG_SOURCE_URL:=@SF/host-sflow
 PKG_VERSION:=1.20
 PKG_MD5SUM:=0bfc0b05fbab27a80557c5efb5e66693
 
+PKG_USE_MIPS16:=0
+
 PKG_SOURCE:=hsflowd-$(PKG_VERSION).tar.gz
 
 include $(INCLUDE_DIR)/package.mk

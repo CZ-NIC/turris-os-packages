@@ -27,7 +27,7 @@ define Package/petitboot
 	CATEGORY:=Boot Loaders
 	TITLE:=A kexec based bootloader
 	URL:=http://ozlabs.org/~jk/projects/petitboot/
-	MAINTAINER:=Geoff Levand <geoffrey.levand@am.sony.com>
+	MAINTAINER:=Geoff Levand <geoff@infradead.org>
 	DEPENDS:=@TARGET_ps3 +kexec-tools +libncurses +libtwin +udev +ps3-utils
 endef
 
@@ -72,7 +72,7 @@ petitboot-install-autorun-$(CONFIG_PETITBOOT_AUTORUN_GUI) = \
 	ln -sf pb-twin $(1)/usr/sbin/petitboot
 
 CONFIGURE_ARGS += $(petitboot-config-args-y) \
-	PACKAGE_VERSION=$(shell echo ${HOSTNAME})-$(shell date +%y.%m.%d-%H.%M)
+	PACKAGE_VERSION=$(shell uname -n)-$(shell date +%y.%m.%d-%H.%M)
 
 EXTRA_CPPFLAGS += $(petitboot-cppflags-y)
 

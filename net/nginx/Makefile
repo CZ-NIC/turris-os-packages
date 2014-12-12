@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nginx
-PKG_VERSION:=1.2.2
+PKG_VERSION:=1.4.4
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://nginx.org/download/
-PKG_MD5SUM:=53105bbe3ac9319db54d9eb46119695b
+PKG_MD5SUM:=5dfaba1cbeae9087f3949860a02caa9f
 
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
@@ -22,7 +22,32 @@ PKG_CONFIG_DEPENDS := \
 	CONFIG_NGINX_STUB_STATUS \
 	CONFIG_NGINX_FLV \
 	CONFIG_NGINX_SSL \
-	CONFIG_NGINX_DAV
+	CONFIG_NGINX_DAV \
+	CONFIG_NGINX_LUA \
+	CONFIG_NGINX_PCRE \
+	CONFIG_NGINX_HTTP_CACHE \
+	CONFIG_NGINX_HTTP_CHARSET \
+	CONFIG_NGINX_HTTP_GZIP \
+	CONFIG_NGINX_HTTP_SSI \
+	CONFIG_NGINX_HTTP_USERID \
+	CONFIG_NGINX_HTTP_ACCESS \
+	CONFIG_NGINX_HTTP_AUTH_BASIC \
+	CONFIG_NGINX_HTTP_AUTOINDEX \
+	CONFIG_NGINX_HTTP_GEO \
+	CONFIG_NGINX_HTTP_MAP \
+	CONFIG_NGINX_HTTP_SPLIT_CLIENTS \
+	CONFIG_NGINX_HTTP_REFERER \
+	CONFIG_NGINX_HTTP_REWRITE \
+	CONFIG_NGINX_HTTP_PROXY \
+	CONFIG_NGINX_HTTP_FASTCGI \
+	CONFIG_NGINX_HTTP_UWSGI \
+	CONFIG_NGINX_HTTP_SCGI \
+	CONFIG_NGINX_HTTP_MEMCACHED \
+	CONFIG_NGINX_HTTP_LIMIT_CONN \
+	CONFIG_NGINX_HTTP_LIMIT_REQ \
+	CONFIG_NGINX_HTTP_EMPTY_GIF \
+	CONFIG_NGINX_HTTP_BROWSER \
+	CONFIG_NGINX_HTTP_UPSTREAM_IP_HASH
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -32,7 +57,7 @@ define Package/nginx
   SUBMENU:=Web Servers/Proxies
   TITLE:=Nginx web server
   URL:=http://nginx.org/
-  DEPENDS:=+libpcre +libopenssl +zlib +libpthread
+  DEPENDS:=+NGINX_PCRE:libpcre +(NGINX_SSL||NGINX_HTTP_CACHE||NGINX_HTTP_AUTH_BASIC):libopenssl +NGINX_HTTP_GZIP:zlib +libpthread +NGINX_LUA:liblua
   MENU:=1
 endef
 
@@ -64,16 +89,90 @@ ifeq ($(CONFIG_NGINX_FLV),y)
 endif
 ifeq ($(CONFIG_NGINX_SSL),y)
   ADDITIONAL_MODULES += --with-http_ssl_module
-else
-  ADDITIONAL_MODULES += --without-http-cache
 endif
 ifeq ($(CONFIG_NGINX_DAV),y)
   ADDITIONAL_MODULES += --with-http_dav_module
+endif
+ifeq ($(CONFIG_NGINX_LUA),y)
+  ADDITIONAL_MODULES += --add-module=$(PKG_BUILD_DIR)/lua-nginx
+endif
+ifneq ($(CONFIG_NGINX_HTTP_CACHE),y)
+  ADDITIONAL_MODULES += --without-http-cache
+endif
+ifneq ($(CONFIG_NGINX_PCRE),y)
+  ADDITIONAL_MODULES += --without-pcre
+endif
+ifneq ($(CONFIG_NGINX_HTTP_CHARSET),y)
+  ADDITIONAL_MODULES += --without-http_charset_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_GZIP),y)
+  ADDITIONAL_MODULES += --without-http_gzip_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_SSI),y)
+  ADDITIONAL_MODULES += --without-http_ssi_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_USERID),y)
+  ADDITIONAL_MODULES += --without-http_userid_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_ACCESS),y)
+  ADDITIONAL_MODULES += --without-http_access_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_AUTH_BASIC),y)
+  ADDITIONAL_MODULES += --without-http_auth_basic_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_AUTOINDEX),y)
+  ADDITIONAL_MODULES += --without-http_autoindex_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_GEO),y)
+  ADDITIONAL_MODULES += --without-http_geo_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_MAP),y)
+  ADDITIONAL_MODULES += --without-http_map_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_SPLIT_CLIENTS),y)
+  ADDITIONAL_MODULES += --without-http_split_clients_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_REFERER),y)
+  ADDITIONAL_MODULES += --without-http_referer_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_REWRITE),y)
+  ADDITIONAL_MODULES += --without-http_rewrite_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_PROXY),y)
+  ADDITIONAL_MODULES += --without-http_proxy_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_FASTCGI),y)
+  ADDITIONAL_MODULES += --without-http_fastcgi_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_UWSGI),y)
+  ADDITIONAL_MODULES += --without-http_uwsgi_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_SCGI),y)
+  ADDITIONAL_MODULES += --without-http_scgi_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_MEMCACHED),y)
+  ADDITIONAL_MODULES += --without-http_memcached_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_LIMIT_CONN),y)
+  ADDITIONAL_MODULES += --without-http_limit_conn_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_LIMIT_REQ),y)
+  ADDITIONAL_MODULES += --without-http_limit_req_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_EMPTY_GIF),y)
+  ADDITIONAL_MODULES += --without-http_empty_gif_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_BROWSER),y)
+  ADDITIONAL_MODULES += --without-http_browser_module
+endif
+ifneq ($(CONFIG_NGINX_HTTP_UPSTREAM_IP_HASH),y)
+  ADDITIONAL_MODULES += --without-http_upstream_ip_hash_module
 endif
 
 define Build/Configure
 	# TODO: fix --crossbuild
 	(cd $(PKG_BUILD_DIR) ;\
+		$(if $(CONFIG_NGINX_LUA),LUA_INC=$(STAGING_DIR)/usr/include LUA_LIB=$(STAGING_DIR)/usr/lib) \
 		./configure \
 			--crossbuild=Linux::$(ARCH) \
 			--prefix=/usr \
@@ -98,6 +197,25 @@ define Package/nginx/install
 	$(INSTALL_DATA) $(addprefix $(PKG_INSTALL_DIR)/etc/nginx/,$(config_files)) $(1)/etc/nginx/
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/nginx.init $(1)/etc/init.d/nginx
+endef
+
+define Build/Prepare
+	$(call Build/Prepare/Default)
+	$(if $(CONFIG_NGINX_LUA),$(call Prepare/lua-nginx))
+endef
+
+define Download/lua-nginx
+	VERSION:=7c0948a08e8449f7a9ffbc35244954e6aaddac5b
+	SUBDIR:=lua-nginx
+	FILE:=lua-nginx-module-$(PKG_VERSION)-$$(VERSION).tar.gz
+	URL:=https://github.com/chaoslawful/lua-nginx-module.git
+	PROTO:=git
+endef
+
+define  Prepare/lua-nginx
+	$(eval $(call Download,lua-nginx))
+	gzip -dc $(DL_DIR)/$(FILE) | tar -C $(PKG_BUILD_DIR) $(TAR_OPTIONS)
+	$(call PatchDir,$(PKG_BUILD_DIR),./patches-lua-nginx)
 endef
 
 $(eval $(call BuildPackage,nginx))

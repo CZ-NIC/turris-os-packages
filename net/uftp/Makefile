@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2011-2012 OpenWrt.org
+# Copyright (C) 2011-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=uftp
-PKG_VERSION:=3.6.1
+PKG_VERSION:=4.1.4
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar
-PKG_SOURCE_URL:=https://www.tcnj.edu/~bush/downloads
-PKG_MD5SUM:=7a0d41a728cd9e36ad396d7c2adeed5c
+PKG_SOURCE_URL:=@SF/uftp-multicast
+PKG_MD5SUM:=9a9074a628caaabd6599e53a36a09a51
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
 
@@ -26,7 +26,7 @@ define Package/uftp/Default
   CATEGORY:=Network
   SUBMENU:=File Transfer
   TITLE:=Multicast UDP FTP
-  URL:=https://www.tcnj.edu/~bush/uftp.html
+  URL:=http://uftp-multicast.sourceforge.net/
 endef
 
 define Package/uftp/Default/description
@@ -39,7 +39,7 @@ define Package/uftp
   $(call Package/uftp/Default)
   TITLE+= server with TLS support
   VARIANT:=tls
-  DEPENDS:=+libopenssl
+  DEPENDS:=+libopenssl +libpthread
 endef
 
 define Package/uftp/description
@@ -51,6 +51,7 @@ define Package/uftp-notls
   $(call Package/uftp/Default)
   TITLE+= server without TLS support
   VARIANT:=notls
+  DEPENDS:=+libpthread
 endef
 
 define Package/uftp-notls/description
@@ -122,6 +123,7 @@ MAKE_FLAGS += \
 
 ifeq ($(BUILD_VARIANT),tls)
 	MAKE_FLAGS += \
+		NO_EC="1" \
 		OPENSSL="$(STAGING_DIR)/usr"
 endif
 

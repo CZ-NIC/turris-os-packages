@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2010 OpenWrt.org
+# Copyright (C) 2006-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libnet
-PKG_VERSION:=1.1.2.1
-PKG_RELEASE:=2
+PKG_VERSION:=1.1.6
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_URL:=http://www.packetfactory.net/libnet/dist/
+PKG_SOURCE_URL:=@SF/$(PKG_NAME)
 PKG_MD5SUM:=be845c41170d72c7db524f3411b50256
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/libnet

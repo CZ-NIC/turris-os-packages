@@ -15,6 +15,8 @@ PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION).orig.tar.gz
 PKG_SOURCE_URL:=http://ftp.debian.org/debian/pool/main/liba/libaio/
 PKG_MD5SUM:=db32c19c61ca937bcb1ba48da9180682
 
+PKG_USE_MIPS16:=0
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/libaio

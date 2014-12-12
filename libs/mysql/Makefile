@@ -1,50 +1,50 @@
 #
-# Copyright (C) 2006-2012 OpenWrt.org
+# Copyright (C) 2006-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
 
 include $(TOPDIR)/rules.mk
+include $(INCLUDE_DIR)/uclibc++.mk
 
 PKG_NAME:=mysql
-PKG_VERSION:=5.1.53
-PKG_RELEASE:=7
+PKG_VERSION:=5.1.73
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=\
-	http://mysql.planetmirror.com/Downloads/MySQL-5.1/ \
 	http://mysql.he.net/Downloads/MySQL-5.1/ \
 	http://www.linorg.usp.br/mysql/Downloads/MySQL-5.1/ \
-	http://mysql.holywar.net/Downloads/MySQL-5.1/
-PKG_MD5SUM:=e5e7c5b0b5c382489e6a66778703bc46
+	http://www.mirrorservice.org/sites/ftp.mysql.com/Downloads/MySQL-5.1/ \
+	http://mirror.switch.ch/ftp/mirror/mysql/Downloads/MySQL-5.1/ \
+	http://downloads.mysql.com/archives/mysql-5.1/
+
+PKG_MD5SUM:=887f869bcc757957067b9198f707f32f
 
 PKG_BUILD_DEPENDS:=libncurses libreadline
 PKG_BUILD_PARALLEL:=1
+PKG_USE_MIPS16:=0
 
-PKG_FIXUP:=libtool no-autoreconf
+PKG_FIXUP:=libtool
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/libmysqlclient/Default
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=+uclibcxx +zlib
+  DEPENDS:=$(CXX_DEPENDS) +zlib
   TITLE:=MySQL client library
   URL:=http://dev.mysql.com/
 endef
 
-define Package/mysql-server/Default
+define Package/mysql-server
   SECTION:=utils
   CATEGORY:=Utilities
   DEPENDS:=+libmysqlclient +libpthread +libncursesw +libreadline
   TITLE:=MySQL Server
   URL:=http://dev.mysql.com/
   SUBMENU:=database
-endef
-
-define Package/mysql-server
-  $(call Package/mysql-server/Default)
 endef
 
 define Package/libmysqlclient
@@ -59,57 +59,35 @@ endef
 
 TARGET_CXX=g++-uc
 
-CONFIGURE_VARS += \
-        CXXFLAGS="$$$$CXXFLAGS -fno-builtin -fno-rtti -nostdinc++"  \
-        CPPFLAGS="$$$$CPPFLAGS -I$(STAGING_DIR)/usr/include/uClibc++" \
-        LDFLAGS="$$$$LDFLAGS" \
-        LIBS="-nodefaultlibs -luClibc++ -lm -lc $(LIBGCC_S)" \
-        CLIENTCLIBS="-nodefaultlibs -luClibc++ -lm -lc $(LIBGCC_S)" \
-
-
-define Build/Configure
-	(cd $(PKG_BUILD_DIR); touch \
-		configure.in \
-		aclocal.m4 \
-		Makefile.in \
-		config.h.in \
-		configure \
-	);
-	$(CP) files/lex_hash.h $(PKG_BUILD_DIR)/sql/lex_hash.h
-
-	$(call Build/Configure/Default, \
-		--enable-shared \
-		--enable-static \
-		--enable-thread-safe-client \
-		--disable-assembler \
-		--with-pthread \
-		--with-server \
-		--without-mysqlmanager \
-		--without-raid \
-		--with-mysqld-user=root \
-		--with-unix-socket-path=/tmp \
-		--without-libwrap \
-		--without-pstack \
-		--with-low-memory \
-		--without-embedded-server \
-		--without-query-cache \
-		--without-mysqlfs \
-		--without-vio \
-		--without-ssl \
-		--without-docs \
-		--without-man \
-		--without-bench \
-		--without-readline \
-		--without-debug \
-		--with-named-thread-libs=-lpthread \
-		, \
-		mysql_cv_compress=yes \
-		mysql_cv_gethostname_style=glibc2 \
-		ac_cv_c_stack_direction=-1 \
-	);
-endef
-
 TARGET_CFLAGS += $(FPIC)
+
+CONFIGURE_ARGS += \
+	--enable-shared \
+	--enable-static \
+	--enable-thread-safe-client \
+	--disable-assembler \
+	--with-pthread \
+	--with-server \
+	--without-mysqlmanager \
+	--with-mysqld-user=root \
+	--with-unix-socket-path=/tmp \
+	--without-libwrap \
+	--with-low-memory \
+	--without-embedded-server \
+	--without-query-cache \
+	--without-ssl \
+	--without-docs \
+	--without-man \
+	--without-readline \
+	--without-debug \
+	--with-named-thread-libs=-lpthread
+
+CONFIGURE_VARS += \
+	mysql_cv_compress=yes \
+	mysql_cv_gethostname_style=glibc2 \
+	mysql_cv_gcc_atomic_builtins=yes \
+	mysql_cv_gcc_atomic_builtins_pthread_t=yes \
+	ac_cv_c_stack_direction=-1
 
 define Build/Compile
 	+$(MAKE) $(PKG_JOBS) -C "$(PKG_BUILD_DIR)" \
@@ -120,6 +98,9 @@ define Build/Compile
 		SUBDIRS="include" \
 		DESTDIR="$(PKG_INSTALL_DIR)" \
 		install
+	g++ -I $(PKG_BUILD_DIR)/include \
+		-o $(PKG_BUILD_DIR)/sql/gen_lex_hash \
+		$(PKG_BUILD_DIR)/sql/gen_lex_hash.cc
 	+$(MAKE) $(PKG_JOBS) -C "$(PKG_BUILD_DIR)/libmysql" \
 		CC="g++" \
 		CFLAGS="$(HOST_CFLAGS)" \

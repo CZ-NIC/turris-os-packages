@@ -1,7 +1,5 @@
-Index: crtmpserver-r692/builders/make/compile.mk
-===================================================================
---- crtmpserver-r692.orig/builders/make/compile.mk
-+++ crtmpserver-r692/builders/make/compile.mk
+--- a/builders/make/compile.mk
++++ b/builders/make/compile.mk
 @@ -67,7 +67,7 @@ TINYXML_OBJS = $(TINYXML_SRCS:.cpp=.tiny
  
  #common

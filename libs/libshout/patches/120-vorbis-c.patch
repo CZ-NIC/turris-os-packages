@@ -1,10 +1,8 @@
-Index: libshout-2.2.2/src/vorbis.c
-===================================================================
---- libshout-2.2.2.orig/src/vorbis.c	2008-02-12 12:30:14.000000000 +0100
-+++ libshout-2.2.2/src/vorbis.c	2008-02-12 12:30:14.000000000 +0100
-@@ -27,7 +27,7 @@
- #include <inttypes.h>
+--- a/src/vorbis.c
++++ b/src/vorbis.c
+@@ -28,7 +28,7 @@
  #endif
+ #include <stdlib.h>
  
 -#include <vorbis/codec.h>
 +#include <tremor/ivorbiscodec.h>

@@ -96,22 +96,37 @@
 +++ b/builtin/daemon.c
 @@ -0,0 +1 @@
 +#include "../daemon.c"
+diff --git a/builtin/fast-import.c b/builtin/fast-import.c
+new file mode 100644
+index 0000000..12e1c10
 --- /dev/null
 +++ b/builtin/fast-import.c
 @@ -0,0 +1 @@
 +#include "../fast-import.c"
+diff --git a/builtin/http-backend.c b/builtin/http-backend.c
+new file mode 100644
+index 0000000..f8780e8
 --- /dev/null
 +++ b/builtin/http-backend.c
 @@ -0,0 +1 @@
 +#include "../http-backend.c"
+diff --git a/builtin/imap-send.c b/builtin/imap-send.c
+new file mode 100644
+index 0000000..246e2c7
 --- /dev/null
 +++ b/builtin/imap-send.c
 @@ -0,0 +1 @@
 +#include "../imap-send.c"
+diff --git a/builtin/shell.c b/builtin/shell.c
+new file mode 100644
+index 0000000..deed6bf
 --- /dev/null
 +++ b/builtin/shell.c
 @@ -0,0 +1 @@
 +#include "../shell.c"
+diff --git a/builtin/upload-pack.c b/builtin/upload-pack.c
+new file mode 100644
+index 0000000..14d020a
 --- /dev/null
 +++ b/builtin/upload-pack.c
 @@ -0,0 +1 @@
@@ -127,6 +142,8 @@
  {
  	int listen_port = 0;
  	struct string_list listen_addr = STRING_LIST_INIT_NODUP;
+diff --git a/fast-import.c b/fast-import.c
+index 4fd18a3..57b80c0 100644
 --- a/fast-import.c
 +++ b/fast-import.c
 @@ -3365,7 +3365,7 @@ static void parse_argv(void)
@@ -198,6 +215,8 @@
  {
  	char *method = getenv("REQUEST_METHOD");
  	char *dir;
+diff --git a/imap-send.c b/imap-send.c
+index 0bc6f7f..686cfe6 100644
 --- a/imap-send.c
 +++ b/imap-send.c
 @@ -1362,7 +1362,7 @@ static int git_imap_config(const char *k
@@ -220,6 +239,8 @@
  {
  	char *prog;
  	const char **user_argv;
+diff --git a/upload-pack.c b/upload-pack.c
+index 0c44f6b..6c2e1fd 100644
 --- a/upload-pack.c
 +++ b/upload-pack.c
 @@ -781,7 +781,7 @@ static int upload_pack_config(const char

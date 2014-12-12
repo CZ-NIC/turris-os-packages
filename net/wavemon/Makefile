@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2008-2012 OpenWrt.org
+# Copyright (C) 2008-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wavemon
 PKG_VERSION:=0.7.5
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://eden-feed.erg.abdn.ac.uk/wavemon/stable-releases
@@ -22,6 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/wavemon
   SECTION:=net
   CATEGORY:=Network
+  MAINTAINER:=Jonathan McCrohan <jmccrohan@gmail.com>
   TITLE:=N-curses based wireless network devices monitor
   DEPENDS:=+libncurses
   SUBMENU:=wireless

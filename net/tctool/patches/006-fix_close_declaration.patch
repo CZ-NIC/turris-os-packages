@@ -1,0 +1,20 @@
+--- a/src/etherStreambuf.cpp
++++ b/src/etherStreambuf.cpp
+@@ -28,6 +28,7 @@
+ #include "etherStreambuf.h"
+ 
+ #include <stdio.h>
++#include <unistd.h>
+ 
+ namespace tc {
+    etherStreambuf::etherStreambuf() {
+--- a/src/tcStreambuf.cpp
++++ b/src/tcStreambuf.cpp
+@@ -30,6 +30,7 @@
+ // this is for the udp-part...
+ #include <netdb.h>         // gethostbyname hostent
+ #include <arpa/inet.h>     // inet_ntoa
++#include <unistd.h>
+ 
+ namespace tc {
+    char tcStreambuf::tcPktType::confirmation(char pktType) {

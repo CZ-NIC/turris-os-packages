@@ -1,6 +1,5 @@
 --- a/modules/pam_unix/yppasswd_xdr.c
 +++ b/modules/pam_unix/yppasswd_xdr.c
-2011-10-01 13:46:21.599443197 +0300
 @@ -21,6 +21,268 @@
  #endif
  #include "yppasswd.h"

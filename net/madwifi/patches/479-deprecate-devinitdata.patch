@@ -1,0 +1,13 @@
+--- a/include/compat.h
++++ b/include/compat.h
+@@ -204,6 +204,10 @@ static inline int timeval_compare(struct
+ #define CTLNAME(x)
+ #endif
+ 
++#ifndef __devinitdata
++#define __devinitdata
++#endif
++
+ #endif /* __KERNEL__ */
+ 
+ #endif /* _ATH_COMPAT_H_ */

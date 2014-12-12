@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2011 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=monit
-PKG_VERSION:=5.4
+PKG_VERSION:=5.6
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://mmonit.com/monit/dist
-PKG_MD5SUM:=f1f391241d44059d0d3e5d26f4ec5ddf
+PKG_MD5SUM:=19dfc1ce8512e832134d06eedd96ba50
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_INSTALL:=1

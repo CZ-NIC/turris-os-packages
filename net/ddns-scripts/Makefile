@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ddns-scripts
 PKG_VERSION:=1.0.0
-PKG_RELEASE:=21
+PKG_RELEASE:=22
 
 PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
 
@@ -37,6 +37,8 @@ endef
 define Package/ddns-scripts/install
 	$(INSTALL_DIR) $(1)
 	$(CP) ./files/* $(1)/
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/etc/init.d/ddns $(1)/etc/init.d/
 endef
 
 $(eval $(call BuildPackage,ddns-scripts))

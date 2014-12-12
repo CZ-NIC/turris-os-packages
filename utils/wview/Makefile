@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wview
 PKG_VERSION:=5.19.0-jgoerzen
-PKG_RELEASE=$(PKG_SOURCE_VERSION)
+PKG_RELEASE=$(PKG_SOURCE_VERSION)-r2
 PKG_SOURCE_URL:=git://github.com/jgoerzen/wview.git
 PKG_SOURCE_VERSION:=7bfac6c11e756290c38e7b5862a4c51b6bc6c51e
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/wview
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libcurl +zlib +libpng +libgd +libreadline +libsqlite3 +libusb-1.0 +radlib +sqlite3-cli
+  DEPENDS:=+libcurl +zlib +libpng +libgd +libreadline +libsqlite3 +libusb-1.0 +radlib +sqlite3-cli +libopenssl
   TITLE:=Wview Weather Station Software
   URL:=http://www.wviewweather.com/
 endef

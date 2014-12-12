@@ -19,7 +19,6 @@ PKG_MD5SUM:=52c9e4d3de931d9013eeaccf7371bb2d
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/libdmapsharing-$(PKG_VERSION)
 
-PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk

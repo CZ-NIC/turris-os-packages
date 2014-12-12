@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2008-2012 OpenWrt.org
+# Copyright (C) 2008-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=at
 PKG_VERSION:=3.1.13
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION).orig.tar.gz
 PKG_SOURCE_URL:=http://ftp.debian.org/debian/pool/main/a/at
@@ -20,7 +20,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/at
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libelf
+  DEPENDS:=+libelf1
   TITLE:=Delayed job execution and batch processing
   URL:=http://packages.debian.org/stable/at
   MAINTAINER:=Luka Perkov <openwrt@lukaperkov.net>
@@ -32,7 +32,7 @@ define Package/at/description
 endef
 
 export SENDMAIL=/bin/true
-EXTRA_CFLAGS:=-DNEED_YYWRAP -I$(PKG_BUILD_DIR) -I$(STAGING_DIR)/usr/include/libelf \
+EXTRA_CFLAGS:=-DNEED_YYWRAP -I$(PKG_BUILD_DIR) \
 	$(TARGET_LDFLAGS)
 
 CONFIGURE_ARGS+=--prefix=/usr \
@@ -40,6 +40,9 @@ CONFIGURE_ARGS+=--prefix=/usr \
 		--with-daemon_groupname=nogroup \
 		--with-jobdir=/var/spool/cron/atjobs \
 		--with-atspool=/var/spool/cron/atspool
+
+CONFIGURE_VARS += \
+	ac_cv_header_security_pam_appl_h=no
 
 define Package/at/install
 	$(INSTALL_DIR) $(1)/usr/bin $(1)/usr/sbin $(1)/etc/init.d/

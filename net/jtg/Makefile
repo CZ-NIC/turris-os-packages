@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2009 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=jtg
 PKG_VERSION:=1.95
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE:=$(PKG_NAME)-v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.netlab.tkk.fi/~jmanner/jtg
 
@@ -25,7 +25,7 @@ define Package/jtg
   URL:=https://hoslab.cs.helsinki.fi/savane/projects/jtg/
 endef
 
-define Package/wing/Description
+define Package/jtg/Description
 	The JTG generator is a simple, yet powerful and, if required, accurate
 	traffic generator. jtg differs from other traffic generators in that one
 	instance of a jtg process only sends one stream (e.g. MGEN can send tens
@@ -37,10 +37,8 @@ define Package/wing/Description
 	is the binary for IPv6 networks.
 endef
 
-define Build/Compile
-	$(MAKE) $(TARGET_CONFIGURE_OPTS) \
-		-C $(PKG_BUILD_DIR)
-endef
+MAKE_VARS += \
+	CFLAGS="$(TARGET_CFLAGS) -DLinuxTCP"
 
 define Package/jtg/install
 	$(INSTALL_DIR) $(1)/usr/bin

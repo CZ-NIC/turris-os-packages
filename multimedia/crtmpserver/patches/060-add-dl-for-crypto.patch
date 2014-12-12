@@ -1,8 +1,6 @@
-Index: crtmpserver-r726/builders/make/compile.mk
-===================================================================
---- crtmpserver-r726.orig/builders/make/compile.mk	2012-06-07 19:53:18.028378001 +0200
-+++ crtmpserver-r726/builders/make/compile.mk	2012-06-07 20:02:08.260400669 +0200
-@@ -59,7 +59,7 @@
+--- a/builders/make/compile.mk
++++ b/builders/make/compile.mk
+@@ -59,7 +59,7 @@ DEFINES = $(PLATFORM_DEFINES) $(FEATURES
  
  #library paths
  SSL_INCLUDE=-I$(SSL_BASE)/include

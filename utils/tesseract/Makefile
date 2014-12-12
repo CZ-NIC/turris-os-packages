@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tesseract
-PKG_VERSION:=3.01
+PKG_VERSION:=3.02.02
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://tesseract-ocr.googlecode.com/files/
-PKG_MD5SUM:=1ba496e51a42358fb9d3ffe781b2d20a
+PKG_MD5SUM:=3d57ee5777fa998632ad0693c13a0e9e
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1

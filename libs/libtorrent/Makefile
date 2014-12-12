@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2007-2011 OpenWrt.org
+# Copyright (C) 2007-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libtorrent
-PKG_VERSION:=0.12.6
-PKG_RELEASE:=1
+PKG_VERSION:=0.13.3-git
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://libtorrent.rakshasa.no/downloads
-PKG_MD5SUM:=037499ed708aaf72988cee60e5a8d96b
+PKG_RELEASE=$(PKG_SOURCE_VERSION)-1
+
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/rakshasa/libtorrent.git
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_VERSION:=6fb96e38f166a1189c1b9af2a6e95bf569a81d4b
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
@@ -27,7 +30,6 @@ define Package/libtorrent
   TITLE:=Rakshasa's BitTorrent library
   URL:=http://libtorrent.rakshasa.no/
   DEPENDS:=+libopenssl +libsigcxx
-  MAINTAINER:=Luka Perkov <openwrt@lukaperkov.net>
 endef
 
 define Package/libtorrent/description
@@ -38,7 +40,6 @@ define Package/libtorrent/description
  official client.
 endef
 
-TARGET_CPPFLAGS += -fno-strict-aliasing -fno-inline
 TARGET_LDFLAGS += $(LIBGCC_S)
 
 CONFIGURE_ARGS+= \
@@ -46,7 +47,7 @@ CONFIGURE_ARGS+= \
 	--enable-static \
 	--enable-aligned \
 	--disable-debug \
-	--enable-openssl \
+	--enable-openssl
 
 define Build/Configure
 	( cd $(PKG_BUILD_DIR); ./autogen.sh );

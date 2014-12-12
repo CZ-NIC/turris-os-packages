@@ -1,5 +1,5 @@
 # 
-# Copyright (C) 2006 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netpipe
 PKG_VERSION:=3.7.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=NetPIPE-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.scl.ameslab.gov/netpipe/code
@@ -40,6 +40,9 @@ endef
 
 define Build/Configure
 endef
+
+MAKE_FLAGS += \
+	$(TARGET_CONFIGURE_OPTS)
 
 define Package/netpipe/install
 	$(INSTALL_DIR) $(1)/usr/bin

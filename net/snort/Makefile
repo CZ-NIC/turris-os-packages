@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=snort
 PKG_VERSION:=2.9.2.2
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://snort.org/dl/snort-current/
@@ -26,7 +26,7 @@ define Package/snort/Default
   SUBMENU:=Firewall
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libpcap +libpcre +libdnet +libdaq +libpthread +zlib +libuuid
+  DEPENDS:=+libpcap +libpcre +libdnet +libdaq +libpthread +libuuid +zlib
   TITLE:=Lightweight Network Intrusion Detection System
   URL:=http://www.snort.org/
 endef
@@ -62,7 +62,7 @@ endef
 
 define Package/snort-pgsql
   $(call Package/snort/Default)
-  DEPENDS+= +libpq
+  DEPENDS+= +libpq +libuuid
   TITLE+= (PostgreSQL)
   VARIANT:=pgsql
 endef

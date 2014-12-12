@@ -1,5 +1,5 @@
-# 
-# Copyright (C) 2006-2011 OpenWrt.org
+#
+# Copyright (C) 2006-2013 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=axtls
-PKG_VERSION:=1.4.3
+PKG_VERSION:=1.4.9
 PKG_RELEASE:=1
 
 PKG_SOURCE:=axTLS-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@SF/axtls
-PKG_MD5SUM:=f0e50d11fec81714b40ae21cca23b827
+PKG_MD5SUM:=6d519bc3b5f20faa6ef8d423f5062241
 
 include $(INCLUDE_DIR)/package.mk
 

@@ -1,0 +1,25 @@
+--- a/unix/Makefile.linux
++++ b/unix/Makefile.linux
+@@ -5,8 +5,8 @@
+ # 1) System specific additional libraries, include paths, etc
+ #    (Where to find X11 libraries, etc)
+ #
+-SYSTEM_INCLUDES = -I/usr/X11R6/include 
+-SYSTEM_LDFLAGS = -L/usr/X11R6/lib 
++SYSTEM_INCLUDES ?= -I/usr/X11R6/include 
++SYSTEM_LDFLAGS ?= -L/usr/X11R6/lib 
+ SYSTEM_LIBS = -ldl -lpthread
+ 
+ # 2) System specific capabilities
+@@ -39,8 +39,8 @@ SYSTEM_HAVES = -DLINUX -DHAVE_PSELECT -D
+ -DHAVE_ASSERT $(NETSEC)
+ 
+ SYSTEM = linux
+-CC = g++
+-RANLIB = ranlib
+-AR = ar
++CC ?= g++
++RANLIB ?= ranlib
++AR ?= ar
+ 
+ include Makefile.common

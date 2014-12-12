@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2011 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netio
 PKG_VERSION:=1.31
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)$(subst .,,$(PKG_VERSION)).zip
 PKG_SOURCE_URL:=http://www.ars.de/ars/ars.nsf/f24a6a0b94c22d82862566960071bf5a/aa577bc4be573b05c125706d004c75b5/%24FILE/
@@ -30,7 +30,7 @@ define Package/netio
 endef
 
 define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR) linux CC="$(TARGET_CC)"
+	$(MAKE) -C $(PKG_BUILD_DIR) linux CC="$(TARGET_CC)" CFLAGS="$(TARGET_CFLAGS) -DUNIX"
 endef
 
 define Package/netio/install

@@ -1,8 +1,6 @@
-Index: alsa-utils-1.0.24.2/alsamixer/volume_mapping.c
-===================================================================
---- alsa-utils-1.0.24.2.orig/alsamixer/volume_mapping.c	2011-03-11 13:26:29.000000000 +0100
-+++ alsa-utils-1.0.24.2/alsamixer/volume_mapping.c	2011-03-11 13:27:58.000000000 +0100
-@@ -109,9 +109,9 @@
+--- a/alsamixer/volume_mapping.c
++++ b/alsamixer/volume_mapping.c
+@@ -114,9 +114,9 @@ static double get_normalized_volume(snd_
  	if (use_linear_dB_scale(min, max))
  		return (value - min) / (double)(max - min);
  
@@ -14,7 +12,7 @@ Index: alsa-utils-1.0.24.2/alsamixer/volume_mapping.c
  		normalized = (normalized - min_norm) / (1 - min_norm);
  	}
  
-@@ -144,7 +144,7 @@
+@@ -149,7 +149,7 @@ static int set_normalized_volume(snd_mix
  	}
  
  	if (min != SND_CTL_TLV_DB_GAIN_MUTE) {

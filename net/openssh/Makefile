@@ -1,5 +1,4 @@
 #
-# Copyright (C) 2013 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 # Copyright (C) 2006-2011 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
@@ -9,46 +8,47 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=openssh
-PKG_VERSION:=6.1p1
-PKG_RELEASE:=8
+PKG_VERSION:=6.5p1
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/ \
-		ftp://openbsd.wiretapped.net/pub/OpenBSD/OpenSSH/portable/ \
-		ftp://ftp.belnet.be/packages/openbsd/OpenSSH/portable/ \
-		ftp://ftp.de.openbsd.org/pub/unix/OpenBSD/OpenSSH/portable/
-PKG_MD5SUM:=3345cbf4efe90ffb06a78670ab2d05d5
-
-PKG_BUILD_DEPENDS:=libopenssl
+		http://mirror.steadynet.cz/pub/OpenBSD/OpenSSH/portable/ \
+		http://ftp.spline.de/pub/OpenBSD/OpenSSH/portable/
 
 PKG_CONFIG_DEPENDS:=PACKAGE_openssh_server_nuci_support
+PKG_MD5SUM:=a084e7272b8cbd25afe0f5dce4802fef
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
+
+PKG_BUILD_DEPENDS:=libopenssl
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/openssh/Default
-  SECTION:=net
-  CATEGORY:=Network
-  DEPENDS:=+libopenssl +zlib +SSP_SUPPORT:libssp
-  TITLE:=OpenSSH
-  MAINTAINER:=Peter Wagner <tripolar@gmx.at>
-  URL:=http://www.openssh.com/
-  SUBMENU:=SSH
+	SECTION:=net
+	CATEGORY:=Network
+	DEPENDS:=+libopenssl +zlib +SSP_SUPPORT:libssp
+	TITLE:=OpenSSH
+	MAINTAINER:=Peter Wagner <tripolar@gmx.at>
+	URL:=http://www.openssh.com/
+	SUBMENU:=SSH
+	VARIANT:=without-pam
 endef
 
 define Package/openssh-moduli
-  $(call Package/openssh/Default)
-  DEPENDS+= +openssh-server
-  TITLE+= moduli file
+	$(call Package/openssh/Default)
+	DEPENDS+= +openssh-keygen
+	TITLE+= moduli file
 endef
 
 define Package/openssh-moduli/description
 OpenSSH server moduli file.
 endef
 
-
 define Package/openssh-client
-  $(call Package/openssh/Default)
-  TITLE+= client
+	$(call Package/openssh/Default)
+	TITLE+= client
 endef
 
 define Package/openssh-client/description
@@ -60,9 +60,9 @@ define Package/openssh-client/conffiles
 endef
 
 define Package/openssh-client-utils
-  $(call Package/openssh/Default)
-  DEPENDS+= +openssh-client +openssh-keygen
-  TITLE+= client utilities
+	$(call Package/openssh/Default)
+	DEPENDS+= +openssh-client +openssh-keygen
+	TITLE+= client utilities
 endef
 
 define Package/openssh-client-utils/description
@@ -70,8 +70,8 @@ OpenSSH client utilities.
 endef
 
 define Package/openssh-keygen
-  $(call Package/openssh/Default)
-  TITLE+= keygen
+	$(call Package/openssh/Default)
+	TITLE+= keygen
 endef
 
 define Package/openssh-keygen/description
@@ -79,9 +79,9 @@ OpenSSH keygen.
 endef
 
 define Package/openssh-server
-  $(call Package/openssh/Default)
-  DEPENDS+= +openssh-keygen
-  TITLE+= server
+	$(call Package/openssh/Default)
+	DEPENDS+= +openssh-keygen
+	TITLE+= server
 endef
 
 define Package/openssh-server/description
@@ -100,10 +100,26 @@ define Package/openssh-server/config
 	select PACKAGE_nuci
 endef
 
+define Package/openssh-server-pam
+	$(call Package/openssh/Default)
+	DEPENDS+= +libpthread +openssh-keygen +libpam
+	TITLE+= server (with PAM support)
+	VARIANT:=with-pam
+endef
+
+define Package/openssh-server-pam/description
+OpenSSH server (with PAM support).
+endef
+
+define Package/openssh-server-pam/conffiles
+/etc/pam.d/sshd
+/etc/security/access-sshd-local.conf
+/etc/ssh/sshd_config
+endef
 
 define Package/openssh-sftp-client
-  $(call Package/openssh/Default)
-  TITLE+= SFTP client
+	$(call Package/openssh/Default)
+	TITLE+= SFTP client
 endef
 
 define Package/openssh-sftp-client/description
@@ -111,8 +127,8 @@ OpenSSH SFTP client.
 endef
 
 define Package/openssh-sftp-server
-  $(call Package/openssh/Default)
-  TITLE+= SFTP server
+	$(call Package/openssh/Default)
+	TITLE+= SFTP server
 endef
 
 define Package/openssh-sftp-server/description
@@ -139,6 +155,15 @@ CONFIGURE_ARGS+= \
 	--without-pam \
 	--without-x
 
+
+ifeq ($(BUILD_VARIANT),with-pam)
+CONFIGURE_ARGS += \
+	--with-pam
+else
+CONFIGURE_ARGS += \
+	--without-pam
+endif
+
 ifeq ($(CONFIG_OPENSSL_ENGINE),y)
 CONFIGURE_ARGS+= \
 	--with-ssl-engine
@@ -151,6 +176,10 @@ endif
 
 CONFIGURE_VARS += LD="$(TARGET_CC)"
 
+ifeq ($(BUILD_VARIANT),with-pam)
+TARGET_LDFLAGS += -lpthread
+endif
+
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 		DESTDIR="$(PKG_INSTALL_DIR)" \
@@ -160,6 +189,24 @@ define Build/Compile
 		DESTDIR="$(PKG_INSTALL_DIR)" \
 		STRIP_OPT="" \
 		all install
+endef
+
+define Package/openssh-client/preinst
+#!/bin/sh
+if [ -L $${IPKG_INSTROOT}/usr/bin/ssh ] && [ -L $${IPKG_INSTROOT}/usr/bin/scp ]; then
+	rm -f $${IPKG_INSTROOT}/usr/bin/ssh $${IPKG_INSTROOT}/usr/bin/scp;
+fi
+exit 0
+endef
+
+define Package/openssh-client/postrm
+#!/bin/sh
+rm -f $${IPKG_INSTROOT}/usr/bin/ssh $${IPKG_INSTROOT}/usr/bin/scp;
+if [ -x $${IPKG_INSTROOT}/usr/sbin/dropbear ] ; then
+	ln -s /usr/sbin/dropbear $${IPKG_INSTROOT}/usr/bin/ssh;
+	ln -s /usr/sbin/dropbear $${IPKG_INSTROOT}/usr/bin/scp;
+fi
+exit 0
 endef
 
 define Package/openssh-moduli/install
@@ -251,5 +298,6 @@ $(eval $(call BuildPackage,openssh-moduli))
 $(eval $(call BuildPackage,openssh-client-utils))
 $(eval $(call BuildPackage,openssh-keygen))
 $(eval $(call BuildPackage,openssh-server))
+$(eval $(call BuildPackage,openssh-server-pam))
 $(eval $(call BuildPackage,openssh-sftp-client))
 $(eval $(call BuildPackage,openssh-sftp-server))

@@ -22,8 +22,8 @@ define Package/polipo
   SECTION:=net
   CATEGORY:=Network
   TITLE:=A caching web proxy
-  URL:=http://www.pps.jussieu.fr/~jch/software/polipo/
-  MAINTAINER:=Gabriel Kerneis <kerneis@pps.jussieu.fr>
+  URL:=http://www.pps.univ-paris-diderot.fr/~jch/software/polipo/
+  MAINTAINER:=Gabriel Kerneis <kerneis@pps.univ-paris-diderot.fr>
 endef
 
 define Package/polipo/description

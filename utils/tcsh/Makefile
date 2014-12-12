@@ -14,6 +14,8 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=ftp://ftp.astron.com/pub/tcsh/
 PKG_MD5SUM:=c47de903e3d52f6824c8dd0c91eeb477
 
+PKG_MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/tcsh
@@ -22,7 +24,6 @@ define Package/tcsh
   TITLE:=Enhanced Berkeley UNIX C shell
   DEPENDS:=+libncurses
   URL:=http://www.tcsh.org/
-  MAINTAINER:=Nuno Goncalves <nunojpg@gmail.com>
 endef
 
 define Package/tcsh/description

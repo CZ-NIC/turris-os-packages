@@ -1,11 +1,11 @@
 --- a/Makefile.common
 +++ b/Makefile.common
-@@ -76,15 +76,15 @@
- SENDMAILOBJS = SendMail.o
+@@ -77,15 +77,15 @@ SENDMAILOBJS = $(addprefix $(OUTDIR)/, $
  
- %.o : %.cpp
--	${CC} ${CPPFLAGS} ${CFLAGS} -c $*.cpp
-+	${CXX} ${CPPFLAGS} ${CFLAGS} -c $*.cpp
+ 
+ $(OUTDIR)/%.o: %.cpp
+-	${CC} ${CPPFLAGS} ${CFLAGS} -o $(OUTDIR)/$*.o -c $*.cpp
++	${CXX} ${CPPFLAGS} ${CFLAGS} -o $(OUTDIR)/$*.o -c $*.cpp
  
  all: ${OUTDIR} ${MKMACHDEPINC} ${MAILSVR} ${CRTLCLNT} ${XMCRYPT} ${MKUSERS} ${SENDMAIL}
  

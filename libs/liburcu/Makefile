@@ -18,19 +18,20 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/userspace-rcu-$(PKG_VERSION)
 
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
+PKG_USE_MIPS16:=0
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/liburcu
-	SECTION:=libs
-	CATEGORY:=Libraries
-	DEPENDS:=+libpthread
-	TITLE:=User-space Read-Copy-Update library
-	URL:=https://lttng.org/
+  SECTION:=libs
+  CATEGORY:=Libraries
+  DEPENDS:=+libpthread
+  TITLE:=User-space Read-Copy-Update library
+  URL:=https://lttng.org/
 endef
 
 define Package/liburcu/description
-Userspace Read-Copy-Update library.
+   Userspace Read-Copy-Update library.
 endef
 
 define Build/InstallDev

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2010-2011 OpenWrt.org
+# Copyright (C) 2010-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=e169-stats
 PKG_VERSION:=0.6
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.mavetju.org/download
@@ -28,6 +28,9 @@ endef
 define Package/e169-stats/description
   Huawei E169 statistics, works with other Huawei's devices.
 endef
+
+MAKE_FLAGS += \
+	LDFLAGS="$(TARGET_LDFLAGS) -lncurses"
 
 define Package/e169-stats/install
 	$(INSTALL_DIR) $(1)/usr/bin

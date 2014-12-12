@@ -1,5 +1,5 @@
 # 
-# Copyright (C) 2008-2011 OpenWrt.org
+# Copyright (C) 2008-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=imsnif
 PKG_VERSION:=0.04
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_SOURCE_URL:=@SF/im-snif
 PKG_SOURCE:=$(PKG_NAME)f_$(PKG_VERSION).tgz
@@ -36,7 +36,7 @@ define Package/imsnif/description
 endef
 
 define Build/Compile
-	$(TARGET_CXX) $(TARGET_CPPFLAGS) -fno-rtti -I$(LINUX_DIR)/include \
+	$(TARGET_CXX) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -fno-rtti -I$(LINUX_DIR)/include \
 		-o $(PKG_BUILD_DIR)/src/imsnif \
 			$(PKG_BUILD_DIR)/src/imsniff.cpp \
 			$(PKG_BUILD_DIR)/src/util.cpp \

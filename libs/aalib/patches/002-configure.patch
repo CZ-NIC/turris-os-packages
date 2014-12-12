@@ -1,0 +1,11 @@
+--- a/configure.in
++++ b/configure.in
+@@ -88,7 +88,7 @@
+ AC_ARG_WITH(slang-driver,
+         [  --with-slang-driver=no   Used to disable slang driver],[
+ 	if test x$withval = xno; then
+-	  vga_driver_test=no
++	  slang_driver_test=no
+ 	fi
+ ])
+ AC_ARG_WITH(curses-driver,
