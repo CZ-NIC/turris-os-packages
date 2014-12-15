@@ -8,7 +8,7 @@
 
 include $(TOPDIR)/package/packages/net/ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,lcollect-majordomo,12))
+$(eval $(call UCOLLECT_BASE,lcollect-majordomo,13))
 
 define Package/lcollect-majordomo
 	SECTION:=net
@@ -30,6 +30,7 @@ define Package/lcollect-majordomo/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_db.sh $(1)/usr/bin/majordomo_db.sh
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_merge.lua $(1)/usr/bin/majordomo_merge.lua
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_cache.lua $(1)/usr/bin/majordomo_cache.lua
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_locked_precache.sh $(1)/usr/bin/majordomo_locked_precache.sh
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_show.lua $(1)/usr/bin/majordomo_show.lua
 	$(INSTALL_DIR) $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libplugin_majordomo.so $(1)/usr/lib/libplugin_lcollect_majordomo_$(PKG_VERSION).so
