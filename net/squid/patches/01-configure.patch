@@ -1,0 +1,86 @@
+diff -u -r -N a/configure.ac b/configure.ac
+--- a/configure.ac	2014-12-09 17:28:58.000000000 +0100
++++ b/configure.ac	2014-12-17 10:15:58.253446664 +0100
+@@ -1306,7 +1306,6 @@
+ AC_SUBST(SSLLIB)
+ 
+ if test "x$with_openssl" = "xyes"; then
+-SQUID_CHECK_OPENSSL_GETCERTIFICATE_WORKS
+ SQUID_CHECK_OPENSSL_CONST_SSL_METHOD
+ SQUID_CHECK_OPENSSL_TXTDB
+ fi
+@@ -1898,11 +1897,6 @@
+     AC_MSG_WARN([If you need Kerberos support you'll have to patch])
+     AC_MSG_WARN([your system. See contrib/solaris/solaris-krb5-include.patch])
+   fi
+-  SQUID_CHECK_KRB5_HEIMDAL_BROKEN_KRB5_H
+-  if test "x$squid_cv_broken_heimdal_krb5_h" = "xyes"; then
+-    AC_DEFINE(HAVE_BROKEN_HEIMDAL_KRB5_H, 1, [Define to 1 if Heimdal krb5.h is broken for C++])
+-  fi
+-  AC_CHECK_HEADERS(krb5.h com_err.h et/com_err.h)
+ 
+   ac_com_error_message=no
+   if test "x$ac_cv_header_com_err_h" = "xyes" ; then
+diff -u -r -N a/helpers/basic_auth/NIS/nis_support.cc b/helpers/basic_auth/NIS/nis_support.cc
+--- a/helpers/basic_auth/NIS/nis_support.cc	2014-12-09 17:27:21.000000000 +0100
++++ b/helpers/basic_auth/NIS/nis_support.cc	2014-12-17 10:19:21.496784546 +0100
+@@ -27,8 +27,6 @@
+ #define BOOL_DEFINED
+ #endif
+ 
+-#include <rpcsvc/ypclnt.h>
+-
+ #if HAVE_RPCSVC_YP_PROT_H
+ #include <rpcsvc/yp_prot.h>
+ #endif
+@@ -40,36 +38,6 @@
+ char *
+ get_nis_password(char *user, char *nisdomain, char *nismap)
+ {
+-    static char *val = NULL;
+-    char *password = NULL;
+-    int vallen, res;
+-
+-#ifdef DEBUG
+-    printf("Domain is set to %s\n", nisdomain);
+-    printf("YP Map is set to %s\n", nismap);
+-#endif
+-
+-    /* Free last entry */
+-    if (val) {
+-        free(val);
+-        val = NULL;
+-    }
+-
+-    /* Get NIS entry */
+-    res = yp_match(nisdomain, nismap, user, strlen(user), &val, &vallen);
+-
+-    switch (res) {
+-    case NO_YPERR:
+-        /* username = */
+-        (void) strtok(val, ":");
+-        password = strtok(NULL, ",:");
+-        return password;
+-    case YPERR_YPBIND:
+-        syslog(LOG_ERR, "Squid Authentication through ypbind failure: can't communicate with ypbind");
+-        return NULL;
+-    case YPERR_KEY:		/* No such key in map */
+-        return NULL;
+-    default:
+-        return NULL;
+-    }
++    syslog(LOG_ERR, "NIS authentication not ported to OpenWRT");
++    return NULL;
+ }
+diff -u -r -N a/src/Makefile.am b/src/Makefile.am
+--- a/src/Makefile.am	2014-12-09 17:27:21.000000000 +0100
++++ b/src/Makefile.am	2014-12-17 10:28:00.590129495 +0100
+@@ -983,7 +983,7 @@
+ 
+ # cf_gen builds the configuration files.
+ cf_gen$(EXEEXT): $(cf_gen_SOURCES) $(cf_gen_DEPENDENCIES) cf_gen_defines.cci
+-	$(HOSTCXX) -o $@ $(srcdir)/cf_gen.cc -I$(srcdir) -I$(top_builddir)/include/ -I$(top_builddir)/src
++	g++ -o $@ $(srcdir)/cf_gen.cc -I$(srcdir) -I$(top_builddir)/include/ -I$(top_builddir)/src
+ 
+ # squid.conf.default is built by cf_gen when making cf_parser.cci
+ squid.conf.default squid.conf.documented: cf_parser.cci
