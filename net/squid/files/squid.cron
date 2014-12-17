@@ -1,0 +1,2 @@
+MAILTO=""
+0	0	*	*	*	root	/usr/sbin/squid -k rotate

@@ -119,15 +119,27 @@ define BuildPlugin
 endef
 
 define Package/squid/install
-	$(INSTALL_DIR) $(1)/etc/squid
-	$(CP) $(PKG_INSTALL_DIR)/etc/squid/mime.conf $(1)/etc/squid/
-	$(CP) $(PKG_INSTALL_DIR)/etc/squid/squid.conf $(1)/etc/squid/
+	$(INSTALL_DIR) $(1)/etc/squid $(1)/etc/cron.d $(1)/etc/init.d
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/etc/squid/mime.conf $(1)/etc/squid/
+	$(INSTALL_DATA) files/squid.conf $(1)/etc/squid/
+	$(INSTALL_DATA) files/squid.cron $(1)/etc/cron.d/squid
+	$(INSTALL_BIN) files/squid.init $(1)/etc/init.d/squid
 	$(INSTALL_DIR) $(1)/usr/share/squid
 	$(CP) $(PKG_INSTALL_DIR)/usr/share/squid/* $(1)/usr/share/squid/
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/squid $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/usr/lib/squid
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/squid/{unlinkd,pinger,log_file_daemon} $(1)/usr/lib/squid/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/squid/{unlinkd,pinger,log_file_daemon} $(1)/usr/lib/squid/
+	chmod u+s $(1)/usr/lib/squid/pinger
+endef
+
+define Package/squid/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+if /etc/init.d/squid enabled ; then
+	/etc/init.d/squid restart
+fi
+}
 endef
 
 define Package/squid-mod-cachemgr/install
