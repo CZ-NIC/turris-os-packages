@@ -50,18 +50,6 @@ define Package/squid-mod-cachemgr
   TITLE:=Web based proxy manager and reporting tool
 endef
 
-define Package/squid-mod-external-acl-ip-user
-  $(call Package/squid/Default)
-  DEPENDS:=squid
-  TITLE:=IP user external ACL helper
-endef
-
-define Package/squid-mod-external-acl-unix-group
-  $(call Package/squid/Default)
-  DEPENDS:=squid
-  TITLE:=Unix group external ACL helper
-endef
-
 CONFIGURE_ARGS += \
 	--datadir=/usr/share/squid \
 	--libexecdir=/usr/lib/squid \
@@ -80,7 +68,7 @@ CONFIGURE_ARGS += \
 	--enable-default-err-language=English \
 	--enable-linux-netfilter \
 	--enable-icmp \
-	--enable-external-acl-helpers="" \
+	--disable-external-acl \
 	--enable-underscores \
 	--enable-cache-digests \
 	--enable-referer-log \
@@ -154,6 +142,3 @@ $(eval $(call RequireHeader,/usr/include/openssl/ssl.h, \
 
 $(eval $(call BuildPackage,squid))
 $(eval $(call BuildPackage,squid-mod-cachemgr))
-$(eval $(call BuildPlugin,squid-mod-external-acl-ip-user,ip_user_check))
-$(eval $(call BuildPlugin,squid-mod-external-acl-unix-group,squid_unix_group))
-
