@@ -114,6 +114,7 @@ handle_openssh_section(){
     set_parameter "$config" VersionAddendum VersionAddendum
     set_parameter "$config" Banner Banner
     set_parameter "$config" IPQoS IPQoS
+    set_parameter "$config" TrustedUserCAKeys TrustedUserCAKeys
     set_multiple_parameters "$config" Subsystem Subsystem
 }
 
