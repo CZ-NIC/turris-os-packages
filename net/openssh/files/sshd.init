@@ -100,11 +100,11 @@ handle_openssh_section(){
     set_parameter "$config" UsePAM UsePAM
     set_parameter "$config" AllowAgentForwarding AllowAgentForwarding
     set_parameter "$config" AllowTcpForwarding AllowTcpForwarding
-    set_parameter "$config" AllowStreamLocalForwarding AllowStreamLocalForwarding
     set_parameter "$config" GatewayPorts GatewayPorts
     set_parameter "$config" X11Forwarding X11Forwarding
     set_parameter "$config" X11DisplayOffset X11DisplayOffset
     set_parameter "$config" X11UseLocalhost X11UseLocalhost
+    set_parameter "$config" XAuthLocation XAuthLocation
     set_parameter "$config" PrintMotd PrintMotd
     set_parameter "$config" PrintLastLog PrintLastLog
     set_parameter "$config" TCPKeepAlive TCPKeepAlive
@@ -149,7 +149,6 @@ handle_match_section() {
 
         set_parameter "$config" AllowAgentForwarding AllowAgentForwarding
         set_parameter "$config" AllowTcpForwarding AllowTcpForwarding
-        set_parameter "$config" AllowStreamLocalForwarding AllowStreamLocalForwarding
         set_parameter "$config" AuthorizedKeysFile AuthorizedKeysFile
         set_parameter "$config" AuthorizedPrincipalsFile AuthorizedPrincipalsFile
         set_parameter "$config" Banner Banner
@@ -194,9 +193,10 @@ init_sshd() {
 }
 
 start() {
-    init_sshd
+	init_sshd
 
-	for type in rsa dsa ecdsa; do {
+    # This code can be probably replaced by ssh-keygen -A (present since 6.4 version)
+	for type in rsa dsa ecdsa ed25519; do {
 		# check for keys
 		key=/etc/ssh/ssh_host_${type}_key
 		[ ! -f $key ] && {
@@ -207,6 +207,7 @@ start() {
 			}
 		}
 	}; done
+
 	user_exists sshd 22 || user_add sshd 22 22 sshd /var/empty
 	group_exists sshd 22 || group_add sshd 22 
 	mkdir -m 0700 -p /var/empty
