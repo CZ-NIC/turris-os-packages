@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=104
+PKG_VERSION:=105
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=9bf331b2833db9e9ceba8da57fef0e5c6fdbcedb
+PKG_SOURCE_VERSION:=ce31a04005608201a98a52bba1f07c6b0e5c966a
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -83,7 +83,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/cron.d
 
 	$(INSTALL_DIR) $(1)/etc/ssl
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/startcom.pem $(1)/etc/ssl/updater.pem
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater.pem $(1)/etc/ssl/updater.pem
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/updater.config $(1)/etc/config/updater
