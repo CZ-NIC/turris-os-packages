@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2013-2014 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2013-2015 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -14,7 +14,7 @@ PKG_VERSION:=$(2)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/ucollect.git
 PKG_SOURCE:=$$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=57d1aa8d5e1d1035c58c800e6ce6c753d6ab1c1c
+PKG_SOURCE_VERSION:=9a169a7daa147c7fc16a1912ca799faf9f28cfac
 PKG_SOURCE:=$$(PKG_NAME)-$$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
