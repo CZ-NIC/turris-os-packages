@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-firewall-rules
-PKG_VERSION:=35
+PKG_VERSION:=36
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/fw-rules.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=5296a47a31f3b251dfa44677c90a88e9833a2e40
+PKG_SOURCE_VERSION:=c8c0e1e3cb7936d64be5a60f6482d900daeb15e3
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
@@ -40,7 +40,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/ulogd.d/
 	$(LN) /var/etc/ulogd-turris.conf $(1)/etc/ulogd.d/
 	$(INSTALL_DIR) $(1)/usr/share/firewall
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/firewall.turris $(1)/usr/share/firewall/turris
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/firewall-turris.sh $(1)/usr/share/firewall/turris
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/fw-rules.cron $(1)/etc/cron.d/fw-rules
 	$(INSTALL_DIR) $(1)/etc/ssl
