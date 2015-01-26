@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=88
+PKG_VERSION:=89
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=90ec170c74d9cc47f4a5e7555f3a989a0098cc2d
+PKG_SOURCE_VERSION:=268ed0bdebc3130f4f0a0ea1402de2ead72c553e
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
