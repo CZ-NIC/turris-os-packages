@@ -25,7 +25,7 @@ PKG_MAINTAINER:=Michael Heimpold <mhei@heimpold.de>
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=COPYING
 
-PKG_FIXUP:=autoreconf
+PKG_FIXUP:=autoreconf libtool
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 
