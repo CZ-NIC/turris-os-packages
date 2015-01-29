@@ -31,6 +31,7 @@ define Package/$(PKG_NAME)/postinst
  • Opravy v nástroji Majordomo
    ◦ Pořadí zobrazovaných měsíců
    ◦ Pád při vložení prázdné konfigurace
+   ◦ Optimalizace cache
  • Vylepšení ucollectu
    ◦ Vypisuje statistiky využití paměti
    ◦ Úklid v kódu
