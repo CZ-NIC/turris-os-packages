@@ -27,7 +27,7 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Update openWRT na Barrier Breaker
+    create_notification -s news " • Update OpenWRT na stabilní verzi Barrier Breaker
  • Opravy v nástroji Majordomo
    ◦ Pořadí zobrazovaných měsíců
    ◦ Pád při vložení prázdné konfigurace
@@ -35,16 +35,19 @@ define Package/$(PKG_NAME)/postinst
  • Vylepšení ucollectu
    ◦ Vypisuje statistiky využití paměti
    ◦ Úklid v kódu
-   ◦ Odstraněn memory leak v ucollect-bucjets
+   ◦ Odstraněn memory leak v ucollect-buckets
    ◦ Oprava počítání času v ucollect-bandwidth
-   ◦ Opravy chyb z Coverity
- • Syslog podporuje větší zprávy
+   ◦ Opravy chyb hlášených statickým analyzátorem Coverity
+ • Zvýšen limit délky zpráv v syslogu
  • Povoleno větší množství otevřených spojení
  • Bezpečnostní opravy v
    ◦ unbound
    ◦ OpenSSL
  • Podpora modemu Turris
- • Update Forisu (rychlejší, nové funkce)
+ • Inovované rozhraní Foris
+   ◦ Nový vzhled, připravený pro mobilní zařízení
+   ◦ Přidaná sekce pro instalaci seznamů balíčků
+   ◦ Zrychlení odezvy rozhraní
  • Nové seznamy balíčků
    ◦ squid
    ◦ cacerts (Kořenové certifikáty autorit)
