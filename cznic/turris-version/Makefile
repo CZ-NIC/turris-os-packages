@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=1.8
+PKG_VERSION:=2.0
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
@@ -27,13 +27,27 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Nová verze ucollect-spoof.
- • Firewall obsahuje drobné opravy načítání pravidel přes ipsets.
- • Ucollect-bandwidth počítá statistiky vytížení linky.
- • Autoritativní DNS server Knot povýšen na verzi 1.6.0.
- • Další opravy shellu bash.
- • Další přípravy na přechod k novější verzi OpenWRT.
- • Možnost pojmenovat zařízení zobrazovaná v nástroji Majordomo."
+    create_notification -s news " • Update openWRT na Barrier Breaker
+ • Opravy v nástroji Majordomo
+   ◦ Pořadí zobrazovaných měsíců
+   ◦ Pád při vložení prázdné konfigurace
+ • Vylepšení ucollectu
+   ◦ Vypisuje statistiky využití paměti
+   ◦ Úklid v kódu
+   ◦ Odstraněn memory leak v ucollect-bucjets
+   ◦ Oprava počítání času v ucollect-bandwidth
+   ◦ Opravy chyb z Coverity
+ • Syslog podporuje větší zprávy
+ • Povoleno větší množství otevřených spojení
+ • Bezpečnostní opravy v
+   ◦ unbound
+   ◦ OpenSSL
+ • Podpora modemu Turris
+ • Update Forisu (rychlejší, nové funkce)
+ • Nové seznamy balíčků
+   ◦ squid
+   ◦ cacerts (Kořenové certifikáty autorit)
+   ◦ tor"
 }
 endef
 
