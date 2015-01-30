@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ouidb
-PKG_VERSION:=2
+PKG_VERSION:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/ouidb.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=23d4d7b3bc50091d589866b96772f484be62eb2c
+PKG_SOURCE_VERSION:=3fa0339fdd3e9a6c825adae8408ab189546d0cce
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Robin Obůrka <robin.oburka@nic.cz>
@@ -36,7 +36,7 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/ouidb $(1)/usr/bin/
 
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/oui.csv $(1)/usr/share/ouidb/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/oui.db $(1)/usr/share/ouidb/
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
