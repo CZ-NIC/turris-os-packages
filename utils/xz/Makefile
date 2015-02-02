@@ -101,10 +101,6 @@ define Build/InstallDev
 		$(1)/usr/lib/
 endef
 
-define Package/xz/install
-	true
-endef
-
 define BuildPlugin
   define Package/$(1)/install
 	$(INSTALL_DIR) $$(1)/usr/bin
