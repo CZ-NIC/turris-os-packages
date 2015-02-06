@@ -45,7 +45,7 @@ define Package/socat/config
 config SOCAT_SSL
         bool "SSL support"
         depends on PACKAGE_socat
-        default n
+        default y
         help
           Implements SSL support in socat (using libopenssl).
 endef
@@ -57,7 +57,7 @@ endef
 CONFIGURE_ARGS += \
 	--disable-libwrap \
 	--disable-readline \
-	--enable-termios
+	--disable-termios
 
 ifneq ($(CONFIG_SOCAT_SSL),y)
   CONFIGURE_ARGS+= --disable-openssl
