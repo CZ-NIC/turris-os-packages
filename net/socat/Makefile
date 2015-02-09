@@ -12,7 +12,8 @@ PKG_VERSION:=1.7.2.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=http://www.dest-unreach.org/socat/download
+PKG_SOURCE_URL:=http://www.dest-unreach.org/socat/download \
+	https://api.turris.cz/mirror
 PKG_MD5SUM:=39231e512d8052f328552865df15d42f
 
 PKG_INSTALL:=1
