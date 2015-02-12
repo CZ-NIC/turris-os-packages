@@ -7,7 +7,7 @@ ipaddr="192.168.1.1"
 setup_root_passwd() {
         local DUMMY_PASS=`tr -dc A-Za-z0-9_ < /dev/urandom | head -c 8`
         echo -e "${DUMMY_PASS}\n${DUMMY_PASS}" | passwd root 2>&1 >/dev/null && \
-        echo "root passwod is: ${DUMMY_PASS}"
+        echo "root password is: ${DUMMY_PASS}"
 }
 
 setup_network() {

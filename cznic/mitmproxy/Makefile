@@ -7,12 +7,12 @@
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=mitmproxy
-PKG_VERSION:=0.2.2
+PKG_VERSION:=0.3.0
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/labs/mitmproxy.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=8495a15e5501763c3cf56705a3174a8f01c85556
+PKG_SOURCE_VERSION:=61e154bf8d565fd1eb55f2def17615cd5fbdc72f
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Ondrej Mikle <ondrej.mikle@nic.cz>
@@ -43,6 +43,21 @@ define Package/mitmproxy/install
 	$(CP) \
 		$(PKG_INSTALL_DIR)/* \
 		$(1)
+endef
+
+define Package/mitmproxy/postinst
+#!/bin/sh
+if [ -z "$${IPKG_INSTROOT}" ]; then
+	python /usr/bin/mitm_turris_config.py
+	rm -rf /root/.mitmkeys/
+	echo Generating keys...
+	/usr/bin/mitmkeygen
+	echo Starting...
+	/etc/init.d/mitmproxy_wrapper start
+	echo Enabling at startup
+	/etc/init.d/mitmproxy_wrapper enable
+fi
+true
 endef
 
 $(eval $(call BuildPackage,mitmproxy))

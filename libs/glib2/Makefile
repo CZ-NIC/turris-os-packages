@@ -16,7 +16,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/glib-$(PKG_VERSION)
 PKG_SOURCE_URL:=@GNOME/glib/2.37
 PKG_MD5SUM:=17a9493e3e2efebc8ab81ec8d4480bfb
 
-PKG_BUILD_DEPENDS:=glib2/host libpthread zlib libintl libffi
+PKG_BUILD_DEPENDS:=glib2/host libpthread zlib libintl libffi python
 HOST_BUILD_DEPENDS:=libintl/host libiconv/host libffi/host
 PKG_INSTALL:=1
 PKG_USE_MIPS16:=0
