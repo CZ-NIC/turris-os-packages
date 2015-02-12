@@ -15,7 +15,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNOME/vala/0.16/
 PKG_MD5SUM:=84b742e9cca4c90fde3026c3793c03c1
 
-PKG_BUILD_DEPENDS:=glib2/host vala/host
+PKG_BUILD_DEPENDS:=glib2 glib2/host vala/host
 HOST_BUILD_DEPENDS:=glib2/host
 
 include $(INCLUDE_DIR)/host-build.mk
