@@ -7,7 +7,7 @@
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=mitmproxy
-PKG_VERSION:=0.3.1
+PKG_VERSION:=0.3.3
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/labs/mitmproxy.git
@@ -60,7 +60,7 @@ fi
 true
 endef
 
-define Package/mitm/prerm
+define Package/mitmproxy/prerm
 	/etc/init.d/mitmproxy_wrapper stop || true
 	/etc/init.d/mitmproxy_wrapper disable || true
 endef
