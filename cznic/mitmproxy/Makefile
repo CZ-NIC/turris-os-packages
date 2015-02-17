@@ -60,4 +60,9 @@ fi
 true
 endef
 
+define Package/mitm/prerm
+	/etc/init.d/mitmproxy_wrapper stop || true
+	/etc/init.d/mitmproxy_wrapper disable || true
+endef
+
 $(eval $(call BuildPackage,mitmproxy))
