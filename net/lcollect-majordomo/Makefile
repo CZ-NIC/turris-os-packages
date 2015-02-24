@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2014 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2014,2015 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,13 +8,13 @@
 
 include $(TOPDIR)/package/packages/net/ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,lcollect-majordomo,9))
+$(eval $(call UCOLLECT_BASE,lcollect-majordomo,17))
 
 define Package/lcollect-majordomo
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=The majordomo plugin for lcollect
-	DEPENDS:=+lcollect +ip
+	DEPENDS:=+lcollect +ip +ouidb
 endef
 
 define Package/lcollect-majordomo/conffiles
@@ -30,6 +30,7 @@ define Package/lcollect-majordomo/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_db.sh $(1)/usr/bin/majordomo_db.sh
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_merge.lua $(1)/usr/bin/majordomo_merge.lua
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_cache.lua $(1)/usr/bin/majordomo_cache.lua
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_locked_precache.sh $(1)/usr/bin/majordomo_locked_precache.sh
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/plugins/majordomo/scripts/majordomo_show.lua $(1)/usr/bin/majordomo_show.lua
 	$(INSTALL_DIR) $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libplugin_majordomo.so $(1)/usr/lib/libplugin_lcollect_majordomo_$(PKG_VERSION).so

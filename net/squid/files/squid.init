@@ -1,0 +1,27 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2014 CZ.NIC
+
+SERVICE_USE_PID=1
+
+# Start after the updater resume
+START=86
+
+start() {
+	mkdir -m 0755 -p /var/log/squid /var/cache/squid
+	chown nobody /var/log/squid /var/cache/squid
+	/usr/sbin/squid -z
+	/usr/sbin/squid
+}
+
+stop() {
+	/usr/sbin/squid -k kill
+}
+
+restart() {
+	stop
+	start
+}
+
+reload() {
+	/usr/sbin/squid -k reconfigure
+}

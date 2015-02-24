@@ -60,8 +60,10 @@ handle_openssh_section(){
     set_multiple_parameters "$config" Port Port
     set_parameter "$config" AddressFamily AddressFamily
     set_multiple_parameters "$config" ListenAddress ListenAddress
-    set_parameter "$confing" Protocol Protocol
+    set_parameter "$config" Protocol Protocol
     set_multiple_parameters "$config" HostKey HostKey
+    set_multiple_parameters "$config" HostCertificate HostCertificate
+    set_parameter "$config" HostKeyAgent HostKeyAgent
     set_parameter "$config" KeyRegenerationInterval KeyRegenerationInterval
     set_parameter "$config" ServerKeyBits ServerKeyBits
     set_parameter "$config" SyslogFacility SyslogFacility
@@ -71,6 +73,7 @@ handle_openssh_section(){
     set_parameter "$config" StrictModes StrictModes
     set_parameter "$config" MaxAuthTries MaxAuthTries
     set_parameter "$config" MaxSessions MaxSessions
+    set_parameter "$config" AuthenticationMethods AuthenticationMethods
     set_parameter "$config" RSAAuthentication RSAAuthentication
     set_parameter "$config" PubkeyAuthentication PubkeyAuthentication
     set_parameter "$config" AuthorizedKeysFile AuthorizedKeysFile .ssh/authorized_keys
@@ -83,6 +86,10 @@ handle_openssh_section(){
     set_parameter "$config" IgnoreRhosts IgnoreRhosts
     set_parameter "$config" PasswordAuthentication PasswordAuthentication
     set_parameter "$config" PermitEmptyPasswords PermitEmptyPasswords
+    set_parameter "$config" Ciphers Ciphers
+    set_parameter "$config" RekeyLimit RekeyLimit
+    set_parameter "$config" RevokedKeys RevokedKeys
+    set_parameter "$config" KexAlgorithms KexAlgorithms
     set_parameter "$config" ChallengeResponseAuthentication ChallengeResponseAuthentication
     set_parameter "$config" KerberosAuthentication KerberosAuthentication
     set_parameter "$config" KerberosOrLocalPasswd KerberosOrLocalPasswd
@@ -97,6 +104,7 @@ handle_openssh_section(){
     set_parameter "$config" X11Forwarding X11Forwarding
     set_parameter "$config" X11DisplayOffset X11DisplayOffset
     set_parameter "$config" X11UseLocalhost X11UseLocalhost
+    set_parameter "$config" XAuthLocation XAuthLocation
     set_parameter "$config" PrintMotd PrintMotd
     set_parameter "$config" PrintLastLog PrintLastLog
     set_parameter "$config" TCPKeepAlive TCPKeepAlive
@@ -110,10 +118,17 @@ handle_openssh_section(){
     set_parameter "$config" PidFile PidFile
     set_parameter "$config" MaxStartups MaxStartups
     set_parameter "$config" PermitTunnel PermitTunnel
+    set_parameter "$config" PermitTTY PermitTTY
     set_parameter "$config" ChrootDirectory ChrootDirectory
     set_parameter "$config" VersionAddendum VersionAddendum
     set_parameter "$config" Banner Banner
-    set_parameter "$config" IPQoS IPQoS
+    set_multiple_parameters "$config" IPQoS IPQoS
+    set_multiple_parameters "$config" AcceptEnv AcceptEnv
+    set_multiple_parameters "$config" AllowUsers AllowUsers
+    set_multiple_parameters "$config" AllowGroups AllowGroups
+    set_multiple_parameters "$config" DenyUsers DenyUsers
+    set_multiple_parameters "$config" DenyGroups DenyGroups
+    set_parameter "$config" TrustedUserCAKeys TrustedUserCAKeys
     set_multiple_parameters "$config" Subsystem Subsystem
 }
 
@@ -178,9 +193,10 @@ init_sshd() {
 }
 
 start() {
-    init_sshd
+	init_sshd
 
-	for type in rsa dsa ecdsa; do {
+    # This code can be probably replaced by ssh-keygen -A (present since 6.4 version)
+	for type in rsa dsa ecdsa ed25519; do {
 		# check for keys
 		key=/etc/ssh/ssh_host_${type}_key
 		[ ! -f $key ] && {
@@ -191,6 +207,7 @@ start() {
 			}
 		}
 	}; done
+
 	user_exists sshd 22 || user_add sshd 22 22 sshd /var/empty
 	group_exists sshd 22 || group_add sshd 22 
 	mkdir -m 0700 -p /var/empty

@@ -8,15 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=0.2.4.21
+PKG_VERSION:=0.2.5.10
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.torproject.org/dist \
 	https://archive.torproject.org/tor-package-archive
-PKG_MD5SUM:=bde981d10e8faf1e171ef1ebbb7b398a
+PKG_MD5SUM:=4bde375229a7a7f77c0596ae05556527
 
-PKG_BUILD_DEPENDS:=libminiupnpc libnatpmp
+PKG_BUILD_DEPENDS:=libevent2 libopenssl
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -46,17 +46,6 @@ $(call Package/tor/Default/description)
  This package contains the tor daemon.
 endef
 
-define Package/tor-fw-helper
-$(call Package/tor/Default)
-  TITLE:=Firewall helper for tor
-  DEPENDS:=+tor +libminiupnpc +libnatpmp
-endef
-
-define Package/tor-fw-helper/description
-$(call Package/tor/Default/description)
- This package contains a helper for automatically configuring port forwarding.
-endef
-
 define Package/tor-geoip
 $(call Package/tor/Default)
   TITLE:=GeoIP db for tor
@@ -75,10 +64,6 @@ endef
 CONFIGURE_ARGS += \
 	--with-libevent-dir="$(STAGING_DIR)/usr" \
 	--with-ssl-dir="$(STAGING_DIR)/usr" \
-	--enable-upnp \
-	--with-libminiupnpc-dir="$(STAGING_DIR)/usr" \
-	--enable-nat-pmp \
-	--with-libnatpmp-dir="$(STAGING_DIR)/usr" \
 	--disable-asciidoc
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
@@ -103,16 +88,10 @@ define Package/tor/install
 	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/etc/tor/torrc.sample $(1)/etc/tor/torrc
 endef
 
-define Package/tor-fw-helper/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/tor-fw-helper $(1)/usr/bin/
-endef
-
 define Package/tor-geoip/install
 	$(INSTALL_DIR) $(1)/usr/share/tor
 	$(CP) $(PKG_INSTALL_DIR)/usr/share/tor/geoip $(1)/usr/share/tor/
 endef
 
 $(eval $(call BuildPackage,tor))
-$(eval $(call BuildPackage,tor-fw-helper))
 $(eval $(call BuildPackage,tor-geoip))

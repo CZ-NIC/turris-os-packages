@@ -1,0 +1,14 @@
+diff -u -r -N a/helpers/external_acl/session/required.m4 b/helpers/external_acl/session/required.m4
+--- a/helpers/external_acl/session/required.m4	2014-12-09 17:27:21.000000000 +0100
++++ b/helpers/external_acl/session/required.m4	2014-12-19 13:11:50.554085539 +0100
+@@ -1 +1 @@
+-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <db.h>]],[[DB_ENV *db_env = NULL; db_env_create(&db_env, 0);]])],[BUILD_HELPER="session"],[])
++AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <db.h>]],[[DB_ENV *db_env = NULL; db_env_create(&db_env, 0);]])],[],[])
+diff -u -r -N a/helpers/external_acl/time_quota/required.m4 b/helpers/external_acl/time_quota/required.m4
+--- a/helpers/external_acl/time_quota/required.m4	2014-12-09 17:27:21.000000000 +0100
++++ b/helpers/external_acl/time_quota/required.m4	2014-12-19 13:11:31.685454367 +0100
+@@ -1,2 +1,2 @@
+-AC_CHECK_HEADERS([db_185.h],[BUILD_HELPER="time_quota"])
+-AC_EGREP_HEADER([dbopen],[/usr/include/db.h],[BUILD_HELPER="time_quota"])
++AC_CHECK_HEADERS([db_185.h],[])
++AC_EGREP_HEADER([dbopen],[/usr/include/db.h],[])

@@ -1,0 +1,35 @@
+diff -r -u a/configure.ac b/configure.ac
+--- a/configure.ac	2015-01-13 13:54:25.000000000 +0100
++++ b/configure.ac	2015-02-04 15:00:19.606376353 +0100
+@@ -493,11 +493,6 @@
+   AC_MSG_NOTICE([With dl])
+ fi
+ 
+-AC_SEARCH_LIBS([shm_open], [rt])
+-if test "x$ac_cv_search_shm_open" != "xno" ; then
+-  AC_DEFINE(HAVE_SHM,1,[Support shared memory features])
+-fi
+-
+ AC_MSG_CHECKING([for DiskIO modules to be enabled])
+ squid_disk_module_candidates=""
+ squid_opt_enable_diskio="auto"  #values: no, yes, "auto"(=yes+detect modules)
+@@ -1342,7 +1337,6 @@
+     AC_DEFINE(USE_OPENSSL,1,[OpenSSL support is available])
+ 
+     # check for other specific broken implementations
+-    SQUID_CHECK_OPENSSL_GETCERTIFICATE_WORKS
+     SQUID_CHECK_OPENSSL_CONST_SSL_METHOD
+     SQUID_CHECK_OPENSSL_TXTDB
+     SQUID_CHECK_OPENSSL_HELLO_OVERWRITE_HACK
+diff -r -u a/src/Makefile.am b/src/Makefile.am
+--- a/src/Makefile.am	2015-01-13 13:52:01.000000000 +0100
++++ b/src/Makefile.am	2015-02-04 13:55:34.503095696 +0100
+@@ -970,7 +970,7 @@
+ 
+ # cf_gen builds the configuration files.
+ cf_gen$(EXEEXT): $(cf_gen_SOURCES) $(cf_gen_DEPENDENCIES) cf_gen_defines.cci
+-	$(BUILDCXX) $(BUILDCXXFLAGS) -o $@ $(srcdir)/cf_gen.cc -I$(srcdir) -I$(top_builddir)/include/ -I$(top_builddir)/src
++	g++ -o $@ $(srcdir)/cf_gen.cc -I$(srcdir) -I$(top_builddir)/include/ -I$(top_builddir)/src
+ 
+ # squid.conf.default is built by cf_gen when making cf_parser.cci
+ squid.conf.default squid.conf.documented: cf_parser.cci

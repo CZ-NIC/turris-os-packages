@@ -1,0 +1,9 @@
+#!/bin/sh
+
+TEMP=`sensors sa56004-i2c-0-4c`
+
+BOARD_TEMP=`echo "$TEMP" | sed -nr 's/^temp1:[ \t]+[+-]{0,1}([0-9]+).*$/\1/p'`
+CPU_TEMP=`echo "$TEMP" | sed -nr 's/^temp2:[ \t]+[+-]{0,1}([0-9]+).*$/\1/p'` 
+
+printf "Board:\t%s\n" $BOARD_TEMP
+printf "CPU:\t%s\n" $CPU_TEMP

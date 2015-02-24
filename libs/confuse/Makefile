@@ -15,7 +15,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://bzero.se/confuse
 PKG_MD5SUM:=0e883d66f0f58fc33585b430c652aa30
 
-PKG_FIXUP:=autoreconf
+PKG_FIXUP:=autoreconf libtool
 
 include $(INCLUDE_DIR)/package.mk
 

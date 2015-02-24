@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2013 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2013-2015 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=103
+PKG_VERSION:=106
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=7dfc077d796115c440beed5708af8744df281188
+PKG_SOURCE_VERSION:=16fd282fd7218af46b1585a2e472bb2311ad90ab
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -83,7 +83,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/cron.d
 
 	$(INSTALL_DIR) $(1)/etc/ssl
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/startcom.pem $(1)/etc/ssl/updater.pem
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater.pem $(1)/etc/ssl/updater.pem
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/updater.config $(1)/etc/config/updater
