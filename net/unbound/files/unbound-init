@@ -71,8 +71,8 @@ init_unbound() {
     set_multiple_parameters interface interface
     set_parameter port port 53
     set_parameter outgoing_range outgoing-range 60
-    set_parameter outgoing_num_tcp outgoing-num-tcp 1
-    set_parameter incoming_num_tcp incoming-num-tcp 1
+    set_parameter outgoing_num_tcp outgoing-num-tcp 128
+    set_parameter incoming_num_tcp incoming-num-tcp 128
     set_parameter msg_buffer_size msg-buffer-size 8192
     set_parameter msg_cache_size msg-cache-size 100k
     set_parameter msg_cache_slabs msg-cache-slabs 1
