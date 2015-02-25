@@ -30,7 +30,7 @@ define Package/gst-python
   CATEGORY:=Languages
   TITLE:=python bindings for gstreamer
   URL:=http://gstreamer.freedesktop.org/
-  DEPENDS:=+gstreamer +gst-plugins-base +python-gobject +python-mini
+  DEPENDS:=+gstreamer +gst-plugins-base +python-gobject
 endef
 
 define Package/gst-python/description

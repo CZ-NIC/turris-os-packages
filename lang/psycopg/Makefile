@@ -26,7 +26,7 @@ define Package/python-psycopg
   CATEGORY:=Languages
   TITLE:=PostgreSQL database adapter for Python
   URL:=http://www.initd.org/
-  DEPENDS:=+python-mini +libpq +python-egenix-mx
+  DEPENDS:=+python +libpq +python-egenix-mx
 endef
 
 define Package/python-psycopg/description

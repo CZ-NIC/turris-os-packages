@@ -32,7 +32,7 @@ define Package/dbus-python
   CATEGORY:=Languages
   TITLE:=Python bindings for dbus
   URL:=http://dbus.freedesktop.org/
-  DEPENDS:=+python +python-expat +libdbus-glib
+  DEPENDS:=+python +libdbus-glib
 endef
 
 define Package/dbus-python/description

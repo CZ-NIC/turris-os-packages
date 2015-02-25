@@ -1,9 +1,15 @@
+diff --git a/Makefile.pre.in b/Makefile.pre.in
+index bcd83bf..c4dcc6d 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -1010,28 +1010,6 @@
- 		$(INSTALL_DATA) $(srcdir)/Modules/xxmodule.c \
- 			$(DESTDIR)$(LIBDEST)/distutils/tests ; \
- 	fi
+@@ -1005,32 +1005,6 @@ libinstall:	build_all $(srcdir)/Lib/$(PLATDIR) $(srcdir)/Modules/xxmodule.c
+ 		done; \
+ 	done
+ 	$(INSTALL_DATA) $(srcdir)/LICENSE $(DESTDIR)$(LIBDEST)/LICENSE.txt
+-	if test -d $(DESTDIR)$(LIBDEST)/distutils/tests; then \
+-		$(INSTALL_DATA) $(srcdir)/Modules/xxmodule.c \
+-			$(DESTDIR)$(LIBDEST)/distutils/tests ; \
+-	fi
 -	PYTHONPATH=$(DESTDIR)$(LIBDEST)  $(RUNSHARED) \
 -		$(PYTHON_FOR_BUILD) -Wi -tt $(DESTDIR)$(LIBDEST)/compileall.py \
 -		-d $(LIBDEST) -f \

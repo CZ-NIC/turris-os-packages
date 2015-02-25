@@ -26,7 +26,7 @@ define Package/arm
   SUBMENU:=Python
   TITLE:=Terminal status monitor for Tor relays
   URL:=http://www.atagar.com/arm/
-  DEPENDS:=+python +python-ncurses +python-readline
+  DEPENDS:=+python
 endef
 
 define Package/arm/description
