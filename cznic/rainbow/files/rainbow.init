@@ -32,6 +32,6 @@ start() {
 stop() {
 	# Reset to the default, so a reboot can be recognized.
 	rainbow all enable white
-	kill $(cat $PID_FILE)
+	kill -9 $(cat $PID_FILE)
 	rm $PID_FILE
 }

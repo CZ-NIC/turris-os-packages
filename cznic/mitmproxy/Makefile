@@ -7,7 +7,7 @@
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=mitmproxy
-PKG_VERSION:=0.3.0
+PKG_VERSION:=0.3.3
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/labs/mitmproxy.git
@@ -58,6 +58,11 @@ if [ -z "$${IPKG_INSTROOT}" ]; then
 	/etc/init.d/mitmproxy_wrapper enable
 fi
 true
+endef
+
+define Package/mitmproxy/prerm
+	/etc/init.d/mitmproxy_wrapper stop || true
+	/etc/init.d/mitmproxy_wrapper disable || true
 endef
 
 $(eval $(call BuildPackage,mitmproxy))
