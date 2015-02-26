@@ -64,7 +64,7 @@ endef
 
 define Package/python
 $(call Package/python/Default)
-  DEPENDS:=+python-base +libncursesw +libbz2 +libgdbm +libsqlite3 +libexpat +libdb47
+  DEPENDS:=+python-base +libncursesw +libbz2 +libexpat
 endef
 
 define Package/python/description
@@ -150,6 +150,7 @@ endef
 
 define PyPackage/python/filespec
 +|/usr/lib/python$(PYTHON_VERSION)
+-|/usr/lib/python$(PYTHON_VERSION)/bsddb
 -|/usr/lib/python$(PYTHON_VERSION)/config
 -|/usr/lib/python$(PYTHON_VERSION)/distutils/cygwinccompiler.py
 -|/usr/lib/python$(PYTHON_VERSION)/distutils/command/wininst*
@@ -157,8 +158,15 @@ define PyPackage/python/filespec
 -|/usr/lib/python$(PYTHON_VERSION)/idlelib
 -|/usr/lib/python$(PYTHON_VERSION)/lib2to3
 -|/usr/lib/python$(PYTHON_VERSION)/lib-tk
+-|/usr/lib/python$(PYTHON_VERSION)/lib-dynload/_bsddb.so
+-|/usr/lib/python$(PYTHON_VERSION)/lib-dynload/dbm.so
+-|/usr/lib/python$(PYTHON_VERSION)/lib-dynload/gdbm.so
 -|/usr/lib/python$(PYTHON_VERSION)/lib-dynload/_testcapi.so
+-|/usr/lib/python$(PYTHON_VERSION)/lib-dynload/_sqlite3.so
 -|/usr/lib/python$(PYTHON_VERSION)/pdb.doc
+-|/usr/lib/python$(PYTHON_VERSION)/pydoc.py
+-|/usr/lib/python$(PYTHON_VERSION)/pydoc_data
+-|/usr/lib/python$(PYTHON_VERSION)/sqlite3
 -|/usr/lib/python$(PYTHON_VERSION)/test
 -|/usr/lib/python$(PYTHON_VERSION)/webbrowser.py
 -|/usr/lib/python$(PYTHON_VERSION)/*/test
@@ -218,3 +226,9 @@ $(eval $(call PyPackage,python))
 
 $(eval $(call BuildPackage,python-base))
 $(eval $(call BuildPackage,python))
+
+include ./files/python-package-bsddb.mk
+include ./files/python-package-dbm.mk
+include ./files/python-package-gdbm.mk
+include ./files/python-package-pydoc.mk
+include ./files/python-package-sqlite3.mk
