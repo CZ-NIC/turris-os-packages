@@ -28,7 +28,7 @@ define Package/python-xapian
   SUBMENU:=Python
   TITLE:=xapian python bindings
   URL:=http://xapian.org/
-  DEPENDS:=+python-mini +libxapian
+  DEPENDS:=+python +libxapian
 endef
 
 MAKE_FLAGS += \

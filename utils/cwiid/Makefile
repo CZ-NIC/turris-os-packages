@@ -47,7 +47,7 @@ $(call Package/cwiid/Default)
   SECTION:=lang
   CATEGORY:=Languages
   TITLE:=Python bindings for the cwiid libs
-  DEPENDS:= +python-mini +libcwiid
+  DEPENDS:= +python +libcwiid
 endef
 
 CONFIGURE_ARGS += \

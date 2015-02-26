@@ -29,7 +29,7 @@ define Package/python-yapsnmp
   CATEGORY:=Languages
   TITLE:=Python interface to Net-SNMP
   URL:=http://yapsnmp.sourceforge.net/
-  DEPENDS:=+python-mini +libnetsnmp
+  DEPENDS:=+python +libnetsnmp
 endef
 
 define Package/python-yapsnmp/description

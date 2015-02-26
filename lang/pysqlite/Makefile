@@ -26,7 +26,7 @@ define Package/python-sqlite
  CATEGORY:=Languages
  TITLE:=SQLite database adapter for Python
  URL:=http://www.initd.org/tracker/pysqlite/wiki/pysqlite
- DEPENDS:=+python-mini +libsqlite3
+ DEPENDS:=+python +libsqlite3
 endef
 
 define Package/python-sqlite/description

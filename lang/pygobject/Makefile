@@ -33,7 +33,7 @@ define Package/python-gobject
   CATEGORY:=Languages
   TITLE:=GLib bindings for python
   URL:=http://www.pygtk.org/
-  DEPENDS:=+python-mini +glib2 +libffi
+  DEPENDS:=+python +glib2 +libffi
 endef
 
 define Package/python-gobject/description

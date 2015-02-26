@@ -26,7 +26,7 @@ define Package/python-json
 	SUBMENU:=Python
 	TITLE:=json-py
 	URL:=http://sourceforge.net/projects/json-py/
-	DEPENDS:=+python-mini
+	DEPENDS:=+python
 endef
 
 define Build/Configure

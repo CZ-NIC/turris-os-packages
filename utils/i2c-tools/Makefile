@@ -49,7 +49,7 @@ define Package/python-smbus
   SECTION:=lang
   CATEGORY:=Languages
   TITLE:=Python bindings for the SMBUS
-  DEPENDS:=+PACKAGE_python-smbus:python-mini +i2c-tools
+  DEPENDS:=+PACKAGE_python-smbus:python +i2c-tools
 endef
 
 define Package/i2c-tools/description
