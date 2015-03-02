@@ -8,6 +8,6 @@
 
 include $(TOPDIR)/package/packages/net/ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_PLUGIN,bandwidth,15))
+$(eval $(call UCOLLECT_PLUGIN,bandwidth,16))
 
 $(eval $(call BuildPackage,ucollect-bandwidth))
