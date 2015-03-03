@@ -13,6 +13,7 @@ PKG_RELEASE:=1
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/T/Twisted/
 PKG_MD5SUM:=8379eb15601d6b7543a189594d3fed8f
+PKG_BUILD_DEPENDS:=distribute/host
 
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python-package.mk)
