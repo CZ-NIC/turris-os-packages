@@ -36,7 +36,7 @@ endef
 
 define PyPackage/python-mysql/filespec
 +|$(PYTHON_PKG_DIR)/_mysql.so
-+|$(PYTHON_PKG_DIR)/_mysql_exceptions.py*
++|$(PYTHON_PKG_DIR)/_mysql_exceptions.py
 +|$(PYTHON_PKG_DIR)/MySQLdb
 endef
 
