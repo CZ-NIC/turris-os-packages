@@ -25,8 +25,11 @@ define HostPython
 	(	export PYTHONPATH="$(PYTHONPATH)"; \
 		export PYTHONOPTIMIZE=""; \
 		export PYTHONDONTWRITEBYTECODE=1; \
+		export _python_sysroot="$(STAGING_DIR)"; \
+		export _python_prefix="/usr"; \
+		export _python_exec_prefix="/usr"; \
 		$(1) \
-		$(3) $(2); \
+		$(HOST_PYTHON_BIN) $(2); \
 	)
 endef
 
@@ -103,8 +106,6 @@ define Build/Compile/PyMod
 		$(3) \
 		, \
 		./setup.py $(2) \
-		, \
-		$(HOST_PYTHON_BIN) \
 	)
 	find $(PKG_INSTALL_DIR) -name "*\.pyc" -o -name "*\.pyo" | xargs rm -f
 endef
@@ -119,8 +120,7 @@ define Build/Compile/Host/PyMod
 		LDFLAGS="$(HOST_LDFLAGS)" \
 		$(3) \
 		, \
-		./setup.py $(2), \
-		$(HOST_PYTHON_BIN) \
+		./setup.py $(2) \
 	)
 endef
 

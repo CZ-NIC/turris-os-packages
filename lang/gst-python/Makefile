@@ -24,6 +24,12 @@ $(call include_mk, python-package.mk)
 TARGET_CFLAGS += $(FPIC)
 CONFIGURE_VARS += PYTHON=$(HOST_PYTHON)
 
+CONFIGURE_ARGS += \
+  	_python_sysroot="$(STAGING_DIR)" \
+	_python_prefix="/usr" \
+	_python_exec_prefix="/usr"
+
+
 define Package/gst-python
   SUBMENU:=Python
   SECTION:=lang

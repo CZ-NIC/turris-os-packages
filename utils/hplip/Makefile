@@ -33,6 +33,9 @@ define Package/hplip/description
 endef
 
 CONFIGURE_ARGS += \
+	_python_sysroot="$(STAGING_DIR)" \
+	_python_prefix="/usr" \
+	_python_exec_prefix="/usr" \
 	--disable-gui-build \
 	--disable-network-build \
 	--disable-fax-build \
