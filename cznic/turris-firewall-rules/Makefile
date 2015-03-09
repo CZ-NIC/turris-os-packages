@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-firewall-rules
-PKG_VERSION:=40
+PKG_VERSION:=41
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/fw-rules.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=9f34decda4377c67f589187cf5313e66832ae31d
+PKG_SOURCE_VERSION:=e81198426eb0ef2d8b7c47ca1baf824d64a3ead8
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
@@ -71,6 +71,12 @@ if [ -z "$${IPKG_INSTROOT}" ]; then
 			echo 'OK'
 		fi
 	fi
+	for zone in $$(uci show firewall | grep 'turris-0' | sed 's/.*\[\([[:digit:]]*\)\].*/\1/')
+		echo -n 'Removing deprecated turris logging mechanism...' &&
+		uci delete firewall.@zone["$${zone}"].log_prefix &&
+		uci commit
+	do
+	done
 fi
 exit 0
 endef
