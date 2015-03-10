@@ -72,10 +72,10 @@ if [ -z "$${IPKG_INSTROOT}" ]; then
 		fi
 	fi
 	for zone in $$(uci show firewall | grep 'turris-0' | sed 's/.*\[\([[:digit:]]*\)\].*/\1/')
+	do
 		echo -n 'Removing deprecated turris logging mechanism...' &&
 		uci delete firewall.@zone["$${zone}"].log_prefix &&
 		uci commit
-	do
 	done
 fi
 exit 0
