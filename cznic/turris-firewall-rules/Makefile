@@ -71,12 +71,26 @@ if [ -z "$${IPKG_INSTROOT}" ]; then
 			echo 'OK'
 		fi
 	fi
+	hit=false
 	for zone in $$(uci show firewall | grep 'turris-0' | sed 's/.*\[\([[:digit:]]*\)\].*/\1/')
 	do
+		hit=true
 		echo -n 'Removing deprecated turris logging mechanism...' &&
-		uci delete firewall.@zone["$${zone}"].log_prefix &&
+		uci delete firewall.@zone["$${zone}"].log_prefix && (
+			(
+				uci delete -q firewall.@zone["$${zone}"].log_limit;
+				uci delete -q firewall.@zone["$${zone}"].log_level;
+				uci delete -q firewall.@zone["$${zone}"].log_limit_burst;
+				uci set -q firewall.@zone["$${zone}"].log=0;
+			) || true
+		) &&
 		uci commit
 	done
+	if [ $${hit} == true ]; then
+		echo -n 'Restarting firewall... ' &&
+		/etc/init.d/firewall restart 1>/dev/null 2>&1 &&
+		echo 'OK'
+	fi
 fi
 exit 0
 endef
