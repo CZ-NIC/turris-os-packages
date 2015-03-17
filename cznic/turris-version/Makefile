@@ -27,17 +27,17 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Majordomo používá lokální databázi MAC adres
- • Unbound zvedá limity na počet TCP spojení
- • Foris umožňuje použití prefixu URL
- • Přidána kontrola zachytávání paketů pravidly projektu Turris
- • Lepší přiřazování pravidel k paketům zachyceným na firewallu
- • Mnoho oprav
- • Balíčky z upstreamu (neinstalované automaticky):
-   ◦ postfix
-   ◦ nginx s podporou SSL
- • Nové seznamy balíčků
-   ◦ webcam"
+    create_notification -s news " • Majordomo používá lokální databázi MAC adres
+ • Unbound zvedá limity na počet TCP spojení
+ • Foris umožňuje použití prefixu URL
+ • Přidána kontrola zachytávání paketů pravidly projektu Turris
+ • Lepší přiřazování pravidel k paketům zachyceným na firewallu
+ • Mnoho oprav
+ • Balíčky z upstreamu (neinstalované automaticky):
+   ◦ postfix
+   ◦ nginx s podporou SSL
+ • Nové seznamy balíčků
+   ◦ webcam"
 }
 endef
 
