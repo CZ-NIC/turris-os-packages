@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-firewall-rules
-PKG_VERSION:=38
+PKG_VERSION:=42
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/fw-rules.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=8bf0cbc3a7a48915b159fa4f80f4822278ef88cd
+PKG_SOURCE_VERSION:=8c30ae304ac72221614f230839d20a3a3afc0048
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
@@ -26,7 +26,8 @@ define Package/$(PKG_NAME)
 endef
 
 define Build/Configure
-	$(SED) 's/^VERSION=.*/VERSION=$(PKG_VERSION)/' $(PKG_BUILD_DIR)/firewall-turris.sh
+	$(SED) 's/^VERSION=.*/VERSION=$(PKG_VERSION)/' $(PKG_BUILD_DIR)/firewall-turris-apply.sh
+	$(SED) 's/^VERSION=.*/VERSION=$(PKG_VERSION)/' $(PKG_BUILD_DIR)/firewall-turris-download.sh
 endef
 
 define Build/Compile
@@ -44,7 +45,8 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/ulogd.d/
 	$(LN) /var/etc/ulogd-turris.conf $(1)/etc/ulogd.d/
 	$(INSTALL_DIR) $(1)/usr/share/firewall
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/firewall-turris.sh $(1)/usr/share/firewall/turris
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/firewall-turris-apply.sh $(1)/usr/share/firewall/turris
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/firewall-turris-download.sh $(1)/usr/share/firewall/turris-download
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/fw-rules.cron $(1)/etc/cron.d/fw-rules
 	$(INSTALL_DIR) $(1)/etc/ssl
@@ -68,6 +70,26 @@ if [ -z "$${IPKG_INSTROOT}" ]; then
 			/etc/init.d/firewall reload 1>/dev/null 2>&1 &&
 			echo 'OK'
 		fi
+	fi
+	hit=false
+	for zone in $$(uci show firewall | grep 'turris-0' | sed 's/.*\[\([[:digit:]]*\)\].*/\1/')
+	do
+		hit=true
+		echo -n 'Removing deprecated turris logging mechanism...' &&
+		uci delete firewall.@zone["$${zone}"].log_prefix && (
+			(
+				uci delete -q firewall.@zone["$${zone}"].log_limit;
+				uci delete -q firewall.@zone["$${zone}"].log_level;
+				uci delete -q firewall.@zone["$${zone}"].log_limit_burst;
+				uci set -q firewall.@zone["$${zone}"].log=0;
+			) || true
+		) &&
+		uci commit
+	done
+	if [ $${hit} == true ]; then
+		echo -n 'Restarting firewall... ' &&
+		/etc/init.d/firewall restart 1>/dev/null 2>&1 &&
+		echo 'OK'
 	fi
 fi
 exit 0

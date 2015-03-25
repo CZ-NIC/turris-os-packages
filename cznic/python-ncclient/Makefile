@@ -26,7 +26,7 @@ define Package/python-ncclient
 	CATEGORY:=Languages
 	TITLE:=python-ncclient
 	URL:=http://beaker.readthedocs.org
-	DEPENDS:=+python +python-expat
+	DEPENDS:=+python
 	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
 endef
 

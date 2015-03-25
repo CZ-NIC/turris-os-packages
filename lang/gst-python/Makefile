@@ -24,13 +24,19 @@ $(call include_mk, python-package.mk)
 TARGET_CFLAGS += $(FPIC)
 CONFIGURE_VARS += PYTHON=$(HOST_PYTHON)
 
+CONFIGURE_ARGS += \
+  	_python_sysroot="$(STAGING_DIR)" \
+	_python_prefix="/usr" \
+	_python_exec_prefix="/usr"
+
+
 define Package/gst-python
   SUBMENU:=Python
   SECTION:=lang
   CATEGORY:=Languages
   TITLE:=python bindings for gstreamer
   URL:=http://gstreamer.freedesktop.org/
-  DEPENDS:=+gstreamer +gst-plugins-base +python-gobject +python-mini
+  DEPENDS:=+gstreamer +gst-plugins-base +python-gobject
 endef
 
 define Package/gst-python/description

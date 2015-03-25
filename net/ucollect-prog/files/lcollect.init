@@ -15,6 +15,7 @@ majordomo_gen_cfg() {
 build_config() {
     mkdir -p /tmp/lcollect/
     cat /etc/config/lcollect >/tmp/lcollect/lcollect
+	echo "" >> /tmp/lcollect/lcollect
     if ls /usr/share/lcollect/configs/* >/dev/null 2>&1 ; then
 	for cfgfile in $(ls /usr/share/lcollect/configs/* | sort); do
 		cat "$cfgfile" >>/tmp/lcollect/lcollect

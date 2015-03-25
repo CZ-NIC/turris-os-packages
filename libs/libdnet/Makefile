@@ -49,7 +49,7 @@ endef
 
 define Package/pydnet
   $(call Package/libdnet/Default)
-  DEPENDS:=libdnet +python-mini
+  DEPENDS:=libdnet +python
 endef
 
 define Package/pydnet/description

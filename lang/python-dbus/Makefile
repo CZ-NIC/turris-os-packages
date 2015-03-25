@@ -26,13 +26,18 @@ $(call include_mk, python-package.mk)
 TARGET_LDFLAGS += \
 	-Wl,-rpath=$(STAGING_DIR)/usr/lib
 
+CONFIGURE_ARGS += \
+	_python_sysroot="$(STAGING_DIR)" \
+	_python_prefix="/usr" \
+	_python_exec_prefix="/usr"
+
 define Package/dbus-python
   SUBMENU:=Python
   SECTION:=lang
   CATEGORY:=Languages
   TITLE:=Python bindings for dbus
   URL:=http://dbus.freedesktop.org/
-  DEPENDS:=+python +python-expat +libdbus-glib
+  DEPENDS:=+python +libdbus-glib
 endef
 
 define Package/dbus-python/description

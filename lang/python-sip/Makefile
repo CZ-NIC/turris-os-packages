@@ -57,7 +57,7 @@ define Build/Configure
 	echo "STRIP			$(STRIP)" >> $(PYTHON_SIP_CONFIG_TEMPLATE)
 	$(call HostPython, \
 		cd "$(PKG_BUILD_DIR)"; \
-		, $(HOST_PYTHON_BIN) \
+		, \
 		./configure.py \
 			--crosscompile \
 			--bindir=$(PKG_INSTALL_DIR)/usr/bin \
@@ -116,7 +116,7 @@ HOST_CFLAGS+= \
 define Host/Configure
 	$(call HostPython, \
 		cd "$(HOST_BUILD_DIR)"; \
-		, $(HOST_PYTHON_BIN) \
+		, \
 		./configure.py \
 			--bindir=$(STAGING_DIR_HOST)/usr/bin \
 			--destdir=$(STAGING_DIR_HOST)/$(PYTHON_PKG_DIR) \

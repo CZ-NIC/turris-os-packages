@@ -20,9 +20,11 @@ config NGINX_FLV
 	help
 		Provides the ability to seek within FLV (Flash) files using time-based offsets.
 
+# This option is not enabled by default in upstream, but should be enabled for Turris builds.
 config NGINX_SSL
 	bool
 	prompt "Enable SSL module"
+	default y
 	help
 		Enable HTTPS/SSL support.
 
@@ -157,5 +159,36 @@ config NGINX_HTTP_UPSTREAM_IP_HASH
 	bool
 	prompt "Enable HTTP IP hash module"
 	default y
+
+config NGINX_NAXSI
+	bool
+	prompt "Enable NAXSI module"
+	select PACKAGE_nginx-naxsi
+	default y
+	help
+		Enable support for NAXSI WAF.
+
+config NGINX_PROXYPROTOCOL
+	bool
+	prompt "Enable HAProxy proxyprotocol"
+	select PACKAGE_nginx-proxyprotocol
+	select NGINX_SSL
+	default n
+	help
+		Enable support for PROXY PROTOCOL
+
+config NGINX_SYSLOG
+	bool
+	prompt "Enable Syslog module"
+	select PACKAGE_nginx-syslog
+	default y
+	help
+		Provides the ability log to a remote destination
+
+config NGINX_HTTP_UPSTREAM_CHECK
+	bool
+	select NGINX_SSL
+	prompt "Enable HTTP upstream check module"
+	default n
 
 endmenu

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2012 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -13,12 +13,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nmap
-PKG_VERSION:=6.40
-PKG_RELEASE:=1
+PKG_VERSION:=6.47
+PKG_RELEASE:=2
+PKG_MAINTAINER=Nuno Goncalves <nunojpg@gmail.com>
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://nmap.org/dist/
-PKG_MD5SUM:=c0e2f3370e1fb97fb53185b15aa22aff
+PKG_MD5SUM:=edfe81f6763223c0a29bfa15a8526e2a
+PKG_LICENSE:=GPL-2.0
+PKG_LICENSE_FILES:=COPYING
 
 PKG_INSTALL:=1
 
@@ -84,7 +87,8 @@ CONFIGURE_ARGS += \
 	--with-libdnet=included \
 	--with-libpcre=included \
 	--with-libpcap="$(STAGING_DIR)/usr" \
-	--without-liblua
+	--without-liblua \
+	--without-zenmap
 
 CONFIGURE_VARS += CXXFLAGS="$$$$CXXFLAGS -fno-builtin"
 

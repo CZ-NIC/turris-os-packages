@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2013-2014 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2013-2015 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=93
+PKG_VERSION:=97
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=2da897b8e2315c203dbfc2f29e108575b004fb7b
+PKG_SOURCE_VERSION:=34c6d60e1f93dee66d39d0f723fd038af45e76b5
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -28,6 +28,11 @@ endef
 define Package/nuci-nethist
 	TITLE:=nethist plugin for nuci
 	DEPENDS:=+nuci +nethist
+endef
+
+define Package/nuci-securris
+	TITLE:=Access securris through nuci
+	DEPENDS:=+nuci
 endef
 
 define Build/Compile
@@ -49,6 +54,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/*.yin $(1)/usr/share/nuci/lua_plugins/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/*.lua $(1)/usr/share/nuci/lua_plugins/
 	rm $(1)/usr/share/nuci/lua_plugins/nethist.*
+	rm $(1)/usr/share/nuci/lua_plugins/securris.*
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_lib
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_lib/* $(1)/usr/share/nuci/lua_lib/
@@ -60,5 +66,12 @@ define Package/nuci-nethist/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/nethist.lua $(1)/usr/share/nuci/lua_plugins/
 endef
 
+define Package/nuci-securris/install
+	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/securris.yin $(1)/usr/share/nuci/lua_plugins/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/securris.lua $(1)/usr/share/nuci/lua_plugins/
+endef
+
 $(eval $(call BuildPackage,$(PKG_NAME)))
 $(eval $(call BuildPackage,nuci-nethist))
+$(eval $(call BuildPackage,nuci-securris))

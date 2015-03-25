@@ -25,7 +25,12 @@ EXTRA_LDFLAGS+= \
 	-L$(ICONV_PREFIX) -L$(INTL_PREFIX)
 
 TARGET_CFLAGS += $(FPIC)
-CONFIGURE_ARGS += --enable-static --disable-instrospection
+CONFIGURE_ARGS += \
+	--enable-static \
+	--disable-instrospection \
+	_python_sysroot="$(STAGING_DIR)" \
+	_python_prefix="/usr" \
+	_python_exec_prefix="/usr"
 
 define Package/python-gobject
   SUBMENU:=Python
@@ -33,7 +38,7 @@ define Package/python-gobject
   CATEGORY:=Languages
   TITLE:=GLib bindings for python
   URL:=http://www.pygtk.org/
-  DEPENDS:=+python-mini +glib2 +libffi
+  DEPENDS:=+python +glib2 +libffi
 endef
 
 define Package/python-gobject/description
