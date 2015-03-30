@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nethist
-PKG_VERSION:=10
+PKG_VERSION:=11
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE_VERSION:=aa1d2f570d20e9170c455217442186b1769f69e9
