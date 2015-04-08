@@ -26,6 +26,13 @@ endef
 define Build/Compile
 endef
 
+define Package/uboot-turris/postinst
+	#!/bin/sh
+	[ -n "$$IPKG_INSTROOT" ] || {
+		mtd -e /dev/mtd5 write /boot/u-boot  /dev/mtd5
+	}
+endef
+
 define Package/uboot-turris/install
 	$(INSTALL_DIR) $(1)/boot
 	$(CP) $(TOPDIR)/uboot-static/uboot-mpc85xx-TURRIS1_padding $(1)/boot/u-boot
