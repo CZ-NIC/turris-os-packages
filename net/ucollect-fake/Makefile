@@ -10,4 +10,4 @@ include $(TOPDIR)/package/packages/net/ucollect-prog/Makefile.common
 
 $(eval $(call UCOLLECT_PLUGIN,fake,1))
 
-$(eval $(call BuildPackage,ucollect-spoof))
+$(eval $(call BuildPackage,ucollect-fake))
