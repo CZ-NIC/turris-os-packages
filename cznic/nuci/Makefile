@@ -32,7 +32,7 @@ endef
 
 define Package/nuci-securris
 	TITLE:=Access securris through nuci
-	DEPENDS:=+nuci
+	DEPENDS:=+nuci +luasocket
 endef
 
 define Build/Compile
