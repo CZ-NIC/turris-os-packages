@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=2.1
+PKG_VERSION:=2.2
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
@@ -27,17 +27,14 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Majordomo používá lokální databázi MAC adres
- • Unbound zvedá limity na počet TCP spojení
- • Foris umožňuje použití prefixu URL
- • Přidána kontrola zachytávání paketů pravidly projektu Turris
- • Lepší přiřazování pravidel k paketům zachyceným na firewallu
- • Mnoho oprav
- • Balíčky z upstreamu (neinstalované automaticky):
-   ◦ postfix
-   ◦ nginx s podporou SSL
- • Nové seznamy balíčků
-   ◦ webcam"
+    create_notification -s news " • Drobné opravy v:
+   ◦ ucollect
+   ◦ updater
+   ◦ nuci
+ • Vyřešené některé kolize balíčků kernelových modulů.
+ • Balík net-snmp je aktualizován na verzi z upstreamu.
+ • Nethist zaznamenává více statistik o využití paměti.
+ • Nikola posílá TCP flagy zachycených paketů a dělá předvýběr paketů k zalogování."
 }
 endef
 
