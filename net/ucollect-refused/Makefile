@@ -6,7 +6,7 @@
 # #
 #
 
-include $(TOPDIR)/package/packages/net/ucollect-prog/Makefile.common
+include ../ucollect-prog/Makefile.common
 
 $(eval $(call UCOLLECT_PLUGIN,refused,5))
 
