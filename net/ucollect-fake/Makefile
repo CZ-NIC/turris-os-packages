@@ -16,7 +16,7 @@ define Package/ucollect-fake
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=The fake servers plugin for ucollect
-	DEPENDS:=+ucollect-prog +kmod-ipt-tproxy +syslog-ng3
+	DEPENDS:=+ucollect-prog +kmod-ipt-tproxy +iptables-mod-tproxy +ip6tables-mod-nat +syslog-ng3
 endef
 
 define Package/ucollect-fake/postinst
