@@ -49,7 +49,7 @@ define Package/mitmproxy/postinst
 #!/bin/sh
 if [ -z "$${IPKG_INSTROOT}" ]; then
 	python /usr/bin/mitm_turris_config.py
-	rm -rf /root/.mitmkeys/
+	rm -rf /etc/mitmkeys
 	echo Generating keys...
 	/usr/bin/mitmkeygen
 	echo Starting...
