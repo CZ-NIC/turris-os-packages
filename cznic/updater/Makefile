@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=111
+PKG_VERSION:=112
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=bf5f327fb8239aeb20621d1dd6591f3cd7575c23
+PKG_SOURCE_VERSION:=ff266e8c8cee3a39774639bcbab37473101a0999
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
