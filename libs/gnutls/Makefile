@@ -8,32 +8,51 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gnutls
-PKG_VERSION:=2.8.6
-PKG_RELEASE:=2
+PKG_VERSION:=3.3.10
+PKG_RELEASE:=1
+PKG_USE_MIPS16:=0
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=@GNU/gnutls \
-	ftp://ftp.mirrors.wiretapped.net/pub/security/network-security/gnutls/
-PKG_MD5SUM:=eb0a6d7d3cb9ac684d971c14f9f6d3ba
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=ftp://ftp.gnutls.org/gcrypt/gnutls/v3.3
+PKG_MD5SUM:=c0a72b2c0553fe1c4992e30835808012
+PKG_MAINTAINER:=Nikos Mavrogiannopoulos <nmav@gnutls.org>
 
-PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
-PKG_LIBTOOL_PATHS:=. lib libextra
+PKG_LIBTOOL_PATHS:=. lib
+PKG_CHECK_FORMAT_SECURITY:=0
+
+PKG_CONFIG_DEPENDS:= \
+	CONFIG_GNUTLS_ALPN \
+	CONFIG_GNUTLS_ANON \
+	CONFIG_GNUTLS_CRYPTODEV \
+	CONFIG_GNUTLS_DTLS_SRTP \
+	CONFIG_GNUTLS_EXT_LIBTASN1 \
+	CONFIG_GNUTLS_HEARTBEAT \
+	CONFIG_GNUTLS_OCSP \
+	CONFIG_GNUTLS_OPENPGP \
+	CONFIG_GNUTLS_PKCS11 \
+	CONFIG_GNUTLS_PSK \
+	CONFIG_GNUTLS_SRP \
+	CONFIG_LIBNETTLE_MINI \
 
 include $(INCLUDE_DIR)/package.mk
+
 
 define Package/gnutls/Default
   SUBMENU:=SSL
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=GNU TLS
-  URL:=http://www.gnu.org/software/gnutls/
+  URL:=http://www.gnutls.org/
 endef
 
 define Package/gnutls/Default/description
- GnuTLS is a project that aims to develop a library which provides a
- secure layer, over a reliable transport layer. Currently the GnuTLS
- library implements the SSL 3.0, TLS 1.0, and TLS 1.1 protocols.
+ GnuTLS is a secure communications library implementing the SSL, TLS
+ and DTLS protocols and technologies around them. It provides a simple
+ C language application programming interface (API) to access the secure
+ communications protocols as well as APIs to parse and write X.509, PKCS12,
+ OpenPGP and other required structures. It is aimed to be portable and
+ efficient with focus on security and interoperability.
 endef
 
 
@@ -42,7 +61,7 @@ $(call Package/gnutls/Default)
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE+= (certool utility)
-  DEPENDS+= +libgnutls +libgnutls-extra +libncurses +libreadline
+  DEPENDS+= +libgnutls
 endef
 
 define Package/certtool/description
@@ -56,7 +75,7 @@ $(call Package/gnutls/Default)
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE+= (utilities)
-  DEPENDS+= +libgnutls +libgnutls-extra
+  DEPENDS+= +libgnutls
 endef
 
 define Package/gnutls-utils/description
@@ -65,28 +84,19 @@ $(call Package/gnutls/Default/description)
  and srptool utilities.
 endef
 
+define Package/libgnutls/config
+	source "$(SOURCE)/Config.in"
+endef
 
 define Package/libgnutls
 $(call Package/gnutls/Default)
   TITLE+= (library)
-  DEPENDS+= +zlib +libgcrypt +libgpg-error
+  DEPENDS+= +libnettle +!LIBNETTLE_MINI:libgmp +GNUTLS_EXT_LIBTASN1:libtasn1 +GNUTLS_PKCS11:p11-kit
 endef
 
 define Package/libgnutls/description
 $(call Package/gnutls/Default/description)
  This package contains the GnuTLS shared library, needed by other programs.
-endef
-
-
-define Package/libgnutls-extra
-$(call Package/gnutls/Default)
-  TITLE+= (extra library)
-  DEPENDS+= +libgnutls
-endef
-
-define Package/libgnutls-extra/description
-$(call Package/gnutls/Default/description)
- This package contains the GnuTLS extra shared library.
 endef
 
 
@@ -104,18 +114,64 @@ endef
 CONFIGURE_ARGS+= \
 	--enable-shared \
 	--enable-static \
-	--disable-openpgp-authentication \
+	--disable-libdane \
 	--disable-guile \
-	--with-included-libcfg \
-	--with-included-libtasn1 \
-	--with-libgcrypt-prefix="$(STAGING_DIR)/usr" \
-	--with-libreadline-prefix="$(STAGING_DIR)/usr" \
-	--with-libz-prefix="$(STAGING_DIR)/usr" \
-	--without-lzo \
+	--disable-nls \
+	--without-zlib \
+	--enable-local-libopts \
+	--disable-doc \
+	--disable-tests \
+	--disable-rsa-export \
+	--with-default-trust-store-dir=/etc/ssl/certs/ \
+	--disable-crywrap
 
-# XXX: AM_CFLAGS duplicates with CFLAGS
-MAKE_FLAGS:= \
-	AM_CFLAGS="" \
+ifneq ($(CONFIG_GNUTLS_EXT_LIBTASN1),y)
+CONFIGURE_ARGS += --with-included-libtasn1
+endif
+
+ifneq ($(CONFIG_GNUTLS_PKCS11),y)
+CONFIGURE_ARGS += --without-p11-kit
+endif
+
+ifeq ($(CONFIG_LIBNETTLE_MINI),y)
+CONFIGURE_ARGS += --with-nettle-mini
+endif
+
+ifneq ($(CONFIG_GNUTLS_DTLS_SRTP),y)
+CONFIGURE_ARGS += --disable-dtls-srtp-support
+endif
+
+ifneq ($(CONFIG_GNUTLS_ALPN),y)
+CONFIGURE_ARGS += --disable-alpn-support
+endif
+
+ifneq ($(CONFIG_GNUTLS_HEARTBEAT),y)
+CONFIGURE_ARGS += --disable-heartbeat-support
+endif
+
+ifneq ($(CONFIG_GNUTLS_SRP),y)
+CONFIGURE_ARGS += --disable-srp-authentication
+endif
+
+ifneq ($(CONFIG_GNUTLS_PSK),y)
+CONFIGURE_ARGS += --disable-psk-authentication
+endif
+
+ifneq ($(CONFIG_GNUTLS_OPENPGP),y)
+CONFIGURE_ARGS += --disable-openpgp-authentication
+endif
+
+ifneq ($(CONFIG_GNUTLS_ANON),y)
+CONFIGURE_ARGS += --disable-anon-authentication
+endif
+
+ifneq ($(CONFIG_GNUTLS_OCSP),y)
+CONFIGURE_ARGS += --disable-ocsp
+endif
+
+ifeq ($(CONFIG_GNUTLS_CRYPTODEV),y)
+CONFIGURE_ARGS += --enable-cryptodev
+endif
 
 TARGET_CFLAGS += $(FPIC)
 TARGET_LDFLAGS += -Wl,-rpath-link=$(STAGING_DIR)/usr/lib
@@ -132,10 +188,10 @@ define Build/InstallDev
 		$(PKG_INSTALL_DIR)/usr/include/gnutls \
 		$(1)/usr/include/
 	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/libgnutls{,-extra,-openssl}.{a,so*} \
+		$(PKG_INSTALL_DIR)/usr/lib/libgnutls{,-openssl}.{a,so*} \
 		$(1)/usr/lib/
 	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/pkgconfig/gnutls{,-extra}.pc \
+		$(PKG_INSTALL_DIR)/usr/lib/pkgconfig/gnutls.pc \
 		$(1)/usr/lib/pkgconfig/
 endef
 
@@ -153,23 +209,37 @@ endef
 
 define Package/gnutls-utils/install
 	$(INSTALL_DIR) $(1)/usr/bin
+ifeq ($(CONFIG_GNUTLS_OCSP),y)
+ifeq ($(CONFIG_GNUTLS_ANON),y)
 	$(CP) \
 		$(PKG_INSTALL_DIR)/usr/bin/gnutls-{cli,serv} \
-		$(PKG_INSTALL_DIR)/usr/bin/psktool \
+		$(1)/usr/bin/
+endif
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/bin/ocsptool \
+		$(1)/usr/bin/
+endif
+ifeq ($(CONFIG_GNUTLS_SRP),y)
+	$(CP) \
 		$(PKG_INSTALL_DIR)/usr/bin/srptool \
 		$(1)/usr/bin/
+endif
+ifeq ($(CONFIG_GNUTLS_PSK),y)
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/bin/psktool \
+		$(1)/usr/bin/
+endif
+ifeq ($(CONFIG_GNUTLS_PKCS11),y)
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/bin/p11tool \
+		$(1)/usr/bin/
+endif
 endef
 
 
 define Package/libgnutls/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libgnutls.so.* $(1)/usr/lib/
-endef
-
-
-define Package/libgnutls-extra/install
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libgnutls-extra.so.* $(1)/usr/lib/
 endef
 
 
@@ -182,5 +252,4 @@ endef
 $(eval $(call BuildPackage,certtool))
 $(eval $(call BuildPackage,gnutls-utils))
 $(eval $(call BuildPackage,libgnutls))
-$(eval $(call BuildPackage,libgnutls-extra))
 $(eval $(call BuildPackage,libgnutls-openssl))
