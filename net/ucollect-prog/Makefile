@@ -9,7 +9,7 @@
 
 include ../ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,ucollect-prog,95))
+$(eval $(call UCOLLECT_BASE,ucollect-prog,96))
 
 BASE_LIB_DEPS:=+libpcap +librt +libopenssl +libuci +libatsha204 +socat +zlib
 
