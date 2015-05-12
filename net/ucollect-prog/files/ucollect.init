@@ -15,6 +15,7 @@ get_wan() {
 		FOUND=true
 		echo 'config interface'
 		echo "	option ifname '$iface'"
+		echo "	option promiscuous '0'"
 	done
 	$FOUND
 }
