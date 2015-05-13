@@ -31,7 +31,7 @@ define Package/clearsilver
   CATEGORY:=Libraries
   TITLE:=ClearSilver template system
   URL:=http://www.clearsilver.net/
-  MAINTAINER:=Raphaël HUCK <rhk@cksum.org>
+  MAINTAINER:=RaphaÃ«l HUCK <rhk@cksum.org>
   DEPENDS:=+CLEARSILVER_ENABLE_COMPRESSION:zlib +CLEARSILVER_ENABLE_GETTEXT:libintl
 endef
 
