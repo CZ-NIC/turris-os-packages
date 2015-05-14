@@ -35,7 +35,7 @@ endef
 
 define Package/uboot-turris/install
 	$(INSTALL_DIR) $(1)/boot
-	$(CP) $(TOPDIR)/uboot-static/uboot-mpc85xx-TURRIS1_padding $(1)/boot/u-boot
+	$(CP) $(TOPDIR)/uboot-static/uboot-mpc85xx-TURRIS1 $(1)/boot/u-boot
 endef
 
 $(eval $(call BuildPackage,uboot-turris))
