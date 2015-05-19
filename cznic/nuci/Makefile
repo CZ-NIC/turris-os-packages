@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=98
+PKG_VERSION:=101
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=0e071b521891099cea2410657c34002053de4372
+PKG_SOURCE_VERSION:=4e64b48fcb13b1243bb6c506104865ebd45b0157
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -32,7 +32,7 @@ endef
 
 define Package/nuci-securris
 	TITLE:=Access securris through nuci
-	DEPENDS:=+nuci
+	DEPENDS:=+nuci +luasocket
 endef
 
 define Build/Compile

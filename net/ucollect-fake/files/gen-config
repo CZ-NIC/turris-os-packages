@@ -1,0 +1,18 @@
+#!/bin/sh
+
+echo 'config plugin'
+echo "    option libname 'libplugin_ucollect_fake_VERSION.so'"
+echo "    option log_credentials $(uci get -q ucollect.@fakes[0].log_credentials || echo 0)"
+
+REDIR_OFFSET="$(uci get -q ucollect.@fakes[0].redir_offset || echo 1369)"
+
+service() {
+	if uci get -q -d '
+' ucollect.@fakes[0].disable | grep -Fx "$1$2" >/dev/null ; then
+		echo "    option ${3}_port 0"
+	else
+		echo "    option ${3}_port $(($1 + $REDIR_OFFSET))"
+	fi
+}
+
+service 23 tcp telnet

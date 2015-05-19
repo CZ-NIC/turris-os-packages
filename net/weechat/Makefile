@@ -27,7 +27,7 @@ define Package/weechat
   CATEGORY:=Network
   TITLE:=Lightweight IRC client
   URL:=http://www.weechat.org/
-  DEPENDS:=+libcurl +libgnutls +libncursesw $(ICONV_DEPENDS)
+  DEPENDS:=+libcurl +libgnutls +libncursesw +libgcrypt +libgpg-error $(ICONV_DEPENDS)
 endef
 
 define Package/weechat/description

@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=109
+PKG_VERSION:=121
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=1984c36e5cec9feef487379e454f98b8a3d21935
+PKG_SOURCE_VERSION:=2514bb137a28ab47f9cbc03613e1329aa154ce8c
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -90,6 +90,8 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater.init $(1)/etc/init.d/updater
+
+	$(INSTALL_DIR) $(1)/usr/share/updater/hashes
 endef
 
 define Package/$(PKG_NAME)/prerm
@@ -121,6 +123,19 @@ define Package/updater-testkey/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater.pub.pem $(1)/usr/share/updater/keys/test.pem
 endef
 
+define Package/updater-hash-check
+	TITLE:=Integrity checker for packages installed by updater
+	DEPENDS:=updater bzip2 python
+endef
+
+define Package/updater-hash-check/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/nand_check/check-hashes.py $(1)/usr/bin
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_CONF) ./files/check-hashes.cron $(1)/etc/cron.d/check-hashes
+endef
+
 $(eval $(call BuildPackage,$(PKG_NAME)))
 $(eval $(call BuildPackage,updater-testkey))
 $(eval $(call BuildPackage,updater-consolidator))
+$(eval $(call BuildPackage,updater-hash-check))

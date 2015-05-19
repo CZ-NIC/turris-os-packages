@@ -14,7 +14,7 @@ PKG_VERSION:=$(2)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/ucollect.git
 PKG_SOURCE:=$$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=5d51de921e213e3858052958979c21a1c5637f1f
+PKG_SOURCE_VERSION:=41141fbeee4f84bc8d31da7fc65f724406541d54
 PKG_SOURCE:=$$(PKG_NAME)-$$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -23,7 +23,7 @@ PKG_BUILD_DIR:=$$(BUILD_DIR)/$$(PKG_NAME)
 include $$(INCLUDE_DIR)/package.mk
 
 define Build/Compile
-	$$(MAKE_VARS) $$(MAKE) -C $$(PKG_BUILD_DIR) $$(MAKE_FLAGS) NO_SIGNAL_REINIT=1 NO_MASTER=1 NO_DOC=1 MAX_LOG_LEVEL:=`if [ "$$$$$$$$TARGET_BOARD" = ar71xx ] ; then echo LLOG_DEBUG_VERBOSE ; else echo LLOG_INFO ; fi` PLUGIN_PATH=/usr/lib `test -e $$$$$$$$HOME/ucollect-password && echo LOGIN_PASSWD_HALF=$$$$$$$$HOME/ucollect-password`
+	$$(MAKE_VARS) $$(MAKE) -C $$(PKG_BUILD_DIR) $$(MAKE_FLAGS) NO_SIGNAL_REINIT=1 NO_MASTER=1 NO_DOC=1 RELEASE=1 MAX_LOG_LEVEL:=`if [ "$$$$$$$$TARGET_BOARD" = ar71xx ] ; then echo LLOG_DEBUG_VERBOSE ; else echo LLOG_INFO ; fi` PLUGIN_PATH=/usr/lib `test -e $$$$$$$$HOME/ucollect-password && echo LOGIN_PASSWD_HALF=$$$$$$$$HOME/ucollect-password`
 endef
 endef
 

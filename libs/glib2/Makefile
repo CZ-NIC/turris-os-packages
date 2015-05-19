@@ -8,15 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glib2
-PKG_VERSION:=2.37.7
-PKG_RELEASE:=1
+PKG_VERSION:=2.41.1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=glib-$(PKG_VERSION).tar.xz
 PKG_BUILD_DIR:=$(BUILD_DIR)/glib-$(PKG_VERSION)
-PKG_SOURCE_URL:=@GNOME/glib/2.37
-PKG_MD5SUM:=17a9493e3e2efebc8ab81ec8d4480bfb
+PKG_SOURCE_URL:=@GNOME/glib/2.41
+PKG_MD5SUM:=bae557c87323e8df7ac30fb484b5cba9
 
-PKG_BUILD_DEPENDS:=glib2/host libpthread zlib libintl libffi python
+PKG_BUILD_DEPENDS:=glib2/host libpthread zlib libintl libffi
 HOST_BUILD_DEPENDS:=libintl/host libiconv/host libffi/host
 PKG_INSTALL:=1
 PKG_USE_MIPS16:=0
@@ -30,8 +30,9 @@ include $(INCLUDE_DIR)/nls.mk
 define Package/glib2
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi
+  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS) +zlib +libpthread +libffi +libattr
   TITLE:=glib 2.0
+  MAINTAINER:=Peter Wagner <tripolar@gmx.at>
   URL:=http://www.gtk.org/
 endef
 
@@ -39,23 +40,24 @@ define Package/glib2/description
   The GLib library of C routines
 endef
 
-define Build/Configure
-	$(call Build/Configure/Default, \
-		--enable-shared \
-		--enable-static \
-		--enable-debug=no \
-		--disable-selinux \
-        --disable-fam \
-        $(if $(ICONV_FULL),--with-libiconv=gnu) \
-		, \
-		glib_cv_stack_grows=no \
-		glib_cv_uscore=no \
-		ac_cv_path_GLIB_GENMARSHAL=$(STAGING_DIR_HOST)/bin/glib-genmarshal \
-		ac_cv_func_mmap_fixed_mapped=yes \
-		ac_cv_func_posix_getpwuid_r=yes \
-		ac_cv_func_posix_getgrgid_r=yes \
-	);
-endef
+HOST_CONFIGURE_ARGS += \
+	--disable-selinux
+
+CONFIGURE_ARGS += \
+	--enable-shared \
+	--enable-static \
+	--enable-debug=no \
+	--disable-selinux \
+	--disable-fam \
+	$(if $(ICONV_FULL),--with-libiconv=gnu)
+
+CONFIGURE_VARS += \
+	glib_cv_stack_grows=no \
+	glib_cv_uscore=no \
+	ac_cv_path_GLIB_GENMARSHAL=$(STAGING_DIR_HOST)/bin/glib-genmarshal \
+	ac_cv_func_mmap_fixed_mapped=yes \
+	ac_cv_func_posix_getpwuid_r=yes \
+	ac_cv_func_posix_getgrgid_r=yes
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include

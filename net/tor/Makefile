@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=0.2.5.10
+PKG_VERSION:=0.2.6.7
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.torproject.org/dist \
 	https://archive.torproject.org/tor-package-archive
-PKG_MD5SUM:=4bde375229a7a7f77c0596ae05556527
+PKG_MD5SUM:=a43b4dc6a95d219927aab0a2bb7ed322
 
 PKG_BUILD_DEPENDS:=libevent2 libopenssl
 PKG_INSTALL:=1
@@ -70,10 +70,10 @@ ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
 		--disable-gcc-hardening
 	MAKE_FLAGS += \
-		CFLAGS="$(TARGET_CFLAGS)"
+		CFLAGS="$(TARGET_CFLAGS) -std=c99 -D_GNU_SOURCE"
 else
 	MAKE_FLAGS += \
-		CFLAGS="$(TARGET_CFLAGS) -fPIC"	
+		CFLAGS="$(TARGET_CFLAGS) -fPIC -std=c99 -D_GNU_SOURCE"
 endif
 
 CONFIGURE_VARS += \
