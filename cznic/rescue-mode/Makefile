@@ -38,7 +38,6 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/proc
 	$(INSTALL_DIR) $(1)/dev
-	$(INSTALL_DIR) $(1)/dev/pts
 	$(INSTALL_DIR) $(1)/sys
 	$(INSTALL_DIR) $(1)/mnt
 	$(INSTALL_DIR) $(1)/root

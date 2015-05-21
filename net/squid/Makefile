@@ -1,5 +1,6 @@
 #
 # Copyright (C) 2006-2012 OpenWrt.org
+# Copyright (C) 2014-2015 CZ.NIC
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +9,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=squid
-PKG_VERSION:=3.5.1
+PKG_VERSION:=3.5.4
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://www.squid-cache.org/Versions/v3/3.5/
-PKG_MD5SUM:=3c4d77ae25c7dee1f5ec597a069e0a53
+PKG_MD5SUM:=436d42ced1d9eb9f5d5b364047cc3dba
 PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
