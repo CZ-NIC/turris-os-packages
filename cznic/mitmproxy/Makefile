@@ -7,12 +7,12 @@
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=mitmproxy
-PKG_VERSION:=0.3.9
+PKG_VERSION:=0.4.0
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/labs/mitmproxy.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=57572f9bad721b15d935de9e10773ef8befef32a
+PKG_SOURCE_VERSION:=82d3b11f0e250bc7c5c86a36f1ce663ce8a765b0
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Ondrej Mikle <ondrej.mikle@nic.cz>
