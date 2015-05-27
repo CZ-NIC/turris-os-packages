@@ -1,0 +1,17 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+STOP=00
+
+start() {
+	msg="Router Turris successfully started."
+	logger -p 0 -t turris "$msg"
+	echo "$msg" > /dev/console
+}
+
+stop() {
+	msg="Stopping router Turris."
+	logger -p 0 -t turris "$msg"
+	echo "$msg" > /dev/console
+}
+
