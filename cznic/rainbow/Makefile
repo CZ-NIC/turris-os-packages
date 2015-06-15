@@ -38,7 +38,6 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/rainbow.cron $(1)/etc/cron.d/rainbow
 	$(INSTALL_BIN) ./files/rainbow_button_sync.sh $(1)/usr/bin/rainbow_button_sync.sh
-	$(INSTALL_DATA) ./files/rainbow.magic $(1)/etc/rainbow.magic
 endef
 
 define Package/$(PKG_NAME)/conffiles
