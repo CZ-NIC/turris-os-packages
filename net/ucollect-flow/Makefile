@@ -8,6 +8,6 @@
 
 include ../ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_PLUGIN,flow,17))
+$(eval $(call UCOLLECT_PLUGIN,flow,18))
 
 $(eval $(call BuildPackage,ucollect-flow))
