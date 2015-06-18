@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2011 OpenWrt.org
+# Copyright (C) 2006-2015 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ulogd
 PKG_VERSION:=2.0.5
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=ulogd-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=\
@@ -109,6 +109,9 @@ endef
 define Package/ulogd-mod-acct/description
 	This package contains NFACCT and NACCT plugins.
 endef
+
+TARGET_CFLAGS += \
+	-D_GNU_SOURCE \
 
 include $(INCLUDE_DIR)/package.mk
 
