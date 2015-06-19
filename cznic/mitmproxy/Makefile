@@ -7,12 +7,12 @@
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=mitmproxy
-PKG_VERSION:=0.3.5
+PKG_VERSION:=0.3.9
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/labs/mitmproxy.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=ac1d8605e5e133ddce29a5a411fb15840ae25d2f
+PKG_SOURCE_VERSION:=57572f9bad721b15d935de9e10773ef8befef32a
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Ondrej Mikle <ondrej.mikle@nic.cz>
@@ -49,7 +49,7 @@ define Package/mitmproxy/postinst
 #!/bin/sh
 if [ -z "$${IPKG_INSTROOT}" ]; then
 	python /usr/bin/mitm_turris_config.py
-	rm -rf /root/.mitmkeys/
+	rm -rf /etc/mitmkeys
 	echo Generating keys...
 	/usr/bin/mitmkeygen
 	echo Starting...

@@ -25,7 +25,6 @@ define Package/$(PKG_NAME)
 endef
 
 define Build/Compile
-	sed -i -e '/^CC=/d' Makefile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS)
 endef
 

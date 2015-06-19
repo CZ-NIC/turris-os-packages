@@ -24,7 +24,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/vim/Default
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libncurses
+  DEPENDS:=+libncurses +libacl
   TITLE:=Vi IMproved - enhanced vi editor
   URL:=http://www.vim.org/
   SUBMENU:=Editors

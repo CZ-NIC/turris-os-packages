@@ -82,6 +82,7 @@ ifneq ($(CONFIG_USE_UCLIBC),)
 endif
 
 CONFIGURE_ARGS += \
+	--disable-xattr \
 	--enable-install-program=su
 
 define Build/Compile
