@@ -34,5 +34,10 @@ config unbound server
 config unbound python
     #list python_script "/etc/unbound/ubmodule-tst.py"
 
+config unbound remote_control
+    option control_enable no
+    list control_interface 0.0.0.0
+    list control_interface ::0
+
 config unbound includes
     #list include_path "/etc/unbound/unbound-part.conf"
