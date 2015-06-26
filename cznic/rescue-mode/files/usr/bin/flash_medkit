@@ -3,9 +3,7 @@ set -ex
 
 CERTS_DEVNUM="4"
 
-FDT_DEVNUM="6"
-KERNEL_DEVNUM="7"
-ROOTFS_DEVNUM="8"
+ROOTFS_DEVNUM="9"
 
 echo "Unpack medkit files"
 [ -d /tmp/rescue ] && rm -rf /tmp/rescue
@@ -16,43 +14,38 @@ if [ -d /tmp/mnt ]; then
     rm -rf /tmp/mnt
 fi
 mkdir /tmp/mnt
+mkdir /tmp/rootfs
 mount -t squashfs /dev/mtdblock3 /tmp/mnt
 
 cd /tmp/rescue
-unxz -c /tmp/mnt/medkit.tar.xz | tar xf -
+unxz -c /tmp/mnt/medkit.tar.xz | tar xf - -C /tmp/rootfs
+
+mkdir /tmp/certs
+mount -t jffs2 /dev/mtdblock$CERTS_DEVNUM /tmp/certs
+[ "$(ls -A /tmp/certs)" ] && cp -a /tmp/certs/* /tmp/rootfs/
+umount /tmp/certs
 
 echo "Erase mtd devices"
 i=3
 while [ $i != 0 ]; do
-	i=$(($i - 1))
-	echo -n "$i "
-	sleep 1
+        i=$(($i - 1))
+        echo -n "$i "
+        sleep 1
 done
 echo
 
-flash_erase -q /dev/mtd$FDT_DEVNUM 0 0
-flash_erase -q /dev/mtd$KERNEL_DEVNUM 0 0
 flash_erase -q /dev/mtd$ROOTFS_DEVNUM 0 0
 
 echo "Erased"
 echo "Flash new images"
 
-nandwrite -pq /dev/mtd$FDT_DEVNUM openwrt-mpc85xx-p2020-nand-turris-nand.fdt
-echo "FDT flashed."
+sed 's/root.ubi/\/tmp\/root.ubi/' /etc/ubinize.cfg > /tmp/ubinize.cfg
 
-nandwrite -pq /dev/mtd$KERNEL_DEVNUM openwrt-mpc85xx-p2020-nand-zImage
-echo "Kernel flashed."
+mkfs.ubifs -v -y -m 2048 -e 124KiB -c 2000 -F -r /tmp/rootfs /tmp/root.ubifs
+ubinize -m 2048 -p 128KiB -s 2048 -o /tmp/root.ubi /tmp/ubinize.cfg
+ubiformat /dev/mtd$ROOTFS_DEVNUM -f /tmp/root.ubi -s 2048
 
-mkdir ./rootfs
-mkdir ./certs
-mount -t jffs2 /dev/mtdblock$ROOTFS_DEVNUM ./rootfs
-mount -t jffs2 /dev/mtdblock$CERTS_DEVNUM ./certs
-tar -xf openwrt-mpc85xx-p2020-nand-rootfs.tar -C ./rootfs
-[ "$(ls -A ./certs)" ] && cp -a ./certs/* ./rootfs/
-umount ./rootfs
-umount ./certs
 sync
 echo "Root filesystem flashed."
 
 echo Done! 
-

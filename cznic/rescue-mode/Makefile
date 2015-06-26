@@ -30,6 +30,7 @@ define Build/Compile
 endef
 
 define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_DIR) $(1)/etc/rc.d
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_DIR) $(1)/usr/share/udhcpc
@@ -41,13 +42,14 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/mnt
 	$(INSTALL_DIR) $(1)/root
 
-	$(INSTALL_BIN) ./files/etc/rc.d/S00boot $(1)/etc/rc.d/S00boot
-	$(INSTALL_BIN) ./files/etc/rc.d/S01flash $(1)/etc/rc.d/S01flash
-	$(INSTALL_BIN) ./files/etc/rc.d/K99umount $(1)/etc/rc.d/K99umount
-	$(INSTALL_BIN) ./files/etc/init.d/rcS $(1)/etc/init.d/rcS
-	$(INSTALL_BIN) ./files/etc/passwd $(1)/etc/passwd
+	$(INSTALL_BIN) ./files/etc/rc.d/S00boot 	$(1)/etc/rc.d/S00boot
+	$(INSTALL_BIN) ./files/etc/rc.d/S01flash 	$(1)/etc/rc.d/S01flash
+	$(INSTALL_BIN) ./files/etc/rc.d/K99umount 	$(1)/etc/rc.d/K99umount
+	$(INSTALL_BIN) ./files/etc/init.d/rcS 		$(1)/etc/init.d/rcS
+	$(INSTALL_BIN) ./files/etc/passwd 		$(1)/etc/passwd
 	$(INSTALL_BIN) ./files/usr/share/udhcpc/default.script $(1)/usr/share/udhcpc/default.script
-	$(INSTALL_BIN) ./files/usr/bin/flash_medkit $(1)/usr/bin/flash_medkit
+	$(INSTALL_BIN) ./files/usr/bin/flash_medkit 	$(1)/usr/bin/flash_medkit
+	$(CP) 		$(TOPDIR)/target/linux/mpc85xx/image/ubinize.cfg $(1)/etc/ubinize.cfg
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
