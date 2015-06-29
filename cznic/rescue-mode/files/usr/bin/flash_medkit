@@ -43,7 +43,7 @@ sed 's/root.ubi/\/tmp\/root.ubi/' /etc/ubinize.cfg > /tmp/ubinize.cfg
 
 mkfs.ubifs -v -y -m 2048 -e 124KiB -c 2000 -F -r /tmp/rootfs /tmp/root.ubifs
 ubinize -m 2048 -p 128KiB -s 2048 -o /tmp/root.ubi /tmp/ubinize.cfg
-ubiformat /dev/mtd$ROOTFS_DEVNUM -f /tmp/root.ubi -s 2048
+ubiformat -y /dev/mtd$ROOTFS_DEVNUM -f /tmp/root.ubi -s 2048
 
 sync
 echo "Root filesystem flashed."
