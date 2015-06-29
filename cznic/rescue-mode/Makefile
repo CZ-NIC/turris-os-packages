@@ -17,7 +17,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+rainbow
+	DEPENDS:=+rainbow +getmac
 endef
 
 define Package/$(PKG_NAME)/conffiles
