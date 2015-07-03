@@ -71,7 +71,7 @@ endef
 define GenPlugin
  define Package/$(1)
    $(call Package/xz/Default)
-   DEPENDS:=xz +$(DEPENDS_$(2)) $(if $(XZ_DEPENDS_$(2)),+xz-$(XZ_DEPENDS_$(2)))
+   DEPENDS:=+$(DEPENDS_$(2)) $(if $(XZ_DEPENDS_$(2)),+xz-$(XZ_DEPENDS_$(2)))
    TITLE:=$(2) utility from XZ Utils
  endef
 endef
