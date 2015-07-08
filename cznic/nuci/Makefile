@@ -74,7 +74,7 @@ endef
 
 define Package/nuci-tls
 	TITLE:=TLS access to nuci
-	DEPENDS:=+nuci +socat +openssl
+	DEPENDS:=+nuci +socat +openssl-util
 endef
 
 define Package/nuci-tls/install
