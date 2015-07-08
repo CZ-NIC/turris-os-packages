@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=socat
-PKG_VERSION:=1.7.2.2
+PKG_VERSION:=1.7.3.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://www.dest-unreach.org/socat/download \
 	https://api.turris.cz/mirror
-PKG_MD5SUM:=39231e512d8052f328552865df15d42f
+PKG_MD5SUM:=b607edb65bc6c57f4a43f06247504274
 
 PKG_INSTALL:=1
 
@@ -23,7 +23,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/socat
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libpthread +libopenssl
+  DEPENDS:=+libpthread +libopenssl +librt
   TITLE:=A multipurpose relay (SOcket CAT)
   URL:=http://www.dest-unreach.org/socat/
 endef

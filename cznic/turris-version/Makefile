@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=2.3
+PKG_VERSION:=2.4
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
@@ -27,18 +27,10 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Ucollect: Zavedení minipotu pro telnet. Sleduje útočníky na portu 23.
-   Ve výchozím nastavení ukládá jen IP adresy. V rozhraní Foris
-   lze zapnout i ukládání hesel nebo celou funkci vypnout.
- • Foris přidává diagnostiku odesílání dat na servery Turris.
- • Updater kontroluje integritu nainstalovaných souborů. Při první
-   kontrole přeinstaluje větší množství balíčků.
- • Squid: Nová verze, opravuje chybu CVE-2015-3455.
- • Dropné opravy:
-   ◦ Foris
-   ◦ cznic-cacert-bundle
-   ◦ ucollect
-   ◦ updater"
+    create_notification -s news " • Podpora pro UBIFS
+ • Vylepšení práce s pluginy v uCollectu
+ • Logování více informací o útocích na telnet
+ • Firewall stahuje pravidla komprimovaná"
 }
 endef
 

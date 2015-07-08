@@ -32,7 +32,7 @@ define Build/Compile
 endef
 else
 define Build/Compile
-	echo "The target board does not have a backup partition.
+	echo "The target board does not have a backup partition."
 endef
 endif
 
