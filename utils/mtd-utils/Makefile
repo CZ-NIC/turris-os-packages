@@ -8,9 +8,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mtd-utils
-PKG_REV:=abcf731e041d8d977b992820c38f6e95ed63fd3b
+PKG_REV:=5be8bafab070709ccc7535bc895ff16f141e3ad5
 PKG_VERSION:=1.5.2-dev
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=git://git.infradead.org/mtd-utils.git
