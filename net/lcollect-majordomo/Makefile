@@ -8,13 +8,13 @@
 
 include ../ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,lcollect-majordomo,19))
+$(eval $(call UCOLLECT_BASE,lcollect-majordomo,20))
 
 define Package/lcollect-majordomo
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=The majordomo plugin for lcollect
-	DEPENDS:=+lcollect +ip +ouidb
+	DEPENDS:=+lcollect +ip +ouidb +coreutils-timeout
 endef
 
 define Package/lcollect-majordomo/conffiles
