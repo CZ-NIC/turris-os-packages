@@ -12,7 +12,7 @@ PKG_VERSION:=102
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=c8d51b1cc39c12c39ee300f0622b5d52123884d4
+PKG_SOURCE_VERSION:=bc81e94115f810f78265199be8265dd33b9e6e2e
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -72,6 +72,38 @@ define Package/nuci-securris/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/securris.lua $(1)/usr/share/nuci/lua_plugins/
 endef
 
+define Package/nuci-tls
+	TITLE:=TLS access to nuci
+	DEPENDS:=+nuci +socat +openssl-util
+endef
+
+define Package/nuci-tls/install
+	$(INSTALL_DIR) $(1)/etc/init.d/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/tls/init $(1)/etc/init.d/nuci-tls
+	$(INSTALL_DIR) $(1)/usr/share/nuci/tls/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/tls/start $(1)/usr/share/nuci/tls/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/tls/new_ca $(1)/usr/share/nuci/tls/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/tls/new_client $(1)/usr/share/nuci/tls/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/tls/openssl.cnf $(1)/usr/share/nuci/tls
+	$(INSTALL_DIR) $(1)/usr/share/nuci/tls/ca
+	$(INSTALL_DIR) $(1)/usr/share/nuci/tls/clients
+endef
+
+define Package/nuci-tls/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/nuci-tls enable || true
+/etc/init.d/nuci-tls restart
+}
+endef
+
+define Package/nuci-tls/prerm
+#!/bin/sh
+/etc/init.d/nuci-tls disable || true
+/etc/init.d/nuci-tls stop
+endef
+
 $(eval $(call BuildPackage,$(PKG_NAME)))
 $(eval $(call BuildPackage,nuci-nethist))
 $(eval $(call BuildPackage,nuci-securris))
+$(eval $(call BuildPackage,nuci-tls))
