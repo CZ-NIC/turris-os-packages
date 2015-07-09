@@ -1,14 +1,10 @@
 config TVHEADEND_CWC_SUPPORT
-	bool "NewCamD support"
-	default n
-
-config TVHEADEND_V4L_SUPPORT
-	bool "Video4Linux v2 support"
-	default n
+	bool "NewCamd support"
+	default y
 
 config TVHEADEND_LINUXDVB_SUPPORT
 	bool "Linux DVB support"
-	default n
+	default y
 
 config TVHEADEND_DVBSCAN_SUPPORT
 	bool "Fetch DVB-scan data"

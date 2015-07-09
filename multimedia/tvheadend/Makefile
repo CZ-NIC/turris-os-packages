@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2012 OpenWrt.org
+# Copyright (C) 2015 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,29 +8,40 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tvheadend
-PKG_VERSION:=3.4patch1
+PKG_VERSION:=4.0.5
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/tvheadend/tvheadend/archive/
-PKG_MD5SUM:=86d1be0ad6e02bd2aecd3d529a026797
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/tvheadend/tvheadend.git
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+
+PKG_LICENSE:=GPL-3.0
+PKG_LICENSE_FILES:=LICENSE.md
+
+PKG_FIXUP:=autoreconf
 
 PKG_USE_MIPS16:=0
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/nls.mk
 
 define Package/tvheadend
   SECTION:=multimedia
   CATEGORY:=Multimedia
   TITLE:=Tvheadend is a TV streaming server for Linux
-  DEPENDS:=+libopenssl +librt +zlib +TVHEADEND_AVAHI_SUPPORT:libavahi-client +libcurl
-  URL:=http://www.lonelycoder.com/hts/tvheadend_overview.html
+  DEPENDS:=+libopenssl +librt +zlib +TVHEADEND_AVAHI_SUPPORT:libavahi-client
+  URL:=https://tvheadend.org
+  MAINTAINER:=Jan Čermák <jan.cermak@nic.cz>
 endef
 
 define Package/tvheadend/description
-  Tvheadend is a TV streaming server for Linux supporting DVB, ATSC, IPTV,
-  and Analog video (V4L) as input sources.
-  Can be used as a backend to Showtime, XBMC and various other clients.
+  Tvheadend is a TV streaming server and recorder for Linux, FreeBSD and Android
+  supporting DVB-S, DVB-S2, DVB-C, DVB-T, ATSC, IPTV, SAT>IP and HDHomeRun as input sources.
+
+  Tvheadend offers the HTTP (VLC, MPlayer), HTSP (Kodi, Movian) and SAT>IP streaming.
 endef
 
 define Package/tvheadend/config
@@ -42,10 +53,6 @@ endef
 
 ifeq ($(CONFIG_TVHEADEND_CWC_SUPPORT),)
   CONFIGURE_ARGS += --disable-cwc
-endif
-
-ifeq ($(CONFIG_TVHEADEND_V4L_SUPPORT),)
-  CONFIGURE_ARGS += --disable-v4l
 endif
 
 ifeq ($(CONFIG_TVHEADEND_LINUXDVB_SUPPORT),)
@@ -63,16 +70,26 @@ else
 endif
 
 CONFIGURE_ARGS += \
-	--release \
+	--arch=$(ARCH) \
+	--disable-dbus_1 \
+	--disable-libav \
 	--enable-bundle
 
+define Build/Prepare
+	$(call Build/Prepare/Default)
+	echo 'Tvheadend $(shell echo $(PKG_SOURCE_VERSION) | sed "s/^v//")~openwrt$(PKG_RELEASE)' \
+		> $(PKG_BUILD_DIR)/debian/changelog
+endef
+
+define Package/conffiles
+/etc/config/tvheadend
+endef
+
 define Package/tvheadend/install
-	$(INSTALL_DIR) $(1)/etc/tvheadend
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/tvheadend.init $(1)/etc/init.d/tvheadend
-	$(INSTALL_DIR) $(1)/lib/upgrade/keep.d
-	$(INSTALL_DATA) ./files/tvheadend.upgrade $(1)/lib/upgrade/keep.d/tvheadend
-	
+	$(INSTALL_DIR) $(1)/etc/config
+
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/build.linux/tvheadend $(1)/usr/bin/
 endef
