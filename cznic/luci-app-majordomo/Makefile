@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-majordomo
-PKG_VERSION:=2
+PKG_VERSION:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/luci-majordomo.git
-PKG_SOURCE_VERSION:=7d1c7f1abe9458a4c7e4f7b87ebaf75200fb20d0
+PKG_SOURCE_VERSION:=8e925c378dc6fc33582c1a885432cc5e439bbb17
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Robin Obůrka <robin.oburka@nic.cz>
