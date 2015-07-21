@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=122
+PKG_VERSION:=123
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=9166d296df22003f2350fde37421eb157cf9c843
+PKG_SOURCE_VERSION:=1e0258c1774f8bc12db8d5350acebd609d0c16f1
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -34,6 +34,7 @@ if [ -z "$$TIME" ] ; then
 fi
 echo 'MAILTO=""' >"$$IPKG_INSTROOT"/etc/cron.d/updater
 echo "$$TIME	*       *       *       *       root	/usr/bin/updater.sh >/dev/null 2>&1 &" >>"$$IPKG_INSTROOT"/etc/cron.d/updater
+echo '0	0	*	*	*	root	/usr/bin/updater-unstuck.sh >/dev/null 2>&1 &" >>"$$IPKG_INSTROOT"/etc/cron.d/updater"
 [ -n "$$IPKG_INSTROOT" ] || {
 if [ -x /usr/sbin/cert-backup ] ; then
 	/usr/sbin/cert-backup /usr/share/updater/keys/standby.pem /usr/share/updater/keys/release.pem /etc/ssl/updater.pem
@@ -73,6 +74,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater.sh $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-wipe.sh $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-resume.sh $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-unstuck.sh $(1)/usr/bin/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-utils.sh $(1)/usr/bin/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-worker.sh $(1)/usr/bin/
 
