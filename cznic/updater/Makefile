@@ -34,7 +34,7 @@ if [ -z "$$TIME" ] ; then
 fi
 echo 'MAILTO=""' >"$$IPKG_INSTROOT"/etc/cron.d/updater
 echo "$$TIME	*       *       *       *       root	/usr/bin/updater.sh >/dev/null 2>&1 &" >>"$$IPKG_INSTROOT"/etc/cron.d/updater
-echo '0	0	*	*	*	root	/usr/bin/updater-unstuck.sh >/dev/null 2>&1 &" >>"$$IPKG_INSTROOT"/etc/cron.d/updater"
+echo "0	0	*	*	*	root	/usr/bin/updater-unstuck.sh >/dev/null 2>&1 &" >>"$$IPKG_INSTROOT"/etc/cron.d/updater
 [ -n "$$IPKG_INSTROOT" ] || {
 if [ -x /usr/sbin/cert-backup ] ; then
 	/usr/sbin/cert-backup /usr/share/updater/keys/standby.pem /usr/share/updater/keys/release.pem /etc/ssl/updater.pem
