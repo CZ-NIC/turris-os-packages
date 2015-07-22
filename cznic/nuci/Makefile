@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=106
+PKG_VERSION:=107
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=d1a0f36b32dcd6fd2565a550355c7fd324274510
+PKG_SOURCE_VERSION:=f3ee0c2e184638fd818016dd1a0b40f2fd7e6ded
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -55,6 +55,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/*.lua $(1)/usr/share/nuci/lua_plugins/
 	rm $(1)/usr/share/nuci/lua_plugins/nethist.*
 	rm $(1)/usr/share/nuci/lua_plugins/securris.*
+	rm $(1)/usr/share/nuci/lua_plugins/nuci-tls.*
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_lib
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_lib/* $(1)/usr/share/nuci/lua_lib/
@@ -87,6 +88,9 @@ define Package/nuci-tls/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/tls/openssl.cnf $(1)/usr/share/nuci/tls
 	$(INSTALL_DIR) $(1)/usr/share/nuci/tls/ca
 	$(INSTALL_DIR) $(1)/usr/share/nuci/tls/clients
+	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/nuci-tls.yin $(1)/usr/share/nuci/lua_plugins/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/nuci-tls.lua $(1)/usr/share/nuci/lua_plugins/
 endef
 
 define Package/nuci-tls/postinst
