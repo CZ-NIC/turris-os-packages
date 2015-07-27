@@ -1,0 +1,4 @@
+--- /dev/null
++++ b/svnversion.h
+@@ -0,0 +1 @@
++#define SVNVERSION  2563
