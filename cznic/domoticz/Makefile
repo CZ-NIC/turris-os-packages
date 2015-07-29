@@ -46,6 +46,9 @@ CMAKE_OPTIONS += \
 	-DCMAKE_BUILD_TYPE=Release . \
 	-DCPACK_STRIP_FILES=1
 
+QUILT_PATH_OPTS:=--binary
+export QUILT_PATH_OPTS
+
 define Build/Prepare
 	$(call Build/Prepare/Default)
 	echo "#define SVNVERSION  $(PKG_REV)-$(PKG_RELEASE)" > $(PKG_BUILD_DIR)/svnversion.h
