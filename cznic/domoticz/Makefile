@@ -46,8 +46,8 @@ CMAKE_OPTIONS += \
 	-DCMAKE_BUILD_TYPE=Release . \
 	-DCPACK_STRIP_FILES=1
 
-QUILT_PATH_OPTS:=--binary
-export QUILT_PATH_OPTS
+QUILT_PATCH_OPTS:=--binary
+export QUILT_PATCH_OPTS
 
 define Build/Prepare
 	$(call Build/Prepare/Default)
