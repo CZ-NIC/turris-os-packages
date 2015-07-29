@@ -46,11 +46,14 @@ CMAKE_OPTIONS += \
 	-DCMAKE_BUILD_TYPE=Release . \
 	-DCPACK_STRIP_FILES=1
 
-QUILT_PATCH_OPTS:=--binary
-export QUILT_PATCH_OPTS
-
+# This trick is here because we aren't able to make the thing work properly with
+# the CMakeList.txt having CRLF line endings no matter what.
 define Build/Prepare
 	$(call Build/Prepare/Default)
+	dos2unix $(PKG_BUILD_DIR)/CMakeList.txt
+	patch -d $(PKG_BUILD_DIR) -p1 <patches-manual/001-disable-static-linking.patch
+	patch -d $(PKG_BUILD_DIR) -p1 <patches-manual/002-disable-svn-version-extraction.patch
+	patch -d $(PKG_BUILD_DIR) -p1 <patches-manual/003-add-libusb1-fix.patch
 	echo "#define SVNVERSION  $(PKG_REV)-$(PKG_RELEASE)" > $(PKG_BUILD_DIR)/svnversion.h
 endef
 
