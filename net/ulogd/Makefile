@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ulogd
-PKG_VERSION:=2.0.4
-PKG_RELEASE:=7
+PKG_VERSION:=2.0.5
+PKG_RELEASE:=1
 
 PKG_SOURCE:=ulogd-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=\
@@ -17,7 +17,7 @@ PKG_SOURCE_URL:=\
 	ftp://ftp.be.netfilter.org/pub/netfilter/ulogd/ \
 	ftp://ftp.de.netfilter.org/pub/netfilter/ulogd/ \
 	ftp://ftp.no.netfilter.org/pub/netfilter/ulogd/
-PKG_MD5SUM:=7c71ec460dfea5287eba27472c521ebc
+PKG_MD5SUM:=f0f8fe1371fa28b5e06cb16aaa0111dd
 
 define Package/ulogd/Default
   SECTION:=net
