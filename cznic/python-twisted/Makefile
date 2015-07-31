@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=Twisted
 PKG_VERSION:=14.0.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/T/Twisted/
@@ -24,7 +24,7 @@ define Package/python-twisted
   SUBMENU:=Python
   TITLE:=python-twisted
   URL:=https://twistedmatrix.com/
-  DEPENDS:=+python +zope-interface +python-pyasn1 +python-crypto
+  DEPENDS:=+python +zope-interface +python-pyasn1 +python-crypto +pyopenssl
   MAINTAINER:=Ondrej Mikle <ondrej.mikle@nic.cz>
 endef
 
