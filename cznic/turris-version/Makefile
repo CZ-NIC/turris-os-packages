@@ -27,8 +27,8 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Možnost nainstalovat program pro domácí automatizaci Domoticz, včetně podpory pro Turris Gatgets
- • Výkonostní vylepšení programu Majordomo
+    create_notification -s news " • Možnost nainstalovat program pro domácí automatizaci Domoticz, včetně podpory pro Turris Gadgets
+ • Výkonnostní vylepšení programu Majordomo
  • Podpora pro vybrané DVB tunery
  • Podpora validace ECDSA DNSSEC podpisů v unbound
  • Oprava přesměrování do SSH honeypotu
