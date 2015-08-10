@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=2.4
+PKG_VERSION:=2.5
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
@@ -27,10 +27,13 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Podpora pro UBIFS
- • Vylepšení práce s pluginy v uCollectu
- • Logování více informací o útocích na telnet
- • Firewall stahuje pravidla komprimovaná"
+    create_notification -s news " • Možnost nainstalovat program pro domácí automatizaci Domoticz, včetně podpory pro Turris Gadgets
+ • Výkonnostní vylepšení programu Majordomo
+ • Podpora pro vybrané DVB tunery
+ • Podpora validace ECDSA DNSSEC podpisů v unbound
+ • Oprava přesměrování do SSH honeypotu
+ • Ucollect používá TLS 1.2
+ • Ucollect pozdrží odeslání dat při ztrátě spojení"
 }
 endef
 
