@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=56
+PKG_VERSION:=57
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
-PKG_SOURCE_VERSION:=c8f7257502ffcfb7a6d6865decb8fea1ee9faf41
+PKG_SOURCE_VERSION:=ee14f3f6d3cb3bc8ac1c06ff4f08e9ab1f3a6af8
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_BUILD_DEPENDS:=ruby/host python-slimit/host
