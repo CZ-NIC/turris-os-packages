@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libevent
-PKG_VERSION:=1.4.14b
+PKG_VERSION:=1.4.15
 PKG_RELEASE:=2
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)-stable
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-stable.tar.gz
-PKG_SOURCE_URL:=http://www.monkey.org/~provos/
-PKG_MD5SUM:=a00e037e4d3f9e4fe9893e8a2d27918c
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-release-$(PKG_VERSION)-stable
+PKG_SOURCE:=release-$(PKG_VERSION)-stable.tar.gz
+PKG_SOURCE_URL:=https://github.com/libevent/libevent/archive/
+PKG_MD5SUM:=6dce6fe39f133c09ffe63de895805f7f
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
