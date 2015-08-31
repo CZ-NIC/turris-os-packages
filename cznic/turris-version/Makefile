@@ -33,7 +33,7 @@ define Package/$(PKG_NAME)/postinst
  • Podpora validace ECDSA DNSSEC podpisů v unbound
  • Oprava přesměrování do SSH honeypotu
  • Ucollect používá TLS 1.2
- • Ucollect pozdrží odeslání dat při ztrátě spojení"
+ • Ucollect pozdrží odeslání dat při ztrátě spojení" " • The same text in english. Please fill in in real version."
 }
 endef
 
