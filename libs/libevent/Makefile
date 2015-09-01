@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2011 OpenWrt.org
+# Copyright (C) 2006-2015 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,12 +9,13 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libevent
 PKG_VERSION:=1.4.15
-PKG_RELEASE:=2
+PKG_RELEASE:=1
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-release-$(PKG_VERSION)-stable
 PKG_SOURCE:=release-$(PKG_VERSION)-stable.tar.gz
 PKG_SOURCE_URL:=https://github.com/libevent/libevent/archive/
 PKG_MD5SUM:=6dce6fe39f133c09ffe63de895805f7f
+PKG_MAINTAINER:=Steven Barth <cyrus@openwrt.org>
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -25,9 +26,9 @@ include $(INCLUDE_DIR)/package.mk
 define Package/libevent
   SECTION:=libs
   CATEGORY:=Libraries
-  TITLE:=Event notification library
+  TITLE:=Event notification library (legacy)
   DEPENDS:=+librt
-  URL:=http://www.monkey.org/~provos/libevent/
+  URL:=http://www.libevent.org
 endef
 
 define Package/libevent/description
