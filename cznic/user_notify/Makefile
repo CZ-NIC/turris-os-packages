@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2014 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2014-2015 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=user_notify
-PKG_VERSION:=36
+PKG_VERSION:=37
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=8d6217757b69ac30329e198656991482f7deec7e
+PKG_SOURCE_VERSION:=a2e5ada8e4163397a213c401351e34c8f45cf39f
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
