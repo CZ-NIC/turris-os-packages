@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-libatsha204
-PKG_VERSION:=4
+PKG_VERSION:=5
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/libatsha204.git
 PKG_ORIG_NAME:=libatsha204
-PKG_SOURCE_VERSION:=3284972e0064d6d3dc0d173f436f920763ebab54
+PKG_SOURCE_VERSION:=644c8ea6cd9571f3b52cfdd2eb8ea7bfa1f501d8
 PKG_SOURCE:=$(PKG_ORIG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_ORIG_NAME)
 PKG_MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
