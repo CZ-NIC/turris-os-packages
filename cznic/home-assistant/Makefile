@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=home-assistant
 PKG_VERSION:=0.7.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
 PKG_MAINTAINER:=Pavel Spirek <pavel.spirek@nic.cz>
@@ -42,7 +42,6 @@ define Build/Compile
 		install --root="$(PKG_INSTALL_DIR)" --prefix="/usr" \
 		--single-version-externally-managed \
 	)
-	$(SED) '1 s~^.*$$$$~#!/usr/bin/env python3~' $(PKG_INSTALL_DIR)/usr/bin/hass
 endef
 
 define Py3Package/home-assistant/install
