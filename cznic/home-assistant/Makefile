@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=home-assistant
 PKG_VERSION:=0.7.1
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
 PKG_MAINTAINER:=Pavel Spirek <pavel.spirek@nic.cz>
@@ -29,7 +29,7 @@ define Package/home-assistant
   CATEGORY:=Utilities
   SUBMENU:=Home Automation
   TITLE:=Open-source home automation platform running on Python 3
-  DEPENDS:=+python3 +python3-requests +python3-pytz +python3-pyyaml +python-setuptools
+  DEPENDS:=+python3 +python3-requests +python3-pytz +python3-pyyaml +python3-setuptools
   URL:=https://home-assistant.com/
 endef
 
