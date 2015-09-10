@@ -28,7 +28,7 @@ define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
     create_notification -s news " • Podpora více WiFi kanálů v 5GHz pásmu.
- • Přidán Home Assistant s podporou Turris Gatgets.
+ • Přidán Home Assistant s podporou Turris Gadgets.
  • Přidán správce balíčků pip pro Python.
  • Přidán Python 3.
  • Vícejazyčná podpora pro notifikace.
