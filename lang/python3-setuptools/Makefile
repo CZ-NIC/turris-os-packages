@@ -9,14 +9,13 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-setuptools
 PKG_VERSION:=18.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=setuptools-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/s/setuptools/
 PKG_MD5SUM:=52b4e48939ef311d7204f8fe940764f4
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/setuptools-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python3-setuptools
 
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python3-package.mk)
@@ -50,7 +49,7 @@ endef
 
 define Py3Package/python3-setuptools/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/easy_install-$(PYTHON3_VERSION) $(1)/usr/bin/easy_install-$(PYTHON3_VERSION)
 endef
 
 $(eval $(call Py3Package,python3-setuptools))
