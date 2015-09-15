@@ -8,7 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
-PKG_VERSION:=17
+PKG_PYTHON_NAME:=python-$(PKG_NAME)
+PKG_VERSION:=18
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/libatsha204.git
 PKG_SOURCE_VERSION:=c91597d3fcbe01d4c561a4aa7ad15097ec4b0c83
@@ -16,8 +17,10 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_BUILD_DEPENDS:=python
 
 include $(INCLUDE_DIR)/package.mk
+$(call include_mk, python-package.mk)
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
@@ -27,10 +30,12 @@ endef
 ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
 define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C VERBOSE=1
+	$(call Build/Compile/PyMod,./src/python/, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)")
 endef
 else
 define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_EMULATION CONFIG_PATH=/etc/atsha.sw VERBOSE=1
+	$(call Build/Compile/PyMod,./src/python/, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)")
 endef
 endif
 
@@ -71,4 +76,16 @@ define Package/$(PKG_NAME)/prerm
 if [ -e /etc/init.d/libatsha204 ] ; then /etc/init.d/libatsha204 disable ; fi
 endef
 
+
+define Package/$(PKG_PYTHON_NAME)
+	TITLE:=$(PKG_PYTHON_NAME)
+	DEPENDS:=+python +libatsha204
+endef
+
+define Package/$(PKG_PYTHON_NAME)/install
+	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* $(1)$(PYTHON_PKG_DIR)
+endef
+
 $(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,$(PKG_PYTHON_NAME)))
