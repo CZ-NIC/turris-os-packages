@@ -14,7 +14,7 @@ PKG_VERSION:=$(2)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/ucollect.git
 PKG_SOURCE:=$$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=2d356ed84577d8be04bbbbfe5687416f6e3acfa4
+PKG_SOURCE_VERSION:=d502e1617e4431e9fcf1ed9e41e94b4c424e34de
 PKG_SOURCE:=$$(PKG_NAME)-$$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -24,6 +24,7 @@ include $$(INCLUDE_DIR)/package.mk
 
 define Build/Compile
 	$$(MAKE_VARS) $$(MAKE) -C $$(PKG_BUILD_DIR) $$(MAKE_FLAGS) NO_MASTER=1 NO_DOC=1 RELEASE=1 MAX_LOG_LEVEL:=`if [ "$$$$$$$$TARGET_BOARD" = ar71xx ] ; then echo LLOG_DEBUG_VERBOSE ; else echo LLOG_INFO ; fi` PLUGIN_PATH=/usr/lib `test -e $$$$$$$$HOME/ucollect-password && echo LOGIN_PASSWD_HALF=$$$$$$$$HOME/ucollect-password`
+	$$(TARGET_CONFIGURE_OPTS) sh -c 'cd $$(PKG_BUILD_DIR) ; for i in bin/ucollect bin/lcollect lib/lib*.so ; do $$$$$$$$STRIP --only-keep-debug $$$$$$$$i -o $$$$$$$$i.debug ; $$$$$$$$STRIP --strip-debug --strip-unneeded $$$$$$$$i ; chmod 0444 $$$$$$$$i.debug ; $$$$$$$$OBJCOPY --add-gnu-debuglink=$$$$$$$$i.debug $$$$$$$$i ; done'
 endef
 endef
 
@@ -52,6 +53,8 @@ endef
 define Package/ucollect-$(1)/install
 	$$(INSTALL_DIR) $$(1)/usr/lib/
 	$$(INSTALL_BIN) $$(PKG_BUILD_DIR)/lib/libplugin_$(1).so $$(1)/usr/lib/libplugin_ucollect_$(1)_$(2).so
+	$$(INSTALL_DIR) $$(1)/usr/lib/debug/usr/lib
+	$$(INSTALL_DATA) $$(PKG_BUILD_DIR)/lib/libplugin_$(1).so.debug $$(1)/usr/lib/debug/usr/lib/
 	$$(INSTALL_DIR) $$(1)/usr/share/ucollect/configs
 	echo 'config plugin' >$$(1)/usr/share/ucollect/configs/99-$(1).cfg
 	echo "	option libname 'libplugin_ucollect_$(1)_$(2).so'" >>$$(1)/usr/share/ucollect/configs/99-$(1).cfg
