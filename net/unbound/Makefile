@@ -25,7 +25,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/unbound/Default
   TITLE:=A validating, recursive & caching DNS resolver
   URL:=http://www.unbound.net/
-  DEPENDS:=+libldns
+  DEPENDS:=+libldns +libopenssl
 endef
 
 ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
