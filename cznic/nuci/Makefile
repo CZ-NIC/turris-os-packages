@@ -86,7 +86,7 @@ define Package/nuci-tls/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/tls/new_ca $(1)/usr/share/nuci/tls/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/tls/new_client $(1)/usr/share/nuci/tls/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/tls/openssl.cnf $(1)/usr/share/nuci/tls
-	$(INSTALL_DATA) ./files/dhparams.pem $(1)/usr/share/nuci/tls
+	$(INSTALL_DATA) ./files/dhparam.pem $(1)/usr/share/nuci/tls/provided-dhparam.pem
 	$(INSTALL_DIR) $(1)/usr/share/nuci/tls/ca
 	$(INSTALL_DIR) $(1)/usr/share/nuci/tls/clients
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
