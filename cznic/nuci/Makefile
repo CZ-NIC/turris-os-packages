@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=111
+PKG_VERSION:=112
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=5c23d15484356836602c1af3b8b6995ac6e97d68
+PKG_SOURCE_VERSION:=5232514ae5156f414c57e5433bf41cd03f2cd9d8
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -86,6 +86,7 @@ define Package/nuci-tls/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/tls/new_ca $(1)/usr/share/nuci/tls/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/tls/new_client $(1)/usr/share/nuci/tls/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/tls/openssl.cnf $(1)/usr/share/nuci/tls
+	$(INSTALL_DATA) ./files/dhparams.pem $(1)/usr/share/nuci/tls
 	$(INSTALL_DIR) $(1)/usr/share/nuci/tls/ca
 	$(INSTALL_DIR) $(1)/usr/share/nuci/tls/clients
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
