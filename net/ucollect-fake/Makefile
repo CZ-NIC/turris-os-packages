@@ -8,7 +8,7 @@
 
 include ../ucollect-prog/Makefile.common
 
-VERSION:=11
+VERSION:=13
 
 $(eval $(call UCOLLECT_BASE,ucollect-fake,$(VERSION)))
 
@@ -38,6 +38,8 @@ endef
 define Package/ucollect-fake/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libplugin_fake.so $(1)/usr/lib/libplugin_ucollect_fake_$(VERSION).so
+	$(INSTALL_DIR) $(1)/usr/lib/debug/usr/lib
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/lib/libplugin_fake.so.debug $(1)/usr/lib/debug/usr/lib
 	$(INSTALL_DIR) $(1)/usr/share/ucollect/configs
 	$(INSTALL_BIN) ./files/gen-config $(1)/usr/share/ucollect/configs/99-fake.cfg
 	sed -i -e 's/VERSION/$(VERSION)/' $(1)/usr/share/ucollect/configs/99-fake.cfg

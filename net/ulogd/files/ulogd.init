@@ -12,7 +12,7 @@ CONFIGFILE="/var/etc/ulogd.conf"
 
 header() {
     cat > "$CONFIGFILE" <<-EOF
-# auto-generated config file from /etc/config/sshd
+# auto-generated config file from /etc/config/ulogd
 # any modification to this file will be lost after reload
 
 EOF

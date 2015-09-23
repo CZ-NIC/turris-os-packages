@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=2.5
+PKG_VERSION:=2.6
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
@@ -27,13 +27,27 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Možnost nainstalovat program pro domácí automatizaci Domoticz, včetně podpory pro Turris Gadgets
- • Výkonnostní vylepšení programu Majordomo
- • Podpora pro vybrané DVB tunery
- • Podpora validace ECDSA DNSSEC podpisů v unbound
- • Oprava přesměrování do SSH honeypotu
- • Ucollect používá TLS 1.2
- • Ucollect pozdrží odeslání dat při ztrátě spojení"
+    create_notification -s news " • Podpora více WiFi kanálů v 5GHz pásmu.
+ • Přidán Home Assistant s podporou Turris Gadgets.
+ • Přidán správce balíčků pip pro Python.
+ • Přidán Python 3.
+ • Vícejazyčná podpora pro notifikace.
+ • Použití wpad místo wpa_supplicant a hostapd.
+ • Opravy:
+   ◦ Spolehlivější detekce online stavu uCollectu.
+   ◦ Oprava buffer overflow v libevent.
+   ◦ Oprava kontroly MAC adresy ve Forisu.
+   ◦ Instalace chybějícího souboru /etc/config/tvheadend." " • Support for more 5GHz WiFi channels.
+ • Added Home Assistant with Turris Gadgets support.
+ • Added Python package manager pip.
+ • Added Python 3.
+ • Multilingual support for notifications.
+ • Use of wpad instead of wpa_supplicant and hostapd.
+ • Fixes:
+   ◦ More accurate detection of uCollect online status.
+   ◦ Buffer overflow bugfix in libevent.
+   ◦ Fix of MAC address validation in Foris.
+   ◦ Installation of missing /etc/config/tvheadend."
 }
 endef
 

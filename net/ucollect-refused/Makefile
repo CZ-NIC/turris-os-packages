@@ -8,6 +8,6 @@
 
 include ../ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_PLUGIN,refused,7))
+$(eval $(call UCOLLECT_PLUGIN,refused,9))
 
 $(eval $(call BuildPackage,ucollect-refused))

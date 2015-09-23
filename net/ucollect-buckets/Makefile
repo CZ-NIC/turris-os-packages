@@ -9,6 +9,6 @@
 
 include ../ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_PLUGIN,buckets,30))
+$(eval $(call UCOLLECT_PLUGIN,buckets,32))
 
 $(eval $(call BuildPackage,ucollect-buckets))
