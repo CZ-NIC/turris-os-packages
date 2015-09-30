@@ -44,7 +44,6 @@ define Build/Compile
 	$(call Build/Compile/Default,verbose=yes)
 endef
 
-TARGET_CFLAGS += -I$(STAGING_DIR)/usr/include/freetype2
 TARGET_LDFLAGS+=-Wl,-rpath-link=$(STAGING_DIR)/usr/lib/libiconv-full/lib/ -L$(STAGING_DIR)/usr/lib/libiconv-full/lib/ -liconv
 
 define Package/fbi/install
