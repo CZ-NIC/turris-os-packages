@@ -54,6 +54,7 @@ CONFIGURE_ARGS = \
 	--disable-pnm \
 	--disable-tga \
 	--enable-fbdev \
+	--enable-static \
 
 define Package/mplayer/install
 	$(INSTALL_DIR) $(1)/usr/bin
