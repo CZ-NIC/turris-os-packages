@@ -58,7 +58,7 @@ define Package/ucollect-$(1)/install
 	$$(INSTALL_DIR) $$(1)/usr/share/ucollect/configs
 	echo 'config plugin' >$$(1)/usr/share/ucollect/configs/99-$(1).cfg
 	echo "	option libname 'libplugin_ucollect_$(1)_$(2).so'" >>$$(1)/usr/share/ucollect/configs/99-$(1).cfg
-	for lib in $(3) ; do echo $$$$$$$$lib | sed -e 's/\(.*\)\.\(.*\)/	list pluglib "libpluglib_\1_\2.so"/' >>$$(1)/usr/share/ucollect/configs/99-$(1).cfg ; done
+	for lib in $(3) ; do echo $$$$$$$$lib | sed -e 's/\(.*\)\.\(.*\)/	list pluglib "libpluglib_ucollect_\1_\2.so"/' >>$$(1)/usr/share/ucollect/configs/99-$(1).cfg ; done
 endef
 
 endef
