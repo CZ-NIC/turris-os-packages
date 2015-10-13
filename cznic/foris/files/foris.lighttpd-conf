@@ -1,0 +1,9 @@
+# lighttpd include file for Foris
+#
+
+## modules to load
+server.modules += (
+	"mod_fastcgi",
+)
+
+include_shell "sh /usr/share/foris/lighttpd-dynamic-conf"
