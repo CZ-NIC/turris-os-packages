@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=113
+PKG_VERSION:=114
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -23,16 +23,6 @@ include $(INCLUDE_DIR)/package.mk
 define Package/$(PKG_NAME)
 	TITLE:=nuci
 	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua +ip +socat +libatsha204 +coreutils +coreutils-base64 +bzip2 +thermometer +user_notify
-endef
-
-define Package/nuci-nethist
-	TITLE:=nethist plugin for nuci
-	DEPENDS:=+nuci +nethist
-endef
-
-define Package/nuci-securris
-	TITLE:=Access securris through nuci
-	DEPENDS:=+nuci +luasocket
 endef
 
 define Build/Compile
@@ -53,29 +43,34 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/*.yin $(1)/usr/share/nuci/lua_plugins/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/*.lua $(1)/usr/share/nuci/lua_plugins/
-	rm $(1)/usr/share/nuci/lua_plugins/nethist.*
-	rm $(1)/usr/share/nuci/lua_plugins/securris.*
-	rm $(1)/usr/share/nuci/lua_plugins/nuci-tls.*
+	rm $(patsubst %,$(1)/usr/share/nuci/lua_plugins/%.*,nethist securris nuci-tls smrt)
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_lib
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_lib/* $(1)/usr/share/nuci/lua_lib/
 endef
 
-define Package/nuci-nethist/install
-	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/nethist.yin $(1)/usr/share/nuci/lua_plugins/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/nethist.lua $(1)/usr/share/nuci/lua_plugins/
+define plugin
+
+define Package/nuci-$(1)
+	TITLE:=$(2)
+	DEPENDS:=+nuci $(3)
 endef
 
-define Package/nuci-securris/install
-	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/securris.yin $(1)/usr/share/nuci/lua_plugins/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/securris.lua $(1)/usr/share/nuci/lua_plugins/
+define Package/nuci-$(1)/install
+	$$(INSTALL_DIR) $$(1)/usr/share/nuci/lua_plugins
+	$$(INSTALL_DATA) $$(PKG_BUILD_DIR)/src/lua_plugins/$(1).yin $$(1)/usr/share/nuci/lua_plugins/
+	$$(INSTALL_DATA) $$(PKG_BUILD_DIR)/src/lua_plugins/$(1).lua $$(1)/usr/share/nuci/lua_plugins/
 endef
+
+endef
+
+$(eval $(call plugin,nethist,Nethist plugin for nuci,+nethist))
+$(eval $(call plugin,securris,Access securris through nuci,+luasocket))
+$(eval $(call plugin,smrt,Nuci plugin for the smrt modem,))
 
 define Package/nuci-tls
-	TITLE:=TLS access to nuci
-	DEPENDS:=+nuci +socat +openssl-util
+TITLE:=TLS access to nuci
+DEPENDS:=+nuci +socat +openssl-util
 endef
 
 define Package/nuci-tls/install
@@ -109,6 +104,7 @@ define Package/nuci-tls/prerm
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,nuci-smrt))
 $(eval $(call BuildPackage,nuci-nethist))
 $(eval $(call BuildPackage,nuci-securris))
 $(eval $(call BuildPackage,nuci-tls))
