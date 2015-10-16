@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2013 OpenWrt.org
+# Copyright (C) 2006-2015 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd
-PKG_VERSION:=1.4.32
-PKG_RELEASE:=3
+PKG_VERSION:=1.4.37
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://download.lighttpd.net/lighttpd/releases-1.4.x
-PKG_MD5SUM:=e5a6f57fc371a10646ff1a57056fa9c0
+PKG_MD5SUM:=ca40168f54b46ee29475868ced8507d6
 
 PKG_LICENSE:=BSD-3c
 PKG_LICENSE_FILES:=COPYING
@@ -28,6 +28,7 @@ define Package/lighttpd/Default
   SECTION:=net
   CATEGORY:=Network
   URL:=http://www.lighttpd.net/
+  MAINTAINER:=W. Michael Petullo <mike@flyn.org>
 endef
 
 define Package/lighttpd
@@ -70,7 +71,7 @@ CONFIGURE_ARGS+= \
 	--without-fam \
 	--without-gdbm \
 	--without-ldap \
-	--without-lua \
+	--with-lua \
 	--without-memcache \
 	--with-pcre \
 	--without-valgrind \
@@ -121,9 +122,10 @@ endef
 
 define Package/lighttpd/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd
-	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
 	$(INSTALL_DATA) ./files/lighttpd.conf $(1)/etc/lighttpd/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/doc/config/conf.d/mime.conf $(1)/etc/lighttpd/
+	$(INSTALL_DIR) $(1)/etc/lighttpd/modules.d
+	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/lighttpd.init $(1)/etc/init.d/lighttpd
 	$(INSTALL_DIR) $(1)/usr/lib/lighttpd
@@ -147,39 +149,47 @@ define BuildPlugin
   define Package/lighttpd-mod-$(1)/install
 	$(INSTALL_DIR) $$(1)/usr/lib/lighttpd
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lighttpd/mod_$(1).so $$(1)/usr/lib/lighttpd
+	$(INSTALL_DIR) $$(1)/etc/lighttpd/modules.d/
+	echo 'server.modules += ( "mod_$(1)" )' > $$(1)/etc/lighttpd/modules.d/$(4)-$(1).load
   endef
 
   $$(eval $$(call BuildPackage,lighttpd-mod-$(1)))
 endef
 
 $(eval $(call BuildPackage,lighttpd))
-$(eval $(call BuildPlugin,access,Access restrictions,,10))
-$(eval $(call BuildPlugin,accesslog,Access logging,,10))
-$(eval $(call BuildPlugin,alias,Directory alias,,10))
-$(eval $(call BuildPlugin,auth,Authentication,,05))
-$(eval $(call BuildPlugin,cgi,CGI,,10))
-$(eval $(call BuildPlugin,cml,Cache Meta Language,,10))
-$(eval $(call BuildPlugin,compress,Compress output,+zlib,10))
-$(eval $(call BuildPlugin,evasive,Evasive,,10))
-$(eval $(call BuildPlugin,evhost,Exnhanced Virtual-Hosting,,10))
-$(eval $(call BuildPlugin,expire,Expire,,10))
-$(eval $(call BuildPlugin,extforward,Extract client,,10))
-$(eval $(call BuildPlugin,fastcgi,FastCGI,,10))
-$(eval $(call BuildPlugin,flv_streaming,FLV streaming,,10))
-$(eval $(call BuildPlugin,magnet,Magnet,,10))
-$(eval $(call BuildPlugin,mysql_vhost,Mysql virtual hosting,+libmysqlclient,10))
-$(eval $(call BuildPlugin,proxy,Proxy,,10))
-$(eval $(call BuildPlugin,redirect,URL redirection,+libpcre,10))
-$(eval $(call BuildPlugin,rewrite,URL rewriting,+libpcre,10))
-$(eval $(call BuildPlugin,rrdtool,RRDtool,,10))
-$(eval $(call BuildPlugin,scgi,SCGI,,10))
-$(eval $(call BuildPlugin,secdownload,Secure and fast download,,10))
-$(eval $(call BuildPlugin,setenv,Environment variable setting,,10))
-$(eval $(call BuildPlugin,simple_vhost,Simple virtual hosting,,10))
-$(eval $(call BuildPlugin,ssi,SSI,+libpcre,10))
-$(eval $(call BuildPlugin,status,Server status display,,10))
-$(eval $(call BuildPlugin,trigger_b4_dl,Trigger before download,+libpcre,10))
-$(eval $(call BuildPlugin,userdir,User directory,,10))
-$(eval $(call BuildPlugin,usertrack,User tracking,,10))
-$(eval $(call BuildPlugin,webdav,WebDAV,+libsqlite3 +libuuid +libxml2,10))
+
+# First, permit redirect from HTTP to HTTPS.
+$(eval $(call BuildPlugin,redirect,URL redirection,+PACKAGE_lighttpd-mod-redirect:libpcre,10))
+
+# Next, permit authentication.
+$(eval $(call BuildPlugin,auth,Authentication,,20))
+
+# Finally, everything else.
+$(eval $(call BuildPlugin,access,Access restrictions,,30))
+$(eval $(call BuildPlugin,accesslog,Access logging,,30))
+$(eval $(call BuildPlugin,alias,Directory alias,,30))
+$(eval $(call BuildPlugin,cgi,CGI,,30))
+$(eval $(call BuildPlugin,cml,Cache Meta Language,+liblua,30))
+$(eval $(call BuildPlugin,compress,Compress output,+PACKAGE_lighttpd-mod-compress:zlib,30))
+$(eval $(call BuildPlugin,evasive,Evasive,,30))
+$(eval $(call BuildPlugin,evhost,Exnhanced Virtual-Hosting,,30))
+$(eval $(call BuildPlugin,expire,Expire,,30))
+$(eval $(call BuildPlugin,extforward,Extract client,,30))
+$(eval $(call BuildPlugin,fastcgi,FastCGI,,30))
+$(eval $(call BuildPlugin,flv_streaming,FLV streaming,,30))
+$(eval $(call BuildPlugin,magnet,Magnet,+liblua,30))
+$(eval $(call BuildPlugin,mysql_vhost,Mysql virtual hosting,+PACKAGE_lighttpd-mod-mysql_vhost:libmysqlclient,30))
+$(eval $(call BuildPlugin,proxy,Proxy,,30))
+$(eval $(call BuildPlugin,rewrite,URL rewriting,+PACKAGE_lighttpd-mod-rewrite:libpcre,30))
+$(eval $(call BuildPlugin,rrdtool,RRDtool,,30))
+$(eval $(call BuildPlugin,scgi,SCGI,,30))
+$(eval $(call BuildPlugin,secdownload,Secure and fast download,,30))
+$(eval $(call BuildPlugin,setenv,Environment variable setting,,30))
+$(eval $(call BuildPlugin,simple_vhost,Simple virtual hosting,,30))
+$(eval $(call BuildPlugin,ssi,SSI,+libpcre,30))
+$(eval $(call BuildPlugin,status,Server status display,,30))
+$(eval $(call BuildPlugin,trigger_b4_dl,Trigger before download,+PACKAGE_lighttpd-mod-trigger_b4_dl:libpcre,30))
+$(eval $(call BuildPlugin,userdir,User directory,,30))
+$(eval $(call BuildPlugin,usertrack,User tracking,,30))
+$(eval $(call BuildPlugin,webdav,WebDAV,+PACKAGE_lighttpd-mod-webdav:libsqlite3 +PACKAGE_lighttpd-mod-webdav:libuuid +PACKAGE_lighttpd-mod-webdav:libxml2,30))
 
