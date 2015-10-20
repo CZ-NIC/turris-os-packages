@@ -12,7 +12,7 @@ PKG_VERSION:=114
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=15129e7b7f6fc88ce9354f03d7dae3ab5b022bf4
+PKG_SOURCE_VERSION:=dfb4673c4d9991be1e1f1748d124627580db6cf1
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -43,7 +43,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/*.yin $(1)/usr/share/nuci/lua_plugins/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/*.lua $(1)/usr/share/nuci/lua_plugins/
-	rm $(patsubst %,$(1)/usr/share/nuci/lua_plugins/%.*,nethist securris nuci-tls smrt)
+	rm $(patsubst %,$(1)/usr/share/nuci/lua_plugins/%.*,nethist nuci-tls smrt)
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_lib
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_lib/* $(1)/usr/share/nuci/lua_lib/
@@ -65,7 +65,6 @@ endef
 endef
 
 $(eval $(call plugin,nethist,Nethist plugin for nuci,+nethist))
-$(eval $(call plugin,securris,Access securris through nuci,+luasocket))
 $(eval $(call plugin,smrt,Nuci plugin for the smrt modem,))
 
 define Package/nuci-tls
@@ -106,5 +105,4 @@ endef
 $(eval $(call BuildPackage,$(PKG_NAME)))
 $(eval $(call BuildPackage,nuci-smrt))
 $(eval $(call BuildPackage,nuci-nethist))
-$(eval $(call BuildPackage,nuci-securris))
 $(eval $(call BuildPackage,nuci-tls))
