@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2008-2013 OpenWrt.org
+# Copyright (C) 2008-2015 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,20 +8,21 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=shadow
-PKG_VERSION:=4.1.5.1
-PKG_RELEASE:=4
+PKG_VERSION:=4.2.1
+PKG_RELEASE:=5
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://pkg-shadow.alioth.debian.org/releases
-PKG_MD5SUM:=a00449aa439c69287b6d472191dc2247
+PKG_MD5SUM:=2bfafe7d4962682d31b5eba65dba4fc8
+PKG_MAINTAINER:=Steven Barth <cyrus@openwrt.org>
+PKG_LICENSE:=BSD-3-Clause
 
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
 
-PKG_BUILD_DEPENDS:=libintl
-
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/nls.mk
 
 SHADOW_APPLETS := \
 	chage groupadd groupdel groupmod groups passwd su \
@@ -34,7 +35,8 @@ CONFIGURE_ARGS += \
 	--without-acl \
 	--without-attr \
 	--without-tcb \
-	--without-nscd
+	--without-nscd \
+	--disable-subordinate-ids \
 
 define Package/shadow/Default
   SECTION:=utils
@@ -45,7 +47,9 @@ endef
 
 define Package/shadow
   $(call Package/shadow/Default)
+  TITLE+= (all)
   DEPENDS:=$(foreach u,$(SHADOW_APPLETS),+shadow-$(u))
+  HIDDEN:=1
 endef
 
 define Package/shadow/description
@@ -58,18 +62,46 @@ define Package/shadow/install
 	true
 endef
 
+define Package/shadow-utils
+  $(call Package/shadow/Default)
+endef
+
+define Package/shadow-utils/config
+    menu "Select shadow utilities"
+      depends on PACKAGE_shadow-utils
+
+    config shadow-all
+      bool "Include all PLD shadow utilities"
+      select PACKAGE_shadow
+      default y
+
+    comment "Utilities"
+
+  $(foreach u,$(SHADOW_APPLETS), \
+    config PACKAGE_shadow-$(u)
+      prompt "Full PLD version of $(u) utility"
+
+   )
+
+  endmenu
+
+endef
+
+Package/shadow-utils/description = $(Package/shadow/description)
 
 define Package/shadow-common
   $(call Package/shadow/Default)
   TITLE:=Shared definitions for the PLD Linux shadow utilities
+  DEPENDS:=$(ICONV_DEPENDS) $(INTL_DEPENDS)
+  HIDDEN:=1
 endef
-
 
 define GenPlugin
   define Package/shadow-$(1)
     $(call Package/shadow/Default)
     TITLE:=Utility $(1) from the PLD Linux shadow utilities
     DEPENDS:=+shadow-common
+    HIDDEN:=1
   endef
 
   define Package/shadow-$(1)/description
@@ -80,7 +112,6 @@ endef
 
 $(foreach u,$(SHADOW_APPLETS),$(eval $(call GenPlugin,$(u))))
 
-
 define Package/shadow-common/conffiles
 /etc/login.defs
 endef
@@ -90,6 +121,9 @@ define Package/shadow-common/install
 	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/etc/login.defs $(1)/etc/
 endef
 
+define Package/shadow-utils/install
+	true
+endef
 
 define BuildPlugin
   define Package/shadow-$(1)/install
@@ -107,5 +141,6 @@ endef
 
 $(foreach u,$(SHADOW_APPLETS),$(eval $(call BuildPlugin,$(u))))
 
-$(eval $(call BuildPackage,shadow))
+$(eval $(call BuildPackage,shadow-utils))
 $(eval $(call BuildPackage,shadow-common))
+$(eval $(call BuildPackage,shadow))
