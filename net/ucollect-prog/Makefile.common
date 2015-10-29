@@ -56,7 +56,7 @@ define Package/ucollect-$(1)/install
 	$$(INSTALL_DIR) $$(1)/usr/lib/debug/usr/lib
 	$$(INSTALL_DATA) $$(PKG_BUILD_DIR)/lib/libplugin_$(1).so.debug $$(1)/usr/lib/debug/usr/lib/
 	$$(INSTALL_DIR) $$(1)/usr/share/ucollect/configs
-	$$(INSTALL_BIN) ./files/plugin.conf $$(1)/usr/share/ucollect/configs/99-$(1).cfg
+	$$(INSTALL_BIN) ../ucollect-prog/files/plugin.conf $$(1)/usr/share/ucollect/configs/99-$(1).cfg
 	sed -i -e 's/@@NAME@@/$(1)/g;s/@@VERSION@@/$(2)/g;s/@@PLUGLIBS@@/$(3)/g' $$(1)/usr/share/ucollect/configs/99-$(1).cfg
 endef
 
