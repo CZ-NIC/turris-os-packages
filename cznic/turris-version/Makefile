@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=2.6
+PKG_VERSION:=2.7
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
@@ -27,27 +27,23 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Podpora více WiFi kanálů v 5GHz pásmu.
- • Přidán Home Assistant s podporou Turris Gadgets.
- • Přidán správce balíčků pip pro Python.
- • Přidán Python 3.
- • Vícejazyčná podpora pro notifikace.
- • Použití wpad místo wpa_supplicant a hostapd.
- • Opravy:
-   ◦ Spolehlivější detekce online stavu uCollectu.
-   ◦ Oprava buffer overflow v libevent.
-   ◦ Oprava kontroly MAC adresy ve Forisu.
-   ◦ Instalace chybějícího souboru /etc/config/tvheadend." " • Support for more 5GHz WiFi channels.
- • Added Home Assistant with Turris Gadgets support.
- • Added Python package manager pip.
- • Added Python 3.
- • Multilingual support for notifications.
- • Use of wpad instead of wpa_supplicant and hostapd.
- • Fixes:
-   ◦ More accurate detection of uCollect online status.
-   ◦ Buffer overflow bugfix in libevent.
-   ◦ Fix of MAC address validation in Foris.
-   ◦ Installation of missing /etc/config/tvheadend."
+    create_notification -s news " • Odstraněn hash-checker.
+ • Oprava vícejazyčné podpory user_notify.
+ • Firewall sbírá data z více WAN rozhraní.
+ • Přidán python-turris-gpio ‒ python modul pro ovládání GPIO.
+ • Minidlna aktualizován na 1.1.4.
+ • Lighttpd aktualizován a jeho konfigurace zmodularizovaná.
+ • Drobné opravy:
+   ◦ ucollect
+   ◦ updater" " • Removed hte hash-checker.
+ • The multi-language support of user_notify is fixed.
+ • The firewall collects data from multiple WAN interfaces.
+ • Added python-turris-gpio ‒ a python module to control GPIO.
+ • Minidlna is updated to 1.1.4.
+ • Lighttpd is updated and its configuration is modularized.
+ • Minor fixes:
+   ◦ ucollect
+   ◦ updater"
 }
 endef
 
