@@ -9,10 +9,10 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
 PKG_PYTHON_NAME:=python-$(PKG_NAME)
-PKG_VERSION:=18
+PKG_VERSION:=19
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/libatsha204.git
-PKG_SOURCE_VERSION:=c91597d3fcbe01d4c561a4aa7ad15097ec4b0c83
+PKG_SOURCE_VERSION:=5946b745d50df75bd41ee73a9233138e559e2be0
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
