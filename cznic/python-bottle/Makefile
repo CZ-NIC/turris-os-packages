@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bottle
 PKG_VERSION:=0.12.7
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=bottle-0.12.7.tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/b/bottle/
@@ -27,7 +27,7 @@ define Package/python-bottle
 	CATEGORY:=Languages
 	TITLE:=python-bottle
 	URL:=http://bottlepy.org
-	DEPENDS:=+python
+	DEPENDS:=+python-light +python-codecs +python-email
 	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
 endef
 

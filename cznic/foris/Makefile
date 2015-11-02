@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
 PKG_VERSION:=60
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
@@ -24,7 +24,7 @@ $(call include_mk, python-package.mk)
 define Package/foris
 	TITLE:=foris
 	DEPENDS:=\
-		+python +python-bottle +python-bottle-i18n +python-beaker \
+		+python-light +python-bottle +python-bottle-i18n +python-beaker \
 		+python-flup +python-ncclient +nuci +lighttpd +lighttpd-mod-fastcgi \
 		+luci +user_notify
 	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>

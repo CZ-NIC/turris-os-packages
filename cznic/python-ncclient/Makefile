@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-ncclient
 PKG_VERSION:=0.4pre
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/ncclient.git
@@ -26,7 +26,7 @@ define Package/python-ncclient
 	CATEGORY:=Languages
 	TITLE:=python-ncclient
 	URL:=http://beaker.readthedocs.org
-	DEPENDS:=+python
+	DEPENDS:=+python-light +python-logging +python-xml
 	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
 endef
 

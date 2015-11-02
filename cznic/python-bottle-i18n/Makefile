@@ -27,7 +27,7 @@ define Package/python-bottle-i18n
 	CATEGORY:=Languages
 	TITLE:=python-bottle-i18n
 	URL:=https://github.com/iocast/bottle-i18n
-	DEPENDS:=+python +python-bottle
+	DEPENDS:=+python-light +python-bottle
 	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
 endef
 

@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=flup
 PKG_VERSION:=1.0.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=flup-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://pypi.python.org/packages/source/f/flup/
@@ -30,7 +30,7 @@ define Package/python-flup
   CATEGORY:=Languages
   TITLE:=python-flup
   URL:=http://pypi.python.org/pypi/flup/
-  DEPENDS:=+python
+  DEPENDS:=+python-light +python-logging
   MAINTAINER:=Hamish Guthrie <hcg@openwrt.org>
 endef
 

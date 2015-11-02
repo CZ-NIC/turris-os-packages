@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=Beaker
 PKG_VERSION:=1.6.4
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=Beaker-1.6.4.tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/B/Beaker/
@@ -27,7 +27,7 @@ define Package/python-beaker
 	CATEGORY:=Languages
 	TITLE:=python-beaker
 	URL:=http://beaker.readthedocs.org
-	DEPENDS:=+python
+	DEPENDS:=+python-light +python-logging +python-openssl
 	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
 endef
 
