@@ -1,0 +1,50 @@
+#!/bin/sh
+
+. /lib/functions.sh
+
+config_load foris
+config_get SCRIPTNAME server scriptname "/"
+config_get_bool DEBUG server debug "0"
+config_get_bool NOAUTH auth noauth "0"
+
+# scriptname must not contain escape codes (avoid CRLF injection in sed later)
+# and for the sake of UX, training and leading slashes are trimmed
+SCRIPTNAME=$(echo "$SCRIPTNAME" | sed -e 's;\\;\\\\;g' | sed -e 's;/*$\|^/*;;g')
+
+EXTRA_FLAGS=""
+[ "$DEBUG" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS -d"
+[ "$NOAUTH" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS --noauth"
+
+STATIC_PREFIX="/"
+FIX_ROOT_DISABLER=""
+
+if [ "$SCRIPTNAME" != "" ] ; then
+	STATIC_PREFIX="/$SCRIPTNAME/"
+	FIX_ROOT_DISABLER="#"
+fi
+
+TEMPLATE="
+var.foris.bin = \"/usr/bin/foris\"\n\
+var.foris.flags = \"-s flup%EXTRA_FLAGS%\"\n\
+var.foris.scriptname = \"/%SCRIPTNAME%\"\n\
+\n\
+\$HTTP[\"url\"] =~ \"^\" + var.foris.scriptname + \"(?(?<!/)/|)(?!static|cgi-bin|luci-static)\" {\n\
+	fastcgi.debug = 0\n\
+	fastcgi.server = (\n\
+		var.foris.scriptname => (\n\
+			\"python-fcgi\" =>	(\n\
+				\"socket\" => \"/tmp/fastcgi.python.socket\",\n\
+				\"bin-path\" => var.foris.bin + \" \" + var.foris.flags,\n\
+%FIX_ROOT_DISABLER%				\"fix-root-scriptname\" => \"enable\",	# required for extension \"/\"\n\
+				\"check-local\" => \"disable\",\n\
+				\"max-procs\" => 1,\n\
+			)\n\
+		)\n\
+	)\n\
+}\n\
+\n\
+alias.url += ( \"%STATIC_PREFIX%\" + \"static/\" => \"/usr/lib/python2.7/site-packages/foris/static/\" )\n\
+"
+
+echo -e "$TEMPLATE" | sed "s;%SCRIPTNAME%;$SCRIPTNAME;g" | sed "s;%FIX_ROOT_DISABLER%;$FIX_ROOT_DISABLER;g" \
+	| sed "s;%STATIC_PREFIX%;$STATIC_PREFIX;g" | sed "s;%EXTRA_FLAGS%;$EXTRA_FLAGS;g"
