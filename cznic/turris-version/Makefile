@@ -35,7 +35,7 @@ define Package/$(PKG_NAME)/postinst
  • Lighttpd aktualizován a jeho konfigurace zmodularizovaná.
  • Drobné opravy:
    ◦ ucollect
-   ◦ updater" " • Removed hte hash-checker.
+   ◦ updater" " • Removed the hash-checker.
  • The multi-language support of user_notify is fixed.
  • The firewall collects data from multiple WAN interfaces.
  • Added python-turris-gpio ‒ a python module to control GPIO.
