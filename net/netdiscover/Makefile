@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2009-2010 OpenWrt.org
+# Copyright (C) 2015 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netdiscover
-PKG_VERSION:=0.3-beta6
-PKG_RELEASE:=3
+PKG_VERSION:=0.3-pre-beta7
+PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-LINUXONLY.tar.gz
 PKG_SOURCE_URL:=http://nixgeneration.com/~jaime/netdiscover/releases/
-PKG_MD5SUM:=0919227a91ecaeeb2443cff249417be2
+PKG_MD5SUM:=8780e66d00496e933b4064cfe9ae61da
+PKG_MAINTAINER:=Mislav Novakovic <mislav.novakovic@sartura.hr>
+PKG_LICENSE:=GPL-2.0
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -23,15 +25,14 @@ include $(INCLUDE_DIR)/package.mk
 define Package/netdiscover
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libpcap +libnet1 +libpthread
+  DEPENDS:=+libpcap +libnet-1.2.x +libpthread
   TITLE:=An active/passive address reconnaissance tool
   URL:=http://nixgeneration.com/~jaime/netdiscover/
-  MAINTAINER:=Daniel Dickinson <openwrt@cshore.neomailbox.net>
 endef
 
 CONFIGURE_VARS+= \
-	CPPFLAGS="$(TARGET_CPPFLAGS) -I$(STAGING_DIR)/usr/lib/libnet-1.1.x/include" \
-	LDFLAGS="$(TARGET_LDFLAGS) -L$(STAGING_DIR)/usr/lib/libnet-1.1.x/lib" \
+	CPPFLAGS="$(TARGET_CPPFLAGS) -I$(STAGING_DIR)/usr/lib/libnet-1.2.x/lib" \
+	LDFLAGS="$(TARGET_LDFLAGS) -L$(STAGING_DIR)/usr/lib/libnet-1.2.x/lib"
 
 define Package/netdiscover/install
 	$(INSTALL_DIR) $(1)/usr/sbin
