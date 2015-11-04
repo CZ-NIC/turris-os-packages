@@ -1316,6 +1316,22 @@ define Package/ruby-zlib/install
 	) | ( cd $(1); $(TAR) -xf - )
 endef
 
+# gems that should be installed to host environment
+GEM_LIST:=compass breakpoint
+GEM_compass_VERSION:=1.0.1
+GEM_breakpoint_VERSION:=2.5.0
+
+define Host/Install
+	$(call Host/Install/Default)
+
+	$(foreach gem,$(GEM_LIST),$(STAGING_DIR_HOST)/bin/gem install $(gem) -v $(GEM_$(gem)_VERSION);)
+endef
+
+define Host/Clean
+	$(RM) -rf $(STAGING_DIR_HOST)/lib/ruby
+	$(RM) -rf $(STAGING_DIR_HOST)/share/ri
+endef
+
 define Build/InstallDev
 	( cd $(PKG_INSTALL_DIR); $(TAR) -cf - \
 		. \
