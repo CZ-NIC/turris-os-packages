@@ -1,0 +1,1 @@
+utils/lvm2: needs @USE_UCLIBC:+librt with uClibc
