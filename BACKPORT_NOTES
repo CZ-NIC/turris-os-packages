@@ -1,1 +1,2 @@
 utils/lvm2: needs @USE_UCLIBC:+librt with uClibc
+utils/dump1090: needs @USE_UCLIBC:+librt with uClibc
