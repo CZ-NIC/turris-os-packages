@@ -24,12 +24,13 @@ define Package/etherwake
   CATEGORY:=Network
   TITLE:=WoL client for magic packets via ethernet frames
   URL:=http://ftp.debian.org/debian/pool/main/e/etherwake
+  MAINTAINER:=Peter Wagner <tripolar@gmx.at>
 endef
 
 define Package/etherwake/description
-	You can wake up WOL compliant Computers which have been powered down to 
+	You can wake up WOL compliant Computers which have been powered down to
 	sleep mode or start WOL compliant Computers with a BIOS feature.
-	WOL is an abbreviation for Wake-on-LAN. It is a standard that allows you 
+	WOL is an abbreviation for Wake-on-LAN. It is a standard that allows you
 	to turn on a computer from another location over a network connection.
 	ether-wake also supports WOL passwords.
 endef
