@@ -1,5 +1,3 @@
-diff --git a/tests/fs-tests/integrity/integck.c b/tests/fs-tests/integrity/integck.c
-index 9e63e53..746b84e 100644
 --- a/tests/fs-tests/integrity/integck.c
 +++ b/tests/fs-tests/integrity/integck.c
 @@ -31,7 +31,6 @@
@@ -10,11 +8,9 @@ index 9e63e53..746b84e 100644
  #include <sys/mman.h>
  #include <sys/vfs.h>
  #include <sys/mount.h>
-diff --git a/tests/jittertest/Makefile b/tests/jittertest/Makefile
-index 0209c63..aba7ad8 100644
 --- a/tests/jittertest/Makefile
 +++ b/tests/jittertest/Makefile
-@@ -30,7 +30,7 @@ JitterTest.o: /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h
+@@ -30,7 +30,7 @@ JitterTest.o: /usr/include/sys/cdefs.h /
  JitterTest.o: /usr/lib/gcc-lib/i386-redhat-linux/egcs-2.91.66/include/stddef.h
  JitterTest.o: /usr/lib/gcc-lib/i386-redhat-linux/egcs-2.91.66/include/stdarg.h
  JitterTest.o: /usr/include/bits/types.h /usr/include/libio.h
