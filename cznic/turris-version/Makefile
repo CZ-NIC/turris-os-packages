@@ -30,6 +30,7 @@ define Package/$(PKG_NAME)/postinst
     create_notification -s news " • Odstraněn hash-checker.
  • Oprava vícejazyčné podpory user_notify.
  • Firewall sbírá data z více WAN rozhraní.
+ • Oprava vytváření DROP pravidel ve firewallu.
  • Přidán python-turris-gpio ‒ python modul pro ovládání GPIO.
  • Minidlna aktualizován na 1.1.4.
  • Lighttpd aktualizován a jeho konfigurace zmodularizovaná.
@@ -38,6 +39,7 @@ define Package/$(PKG_NAME)/postinst
    ◦ updater" " • Removed the hash-checker.
  • The multi-language support of user_notify is fixed.
  • The firewall collects data from multiple WAN interfaces.
+ • Generation of firewall DROP rules fixed.
  • Added python-turris-gpio ‒ a python module to control GPIO.
  • Minidlna is updated to 1.1.4.
  • Lighttpd is updated and its configuration is modularized.

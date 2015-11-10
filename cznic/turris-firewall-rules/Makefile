@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-firewall-rules
-PKG_VERSION:=52
+PKG_VERSION:=53
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/fw-rules.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=956f964e95f88fca3e1e80db0111a2000a550fb1
+PKG_SOURCE_VERSION:=19b2f8f56ce6cf037a7fc3066e8df9f5ad7b8dd4
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
