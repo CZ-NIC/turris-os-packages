@@ -8,17 +8,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=60
-PKG_RELEASE:=3
+PKG_VERSION:=61
+PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
 PKG_SOURCE_VERSION:=package-v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)
 PKG_BUILD_DEPENDS:=ruby/host python-slimit/host
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/host-build.mk
 $(call include_mk, python-package.mk)
 
 define Package/foris
@@ -98,6 +100,23 @@ define Package/foris-oldconfig/install
 	$(INSTALL_DATA) ./files/foris.conf $(1)/etc/foris/foris-lighttpd-inc.conf
 endef
 
+define Build/InstallDev
+	$(INSTALL_DIR) $(STAGING_DIR)/mk/
+	$(INSTALL_DATA) ./files/foris-plugin.mk $(STAGING_DIR)/mk/
+endef
+
+define Host/Install
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/tools/compilemessages.sh $(STAGING_DIR_HOST)/bin/foris_compilemessages.sh
+endef
+
+define Host/Compile
+endef
+
+define Host/Clean
+	$(RM) -rf $(STAGING_DIR_HOST)/bin/foris_compilemessages.sh
+endef
+
 $(eval $(call BuildPackage,foris))
 $(eval $(call PyPackage,foris))
 $(eval $(call BuildPackage,foris-oldconfig))
+$(eval $(call HostBuild))

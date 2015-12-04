@@ -46,5 +46,14 @@ var.foris.scriptname = \"/%SCRIPTNAME%\"\n\
 alias.url += ( \"%STATIC_PREFIX%\" + \"static/\" => \"/usr/lib/python2.7/site-packages/foris/static/\" )\n\
 "
 
+PLUGINS_DIR=/usr/share/foris/plugins
+
+for PLUGIN_PATH in $PLUGINS_DIR/*; do
+	PLUGIN_NAME=$(basename $PLUGIN_PATH)
+	[ -d "$PLUGIN_PATH/static" ] && {
+		TEMPLATE="$TEMPLATE\nalias.url += ( \"%STATIC_PREFIX%\" + \"plugins/$PLUGIN_NAME/static/\" => \"$PLUGIN_PATH/static/\" )"
+	}
+done
+
 echo -e "$TEMPLATE" | sed "s;%SCRIPTNAME%;$SCRIPTNAME;g" | sed "s;%FIX_ROOT_DISABLER%;$FIX_ROOT_DISABLER;g" \
 	| sed "s;%STATIC_PREFIX%;$STATIC_PREFIX;g" | sed "s;%EXTRA_FLAGS%;$EXTRA_FLAGS;g"
