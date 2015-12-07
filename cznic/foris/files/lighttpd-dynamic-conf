@@ -28,7 +28,7 @@ var.foris.bin = \"/usr/bin/foris\"\n\
 var.foris.flags = \"-s flup%EXTRA_FLAGS%\"\n\
 var.foris.scriptname = \"/%SCRIPTNAME%\"\n\
 \n\
-\$HTTP[\"url\"] =~ \"^\" + var.foris.scriptname + \"(?(?<!/)/|)(?!static|cgi-bin|luci-static)\" {\n\
+\$HTTP[\"url\"] =~ \"^\" + var.foris.scriptname + \"(?(?<!/)/|)(?!static|cgi-bin|luci-static|plugins)\" {\n\
 	fastcgi.debug = 0\n\
 	fastcgi.server = (\n\
 		var.foris.scriptname => (\n\
