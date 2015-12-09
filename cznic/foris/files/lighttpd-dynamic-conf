@@ -9,7 +9,7 @@ config_get_bool NOAUTH auth noauth "0"
 
 # scriptname must not contain escape codes (avoid CRLF injection in sed later)
 # and for the sake of UX, training and leading slashes are trimmed
-SCRIPTNAME=$(echo "$SCRIPTNAME" | sed -e 's;\\;\\\\;g' | sed -e 's;/*$\|^/*;;g')
+SCRIPTNAME=$(echo "$SCRIPTNAME" | sed -e 's;\\;\\\\;g' | sed -e 's;/*$;;g' | sed -e 's;^/*;;g')
 
 EXTRA_FLAGS=""
 [ "$DEBUG" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS -d"
