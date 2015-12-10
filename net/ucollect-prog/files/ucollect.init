@@ -22,7 +22,7 @@ get_wan() {
 
 build_config() {
 	mkdir -p /tmp/ucollect/
-	autodetect=$(uci get -q ucollect.wan.autodetect || echo '1')
+	autodetect=$(uci -q get ucollect.wan.autodetect || echo '1')
 	if [ "$autodetect" = 1 ] ; then
 		# Look into the routing tables to guess WAN interfaces
 		V4=$(route -n | sed -ne 's/ *$//;/^0\.0\.0\.0  *[0-9.][0-9.]*  *0\.0\.0\.0/s/.* //p')
@@ -30,7 +30,7 @@ build_config() {
 		# Unify them and remove duplicates
 		ALL=$(echo "$V4" "$V6" | sed -e 's/  */ /g;s/ /\n/g' | sort -u)
 		IGNORE=$(uci -X show network | sed -ne 's/^network\.\([^.]*\)=interface$/\1/p' | while read iface ; do
-			proto=$(uci get -q network.$iface.proto)
+			proto=$(uci -q get network.$iface.proto)
 			name=$(echo "$proto-$iface" | head -c 15)
 			# TODO: What about L2TP? #3093
 			if [ "$proto" = "6in4" -o "$proto" = "6to4" -o "$proto" = "6rd" -o "$proto" = "dslite" ] ; then
