@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "$(uci get -q dhcp.@dnsmasq[0].port || echo 53)" = 53 ] ; then
+if [ "$(uci -q get dhcp.@dnsmasq[0].port || echo 53)" = 53 ] ; then
 	uci set dhcp.@dnsmasq[0].port=0
 fi
 # Make sure we can set time for resolution to work, before the resolution works.
@@ -16,5 +16,5 @@ uci show dhcp | sed -ne 's/^dhcp\.//;s/=dhcp$//p' | while read INTERFACE ; do
 		fi
 	fi
 done
-uci commit
-
+uci commit dhcp
+uci commit system
