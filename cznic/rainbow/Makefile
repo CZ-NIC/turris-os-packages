@@ -24,6 +24,18 @@ define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 endef
 
+ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+# FIXME: Temporary, until rainbow is ported.
+
+define Build/Compile
+	echo 'echo "Rainbow not ported yet" >&2; exit 1' >$(PKG_BUILD_DIR)/rainbow
+endef
+
+define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/rainbow $(1)/usr/bin/
+endef
+else
 define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS)
 endef
@@ -58,5 +70,6 @@ define Package/$(PKG_NAME)/prerm
 /etc/init.d/rainbow disable
 rainbow all auto white
 endef
+endif
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

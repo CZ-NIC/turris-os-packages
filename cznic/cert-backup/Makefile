@@ -30,15 +30,23 @@ ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
 define Build/Compile
 	true
 endef
-else
-define Build/Compile
-	echo "The target board does not have a backup partition."
-endef
-endif
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/cert-backup/cert-backup $(1)/usr/sbin/
 endef
+
+else
+define Build/Compile
+	echo "The target board does not have a backup partition."
+endef
+
+# We install an empty file instead of the cert-backup script, so not to damage things
+define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/cert-backup/cert-backup $(1)/usr/sbin/
+	echo ''>$(1)/usr/sbin/cert-backup
+endef
+endif
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
