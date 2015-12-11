@@ -16,7 +16,9 @@ start() {
 		exit
 	fi
 
-	MAC=$(ifconfig | head -n1 | sed -e 's/.* HWaddr //;s/^..:..//')
+	#FIXME: Omnia currently doesn't have a mac address at this time
+	#MAC=$(ifconfig | head -n1 | sed -e 's/.* HWaddr //;s/^..:..//')
+	MAC=$(dd if=/dev/urandom bs=1 count=4 | hexdump -C | sed -e 's/^[^ ]*//;s/|.*//;s/ //g' | tr '\n' ' ' | tr '[a-z]' '[A-Z]' | sed -e 's/ //g')
 	touch /tmp/atsha.sw
 	chmod 0600 /tmp/atsha.sw
 	for i in `seq 1 16` ; do
