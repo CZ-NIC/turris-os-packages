@@ -140,7 +140,7 @@ hash_dir()
         fi
     done
 
-    ls -1 *.pem 2>/dev/null | while read FILE
+    ls -1 *.pem *.crt 2>/dev/null | while read FILE
     do
 	check_file ${FILE}
         local FILE_TYPE=${?}
