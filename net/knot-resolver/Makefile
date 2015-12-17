@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
-PKG_VERSION:=1.0.0-beta2
+PKG_VERSION:=1.0.0-beta2-91-g3bbdca3
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
@@ -40,7 +40,7 @@ define Package/knot-resolver/description
 endef
 
 MAKE_FLAGS += \
-	PREFIX=$(PKG_INSTALL_DIR)/usr
+	PREFIX=/usr
 
 define Package/knot-resolver/install
 	$(INSTALL_DIR) $(1)/usr/bin
