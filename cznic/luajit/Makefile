@@ -51,6 +51,7 @@ endef
 define Package/luajit/install
 	$(INSTALL_DIR) $(1)/usr/{lib,bin,share}
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libluajit*so* $(1)/usr/lib/
+	$(LN) libluajit-5.1.so.2.0.4 $(1)/usr/lib/libluajit-5.1.so.2
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 	$(CP) $(PKG_INSTALL_DIR)/usr/share/luajit* $(1)/usr/share/
 endef
