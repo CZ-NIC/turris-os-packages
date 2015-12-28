@@ -47,7 +47,14 @@ define Package/knot-resolver/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/kresd $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libkres.so* $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/kdns_modules $(1)/usr/lib
+
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/kresd.init $(1)/etc/init.d/kresd
+
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/kresd.config $(1)/etc/config/kresd
 endef
 
 $(eval $(call BuildPackage,knot-resolver))
