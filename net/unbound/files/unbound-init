@@ -58,8 +58,24 @@ set_multiple_parameters() {
     config_list_foreach "$section" "$var" add_parameter "$opt"
 }
 
+# Check the /etc/unbound/root.key is reasonable and try to fix it with given command
+check_root_key() {
+    # Don't do anything if it looks OK
+    grep -q '[[:space:]]\(DNSKEY\|DS\)[[:space:]]' /etc/unbound/root.key && return
+    # Not OK -> run the command and hope for the best
+    echo "Trying to restore broken /etc/unbound/root.key with command $@" | logger -t unbound -p daemon.warning
+    eval "$@"
+}
+
 #initialize everything 
 init_unbound() {
+
+    # Sometimes, the root anchor is broken. We first try unbound-anchor (with and without upstream DNS servers).
+    check_root_key unbound-anchor -f /tmp/resolv.conf.auto
+    check_root_key unbound-anchor
+    # unbound-anchor is of no use :-(. Try to restore it from the certificate backup, if there's anything.
+    check_root_key cert-backup -x /etc/unbound/root.key
+    # No more ideas what to do, so just try running unbound, something of the above may have worked.
 
     #Clear the config and set header
     header

@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=domoticz
-PKG_REV:=2563-gadgets-10-g7a520a0
+PKG_REV:=2563-gadgets-11-g7b63085
 PKG_VERSION:=2.${PKG_REV}
 PKG_RELEASE:=1
 PKG_LICENSE:=GPL-3.0

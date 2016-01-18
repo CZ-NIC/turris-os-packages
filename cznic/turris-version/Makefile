@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=2.7
+PKG_VERSION:=2.8
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
@@ -27,25 +27,11 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Odstraněn hash-checker.
- • Oprava vícejazyčné podpory user_notify.
- • Firewall sbírá data z více WAN rozhraní.
- • Oprava vytváření DROP pravidel ve firewallu.
- • Přidán python-turris-gpio ‒ python modul pro ovládání GPIO.
- • Minidlna aktualizován na 1.1.4.
- • Lighttpd aktualizován a jeho konfigurace zmodularizovaná.
- • Drobné opravy:
-   ◦ ucollect
-   ◦ updater" " • Removed the hash-checker.
- • The multi-language support of user_notify is fixed.
- • The firewall collects data from multiple WAN interfaces.
- • Generation of firewall DROP rules fixed.
- • Added python-turris-gpio ‒ a python module to control GPIO.
- • Minidlna is updated to 1.1.4.
- • Lighttpd is updated and its configuration is modularized.
- • Minor fixes:
-   ◦ ucollect
-   ◦ updater"
+    create_notification -s news " • Zpřístupnění konfiguračního rozhraní pro klientské aplikace.
+ • Kompletní lokalizace emailových notifikací.
+ • Rychlejší updaty firewallu." " • The configuration interface is made available to client applications.
+ • Complete localisation of texts in email notifications.
+ • Faster firewall updates."
 }
 endef
 
