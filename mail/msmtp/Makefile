@@ -80,7 +80,8 @@ CONFIGURE_ARGS += \
 	--disable-rpath \
 	--without-libintl-prefix \
 	--without-libgsasl \
-	--without-libidn
+	--without-libidn \
+	--disable-gai-idn
 
 MAKE_FLAGS :=
 
