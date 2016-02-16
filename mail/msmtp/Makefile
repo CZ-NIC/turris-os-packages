@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=msmtp
 PKG_VERSION:=1.6.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@SF/msmtp
@@ -80,7 +80,8 @@ CONFIGURE_ARGS += \
 	--disable-rpath \
 	--without-libintl-prefix \
 	--without-libgsasl \
-	--without-libidn
+	--without-libidn \
+	--disable-gai-idn
 
 MAKE_FLAGS :=
 
