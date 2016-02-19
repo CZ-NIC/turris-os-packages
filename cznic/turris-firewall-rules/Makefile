@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-firewall-rules
-PKG_VERSION:=57
+PKG_VERSION:=58
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/fw-rules.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=75ef2699101916d8b1df2518f7255dc0abf28a81
+PKG_SOURCE_VERSION:=5e53ba241328dd76f621fdb7c2840e548d7144b4
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
@@ -96,4 +96,29 @@ fi
 exit 0
 endef
 
+define Package/$(PKG_NAME)-tests
+	$(call Package/$(PKG_NAME))
+	TITLE+= (tests)
+	DEPENDS+= +$(PKG_NAME) +diffutils
+endef
+
+define Package/$(PKG_NAME)-tests/description
+	This package is used to test firewall rules.
+endef
+
+define Package/$(PKG_NAME)-tests/install
+	$(INSTALL_DIR) $(1)/usr/share/firewall-tests
+	$(INSTALL_DIR) $(1)/usr/share/firewall-tests/files
+	$(INSTALL_DIR) $(1)/usr/share/firewall-tests/files/content
+	$(INSTALL_DIR) $(1)/usr/share/firewall-tests/files/fw3
+	$(INSTALL_DIR) $(1)/usr/share/firewall-tests/files/script
+
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tests/test-*.sh $(1)/usr/share/firewall-tests
+
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/tests/files/fw3/*  $(1)/usr/share/firewall-tests/files/fw3
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/tests/files/script/*  $(1)/usr/share/firewall-tests/files/script
+
+endef
+
 $(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,$(PKG_NAME)-tests))
