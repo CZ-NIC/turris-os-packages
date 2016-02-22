@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
 PKG_VERSION:=63
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
@@ -75,6 +75,11 @@ define Package/foris/postinst
 #!/bin/sh
 set -x
 [ -n "$$IPKG_INSTROOT" ] || {
++# Cleanup of 1.0
+if [ -f /www2/forris.pyc ]; then
+	find /www2 -name '*.pyc' -exec rm -f \{\} \;
+	rmdir /www2/nuci/modules /www2/nuci /www2/config_handlers /www2/utils /www2 || true
+fi
 /etc/init.d/lighttpd enable
 /etc/init.d/lighttpd restart
 }
