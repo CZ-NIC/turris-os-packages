@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=perl
-PKG_VERSION:=5.22.0
-PKG_RELEASE:=3
+PKG_VERSION:=5.22.1
+PKG_RELEASE:=2
 
 PKG_SOURCE_URL:=ftp://ftp.cpan.org/pub/CPAN/src/5.0 \
 		http://www.cpan.org/src/5.0 \
@@ -20,7 +20,7 @@ PKG_SOURCE_URL:=ftp://ftp.cpan.org/pub/CPAN/src/5.0 \
 		ftp://ftp.funet.fi/pub/languages/perl/CPAN/src/5.0 \
 		http://ftp.funet.fi/pub/languages/perl/CPAN/src/5.0
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_MD5SUM:=e32cb6a8dda0084f2a43dac76318d68d
+PKG_MD5SUM:=19295bbb775a3c36123161b9bf4892f1
 
 PKG_LICENSE:=GPL-1.0+ Artistic-1.0-Perl
 PKG_LICENSE_FILES:=Copying Artistic README
@@ -35,7 +35,7 @@ PKG_BUILD_PARALLEL:=1
 HOST_BUILD_PARALLEL:=1
 
 # Variables used during configuration/build
-HOST_PERL_PREFIX:=$(STAGING_DIR_HOST)/usr
+HOST_PERL_PREFIX:=$(STAGING_DIR)/host/usr
 
 # Filter -g3, it will break Compress-Raw-Zlib
 TARGET_CFLAGS_PERL:=$(patsubst -g3,-g,$(TARGET_CFLAGS))
@@ -93,10 +93,11 @@ endef
 # Target perl
 define Build/Configure
 	$(PERL_CMD) files/perlconfig.pl -Dowrt:target_cc='$(TARGET_CC)' \
+	                                -Dowrt:gccversion=$(CONFIG_GCC_VERSION) \
 	                                -Dowrt:target_cross='$(TARGET_CROSS)' \
 	                                -Dowrt:cflags='$(TARGET_CFLAGS_PERL) $(TARGET_CPPFLAGS_PERL)' \
 	                                -Dowrt:ldflags='-rdynamic $(TARGET_LDFLAGS)' \
-	                                -Dowrt:libc=$(CONFIG_LIBC) \
+	                                -Dowrt:libc=$(subst uClibc,uclibc,$(CONFIG_LIBC)) \
 	                                -Dowrt:ipv6=$(if $($(CONFIG_IPV6)),define,undef) \
 	                                -Dowrt:threads=$(if $(CONFIG_PERL_THREADS),yes,no) \
 	                                -Dowrt:staging_dir='$(STAGING_DIR)' \
