@@ -131,14 +131,8 @@ hash_dir()
 
     cd ${1}
 
-    ls -1 * 2>/dev/null | while read FILE
-    do
-        if echo ${FILE} | grep -q -E '^[[:xdigit:]]{8}\.r?[[:digit:]]+$' \
-	    	&& [ -h "${FILE}" ]
-        then
-            rm ${FILE}
-        fi
-    done
+    # Wipe old version of the symlinks
+    /bin/busybox find -maxdepth 1 -type l -regex '^\./[[:xdigit:]]\{8\}\.r\{0,1\}[[:digit:]]\{1,\}$' -exec rm {} \;
 
     ls -1 *.pem *.crt 2>/dev/null | while read FILE
     do
