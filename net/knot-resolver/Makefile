@@ -5,6 +5,8 @@
 # See /LICENSE for more information.
 #
 
+PKG_RELRO_FULL:=0
+
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
