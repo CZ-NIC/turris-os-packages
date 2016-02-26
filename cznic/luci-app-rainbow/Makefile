@@ -20,10 +20,17 @@ PKG_BUILD_DEPENDS:=luci-base/host
 
 include $(INCLUDE_DIR)/package.mk
 
+ifdef CONFIG_TARGET_mvebu_Turris-Omnia
+define Package/$(PKG_NAME)
+	TITLE:=$(PKG_NAME)
+	DEPENDS:=+luci +rainbow-omnia
+endef
+else
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=+luci +rainbow
 endef
+endif
 
 define Build/Compile
 	po2lmo $(PKG_BUILD_DIR)/rainbow.po $(PKG_BUILD_DIR)/rainbow.cs.lmo
