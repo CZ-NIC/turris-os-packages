@@ -22,6 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
+	DEPENDS:=@TARGET_mvebu_Turris-Omnia
 endef
 
 define Build/Compile
