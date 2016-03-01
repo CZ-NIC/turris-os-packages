@@ -8,17 +8,22 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-setuptools
-PKG_VERSION:=18.2
+PKG_VERSION:=19.4
 PKG_RELEASE:=1
 
 PKG_SOURCE:=setuptools-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/s/setuptools/
-PKG_MD5SUM:=52b4e48939ef311d7204f8fe940764f4
+PKG_MD5SUM:=c5a7d90c1e0acf8c4ec5c2bf31bc25b5
+
+HOST_BUILD_DEPENDS:=python/host
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/setuptools-$(PKG_VERSION)
+HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/setuptools-$(PKG_VERSION)
 
+include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python-package.mk)
+$(call include_mk, python-host.mk)
 
 define Package/python-setuptools
   SUBMENU:=Python
@@ -26,7 +31,7 @@ define Package/python-setuptools
   CATEGORY:=Languages
   TITLE:=Tool for installing Python packages.
   URL:=https://bitbucket.org/pypa/setuptools
-  DEPENDS:=+python
+  DEPENDS:=+python +ca-certificates
   MAINTAINER:=Alexandru Ardelean <ardeleanalex@gmail.com>
 endef
 
@@ -52,6 +57,18 @@ define PyPackage/python-setuptools/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 endef
+
+define Host/Compile
+	$(call Build/Compile/HostPyMod,,\
+		install --root="$(STAGING_DIR)/host" --prefix="/usr" \
+		--single-version-externally-managed \
+	)
+endef
+
+define Host/Install
+endef
+
+$(eval $(call HostBuild))
 
 $(eval $(call PyPackage,python-setuptools))
 $(eval $(call BuildPackage,python-setuptools))

@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rainbow-omnia
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/rainbow_omnia.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=ef51bc52ce5db8b305d5d3a69837a950456d6b23
+PKG_SOURCE_VERSION:=d3722339bd5c5a907256ff166f8806a42c4c93cb
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Robin Obůrka <robin.oburka@nic.cz>
@@ -22,6 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
+	DEPENDS:=@TARGET_mvebu_Turris-Omnia
 endef
 
 define Build/Compile
