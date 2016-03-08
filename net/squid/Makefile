@@ -9,12 +9,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=squid
-PKG_VERSION:=3.5.4
+PKG_VERSION:=3.5.15
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://www.squid-cache.org/Versions/v3/3.5/
-PKG_MD5SUM:=436d42ced1d9eb9f5d5b364047cc3dba
+PKG_MD5SUM:=59d6732a4ebd3f63e2164d9847dc37c0
 PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
