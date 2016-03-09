@@ -33,10 +33,17 @@ define Build/Compile
 	$(call Build/Compile/PyMod,./src/python/, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)", CFLAGS+=" -I$(PKG_BUILD_DIR)/src/libatsha204/" LDFLAGS+=" -L$(PKG_BUILD_DIR)/src/libatsha204/")
 endef
 else
+ifdef CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND
 define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C DEFAULT_NI2C_DEV_PATH=NI2C_DEV_PATH_TURRIS VERBOSE=1 bin/atsha204cmd
 	$(call Build/Compile/PyMod,./src/python/, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)", CFLAGS+=" -I$(PKG_BUILD_DIR)/src/libatsha204/" LDFLAGS+=" -L$(PKG_BUILD_DIR)/src/libatsha204/")
 endef
+else
+define Build/Compile
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_EMULATION CONFIG_PATH=/etc/atsha.sw VERBOSE=1 bin/atsha204cmd
+	$(call Build/Compile/PyMod,./src/python/, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)", CFLAGS+=" -I$(PKG_BUILD_DIR)/src/libatsha204/" LDFLAGS+=" -L$(PKG_BUILD_DIR)/src/libatsha204/")
+endef
+endif
 endif
 
 define Package/$(PKG_NAME)/install
