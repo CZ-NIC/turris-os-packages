@@ -9,10 +9,10 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
 PKG_PYTHON_NAME:=python-$(PKG_NAME)
-PKG_VERSION:=19
+PKG_VERSION:=20
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/libatsha204.git
-PKG_SOURCE_VERSION:=a4aad9ee21da0884a5dbb65da36636206c41667b
+PKG_SOURCE_VERSION:=f4fc9e045b0e90416857263f5237a8ea2bfbc327
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -27,14 +27,14 @@ define Package/$(PKG_NAME)
 	DEPENDS:=+libopenssl +libunbound +unbound
 endef
 
-ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
+ifdef CONFIG_TARGET_mvebu_Turris-Omnia
 define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C VERBOSE=1
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C DEFAULT_NI2C_DEV_PATH=NI2C_DEV_PATH_OMNIA VERBOSE=1
 	$(call Build/Compile/PyMod,./src/python/, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)", CFLAGS+=" -I$(PKG_BUILD_DIR)/src/libatsha204/" LDFLAGS+=" -L$(PKG_BUILD_DIR)/src/libatsha204/")
 endef
 else
 define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_EMULATION CONFIG_PATH=/etc/atsha.sw VERBOSE=1
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C DEFAULT_NI2C_DEV_PATH=NI2C_DEV_PATH_TURRIS VERBOSE=1
 	$(call Build/Compile/PyMod,./src/python/, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)", CFLAGS+=" -I$(PKG_BUILD_DIR)/src/libatsha204/" LDFLAGS+=" -L$(PKG_BUILD_DIR)/src/libatsha204/")
 endef
 endif
