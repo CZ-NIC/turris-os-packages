@@ -83,7 +83,9 @@ CONFIGURE_ARGS += \
 	--without-libcap \
 	--without-nettle \
 	--without-netfilter-conntrack \
-	--with-krb5-config=no
+	--with-krb5-config=no \
+	--without-mit-krb5 \
+	--without-heimdal-krb5
 
 CONFIGURE_VARS += \
 	ac_cv_header_linux_netfilter_ipv4_h=yes \
