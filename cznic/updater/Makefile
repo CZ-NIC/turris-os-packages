@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=132
+PKG_VERSION:=133
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -26,7 +26,12 @@ TURRIS_DEPS:=+cert-backup
 
 endif
 
-define Package/$(PKG_NAME)/postinst
+define Package/updater-deps
+	TITLE:=updater-deps
+	DEPENDS:=+vixie-cron +openssl-util +libatsha204 +curl $(TURRIS_DEPS) +opkg +bzip2 +cznic-cacert-bundle +logsend +updater
+endef
+
+define Package/updater-deps/postinst
 #!/bin/sh
 TIME=$$(( $$(tr -cd 0-9 </dev/urandom | head -c 8 | sed -e 's/^0*//' ) % 60 ))
 if [ -z "$$TIME" ] ; then
@@ -60,7 +65,6 @@ endef
 # without it.
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+vixie-cron +openssl-util +libatsha204 +curl $(TURRIS_DEPS) +opkg +bzip2 +cznic-cacert-bundle
 endef
 
 # The built is empty. But as there's no makefile in the git repo, we need to
@@ -82,19 +86,21 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-standby.pub.pem $(1)/usr/share/updater/keys/standby.pem
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-release.pub.pem $(1)/usr/share/updater/keys/release.pem
 
-	$(INSTALL_DIR) $(1)/etc/cron.d
-
 	$(INSTALL_DIR) $(1)/etc/ssl
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater.pem $(1)/etc/ssl/updater.pem
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/updater.config $(1)/etc/config/updater
+endef
+
+define Package/updater-deps/install
+	$(INSTALL_DIR) $(1)/etc/cron.d
 
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater.init $(1)/etc/init.d/updater
 endef
 
-define Package/$(PKG_NAME)/prerm
+define Package/updater-deps/prerm
 #!/bin/sh
 /etc/init.d/updater disable
 endef
@@ -124,5 +130,6 @@ define Package/updater-testkey/install
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,updater-deps))
 $(eval $(call BuildPackage,updater-testkey))
 $(eval $(call BuildPackage,updater-consolidator))
