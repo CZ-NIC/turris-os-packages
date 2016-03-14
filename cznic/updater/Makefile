@@ -91,13 +91,13 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/updater.config $(1)/etc/config/updater
+
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater.init $(1)/etc/init.d/updater
 endef
 
 define Package/updater-deps/install
 	$(INSTALL_DIR) $(1)/etc/cron.d
-
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater.init $(1)/etc/init.d/updater
 endef
 
 define Package/updater-deps/prerm
