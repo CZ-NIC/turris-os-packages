@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd
 PKG_VERSION:=1.4.37
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://download.lighttpd.net/lighttpd/releases-1.4.x
@@ -41,7 +41,7 @@ endef
 define Package/lighttpd/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-if [ -e /etc/rc.d/S50lighttpd ] ; then
+if [ -e /etc/rc.d/S86lighttpd ] ; then
 	/etc/init.d/lighttpd disable
 	/etc/init.d/lighttpd enable
 fi
