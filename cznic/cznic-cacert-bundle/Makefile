@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cznic-cacert-bundle
-PKG_VERSION:=28
+PKG_VERSION:=29
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=ad42305e1c0a178915ec725e128c9b7935dbf9ed
+PKG_SOURCE_VERSION:=111f932e3578dccf18e151f5f05213217b2c1e74
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -32,7 +32,7 @@ c_rehash .
 
 [ -n "$$IPKG_INSTROOT" ] || {
 # TODO: If ever anything gets removed from this list, use -r, not delete it manually.
-/usr/sbin/cert-backup /etc/ssl/ucollect-server.pem /etc/ssl/startcom.pem /etc/ssl/api.turris.pem
+/usr/sbin/cert-backup /etc/ssl/ucollect-server.pem /etc/ssl/startcom.pem /etc/ssl/api.turris.pem /usr/bin/get-api-crl
 get-api-crl
 }
 endef
