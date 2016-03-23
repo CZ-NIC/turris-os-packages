@@ -1,0 +1,2 @@
+/bin/rescue.sh >/dev/ttyS0 2>&1
+exit 0
