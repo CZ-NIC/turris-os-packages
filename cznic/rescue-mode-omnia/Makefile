@@ -43,11 +43,4 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/rc.local 	$(1)/etc/rc.local
 endef
 
-define Package/$(PKG_NAME)/postinst
-#!/bin/sh
-
-rm -f "$${IPKG_INSTROOT}"/boot/*
-rm "$${IPKG_INSTROOT}"/etc/rc.d/*rainbow
-endef
-
 $(eval $(call BuildPackage,$(PKG_NAME)))
