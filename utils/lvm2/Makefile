@@ -9,13 +9,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=LVM2
-PKG_VERSION:=2.02.132
+PKG_VERSION:=2.02.145
 PKG_RELEASE:=1
 PKG_LICENSE:=GPL-2.0 LGPL-2.1
 
 PKG_SOURCE:=$(PKG_NAME).$(PKG_VERSION).tgz
 PKG_SOURCE_URL:=ftp://sources.redhat.com/pub/lvm2
-PKG_MD5SUM:=80af5af726949bbbb2aceb15b24b7d20
+PKG_MD5SUM:=fd952ba7d640f0bedcec0085e358b318
 PKG_MAINTAINER:=Daniel Golle <daniel@makrotopia.org>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME).$(PKG_VERSION)
 
@@ -48,8 +48,6 @@ define Package/lvm2/description
  facilities on linux. It is reasonably backwards-compatible with the original
  LVM toolset.
 endef
-
-CONFIGURE_ARGS += --disable-o_direct
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
