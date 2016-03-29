@@ -4,7 +4,7 @@ echo 'config plugin'
 echo "    option libname 'libplugin_ucollect_fake_VERSION.so'"
 echo "    option log_credentials $(uci -q get ucollect.@fakes[0].log_credentials || echo 0)"
 
-REDIR_OFFSET="$(uci get -q ucollect.@fakes[0].redir_offset || echo 1369)"
+REDIR_OFFSET="$(uci -q get ucollect.@fakes[0].redir_offset || echo 1369)"
 
 service() {
 	if uci -q -d '
