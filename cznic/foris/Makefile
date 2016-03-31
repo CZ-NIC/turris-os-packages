@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=63
-PKG_RELEASE:=4
+PKG_VERSION:=64
+PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
@@ -36,13 +36,23 @@ define Package/foris/description
  Web administration interface using nuci for communication.
 endef
 
+# Set "branding" variable to create different builds for different devices
+BRAND?=turris
+ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+BRAND:=omnia
+endif
+
 define Build/Prepare
 	$(call Build/Prepare/Default)
 	$(SED) 's/^__version__ = ".*"/__version__ = "$(PKG_VERSION)"/g' $(PKG_BUILD_DIR)/foris/__init__.py
+	$(SED) 's/^DEVICE_CUSTOMIZATION = ".*"/DEVICE_CUSTOMIZATION = "$(BRAND)"/g' $(PKG_BUILD_DIR)/foris/__init__.py
 endef
 
+MAKE_FLAGS+=\
+	BRAND=$(BRAND)
+
 define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS)
+	$(call Build/Compile/Default)
 	$(call Build/Compile/PyMod,,install --prefix=/usr --root="$(PKG_INSTALL_DIR)")
 endef
 
