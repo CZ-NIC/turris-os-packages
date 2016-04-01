@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=140
+PKG_VERSION:=138
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=a7932c5bca893b7fb9703a672ffcd54413cdded9
+PKG_SOURCE_VERSION:=56dbee0950afb2eb38b72b7e51de74eda69d6609
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -65,6 +65,7 @@ endef
 # without it.
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
+	DEPENDS:=+opkg-trans
 endef
 
 # The built is empty. But as there's no makefile in the git repo, we need to
@@ -75,25 +76,25 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-wipe.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-resume.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-unstuck.sh $(1)/usr/bin/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-utils.sh $(1)/usr/bin/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-worker.sh $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/legacy/updater.sh $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/legacy/updater-wipe.sh $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/legacy/updater-resume.sh $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/legacy/updater-unstuck.sh $(1)/usr/bin/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/legacy/updater-utils.sh $(1)/usr/bin/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/legacy/updater-worker.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/share/updater/keys
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-standby.pub.pem $(1)/usr/share/updater/keys/standby.pem
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater-release.pub.pem $(1)/usr/share/updater/keys/release.pem
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/legacy/updater-standby.pub.pem $(1)/usr/share/updater/keys/standby.pem
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/legacy/updater-release.pub.pem $(1)/usr/share/updater/keys/release.pem
 
 	$(INSTALL_DIR) $(1)/etc/ssl
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater.pem $(1)/etc/ssl/updater.pem
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/legacy/updater.pem $(1)/etc/ssl/updater.pem
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/updater.config $(1)/etc/config/updater
 
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater.init $(1)/etc/init.d/updater
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/legacy/updater.init $(1)/etc/init.d/updater
 endef
 
 define Package/updater-deps/install
@@ -116,8 +117,8 @@ endef
 
 define Package/updater-consolidator/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-remove-pkg.sh $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/updater-consolidate.py $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/legacy/updater-remove-pkg.sh $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/legacy/updater-consolidate.py $(1)/usr/bin
 endef
 
 define Package/updater-testkey
@@ -126,7 +127,7 @@ endef
 
 define Package/updater-testkey/install
 	$(INSTALL_DIR) $(1)/usr/share/updater/keys
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater.pub.pem $(1)/usr/share/updater/keys/test.pem
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/legacy/updater.pub.pem $(1)/usr/share/updater/keys/test.pem
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
