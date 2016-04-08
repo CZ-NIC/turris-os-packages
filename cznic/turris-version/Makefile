@@ -26,22 +26,23 @@ endef
 
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
+# Danger: spaces are not ordinary spaces, but special unicode ones
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Update OpenWrt na poslední stabilní verzi 15.05 Chaos Calmer.
- • Zapnutí některých hardening voleb pro větší bezpečnost.
- • Balíček multiwan není nadále podporován, nahradil ho mwan3.
- • Příkaz ip je nově k dispozici s více funkcemi.
- • Přidána podpora IPv6 v nuci - rozhraní pro vzdálený monitoring a správu.
- • Došlo k přečíslování GPIO portů.
- • Ovladač pro IT913x DVB tunery nahrazen ovladačem kmod-usb-af9035.
- • Příkaz sleep umí i neceločíselné hodnoty." " • Update OpenWrt to the latest stable version 15.05 Chaos Calmer.
- • Enabled several hardening options for better security.
- • Package multiwan is deprecated so it was replaced by mwan3.
- • Full version of the ip command is installed by default.
- • Added support for IPv6 in nuci - interface for remote monitoring and control.
- • GPIO ports were renumbered.
- • Driver for IT913x DVB tuners replaced by kmod-usb-af9035.
- • Sleep command can take fractions of seconds as an argument."
+    create_notification -s news " • Update OpenWrt na poslední stabilní verzi 15.05 Chaos Calmer.
+ • Zapnutí některých hardening voleb pro větší bezpečnost.
+ • Balíček multiwan není nadále podporován, nahradil ho mwan3.
+ • Příkaz ip je nově k dispozici s více funkcemi.
+ • Přidána podpora IPv6 v nuci - rozhraní pro vzdálený monitoring a správu.
+ • Došlo k přečíslování GPIO portů.
+ • Ovladač pro IT913x DVB tunery nahrazen ovladačem kmod-usb-af9035.
+ • Příkaz sleep umí i neceločíselné hodnoty." " • Update OpenWrt to the latest stable version 15.05 Chaos Calmer.
+ • Enabled several hardening options for better security.
+ • Package multiwan is deprecated so it was replaced by mwan3.
+ • Full version of the ip command is installed by default.
+ • Added support for IPv6 in nuci - interface for remote monitoring and control.
+ • GPIO ports were renumbered.
+ • Driver for IT913x DVB tuners replaced by kmod-usb-af9035.
+ • Sleep command can take fractions of seconds as an argument."
 }
 endef
 
