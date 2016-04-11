@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nikola
-PKG_VERSION:=35
+PKG_VERSION:=36
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nikola.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=4f606963b01c88578742cba1729cc5e0717da6ec
+PKG_SOURCE_VERSION:=301a996e0641f49e5a604fa25e644d4315a8c8f4
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -35,6 +35,10 @@ endef
 
 define Package/$(PKG_NAME)/conffiles
 /etc/config/nikola
+endef
+
+define Build/Configure
+	$(SED) 's/^__version__ =.*/__version__ = "$(PKG_VERSION)"/' $(PKG_BUILD_DIR)/Nikola/nikola/version.py
 endef
 
 define Package/$(PKG_NAME)/install
