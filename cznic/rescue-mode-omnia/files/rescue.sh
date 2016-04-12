@@ -51,7 +51,8 @@ BIN_LS="/bin/ls"
 BIN_SORT="/usr/bin/sort"
 BIN_TAIL="/usr/bin/tail"
 BIN_REBOOT="/sbin/reboot"
-
+BIN_MDEV="`which mdev`"
+[ -z "$BIN_MDEV" ] || BIN_MDEV="$BIN_MDEV -s"
 
 d() {
 	if [ $DEBUG -gt 0 ]; then
@@ -143,19 +144,25 @@ rollback_first () {
 
 reflash () {
 	IMG=""
-	# find image
-	for dev in `$BIN_AWK '$4 ~ /sd[a-z]+[0-9]+/ { print $4 }' /proc/partitions`; do
-		d "Testing FS on device $dev"
-		mount_fs "/dev/$dev" $SRCFS_MOUNTPOINT
-		d "Searching for ${SRCFS_MOUNTPOINT}/${MEDKIT_FILENAME} on $dev"
-		if [ -f ${SRCFS_MOUNTPOINT}/${MEDKIT_FILENAME} ]; then
-			IMG="${SRCFS_MOUNTPOINT}/${MEDKIT_FILENAME}"
-			d "Found medkit file $IMG on device $dev"
-			break
-		else
-			d "Medkit file not found on device $dev"
-			umount_fs $SRCFS_MOUNTPOINT
-		fi
+	# find image (give it 10 tries with 1 sec delay)
+	for i in `seq 1 10`; do
+		$BIN_MDEV
+		for dev in `$BIN_AWK '$4 ~ /sd[a-z]+[0-9]+/ { print $4 }' /proc/partitions`; do
+			d "Testing FS on device $dev"
+			[ -b "/dev/$dev" ] || continue
+			mount_fs "/dev/$dev" $SRCFS_MOUNTPOINT
+			d "Searching for ${SRCFS_MOUNTPOINT}/${MEDKIT_FILENAME} on $dev"
+			if [ -f ${SRCFS_MOUNTPOINT}/${MEDKIT_FILENAME} ]; then
+				IMG="${SRCFS_MOUNTPOINT}/${MEDKIT_FILENAME}"
+				d "Found medkit file $IMG on device $dev"
+				break
+			else
+				d "Medkit file not found on device $dev"
+				umount_fs $SRCFS_MOUNTPOINT
+			fi
+		done
+		[ -z "${IMG}" ] || break
+		sleep 1
 	done
 
 	if [ -n "${IMG}" ]; then
@@ -172,6 +179,7 @@ w
 EOF
 
 		$BIN_BLOCKDEV --rereadpt $DEV
+		$BIN_MDEV
 		$BIN_SLEEP 1
 		if ! [ -e $FS_DEV ]; then
 			e "Partition $FS_DEV missing. Exit."
@@ -223,19 +231,16 @@ case "$MODE" in
 	1)
 		d "Mode: Rollback to the last snapshot..."
 		rollback_last
-		$BIN_REBOOT
 		;;
 
 	2)
 		d "Mode: Rollback to first snapshot..."
 		rollback_first
-		$BIN_REBOOT
 		;;
 	3)
 		d "Mode: Reflash..."
 		reset_clock
 		reflash
-		$BIN_REBOOT
 		;;
 	*)
 		e "Invalid mode $MODE. Exit to shell."

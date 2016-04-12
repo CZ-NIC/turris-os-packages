@@ -17,12 +17,10 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+rainbow-omnia +mtd +btrfs-progs @TARGET_mvebu_Turris-Omnia @!ALL @!PACKAGE_oneshot
+	DEPENDS:=+rainbow-omnia +mtd +btrfs-progs @TARGET_mvebu_Turris-Omnia @!ALL @!PACKAGE_oneshot @!PACKAGE_procd
 endef
 
 define Package/$(PKG_NAME)/conffiles
-/etc/init.d/
-/etc/rc.d/
 endef
 
 define Build/Compile
@@ -31,6 +29,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/bin
+	$(INSTALL_DIR) $(1)/sbin
 	$(INSTALL_DIR) $(1)/etc
 
 	$(INSTALL_DIR) $(1)/proc
@@ -40,7 +39,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/root
 
 	$(INSTALL_BIN) ./files/rescue.sh 	$(1)/bin/rescue.sh
-	$(INSTALL_BIN) ./files/rc.local 	$(1)/etc/rc.local
+	$(INSTALL_BIN) ./files/init.sh 		$(1)/sbin/init
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
