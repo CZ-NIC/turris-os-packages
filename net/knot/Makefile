@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2014-2015 CZ.NIC, z.s.p.o. <knot-dns@labs.nic.cz>
+# Copyright (C) 2014-2016 CZ.NIC, z.s.p.o. <knot-dns@labs.nic.cz>
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,19 +8,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot
-PKG_VERSION:=2.0.1-213-gc1353ef
+PKG_VERSION:=2.1.1
 PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/labs/knot.git
-PKG_SOURCE_VERSION:=v$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-dns/
+PKG_MD5SUM:=ee6a54ec8a7898579b768c66e2eaeb54
 
 PKG_MAINTAINER:=Daniel Salzman <daniel.salzman@nic.cz>
-PKG_LICENSE:=GPL-2.0+
+PKG_LICENSE:=GPL-3.0 LGPL-2.0 0BSD MIT OLDAP-2.8
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
@@ -149,7 +148,9 @@ CONFIGURE_ARGS += 			\
 	--without-libidn		\
 	--with-rundir=/var/run/knot	\
 	--with-storage=/var/lib/knot	\
-	--with-configdir=/etc/knot
+	--with-configdir=/etc/knot	\
+	--with-timer-mapsize=50		\
+	--with-conf-mapsize=50
 
 TARGET_CFLAGS += -DPSELECT_COMPAT -DNDEBUG
 
@@ -169,8 +170,8 @@ define Build/InstallDev
 	$(INSTALL_DIR)					$(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.{a,so*}	$(1)/usr/lib/
 
-	$(INSTALL_DIR)						$(1)/usr/include/
-	$(CP) $(PKG_INSTALL_DIR)/usr/include/*			$(1)/usr/include/
+	$(INSTALL_DIR)						$(1)/usr/include/libknot
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/libknot/*		$(1)/usr/include/libknot/
 
 	$(INSTALL_DIR)							$(1)/usr/lib/pkgconfig
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/*.pc	$(1)/usr/lib/pkgconfig/
@@ -245,6 +246,10 @@ define Package/knot-tests/install
 	find $(PKG_BUILD_DIR)/tests/.libs -maxdepth 1 -executable -type f | \
 		xargs -I{} basename {} | \
 		xargs -I{} $(INSTALL_BIN) -T $(PKG_BUILD_DIR)/tests/.libs/{}		$(1)/usr/share/knot/tests/test_{}
+
+	find $(PKG_BUILD_DIR)/tests/modules/.libs -maxdepth 1 -executable -type f | \
+		xargs -I{} basename {} | \
+		xargs -I{} $(INSTALL_BIN) -T $(PKG_BUILD_DIR)/tests/modules/.libs/{}	$(1)/usr/share/knot/tests/test_module_{}
 
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/zscanner/tests/.libs/zscanner-tool	$(1)/usr/share/knot/tests/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/zscanner/tests/unittests		$(1)/usr/share/knot/tests/test_zscanner
