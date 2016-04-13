@@ -71,8 +71,8 @@ define Package/ucollect-prog/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ucollect/main.cfg $(1)/usr/share/ucollect/configs/00-main.cfg
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
 	$(INSTALL_DATA) ./files/ucollect.hotplug $(1)/etc/hotplug.d/iface/50-ucollect
-	$(INSTALL_DIR) $(1)/usr/lib/debug/usr/bin
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/bin/ucollect.debug $(1)/usr/lib/debug/usr/bin/
+	#$(INSTALL_DIR) $(1)/usr/lib/debug/usr/bin
+	#$(INSTALL_DATA) $(PKG_BUILD_DIR)/bin/ucollect.debug $(1)/usr/lib/debug/usr/bin/
 endef
 
 ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
@@ -90,8 +90,8 @@ endif
 define Package/ucollect-lib/install
 	$(INSTALL_DIR) $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libucollect_core.so $(1)/usr/lib/
-	$(INSTALL_DIR) $(1)/usr/lib/debug/usr/lib
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/lib/libucollect_core.so.debug $(1)/usr/lib/debug/usr/lib
+	#$(INSTALL_DIR) $(1)/usr/lib/debug/usr/lib
+	#$(INSTALL_DATA) $(PKG_BUILD_DIR)/lib/libucollect_core.so.debug $(1)/usr/lib/debug/usr/lib
 endef
 
 define Package/lcollect/install
@@ -103,8 +103,8 @@ define Package/lcollect/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/lcollect/lcollect-turris.cfg $(1)/etc/config/lcollect
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/lcollect $(1)/usr/bin/
-	$(INSTALL_DIR) $(1)/usr/lib/debug/usr/bin
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/bin/lcollect.debug $(1)/usr/lib/debug/usr/bin/
+	#$(INSTALL_DIR) $(1)/usr/lib/debug/usr/bin
+	#$(INSTALL_DATA) $(PKG_BUILD_DIR)/bin/lcollect.debug $(1)/usr/lib/debug/usr/bin/
 endef
 
 define Package/lcollect/postinst
