@@ -34,5 +34,7 @@ rainbow all enable red
 rainbow all enable white
 
 # Reboot
+echo "Doing sysrq reboot as busybox one doesn't work"
 sync
+echo 0 > /proc/sysrq-trigger
 echo b > /proc/sysrq-trigger
