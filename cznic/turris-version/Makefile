@@ -32,15 +32,21 @@ define Package/$(PKG_NAME)/postinst
  • Zapnutí některých hardening voleb pro větší bezpečnost.
  • Balíček multiwan není nadále podporován, nahradil ho mwan3.
  • Příkaz ip je nově k dispozici s více funkcemi.
- • Přidána podpora IPv6 v nuci - rozhraní pro vzdálený monitoring a správu.
+ • Přidána podpora IPv6 v nuci-tls - rozhraní pro vzdálený monitoring a správu.
  • Došlo k přečíslování GPIO portů.
+ • Updater nyní stahuje seznamy balíčků pro opkg.
+ • Nainstalovaná metadata o balíčcích nyní obsahují hash všech nainstalovaných souborů.
+ • Unbound - přidána podpora pro obnovu poškozené kořenové kotvy.
  • Ovladač pro IT913x DVB tunery nahrazen ovladačem kmod-usb-af9035.
  • Příkaz sleep umí i neceločíselné hodnoty." " • Update OpenWrt to the latest stable version 15.05 Chaos Calmer.
  • Enabled several hardening options for better security.
  • Package multiwan is deprecated so it was replaced by mwan3.
  • Full version of the ip command is installed by default.
- • Added support for IPv6 in nuci - interface for remote monitoring and control.
+ • Added support for IPv6 in nuci-tls - interface for remote monitoring and control.
  • GPIO ports were renumbered.
+ • Updater now downloads lists of packages for opkg.
+ • Installed package metadata now contain hash of all installed files.
+ • Unbound - added support for fixing broken root nachor.
  • Driver for IT913x DVB tuners replaced by kmod-usb-af9035.
  • Sleep command can take fractions of seconds as an argument."
 }
