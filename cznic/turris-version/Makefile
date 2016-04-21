@@ -46,7 +46,7 @@ define Package/$(PKG_NAME)/postinst
  • GPIO ports were renumbered.
  • Updater now downloads lists of packages for opkg.
  • Installed package metadata now contain hash of all installed files.
- • Unbound - added support for fixing broken root nachor.
+ • Unbound - added support for fixing broken root anchor.
  • Driver for IT913x DVB tuners replaced by kmod-usb-af9035.
  • Sleep command can take fractions of seconds as an argument."
 }
