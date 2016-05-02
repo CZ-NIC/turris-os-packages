@@ -27,7 +27,7 @@ DEV="/dev/mmcblk0"
 FS_DEV="${DEV}p1"
 FS_MOUNTPOINT="/mnt"
 SRCFS_MOUNTPOINT="/srcmnt"
-MEDKIT_FILENAME="omnia-medkit.tar.gz"
+MEDKIT_FILENAME="omnia-medkit*.tar.gz"
 FACTORY_SNAPNAME="@factory"
 
 BIN_I2CGET="/usr/sbin/i2cget"
@@ -104,11 +104,12 @@ reflash () {
 			[ -b "/dev/$dev" ] || continue
 			mount_fs "/dev/$dev" $SRCFS_MOUNTPOINT
 			d "Searching for ${SRCFS_MOUNTPOINT}/${MEDKIT_FILENAME} on $dev"
-			if [ -f ${SRCFS_MOUNTPOINT}/${MEDKIT_FILENAME} ]; then
-				IMG="${SRCFS_MOUNTPOINT}/${MEDKIT_FILENAME}"
+			IMG="$(ls -1 ${SRCFS_MOUNTPOINT}/${MEDKIT_FILENAME} | sort | tail -n 1)"
+			if [ -n "${IMG}" ] && [ -f "${IMG}" ]; then
 				d "Found medkit file $IMG on device $dev"
 				break
 			else
+				IMG=""
 				d "Medkit file not found on device $dev"
 				umount_fs $SRCFS_MOUNTPOINT
 			fi
