@@ -94,54 +94,6 @@ umount_fs() {
 	$BIN_SYNC
 }
 
-rollback () {
-	# precondition: $FS_DEV mounted to $FS_MOUNTPOINT
-
-	d "Rollback the root snapshot ${FS_MOUNTPOINT}/@ to "
-
-	D=`$BIN_DATE +%s`
-	BCK="${FS_MOUNTPOINT}/@backup-${D}"
-	while test -d $BCK; do
-		$BIN_SLEEP 2
-		D=`$BIN_DATE +%s`
-		BCK="${FS_MOUNTPOINT}/@backup-${D}"
-	done
-
-	if ! [ -e "${FS_MOUNTPOINT}/$1" ]; then
-		umount_fs $FS_MOUNTPOINT
-		e "Source snapshot ${FS_MOUNTPOINT}/$1 does not exist. Exit."
-		exit 21
-	fi
-
-	d "Backing up root ${FS_MOUNTPOINT}/@ to $BCK"
-	$BIN_MV "${FS_MOUNTPOINT}/@" "$BCK"
-
-	d "Restoring ${FS_MOUNTPOINT}/$1 to root ${FS_MOUNTPOINT}/@"
-	$BIN_BTRFS subvolume snapshot "${FS_MOUNTPOINT}/$1" "${FS_MOUNTPOINT}/@"
-
-	umount_fs $FS_MOUNTPOINT
-
-	d "Rollback succeeded."
-}
-
-rollback_last () {
-	mount_fs $FS_DEV $FS_MOUNTPOINT
-
-	SRCSNAP=`$BIN_LS ${FS_MOUNTPOINT} | $BIN_AWK '/@[0-9]+/ { print $1 }' | $BIN_SORT -n | $BIN_TAIL -1`
-	if [ -z "${SRCSNAP}" ]; then
-		e "Missing source snapshot. Setting factory default snapshot."
-		SRCSNAP="${FACTORY_SNAPNAME}"
-	fi
-
-	rollback "$SRCSNAP"
-}
-
-rollback_first () {
-	mount_fs $FS_DEV $FS_MOUNTPOINT
-
-	rollback "${FACTORY_SNAPNAME}"
-}
-
 reflash () {
 	IMG=""
 	# find image (give it 10 tries with 1 sec delay)
@@ -230,12 +182,12 @@ case "$MODE" in
 		;;
 	1)
 		d "Mode: Rollback to the last snapshot..."
-		rollback_last
+		schnapps rollback
 		;;
 
 	2)
 		d "Mode: Rollback to first snapshot..."
-		rollback_first
+		schnapps rollback factory
 		;;
 	3)
 		d "Mode: Reflash..."
