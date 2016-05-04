@@ -20,6 +20,7 @@ mount -t sysfs none /sys
 mount -t proc none /proc
 
 # Load all modules, busybox modprobe handles dependencies
+depmod
 find /lib/modules/ -name '*.ko' -exec basename \{\} .ko \; | xargs -t -n 1 modprobe
 
 # Wait for stuff to settle down
