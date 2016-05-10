@@ -18,6 +18,8 @@
 
 mount -t sysfs none /sys
 mount -t proc none /proc
+mdev -s
+[ \! -e /dev/watchdog0 ] || watchdog -t 10 -T 60 /dev/watchdog0
 
 # Load all modules, busybox modprobe handles dependencies
 depmod
@@ -31,7 +33,7 @@ done
 
 # Run the rescue while flashing the red light
 rainbow all enable red
-/bin/rescue.sh || sh
+/bin/rescue.sh || setsid cttyhack sh
 rainbow all enable white
 
 # Reboot
