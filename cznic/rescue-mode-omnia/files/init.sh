@@ -19,7 +19,15 @@
 mount -t sysfs none /sys
 mount -t proc none /proc
 mdev -s
-[ \! -e /dev/watchdog0 ] || watchdog -t 10 -T 60 /dev/watchdog0
+
+simple_udev() {
+    while sleep 5; do
+        mdev -s
+        if [ -e /dev/watchdog0 ] && ! pidof watchdog > /dev/null && [ \! -f /tmp/halt ]; then
+            watchdog -t 10 -T 60 /dev/watchdog0
+        fi
+    done
+}
 
 # Load all modules, busybox modprobe handles dependencies
 depmod
@@ -30,11 +38,14 @@ while [ \! -b /dev/mmcblk0 ] || [ \! -c /dev/i2c-0 ]; do
     sleep 1
     mdev -s
 done
+simple_udev &
 
 # Run the rescue while flashing the red light
 rainbow all enable red
 /bin/rescue.sh || setsid cttyhack sh
 rainbow all enable white
+touch /tmp/halt
+killall watchdog
 
 # Reboot
 echo "Doing sysrq reboot as busybox one doesn't work"
