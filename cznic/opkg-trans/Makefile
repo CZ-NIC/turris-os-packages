@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opkg-trans
-PKG_VERSION:=1
+PKG_VERSION:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=1f1694ac4ca6341a76dd6ca3ec4de9572ad33e64
+PKG_SOURCE_VERSION:=35e80ff6b21546ae1e7d38f173523d4daeb56bd6
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/opkg-trans
 	TITLE:=opkg-trans
-	DEPENDS:=+liblua +libevent2
+	DEPENDS:=+liblua +libevent2 +usign
 endef
 
 define Build/Compile
@@ -35,6 +35,49 @@ define Package/opkg-trans/install
 
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/opkg-trans $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgupdate $(1)/usr/bin/
+
+	$(INSTALL_DIR) $(1)/etc/updater
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/* $(1)/etc/updater
+endef
+
+define Package/opkg-trans/conffiles
+/etc/updater/auto.lua
+/etc/updater/user.lua
+endef
+
+define Package/updater-ng
+	TITLE:=The next generation updater
+	DEPENDS:=+opkg-trans +vixie-cron
+endef
+
+define Package/updater-ng/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/updater.sh $(1)/usr/bin/
+
+	$(INSTALL_DIR) $(1)/etc/ssl
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/legacy/updater.pem $(1)/etc/ssl/updater.pem
+
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/updater.config $(1)/etc/config/updater
+
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/init $(1)/etc/init.d/updater
+
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/pkgupdate/cron $(1)/etc/cron.d/updater
+endef
+
+define Package/updater-ng/conffiles
+/etc/config/updater
+endef
+
+define Package/updater-ng/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/updater enable || true
+}
 endef
 
 $(eval $(call BuildPackage,opkg-trans))
+$(eval $(call BuildPackage,updater-ng))
