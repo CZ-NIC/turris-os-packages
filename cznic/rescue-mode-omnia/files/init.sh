@@ -34,11 +34,10 @@ depmod
 find /lib/modules/ -name '*.ko' -exec basename \{\} .ko \; | xargs -t -n 1 modprobe
 
 # Wait for stuff to settle down
+simple_udev &
 while [ \! -b /dev/mmcblk0 ] || [ \! -c /dev/i2c-0 ]; do
     sleep 1
-    mdev -s
 done
-simple_udev &
 
 # Run the rescue while flashing the red light
 rainbow all enable red
