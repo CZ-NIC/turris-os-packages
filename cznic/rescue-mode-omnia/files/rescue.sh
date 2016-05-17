@@ -139,7 +139,7 @@ EOF
 			umount_fs $SRCFS_MOUNTPOINT
 			exit 23
 		fi
-		$BIN_MKFS -f $FS_DEV
+		$BIN_MKFS -M -f $FS_DEV
 		mount_fs $FS_DEV $FS_MOUNTPOINT
 		$BIN_BTRFS subvolume create "${FS_MOUNTPOINT}/@"
 		ROOTDIR="${FS_MOUNTPOINT}/@"
