@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater
-PKG_VERSION:=138
+PKG_VERSION:=141
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -20,15 +20,9 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
-
-TURRIS_DEPS:=+cert-backup
-
-endif
-
 define Package/updater-deps
 	TITLE:=updater-deps
-	DEPENDS:=+vixie-cron +openssl-util +libatsha204 +curl $(TURRIS_DEPS) +opkg +bzip2 +cznic-cacert-bundle +logsend +updater
+	DEPENDS:=+vixie-cron +openssl-util +libatsha204 +curl +cert-backup +opkg +bzip2 +cznic-cacert-bundle +logsend +updater
 endef
 
 define Package/updater-deps/postinst
