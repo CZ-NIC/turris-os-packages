@@ -69,18 +69,23 @@ check_root_key() {
 
 #initialize everything 
 init_unbound() {
+    config_load unbound
 
-    # Sometimes, the root anchor is broken. We first try unbound-anchor (with and without upstream DNS servers).
-    check_root_key unbound-anchor -f /tmp/resolv.conf.auto
-    check_root_key unbound-anchor
-    # unbound-anchor is of no use :-(. Try to restore it from the certificate backup, if there's anything.
-    check_root_key cert-backup -x /etc/unbound/root.key
-    # No more ideas what to do, so just try running unbound, something of the above may have worked.
+    local ignore_root_key
+    config_get_bool ignore_root_key server ignore_root_key 0
+
+    # Do not try to restore the root key if it's not used
+    if [ "$ignore_root_key" = "0" ] ; then
+        # Sometimes, the root anchor is broken. We first try unbound-anchor (with and without upstream DNS servers).
+        check_root_key unbound-anchor -f /tmp/resolv.conf.auto
+        check_root_key unbound-anchor
+        # unbound-anchor is of no use :-(. Try to restore it from the certificate backup, if there's anything.
+        check_root_key cert-backup -x /etc/unbound/root.key
+        # No more ideas what to do, so just try running unbound, something of the above may have worked.
+    fi
 
     #Clear the config and set header
     header
-
-    config_load unbound
 
     #Server Section
     add_section server
@@ -105,7 +110,9 @@ init_unbound() {
     set_quoted_parameter target_fetch_policy target-fetch-policy "2 1 0 0 0 0"
     set_parameter harden_short_bufsize harden-short-bufsize yes
     set_parameter harden_large_queries harden-large-queries yes
-    set_quoted_parameter auto_trust_anchor_file auto-trust-anchor-file "/etc/unbound/root.key"
+    if [ "$ignore_root_key" = "0" ] ; then
+        set_quoted_parameter auto_trust_anchor_file auto-trust-anchor-file "/etc/unbound/root.key"
+    fi
     set_parameter key_cache_size key-cache-size 100k
     set_parameter key_cache_slabs key-cache-slabs 1
     set_parameter neg_cache_size neg-cache-size 10k
