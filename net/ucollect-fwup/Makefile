@@ -8,7 +8,7 @@
 
 include ../ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_PLUGIN,fwup,10,diffstore.1))
+$(eval $(call UCOLLECT_PLUGIN,fwup,11,diffstore.1))
 
 define Package/ucollect-fwup
 	SECTION:=net
