@@ -10,4 +10,11 @@ include ../ucollect-prog/Makefile.common
 
 $(eval $(call UCOLLECT_PLUGIN,fwup,10,diffstore.1))
 
+define Package/ucollect-fwup
+	SECTION:=net
+	CATEGORY:=Network
+	TITLE:=The fwup pluglib for ucollect
+	DEPENDS:=+ucollect-lib +ipset +turris-firewall-rules
+endef
+
 $(eval $(call BuildPackage,ucollect-fwup))
