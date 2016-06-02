@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=logrotate
 PKG_VERSION:=3.8.1
-PKG_RELEASE:=7
+PKG_RELEASE:=8
 
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION).orig.tar.gz
 PKG_SOURCE_URL:= \
@@ -24,7 +24,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/logrotate
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libpopt
+  DEPENDS:=+libpopt +vixie-cron +syslog-ng3
   TITLE:=rotates, compresses, and mails system logs
   URL:=http://packages.debian.org/unstable/admin/logrotate
 endef
@@ -51,11 +51,13 @@ define Build/Compile
 	)
 endef
 
-define Package/logrotate/install	
+define Package/logrotate/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) ${PKG_BUILD_DIR}/logrotate $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc
 	$(INSTALL_DATA) ./files/logrotate.conf $(1)/etc/
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_DATA) ./files/logrotate.cron $(1)/etc/cron.d/logrotate
 	$(INSTALL_DIR) $(1)/etc/logrotate.d
 endef
 
