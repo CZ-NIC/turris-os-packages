@@ -10,7 +10,7 @@ options {
 
 source src {
 	internal();
-	unix-stream("/dev/log");
+	unix-dgram("/dev/log");
 };
 
 source kernel {
