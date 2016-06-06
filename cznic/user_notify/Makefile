@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=user_notify
-PKG_VERSION:=40
+PKG_VERSION:=41
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=23dee0c4661d4db7ba931fb0e919b31f74d774de
+PKG_SOURCE_VERSION:=896ddf73c3c876a5fd8fc9109c39ae3353f075df
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
