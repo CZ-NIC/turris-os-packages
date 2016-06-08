@@ -53,6 +53,7 @@ CONFIGURE_ARGS = \
 	--disable-yuv4mpeg \
 	--disable-pnm \
 	--disable-tga \
+	--disable-gif \
 	--enable-fbdev \
 	--enable-static \
 
