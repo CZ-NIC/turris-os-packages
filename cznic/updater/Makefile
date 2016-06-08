@@ -20,6 +20,13 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
+# It also uses the notifier. But if there's no package that depends on it
+# (to send notification) and it is not installed therefore, we can live
+# without it.
+define Package/$(PKG_NAME)
+	TITLE:=$(PKG_NAME)
+endef
+
 define Package/updater-deps
 	TITLE:=updater-deps
 	DEPENDS:=+vixie-cron +openssl-util +libatsha204 +curl +cert-backup +opkg +bzip2 +cznic-cacert-bundle +logsend +updater
