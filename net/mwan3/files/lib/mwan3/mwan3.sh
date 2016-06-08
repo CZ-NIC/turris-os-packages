@@ -2,8 +2,8 @@
 
 local IP4 IP6 IPS IPT4 IPT6 LOG
 
-IP4="/usr/bin/ip -4"
-IP6="/usr/bin/ip -6"
+IP4="/usr/sbin/ip -4"
+IP6="/usr/sbin/ip -6"
 IPS="/usr/sbin/ipset"
 IPT4="/usr/sbin/iptables -t mangle -w"
 IPT6="/usr/sbin/ip6tables -t mangle -w"

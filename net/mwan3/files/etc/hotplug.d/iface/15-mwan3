@@ -16,7 +16,7 @@ if [ "$ACTION" == "ifup" ]; then
         [ -n "$DEVICE" ] || exit 3
 fi
 
-[ -x /usr/bin/ip ] || exit 4
+[ -x /usr/sbin/ip ] || exit 4
 [ -x /usr/sbin/ipset ] || exit 5
 [ -x /usr/sbin/iptables ] || exit 6
 [ -x /usr/sbin/ip6tables ] || exit 7
