@@ -14,6 +14,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
+# TODO: remove +ip6tables +iptables from DEPENDS and figure out why OpenWRT thinks there is a circular dependency
+
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=+ucollect-badconf +ucollect-bandwidth +ucollect-buckets +ucollect-count +ucollect-flow +ucollect-sniff +ucollect-spoof +ucollect-refused +ucollect-fake +ucollect-fwup +ip6tables +iptables
