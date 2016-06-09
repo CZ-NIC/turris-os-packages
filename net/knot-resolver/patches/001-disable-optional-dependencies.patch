@@ -1,7 +1,7 @@
---- a/Makefile
-+++ b/Makefile
-@@ -18,23 +18,23 @@ endif
- $(eval $(call find_lib,libknot))
+--- a/Makefile	2016-06-06 13:03:31.000000000 +0200
++++ b/Makefile	2016-06-06 13:13:13.966001264 +0200
+@@ -20,15 +20,15 @@ $(eval $(call find_lib,lmdb))
+ $(eval $(call find_lib,libzscanner,2.1))
  $(eval $(call find_lib,libuv,1.0))
  $(eval $(call find_alt,lua,luajit))
 -$(eval $(call find_lib,cmocka))
@@ -16,48 +16,35 @@
 +#$(eval $(call find_lib,hiredis))
  $(eval $(call find_lib,socket_wrapper))
  $(eval $(call find_lib,libdnssec))
+ $(eval $(call find_lib,libsystemd))
 -$(eval $(call find_gopkg,geoip,github.com/abh/geoip))
 +#$(eval $(call find_gopkg,geoip,github.com/abh/geoip))
- # Find Go compiler version
- # @note Go 1.5 support amd64 only, disabled for other architectures
--ifeq ($(ARCH),x86_64)
--E :=
--GO_VERSION := $(subst $(E) $(E),,$(subst go,,$(wordlist 1,2,$(subst ., ,$(word 3,$(shell $(GO) version))))))
--$(eval $(call find_ver,go,$(GO_VERSION),15))
--else
--HAS_go = no
--endif
-+#ifeq ($(ARCH),x86_64)
-+#E :=
-+#GO_VERSION := $(subst $(E) $(E),,$(subst go,,$(wordlist 1,2,$(subst ., ,$(word 3,$(shell $(GO) version))))))
-+#$(eval $(call find_ver,go,$(GO_VERSION),15))
-+#else
-+#HAS_go = no
-+#endif
- # Work around luajit on OS X
- ifeq ($(PLATFORM), Darwin)
- ifneq (,$(findstring luajit, $(lua_LIBS)))
-@@ -66,15 +66,15 @@ info:
- 	$(info [$(HAS_lua)] LuaJIT (daemon))
+ 
+ # Find Go version and platform
+ GO_VERSION := $(shell $(GO) version 2>/dev/null)
+@@ -89,16 +89,16 @@ info:
+ 	$(info [$(HAS_lua)] luajit (daemon))
  	$(info [$(HAS_libuv)] libuv (daemon))
  	$(info )
 -	$(info Optional)
 -	$(info --------)
 -	$(info [$(HAS_doxygen)] doxygen (doc))
--	$(info [$(HAS_go)] Go 1.5+ on amd64 (modules/go))
--	$(info [$(HAS_geoip)] github.com/abh/geoip (modules/tinyweb))
+-	$(info [$(HAS_go)] go (modules/go, Go buildmode=c-shared support))
+-	$(info [$(HAS_geoip)] geoip (modules/tinyweb, github.com/abh/geoip))
 -	$(info [$(HAS_libmemcached)] libmemcached (modules/memcached))
 -	$(info [$(HAS_hiredis)] hiredis (modules/redis))
 -	$(info [$(HAS_cmocka)] cmocka (tests/unit))
+-	$(info [$(HAS_libsystemd)] systemd (daemon))
 -	$(info )
 +#	$(info Optional)
 +#	$(info --------)
 +#	$(info [$(HAS_doxygen)] doxygen (doc))
-+#	$(info [$(HAS_go)] Go 1.5+ on amd64 (modules/go))
-+#	$(info [$(HAS_geoip)] github.com/abh/geoip (modules/tinyweb))
++#	$(info [$(HAS_go)] go (modules/go, Go buildmode=c-shared support))
++#	$(info [$(HAS_geoip)] geoip (modules/tinyweb, github.com/abh/geoip))
 +#	$(info [$(HAS_libmemcached)] libmemcached (modules/memcached))
 +#	$(info [$(HAS_hiredis)] hiredis (modules/redis))
 +#	$(info [$(HAS_cmocka)] cmocka (tests/unit))
++#	$(info [$(HAS_libsystemd)] systemd (daemon))
 +#	$(info )
  
  # Installation directories

@@ -10,7 +10,7 @@ PKG_RELRO_FULL:=0
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
-PKG_VERSION:=1.0.0-beta2-91-g3bbdca3
+PKG_VERSION:=1.0.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
@@ -34,7 +34,7 @@ define Package/knot-resolver
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Knot DNS Resolver
 	URL:=https://gitlab.labs.nic.cz/knot/resolver
-	DEPENDS=+knot-libknot +libuv +luajit
+	DEPENDS=+knot-libknot +libuv +luajit +knot-libzscanner +knot 
 endef
 
 define Package/knot-resolver/description
@@ -57,6 +57,28 @@ define Package/knot-resolver/install
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/kresd.config $(1)/etc/config/kresd
+
+	$(INSTALL_CONF) ./files/root.keys $(1)/etc
 endef
 
-$(eval $(call BuildPackage,knot-resolver))
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh
+set -ex
+
+/etc/init.d/kresd enable || true
+sleep 2
+/etc/init.d/dnsmasq restart
+sleep 20 # Cooldown for above (problems in times of reinstall)
+# Also in case we fail to restart because the kernel did not have time to clean
+# # up the sockets, try to wait a little and try it again.
+/etc/init.d/kresd restart || \
+	( sleep 10 ; /etc/init.d/kresd restart ) || \
+	( sleep 30 ; /etc/init.d/kresd restart )
+endef
+
+define Package/$(PKG_NAME)/prerm
+# Remove the script if it is there.
+if [ -e /etc/init.d/kresd ] ; then /etc/init.d/kresd disable ; fi
+endef
+
+$(eval $(call BuildPackage,knot-resolver,+knot-libknot))
