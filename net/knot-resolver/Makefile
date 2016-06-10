@@ -34,7 +34,7 @@ define Package/knot-resolver
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Knot DNS Resolver
 	URL:=https://gitlab.labs.nic.cz/knot/resolver
-	DEPENDS=+knot-libknot +libuv +luajit +knot-libzscanner +knot 
+	DEPENDS=+knot-libknot +libuv +luajit +knot-libzscanner 
 endef
 
 define Package/knot-resolver/description
@@ -64,7 +64,7 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 set -ex
-
+if [ -z "$$IPKG_INSTROOT" ]; then 
 /etc/init.d/kresd enable || true
 sleep 2
 /etc/init.d/dnsmasq restart
@@ -74,11 +74,18 @@ sleep 20 # Cooldown for above (problems in times of reinstall)
 /etc/init.d/kresd restart || \
 	( sleep 10 ; /etc/init.d/kresd restart ) || \
 	( sleep 30 ; /etc/init.d/kresd restart )
+fi
 endef
 
 define Package/$(PKG_NAME)/prerm
+#!/bin/sh
+set -ex
+if [ -z "$$IPKG_INSTROOT" ]; then
+
 # Remove the script if it is there.
 if [ -e /etc/init.d/kresd ] ; then /etc/init.d/kresd disable ; fi
+fi
 endef
 
-$(eval $(call BuildPackage,knot-resolver,+knot-libknot))
+$(eval $(call BuildPackage,knot-resolver))
+
