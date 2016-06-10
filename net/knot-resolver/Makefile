@@ -68,12 +68,8 @@ if [ -z "$$IPKG_INSTROOT" ]; then
 /etc/init.d/kresd enable || true
 sleep 2
 /etc/init.d/dnsmasq restart
-sleep 20 # Cooldown for above (problems in times of reinstall)
-# Also in case we fail to restart because the kernel did not have time to clean
-# # up the sockets, try to wait a little and try it again.
-/etc/init.d/kresd restart || \
-	( sleep 10 ; /etc/init.d/kresd restart ) || \
-	( sleep 30 ; /etc/init.d/kresd restart )
+sleep 2 # Cooldown for above (problems in times of reinstall)
+/etc/init.d/kresd restart 
 fi
 endef
 
