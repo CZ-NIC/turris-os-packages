@@ -57,6 +57,31 @@ define Package/knot-resolver/install
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/kresd.config $(1)/etc/config/kresd
+
+	$(INSTALL_CONF) ./files/root.keys $(1)/etc
+endef
+
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh
+set -ex
+if [ -z "$$IPKG_INSTROOT" ]; then 
+/etc/init.d/kresd enable || true
+sleep 2
+/etc/init.d/dnsmasq restart
+sleep 2 # Cooldown for above (problems in times of reinstall)
+/etc/init.d/kresd restart 
+fi
+endef
+
+define Package/$(PKG_NAME)/prerm
+#!/bin/sh
+set -ex
+if [ -z "$$IPKG_INSTROOT" ]; then
+
+# Remove the script if it is there.
+if [ -e /etc/init.d/kresd ] ; then /etc/init.d/kresd disable ; fi
+fi
 endef
 
 $(eval $(call BuildPackage,knot-resolver))
+
