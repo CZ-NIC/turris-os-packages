@@ -40,7 +40,7 @@ define Package/boost/Default
   CATEGORY:=Libraries
   TITLE:=Boost C++ source library
   URL:=http://www.boost.org
-  DEPENDS:=+libstdcpp +libpthread +librt +libicu
+  DEPENDS:=+libstdcpp +libpthread +librt +icu
 endef
 
 define Package/boost/description/Default
