@@ -69,7 +69,7 @@ handle_openssh_section(){
     set_parameter "$config" SyslogFacility SyslogFacility
     set_parameter "$config" LogLevel LogLevel
     set_parameter "$config" LoginGraceTime LoginGraceTime
-    set_parameter "$config" PermitRootLogin PermitRootLogin
+    set_parameter "$config" PermitRootLogin PermitRootLogin yes
     set_parameter "$config" StrictModes StrictModes
     set_parameter "$config" MaxAuthTries MaxAuthTries
     set_parameter "$config" MaxSessions MaxSessions
