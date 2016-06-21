@@ -61,7 +61,7 @@ set_multiple_parameters() {
 # Check the /etc/unbound/root.key is reasonable and try to fix it with given command
 check_root_key() {
     # Don't do anything if it looks OK
-    grep -qE '\sDNSKEY|DS\s' /etc/unbound/root.key && return
+    grep -qE '[[:space:]](DNSKEY|DS)[[:space:]]' /etc/unbound/root.key && return
     # Not OK -> run the command and hope for the best
     echo "Trying to restore broken /etc/unbound/root.key with command $@" | logger -t unbound -p daemon.warning
     eval "$@"
