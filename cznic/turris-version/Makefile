@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=3.0
+PKG_VERSION:=3.1
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
@@ -28,27 +28,27 @@ define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 # Danger: spaces are not ordinary spaces, but special unicode ones
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • Update OpenWrt na poslední stabilní verzi 15.05 Chaos Calmer.
- • Zapnutí některých hardening voleb pro větší bezpečnost.
- • Balíček multiwan není nadále podporován, nahradil ho mwan3.
- • Příkaz ip je nově k dispozici s více funkcemi.
- • Přidána podpora IPv6 v nuci-tls - rozhraní pro vzdálený monitoring a správu.
- • Došlo k přečíslování GPIO portů.
- • Updater nyní stahuje seznamy balíčků pro opkg.
- • Nainstalovaná metadata o balíčcích nyní obsahují hash všech nainstalovaných souborů.
- • Unbound - přidána podpora pro obnovu poškozené kořenové kotvy.
- • Ovladač pro IT913x DVB tunery nahrazen ovladačem kmod-usb-af9035.
- • Příkaz sleep umí i neceločíselné hodnoty." " • Update OpenWrt to the latest stable version 15.05 Chaos Calmer.
- • Enabled several hardening options for better security.
- • Package multiwan is deprecated so it was replaced by mwan3.
- • Full version of the ip command is installed by default.
- • Added support for IPv6 in nuci-tls - interface for remote monitoring and control.
- • GPIO ports were renumbered.
- • Updater now downloads lists of packages for opkg.
- • Installed package metadata now contain hash of all installed files.
- • Unbound - added support for fixing broken root anchor.
- • Driver for IT913x DVB tuners replaced by kmod-usb-af9035.
- • Sleep command can take fractions of seconds as an argument."
+    create_notification -s news " Toto je opravné vydání:
+ • logrotate: Přidání chybějícího cron skriptu
+ • ddns-scripts: Synchronizace verzí s LuCI
+ • ucollect-fwup: Oprava pádu
+ • minidlna: Oprava linkování
+ • nginx: Přidány chybějící moduly
+ • hostapd: Nová verze
+ • unbound: Oprava obnovy kotvy
+ • multiwan: Zcela odebrán
+ • mwan3: Oprava cest k ip
+ • motion: Konfigurační soubor není přepisován novou verzí" " This is a bugfix release:
+ • logrotate: Addition of missing cron script
+ • ddns-scripts: Version sync with LuCI
+ • ucollect-fwup: Fix of crash
+ • minidlna: Fix of linkage
+ • nginx: Missing modules added
+ • hostapd: Version bump
+ • unbound: Fix of anchor recovery
+ • multiwan: Removed completely
+ • mwan3: Fix paths to ip
+ • motion: Configuration file is not overwritten"
 }
 endef
 
