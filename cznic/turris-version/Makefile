@@ -38,7 +38,8 @@ define Package/$(PKG_NAME)/postinst
  • unbound: Oprava obnovy kotvy
  • multiwan: Zcela odebrán
  • mwan3: Oprava cest k ip
- • motion: Konfigurační soubor není přepisován novou verzí" " This is a bugfix release:
+ • motion: Konfigurační soubor není přepisován novou verzí
+ • kernel: Oprava zavádění DVB modulů při startu systému" " This is a bugfix release:
  • logrotate: Addition of missing cron script
  • ddns-scripts: Version sync with LuCI
  • ucollect-fwup: Fix of crash
@@ -48,7 +49,8 @@ define Package/$(PKG_NAME)/postinst
  • unbound: Fix of anchor recovery
  • multiwan: Removed completely
  • mwan3: Fix paths to ip
- • motion: Configuration file is not overwritten"
+ • motion: Configuration file is not overwritten
+ • kernel: Fix loading of the DVB modules on boot"
 }
 endef
 
