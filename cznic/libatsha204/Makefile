@@ -24,7 +24,7 @@ $(call include_mk, python-package.mk)
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+libopenssl +libunbound +unbound
+	DEPENDS:=+libopenssl +libunbound 
 endef
 
 ifdef CONFIG_TARGET_mvebu_Turris-Omnia
