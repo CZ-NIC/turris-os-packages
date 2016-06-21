@@ -20,7 +20,7 @@ start() {
 			NAME=$(uci get smrtd."$IFACE".name)
 			PARAMS="$PARAMS -i '$NAME'"
 			for CONN in $(uci -d: get smrtd."$IFACE".connections | sed -e 's/  */_/g;s/:/ /g') ; do
-				PARAMS="$PARAMS -c "$(echo $CONN | tr _ ' ')
+				PARAMS="$PARAMS -c "$(echo $CONN | tr _ ' ' | tr -d \' )
 			done
 		done
 		eval start-stop-daemon -S -p "$PID_FILE" -m -b -x "$PROG" -- "$PARAMS"
