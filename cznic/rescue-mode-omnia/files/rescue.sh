@@ -30,11 +30,11 @@ SRCFS_MOUNTPOINT="/srcmnt"
 MEDKIT_FILENAME="omnia-medkit*.tar.gz"
 FACTORY_SNAPNAME="@factory"
 
-BIN_I2CGET="/usr/sbin/i2cget"
 BIN_BTRFS="/usr/bin/btrfs"
 BIN_MKFS="/usr/bin/mkfs.btrfs"
 BIN_MOUNT="/bin/mount"
 BIN_GREP="/bin/grep"
+BIN_SED="/bin/sed"
 BIN_UMOUNT="/bin/umount"
 BIN_SYNC="/bin/sync"
 BIN_AWK="/usr/bin/awk"
@@ -167,8 +167,10 @@ reset_clock () {
 
 
 # main
-MODE=`$BIN_I2CGET -y $I2C_BUS $I2C_ADDR $I2C_REG b`
-MODE=$(( $MODE ))
+MODE=`$BIN_GREP -E "omniarescue=[0-9]+" /proc/cmdline | $BIN_SED -r 's/.*omniarescue=([0-9]+)(\s.*|)$/\1/'`
+if [ -z "${MODE}" ]; then
+  MODE=0
+fi
 d "MODE=$MODE"
 
 if [ -z "${MODE}" ]; then
