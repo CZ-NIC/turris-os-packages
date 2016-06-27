@@ -5,7 +5,7 @@ START=50
 PID_FILE=/var/run/lcollect.pid
 
 majordomo_gen_cfg() {
-	for iface in $(uci -q -X show lcollect | sed -n 's/^lcollect\.cfg[0-9a-zA-Z]*\.ifname=\(.*\)$/\1/p'); do
+	for iface in $(uci -q -X show lcollect | sed -n "s/^lcollect\.cfg[0-9a-zA-Z]*\.ifname='\(.*\)'$/\1/p"); do
 		for addr in $(ip --oneline addr show dev $iface | sed -n 's/.*inet[0-9]* \([^\/]*\)\/\([0-9]*\).*/\1\/\2/p') ; do
 			printf "\tlist ignore_subnet '%s'\n" $addr
 		done
