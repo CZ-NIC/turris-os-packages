@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opkg-trans
-PKG_VERSION:=6
+PKG_VERSION:=7
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=9149d1b223749c0c819de3143883f3f988f766a6
+PKG_SOURCE_VERSION:=cfd0e3c60871d1a720dc4eb32ae2570d5f0f07dd
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -79,5 +79,20 @@ define Package/updater-ng/postinst
 }
 endef
 
+define Package/updater-migrate
+	TITLE:=Automatic migration to the updater-ng
+	DEPENDS:=+opkg-trans +vixie-cron
+endef
+
+define Package/updater-migrate/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/updater-migrate.sh $(1)/usr/bin
+
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/pkgupdate/cron $(1)/etc/cron.d/updater-migrate
+	sed -i -e 's/updater\.sh/updater-migrate.sh/' $(1)/etc/cron.d/updater-migrate
+endef
+
 $(eval $(call BuildPackage,opkg-trans))
 $(eval $(call BuildPackage,updater-ng))
+$(eval $(call BuildPackage,updater-migrate))
