@@ -25,8 +25,18 @@ include $(INCLUDE_DIR)/package.mk
 define Package/unbound/Default
   TITLE:=A validating, recursive & caching DNS resolver
   URL:=http://www.unbound.net/
-  DEPENDS:=+libldns +libopenssl
+  DEPENDS:=+libldns +libopenssl +dnssec-rootkey +resolver-conf
 endef
+
+ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
+
+TURRIS_DEPS:=+cert-backup
+endif
+
+ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+
+TURRIS_DEPS:=+cert-backup
+endif
 
 define Package/unbound
   $(call Package/unbound/Default)
@@ -114,7 +124,6 @@ CONFIGURE_ARGS += \
 
 define Package/unbound/conffiles
 /etc/unbound/unbound.conf
-/etc/config/unbound
 endef
 
 define Build/InstallDev
@@ -137,8 +146,6 @@ define Package/unbound/install
 	$(INSTALL_BIN) ./files/unbound-init $(1)/etc/init.d/unbound
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
 	$(CP) ./files/unbound-reload $(1)/etc/hotplug.d/iface/40-unbound-reload
-	$(INSTALL_DIR) $(1)/etc/config
-	$(CP) ./files/unbound-config $(1)/etc/config/unbound
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/unbound.defaults $(1)/etc/uci-defaults/unbound
 	$(INSTALL_DIR) $(1)/usr/share/unbound/
@@ -150,7 +157,6 @@ define Package/unbound/postinst
 #!/bin/sh
 set -ex
 [ -n "$$IPKG_INSTROOT" ] || {
-/usr/sbin/cert-backup /etc/unbound/root.key
 /usr/share/unbound/postinst
 }
 endef

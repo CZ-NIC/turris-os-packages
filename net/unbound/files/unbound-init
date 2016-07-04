@@ -3,13 +3,17 @@
 START=61
 
 CONFIGFILE="/var/etc/unbound/unbound.conf"
+ROOTKEYFILE="/etc/root.keys"
 
 header() {
     cat > "$CONFIGFILE" <<-EOF
-# auto-generated config file from /etc/config/unbound
+# auto-generated config file from /etc/config/resolver
 EOF
 }
 
+set_section() {
+    section="$1"
+}
 
 add_section() {
     section="$1"
@@ -45,6 +49,19 @@ set_quoted_parameter() {
     echo -e "\t$opt: \"$val\"" >> "$CONFIGFILE"
 }
 
+set_bool_parameter() {
+    local var="$1"
+    local opt="$2"
+    local def="$3"
+    local val
+
+    config_get val "$section" "$var"
+    val=${val:-$def}
+    val=$(echo $val | sed -e "s/true/yes/g" -e "s/false/no/g")
+    echo -e "\t$opt: $val" >> "$CONFIGFILE"
+
+}
+
 add_parameter() {
     val="$1"
     opt="$2"
@@ -54,25 +71,33 @@ add_parameter() {
 set_multiple_parameters() {
     local var="$1"
     local opt="$2"
-    
+
     config_list_foreach "$section" "$var" add_parameter "$opt"
+}
+
+set_rootkey() {
+    local var="$1"
+    local val
+
+    config_get val "$section" "$var"
+    ROOTKEYFILE="$val"
 }
 
 # Check the /etc/unbound/root.key is reasonable and try to fix it with given command
 check_root_key() {
     # Don't do anything if it looks OK
-    grep -qE '[[:space:]](DNSKEY|DS)[[:space:]]' /etc/unbound/root.key && return
+    grep -qE '[[:space:]](DNSKEY|DS)[[:space:]]' $ROOTKEYFILE && return
     # Not OK -> run the command and hope for the best
-    echo "Trying to restore broken /etc/unbound/root.key with command $@" | logger -t unbound -p daemon.warning
+    echo "Trying to restore broken $ROOTKEYFILE with command $@" | logger -t unbound -p daemon.warning
     eval "$@"
 }
 
-#initialize everything 
+#initialize everything
 init_unbound() {
-    config_load unbound
+    config_load resolver
 
     local ignore_root_key
-    config_get_bool ignore_root_key server ignore_root_key 0
+    config_get_bool ignore_root_key common ignore_root_key 0
 
     # Do not try to restore the root key if it's not used
     if [ "$ignore_root_key" = "0" ] ; then
@@ -80,24 +105,37 @@ init_unbound() {
         check_root_key unbound-anchor -f /tmp/resolv.conf.auto
         check_root_key unbound-anchor
         # unbound-anchor is of no use :-(. Try to restore it from the certificate backup, if there's anything.
-        check_root_key cert-backup -x /etc/unbound/root.key
+        check_root_key cert-backup -x $ROOTKEYFILE
         # No more ideas what to do, so just try running unbound, something of the above may have worked.
     fi
 
     #Clear the config and set header
     header
 
+    config_load resolver
+
     #Server Section
-    add_section server
+    add_section common server
     echo '	chroot: ""' >> "$CONFIGFILE"
-    set_parameter verbosity verbosity 1
+    set_parameter verbose verbosity 1
     set_multiple_parameters interface interface
     set_parameter port port 53
+
+    if [ "$ignore_root_key" = "0" ] ; then
+	set_rootkey keyfile
+	set_quoted_parameter keyfile auto-trust-anchor-file "$ROOTKEYFILE"
+    fi
+
+    set_parameter msg_buffer_size msg-buffer-size 8192
+    set_parameter msg_buffer_size edns-buffer-size 8192
+    set_parameter msg_cache_size msg-cache-size 100k
+    set_bool_parameter net_ipv4 do-ip4 "true"
+    set_bool_parameter net_ipv6 do-ip6 "true"
+
+    set_section unbound
     set_parameter outgoing_range outgoing-range 60
     set_parameter outgoing_num_tcp outgoing-num-tcp 128
     set_parameter incoming_num_tcp incoming-num-tcp 128
-    set_parameter msg_buffer_size msg-buffer-size 8192
-    set_parameter msg_cache_size msg-cache-size 100k
     set_parameter msg_cache_slabs msg-cache-slabs 1
     set_parameter num_queries_per_thread num-queries-per-thread 30
     set_parameter rrset_cache_slabs rrset-cache-slabs 1
@@ -110,9 +148,6 @@ init_unbound() {
     set_quoted_parameter target_fetch_policy target-fetch-policy "2 1 0 0 0 0"
     set_parameter harden_short_bufsize harden-short-bufsize yes
     set_parameter harden_large_queries harden-large-queries yes
-    if [ "$ignore_root_key" = "0" ] ; then
-        set_quoted_parameter auto_trust_anchor_file auto-trust-anchor-file "/etc/unbound/root.key"
-    fi
     set_parameter key_cache_size key-cache-size 100k
     set_parameter key_cache_slabs key-cache-slabs 1
     set_parameter neg_cache_size neg-cache-size 10k
@@ -124,7 +159,7 @@ init_unbound() {
     set_multiple_parameters python_script python-script
 
     #Remote Control
-    add_section remote_control remote-control
+    add_section unbound_remote_control remote-control
     set_parameter control_enable control-enable no
     set_multiple_parameters control_interface control-interface
     set_parameter control_port control-port 8953
@@ -162,8 +197,8 @@ start() {
 
     init_unbound
     unbound || (
-        sleep 2 # There are temporary failures with ports in unbound sometimes, try again after a while
-	unbound
+    sleep 2 # There are temporary failures with ports in unbound sometimes, try again after a while
+    unbound
     )
 }
 
@@ -174,7 +209,7 @@ reload() {
     init_unbound
 
     local pidfile
-    config_get pidfile server pidfile
+    config_get pidfile unbound pidfile
 
     if [ -f "$pidfile" ] ; then
         kill -HUP $(cat $pidfile)
@@ -182,10 +217,10 @@ reload() {
 }
 
 stop() {
-    config_load unbound
+    config_load resolver
 
     local pidfile
-    config_get pidfile server pidfile
+    config_get pidfile unbound pidfile
 
     if [ -f "$pidfile" ] ; then
         kill $(cat $pidfile) ; rm "$pidfile"
