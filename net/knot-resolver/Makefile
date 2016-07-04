@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
 PKG_VERSION:=1.0.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/knot/resolver.git
@@ -34,7 +34,7 @@ define Package/knot-resolver
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Knot DNS Resolver
 	URL:=https://gitlab.labs.nic.cz/knot/resolver
-	DEPENDS=+knot-libknot +libuv +luajit +knot-libzscanner +knot-libdnssec
+	DEPENDS=+knot-libknot +libuv +luajit +knot-libzscanner +knot-libdnssec +dnssec-rootkey +resolver-conf
 endef
 
 define Package/knot-resolver/description
@@ -54,11 +54,6 @@ define Package/knot-resolver/install
 
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/kresd.init $(1)/etc/init.d/kresd
-
-	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_CONF) ./files/kresd.config $(1)/etc/config/kresd
-
-	$(INSTALL_CONF) ./files/root.keys $(1)/etc
 endef
 
 define Package/$(PKG_NAME)/postinst

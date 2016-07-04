@@ -5,58 +5,133 @@ STOP=00
 
 USE_PROCD=1
 PROG=/usr/bin/kresd
-
+CONFIGFILE=/tmp/kresd.config
+ROOTKEYFILE=/etc/root.keys
 DEFAULT_RUNDIR=/tmp/kresd
 
-add_listen_addr() {
-	local val="$1"
-	procd_append_param command -a "$val"
+# Check the /etc/unbound/root.keys is reasonable and try to fix it with given command
+check_root_key() {
+	# Don't do anything if it looks OK
+	grep -qE '[[:space:]](DNSKEY|DS)[[:space:]]' $ROOTKEYFILE && return
+	# Not OK -> run the command and hope for the best
+	echo "Trying to restore broken $ROOTKEYFILE with command $@"
+	eval "$@"
 }
 
-load_uci_config() {
-	local cfg="$1" addr config keyfile forks verbose rundir log_stderr log_stdout
+add_listen_addr() {
+	local addr="$1"
+	local port="$2"
+	[ "$addr" == "::0" ] && addr="::"
+	procd_append_param command -a "$addr#$port"
+}
+
+init_header() {
+	echo "--Automatically generated file; DO NOT EDIT">$CONFIGFILE
+	echo "modules = { 'policy' }">>$CONFIGFILE
+}
+
+set_param_func() {
+	local func_name="$1"
+	local val="$2"
+	echo "$func_name($val)">>$CONFIGFILE
+}
+
+set_param_var() {
+	local name="$1"
+	local val="$2"
+	echo "$name=$val">>$CONFIGFILE
+}
+
+load_uci_config_common() {
+	local interface keyfile verbose port msg_buffer_size net_ipv4 net_ipv6 msg_cache_size do_forward ignore_root_key
+	local section="common"
+
+	# port
+	config_get port "$section" port
 
 	# list of listen addresses
-	config_list_foreach "$cfg" addr add_listen_addr
+	config_list_foreach "$section" interface add_listen_addr $port
 
-	# knot-resolver config
-	config_get config "$cfg" config
-	[ -n "$config" ] && procd_append_param command -c "$config"
+	# ignore keyfile
+	config_get_bool ignore_root_key "$section" ignore_root_key 0
 
-	# number of forks
-	config_get forks "$cfg" forks 1
-	procd_append_param command -f "$forks"
+	if [ "$ignore_root_key" = "0" ]; then
+		#keyfile
+		config_get keyfile "$section" keyfile
+		if [ -n "$keyfile" ]; then
+			ROOTKEYFILE=$keyfile
+			check_root_key cert-backup $ROOTKEYFILE -x key
+			procd_append_param command -k "$keyfile"
+		fi
+	fi
 
 	# verbosity
-	config_get_bool verbose "$cfg" verbose 0
+	config_get_bool verbose "$section" verbose 0
 	[ "$verbose" -eq 1 ] && procd_append_param command -v
 
-	# keyfile
-	config_get keyfile "$cfg" keyfile
-	[ -n "$keyfile" ] && procd_append_param command -k "$keyfile"
+	# EDNS payload
+	config_get msg_buffer_size "$section" msg_buffer_size
+	[ "$msg_buffer_size" -gt 1220 ] && set_param_func "net.bufsize" "$msg_buffer_size"
+
+	# ipv4
+	config_get_bool net_ipv4 "$section" net_ipv4
+	set_param_var "net.ipv4" "$net_ipv4"
+
+	# ipv6
+	config_get_bool net_ipv6 "$section" net_ipv6
+	set_param_var "net.ipv6" "$net_ipv6"
+
+	# msg_cache_size
+	config_get msg_cache_size "$section" msg_cache_size
+	conv_msg_cache_size=$(echo "$msg_cache_size"|sed -e "s/k//g" -e "s/m/*MB/g" -e "s/g/*GB/g" )
+	set_param_var "cache.size" "$conv_msg_cache_size"
+
+	config_get_bool do_forward "$section" forward_upstream 1
+	if [ "$do_forward" = "1" ] ; then
+		local SERVERS
+		SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' /tmp/resolv.conf.auto | sort)
+		if [ "$SERVERS" ] ; then
+			for SERVER in $SERVERS ; do
+				echo "policy:add(policy.all(policy.FORWARD('$SERVER')))">>$CONFIGFILE
+			done
+		fi
+	fi
+}
+
+load_uci_config_kresd() {
+	local addr config keyfile forks verbose rundir log_stderr log_stdout
+	local section="kresd"
+
+	# knot-resolver config
+	procd_append_param command -c "$CONFIGFILE"
+
+	# number of forks
+	config_get forks "$section" forks 1
+	procd_append_param command -f "$forks"
 
 	# rundir
-	config_get rundir "$cfg" rundir "$DEFAULT_RUNDIR"
+	config_get rundir "$section" rundir "$DEFAULT_RUNDIR"
 	[ ! -d "$rundir" ] && mkdir -p "$rundir"
 	procd_append_param command "$rundir"
 
 	# procd stdout/err logging
-	config_get_bool log_stderr "$cfg" log_stderr  0
+	config_get_bool log_stderr "$section" log_stderr  0
 	procd_set_param stderr $log_stderr
-	config_get_bool log_stdout "$cfg" log_stdout  0
+	config_get_bool log_stdout "$section" log_stdout  0
 	procd_set_param stdout $log_stdout
 }
 
 run_instance() {
 	procd_open_instance
-	procd_set_param file /etc/config/kresd
+	procd_set_param file /etc/config/resolver
 	procd_set_param command "$PROG"
-	load_uci_config "$1"
+	init_header
+	load_uci_config_kresd
+	load_uci_config_common
 	procd_close_instance
 }
 
 start_service() {
-	config_load kresd
-	config_foreach run_instance kresd
+	config_load resolver
+	run_instance
 }
-
