@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2008-2014 OpenWrt.org
+# Copyright (C) 2008-2016 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,15 +8,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=0.2.6.10
-PKG_RELEASE:=1
+PKG_VERSION:=0.2.7.6
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://www.torproject.org/dist \
+PKG_SOURCE_URL:=https://dist.torproject.org/ \
 	https://archive.torproject.org/tor-package-archive
-PKG_MD5SUM:=04f919e7882d1ca80f835545af562bad
+PKG_MD5SUM:=cc19107b57136a68e8c563bf2d35b072
+PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de>
+PKG_LICENSE_FILES:=LICENSE
 
-PKG_BUILD_DEPENDS:=libevent2 libopenssl
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
@@ -25,6 +26,7 @@ define Package/tor/Default
   SECTION:=net
   CATEGORY:=Network
   URL:=https://www.torproject.org/
+  USERID:=tor=52:tor=52
 endef
 
 define Package/tor/Default/description
@@ -38,7 +40,7 @@ endef
 define Package/tor
 $(call Package/tor/Default)
   TITLE:=An anonymous Internet communication system
-  DEPENDS:=+libevent2 +libopenssl +libpthread +librt +SSP_SUPPORT:libssp
+  DEPENDS:=+libevent2 +libopenssl +libpthread +librt
 endef
 
 define Package/tor/description
@@ -64,7 +66,8 @@ endef
 CONFIGURE_ARGS += \
 	--with-libevent-dir="$(STAGING_DIR)/usr" \
 	--with-ssl-dir="$(STAGING_DIR)/usr" \
-	--disable-asciidoc
+	--disable-asciidoc \
+	--disable-seccomp
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
