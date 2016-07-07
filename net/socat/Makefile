@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2012 OpenWrt.org
+# Copyright (C) 2006-2015 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,12 +9,16 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=socat
 PKG_VERSION:=1.7.3.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=http://www.dest-unreach.org/socat/download \
-	https://api.turris.cz/mirror
+PKG_SOURCE_URL:=http://www.dest-unreach.org/socat/download
 PKG_MD5SUM:=b607edb65bc6c57f4a43f06247504274
+
+PKG_MAINTAINER:= Ted Hess <thess@kitschensync.net>
+
+PKG_LICENSE:=GPL-2.0 OpenSSL
+PKG_LICENSE_FILES:=COPYING COPYING.OpenSSL
 
 PKG_INSTALL:=1
 
@@ -23,7 +27,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/socat
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libpthread +libopenssl +librt
+  DEPENDS:=+libpthread +librt +SOCAT_SSL:libopenssl
   TITLE:=A multipurpose relay (SOcket CAT)
   URL:=http://www.dest-unreach.org/socat/
 endef
@@ -37,10 +41,27 @@ define Package/socat/description
 	many more options.
 endef
 
+define Package/socat/config
+config SOCAT_SSL
+        bool "SSL support"
+        depends on PACKAGE_socat
+        default n
+        help
+          Implements SSL support in socat (using libopenssl).
+endef
+
+define Package/socat/conffiles
+/etc/config/socat
+endef
+
 CONFIGURE_ARGS += \
 	--disable-libwrap \
 	--disable-readline \
-	--disable-termios
+	--enable-termios
+
+ifneq ($(CONFIG_SOCAT_SSL),y)
+  CONFIGURE_ARGS+= --disable-openssl
+endif
 
 CONFIGURE_VARS += \
 	sc_cv_termios_ispeed="no" \
@@ -51,6 +72,10 @@ CONFIGURE_VARS += \
 define Package/socat/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/socat $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/socat.config $(1)/etc/config/socat
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/socat.init $(1)/etc/init.d/socat
 endef
 
 $(eval $(call BuildPackage,socat))
