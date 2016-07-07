@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2011 OpenWrt.org
+# Copyright (C) 2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,12 +9,18 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libxslt
 PKG_VERSION:=1.1.28
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://xmlsoft.org/sources/ \
+PKG_SOURCE_URL:= \
+	http://xmlsoft.org/sources/ \
 	ftp://fr.rpmfind.net/pub/libxml/
 PKG_MD5SUM:=9667bf6f9310b957254fdcf6596600b7
+
+PKG_LICENSE:=MIT
+PKG_LICENSE_FILES:=COPYING
+
+PKG_MAINTAINER:=Jiri Slachta <jiri@slachta.eu>
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -30,19 +36,19 @@ define Package/libxslt
 endef
 
 define Package/libxslt/description
-	A library for XML transformation using XSLT.
+ A library for XML transformation using XSLT.
 endef
 
 define Package/libexslt
   SECTION:=libs
   CATEGORY:=Libraries
   DEPENDS:=+libxslt
-  TITLE:=Gnome XSLT library Extention
+  TITLE:=Gnome XSLT library Extension
   URL:=http://xmlsoft.org/XSLT/EXSLT/
 endef
 
 define Package/libexslt/description
-	A extention for XSLT.
+ An extension for XSLT.
 endef
 
 define Package/xsltproc
@@ -54,7 +60,7 @@ define Package/xsltproc
 endef
 
 define Package/xsltproc/description
-	XSLT XML transformation utility
+ XSLT XML transformation utility.
 endef
 
 CONFIGURE_ARGS+= \
