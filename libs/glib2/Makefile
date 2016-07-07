@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=glib2
 PKG_VERSION:=2.46.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=glib-$(PKG_VERSION).tar.xz
 PKG_BUILD_DIR:=$(BUILD_DIR)/glib-$(PKG_VERSION)
@@ -18,7 +18,7 @@ PKG_MD5SUM:=7f815d6e46df68e070cb421ed7f1139e
 
 PKG_BUILD_PARALLEL:=1
 HOST_BUILD_PARALLEL:=1
-PKG_BUILD_DEPENDS:=glib2/host libpthread zlib libintl libffi
+PKG_BUILD_DEPENDS:=glib2/host libpthread zlib libiconv-full libintl libffi
 HOST_BUILD_DEPENDS:=gettext-full/host libiconv/host libffi/host
 PKG_INSTALL:=1
 PKG_USE_MIPS16:=0
@@ -45,7 +45,9 @@ define Package/glib2/description
 endef
 
 HOST_CONFIGURE_ARGS += \
-	--disable-selinux \
+	--with-libiconv=no
+
+TARGET_CONFIGURE_ARGS += \
 	--with-libiconv=gnu
 
 CONFIGURE_ARGS += \
@@ -53,8 +55,7 @@ CONFIGURE_ARGS += \
 	--enable-static \
 	--enable-debug=no \
 	--disable-selinux \
-	--disable-fam \
-	--with-libiconv=gnu
+	--disable-fam
 
 CONFIGURE_VARS += \
 	glib_cv_stack_grows=no \
