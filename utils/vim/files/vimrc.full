@@ -1,6 +1,5 @@
 set showcmd			" show (partial) command in status line
 set showmatch			" show matching brackets
-set ignorecase			" do case insensitive matching
 set incsearch			" incremental search
 set autowrite			" automatically save before commands like :next and :make
 set nocompatible		" use Vim defaults instead of 100% vi compatibility
@@ -9,6 +8,9 @@ set autoindent			" always set autoindenting on
 set linebreak			" don't wrap words by default
 set textwidth=0			" don't wrap lines by default
 set ruler			" show the cursor position all the time
+
+set backupskip+=/etc/crontabs.*	" fix crontab -e
+
 if filereadable(expand("$VIMRUNTIME/syntax/synload.vim"))
 	syntax on
 endif
@@ -22,3 +24,7 @@ if has("syntax") && &term =~ "xterm"
 		set t_Sb=<Esc>[4%dm
 	endif
 endif
+
+" Uncomment out for line and/or relative numberig
+" set number
+" set rnu

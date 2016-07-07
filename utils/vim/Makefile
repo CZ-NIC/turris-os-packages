@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2012 OpenWrt.org
+# Copyright (C) 2015 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,13 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=vim
-PKG_VERSION:=7.3
-PKG_RELEASE:=1
-VIMVER:=73
+PKG_VERSION:=7.4
+PKG_RELEASE:=3
+VIMVER:=74
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=ftp://ftp.vim.org/pub/vim/unix/
-PKG_MD5SUM:=5b9510a17074e2b37d8bb38ae09edbf2
+PKG_MD5SUM:=607e135c559be642f210094ad023dc65
+PKG_MAINTAINER:=Marko Ratkaj <marko.ratkaj@sartura.hr>
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)$(VIMVER)
 PKG_BUILD_PARALLEL:=1
@@ -24,7 +25,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/vim/Default
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libncurses +libacl
+  DEPENDS:=+libncurses
   TITLE:=Vi IMproved - enhanced vi editor
   URL:=http://www.vim.org/
   SUBMENU:=Editors
@@ -59,10 +60,12 @@ endef
 
 define Package/vim-full/conffiles
 /usr/share/vim/vimrc
+/root/.vimrc
 endef
 
 define Package/vim/conffiles
 /usr/share/vim/vimrc
+/root/.vimrc
 endef
 
 define Package/vim/description
@@ -98,6 +101,7 @@ CONFIGURE_ARGS += \
 	--disable-netbeans \
 	--disable-cscope \
 	--disable-gpm \
+	--disable-acl \
 	--with-tlib=ncurses
 
 CONFIGURE_VARS += \
@@ -116,7 +120,6 @@ define Build/Compile/vim
 		--with-features=tiny \
 		--disable-multibyte \
 	)
-	$(MAKE) -C $(PKG_BUILD_DIR) clean
 	+$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
 		DESTDIR="$(PKG_INSTALL_DIR)" all
 	$(CP) $(PKG_BUILD_DIR)/src/$(PKG_NAME) $(PKG_BUILD_DIR)/vim_tiny
@@ -129,7 +132,6 @@ define Build/Compile/vim-full
 		--with-features=normal \
 		--enable-multibyte \
 	)
-	$(MAKE) -C $(PKG_BUILD_DIR) clean
 	+$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
 		DESTDIR="$(PKG_INSTALL_DIR)" all
 	$(CP) $(PKG_BUILD_DIR)/src/$(PKG_NAME) $(PKG_BUILD_DIR)/vim_normal
