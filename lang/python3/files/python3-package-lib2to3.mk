@@ -5,12 +5,12 @@
 # See /LICENSE for more information.
 #
 
-define Package/python3-email
+define Package/python3-lib2to3
 $(call Package/python3/Default)
-  TITLE:=Python $(PYTHON3_VERSION) email module
-  DEPENDS:=+python3-light
+  TITLE:=Python $(PYTHON3_VERSION) lib2to3 module
+  DEPENDS:=+python3
 endef
 
-$(eval $(call Py3BasePackage,python3-email, \
-	/usr/lib/python$(PYTHON3_VERSION)/email \
+$(eval $(call Py3BasePackage,python3-lib2to3, \
+	/usr/lib/python$(PYTHON3_VERSION)/lib2to3 \
 ))
