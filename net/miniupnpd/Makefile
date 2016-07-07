@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2013 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,23 +8,25 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=miniupnpd
-PKG_VERSION:=1.8.20130426
+PKG_VERSION:=2.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=http://miniupnp.free.fr/files
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_MD5SUM:=ca5344eba200e4a6d1313849d68310f6
+PKG_MD5SUM:=1c07a215dd9b362e75a9efc05e2fb3b4
+
+PKG_MAINTAINER:=Markus Stenberg <fingon@iki.fi>
+PKG_LICENSE:=BSD-3-Clause
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/miniupnpd
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+iptables +libip4tc +IPV6:libip6tc +libnfnetlink
-  TITLE:=Lightweight UPnP daemon
+  DEPENDS:=+iptables +libip4tc +IPV6:libip6tc +IPV6:ip6tables +libuuid
+  TITLE:=Lightweight UPnP IGD, NAT-PMP & PCP daemon
   SUBMENU:=Firewall
   URL:=http://miniupnp.free.fr/
-  MAINTAINER:=Daniel Dickinson <openwrt@cshore.neomailbox.net>
 endef
 
 define Package/miniupnpd/conffiles
@@ -44,12 +46,14 @@ endef
 
 define Build/Prepare
 	$(call Build/Prepare/Default)
-	echo "OpenWrt/$(OPENWRTVERSION)" | tr \(\)\  _ >$(PKG_BUILD_DIR)/os.openwrt
+	echo "OpenWrt" | tr \(\)\  _ >$(PKG_BUILD_DIR)/os.openwrt
 endef
 
 MAKE_FLAGS += \
+	TARGET_OPENWRT=1 TEST=0 \
 	LIBS="" \
-	CC="$(TARGET_CC) -DIPTABLES_143 -lnfnetlink -lip4tc $(if $(CONFIG_IPV6),-lip6tc)" \
+	CC="$(TARGET_CC) -DIPTABLES_143 \
+		-lip4tc $(if $(CONFIG_IPV6),-lip6tc) -luuid" \
 	CONFIG_OPTIONS="$(if $(CONFIG_IPV6),--ipv6) --leasefile" \
 	-f Makefile.linux \
 	miniupnpd
