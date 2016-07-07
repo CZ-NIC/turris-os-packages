@@ -1,4 +1,4 @@
-# Copyright (C) 2009 OpenWrt.org
+# Copyright (C) 2009-2016 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -7,9 +7,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nfs-kernel-server
-PKG_VERSION:=1.2.9
-PKG_RELEASE:=1
-PKG_MD5SUM:=18869d16db3f49c053f8c68eba3fe2e0
+PKG_VERSION:=1.3.3
+PKG_RELEASE:=3
+PKG_MD5SUM:=9b87d890669eaaec8e97a2b0a35b2665
 
 PKG_SOURCE_URL:=@SF/nfs
 PKG_SOURCE:=nfs-utils-$(PKG_VERSION).tar.bz2
@@ -29,6 +29,7 @@ define Package/nfs-kernel-server/Default
   SUBMENU:=Filesystem
   DEPENDS:=+libwrap +libblkid +libuuid $(LIBRPC_DEPENDS)
   URL:=http://nfs.sourceforge.net/
+  MAINTAINER:=Peter Wagner <tripolar@gmx.at>
 endef
 
 define Package/nfs-kernel-server
@@ -59,7 +60,7 @@ define Package/nfs-utils
   $(call Package/nfs-kernel-server/Default)
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS+= +libevent +USE_UCLIBC:librpc
+  DEPENDS+= +libevent2 +USE_UCLIBC:librpc
   TITLE:=updated mount utility (includes nfs4)
 endef
 
@@ -76,6 +77,7 @@ CONFIGURE_ARGS += \
 	--disable-gss \
 	--disable-nfsv4 \
 	--disable-nfsv41 \
+	--disable-ipv6 \
 	--enable-static \
 	--enable-shared \
 	--disable-caps \
@@ -83,6 +85,7 @@ CONFIGURE_ARGS += \
 	--disable-nfsdcld
 
 CONFIGURE_VARS += \
+	libblkid_cv_is_recent=yes \
 	CONFIG_SQLITE3_TRUE="\#" \
 	CONFIG_NFSDCLD_TRUE="\#"
 
@@ -90,8 +93,8 @@ MAKE_FLAGS += \
 	OPT="$(TARGET_CFLAGS)" \
 	INSTALLSUID="install -m 4755" \
 	DESTDIR="$(PKG_INSTALL_DIR)" \
-	RPCGEN_PATH=$(STAGING_DIR_HOST)/bin/rpcgen \
-	RPCGEN=$(STAGING_DIR_HOST)/bin/rpcgen
+	RPCGEN_PATH=$(STAGING_DIR)/host/bin/rpcgen \
+	RPCGEN=$(STAGING_DIR)/host/bin/rpcgen
 
 HOST_CFLAGS += -Dlinux
 
@@ -99,6 +102,8 @@ HOST_CONFIGURE_ARGS += \
 	--disable-gss \
 	--disable-nfsv4 \
 	--disable-nfsv41 \
+	--disable-ipv6 \
+	--disable-tirpc \
 	--without-tcp-wrappers
 
 HOST_CONFIGURE_VARS += \
@@ -120,7 +125,8 @@ define Host/Compile
 endef
 
 define Host/Install
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/tools/rpcgen/rpcgen $(STAGING_DIR_HOST)/bin/rpcgen
+	$(INSTALL_DIR) $(STAGING_DIR)/host/bin
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/tools/rpcgen/rpcgen $(STAGING_DIR)/host/bin/rpcgen
 endef
 
 define Package/nfs-kernel-server/install
