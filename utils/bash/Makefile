@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2007-2014 OpenWrt.org
+# Copyright (C) 2007-2015 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -10,8 +10,8 @@ include $(TOPDIR)/rules.mk
 BASE_VERSION:=4.3
 
 PKG_NAME:=bash
-PKG_VERSION:=$(BASE_VERSION).30
-PKG_RELEASE:=3
+PKG_VERSION:=$(BASE_VERSION).42
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(BASE_VERSION).tar.gz
 PKG_SOURCE_URL:=@GNU/bash
