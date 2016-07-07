@@ -1,3 +1,5 @@
+diff --git a/setuptools/command/easy_install.py b/setuptools/command/easy_install.py
+index df1655b..24c34e5 100755
 --- a/setuptools/command/easy_install.py
 +++ b/setuptools/command/easy_install.py
 @@ -1885,7 +1885,7 @@ class CommandSpec(list):
