@@ -7,14 +7,17 @@ config resolver 'common'
 	option verbose '0'
 	option msg_buffer_size '8172'
 	option msg_cache_size '100k'
-	option net_ipv6 'false'
+	option net_ipv6 'true'
 	option net_ipv4 'true'
-        option forward_upstream 'true'
+	option forward_upstream 'true'
+	option prefered_resolver 'unbound'
+	option ignore_root_key '0'
 
 config resolver 'kresd'
 	option rundir '/tmp/kresd'
 	option log_stderr '0'
 	option log_stdout '0'
+	option forks '1'
 
 config resolver 'unbound'
 	option outgoing_range '60'
@@ -40,8 +43,13 @@ config resolver 'unbound'
 	option prefetch_key 'yes'
 	#option dnssec_validation 'true'
 
-config resolver 'unboun_remote_control'
+config resolver 'unbound_python'
+	list python_script "/etc/unbound/ubmodule-tst.py"
+
+config resolver 'unbound_remote_control'
 	option control_enable 'no'
 	list control_interface '0.0.0.0'
 	list control_interface '::0'
 
+config resolver 'unbound_includes'
+	list include_path "/etc/unbound/unbound-part.conf"

@@ -1,0 +1,270 @@
+#!/bin/sh /etc/rc.common
+#Copyright (C) 2016 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+
+SERVICE_USE_PID=0
+
+EXTRA_COMMANDS="convert"
+EXTRA_HELP="	convert Converts unbound config to /etc/config/resolver"
+
+START=60
+
+SECTIONFROM=""
+SECTIONTO=""
+
+CONFIGFROM=""
+CONFIGTO=""
+
+prefered_resolver() {
+	local pref_resolver
+	config_load resolver
+	config_get pref_resolver common prefered_resolver
+	echo -ne "$pref_resolver"
+}
+
+PREF_RESOLVER=$(prefered_resolver)
+
+run_cmd() {
+	#Prefers given resolver only if it's installed
+
+	local pref=$2	#unbound
+	local param=$1	#parameter for init script
+
+	if [ "$pref" == "kresd" ]; then
+		if [ -e /etc/init.d/kresd ]; then
+			/etc/init.d/kresd $param
+			echo "Called /etc/init.d/kresd $param"
+		elif [ -e /etc/init.d/unbound ]; then
+			/etc/init.d/unbound $param
+			echo "Called /etc/init.d/unbound $param"
+		else
+			echo "Error! kresd and unbound not found !"
+			exit 1
+		fi
+	elif [ "$pref" == "unbound" ]; then
+		if [ -e /etc/init.d/unbound ]; then
+			/etc/init.d/unbound $param
+			echo "Called /etc/init.d/unbound $param"
+		elif [ -e /etc/init.d/kresd ]; then
+			/etc/init.d/kresd $param
+			echo "Called /etc/init.d/kresd $param"
+		else
+			echo "Error! kresd and unbound not found !"
+			exit 1
+		fi
+	fi
+}
+
+start() {
+	run_cmd start $PREF_RESOLVER
+}
+
+stop() {
+	run_cmd stop $PREF_RESOLVER
+}
+
+set_sections() {
+	SECTIONFROM="$1"
+	SECTIONTO="$2"
+}
+
+set_configs() {
+	CONFIGFROM="$1"
+	CONFIGTO="$2"
+}
+
+conv_opt() {
+	local from_var="$1"
+	local to_var="$2"
+	local val
+
+	config_load $CONFIGFROM
+	if [ "$CONFIGFROM" == "kresd" ]; then
+		kresd_config_get val "$SECTIONFROM" $from_var
+	else
+		config_get val "$SECTIONFROM" $from_var
+	fi
+
+	uci_set "$CONFIGTO" "$SECTIONTO" "$to_var" "$val"
+	uci_commit "$CONFIGTO"
+}
+
+add_to_list() {
+	local to_var=$2
+	local val=$1
+
+	/sbin/uci add_list $CONFIGTO.$SECTIONTO.$to_var="$val"
+}
+
+conv_list() {
+	local from_var="$1"
+	local to_var="$2"
+	local val
+
+	/sbin/uci delete $CONFIGTO.$SECTIONTO.$to_var
+
+	config_load $CONFIGFROM
+	config_list_foreach $SECTIONFROM $from_var add_to_list $to_var
+}
+
+kresd_section_hdl() {
+	local config="$1"
+	local val
+	local from_val=$3
+
+	config_get val $config $from_val
+	echo -ne "$val"
+}
+
+kresd_config_get() {
+	local __resultvar=$1
+	config_load kresd
+	resl=$(config_foreach kresd_section_hdl $2 $1 $3)
+	eval $__resultvar="'$resl'"
+}
+
+get_kresd_port() {
+	local val
+	kresd_config_get val kresd addr
+	echo -ne $val |sed -r 's/.*\#/\1/g'
+}
+
+kresd_add_to_list() {
+	local to_var=$2
+	local val=$1
+	local is_addr=$3
+
+	[ ! -z "$is_addr" ] && val=${1%%\#*}
+	[ "$val" == "::" ] && val="::0"
+	/sbin/uci add_list $CONFIGTO.$SECTIONTO.$to_var="$val"
+}
+
+kresd_conv_list_hdl() {
+	local _config=$1
+	local from_var="$2"
+	local to_var="$3"
+	local val
+	local is_addr
+
+	[ "$from_var" == "addr" ] && is_addr=1
+	config_list_foreach $_config $from_var kresd_add_to_list $to_var $is_addr
+}
+
+kresd_conv_list() {
+	local from_var="$1"
+	local to_var="$2"
+	local val
+	/sbin/uci delete $CONFIGTO.$SECTIONTO.$to_var
+
+	config_load $CONFIGFROM
+	config_foreach kresd_conv_list_hdl kresd $*
+}
+
+kresd_conv() {
+	local conv_common="$1"
+	local port_num
+	set_configs kresd resolver
+	set_sections kresd kresd
+
+	conv_opt forks forks
+	conv_opt log_stdout log_stdout
+	conv_opt log_stderr log_stderr
+
+	#set_configs "unbound" "resolver"
+	if [ "$conv_common" == "1" ]; then
+		port_num=$(get_kresd_port)
+		config_load resolver
+		#config_set common port $port_num
+
+		uci_set resolver common port $port_num
+		uci_commit resolver
+
+		#conv addr
+		set_sections kresd common
+		kresd_conv_list addr interface
+		conv_opt keyfile keyfile
+		conv_opt verbose verbose
+	fi
+
+	set_sections kresd kresd
+	conv_opt rundir rundir
+	conv_opt log_stderr log_stderr
+	conv_opt log_stdout log_stdout
+	conv_opt forks forks
+}
+
+unbound_conv() {
+	local conv_common="$1"
+
+	set_configs "unbound" "resolver"
+	if [ "$conv_common" == "1" ]; then
+		#unbound.server => resolver.common
+		set_sections "server" "common"
+		conv_list interface interface
+		conv_opt verbosity verbose
+		conv_opt port port
+		conv_opt msg_buffer_size msg_buffer_size
+		conv_opt msg_cache_size msg_cache_size
+		conv_opt forward_upstream forward_upstream
+		conv_opt ignore_root_key ignore_root_key
+		conv_opt auto_trust_anchor_file keyfile
+	fi
+
+	#unbound.server => resolver.unbound
+	set_sections "server" "unbound"
+	conv_opt outgoing_range outgoing_range
+	conv_opt outgoing_num_tcp outgoing_num_tcp
+	conv_opt incoming_num_tcp incoming_num_tcp
+	conv_opt msg_cache_slabs msg_cache_slabs
+	conv_opt num_queries_per_thread  num_queries_per_thread
+	conv_opt rrset_cache_size rrset_cache_size
+	conv_opt rrset_cache_slabs rrset_cache_slabs
+	conv_opt infra_cache_slabs infra_cache_slabs
+	conv_opt infra_cache_numhosts infra_cache_numhosts
+
+	conv_list access_control access_control #list
+
+	conv_opt pidfile pidfile
+	conv_opt root_hints root_hints
+	conv_opt target_fetch_policy target_fetch_policy
+	conv_opt harden_short_bufsize harden_short_bufsize
+	conv_opt harden_large_queries harden_large_queries
+	conv_opt key_cache_size key_cache_size
+	conv_opt key_cache_slabs key_cache_slabs
+	conv_opt neg_cache_size neg_cache_size
+	conv_opt prefetch prefetch
+	conv_opt prefetch_key prefetch_key
+
+	#unbound.python =>resolver.unbound_python
+	set_sections "python" "unbound_python"
+	conv_list python_script python_script
+
+	#unbound.remote_control => resolver.unbound_remote_control
+	set_sections "remote_control" "unbound_remote_control"
+	conv_opt control_enable control_enable
+	conv_list control_interface control_interface #list
+
+	#unbound.includes => resolver.unbound_includes
+	set_sections "includes" "unbound_includes"
+	conv_list include_path include_path
+}
+
+convert() {
+	local conv_cmm=1
+
+	echo "Preferred resolver=$PREF_RESOLVER"
+	echo "Convert kresd/unbound configuration to /etc/config/resolver"
+
+	#disable and stop kresd,unbound
+	[ -e /etc/init.d/kresd ] && run_cmd disable kresd && run_cmd stop kresd
+	[ -e /etc/init.d/unbound ] && run_cmd disable unbound && run_cmd stop unbound
+
+	if [ "$PREF_RESOLVER" == "unbound" ]; then
+		[ -e /etc/config/unbound ] && unbound_conv $conv_cmm && conv_cmm=0
+		[ -e /etc/config/kresd ] && kresd_conv $conv_cmm
+	else #kresd
+		[ -e /etc/config/kresd ] && kresd_conv $conv_cmm && conv_cmm=0
+		[ -e /etc/config/unbound ] && unbound_conv $conv_cmm
+	fi
+
+	uci_commit resolver
+}
