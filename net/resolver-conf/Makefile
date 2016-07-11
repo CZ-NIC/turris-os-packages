@@ -39,13 +39,13 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/resolver-config $(1)/etc/config/resolver
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_CONF) ./files/resolver-init $(1)/etc/init.d/resolver
+	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
 endef
 
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 # check if we are on real system
-if [ -z "$${IPKG_INSTROOT}" ]; then
+if [ -z "$$IPKG_INSTROOT" ]; then
 /etc/init.d/resolver convert
 fi
 exit 0
