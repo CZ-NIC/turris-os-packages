@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opkg-trans
-PKG_VERSION:=7
+PKG_VERSION:=8
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=cfd0e3c60871d1a720dc4eb32ae2570d5f0f07dd
+PKG_SOURCE_VERSION:=e3dde2edf105a654efa1ec96ac8798feb40d55e0
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -36,6 +36,7 @@ define Package/opkg-trans/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/opkg-trans $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgupdate $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/opkg $(1)/usr/bin/opkg-pkgupdate-wrapper.sh
 
 	$(INSTALL_DIR) $(1)/etc/updater
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/* $(1)/etc/updater
