@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# We want to generate some "random" time when the updater is run, every 12 hours.
+# The time when the router is first booted or the updater is installed for
+# the first time is as good source of the time as any.
+#
+# With date +%l we get time in interval 1-12. Substracting 1 gives us 0-11, and
+# the next run is 12-23 by adding 12. We may take the minutes as they are.
+#
+# We need to take care not to have leading zeroes, since tools tend to take that
+# as octal. We don't want to study which tools are OK with it, so we simply
+# don't have them.
+
+HOUR=$(($(date +%I | sed -e 's/^0*\(..*\)/\1/') - 1)) # We want 12-hour interval. And no leading zeroes (except for a lone 0)
+HOUR_NEXT=$(($HOUR + 12))
+MINUTE=$(date +%M | sed -e 's/^0*\(..*\)/\1/')
+
+# Generate the cron script
+(
+	echo 'MAILTO=""'
+	echo "$MINUTE	$HOUR,$HOUR_NEXT	*	*	*	root	/usr/bin/updater.sh >/dev/null 2>&1 &"
+	echo "0	0	*	*	*	root	/usr/bin/updater-unstuck.sh >/dev/null 2>&1"
+) >/etc/cron.d/updater
+chmod 0600 /etc/cron.d/updater
