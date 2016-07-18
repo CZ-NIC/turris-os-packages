@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2014 OpenWrt.org
+# Copyright (C) 2014-2016 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=attr
-PKG_REV:=c252ef434219891f616d891b46aad6b06efdd185
-PKG_VERSION:=20150220
+PKG_REV:=315af30d0c1a198dc662a90e6e6ae2456abf2489
+PKG_VERSION:=20160302
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -86,7 +86,7 @@ endef
 define Build/InstallDev
 	mkdir -p $(1)/usr/include
 	mkdir -p $(1)/usr/lib/pkgconfig
-	$(CP) -r $(PKG_INSTALL_DIR)/usr/{include,lib} $(1)/usr/
+	$(CP) $(PKG_INSTALL_DIR)/usr/{include,lib} $(1)/usr/
 endef
 
 $(eval $(call BuildPackage,attr))

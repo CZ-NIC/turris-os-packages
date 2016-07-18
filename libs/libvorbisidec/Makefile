@@ -1,5 +1,5 @@
-# 
-# Copyright (C) 2006-2011 OpenWrt.org
+#
+# Copyright (C) 2006-2016 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,18 +8,24 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libvorbisidec
-PKG_VERSION:=1.0.2+svn18153
+PKG_REV:=20150104
+PKG_VERSION:=1.0.3-$(PKG_REV)
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION).orig.tar.gz
-PKG_SOURCE_URL:=http://ftp.de.debian.org/debian/pool/main/libv/libvorbisidec/
-PKG_MD5SUM:=4190859414c5d6760e316b5cf00fe7c5
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://git.xiph.org/tremor.git
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_VERSION:=b56ffce0c0773ec5ca04c466bc00b1bbcaf65aef
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 
-PKG_LICENSE:=BSD-3c
+PKG_MAINTAINER:=Ted Hess <thess@kitschensync.net>
+
+PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=COPYING
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
+PKG_USE_MIPS16:=0
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -33,7 +39,7 @@ endef
 
 define Package/libvorbisidec/description
 	libvorbisidec is "tremor", a fixed-point implementation of libvorbis.
-	It also has libogg built-in. It is suitable as a replacement for 
+	It also has libogg built-in. It is suitable as a replacement for
 	libvorbis and libogg in tremor-aware applications.
 	Tremor is a decoder only.
 endef

@@ -1,5 +1,5 @@
-# 
-# Copyright (C) 2006-2010 OpenWrt.org
+#
+# Copyright (C) 2006-2015 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,14 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pptpd
-PKG_VERSION:=1.3.4
-PKG_RELEASE:=2
+PKG_VERSION:=1.4.0
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@SF/poptop
-PKG_MD5SUM:=b38df9c431041922c997c1148bedf591
+PKG_MD5SUM:=36f9f45c6ffa92bc3b6e24ae2d053505
 
 PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=1
+
+PKG_MAINTAINER:=Luka Perkov <luka@openwrt.org>
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -24,7 +27,7 @@ define Package/pptpd
   CATEGORY:=Network
   DEPENDS:=+kmod-ppp +kmod-gre +kmod-mppe +ppp
   TITLE:=PopTop pptp server
-  URL:=http://www.poptop.org/
+  URL:=http://poptop.sourceforge.net/
   SUBMENU:=VPN
 endef
 

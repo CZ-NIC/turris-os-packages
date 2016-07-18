@@ -1,5 +1,5 @@
---- pptpd-1.3.4.orig/plugins/Makefile	2006-08-03 04:02:01.000000000 +0200
-+++ pptpd-1.3.4/plugins/Makefile	2009-12-03 21:18:09.678467590 +0100
+--- a/plugins/Makefile
++++ b/plugins/Makefile
 @@ -18,7 +18,7 @@ all:	$(PLUGINS)
  %.so: %.c
  	$(CC) -o $@ $(LDFLAGS) $(CFLAGS) $^ $(LDADD)

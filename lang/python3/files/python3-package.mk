@@ -1,12 +1,15 @@
 #
-# Copyright (C) 2007-2014 OpenWrt.org
+# Copyright (C) 2007-2016 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
 
-PYTHON3_VERSION:=3.4
-PYTHON3_VERSION_MICRO:=3
+PYTHON3_VERSION_MAJOR:=3
+PYTHON3_VERSION_MINOR:=5
+PYTHON3_VERSION_MICRO:=1
+
+PYTHON3_VERSION:=$(PYTHON3_VERSION_MAJOR).$(PYTHON3_VERSION_MINOR)
 
 PYTHON3_DIR:=$(STAGING_DIR)/usr
 PYTHON3_BIN_DIR:=$(PYTHON3_DIR)/bin
@@ -17,18 +20,28 @@ PYTHON3_PKG_DIR:=/usr/lib/python$(PYTHON3_VERSION)/site-packages
 
 PYTHON3:=python$(PYTHON3_VERSION)
 
-HOST_PYTHON3_LIB_DIR:=$(STAGING_DIR_HOST)/lib/python$(PYTHON3_VERSION)
-HOST_PYTHON3_BIN:=$(STAGING_DIR_HOST)/bin/python3
+HOST_PYTHON3_LIB_DIR:=$(STAGING_DIR)/host/lib/python$(PYTHON3_VERSION)
+HOST_PYTHON3_BIN:=$(STAGING_DIR)/host/bin/python3
 
 PYTHON3PATH:=$(PYTHON3_LIB_DIR):$(STAGING_DIR)/$(PYTHON3_PKG_DIR):$(PKG_INSTALL_DIR)/$(PYTHON3_PKG_DIR)
 define HostPython3
 	(	export PYTHONPATH="$(PYTHON3PATH)"; \
 		export PYTHONOPTIMIZE=""; \
 		export PYTHONDONTWRITEBYTECODE=1; \
+		export _python_sysroot="$(STAGING_DIR)"; \
+		export _python_prefix="/usr"; \
+		export _python_exec_prefix="/usr"; \
 		$(1) \
 		$(HOST_PYTHON3_BIN) $(2); \
 	)
 endef
+
+# These configure args are needed in detection of path to Python header files
+# using autotools.
+CONFIGURE_ARGS += \
+	_python_sysroot="$(STAGING_DIR)" \
+	_python_prefix="/usr" \
+	_python_exec_prefix="/usr"
 
 PKG_USE_MIPS16:=0
 # This is required in addition to PKG_USE_MIPS16:=0 because otherwise MIPS16
@@ -49,7 +62,7 @@ define Py3Package
   $(call shexport,Py3Package/$(1)/filespec)
 
   define Package/$(1)/install
-	find $(PKG_INSTALL_DIR) -name "*\.pyc" -o -name "*\.pyo" | xargs rm -f
+	find $(PKG_INSTALL_DIR) -name "*\.pyc" -o -name "*\.pyo" -o -name "*\.exe" | xargs rm -f
 	@echo "$$$$$$$$$$(call shvar,Py3Package/$(1)/filespec)" | ( \
 		IFS='|'; \
 		while read fop fspec fperm; do \
@@ -104,6 +117,6 @@ define Build/Compile/Py3Mod
 		, \
 		./setup.py $(2) \
 	)
-	find $(PKG_INSTALL_DIR) -name "*\.pyc" -o -name "*\.pyo" | xargs rm -f
+	find $(PKG_INSTALL_DIR) -name "*\.pyc" -o -name "*\.pyo" -o -name "*\.exe" | xargs rm -f
 endef
 

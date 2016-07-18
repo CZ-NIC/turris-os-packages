@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2008-2012 OpenWrt.org
+# Copyright (C) 2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -10,6 +10,10 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=hd-idle
 PKG_VERSION:=1.04
 PKG_RELEASE:=1
+
+PKG_MAINTAINER:=Lim Guo Wei <limguowei@gmail.com>
+PKG_LICENSE:=GPL-2.0
+PKG_LICENSE_FILES:=
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tgz
 PKG_SOURCE_URL:=@SF/$(PKG_NAME)
@@ -25,6 +29,10 @@ define Package/hd-idle
   TITLE:=Another idle-daemon for attached hard drives
   SUBMENU:=disc
   URL:=http://hd-idle.sourceforge.net/
+endef
+
+define Package/hd-idle/description
+       hd-idle is a utility program for spinning-down external disks after a period of idle time.
 endef
 
 define Build/Compile

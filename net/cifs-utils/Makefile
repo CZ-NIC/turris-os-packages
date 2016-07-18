@@ -8,12 +8,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cifs-utils
-PKG_VERSION:=5.4
+PKG_VERSION:=6.4
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=http://ftp.samba.org/pub/linux-cifs/cifs-utils
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_MD5SUM:=dde98336c833b59777114145cb8f3c64
+PKG_MD5SUM:=b7d75b67fd3987952896d27256c7293d
+
+PKG_MAINTAINER:=Florian Fainelli <florian@openwrt.org>
+PKG_LICENSE:=GPL-3.0
+PKG_LICENSE_FILES:=COPYING
 
 include $(INCLUDE_DIR)/package.mk
 

@@ -9,12 +9,12 @@ include $(TOPDIR)/rules.mk
 
 # Make sure to also update the dbus-x package
 PKG_NAME:=dbus
-PKG_VERSION:=1.10.0
+PKG_VERSION:=1.10.4
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://dbus.freedesktop.org/releases/dbus/
-PKG_MD5SUM:=5af6297348107a906c8449817a728b3b
+PKG_MD5SUM:=27b8e99ffad603b8acfa25201c6e3d5c
 PKG_MAINTAINER:=Steven Barth <cyrus@openwrt.org>
 PKG_LICENSE:=AFL-2.1
 
@@ -122,11 +122,11 @@ HOST_CONFIGURE_ARGS+= \
 	--disable-verbose-mode \
 	--disable-xml-docs \
 	--with-dbus-user=root \
-	--with-dbus-daemondir="$(STAGIND_DIR_HOST)/bin" \
-	--with-system-socket="$(STAGING_DIR_HOST)/var/run/dbus/system_bus_socket" \
-	--with-system-pid-file="$(STAGING_DIR_HOST)/var/run/dbus.pid" \
+	--with-dbus-daemondir="$(STAGIND_DIR)/host/bin" \
+	--with-system-socket="$(STAGING_DIR)/host/var/run/dbus/system_bus_socket" \
+	--with-system-pid-file="$(STAGING_DIR)/host/var/run/dbus.pid" \
 	--without-x \
-	--libexecdir="$(STAGING_DIR_HOST)/lib/dbus-1"
+	--libexecdir="$(STAGING_DIR)/host/lib/dbus-1"
 
 HOST_CONFIGURE_VARS+= \
 	ac_cv_have_abstract_sockets="yes" \

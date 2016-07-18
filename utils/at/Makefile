@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2008-2014 OpenWrt.org
+# Copyright (C) 2008-2015 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=at
-PKG_VERSION:=3.1.13
+PKG_VERSION:=3.1.16
 PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION).orig.tar.gz
 PKG_SOURCE_URL:=http://ftp.debian.org/debian/pool/main/a/at
-PKG_MD5SUM:=1da61af6c29e323abaaf13ee1a8dad79
+PKG_MD5SUM:=d05da75d9b75d93917ffb16ab48b1e19
+
+PKG_LICENSE:=GPL-2.0+ GPL-3.0+ ISC
+PKG_LICENSE_FILES:=COPYING Copyright
+PKG_MAINTAINER:=Phil Eichinger <phil@zankapfel.net>
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -23,7 +27,6 @@ define Package/at
   DEPENDS:=+libelf1
   TITLE:=Delayed job execution and batch processing
   URL:=http://packages.debian.org/stable/at
-  MAINTAINER:=Luka Perkov <openwrt@lukaperkov.net>
 endef
 
 define Package/at/description
@@ -44,15 +47,6 @@ CONFIGURE_ARGS+=--prefix=/usr \
 CONFIGURE_VARS += \
 	ac_cv_header_security_pam_appl_h=no
 
-define Package/at/install
-	$(INSTALL_DIR) $(1)/usr/bin $(1)/usr/sbin $(1)/etc/init.d/
-	$(INSTALL_BIN) ./files/atd.init $(1)/etc/init.d/atd
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/at $(1)/usr/bin
-	ln -sf at $(1)/usr/bin/atq
-	ln -sf at $(1)/usr/bin/atrm
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/atd $(1)/usr/sbin
-endef
-
 define Package/at/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
@@ -67,5 +61,13 @@ define Package/at/prerm
 /etc/init.d/atd stop
 endef
 
+define Package/at/install
+	$(INSTALL_DIR) $(1)/usr/bin $(1)/usr/sbin $(1)/etc/init.d/
+	$(INSTALL_BIN) ./files/atd.init $(1)/etc/init.d/atd
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/at $(1)/usr/bin
+	ln -sf at $(1)/usr/bin/atq
+	ln -sf at $(1)/usr/bin/atrm
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/atd $(1)/usr/sbin
+endef
 
 $(eval $(call BuildPackage,at))

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2010 OpenWrt.org
+# Copyright (C) 2006-2014 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -15,6 +15,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@SF/mad \
 	ftp://ftp.mars.org/pub/mpeg/
 PKG_MD5SUM:=1be543bc30c56fb6bea1d7bf6a64e66c
+PKG_MAINTAINER:=Ted Hess <thess@kitschensync.net>
 
 PKG_LICENSE:=GPLv2
 PKG_LICENSE_FILES:=COPYING
@@ -45,9 +46,9 @@ define Package/libmad
 endef
 
 define Package/libmad/description
-	MAD is a high-quality MPEG audio decoder. It currently supports 
-	MPEG-1 and the MPEG-2 extension to lower sampling frequencies, 
-	as well as the de facto MPEG 2.5 format. All three audio layers - 
+	MAD is a high-quality MPEG audio decoder. It currently supports
+	MPEG-1 and the MPEG-2 extension to lower sampling frequencies,
+	as well as the de facto MPEG 2.5 format. All three audio layers -
 	Layer I, Layer II, and Layer III (i.e. MP3) - are fully implemented.
 endef
 

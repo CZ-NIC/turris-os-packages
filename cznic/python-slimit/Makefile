@@ -22,6 +22,7 @@ HOST_BUILD_DEPENDS:=python/host python-ply/host
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
 $(call include_mk, python-package.mk)
+$(call include_mk, python-host.mk)
 
 define Package/python-slimit
 	SUBMENU:=Python
@@ -42,12 +43,14 @@ define Build/Compile
 endef
 
 define Host/Compile
-	$(call Build/Compile/Host/PyMod,,install --prefix=$(STAGING_DIR_HOST))
+	$(call Build/Compile/HostPyMod,,build)
 endef
 
 define Host/Install
+	$(call Build/Compile/HostPyMod,,install --prefix="" --root="$(STAGING_DIR)/host")
 	$(INSTALL_BIN) ./files/slimit-wrapper.sh $(STAGING_DIR_HOST)/bin/slimit
 	# copy a wrapper script so just "slimit" can be called from buildroot environment
+	$(SED) 's~export PYTHONPATH=.*~export PYTHONPATH="$(HOST_PYTHONPATH)"~' $(STAGING_DIR_HOST)/bin/slimit
 	$(SED) 's~python~$(HOST_PYTHON_BIN)~' $(STAGING_DIR_HOST)/bin/slimit
 endef
 
