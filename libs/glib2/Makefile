@@ -45,7 +45,8 @@ define Package/glib2/description
 endef
 
 HOST_CONFIGURE_ARGS += \
-	--with-libiconv=no
+	--with-libiconv=no \
+  --disable-selinux
 
 TARGET_CONFIGURE_ARGS += \
 	--with-libiconv=gnu
