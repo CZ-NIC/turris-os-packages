@@ -36,7 +36,7 @@ define Package/mpd/Default
   TITLE:=Music Player Daemon
   URL:=http://www.musicpd.org/
   DEPENDS:= +glib2 +libcurl +libpthread +libmpdclient $(ICONV_DEPENDS) +libstdcpp \
-	    +libflac +BUILD_PATENTED:libmad +libvorbisidec +AUDIO_SUPPORT:alsa-lib
+	    +libflac +shine +BUILD_PATENTED:libmad +libvorbisidec +AUDIO_SUPPORT:alsa-lib
 endef
 
 define Package/mpd/Default/description
