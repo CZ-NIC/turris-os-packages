@@ -209,14 +209,6 @@ FFMPEG_AUDIO_PROTOCOLS:= \
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)
 
-PKG_CONFIG_DEPENDS:= \
-	$(patsubst %,CONFIG_FFMPEG_CUSTOM_ENCODER_%,$(FFMPEG_CUSTOM_ENCODERS)) \
-	$(patsubst %,CONFIG_FFMPEG_CUSTOM_DECODER_%,$(FFMPEG_CUSTOM_DECODERS)) \
-	$(patsubst %,CONFIG_FFMPEG_CUSTOM_MUXER_%,$(FFMPEG_CUSTOM_DEMUXERS)) \
-	$(patsubst %,CONFIG_FFMPEG_CUSTOM_DEMUXER_%,$(FFMPEG_CUSTOM_DEMUXERS)) \
-	$(patsubst %,CONFIG_FFMPEG_CUSTOM_PARSER_%,$(FFMPEG_CUSTOM_PARSERS)) \
-	$(patsubst %,CONFIG_FFMPEG_CUSTOM_PROTOCOL_%,$(FFMPEG_CUSTOM_PROTOCOLS))
-
 include $(INCLUDE_DIR)/package.mk
 
 define Package/ffmpeg/Default
@@ -235,7 +227,7 @@ $(call Package/ffmpeg/Default)
  SECTION:=multimedia
  CATEGORY:=Multimedia
  TITLE+= program
- DEPENDS+= +libpthread +libffmpeg-full
+ DEPENDS+= +libpthread +libffmpeg
  VARIANT:=full
 endef
 
@@ -251,7 +243,7 @@ $(call Package/ffmpeg/Default)
  SECTION:=multimedia
  CATEGORY:=Multimedia
  TITLE+= CLI media identifier
- DEPENDS+= +libffmpeg-full
+ DEPENDS+= +libffmpeg
  VARIANT:=full
 endef
 
@@ -267,7 +259,7 @@ $(call Package/ffserver/Default)
  SECTION:=multimedia
  CATEGORY:=Multimedia
  TITLE+= streaming server
- DEPENDS+= +libpthread +libffmpeg-full
+ DEPENDS+= +libpthread +libffmpeg
  VARIANT:=full
 endef
 
@@ -278,76 +270,21 @@ $(call Package/ffmpeg/Default/description)
 endef
 
 
-define Package/libffmpeg/Default
+define Package/libffmpeg
 $(call Package/ffmpeg/Default)
  SECTION:=libs
  CATEGORY:=Libraries
- TITLE+= libraries
- DEPENDS+= +libpthread +zlib +libbz2
- PROVIDES:= libffmpeg
-endef
-
-
-define Package/libffmpeg-custom
-$(call Package/libffmpeg/Default)
- TITLE+= (custom)
- DEPENDS+= @DEVEL @!ALL +libopus +libspeex
- VARIANT:=custom
- MENU:=1
-endef
-
-define Package/libffmpeg-custom/config
-source "$(SOURCE)/Config.in"
-endef
-
-define Package/libffmpeg-custom/description
-$(call Package/ffmpeg/Default/description)
- .
- This package contains customized FFmpeg shared libraries.
-endef
-
-
-define Package/libffmpeg-audio-dec
-$(call Package/libffmpeg/Default)
- TITLE+= (audio)
- DEPENDS+= @BUILD_PATENTED +libspeex
- VARIANT:=audio-dec
-endef
-
-define Package/libffmpeg-audio-dec/description
-$(call Package/ffmpeg/Default/description)
- .
- This package contains FFmpeg shared libraries for audio decoding
-endef
-
-
-define Package/libffmpeg-full
-$(call Package/libffmpeg/Default)
- TITLE+= (full)
- DEPENDS+= @BUILD_PATENTED +alsa-lib
+ TITLE+= libraries (full)
+ DEPENDS+= +libpthread +zlib +libbz2 +libspeex +alsa-lib
+ PROVIDES:= libffmpeg-mini libffmpeg-full libffmpeg-custom libffmpeg-audio-dec
  VARIANT:=full
 endef
 
-define Package/libffmpeg-full/description
+define Package/libffmpeg/description
 $(call Package/ffmpeg/Default/description)
  .
  This package contains full-featured FFmpeg shared libraries.
 endef
-
-
-define Package/libffmpeg-mini
-$(call Package/libffmpeg/Default)
- TITLE+= (mini)
- DEPENDS+= @BUILD_PATENTED
- VARIANT:=mini
-endef
-
-define Package/libffmpeg-mini/description
-$(call Package/ffmpeg/Default/description)
- .
- This package contains minimal-featured FFmpeg shared libraries.
-endef
-
 
 FFMPEG_CONFIGURE:= \
 	CFLAGS="$(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $(FPIC)" \
@@ -387,8 +324,6 @@ FFMPEG_CONFIGURE:= \
 	--disable-fma3 \
 	--disable-fma4 \
 	--disable-avx2 \
-	--disable-vfp \
-	--disable-neon \
 	--disable-inline-asm \
 	--disable-yasm \
 	--disable-mips32r2 \
@@ -403,92 +338,14 @@ FFMPEG_CONFIGURE:= \
 	--disable-vdpau \
 	--disable-outdevs
 
-ifeq ($(BUILD_VARIANT),custom)
-
-  FFMPEG_ENABLE= \
-	$(foreach c, $(2), \
-		$(if $($(3)_$(c)),--enable-$(1)="$(c)") \
-	)
-
-  FFMPEG_CONFIGURE+= \
-	--disable-programs \
-	--disable-avfilter \
-	--disable-postproc \
-	--disable-swresample \
-	--disable-swscale \
-	--disable-everything \
-	$(call FFMPEG_ENABLE,encoder,$(FFMPEG_CUSTOM_ENCODERS),CONFIG_FFMPEG_CUSTOM_ENCODER) \
-	$(call FFMPEG_ENABLE,decoder,$(FFMPEG_CUSTOM_DECODERS),CONFIG_FFMPEG_CUSTOM_DECODER) \
-	$(call FFMPEG_ENABLE,muxer,$(FFMPEG_CUSTOM_MUXERS),CONFIG_FFMPEG_CUSTOM_MUXER) \
-	$(call FFMPEG_ENABLE,demuxer,$(FFMPEG_CUSTOM_DEMUXERS),CONFIG_FFMPEG_CUSTOM_DEMUXER) \
-	$(call FFMPEG_ENABLE,parser,$(FFMPEG_CUSTOM_PARSERS),CONFIG_FFMPEG_CUSTOM_PARSER) \
-	$(call FFMPEG_ENABLE,protocol,$(FFMPEG_CUSTOM_PROTOCOLS),CONFIG_FFMPEG_CUSTOM_PROTOCOL) \
-
-ifeq ($(CONFIG_FFMPEG_CUSTOM_SELECT_adpcm),y)
-  FFMPEG_CONFIGURE+= \
-	--enable-decoder=adpcm_ima_wav \
-	--enable-decoder=adpcm_ima_qt \
-	--enable-decoder=adpcm_ms \
-
-endif
-
-ifeq ($(CONFIG_FFMPEG_CUSTOM_SELECT_libopus),y)
-  FFMPEG_CONFIGURE+= \
-	--enable-libopus --enable-decoder=libopus \
-
-endif
-
-ifeq ($(CONFIG_FFMPEG_CUSTOM_SELECT_speex),y)
-  FFMPEG_CONFIGURE+= \
-	--enable-libspeex --enable-decoder=libspeex \
-
-endif
-
-endif
-
-ifeq ($(BUILD_VARIANT),audio-dec)
-
-  FFMPEG_ENABLE= \
-	$(foreach c, $(2), \
-		--enable-$(1)="$(c)" \
-	)
-
-  FFMPEG_CONFIGURE+= \
-	--disable-programs \
-	--disable-avfilter \
-	--disable-postproc \
-	--disable-swresample \
-	--disable-swscale \
-	--disable-everything \
-	$(call FFMPEG_ENABLE,decoder,$(FFMPEG_AUDIO_DECODERS)) \
-	$(call FFMPEG_ENABLE,demuxer,$(FFMPEG_AUDIO_DEMUXERS)) \
-	$(call FFMPEG_ENABLE,parser,$(FFMPEG_AUDIO_PARSERS)) \
-	$(call FFMPEG_ENABLE,protocol,$(FFMPEG_AUDIO_PROTOCOLS)) \
-	--enable-libspeex --enable-decoder=libspeex \
-	--disable-decoder=pcm_bluray,pcm_dvd \
-
-endif
-
-ifeq ($(BUILD_VARIANT),mini)
-
-  FFMPEG_ENABLE= \
-	$(foreach c, $(2), \
-		--enable-$(1)="$(c)" \
-	)
-
-  FFMPEG_CONFIGURE+= \
-	--disable-programs \
-	--disable-avdevice \
-	--disable-avfilter \
-	--disable-postproc \
-	--disable-swresample \
-	--disable-swscale \
-	--disable-everything \
-	$(call FFMPEG_ENABLE,decoder,$(FFMPEG_MINI_DECODERS)) \
-	$(call FFMPEG_ENABLE,demuxer,$(FFMPEG_MINI_DEMUXERS)) \
-	$(call FFMPEG_ENABLE,parser,$(FFMPEG_MINI_PARSERS)) \
-	$(call FFMPEG_ENABLE,protocol,$(FFMPEG_MINI_PROTOCOLS)) \
-
+ifeq ($(CONFIG_TARGET_mvebu),)
+FFMPEG_CONFIGURE+= \
+	--disable-vfp \
+	--disable-neon
+else
+FFMPEG_CONFIGURE+= \
+	--enable-vfp \
+	--enable-neon
 endif
 
 ifneq ($(CONFIG_TARGET_x86),)
@@ -505,16 +362,7 @@ define Build/Compile
 		all install
 endef
 
-define Build/InstallDev/custom
-	$(INSTALL_DIR) $(1)/usr/include
-	$(CP) $(PKG_INSTALL_DIR)/usr/include/lib{avcodec,avdevice,avformat,avutil} $(1)/usr/include/
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib{avcodec,avdevice,avformat,avutil}.{a,so*} $(1)/usr/lib/
-	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/lib{avcodec,avdevice,avformat,avutil}.pc $(1)/usr/lib/pkgconfig/
-endef
-
-define Build/InstallDev/full
+define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/lib{avcodec,avdevice,avfilter,avformat,avutil,postproc,swresample,swscale} $(1)/usr/include/
 	$(INSTALL_DIR) $(1)/usr/lib
@@ -522,41 +370,6 @@ define Build/InstallDev/full
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/lib{avcodec,avdevice,avfilter,avformat,avutil,postproc,swresample,swscale}.pc $(1)/usr/lib/pkgconfig/
 endef
-
-define Build/InstallDev/mini
-	$(INSTALL_DIR) $(1)/usr/include
-	$(CP) $(PKG_INSTALL_DIR)/usr/include/lib{avcodec,avformat,avutil} $(1)/usr/include/
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib{avcodec,avformat,avutil}.{a,so*} $(1)/usr/lib/
-	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/lib{avcodec,avformat,avutil}.pc $(1)/usr/lib/pkgconfig/
-endef
-
-Build/InstallDev/audio-dec = $(Build/InstallDev/custom)
-
-# XXX: attempt at installing "best" dev files available
-ifeq ($(BUILD_VARIANT),custom)
-  # XXX: only install "custom" dev files if -full & -mini are not selected
-  ifeq ($(CONFIG_PACKAGE_libffmpeg-full)$(CONFIG_PACKAGE_libffmpeg-mini),)
-    Build/InstallDev = $(Build/InstallDev/custom)
-  endif
-endif
-ifeq ($(BUILD_VARIANT),audio-dec)
-  # XXX: only install "audio-dec" dev files if -full & -mini are not selected
-  ifeq ($(CONFIG_PACKAGE_libffmpeg-full)$(CONFIG_PACKAGE_libffmpeg-mini),)
-    Build/InstallDev = $(Build/InstallDev/audio-dec)
-  endif
-endif
-ifeq ($(BUILD_VARIANT),full)
-  # XXX: always install "full" dev files if -full is selected
-  Build/InstallDev = $(Build/InstallDev/full)
-endif
-ifeq ($(BUILD_VARIANT),mini)
-  # XXX: only install "mini" dev files if -full is not selected
-  ifeq ($(CONFIG_PACKAGE_libffmpeg-full),)
-    Build/InstallDev = $(Build/InstallDev/mini)
-  endif
-endif
 
 define Package/ffmpeg/install
 	$(INSTALL_DIR) $(1)/usr/bin
@@ -573,27 +386,12 @@ define Package/ffserver/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/ffserver $(1)/usr/bin/
 endef
 
-define Package/libffmpeg-custom/install
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib{avcodec,avdevice,avformat,avutil}.so.* $(1)/usr/lib/
-endef
-
-define Package/libffmpeg-full/install
+define Package/libffmpeg/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib{avcodec,avdevice,avfilter,avformat,avutil,postproc,swresample,swscale}.so.* $(1)/usr/lib/
 endef
 
-define Package/libffmpeg-mini/install
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib{avcodec,avformat,avutil}.so.* $(1)/usr/lib/
-endef
-
-Package/libffmpeg-audio-dec/install = $(Package/libffmpeg-custom/install)
-
 $(eval $(call BuildPackage,ffmpeg))
 $(eval $(call BuildPackage,ffprobe))
 $(eval $(call BuildPackage,ffserver))
-$(eval $(call BuildPackage,libffmpeg-custom))
-$(eval $(call BuildPackage,libffmpeg-full))
-$(eval $(call BuildPackage,libffmpeg-mini))
-$(eval $(call BuildPackage,libffmpeg-audio-dec))
+$(eval $(call BuildPackage,libffmpeg))
