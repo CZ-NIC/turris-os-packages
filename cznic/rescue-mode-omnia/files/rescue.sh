@@ -77,8 +77,8 @@ mount_fs() {
 
 	$BIN_MOUNT $1 $2
 	if [ $? -ne 0 ]; then
-		e "Mount $1 on $2 failed. Exit."
-		exit 22
+		e "Mount $1 on $2 failed."
+		return 22
 	fi
 }
 
@@ -103,6 +103,9 @@ reflash () {
 			d "Testing FS on device $dev"
 			[ -b "/dev/$dev" ] || continue
 			mount_fs "/dev/$dev" $SRCFS_MOUNTPOINT
+			if [ $? -ne 0 ]; then
+				continue
+			fi
 			d "Searching for ${SRCFS_MOUNTPOINT}/${MEDKIT_FILENAME} on $dev"
 			IMG="$(ls -1 ${SRCFS_MOUNTPOINT}/${MEDKIT_FILENAME} | sort | tail -n 1)"
 			if [ -n "${IMG}" ] && [ -f "${IMG}" ]; then
