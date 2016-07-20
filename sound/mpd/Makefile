@@ -37,7 +37,7 @@ define Package/mpd/Default
   URL:=http://www.musicpd.org/
   DEPENDS:= +glib2 +libcurl +libpthread +libmpdclient +libstdcpp $(ICONV_DEPENDS) \
 	    +libflac +BUILD_PATENTED:libmad +libvorbisidec +AUDIO_SUPPORT:alsa-lib \
-            +boost +boost-container +libexpat
+            +boost +boost-container +libexpat +shine
 endef
 
 define Package/mpd/Default/description
