@@ -17,7 +17,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec@nic.cz>
 PKG_LICENSE:=GPL-3.0
 
-PKG_INSTALL:=1
+PKG_INSTALL:=0
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -39,8 +39,12 @@ endef
 define Build/Compile
 endef
 
+define Build/Install
+endef
+
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_DIR) $(1)/etc/resolver
 	$(INSTALL_CONF) ./files/resolver-config $(1)/etc/config/resolver
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
@@ -50,12 +54,14 @@ define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 # check if we are on real system
 if [ -z "$$IPKG_INSTROOT" ]; then
+if [ ! -f /etc/resolver/converted ]; then
 /etc/init.d/resolver convert
+touch /etc/resolver/converted
+fi
+/etc/init.d/resolver enable
 fi
 exit 0
 endef
-
-
 
 $(eval $(call BuildPackage,resolver-conf))
 
