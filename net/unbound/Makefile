@@ -28,18 +28,13 @@ define Package/unbound/Default
   DEPENDS:=+libldns +libopenssl
 endef
 
-ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
-
-TURRIS_DEPS:=+cert-backup
-endif
-
 define Package/unbound
   $(call Package/unbound/Default)
   SECTION:=net
   CATEGORY:=Network
   SUBMENU:=IP Addresses and Names
   TITLE+= (daemon)
-  DEPENDS+= +libunbound $(TURRIS_DEPS)
+  DEPENDS+= +libunbound +cert-backup
 endef
 
 define Package/unbound/description
@@ -151,7 +146,6 @@ define Package/unbound/install
 	$(LN) /var/etc/unbound/unbound.conf $(1)/etc/unbound/unbound.conf
 endef
 
-ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
 define Package/unbound/postinst
 #!/bin/sh
 set -ex
@@ -160,15 +154,6 @@ set -ex
 /usr/share/unbound/postinst
 }
 endef
-else
-define Package/unbound/postinst
-#!/bin/sh
-set -ex
-[ -n "$$IPKG_INSTROOT" ] || {
-/usr/share/unbound/postinst
-}
-endef
-endif
 
 define Package/unbound/prerm
 #!/bin/sh

@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cznic-cacert-bundle
-PKG_VERSION:=30
+PKG_VERSION:=31
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -19,8 +19,6 @@ PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
-
-ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
 
 TURRIS_DEPS:=+cert-backup
 
@@ -36,23 +34,10 @@ c_rehash .
 get-api-crl
 }
 endef
-else
-define Package/$(PKG_NAME)/postinst
-#!/bin/sh
-
-cd "$${IPKG_INSTROOT}"/etc/ssl/certs
-c_rehash .
-
-if [ -z "$${IPKG_INSTROOT}" ] ; then
-	get-api-crl
-fi
-endef
-
-endif
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:= $(TURRIS_DEPS) +vixie-cron +c-rehash
+	DEPENDS:=+cert-backup +vixie-cron +c-rehash
 endef
 
 # The built is empty. But as there's no makefile in the git repo, we need to
