@@ -13,6 +13,7 @@ SECTIONTO=""
 
 CONFIGFROM=""
 CONFIGTO=""
+LAST_SERVICE=""
 
 prefered_resolver() {
 	local pref_resolver
@@ -32,9 +33,11 @@ run_cmd() {
 	if [ "$pref" == "kresd" ]; then
 		if [ -e /etc/init.d/kresd ]; then
 			/etc/init.d/kresd $param
+			LAST_SERVICE=/etc/init.d/kresd
 			echo "Called /etc/init.d/kresd $param"
 		elif [ -e /etc/init.d/unbound ]; then
 			/etc/init.d/unbound $param
+			LAST_SERVICE=/etc/init.d/unbound
 			echo "Called /etc/init.d/unbound $param"
 		else
 			echo "Error! kresd and unbound not found !"
@@ -43,9 +46,11 @@ run_cmd() {
 	elif [ "$pref" == "unbound" ]; then
 		if [ -e /etc/init.d/unbound ]; then
 			/etc/init.d/unbound $param
+			LAST_SERVICE=/etc/init.d/unbound
 			echo "Called /etc/init.d/unbound $param"
 		elif [ -e /etc/init.d/kresd ]; then
 			/etc/init.d/kresd $param
+			LAST_SERVICE=/etc/init.d/kresd
 			echo "Called /etc/init.d/kresd $param"
 		else
 			echo "Error! kresd and unbound not found !"
@@ -55,11 +60,21 @@ run_cmd() {
 }
 
 start() {
+	local pid_num
 	run_cmd start $PREF_RESOLVER
+	rm /var/run/resolver.pid
+	if [ "$LAST_SERVICE" == "/etc/init.d/unbound" ]; then
+		cp /var/run/unbound.pid /var/run/resolver.pid
+	else #kresd
+		sleep 1
+		pid_num=$(ps|grep kres|grep -v grep|tail -n 1|awk '{print $1}')
+		echo $pid_num>/var/run/resolver.pid
+	fi
 }
 
 stop() {
 	run_cmd stop $PREF_RESOLVER
+	rm /var/run/resolver.pid
 }
 
 set_sections() {
