@@ -10,7 +10,7 @@ config resolver 'common'
 	option net_ipv6 'true'
 	option net_ipv4 'true'
 	option forward_upstream 'true'
-	option prefered_resolver 'unbound'
+	option prefered_resolver 'kresd'
 	option ignore_root_key '0'
 
 config resolver 'kresd'
