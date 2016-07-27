@@ -43,6 +43,8 @@ define Package/opkg-trans/install
 
 	$(INSTALL_DIR) $(1)/etc/updater/hook_preupdate
 	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
+	touch $(1)/etc/updater/hook_preupdate/.keep
+	touch $(1)/etc/updater/hook_postupdate/.keep
 endef
 
 define Package/opkg-trans/conffiles
