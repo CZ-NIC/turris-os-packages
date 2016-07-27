@@ -68,7 +68,11 @@ define Package/updater-ng/install
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/updater.config $(1)/etc/config/updater
-
+ifneq ($(PKG_BRANCH),)
+	echo >> $(1)/etc/config/updater
+	echo "config override 'override'" >> $(1)/etc/config/updater
+	echo "	option branch '$(PKG_BRANCH)'" >> $(1)/etc/config/updater
+endif
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/init $(1)/etc/init.d/updater
 
