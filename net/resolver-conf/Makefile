@@ -32,6 +32,10 @@ define Package/$(PKG_NAME)/description
   Configuration for knot-resolver and unbound.
 endef
 
+define Package/$(PKG_NAME)/conffiles
+/etc/config/resolver
+endef
+
 define Build/Compile
 endef
 
