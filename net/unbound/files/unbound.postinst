@@ -4,7 +4,6 @@ set -ex
 
 /etc/uci-defaults/unbound && rm /etc/uci-defaults/unbound
 
-/etc/init.d/unbound enable || true
 sleep 2
 /etc/init.d/dnsmasq restart
 sleep 20 # Cooldown for above (problems in times of reinstall)

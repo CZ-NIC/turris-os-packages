@@ -55,9 +55,9 @@ set_bool_parameter() {
     local def="$3"
     local val
 
-    config_get val "$section" "$var"
+    config_get_bool val "$section" "$var"
     val=${val:-$def}
-    val=$(echo $val | sed -e "s/true/yes/g" -e "s/false/no/g")
+    val=$(echo $val | sed -e "s/1/yes/g" -e "s/0/no/g")
     echo -e "\t$opt: $val" >> "$CONFIGFILE"
 
 }
