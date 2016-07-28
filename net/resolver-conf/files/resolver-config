@@ -41,7 +41,6 @@ config resolver 'unbound'
 	option neg_cache_size '10k'
 	option prefetch 'yes'
 	option prefetch_key 'yes'
-	#option dnssec_validation 'true'
 
 config resolver 'unbound_python'
 	list python_script "/etc/unbound/ubmodule-tst.py"
