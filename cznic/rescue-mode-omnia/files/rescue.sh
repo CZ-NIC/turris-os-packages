@@ -19,10 +19,6 @@
 
 DEBUG=1
 
-I2C_BUS="1"
-I2C_ADDR="0x2a"
-I2C_REG="0x9"
-
 DEV="/dev/mmcblk0"
 FS_DEV="${DEV}p1"
 FS_MOUNTPOINT="/mnt"
@@ -149,10 +145,13 @@ EOF
 		d "Rootdir is $ROOTDIR"
 		cd $ROOTDIR
 		$BIN_TAR zxf $IMG
+		RD=`$BIN_DATE '+%s' -r sbin/init`
 		cd /
 		$BIN_BTRFS subvolume snapshot "${FS_MOUNTPOINT}/@" "${FS_MOUNTPOINT}/@factory"
 		umount_fs $FS_MOUNTPOINT
 		umount_fs $SRCFS_MOUNTPOINT
+
+		check_reset_clock $RD
 	else
 		d "No medkit image found. Exit to shell."
 		exit 0
@@ -161,9 +160,19 @@ EOF
 	d "Reflash succeeded."
 }
 
-reset_clock () {
-	$BIN_DATE 201603010000
-	$BIN_HWCLOCK -w
+check_reset_clock () {
+	D=${1:-`$BIN_DATE '+%s' -d 201606010000`}
+	CD=`$BIN_DATE '+%s'`
+
+	# reset clock to the date in param if it is before the 
+	# system time or behind for more than 10 days from the system time
+	if [ $D -gt $CD ] || [ $(( $D + 864000 )) -lt $CD ]; then
+		d "Resetting clock to $D ."
+		$BIN_DATE "@${D}"
+		$BIN_HWCLOCK -w
+	else
+		d "Current time `$BIN_DATE` seems to be OK. Keeping it."
+	fi
 }
 
 
@@ -197,7 +206,6 @@ case "$MODE" in
 		;;
 	3)
 		d "Mode: Reflash..."
-		reset_clock
 		reflash
 		;;
 	*)
