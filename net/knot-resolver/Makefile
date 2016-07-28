@@ -59,12 +59,10 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 set -ex
-if [ -z "$$IPKG_INSTROOT" ]; then 
-/etc/init.d/kresd enable || true
-sleep 2
+if [ -z "$$IPKG_INSTROOT" ]; then
 /etc/init.d/dnsmasq restart
 sleep 2 # Cooldown for above (problems in times of reinstall)
-/etc/init.d/kresd restart 
+/etc/init.d/kresd restart
 fi
 endef
 
