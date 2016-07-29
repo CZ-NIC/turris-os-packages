@@ -29,15 +29,18 @@ run_cmd() {
 
 	local pref=$2	#unbound
 	local param=$1	#parameter for init script
+	if ([ "$param" == "stop" ] || [ "$param" == "reload" ]) && [ -f /var/run/resolver.name ]; then
+		pref=$(cat /var/run/resolver.name)
+	fi
 
 	if [ "$pref" == "kresd" ]; then
 		if [ -e /etc/init.d/kresd ]; then
 			/etc/init.d/kresd $param
-			LAST_SERVICE=/etc/init.d/kresd
+			LAST_SERVICE=kresd
 			echo "Called /etc/init.d/kresd $param"
 		elif [ -e /etc/init.d/unbound ]; then
 			/etc/init.d/unbound $param
-			LAST_SERVICE=/etc/init.d/unbound
+			LAST_SERVICE=unbound
 			echo "Called /etc/init.d/unbound $param"
 		else
 			echo "Error! kresd and unbound not found !"
@@ -46,11 +49,11 @@ run_cmd() {
 	elif [ "$pref" == "unbound" ]; then
 		if [ -e /etc/init.d/unbound ]; then
 			/etc/init.d/unbound $param
-			LAST_SERVICE=/etc/init.d/unbound
+			LAST_SERVICE=unbound
 			echo "Called /etc/init.d/unbound $param"
 		elif [ -e /etc/init.d/kresd ]; then
 			/etc/init.d/kresd $param
-			LAST_SERVICE=/etc/init.d/kresd
+			LAST_SERVICE=kresd
 			echo "Called /etc/init.d/kresd $param"
 		else
 			echo "Error! kresd and unbound not found !"
@@ -63,18 +66,23 @@ start() {
 	local pid_num
 	run_cmd start $PREF_RESOLVER
 	rm /var/run/resolver.pid
-	if [ "$LAST_SERVICE" == "/etc/init.d/unbound" ]; then
+	if [ "$LAST_SERVICE" == "unbound" ]; then
 		cp /var/run/unbound.pid /var/run/resolver.pid
 	else #kresd
 		sleep 1
 		pid_num=$(ps|grep kres|grep -v grep|tail -n 1|awk '{print $1}')
 		echo $pid_num>/var/run/resolver.pid
 	fi
+	echo $LAST_SERVICE>/var/run/resolver.name
 }
 
 stop() {
 	run_cmd stop $PREF_RESOLVER
 	rm /var/run/resolver.pid
+}
+
+reload() {
+	run_cmd reload $PREF_RESOLVER
 }
 
 set_sections() {
