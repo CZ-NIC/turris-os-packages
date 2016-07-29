@@ -165,8 +165,8 @@ check_reset_clock () {
 	CD=`$BIN_DATE '+%s'`
 
 	# reset clock to the date in param if it is before the 
-	# system time or behind for more than 10 days from the system time
-	if [ $D -gt $CD ] || [ $(( $D + 864000 )) -lt $CD ]; then
+	# system time or behind for more than 360 days from the system time
+	if [ $D -gt $CD ] || [ $(( $D + 31104000 )) -lt $CD ]; then
 		d "Resetting clock to $D ."
 		$BIN_DATE "@${D}"
 		$BIN_HWCLOCK -w
