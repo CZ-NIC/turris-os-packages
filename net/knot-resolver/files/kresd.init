@@ -135,3 +135,9 @@ start_service() {
 	config_load resolver
 	run_instance
 }
+
+reload_service()
+{
+	stop
+	start
+}
