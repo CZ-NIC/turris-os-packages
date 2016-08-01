@@ -53,6 +53,7 @@ define Package/schnapps/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps/schnapps $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/updater/hook_preupdate
 	$(INSTALL_BIN) ./files/updater_hook.sh $(1)/etc/updater/hook_preupdate/05_schnapps.sh
+	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
 	cat ./files/updater_hook.sh | sed 's|pre|post|g' > $(1)/etc/updater/hook_postupdate/05_schnapps.sh
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps/schnapps.cron $(1)/etc/cron.d/schnapps
