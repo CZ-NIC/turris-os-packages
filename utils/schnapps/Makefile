@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=schnapps
-PKG_VERSION:=0.7
+PKG_VERSION:=0.8
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=a0c68c338d99686b60af662061b1e7dff32876a1
+PKG_SOURCE_VERSION:=fcb4ff883d39f78c92d5d373240e54d53df3a962
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -53,6 +53,7 @@ define Package/schnapps/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps/schnapps $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/updater/hook_preupdate
 	$(INSTALL_BIN) ./files/updater_hook.sh $(1)/etc/updater/hook_preupdate/05_schnapps.sh
+	cat ./files/updater_hook.sh | sed 's|pre|post|g' > $(1)/etc/updater/hook_postupdate/05_schnapps.sh
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps/schnapps.cron $(1)/etc/cron.d/schnapps
 endef
