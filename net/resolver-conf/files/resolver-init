@@ -26,11 +26,23 @@ PREF_RESOLVER=$(prefered_resolver)
 
 run_cmd() {
 	#Prefers given resolver only if it's installed
-
 	local pref=$2	#unbound
 	local param=$1	#parameter for init script
-	if ([ "$param" == "stop" ] || [ "$param" == "reload" ]) && [ -f /var/run/resolver.name ]; then
-		pref=$(cat /var/run/resolver.name)
+	local cur
+
+	if [ -f /var/run/resolver.name ]; then
+	#special handling when running resolver is
+	#different from prefered resolver
+
+		cur=$(cat /var/run/resolver.name|tr -d  "\n")
+		if [ "$param" == "stop" ]; then
+			pref=$cur
+		elif [ "$param" == "reload" ]; then
+			if [ "$pref" != "$cur" ]; then
+				/etc/init.d/$cur stop
+				param="start"
+			fi
+		fi
 	fi
 
 	if [ "$pref" == "kresd" ]; then
@@ -61,19 +73,22 @@ run_cmd() {
 		fi
 	fi
 }
+save_resolver_info() {                                                                :
+        local pid_num
+        rm /var/run/resolver.pid
+        if [ "$LAST_SERVICE" == "unbound" ]; then
+                cp /var/run/unbound.pid /var/run/resolver.pid
+        else #kresd
+                sleep 1
+                pid_num=$(ps|grep kres|grep -v grep|tail -n 1|awk '{print $1}')
+                echo $pid_num>/var/run/resolver.pid
+        fi
+        echo $LAST_SERVICE>/var/run/resolver.name
+}
 
 start() {
-	local pid_num
 	run_cmd start $PREF_RESOLVER
-	rm /var/run/resolver.pid
-	if [ "$LAST_SERVICE" == "unbound" ]; then
-		cp /var/run/unbound.pid /var/run/resolver.pid
-	else #kresd
-		sleep 1
-		pid_num=$(ps|grep kres|grep -v grep|tail -n 1|awk '{print $1}')
-		echo $pid_num>/var/run/resolver.pid
-	fi
-	echo $LAST_SERVICE>/var/run/resolver.name
+	save_resolver_info
 }
 
 stop() {
@@ -83,6 +98,7 @@ stop() {
 
 reload() {
 	run_cmd reload $PREF_RESOLVER
+	save_resolver_info
 }
 
 set_sections() {
