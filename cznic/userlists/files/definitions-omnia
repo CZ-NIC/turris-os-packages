@@ -1,104 +1,138 @@
 lists = {
 ['api-token'] = {
     description_cs = 'Možnost ve Forisu generovat tokeny pro vzdálený API přístup (např. pro Spectator).',
+    description_de = 'Ein Plugin für Foris, welcher zur Generierung von Token für das Fernzugriff-API (z. B. für Spectator).',
     description_en = 'A Foris plugin allowing to generate remote API access tokens (for example for use in Spectator).',
     title_cs = 'Přístupové tokeny',
+    title_de = 'Zugangsverwaltung',
     title_en = 'Access tokens'
 },
 ['automation'] = {
     description_cs = 'Software pro ovládání domácí automatizace, včetně Turris Gadgets.',
+    description_de = 'Steuerungssoftware für die Hausautomation, einschließlich Turris Gadgets.',
     description_en = 'Control software for home automation, including Turris Gadgets.',
     title_cs = 'Domácí automatizace',
+    title_de = 'Hausautomation',
     title_en = 'Home automation'
 },
 ['cacerts'] = {
     description_cs = 'Seznam certifikátů důvěryhodných autorit pro SSL/TLS (přejato z Debianu).',
+    description_de = 'Liste der Zertifikate vertrauenswürdiger Zertifizierungsstellen für SSL/TLS (ausgeborgt von Debian).',
     description_en = 'List of trusted CA certificates for SSL/TLS (borrowed from Debian).',
     title_cs = 'Certifikáty kořenových autorit',
+    title_de = 'Zertifikate der Zertifizierungsstellen',
     title_en = 'CA root certificates'
 },
 ['dvb'] = {
     description_cs = 'Software na sdílení televizního vysílání přijímaného Turrisem. Neobsahuje ovladače pro zařízení.',
+    description_de = 'Software für die Weiterleitung von Fernsehsignal, welcher mittels DVB-Tuner vom Turris empfangen wird. Gerätetreiber sind nicht enthalten.',
     description_en = 'Software for sharing television received by a DVB tuner on Turris. Does not include device drivers.',
     title_cs = 'Televizní tuner',
+    title_de = 'DVB-Tuner',
     title_en = 'DVB tuner'
 },
 ['i_agree_honeypot'] = {
     description_cs = 'Past na roboty zkoušející hesla na SSH.',
+    description_de = 'Falle für Roboter, die das Kennwort für den SSH-Zugriff zu erraten versuchen.',
     description_en = 'Trap for password-guessing robots on SSH.',
     title_cs = 'SSH Honeypot',
+    title_de = 'SSH-Honigtopf',
     title_en = 'SSH Honeypot'
 },
 ['luci-controls'] = {
     description_cs = 'Mnoho rozšiřujících záložek a ovládacích prvků do pokročilého rozhraní LuCI.',
+    description_de = 'Zusätzliche Einstellungen für die erweiterte LuCI-Schnittstelle.',
     description_en = 'Several addional tabs and controls for the advanced LuCI interface.',
     title_cs = 'LuCI rozšíření',
+    title_de = 'LuCI-Erweiterungen',
     title_en = 'LuCI extensions'
 },
 ['majordomo'] = {
     description_cs = 'Software pro sledování spojení jednotlivých zařízení v síti.',
+    description_de = 'Überwachungssoftware für die Netzwerkverbindungen einzelner Geräte.',
     description_en = 'Software for monitoring connections of devices in local network.',
     title_cs = 'Majordomo',
+    title_de = 'Majordomo',
     title_en = 'Majordomo'
 },
 ['nas'] = {
     description_cs = 'Služby umožňující připojit disk k routeru a používat jej jako síťové úložiště dat.',
+    description_de = 'Dienste die eine Festplatte anzuschließen ermöglichen, um sie als Netzwerkdatenspeicher zu verwenden.',
     description_en = 'Services allowing to connect a disk to the router and use it as network data store.',
     title_cs = 'NAS',
+    title_de = 'NAS',
     title_en = 'NAS'
 },
 ['netutils'] = {
     description_cs = 'Podpora dalších protokolů a druhů připojení.',
+    description_de = 'Unterstützung für weitere Netzwerkprotokolle und Verbindungsarten.',
     description_en = 'Support for additional protocols and connection types.',
     title_cs = 'Rozšíření síťové podpory',
+    title_de = 'Netzwerkprotokoll-Erweiterungen',
     title_en = 'Extensions of network protocols'
 },
 ['printserver'] = {
     description_cs = 'Služby umožňující připojit tiskárnu k routeru a používat ji pro tisk po síti.',
+    description_de = 'Dienste die ermöglichen ein Drucker anzuschließen, um ihn als Netzwerkdrucker zu verwenden.',
     description_en = 'Services allowing to connect a printer to the router and use it for remote printing.',
     title_cs = 'Tiskový server',
+    title_de = 'Druckserver',
     title_en = 'Print server'
 },
 ['shell-utils'] = {
     description_cs = 'Programy usnadňující používání příkazové řádky (např. bash či vim).',
+    description_de = 'Programme für eine bequemere Benutzung der Kommandozeile (wie z. B. bash oder vim).',
     description_en = 'Programs making life in command line slightly easier (like bash or vim).',
     title_cs = 'Pohodlnější příkazová řádka',
+    title_de = 'Komfortablere Kommandozeile',
     title_en = 'More comfortable command line'
 },
 ['smrt-support'] = {
     description_cs = 'Podpora pro modem S.M.R.T.',
+    description_de = 'Unterstützung für das S.M.R.T.-Modem.',
     description_en = 'Support for the S.M.R.T. modem.',
     title_cs = 'S.M.R.T.',
+    title_de = 'S.M.R.T.',
     title_en = 'S.M.R.T.'
 },
 ['snd'] = {
     description_cs = 'Podpora pro připojení USB zvukové karty.',
+    description_de = 'Unterstützung für das Anschließen einer USB-Soundkarte.',
     description_en = 'Support for USB sound card.',
     title_cs = 'Zvuková karta',
+    title_de = 'Soundkarte',
     title_en = 'Sound card'
 },
 ['squid'] = {
     description_cs = 'HTTP cachující proxy Squid.',
+    description_de = 'Squid-Proxyserver.',
     description_en = 'HTTP caching proxy Squid.',
     title_cs = 'Squid',
+    title_de = 'Squid',
     title_en = 'Squid'
 },
 ['tor'] = {
     description_cs = 'Služba umožňující zvýšení anonymity na internetu.',
+    description_de = 'Dienst zur Erhöhung der Anonymität im Internet.',
     description_en = 'Service to increase anonymity on the Internet.',
     title_cs = 'Tor',
+    title_de = 'Tor',
     title_en = 'Tor'
 },
 ['webcam'] = {
     description_cs = 'Podpora pro snímání obrazu pomocí webové kamery.',
+    description_de = 'Unterstützung von Bildaufnahmen mittels einer Webcam.',
     description_en = 'Support to capture image with web camera.',
     title_cs = 'Webová kamera',
+    title_de = 'Webkamera',
     title_en = 'Web camera'
 },
 ['i_agree_datacollect'] = {
     description_cs = 'Programy pro sběr dat do projektu turris.cz.',
+    description_de = 'Programme für Datenerfassung für das turris.cz-Projekt.',
     description_en = 'Programs collecting data for the turris.cz project.',
     title_cs = 'Sběr dat',
+    title_de = 'Datenerfassung',
     title_en = 'Data collection'
 }
 };
