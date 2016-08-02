@@ -4,7 +4,7 @@ lists = {
     description_de = 'Ein Plugin für Foris, welcher zur Generierung von Token für das Fernzugriff-API (z. B. für Spectator).',
     description_en = 'A Foris plugin allowing to generate remote API access tokens (for example for use in Spectator).',
     title_cs = 'Přístupové tokeny',
-    title_de = 'Zugriffs-Token',
+    title_de = 'Zugangsverwaltung',
     title_en = 'Access tokens'
 },
 ['automation'] = {
