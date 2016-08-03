@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=3.1
+PKG_VERSION:=3.2
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
