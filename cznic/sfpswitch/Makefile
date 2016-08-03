@@ -22,6 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
+	DEPENDS:=+i2c-tools +python-base
 endef
 
 # The built is empty. But as there's no makefile in the git repo, we need to
