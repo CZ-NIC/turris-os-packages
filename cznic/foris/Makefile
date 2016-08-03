@@ -85,7 +85,7 @@ define Package/foris/postinst
 #!/bin/sh
 set -x
 [ -n "$$IPKG_INSTROOT" ] || {
-+# Cleanup of 1.0
+# Cleanup of 1.0
 if [ -f /www2/forris.pyc ]; then
 	find /www2 -name '*.pyc' -exec rm -f \{\} \;
 	rmdir /www2/nuci/modules /www2/nuci /www2/config_handlers /www2/utils /www2 || true
