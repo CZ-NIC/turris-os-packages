@@ -57,7 +57,7 @@ define Package/sqlite3-cli
   $(call Package/sqlite3/Default)
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libsqlite3 +libncurses +libreadline
+  DEPENDS:=+libsqlite3 +libncurses +libreadline +libedit
   TITLE+= (cli)
 endef
 
