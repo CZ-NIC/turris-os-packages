@@ -27,6 +27,7 @@ add_listen_addr() {
 
 init_header() {
 	echo "--Automatically generated file; DO NOT EDIT">$CONFIGFILE
+	echo "cache.clear()">>$CONFIGFILE
 	echo "modules = { 'policy' }">>$CONFIGFILE
 }
 
@@ -71,7 +72,7 @@ load_uci_config_common() {
 
 	# EDNS payload
 	config_get msg_buffer_size "$section" msg_buffer_size
-	[ "$msg_buffer_size" -gt 1220 ] && set_param_func "net.bufsize" "$msg_buffer_size"
+	[ "$msg_buffer_size" -ge 512 ] && set_param_func "net.bufsize" "$msg_buffer_size"
 
 	# ipv4
 	config_get_bool net_ipv4 "$section" net_ipv4
