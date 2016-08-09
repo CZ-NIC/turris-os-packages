@@ -86,7 +86,7 @@ set_rootkey() {
 # Check the /etc/unbound/root.key is reasonable and try to fix it with given command
 check_root_key() {
     # Don't do anything if it looks OK
-    grep -qE '[[:space:]](DNSKEY|DS)[[:space:]]' $ROOTKEYFILE && return
+    grep -qE '[[:space:]](DNSKEY|DS|TYPE[[:digit:]][[:digit:]])[[:space:]]' $ROOTKEYFILE && return
     # Not OK -> run the command and hope for the best
     echo "Trying to restore broken $ROOTKEYFILE with command $@" | logger -t unbound -p daemon.warning
     eval "$@"
