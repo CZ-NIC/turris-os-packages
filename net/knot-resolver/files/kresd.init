@@ -61,7 +61,7 @@ load_uci_config_common() {
 		config_get keyfile "$section" keyfile
 		if [ -n "$keyfile" ]; then
 			ROOTKEYFILE=$keyfile
-			check_root_key cert-backup $ROOTKEYFILE -x key
+			check_root_key cert-backup -x $ROOTKEYFILE
 			procd_append_param command -k "$keyfile"
 		fi
 	fi
