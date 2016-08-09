@@ -44,6 +44,10 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/
 	$(INSTALL_CONF) ./files/root.keys $(1)/etc/root.keys
+	$(INSTALL_DIR) $(1)/usr/bin/
+	$(INSTALL_BIN) ./files/rootkeys_backup.sh $(1)/usr/bin/rootkeys_backup.sh
+	$(INSTALL_DIR) $(1)/etc/cron.d/
+	$(INSTALL_CONF) ./files/rootkeys_backup.cron $(1)/etc/cron.d/rootkeys_backup
 endef
 
 $(eval $(call BuildPackage,dnssec-rootkey))
