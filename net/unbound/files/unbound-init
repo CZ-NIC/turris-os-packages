@@ -129,8 +129,8 @@ init_unbound() {
     set_parameter msg_buffer_size msg-buffer-size 8192
     set_parameter msg_buffer_size edns-buffer-size 8192
     set_parameter msg_cache_size msg-cache-size 100k
-    set_bool_parameter net_ipv4 do-ip4 "true"
-    set_bool_parameter net_ipv6 do-ip6 "true"
+    set_bool_parameter net_ipv4 do-ip4 1
+    set_bool_parameter net_ipv6 do-ip6 1
 
     set_section unbound
     set_parameter outgoing_range outgoing-range 60
