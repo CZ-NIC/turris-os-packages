@@ -67,8 +67,8 @@ load_uci_config_common() {
 	fi
 
 	# verbosity
-	config_get_bool verbose "$section" verbose 0
-	[ "$verbose" -eq 1 ] && procd_append_param command -v
+	config_get verbose "$section" verbose 0
+	[ "$verbose" -ge 1 ] && procd_append_param command -v
 
 	# EDNS payload
 	config_get msg_buffer_size "$section" msg_buffer_size
