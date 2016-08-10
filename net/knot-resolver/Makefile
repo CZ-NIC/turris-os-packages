@@ -11,13 +11,13 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
 PKG_VERSION:=1.0.0
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/knot/resolver.git
-PKG_SOURCE_VERSION:=4a49a83f028c3f75b71b508143b98e34cd8d4436
+PKG_SOURCE_VERSION:=3163b3457981e8969541ceba91f93e7735698ea7
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -42,7 +42,8 @@ define Package/knot-resolver/description
 endef
 
 MAKE_FLAGS += \
-	PREFIX=/usr
+	PREFIX=/usr \
+	ETCDIR=/etc/kresd
 
 define Package/knot-resolver/install
 	$(INSTALL_DIR) $(1)/usr/bin
