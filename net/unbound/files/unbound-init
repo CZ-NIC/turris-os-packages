@@ -22,7 +22,7 @@ add_section() {
     echo "$name:" >> "$CONFIGFILE"
 }
 
-add_inculde() {
+add_include() {
     include_path="$1"
     echo "include: \"$include_path\"" >> "$CONFIGFILE"
 }
@@ -169,10 +169,10 @@ init_unbound() {
     set_quoted_parameter control_cert_file control-cert-file "/etc/unbound/unbound_control.pem"
 
     #Includes
-    config_list_foreach includes include_path add_inculde
+    config_list_foreach includes include_path add_include
 
     local do_forward
-    config_get_bool do_forward server forward_upstream 1
+    config_get_bool do_forward common forward_upstream 1
 
     if [ "$do_forward" = "1" ] ; then
         local SERVERS
