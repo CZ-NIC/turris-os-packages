@@ -91,7 +91,7 @@ endef
 define Package/knot-keymgr
 	$(call Package/knot/Default)
 	TITLE+= DNSSEC key management utility
-	DEPENDS=+knot-libdnssec +knot-libzscanner
+	DEPENDS=+knot-libdnssec +knot-libzscanner +knot-libknot +liburcu
 endef
 
 define Package/knot-tests
