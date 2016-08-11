@@ -87,14 +87,6 @@ lists = {
     title_de = 'Komfortablere Kommandozeile',
     title_en = 'More comfortable command line'
 },
-['smrt-support'] = {
-    description_cs = 'Podpora pro modem S.M.R.T.',
-    description_de = 'Unterstützung für das S.M.R.T.-Modem.',
-    description_en = 'Support for the S.M.R.T. modem.',
-    title_cs = 'S.M.R.T.',
-    title_de = 'S.M.R.T.',
-    title_en = 'S.M.R.T.'
-},
 ['snd'] = {
     description_cs = 'Podpora pro připojení USB zvukové karty.',
     description_de = 'Unterstützung für das Anschließen einer USB-Soundkarte.',
