@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
 PKG_VERSION:=1.0.0
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/knot/resolver.git
@@ -63,7 +63,7 @@ set -ex
 if [ -z "$$IPKG_INSTROOT" ]; then
 /etc/init.d/dnsmasq restart
 sleep 2 # Cooldown for above (problems in times of reinstall)
-/etc/init.d/kresd restart
+/etc/init.d/resolver restart
 fi
 endef
 
@@ -73,8 +73,13 @@ set -ex
 if [ -z "$$IPKG_INSTROOT" ]; then
 
 # Remove the script if it is there.
-if [ -e /etc/init.d/kresd ] ; then /etc/init.d/kresd disable ; fi
+if [ -e /etc/init.d/kresd ] ; then /etc/init.d/kresd stop ; /etc/init.d/kresd disable ;  fi
 fi
+endef
+
+define Package/knot-resolver/postrm
+#!/bin/sh
+[ \! -x /etc/init.d/resolver ] || /etc/init.d/resolver restart
 endef
 
 $(eval $(call BuildPackage,knot-resolver))

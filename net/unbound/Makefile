@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
 PKG_VERSION:=1.5.1
-PKG_RELEASE:=8
+PKG_RELEASE:=9
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.unbound.net/downloads
@@ -170,6 +170,11 @@ uci commit
 sleep 2
 /etc/init.d/dnsmasq restart
 sleep 20 # Cooldown for above (problems in times of reinstall)
+endef
+
+define Package/unbound/postrm
+#!/bin/sh
+[ \! -x /etc/init.d/resolver ] || /etc/init.d/resolver restart
 endef
 
 define Package/unbound-anchor/install
