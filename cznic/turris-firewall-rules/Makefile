@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-firewall-rules
-PKG_VERSION:=60
+PKG_VERSION:=61
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/fw-rules.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -58,6 +58,7 @@ define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 # check if we are on real system
 if [ -z "$${IPKG_INSTROOT}" ]; then
+	/usr/share/firewall/turris-download
 	index=`uci show firewall | grep /usr/share/firewall | sed 's/.*\[\([[:digit:]]*\)\].*/\1/'`
 	if [ -n $${index} ]; then
 		uci get firewall.@include["$${index}"].reload 1>/dev/null 2>&1
