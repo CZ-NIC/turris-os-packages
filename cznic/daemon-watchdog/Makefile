@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=daemon-watchdog
-PKG_VERSION:=17
+PKG_VERSION:=18
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=7c949ed7c2f854fbf7ffc51f0e9342c9b88fcf96
+PKG_SOURCE_VERSION:=889940e1a298efe32b6ce3eb9c1c5d0d1b05e3e5
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
