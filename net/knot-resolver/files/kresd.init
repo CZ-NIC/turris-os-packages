@@ -88,7 +88,6 @@ load_uci_config_common() {
 	conv_msg_cache_size=$(echo "$msg_cache_size"|sed -e 's/k$/*kB/gi' -e 's/M$/*MB/gi' -e 's/G$/*GB/gi')
 	set_param_func "cache.open" "$conv_msg_cache_size"
 	set_param_func "cache.clear" ""
-	set_param_var "cache.size" "$conv_msg_cache_size"
 
 	config_get_bool do_forward "$section" forward_upstream 1
 	if [ "$do_forward" = "1" ] ; then
