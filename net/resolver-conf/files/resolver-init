@@ -73,9 +73,9 @@ run_cmd() {
 		fi
 	fi
 }
-save_resolver_info() {                                                                :
+save_resolver_info() {
         local pid_num
-        rm /var/run/resolver.pid
+        rm -f /var/run/resolver.pid
         if [ "$LAST_SERVICE" == "unbound" ]; then
                 cp /var/run/unbound.pid /var/run/resolver.pid
         else #kresd
