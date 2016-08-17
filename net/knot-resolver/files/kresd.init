@@ -27,7 +27,7 @@ add_listen_addr() {
 
 init_header() {
 	echo "--Automatically generated file; DO NOT EDIT">$CONFIGFILE
-	echo "modules = { 'policy' }">>$CONFIGFILE
+	echo "modules = { 'policy', 'hints' }">>$CONFIGFILE
 }
 
 set_param_func() {
@@ -99,6 +99,23 @@ load_uci_config_common() {
 			done
 		fi
 	fi
+	cat >> << EOF
+hints.root({
+  ['a.root-servers.net.'] = { '198.41.0.4' },
+  ['b.root-servers.net.'] = { '192.228.79.201' },
+  ['c.root-servers.net.'] = { '192.33.4.12' },
+  ['d.root-servers.net.'] = { '199.7.91.13' },
+  ['e.root-servers.net.'] = { '192.203.230.10' },
+  ['f.root-servers.net.'] = { '192.5.5.241' },
+  ['g.root-servers.net.'] = { '192.112.36.4' },
+  ['h.root-servers.net.'] = { '198.97.190.53' },
+  ['i.root-servers.net.'] = { '192.36.148.17' },
+  ['j.root-servers.net.'] = { '192.58.128.30' },
+  ['k.root-servers.net.'] = { '193.0.14.129' },
+  ['l.root-servers.net.'] = { '199.7.83.42' },
+  ['m.root-servers.net.'] = { '203.12.27.33' }
+})
+EOF
 }
 
 load_uci_config_kresd() {
