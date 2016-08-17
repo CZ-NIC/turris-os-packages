@@ -75,11 +75,13 @@ load_uci_config_common() {
 
 	# ipv4
 	config_get_bool net_ipv4 "$section" net_ipv4
-	set_param_var "net.ipv4" "$net_ipv4"
-
+	net_ipv4_bool=$(if test "$net_ipv4" -eq "1"; then echo true; else echo false; fi)
+	set_param_var "net.ipv4" "$net_ipv4_bool"
+	
 	# ipv6
 	config_get_bool net_ipv6 "$section" net_ipv6
-	set_param_var "net.ipv6" "$net_ipv6"
+	net_ipv6_bool=$(if test "$net_ipv6" -eq "1"; then echo true; else echo false; fi)
+	set_param_var "net.ipv6" "$net_ipv6_bool"
 
 	# msg_cache_size
 	config_get msg_cache_size "$section" msg_cache_size
