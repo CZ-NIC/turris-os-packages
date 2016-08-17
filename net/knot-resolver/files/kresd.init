@@ -27,7 +27,6 @@ add_listen_addr() {
 
 init_header() {
 	echo "--Automatically generated file; DO NOT EDIT">$CONFIGFILE
-	echo "cache.clear()">>$CONFIGFILE
 	echo "modules = { 'policy' }">>$CONFIGFILE
 }
 
@@ -85,6 +84,8 @@ load_uci_config_common() {
 	# msg_cache_size
 	config_get msg_cache_size "$section" msg_cache_size
 	conv_msg_cache_size=$(echo "$msg_cache_size"|sed -e "s/K//g" -e "s/M/*MB/g" -e "s/G/*GB/g" -e "s/k//g" -e "s/m/*MB/g" -e "s/g/*GB/g" )
+	set_param_func "cache.open" "$conv_msg_cache_size"
+	set_param_func "cache.clear" ""
 	set_param_var "cache.size" "$conv_msg_cache_size"
 
 	config_get_bool do_forward "$section" forward_upstream 1
