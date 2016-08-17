@@ -27,7 +27,6 @@ add_listen_addr() {
 
 init_header() {
 	echo "--Automatically generated file; DO NOT EDIT">$CONFIGFILE
-	echo "user('nobody','nogroup')">>$CONFIGFILE
 	echo "cache.clear()">>$CONFIGFILE
 	echo "modules = { 'policy' }">>$CONFIGFILE
 }
@@ -113,7 +112,7 @@ load_uci_config_kresd() {
 
 	# rundir
 	config_get rundir "$section" rundir "$DEFAULT_RUNDIR"
-	[ ! -d "$rundir" ] && mkdir -m 0750 -p "$rundir" && chown nobody:nogroup "$rundir"
+	[ ! -d "$rundir" ] && mkdir -p "$rundir"
 	procd_append_param command "$rundir"
 
 	# procd stdout/err logging
