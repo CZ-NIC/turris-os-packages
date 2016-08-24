@@ -65,10 +65,10 @@ lists = {
 },
 ['lxc'] = {
     description_cs = 'Sada nástrojů pro správu Linuxových kontejnerů (úsporná forma virtualizace).',
-    description_de = 'Set of utilities to manage Linux Containers (lightweight virtualization technology).',
+    description_de = 'Programmbibliothek und Werkzeuge für die Verwaltung der Linux Container (eine „leichtgewichtige“ Virtualisierungstechnologie).',
     description_en = 'Set of utilities to manage Linux Containers (lightweight virtualization technology).',
     title_cs = 'Nástroje LXC',
-    title_de = 'LXC utilities',
+    title_de = 'LXC-Dienstprogramme',
     title_en = 'LXC utilities'
 },
 ['netutils'] = {
