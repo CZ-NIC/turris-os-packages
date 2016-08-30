@@ -67,10 +67,11 @@ config_load ntpclient
 config_foreach load_settings ntpclient
 
 NTP_RUNNING=`ps  | grep $NTPC | grep -v grep`
+FORIS_STEP=`uci -q get foris.wizard.allowed_step_max || echo 1`
 
 case "${ACTION:-ifup}" in
 	ifup)
-		[ -z "$NTP_RUNNING" ] && start_ntpclient 
+		[ -z "$NTP_RUNNING" ] && [ "$FORIS_STEP" -gt 4 ] && start_ntpclient 
 	;;
 	ifdown)
 		[ -n "$NTP_RUNNING" ] && stop_ntpclient 
