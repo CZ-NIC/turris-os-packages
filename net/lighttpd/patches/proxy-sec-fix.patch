@@ -39,11 +39,9 @@ httpoxy: A CGI application vulnerability
  src/mod_ssi.c     | 9 ++++++++-
  5 files changed, 33 insertions(+), 1 deletion(-)
 
-diff --git a/src/mod_cgi.c b/src/mod_cgi.c
-index 38eb169..e6212fe 100644
 --- a/src/mod_cgi.c
 +++ b/src/mod_cgi.c
-@@ -1289,6 +1289,13 @@ static int cgi_create_env(server *srv, connection *con, plugin_data *p, handler_
+@@ -1041,6 +1041,13 @@ static int cgi_create_env(server *srv, c
  			ds = (data_string *)con->request.headers->data[n];
  
  			if (!buffer_is_empty(ds->value) && !buffer_is_empty(ds->key)) {
@@ -57,11 +55,9 @@ index 38eb169..e6212fe 100644
  				buffer_copy_string_encoded_cgi_varnames(p->tmp_buf, CONST_BUF_LEN(ds->key), 1);
  
  				cgi_env_add(&env, CONST_BUF_LEN(p->tmp_buf), CONST_BUF_LEN(ds->value));
-diff --git a/src/mod_fastcgi.c b/src/mod_fastcgi.c
-index 31c2e62..52d707d 100644
 --- a/src/mod_fastcgi.c
 +++ b/src/mod_fastcgi.c
-@@ -1888,6 +1888,13 @@ static int fcgi_env_add_request_headers(server *srv, connection *con, plugin_dat
+@@ -1774,6 +1774,13 @@ static int fcgi_env_add_request_headers(
  		ds = (data_string *)con->request.headers->data[i];
  
  		if (!buffer_is_empty(ds->value) && !buffer_is_empty(ds->key)) {
@@ -75,14 +71,12 @@ index 31c2e62..52d707d 100644
  			buffer_copy_string_encoded_cgi_varnames(srv->tmp_buf, CONST_BUF_LEN(ds->key), 1);
  
  			FCGI_ENV_ADD_CHECK(fcgi_env_add(p->fcgi_env, CONST_BUF_LEN(srv->tmp_buf), CONST_BUF_LEN(ds->value)),con);
-diff --git a/src/mod_proxy.c b/src/mod_proxy.c
-index 3b87785..b101baf 100644
 --- a/src/mod_proxy.c
 +++ b/src/mod_proxy.c
-@@ -494,6 +494,10 @@ static int proxy_create_env(server *srv, handler_ctx *hctx) {
+@@ -492,6 +492,10 @@ static int proxy_create_env(server *srv,
  		if (!buffer_is_empty(ds->value) && !buffer_is_empty(ds->key)) {
- 			if (buffer_is_equal_caseless_string(ds->key, CONST_STR_LEN("Connection"))) continue;
- 			if (buffer_is_equal_caseless_string(ds->key, CONST_STR_LEN("Proxy-Connection"))) continue;
+ 			if (buffer_is_equal_string(ds->key, CONST_STR_LEN("Connection"))) continue;
+ 			if (buffer_is_equal_string(ds->key, CONST_STR_LEN("Proxy-Connection"))) continue;
 +			/* Do not emit HTTP_PROXY in environment.
 +			 * Some executables use HTTP_PROXY to configure
 +			 * outgoing proxy.  See also https://httpoxy.org/ */
@@ -90,11 +84,9 @@ index 3b87785..b101baf 100644
  
  			buffer_append_string_buffer(b, ds->key);
  			buffer_append_string_len(b, CONST_STR_LEN(": "));
-diff --git a/src/mod_scgi.c b/src/mod_scgi.c
-index 584c20a..f3ec978 100644
 --- a/src/mod_scgi.c
 +++ b/src/mod_scgi.c
-@@ -1536,6 +1536,13 @@ static int scgi_env_add_request_headers(server *srv, connection *con, plugin_dat
+@@ -1424,6 +1424,13 @@ static int scgi_env_add_request_headers(
  		ds = (data_string *)con->request.headers->data[i];
  
  		if (!buffer_is_empty(ds->value) && !buffer_is_empty(ds->key)) {
@@ -108,11 +100,9 @@ index 584c20a..f3ec978 100644
  			buffer_copy_string_encoded_cgi_varnames(srv->tmp_buf, CONST_BUF_LEN(ds->key), 1);
  
  			scgi_env_add(p->scgi_env, CONST_BUF_LEN(srv->tmp_buf), CONST_BUF_LEN(ds->value));
-diff --git a/src/mod_ssi.c b/src/mod_ssi.c
-index c9b59a6..8dda845 100644
 --- a/src/mod_ssi.c
 +++ b/src/mod_ssi.c
-@@ -165,7 +165,14 @@ static int ssi_env_add_request_headers(server *srv, connection *con, plugin_data
+@@ -177,7 +177,14 @@ static int ssi_env_add_request_headers(s
  
  		if (!buffer_is_empty(ds->value) && !buffer_is_empty(ds->key)) {
  			/* don't forward the Authorization: Header */
