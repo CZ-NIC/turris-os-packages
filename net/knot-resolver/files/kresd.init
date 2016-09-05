@@ -26,8 +26,18 @@ add_listen_addr() {
 }
 
 init_header() {
-	echo "--Automatically generated file; DO NOT EDIT">$CONFIGFILE
-	echo "modules = { 'policy' }">>$CONFIGFILE
+	echo "--Automatically generated file; DO NOT EDIT" > $CONFIGFILE
+	echo "modules = {" >> $CONFIGFILE
+	config_get_bool prefetch common prefetch 0
+	echo "    'policy'" >> $CONFIGFILE
+	if [ "$prefetch" \!= 0 ]; then
+		echo "  , 'stats'" >> $CONFIGFILE
+		echo "  , predict = {" >> $CONFIGFILE
+		echo "        window = 30 -- 30 minutes sampling window" >> $CONFIGFILE
+		echo "      , period = 24*(60/30) -- track last 24 hours" >> $CONFIGFILE
+		echo "  }" >> $CONFIGFILE
+	fi
+	echo "}" >> $CONFIGFILE
 }
 
 set_param_func() {
