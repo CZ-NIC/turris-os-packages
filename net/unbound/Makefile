@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
 PKG_VERSION:=1.5.1
-PKG_RELEASE:=9
+PKG_RELEASE:=10
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.unbound.net/downloads
