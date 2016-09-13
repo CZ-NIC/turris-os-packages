@@ -90,6 +90,26 @@ umount_fs() {
 	$BIN_SYNC
 }
 
+do_warning() {
+	umount_fs $SRCFS_MOUNTPOINT
+	while true; do
+		rainbow all enable blue
+		sleep 1
+		rainbow all disable
+		sleep 1
+	done
+}
+
+do_panic() {
+	umount_fs $SRCFS_MOUNTPOINT
+	while true; do
+		rainbow all enable red
+		sleep 1
+		rainbow all disable
+		sleep 1
+	done
+}
+
 reflash () {
 	IMG=""
 	# find image (give it 10 tries with 1 sec delay)
@@ -118,7 +138,16 @@ reflash () {
 	done
 
 	if [ -n "${IMG}" ]; then
-
+		if [ -r "${IMG}".md5 ]; then
+			cd "$(dirname "${IMG}")"
+			md5sum -c "$(basename "${IMG}")".md5 || do_warning
+			cd
+		fi
+		if [ -r "${IMG}".sha256 ]; then
+			cd "$(dirname "${IMG}")"
+			sha256sum -c "$(basename "${IMG}")".sha256 || do_warning
+			cd
+		fi
 		$BIN_DD if=/dev/zero of=$DEV bs=512 count=1
 		$BIN_FDISK $DEV <<EOF
 n
@@ -138,13 +167,13 @@ EOF
 			umount_fs $SRCFS_MOUNTPOINT
 			exit 23
 		fi
-		$BIN_MKFS -M -f $FS_DEV
+		$BIN_MKFS -M -f $FS_DEV || do_panic
 		mount_fs $FS_DEV $FS_MOUNTPOINT
 		$BIN_BTRFS subvolume create "${FS_MOUNTPOINT}/@"
 		ROOTDIR="${FS_MOUNTPOINT}/@"
 		d "Rootdir is $ROOTDIR"
 		cd $ROOTDIR
-		$BIN_TAR zxf $IMG
+		$BIN_TAR zxf $IMG || do_panic
 		RD=`$BIN_DATE '+%s' -r sbin/init`
 		cd /
 		$BIN_BTRFS subvolume snapshot "${FS_MOUNTPOINT}/@" "${FS_MOUNTPOINT}/@factory"
@@ -153,8 +182,8 @@ EOF
 
 		check_reset_clock $RD
 	else
-		d "No medkit image found. Exit to shell."
-		exit 0
+		d "No medkit image found. Please reboot."
+		do_warning
 	fi
 
 	d "Reflash succeeded."
