@@ -100,7 +100,7 @@ endef
 
 define Package/updater-migrate/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/migrate/updater-migrate.sh $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/migrator/updater-migrate.sh $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgmigrate $(1)/usr/bin
 
 endef
