@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opkg-trans
-PKG_VERSION:=32
+PKG_VERSION:=33
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=918e03f937e84e3c5aba3a7d61f03aeffcdc1735
+PKG_SOURCE_VERSION:=2dda016a1f2fa88d1eb57c4562f31fe0a27e4c13
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -100,12 +100,13 @@ endef
 
 define Package/updater-migrate/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/updater-migrate.sh $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/migrate/updater-migrate.sh $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgmigrate $(1)/usr/bin
 
-	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/pkgupdate/cron $(1)/etc/cron.d/updater-migrate
-	sed -i -e 's/updater\.sh/updater-migrate.sh/' $(1)/etc/cron.d/updater-migrate
 endef
+#	$(INSTALL_DIR) $(1)/etc/cron.d
+#	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/pkgupdate/cron $(1)/etc/cron.d/updater-migrate
+#	sed -i -e 's/updater\.sh/updater-migrate.sh/' $(1)/etc/cron.d/updater-migrate
 
 $(eval $(call BuildPackage,opkg-trans))
 $(eval $(call BuildPackage,updater-ng))
