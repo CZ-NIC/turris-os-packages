@@ -1,0 +1,45 @@
+			     BASH PATCH REPORT
+			     =================
+
+Bash-Release:	4.3
+Patch-ID:	bash43-046
+
+Bug-Reported-by:	Sergey Tselikh <stselikh@gmail.com>
+Bug-Reference-ID:	<20150816110235.91f3e12e3f20d20cdaad963e@gmail.com>
+Bug-Reference-URL:	http://lists.gnu.org/archive/html/bug-bash/2015-08/msg00080.html
+
+Bug-Description:
+
+An incorrect conversion from an indexed to associative array can result in a
+core dump.
+
+Patch (apply with `patch -p0'):
+
+--- a/subst.c
++++ b/subst.c
+@@ -9561,7 +9561,14 @@ shell_expand_word_list (tlist, eflags)
+ 
+ 	  opts[opti] = '\0';
+ 	  if (opti > 0)
+-	    make_internal_declare (tlist->word->word, opts);
++	    {
++	      t = make_internal_declare (tlist->word->word, opts);
++	      if (t != EXECUTION_SUCCESS)
++		{
++		  last_command_exit_value = t;
++		  exp_jump_to_top_level (DISCARD);
++		}
++	    }
+ 
+ 	  t = do_word_assignment (tlist->word, 0);
+ 	  if (t == 0)
+--- a/patchlevel.h
++++ b/patchlevel.h
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 45
++#define PATCHLEVEL 46
+ 
+ #endif /* _PATCHLEVEL_H_ */
