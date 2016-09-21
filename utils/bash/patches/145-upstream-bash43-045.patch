@@ -1,0 +1,42 @@
+			     BASH PATCH REPORT
+			     =================
+
+Bash-Release:	4.3
+Patch-ID:	bash43-045
+
+Bug-Reported-by:	Basin Ilya <basinilya@gmail.com>
+Bug-Reference-ID:	<5624C0AC.8070802@gmail.com>
+Bug-Reference-URL:	http://lists.gnu.org/archive/html/bug-bash/2015-10/msg00141.html
+
+Bug-Description:
+
+If a file open attempted as part of a redirection fails because it is interrupted
+by a signal, the shell needs to process any pending traps to allow the redirection
+to be canceled.
+
+Patch (apply with `patch -p0'):
+
+--- a/redir.c
++++ b/redir.c
+@@ -671,7 +671,10 @@ redir_open (filename, flags, mode, ri)
+ 	  fd = open (filename, flags, mode);
+ 	  e = errno;
+ 	  if (fd < 0 && e == EINTR)
+-	    QUIT;
++	    {
++	      QUIT;
++	      run_pending_traps ();
++	    }
+ 	  errno = e;
+ 	}
+       while (fd < 0 && errno == EINTR);
+--- a/patchlevel.h
++++ b/patchlevel.h
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 44
++#define PATCHLEVEL 45
+ 
+ #endif /* _PATCHLEVEL_H_ */

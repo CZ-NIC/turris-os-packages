@@ -1,0 +1,49 @@
+			     BASH PATCH REPORT
+			     =================
+
+Bash-Release:	4.3
+Patch-ID:	bash43-043
+
+Bug-Reported-by:	lolilolicon <lolilolicon@gmail.com>
+Bug-Reference-ID:	<CAMtVo_MF16KWanCB4C8WxA88Qt26zWsvV6V7+_U2fM0E6tCDxw@mail.gmail.com>
+Bug-Reference-URL:	http://lists.gnu.org/archive/html/bug-bash/2014-08/msg00040.html
+
+Bug-Description:
+
+When the lastpipe option is enabled, the last component can contain nested
+pipelines and cause a segmentation fault under certain circumestances.
+
+Patch (apply with `patch -p0'):
+
+--- a/execute_cmd.c
++++ b/execute_cmd.c
+@@ -2409,9 +2409,17 @@ execute_pipeline (command, asynchronous,
+   if (lastpipe_flag)
+     {
+ #if defined (JOB_CONTROL)
+-      append_process (savestring (the_printed_command), dollar_dollar_pid, exec_result, lastpipe_jid);
+-#endif
++      if (INVALID_JOB (lastpipe_jid) == 0)
++        {
++          append_process (savestring (the_printed_command_except_trap), dollar_dollar_pid, exec_result, lastpipe_jid);
++          lstdin = wait_for (lastpid);
++        }
++      else
++        lstdin = wait_for_single_pid (lastpid);		/* checks bgpids list */
++#else
+       lstdin = wait_for (lastpid);
++#endif
++
+ #if defined (JOB_CONTROL)
+       /* If wait_for removes the job from the jobs table, use result of last
+ 	 command as pipeline's exit status as usual.  The jobs list can get
+--- a/patchlevel.h
++++ b/patchlevel.h
+@@ -25,6 +25,6 @@
+    regexp `^#define[ 	]*PATCHLEVEL', since that's what support/mkversion.sh
+    looks for to find the patch level (for the sccs version string). */
+ 
+-#define PATCHLEVEL 42
++#define PATCHLEVEL 43
+ 
+ #endif /* _PATCHLEVEL_H_ */
