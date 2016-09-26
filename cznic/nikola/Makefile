@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nikola
-PKG_VERSION:=39
+PKG_VERSION:=40
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nikola.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=477596554a5ff1015f9d0c6486a2f295a3f8ec2f
+PKG_SOURCE_VERSION:=0f305e17e90e952db0960ba191b4e3772134018a
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
