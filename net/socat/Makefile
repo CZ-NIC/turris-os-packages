@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=socat
-PKG_VERSION:=1.7.3.0
+PKG_VERSION:=1.7.3.1
 PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://www.dest-unreach.org/socat/download
-PKG_MD5SUM:=b607edb65bc6c57f4a43f06247504274
+PKG_MD5SUM:=334e46924f2b386299c9db2ac22bcd36
 
 PKG_MAINTAINER:= Ted Hess <thess@kitschensync.net>
 
