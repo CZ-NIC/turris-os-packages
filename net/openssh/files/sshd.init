@@ -199,7 +199,9 @@ start() {
 	for type in rsa dsa ecdsa ed25519; do {
 		# check for keys
 		key=/etc/ssh/ssh_host_${type}_key
-		[ ! -f $key ] && {
+		[ ! -s $key ] && {
+			# try to remove the key - it might be empty
+			[ -f $key ] && rm -f $key
 			# generate missing keys
 			[ -x /usr/bin/ssh-keygen ] && {
 				mkdir -p /etc/ssh
