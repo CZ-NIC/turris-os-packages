@@ -8,7 +8,7 @@
 
 include ../ucollect-prog/Makefile.common
 
-VERSION:=19
+VERSION:=20
 
 $(eval $(call UCOLLECT_BASE,ucollect-fake,$(VERSION)))
 

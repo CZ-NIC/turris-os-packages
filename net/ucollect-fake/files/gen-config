@@ -17,3 +17,4 @@ service() {
 
 service 23 tcp telnet
 service 80 tcp http
+service 2323 tcp telnet_alt
