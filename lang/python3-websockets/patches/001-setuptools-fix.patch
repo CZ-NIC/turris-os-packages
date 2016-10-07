@@ -1,0 +1,22 @@
+diff --git a/setup.py b/setup.py
+index 06ff24b..65aba38 100644
+--- a/setup.py
++++ b/setup.py
+@@ -1,7 +1,7 @@
+ import os
+ import sys
+ 
+-import setuptools
++from distutils.core import setup
+ 
+ 
+ # Avoid polluting the .tar.gz with ._* files under Mac OS X
+@@ -31,7 +31,7 @@ packages = ['websockets']
+ if py_version >= (3, 5):
+     packages.append('websockets/py35')
+ 
+-setuptools.setup(
++setup(
+     name='websockets',
+     version=version,
+     author='Aymeric Augustin',
