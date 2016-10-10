@@ -10,8 +10,8 @@ include $(TOPDIR)/rules.mk
 BASE_VERSION:=4.3
 
 PKG_NAME:=bash
-PKG_VERSION:=$(BASE_VERSION).46
-PKG_RELEASE:=2
+PKG_VERSION:=$(BASE_VERSION).48
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(BASE_VERSION).tar.gz
 PKG_SOURCE_URL:=@GNU/bash
@@ -39,11 +39,14 @@ define Package/bash/description
   incorporates useful features from the Korn and C shells (ksh and csh).
 endef
 
-CONFIGURE_ARGS += \
-	bash_cv_job_control_missing=present \
-	bash_cv_sys_named_pipes=present \
-	--without-bash-malloc \
-	--bindir=/bin
+
+define Build/Configure
+	$(call Build/Configure/Default, \
+		--without-bash-malloc \
+                --bindir=/bin \
+	)
+endef
+
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR)/builtins LDFLAGS_FOR_BUILD= mkbuiltins
