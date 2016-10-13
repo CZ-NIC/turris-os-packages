@@ -87,7 +87,7 @@ load_uci_config_common() {
 	config_get_bool net_ipv4 "$section" net_ipv4
 	net_ipv4_bool=$(if test "$net_ipv4" -eq "1"; then echo true; else echo false; fi)
 	set_param_var "net.ipv4" "$net_ipv4_bool"
-	
+
 	# ipv6
 	config_get_bool net_ipv6 "$section" net_ipv6
 	net_ipv6_bool=$(if test "$net_ipv6" -eq "1"; then echo true; else echo false; fi)
@@ -128,9 +128,9 @@ load_uci_config_kresd() {
 	procd_append_param command "$rundir"
 
 	# procd stdout/err logging
-	config_get_bool log_stderr "$section" log_stderr  0
+	config_get_bool log_stderr "$section" log_stderr  1
 	procd_set_param stderr $log_stderr
-	config_get_bool log_stdout "$section" log_stdout  0
+	config_get_bool log_stdout "$section" log_stdout  1
 	procd_set_param stdout $log_stdout
 }
 
