@@ -19,6 +19,8 @@ config resolver 'kresd'
 	option log_stderr '1'
 	option log_stdout '1'
 	option forks '1'
+	option custom_config '/tmp/kresd.custom.conf'
+	option hostname_config '/etc/hosts'
 
 config resolver 'unbound'
 	option outgoing_range '60'

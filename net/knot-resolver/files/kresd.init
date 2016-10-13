@@ -29,7 +29,8 @@ init_header() {
 	echo "--Automatically generated file; DO NOT EDIT" > $CONFIGFILE
 	echo "modules = {" >> $CONFIGFILE
 	config_get_bool prefetch common prefetch 0
-	echo "    'policy'" >> $CONFIGFILE
+	echo "    'hints'"  >> $CONFIGFILE
+	echo "  , 'policy'" >> $CONFIGFILE
 	if [ "$prefetch" \!= 0 ]; then
 		echo "  , 'stats'" >> $CONFIGFILE
 		echo "  , predict = {" >> $CONFIGFILE
@@ -50,6 +51,19 @@ set_param_var() {
 	local name="$1"
 	local val="$2"
 	echo "$name=$val">>$CONFIGFILE
+}
+
+include_custom_config() {
+	local custom_config_path
+	config_get custom_config_path "kresd" custom_config
+	if [ -e "$custom_config_path" ]; then
+		echo "" >> $CONFIGFILE
+		echo "--- Included custom config file from: ---" >> $CONFIGFILE
+		echo "--- $custom_config_path " >> $CONFIGFILE
+		cat $custom_config_path >> $CONFIGFILE
+	else
+		[ -z "$custom_config_path" ] || echo "Warning! Kresd custom config file  $custom_config_path doesn't exist."
+	fi
 }
 
 load_uci_config_common() {
@@ -109,6 +123,9 @@ load_uci_config_common() {
 			done
 		fi
 	fi
+
+	# include custom kresd config
+	include_custom_config
 }
 
 load_uci_config_kresd() {
@@ -132,6 +149,12 @@ load_uci_config_kresd() {
 	procd_set_param stderr $log_stderr
 	config_get_bool log_stdout "$section" log_stdout  1
 	procd_set_param stdout $log_stdout
+
+	# hostnames for local DNS
+	config_get hostname_config "$section" hostname_config "/etc/hosts"
+	if [ -e "$hostname_config" ]; then
+		set_param_func "hints.config" "'$hostname_config'"
+	fi
 }
 
 run_instance() {
