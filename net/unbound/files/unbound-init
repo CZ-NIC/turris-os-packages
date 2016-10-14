@@ -140,6 +140,7 @@ init_unbound() {
     set_parameter msg_cache_slabs msg-cache-slabs 1
     set_parameter num_queries_per_thread num-queries-per-thread 30
     set_parameter rrset_cache_slabs rrset-cache-slabs 1
+    set_parameter rrset_cache_size rrset-cache-size 100k
     set_parameter infra_cache_slabs infra-cache-slabs 1
     set_parameter infra_cache_numhosts infra-cache-numhosts 200
     set_multiple_parameters access_control access-control
