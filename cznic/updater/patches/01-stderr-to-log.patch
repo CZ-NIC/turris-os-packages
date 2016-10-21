@@ -8,10 +8,10 @@ Date:   Fri Oct 21 14:46:47 2016 +0200
     Wouldn't needlessly clutter system log (thought procd) and would make it easier
     to inspect.
 
-diff --git a/updater.init b/updater.init
+diff --git a/legacy/updater.init b/legacy/updater.init
 index 4916e01..869c908 100644
---- a/updater.init
-+++ b/updater.init
+--- a/legacy/updater.init
++++ b/legacy/updater.init
 @@ -11,7 +11,7 @@ status() {
  
  start() {
