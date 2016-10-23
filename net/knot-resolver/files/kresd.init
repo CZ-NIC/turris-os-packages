@@ -109,6 +109,11 @@ load_uci_config_common() {
 			done
 		fi
 	fi
+
+	# local config
+	if [ -e "/etc/kresd/config" ]; then
+		cat /etc/kresd/config >> $CONFIGFILE
+	fi
 }
 
 load_uci_config_kresd() {
