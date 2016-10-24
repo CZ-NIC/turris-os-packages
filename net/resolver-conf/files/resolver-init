@@ -245,7 +245,7 @@ unbound_conv() {
 		conv_opt msg_cache_size msg_cache_size
 		conv_opt forward_upstream forward_upstream
 		conv_opt ignore_root_key ignore_root_key
-		conv_opt auto_trust_anchor_file keyfile
+		uci_set "$CONFIGTO" "$SECTIONTO" "auto_trust_anchor_file" "/etc/root.keys"
 	fi
 
 	#unbound.server => resolver.unbound
