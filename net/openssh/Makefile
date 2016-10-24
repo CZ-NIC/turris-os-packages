@@ -289,8 +289,10 @@ if [ -e /etc/dropbear/authorized_keys -a '!' -e /root/.ssh/authorized_keys ] ; t
 	cp /etc/dropbear/authorized_keys /root/.ssh/
 fi
 # Make sure we don't fail on disabling dropbear, it may not be present or already disabled
-/etc/init.d/dropbear stop || true
-/etc/init.d/dropbear disable || true
+if [ -x /etc/init.d/dropbear ] ;then
+	/etc/init.d/dropbear stop || true
+	/etc/init.d/dropbear disable || true
+fi
 /etc/init.d/sshd restart
 /etc/init.d/sshd enable
 rm /etc/uci-defaults/sshd
@@ -300,8 +302,10 @@ endef
 define Package/openssh-server/prerm
 /etc/init.d/sshd stop || true
 /etc/init.d/sshd disable || true
-/etc/init.d/dropbear enable || true
-/etc/init.d/dropbear start || true
+if [ -x /etc/init.d/dropbear ] ;then
+	/etc/init.d/dropbear enable || true
+	/etc/init.d/dropbear start || true
+fi
 endef
 
 define Package/openssh-sftp-client/install
