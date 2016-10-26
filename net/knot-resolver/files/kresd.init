@@ -18,6 +18,10 @@ check_root_key() {
 	eval "$@"
 }
 
+service_triggers() {
+        procd_add_reload_trigger "dhcp"
+}
+
 add_listen_addr() {
 	local addr="$1"
 	local port="$2"
