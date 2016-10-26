@@ -31,7 +31,7 @@ define Package/$(PKG_NAME)/postinst
     create_notification -s news " • kernel: Update na poslední dostupnou verzi
  • mac80211: Update na nové drivery pro WiFi z LEDE
  • ath10k: Přechod na Candela Technologies driver
- • knot-resolver: Základní podpora místní zónu" " • kernel: Update to the latest version
+ • knot-resolver: Základní podpora pro místní zónu" " • kernel: Update to the latest version
  • mac80211: Update to the latest version of WiFi drivers from LEDE
  • sth10k: Switch to Candela Technologies driver
  • knot-resolver: Basic support for local domain"
