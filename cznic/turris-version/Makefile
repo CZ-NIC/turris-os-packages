@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-version
-PKG_VERSION:=3.2.1
+PKG_VERSION:=3.3
 
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 
@@ -28,9 +28,13 @@ define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 # Danger: spaces are not ordinary spaces, but special unicode ones
 [ -n "$$IPKG_INSTROOT" ] || {
-    create_notification -s news " • foris: Opraveno nastavení PPP
- • openssh: Zotavení se z prázdných klíčů" " • foris: Fix PPP settings
- • openssh: Recover from empty ssh keys"
+    create_notification -s news " • kernel: Update na poslední dostupnou verzi
+ • mac80211: Update na nové drivery pro WiFi z LEDE
+ • ath10k: Přechod na Candela Technologies driver
+ • knot-resolver: Základní podpora místní zónu" " • kernel: Update to the latest version
+ • mac80211: Update to the latest version of WiFi drivers from LEDE
+ • sth10k: Switch to Candela Technologies driver
+ • knot-resolver: Basic support for local domain"
 }
 endef
 
