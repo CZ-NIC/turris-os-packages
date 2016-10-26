@@ -55,10 +55,10 @@ set_param_var() {
 
 include_custom_config() {
 	local custom_config_path
-	config_get custom_config_path "kresd" custom_config
+	config_get custom_config_path "kresd" include_config
 	if [ -e "$custom_config_path" ]; then
 		echo "" >> $CONFIGFILE
-		echo "--- Included custom config file from: ---" >> $CONFIGFILE
+		echo "--- Included custom configuration file from: ---" >> $CONFIGFILE
 		echo "--- $custom_config_path " >> $CONFIGFILE
 		cat $custom_config_path >> $CONFIGFILE
 	else
