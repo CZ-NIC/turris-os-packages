@@ -53,7 +53,6 @@ $(call Package/mpd/Default)
   DEPENDS+= \
 	+libaudiofile +BUILD_PATENTED:libfaad2 +libffmpeg +libid3tag \
 	+libmms +libogg +libsndfile +libvorbis +libupnp
-  PROVIDES:=mpd
   VARIANT:=full
 endef
 
@@ -70,7 +69,6 @@ endef
 define Package/mpd-mini
 $(call Package/mpd/Default)
   TITLE+= (mini)
-  PROVIDES:=mpd
   VARIANT:=mini
 endef
 
@@ -221,6 +219,16 @@ define Package/mpd-avahi-service/install
 	$(INSTALL_DATA) ./files/mpd.service $(1)/etc/avahi/services/
 endef
 
+define Package/mpd
+  TITLE:=mpd provides compat
+  DEPENDS:=+mpd-full
+endef
+
+define Package/mpd/install
+	true
+endef
+
 $(eval $(call BuildPackage,mpd-full))
 $(eval $(call BuildPackage,mpd-mini))
 $(eval $(call BuildPackage,mpd-avahi-service))
+$(eval $(call BuildPackage,mpd))

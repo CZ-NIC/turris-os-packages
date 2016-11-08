@@ -276,7 +276,6 @@ $(call Package/ffmpeg/Default)
  CATEGORY:=Libraries
  TITLE+= libraries (full)
  DEPENDS+= +libpthread +zlib +libbz2 +libspeex +alsa-lib
- PROVIDES:= libffmpeg-mini libffmpeg-full libffmpeg-custom libffmpeg-audio-dec
  VARIANT:=full
 endef
 
@@ -391,7 +390,47 @@ define Package/libffmpeg/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib{avcodec,avdevice,avfilter,avformat,avutil,postproc,swresample,swscale}.so.* $(1)/usr/lib/
 endef
 
+define Package/libffmpeg-mini
+  TITLE:=libffmpeg provides compat
+  DEPENDS:=+libffmpeg
+endef
+
+define Package/libffmpeg-mini/install
+	true
+endef
+
+define Package/libffmpeg-full
+  TITLE:=libffmpeg provides compat
+  DEPENDS:=+libffmpeg
+endef
+
+define Package/libffmpeg-full/install
+	true
+endef
+
+define Package/libffmpeg-custom
+  TITLE:=libffmpeg provides compat
+  DEPENDS:=+libffmpeg
+endef
+
+define Package/libffmpeg-custom/install
+	true
+endef
+
+define Package/libffmpeg-audio-dec
+  TITLE:=libffmpeg provides compat
+  DEPENDS:=+libffmpeg
+endef
+
+define Package/libffmpeg-audio-dec/install
+	true
+endef
+
 $(eval $(call BuildPackage,ffmpeg))
 $(eval $(call BuildPackage,ffprobe))
 $(eval $(call BuildPackage,ffserver))
 $(eval $(call BuildPackage,libffmpeg))
+$(eval $(call BuildPackage,libffmpeg-mini))
+$(eval $(call BuildPackage,libffmpeg-full))
+$(eval $(call BuildPackage,libffmpeg-custom))
+$(eval $(call BuildPackage,libffmpeg-audio-dec))

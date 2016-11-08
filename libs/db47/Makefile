@@ -35,7 +35,6 @@ define Package/libdb47
   DEPENDS:=+libxml2
   TITLE:=Berkeley DB library (4.7)
   URL:=http://www.oracle.com/us/products/database/berkeley-db
-  PROVIDES:=libdb47-full
 endef
 
 define Package/libdb47/description
@@ -48,7 +47,6 @@ define Package/libdb47xx
   DEPENDS:=+libdb47 $(CXX_DEPENDS)
   TITLE:=Berkeley DB library (4.7) for C++
   URL:=http://www.oracle.com/us/products/database/berkeley-db
-  PROVIDES:=libdb47xx-full
 endef
 
 define Package/libdb47xx/description
@@ -96,5 +94,25 @@ define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libdb*.{a,so} $(1)/usr/lib
 endef
 
+define Package/libdb47-full
+  TITLE:=libdb47 provides compat
+  DEPENDS:=+libdb47
+endef
+
+define Package/libdb47-full/install
+	true
+endef
+
+define Package/libdb47xx-full
+  TITLE:=libdb47xx provides compat
+  DEPENDS:=+libdb47xx
+endef
+
+define Package/libdb47xx-full/install
+	true
+endef
+
 $(eval $(call BuildPackage,libdb47))
 $(eval $(call BuildPackage,libdb47xx))
+$(eval $(call BuildPackage,libdb47-full))
+$(eval $(call BuildPackage,libdb47xx-full))

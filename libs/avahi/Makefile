@@ -55,7 +55,6 @@ define Package/libavahi/Default
   $(call Package/avahi/Default)
   SECTION:=libs
   CATEGORY:=Libraries
-  PROVIDES:=libavahi
   DEPENDS:=+libpthread
 endef
 
@@ -86,7 +85,6 @@ endef
 
 define Package/avahi-dbus-daemon
   $(call Package/avahi/Default)
-  PROVIDES:=avahi-daemon
   VARIANT:=dbus
   SUBMENU:=IP Addresses and Names
   DEPENDS:=+libavahi-dbus-support +libexpat +librt +libdaemon
@@ -95,7 +93,6 @@ endef
 
 define Package/avahi-nodbus-daemon
   $(call Package/avahi/Default)
-  PROVIDES:=avahi-daemon
   VARIANT:=nodbus
   SUBMENU:=IP Addresses and Names
   DEPENDS:=+libavahi-nodbus-support +libexpat +librt +libdaemon
@@ -391,6 +388,24 @@ define Package/avahi-dnsconfd/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/avahi-dnsconfd $(1)/usr/sbin/
 endef
 
+define Package/libavahi
+  DEPENDS:=+libavahi-dbus-support
+  TITLE:=libavahi provides compat
+endef
+
+define Package/libavahi/install
+	true
+endef
+
+define Package/avahi-daemon
+  DEPENDS:=+avahi-dbus-support
+  TITLE:=avahi-daemon provides compat
+endef
+
+define Package/avahi-daemon/install
+	true
+endef
+
 $(eval $(call BuildPackage,libavahi-client))
 $(eval $(call BuildPackage,libavahi-compat-libdnssd))
 $(eval $(call BuildPackage,avahi-utils))
@@ -402,3 +417,5 @@ $(eval $(call BuildPackage,avahi-nodbus-daemon))
 $(eval $(call BuildPackage,avahi-daemon-service-http))
 $(eval $(call BuildPackage,avahi-daemon-service-ssh))
 $(eval $(call BuildPackage,avahi-dnsconfd))
+$(eval $(call BuildPackage,libavahi))
+$(eval $(call BuildPackage,avahi-daemon))
