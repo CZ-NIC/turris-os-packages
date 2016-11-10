@@ -153,7 +153,7 @@ endef
 define Package/avahi-dnsconfd
   $(call Package/avahi/Default)
   SUBMENU:=IP Addresses and Names
-  DEPENDS:=+libavahi +libdaemon +libpthread
+  DEPENDS:=+libavahi-dbus-support +libdaemon +libpthread
   TITLE:=A Unicast DNS server using avahi-daemon
 endef
 
