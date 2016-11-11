@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=137
+PKG_VERSION:=138
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -43,7 +43,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/*.yin $(1)/usr/share/nuci/lua_plugins/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/*.lua $(1)/usr/share/nuci/lua_plugins/
-	rm $(patsubst %,$(1)/usr/share/nuci/lua_plugins/%.*,nethist nuci-tls smrt)
+	rm $(patsubst %,$(1)/usr/share/nuci/lua_plugins/%.*,nethist nuci-tls smrt diagnostics)
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_lib
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_lib/* $(1)/usr/share/nuci/lua_lib/
@@ -66,6 +66,7 @@ endef
 
 $(eval $(call plugin,nethist,Nethist plugin for nuci,+nethist))
 $(eval $(call plugin,smrt,Nuci plugin for the smrt modem,))
+$(eval $(call plugin,diagnostics,Nuci plugin for the diagnostics module,+turris-diagnostics))
 
 define Package/nuci-tls
 TITLE:=TLS access to nuci
@@ -105,4 +106,5 @@ endef
 $(eval $(call BuildPackage,$(PKG_NAME)))
 $(eval $(call BuildPackage,nuci-smrt))
 $(eval $(call BuildPackage,nuci-nethist))
+$(eval $(call BuildPackage,nuci-diagnostics))
 $(eval $(call BuildPackage,nuci-tls))
