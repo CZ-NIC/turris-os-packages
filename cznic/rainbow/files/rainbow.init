@@ -21,6 +21,11 @@ start() {
 	# Resume last intensity settings
 	rainbow intensity $(cat /etc/rainbow.magic)
 
+	# Setup LEDs if enabled
+	if [ -x /etc/init.d/setup_led ] && /etc/init.d/setup_led enabled; then
+		/etc/init.d/setup_led restart
+	fi
+
 	# Start the daemon
 	if [ -s $PID_FILE ]; then
 		echo "Daemon is alredy running..."
