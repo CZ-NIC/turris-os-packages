@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=minidlna
 PKG_VERSION:=1.1.5
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@SF/minidlna
@@ -81,5 +81,17 @@ define Package/minidlna/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/minidlna.config $(1)/etc/config/minidlna
 endef
+
+define Package/minidlna/postinst
+#!/bin/sh
+# check if we are on real system
+if [ -z "$${IPKG_INSTROOT}" ]; then
+        if [ -s /etc/rc.d/S[0-9][0-9]minidlna ] && \
+           [ "`ls -1 /etc/rc.d/S[0-9][0-9]minidlna | head -n 1`" \!= /etc/rc.d/`sed -n 's|START=\([0-9][0-9]\)|\1|p' /etc/init.d/minidlna` ]; then
+                rm /etc/rc.d/S[0-9][0-9]minidlna
+                rm /etc/rc.d/K[0-9][0-9]minidlna
+                /etc/init.d/minidlna enable
+        fi
+enddef
 
 $(eval $(call BuildPackage,minidlna))
