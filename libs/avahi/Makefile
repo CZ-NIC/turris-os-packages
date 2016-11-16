@@ -321,18 +321,16 @@ endif
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/* $(1)/usr/lib/pkgconfig/
 endef
 
-define Package/libavahi/install
+define Package/libavahi-nodbus-support/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libavahi-{common,core}.so.* $(1)/usr/lib/
 endef
 
 define Package/libavahi-dbus-support/install
-	$(call Package/libavahi/install,$(1))
+	$(call Package/libavahi-nodbus-support/install,$(1))
 	$(INSTALL_DIR) $(1)/etc/dbus-1/system.d
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/etc/dbus-1/system.d/* $(1)/etc/dbus-1/system.d
 endef
-
-Package/libavahi-nodbus-support/install=$(Package/libavahi/install)
 
 define Package/libavahi-client/install
 	$(INSTALL_DIR) $(1)/usr/lib
