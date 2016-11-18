@@ -19,8 +19,8 @@ config resolver 'kresd'
 	option log_stderr '1'
 	option log_stdout '1'
 	option forks '1'
-#	option include_config '/etc/kresd/kresd.custom.conf'
-#	option hostname_config '/etc/hosts'
+	#option include_config '/tmp/kresd.custom.conf'
+	#option hostname_config '/etc/hosts'
 
 config resolver 'unbound'
 	option outgoing_range '60'
@@ -43,6 +43,7 @@ config resolver 'unbound'
 	option key_cache_slabs '1'
 	option neg_cache_size '10k'
 	option prefetch_key 'yes'
+	#option hostname_config '/etc/hosts'
 
 # config resolver 'unbound_python'
 # 	list python_script "/etc/unbound/ubmodule-tst.py"

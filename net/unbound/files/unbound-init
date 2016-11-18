@@ -27,6 +27,20 @@ add_include() {
     echo "include: \"$include_path\"" >> "$CONFIGFILE"
 }
 
+set_local_zone() {
+    host_filename=$1
+    if [ -e $host_filename ]; then
+
+        while read -r line
+        do
+            ipaddr=$(echo $line|awk '{ print $1 }')
+            name=$(echo $line|awk '{ print $2}')
+            echo "	local-zone: \"$name.\" static">>$CONFIGFILE
+            echo "	local-data: \"$name. IN A $ipaddr\" ">>$CONFIGFILE
+        done < $host_filename
+    fi
+}
+
 set_parameter() {
     local var="$1"
     local opt="$2"
@@ -96,7 +110,7 @@ check_root_key() {
 init_unbound() {
     config_load resolver
 
-    local ignore_root_key
+    local ignore_root_key, hostname_config
     config_get_bool ignore_root_key common ignore_root_key 0
 
     # Do not try to restore the root key if it's not used
@@ -122,8 +136,8 @@ init_unbound() {
     set_parameter port port 53
 
     if [ "$ignore_root_key" = "0" ] ; then
-	set_rootkey keyfile
-	set_quoted_parameter keyfile auto-trust-anchor-file "$ROOTKEYFILE"
+        set_rootkey keyfile
+        set_quoted_parameter keyfile auto-trust-anchor-file "$ROOTKEYFILE"
     fi
 
     set_parameter msg_buffer_size msg-buffer-size 8192
@@ -132,6 +146,11 @@ init_unbound() {
     set_bool_parameter net_ipv4 do-ip4 1
     set_bool_parameter net_ipv6 do-ip6 1
     set_parameter prefetch prefetch yes
+
+    config_get hostname_config "unbound" hostname_config "/etc/hosts"
+    if [ -e "$hostname_config" ] ; then
+        set_local_zone $hostname_config
+    fi
 
     set_section unbound
     set_parameter outgoing_range outgoing-range 60
@@ -153,6 +172,7 @@ init_unbound() {
     set_parameter key_cache_size key-cache-size 100k
     set_parameter key_cache_slabs key-cache-slabs 1
     set_parameter neg_cache_size neg-cache-size 10k
+    set_parameter prefetch prefetch yes
     set_parameter prefetch_key prefetch-key yes
 
     #Python section
