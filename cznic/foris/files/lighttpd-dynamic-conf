@@ -12,6 +12,12 @@ config_get SESSION_TIMEOUT auth session_timeout ""
 # and for the sake of UX, training and leading slashes are trimmed
 SCRIPTNAME=$(echo "$SCRIPTNAME" | sed -e 's;\\;\\\\;g' | sed -e 's;/*$;;g' | sed -e 's;^/*;;g')
 
+LOCALPATH=""
+append_localpath() {
+	LOCALPATH="${LOCALPATH}|$(echo $1 | sed -e 's;\\;\\\\;g' | sed -e 's;/*$;;g' | sed -e 's;^/*;;g')"
+}
+config_list_foreach server localpath append_localpath
+
 EXTRA_FLAGS=""
 [ "$DEBUG" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS -d"
 [ "$NOAUTH" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS --noauth"
@@ -30,7 +36,7 @@ var.foris.bin = \"/usr/bin/foris\"\n\
 var.foris.flags = \"-s flup%EXTRA_FLAGS%\"\n\
 var.foris.scriptname = \"/%SCRIPTNAME%\"\n\
 \n\
-\$HTTP[\"url\"] =~ \"^\" + var.foris.scriptname + \"(?(?<!/)/|)(?!static|cgi-bin|luci-static|plugins)\" {\n\
+\$HTTP[\"url\"] =~ \"^\" + var.foris.scriptname + \"(?(?<!/)/|)(?!static|cgi-bin|luci-static|plugins%LOCALPATH%)\" {\n\
 	fastcgi.debug = 0\n\
 	fastcgi.server = (\n\
 		var.foris.scriptname => (\n\
@@ -58,4 +64,5 @@ for PLUGIN_PATH in $PLUGINS_DIR/*; do
 done
 
 echo -e "$TEMPLATE" | sed "s;%SCRIPTNAME%;$SCRIPTNAME;g" | sed "s;%FIX_ROOT_DISABLER%;$FIX_ROOT_DISABLER;g" \
-	| sed "s;%STATIC_PREFIX%;$STATIC_PREFIX;g" | sed "s;%EXTRA_FLAGS%;$EXTRA_FLAGS;g"
+	| sed "s;%STATIC_PREFIX%;$STATIC_PREFIX;g" | sed "s;%EXTRA_FLAGS%;$EXTRA_FLAGS;g" \
+	| sed "s;%LOCALPATH%;$LOCALPATH;g"
