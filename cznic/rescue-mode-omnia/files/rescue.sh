@@ -204,6 +204,21 @@ check_reset_clock () {
 	fi
 }
 
+rescue_shell() {
+	rainbow all ff0066 auto
+	d "Configuring switch LAN4 <-> eth0..."
+	swconfig dev switch0 vlan 1 set ports '4 5'
+	d "Setting IP..."
+	ip link set dev eth0 up
+	ip addr add dev eth0 192.168.1.1/24
+	d "Mounting /dev/pts..."
+	mount -t devpts devpts /dev/pts
+	d "Starting dropbear..."
+	rm -f /etc/dropbear/*
+	dropbear -R -B -E
+	d "Spawning local shell. Exit to reboot..."
+	setsid cttyhack sh
+}
 
 
 
@@ -236,6 +251,10 @@ case "$MODE" in
 	3)
 		d "Mode: Reflash..."
 		reflash
+		;;
+	4)
+		d "Mode: Rescue shell..."
+		rescue_shell
 		;;
 	*)
 		e "Invalid mode $MODE. Exit to shell."
