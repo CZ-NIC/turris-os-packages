@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rescue-mode-omnia
-PKG_VERSION:=2
+PKG_VERSION:=3
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Hrusecky <michal.hrusecky@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -40,6 +40,7 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_BIN) ./files/rescue.sh 	$(1)/bin/rescue.sh
 	$(INSTALL_BIN) ./files/init.sh 		$(1)/sbin/init
+	$(INSTALL_BIN) ./files/passwd 		$(1)/etc/passwd
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
