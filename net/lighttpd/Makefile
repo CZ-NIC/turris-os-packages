@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd
 PKG_VERSION:=1.4.42
-PKG_RELEASE:=3
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://download.lighttpd.net/lighttpd/releases-1.4.x
@@ -119,7 +119,6 @@ endef
 
 define Package/lighttpd/conffiles
 /etc/lighttpd/lighttpd.conf
-/etc/lighttpd/conf.d/clickjacking.conf
 endef
 
 define Package/lighttpd/install
@@ -130,7 +129,6 @@ define Package/lighttpd/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/lighttpd.init $(1)/etc/init.d/lighttpd
-	$(INSTALL_BIN) ./files/clickjacking.conf $(1)/etc/lighttpd/conf.d
 	$(INSTALL_DIR) $(1)/usr/lib/lighttpd
 	for m in dirlisting indexfile staticfile; do \
 		$(CP) $(PKG_INSTALL_DIR)/usr/lib/lighttpd/mod_$$$${m}.so $(1)/usr/lib/lighttpd/ ; \
