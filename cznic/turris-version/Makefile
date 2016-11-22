@@ -29,11 +29,15 @@ define Package/$(PKG_NAME)/postinst
 # Danger: spaces are not ordinary spaces, but special unicode ones
 [ -n "$$IPKG_INSTROOT" ] || {
     create_notification -s news " • kernel: Update na poslední dostupnou verzi
+ • updater-ng: Podpora priorit, řešení kolizí, provides a dalších
+ • ucollect-fake: Minipoty http a telnet-alt
  • mac80211: Update na nové verze WiFi ovladačů z LEDE
  • ath10k: Přechod na Candela Technologies driver
  • kernel: Více ovladačů pro DVB tunnery
  • wondershaper byl nahrazen sqm ve výchozí instalaci
  • knot-resolver: Základní podpora pro místní zónu" " • kernel: Update to the latest version
+ • updater-ng: Support priorities, collision solutions, provides header and others
+ • ucollect-fake: Minipots for http and telnet-alt
  • mac80211: Update to the latest version of WiFi drivers from LEDE
  • sth10k: Switch to Candela Technologies driver
  • kernel: More DVB tunner drivers
