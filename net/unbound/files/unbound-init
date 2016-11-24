@@ -29,15 +29,12 @@ add_include() {
 
 set_local_zone() {
     host_filename=$1
-    if [ -e $host_filename ]; then
-
-        while read -r line
-        do
-            ipaddr=$(echo $line|awk '{ print $1 }')
-            name=$(echo $line|awk '{ print $2}')
-            echo "	local-zone: \"$name.\" static">>$CONFIGFILE
-            echo "	local-data: \"$name. IN A $ipaddr\" ">>$CONFIGFILE
-        done < $host_filename
+    if [ "$host_filename" ] && [ -e "$host_filename" ]; then
+        sed -n \
+        -e 's|^[[:blank:]]*\([0-9.]\+\)[[:blank:]]\+\([^#[:blank:]]\+\)$|\tlocal-zone: "\2." static\n\tlocal-data: "\2. IN A \1\"|p' \
+        -e 's|^[[:blank:]]*\([0-9a-f:]\+\)[[:blank:]]\+\([^#[:blank:]]\+\)$|\tlocal-zone: "\2." static\n\tlocal-data: "\2. IN AAAA \1\"|p' \
+        -e 's|^[[:blank:]]*\([0-9.]\+\)[[:blank:]]\+\([^#[:blank:]]\+\)[[:blank:]#].*|\tlocal-zone: "\2." static\n\tlocal-data: "\2. IN A \1\"|p' \
+        -e 's|^[[:blank:]]*\([0-9a-f:]\+\)[[:blank:]]\+\([^#[:blank:]]\+\)[[:blank:]#].*|\tlocal-zone: "\2." static\n\tlocal-data: "\2. IN AAAA \1\"|p' /etc/hosts >> "$CONFIGFILE"
     fi
 }
 
@@ -106,6 +103,20 @@ check_root_key() {
     eval "$@"
 }
 
+get_local_domain() {
+    config_get DOMAIN $1 domain
+    echo "  local-zone: \"$DOMAIN.\" static" >> "$CONFIGFILE"
+}
+
+set_local_host() {
+    config_get NAME $1 name
+    config_get IP $1 ip
+    if [ -n "$NAME" ] && [ -n "$DOMAIN" ] && [ -n "$IP" ]; then
+        echo "  local-data: \"$NAME.$DOMAIN. IN A $IP\"" >> "$CONFIGFILE"
+        echo "  local-data-ptr: \"$IP $NAME.$DOMAIN\"" >> "$CONFIGFILE"
+    fi
+}
+
 #initialize everything
 init_unbound() {
     config_load resolver
@@ -151,6 +162,10 @@ init_unbound() {
     if [ -e "$hostname_config" ] ; then
         set_local_zone $hostname_config
     fi
+    config_load dhcp
+    config_foreach get_local_domain dnsmasq
+    config_foreach set_local_host host
+    config_load resolver
 
     set_section unbound
     set_parameter outgoing_range outgoing-range 60
