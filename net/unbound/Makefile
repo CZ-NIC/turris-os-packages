@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
-PKG_VERSION:=1.5.1
-PKG_RELEASE:=10
+PKG_VERSION:=1.5.10
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.unbound.net/downloads
-PKG_MD5SUM:=ed4c46476dcfb8a507cc08b1ba12a8f1
+PKG_MD5SUM:=a39b8b4fcca2a2b35a2daa53fe35150cc3f09038dc9acede09c912fc248a9486
 
 PKG_BUILD_DEPENDS:=libexpat
 PKG_BUILD_PARALLEL:=1
