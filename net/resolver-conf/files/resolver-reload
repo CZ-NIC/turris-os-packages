@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MD5=$(md5sum /tmp/resolv.conf.auto | cut -f1 -d\ )
+PREVIOUS=$(cat /tmp/resolv.conf.auto.last.md5 || true)
+DO_FORWARD=$(uci -q get resolver.common.forward_upstream || echo 1)
+if /etc/init.d/resolver enabled && \
+   [ "$MD5" != "$PREVIOUS" ] && \
+   [ "$DO_FORWARD" = "1" ] ; then
+	/etc/init.d/resolver reload
+fi
