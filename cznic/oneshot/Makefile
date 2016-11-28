@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=oneshot
-PKG_VERSION:=19
+PKG_VERSION:=20
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -43,7 +43,7 @@ define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 
 if [ -z "$${IPKG_INSTROOT}" ] ; then
-	if -f /usr/share/oneshot/completed/scripts ; then
+	if [ -f /usr/share/oneshot/completed/scripts ]; then
 		# Workaround. We didn't create the right scripts when it was being distributed.
 		# So add them now
 		cd /usr/share/oneshot/completed
