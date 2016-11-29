@@ -34,7 +34,7 @@ set_local_zone() {
         -e 's|^[[:blank:]]*\([0-9.]\+\)[[:blank:]]\+\([^#[:blank:]]\+\)$|\tlocal-zone: "\2." static\n\tlocal-data: "\2. IN A \1\"|p' \
         -e 's|^[[:blank:]]*\([0-9a-f:]\+\)[[:blank:]]\+\([^#[:blank:]]\+\)$|\tlocal-zone: "\2." static\n\tlocal-data: "\2. IN AAAA \1\"|p' \
         -e 's|^[[:blank:]]*\([0-9.]\+\)[[:blank:]]\+\([^#[:blank:]]\+\)[[:blank:]#].*|\tlocal-zone: "\2." static\n\tlocal-data: "\2. IN A \1\"|p' \
-        -e 's|^[[:blank:]]*\([0-9a-f:]\+\)[[:blank:]]\+\([^#[:blank:]]\+\)[[:blank:]#].*|\tlocal-zone: "\2." static\n\tlocal-data: "\2. IN AAAA \1\"|p' /etc/hosts >> "$CONFIGFILE"
+        -e 's|^[[:blank:]]*\([0-9a-f:]\+\)[[:blank:]]\+\([^#[:blank:]]\+\)[[:blank:]#].*|\tlocal-zone: "\2." static\n\tlocal-data: "\2. IN AAAA \1\"|p' "$host_filename" >> "$CONFIGFILE"
     fi
 }
 
@@ -158,8 +158,8 @@ init_unbound() {
     set_bool_parameter net_ipv6 do-ip6 1
     set_parameter prefetch prefetch yes
 
-    config_get hostname_config "unbound" hostname_config "/etc/hosts"
-    if [ -e "$hostname_config" ] ; then
+    config_get hostname_config "unbound" hostname_config ""
+    if [ -n "$hostname_config" ] && [ -e "$hostname_config" ] ; then
         set_local_zone $hostname_config
     fi
     config_load dhcp
