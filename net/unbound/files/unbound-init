@@ -105,7 +105,7 @@ check_root_key() {
 
 get_local_domain() {
     config_get DOMAIN $1 domain
-    echo "  local-zone: \"$DOMAIN.\" static" >> "$CONFIGFILE"
+    [ -z "$DOMAIN" ] || echo "  local-zone: \"$DOMAIN.\" static" >> "$CONFIGFILE"
 }
 
 set_local_host() {
