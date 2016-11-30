@@ -92,6 +92,7 @@ if [ -z "$${IPKG_INSTROOT}" ]; then
                 rm /etc/rc.d/K[0-9][0-9]minidlna
                 /etc/init.d/minidlna enable
         fi
+fi
 endef
 
 $(eval $(call BuildPackage,minidlna))
