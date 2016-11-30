@@ -104,8 +104,11 @@ check_root_key() {
 }
 
 get_local_domain() {
-    config_get DOMAIN $1 domain
-    [ -z "$DOMAIN" ] || echo "  local-zone: \"$DOMAIN.\" static" >> "$CONFIGFILE"
+    config_get DOMAIN $1 local
+    if [ -n "$DOMAIN" ]; then
+        DOMAIN="`echo "$DOMAIN" | sed 's|/||g'`"
+        echo "  local-zone: \"$DOMAIN.\" static" >> "$CONFIGFILE"
+    fi
 }
 
 set_local_host() {
@@ -121,7 +124,8 @@ set_local_host() {
 init_unbound() {
     config_load resolver
 
-    local ignore_root_key, hostname_config
+    local ignore_root_key
+    local hostname_config
     config_get_bool ignore_root_key common ignore_root_key 0
 
     # Do not try to restore the root key if it's not used
@@ -259,7 +263,7 @@ stop() {
     config_get pidfile unbound pidfile
 
     if [ -f "$pidfile" ] ; then
-        kill $(cat $pidfile) ; rm "$pidfile"
+        kill $(cat $pidfile) ; rm -f "$pidfile"
     fi
     sleep 1 # For cleanup of ports and such
 }

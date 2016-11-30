@@ -134,7 +134,8 @@ load_uci_config_common() {
 }
 
 get_local_domain() {
-	config_get DOMAIN $1 domain
+	config_get DOMAIN $1 local
+	[ -z "$DOMAIN" ] || DOMAIN="`echo "$DOMAIN" | sed 's|/||g'`"
 }
 
 set_local_host() {
