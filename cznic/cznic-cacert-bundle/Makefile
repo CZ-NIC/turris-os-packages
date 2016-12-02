@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cznic-cacert-bundle
-PKG_VERSION:=31
+PKG_VERSION:=32
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=fff90f93e472fe5eaf5463adb4bbcbf8b049540a
+PKG_SOURCE_VERSION:=4e75e2a3eff46031c66a230b62611417828b3b80
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
@@ -30,7 +30,7 @@ c_rehash .
 
 [ -n "$$IPKG_INSTROOT" ] || {
 # TODO: If ever anything gets removed from this list, use -r, not delete it manually.
-/usr/sbin/cert-backup /etc/ssl/ucollect-server.pem /etc/ssl/startcom.pem /etc/ssl/api.turris.pem /usr/bin/get-api-crl
+/usr/sbin/cert-backup /etc/ssl/ucollect-server.pem /etc/ssl/startcom.pem /etc/ssl/api.turris.pem /etc/ssl/turris.pem /usr/bin/get-api-crl
 get-api-crl
 }
 endef
@@ -51,6 +51,8 @@ define Package/$(PKG_NAME)/install
 	# TODO: If anything is modified here, it needs to be updated in the postinst too
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/api.turris.pem $(1)/etc/ssl/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/emergency-ca/ca.crt $(1)/etc/ssl/turris.pem
+	cat $(PKG_BUILD_DIR)/cacerts/startcom.pem >>$(1)/etc/ssl/turris.pem
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/ucollect-server.pem $(1)/etc/ssl/
 	ln -s /tmp/crl.pem $(1)/etc/ssl/crl.pem
 
