@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cznic-cacert-bundle
-PKG_VERSION:=33
+PKG_VERSION:=34
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -53,6 +53,8 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/emergency-ca/ca.crt $(1)/etc/ssl/turris.pem
 	cat $(PKG_BUILD_DIR)/cacerts/startcom.pem >>$(1)/etc/ssl/turris.pem
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/letsencrypt.pem $(1)/etc/ssl/www_turris_cz_ca.pem
+	cat $(PKG_BUILD_DIR)/cacerts/startcom.pem >>$(1)/etc/ssl/www_turris_cz_ca.pem
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/ucollect-server.pem $(1)/etc/ssl/
 	ln -s /tmp/crl.pem $(1)/etc/ssl/crl.pem
 
