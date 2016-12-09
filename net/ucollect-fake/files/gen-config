@@ -18,3 +18,6 @@ service() {
 service 23 tcp telnet
 service 80 tcp http
 service 2323 tcp telnet_alt
+service 3128 tcp squid_http_proxy
+service 8080 tcp http_proxy
+service 8123 tcp polipo_http_proxy
