@@ -133,19 +133,6 @@ load_uci_config_common() {
 	include_custom_config
 }
 
-get_local_domain() {
-	config_get DOMAIN $1 local
-	[ -z "$DOMAIN" ] || DOMAIN="`echo "$DOMAIN" | sed 's|/||g'`"
-}
-
-set_local_host() {
-	config_get NAME $1 name
-	config_get IP $1 ip
-	if [ -n "$NAME" ] && [ -n "$DOMAIN" ] && [ -n "$IP" ]; then
-		echo "hints['$NAME.$DOMAIN'] = '$IP'" >> $CONFIGFILE
-	fi
-}
-
 load_uci_config_kresd() {
 	local addr config keyfile forks verbose rundir log_stderr log_stdout
 	local section="kresd"
@@ -169,14 +156,10 @@ load_uci_config_kresd() {
 	procd_set_param stdout $log_stdout
 
 	# hostnames for local DNS
-	config_get hostname_config "$section" hostname_config "/etc/hosts"
+	config_get hostname_config "$section" hostname_config "/tmp/hosts/dhcp"
 	if [ -e "$hostname_config" ]; then
 		set_param_func "hints.config" "'$hostname_config'"
 	fi
-	config_load dhcp
-	config_foreach get_local_domain dnsmasq
-	config_foreach set_local_host host
-	config_load resolver
 }
 
 run_instance() {
