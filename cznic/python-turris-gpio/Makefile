@@ -9,13 +9,18 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-turris-gpio
 PKG_VERSION:=0.1.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENCE.txt
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/python-turris-gpio.git
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
+ifeq ($(ARCH),armhf)
+  PKG_SOURCE_VERSION:=c162ace4e3ee6bbdadde820466f50a50e29cce9e
+endif
+ifeq ($(ARCH),powerpc)
+  PKG_SOURCE_VERSION:=$(PKG_VERSION)
+endif
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
