@@ -311,6 +311,7 @@ FFMPEG_CONFIGURE:= \
 	--disable-altivec \
 	--disable-amd3dnow \
 	--disable-amd3dnowext \
+	--disable-asm \
 	--disable-mmx \
 	--disable-mmxext \
 	--disable-sse \
