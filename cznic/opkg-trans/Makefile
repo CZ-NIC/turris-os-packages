@@ -22,7 +22,6 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/opkg-trans
 	TITLE:=opkg-trans
-	PROVIDES:=updater
 	DEPENDS:=+liblua +libevent2 +usign +curl
 endef
 
