@@ -15,11 +15,12 @@ PKG_LICENSE_FILES:=LICENCE.txt
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/python-turris-gpio.git
-ifeq ($(ARCH),armhf)
-  PKG_SOURCE_VERSION:=c162ace4e3ee6bbdadde820466f50a50e29cce9e
-endif
-ifeq ($(ARCH),powerpc)
+
+ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
   PKG_SOURCE_VERSION:=$(PKG_VERSION)
+endif
+ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+  PKG_SOURCE_VERSION:=c162ace4e3ee6bbdadde820466f50a50e29cce9e
 endif
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
