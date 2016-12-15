@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=syslog-ng
 PKG_VERSION:=3.19.1
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 PKG_LICENSE:=LGPL-2.1+
 PKG_LICENSE_FILES:=COPYING
@@ -95,10 +95,11 @@ define Package/syslog-ng3/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/syslog-ng.init $(1)/etc/init.d/syslog-ng
 	$(INSTALL_DIR) $(1)/etc/syslog-ng.d
+	touch $(1)/etc/syslog-ng.d/.keep
 ifdef CONFIG_USE_MUSL
-		$(INSTALL_DATA) ./files/syslog-ng.conf.musl $(1)/etc/syslog-ng.conf
+	$(INSTALL_DATA) ./files/syslog-ng.conf.musl $(1)/etc/syslog-ng.conf
 else
-		$(INSTALL_DATA) ./files/syslog-ng.conf $(1)/etc
+	$(INSTALL_DATA) ./files/syslog-ng.conf $(1)/etc
 endif
 	$(INSTALL_BIN) ./files/logread $(1)/usr/sbin
 endef
