@@ -81,7 +81,7 @@ else
 	$(INSTALL_DATA) ./files/syslog-ng.conf $(1)/etc
 endif
 	$(INSTALL_DIR) $(1)/etc/syslog-ng.d
-	touch $(1)/etc/syslog-nd.d/.keep
+	touch $(1)/etc/syslog-ng.d/.keep
 endef
 
 define Package/syslog-ng3/postinst
