@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=syslog-ng
 PKG_VERSION:=3.0.9
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE_URL:=http://www.balabit.com/downloads/files/syslog-ng/open-source-edition/$(PKG_VERSION)/source/
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION).tar.gz
@@ -81,6 +81,7 @@ else
 	$(INSTALL_DATA) ./files/syslog-ng.conf $(1)/etc
 endif
 	$(INSTALL_DIR) $(1)/etc/syslog-ng.d
+	touch $(1)/etc/syslog-nd.d/.keep
 endef
 
 define Package/syslog-ng3/postinst
