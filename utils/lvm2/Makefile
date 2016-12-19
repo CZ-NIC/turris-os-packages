@@ -14,7 +14,7 @@ PKG_RELEASE:=1
 PKG_LICENSE:=GPL-2.0 LGPL-2.1
 
 PKG_SOURCE:=$(PKG_NAME).$(PKG_VERSION).tgz
-PKG_SOURCE_URL:=ftp://sources.redhat.com/pub/lvm2
+PKG_SOURCE_URL:=ftp://sources.redhat.com/pub/lvm2/releases
 PKG_MD5SUM:=fd952ba7d640f0bedcec0085e358b318
 PKG_MAINTAINER:=Daniel Golle <daniel@makrotopia.org>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME).$(PKG_VERSION)
