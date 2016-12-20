@@ -205,7 +205,7 @@ init_unbound() {
     set_parameter control_port control-port 8953
     set_quoted_parameter server_key_file server-key-file "/etc/unbound/unbound_server.key"
     set_quoted_parameter server_cert_file server-cert-file "/etc/unbound/unbound_server.pem"
-    set_quoted_parameter control_key_file control-key-file "/etc/unbound/unbound_control.pem"
+    set_quoted_parameter control_key_file control-key-file "/etc/unbound/unbound_control.key"
     set_quoted_parameter control_cert_file control-cert-file "/etc/unbound/unbound_control.pem"
 
     #Includes
