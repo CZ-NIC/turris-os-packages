@@ -10,7 +10,7 @@ PKG_RELRO_FULL:=0
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
-PKG_VERSION:=v1.1.1-168-g67064bc
+PKG_VERSION:=v1.1.1-175-geec9c81
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
