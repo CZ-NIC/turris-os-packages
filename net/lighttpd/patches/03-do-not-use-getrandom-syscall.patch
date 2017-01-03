@@ -1,0 +1,11 @@
+--- a/src/rand.c
++++ b/src/rand.c
+@@ -87,7 +87,7 @@ static int li_rand_device_bytes (unsigne
+ 
+     /* device files might not be available in chroot environment,
+      * so prefer syscall, if available */
+-    if (0 == li_getentropy(buf, (size_t)num)) return 1;
++    //if (0 == li_getentropy(buf, (size_t)num)) return 1;
+ 
+     for (unsigned int u = 0; u < sizeof(devices)/sizeof(devices[0]); ++u) {
+         /*(some systems might have symlink to another device; omit O_NOFOLLOW)*/
