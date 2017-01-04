@@ -90,6 +90,7 @@ handle_openssh_section(){
     set_parameter "$config" RekeyLimit RekeyLimit
     set_parameter "$config" RevokedKeys RevokedKeys
     set_parameter "$config" KexAlgorithms KexAlgorithms
+    set_parameter "$config" MACs MACs
     set_parameter "$config" ChallengeResponseAuthentication ChallengeResponseAuthentication
     set_parameter "$config" KerberosAuthentication KerberosAuthentication
     set_parameter "$config" KerberosOrLocalPasswd KerberosOrLocalPasswd
@@ -130,19 +131,6 @@ handle_openssh_section(){
     set_multiple_parameters "$config" DenyGroups DenyGroups
     set_parameter "$config" TrustedUserCAKeys TrustedUserCAKeys
     set_multiple_parameters "$config" Subsystem Subsystem
-    set_multiple_parameters "$config" AllowGroups AllowGroups
-    set_multiple_parameters "$config" AllowUsers AllowUsers
-    set_multiple_parameters "$config" DenyUsers DenyUsers
-    set_multiple_parameters "$config" DenyGroups DenyGroups
-    set_parameter "$config" AcceptEnv AcceptEnv
-    set_parameter "$config" HostbasedUsesNameFromPacketOnly HostbasedUsesNameFromPacketOnly
-    set_multiple_parameters "$config" HostCertificate HostCertificate
-    set_parameter "$config" KexAlgorithms KexAlgorithms
-    set_parameter "$config" MACs MACs
-    set_multiple_parameters "$config" PermitOpen PermitOpen
-    set_parameter "$config" RevokedKeys RevokedKeys
-    set_parameter "$config" TrustedUserCAKeys TrustedUserCAKeys
-    set_parameter "$config" XAuthLocation XAuthLocation
 }
 
 handle_match_section() {
