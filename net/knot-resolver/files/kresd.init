@@ -122,9 +122,11 @@ load_uci_config_common() {
 		local SERVERS
 		SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' /tmp/resolv.conf.auto | sort)
 		if [ "$SERVERS" ] ; then
+			echo "policy:add(policy.all(policy.FORWARD({">>$CONFIGFILE
 			for SERVER in $SERVERS ; do
-				echo "policy:add(policy.all(policy.FORWARD('$SERVER')))">>$CONFIGFILE
+				echo "	'$SERVER',">>$CONFIGFILE
 			done
+			echo "})))">>$CONFIGFILE
 		fi
 		md5sum /tmp/resolv.conf.auto | cut -f1 -d\ >/tmp/resolv.conf.auto.last.md5
 	fi
