@@ -1,46 +1,14 @@
 --- a/Makefile
 +++ b/Makefile
-@@ -22,13 +22,7 @@ $(eval $(call find_lib,lmdb))
- $(eval $(call find_lib,libuv,1.0,yes))
- $(eval $(call find_lib,nettle,,yes))
+@@ -20,11 +20,6 @@ $(eval $(call find_lib,lmdb))
+ $(eval $(call find_lib,libzscanner,2.1))
+ $(eval $(call find_lib,libuv,1.0))
  $(eval $(call find_alt,lua,luajit))
 -$(eval $(call find_lib,cmocka))
 -$(eval $(call find_bin,doxygen))
 -$(eval $(call find_bin,sphinx-build))
 -$(eval $(call find_lib,libmemcached,1.0))
--$(eval $(call find_lib,hiredis,,yes))
+-$(eval $(call find_lib,hiredis))
  $(eval $(call find_lib,socket_wrapper))
--$(eval $(call find_lib,libsystemd,227))
- $(eval $(call find_lib,gnutls))
-
- # Lookup SONAME
-@@ -43,28 +37,10 @@ ifeq ($(libzscanner_SONAME),)
- endif
-
- # Find Go version and platform
--GO_VERSION := $(shell $(GO) version 2>/dev/null)
--ifeq ($(GO_VERSION),)
--        GO_VERSION := 0
--else
--        GO_PLATFORM := $(word 2,$(subst /, ,$(word 4,$(GO_VERSION))))
--        GO_VERSION := $(subst .,,$(subst go,,$(word 3,$(GO_VERSION))))
--endif
--$(eval $(call find_ver,go,$(GO_VERSION),16))
-+GO_VERSION := 0
-
- # Check if Go is able to build shared libraries
--ifeq ($(HAS_go),yes)
--ifneq ($(GO_PLATFORM),$(filter $(GO_PLATFORM),amd64 386 arm arm64))
--HAS_go := no
--endif
--else
--$(eval $(call find_ver,go,$(GO_VERSION),15))
--ifeq ($HAS_go,yes)
--ifneq ($(GO_PLATFORM),$(filter $(GO_PLATFORM),arm amd64))
- HAS_go := no
--endif
--endif
--endif
-
- # Overview
- info:
+ $(eval $(call find_lib,libdnssec))
+ $(eval $(call find_lib,libsystemd))
