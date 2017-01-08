@@ -12,7 +12,7 @@ PKG_VERSION:=1.4.44
 PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=http://download.lighttpd.net/lighttpd/releases-1.4.x
+PKG_SOURCE_URL:=https://download.lighttpd.net/lighttpd/releases-1.4.x
 PKG_MD5SUM:=adb66ca985651957feb209c91c55ebbf917d23630bfc3a216a2f70043c7b5422
 
 PKG_LICENSE:=BSD-3c
