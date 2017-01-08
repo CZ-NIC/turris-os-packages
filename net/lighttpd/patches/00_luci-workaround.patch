@@ -1,0 +1,65 @@
+commit 4b36adf30eeb13eaeaa1622b9d3d912431a54c38
+Author: Glenn Strauss <gstrauss@gluelogic.com>
+Date:   Fri Jan 6 18:03:02 2017 -0500
+
+    [mod_cgi] skip local-redir handling if to self (#2108)
+    
+    Loosen local redirect handling in mod_cgi to skip handling as local
+    redirect if the Location matches con->uri.path, since if the request
+    is intended to redirect back to the same CGI using the same request
+    method, path info, and query string, the CGI would logically just
+    return the final intended response.  Loosening this handling avoids a
+    problem with applications (potentially) accessible through multiple
+    gateways, where the application is not aware of this specific handling
+    of Location in the Common Gateway Interface (CGI/1.1), the application
+    sends abs-path in the Location response header instead of absoluteURI,
+    and the application expects the client to receive this Location response
+    header instead of the server to process as a CGI local redirect.
+    
+    One example of such an application is LuCI
+      https://github.com/openwrt/luci
+    
+    (Note that this loose check for matching con->uri.path is not perfect
+     and might not match if the CGI returned a path with a different case
+     and the server is on a case-insensitive filesystem, or if the path
+     returned by the CGI is rewritten elsewhere to a different con->uri.path
+     before getting to mod_cgi.)
+    
+    RFC3875 CGI 1.1 specification section 6.2.2 Local Redirect Response
+    http://www.ietf.org/rfc/rfc3875
+    
+    x-ref:
+      "CGI local redirect not implemented correctly"
+      https://redmine.lighttpd.net/issues/2108
+
+diff --git a/src/mod_cgi.c b/src/mod_cgi.c
+index 58a1b67..f0e7bb4 100644
+--- a/src/mod_cgi.c
++++ b/src/mod_cgi.c
+@@ -529,9 +529,12 @@ static int cgi_demux_response(server *srv, handler_ctx *hctx) {
+ 
+ 					if (con->http_status >= 300 && con->http_status < 400) {
+ 						/*(con->parsed_response & HTTP_LOCATION)*/
++						size_t ulen = buffer_string_length(con->uri.path);
+ 						data_string *ds;
+ 						if (NULL != (ds = (data_string *) array_get_element(con->response.headers, "Location"))
+-						    && ds->value->ptr[0] == '/') {
++						    && ds->value->ptr[0] == '/'
++						    && (0 != strncmp(ds->value->ptr, con->uri.path->ptr, ulen)
++							|| (ds->value->ptr[ulen] != '\0' && ds->value->ptr[ulen] != '/' && ds->value->ptr[ulen] != '?'))) {
+ 							if (++con->loops_per_request > 5) {
+ 								log_error_write(srv, __FILE__, __LINE__, "sb", "too many internal loops while processing request:", con->request.orig_uri);
+ 								con->http_status = 500; /* Internal Server Error */
+diff --git a/tests/docroot/www/cgi.pl b/tests/docroot/www/cgi.pl
+index 096d509..f7296f8 100755
+--- a/tests/docroot/www/cgi.pl
++++ b/tests/docroot/www/cgi.pl
+@@ -1,7 +1,7 @@
+ #!/usr/bin/env perl
+ 
+ if ($ENV{"QUERY_STRING"} eq "internal-redir") {
+-    print "Location: /cgi.pl\r\n\r\n";
++    print "Location: /cgi-pathinfo.pl/foo\r\n\r\n";
+     exit 0;
+ }
+ 
