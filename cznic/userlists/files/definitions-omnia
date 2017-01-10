@@ -79,6 +79,14 @@ lists = {
     title_de = 'Netzwerkprotokoll-Erweiterungen',
     title_en = 'Extensions of network protocols'
 },
+['openvpn'] = {
+    description_cs = 'Jednoduché nastavení OpenVPN serveru z Forisu.',
+    description_de = 'Einfache Einstellung des OpenVPN server von Foris.',
+    description_en = 'An easy setup of OpenVPN server from Foris.',
+    title_cs = 'OpenVPN',
+    title_de = 'OpenVPN',
+    title_en = 'OpenVPN'
+},
 ['printserver'] = {
     description_cs = 'Služby umožňující připojit tiskárnu k routeru a používat ji pro tisk po síti.',
     description_de = 'Dienste die ermöglichen ein Drucker anzuschließen, um ihn als Netzwerkdrucker zu verwenden.',
