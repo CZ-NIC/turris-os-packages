@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=145
+PKG_VERSION:=146
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=c322e1c0535ca202b37ff413990ff004978d935a
+PKG_SOURCE_VERSION:=71681829e297affb1084776e17d7c089b81cbfe6
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -47,7 +47,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/*.yin $(1)/usr/share/nuci/lua_plugins/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/*.lua $(1)/usr/share/nuci/lua_plugins/
-	rm $(patsubst %,$(1)/usr/share/nuci/lua_plugins/%.*,nethist nuci-tls smrt diagnostics)
+	rm $(patsubst %,$(1)/usr/share/nuci/lua_plugins/%.*,nethist nuci-tls smrt diagnostics ca-gen openvpn-client)
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_lib
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_lib/* $(1)/usr/share/nuci/lua_lib/
@@ -110,8 +110,35 @@ define Package/nuci-tls/prerm
 /etc/init.d/nuci-tls stop
 endef
 
+define Package/nuci-ca-gen
+TITLE:=Nuci plugin for generating CAs, certificates and dhparams
+DEPENDS:=+nuci +openssl-util
+endef
+
+define Package/nuci-ca-gen/install
+	$(INSTALL_DIR) $(1)/usr/share/nuci/ca
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ca/gen $(1)/usr/share/nuci/ca/
+	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/ca/openssl.cnf $(1)/usr/share/nuci/ca/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/ca-gen.yin $(1)/usr/share/nuci/lua_plugins/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/ca-gen.lua $(1)/usr/share/nuci/lua_plugins/
+endef
+
+define Package/nuci-openvpn-client
+TITLE:=Nuci plugin for obtaining openvpn client config
+DEPENDS:=+nuci +openvpn-openssl
+endef
+
+define Package/nuci-openvpn-client/install
+	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/openvpn-client.yin $(1)/usr/share/nuci/lua_plugins/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/openvpn-client.lua $(1)/usr/share/nuci/lua_plugins/
+endef
+
 $(eval $(call BuildPackage,$(PKG_NAME)))
 $(eval $(call BuildPackage,nuci-smrt))
 $(eval $(call BuildPackage,nuci-nethist))
 $(eval $(call BuildPackage,nuci-diagnostics))
 $(eval $(call BuildPackage,nuci-tls))
+$(eval $(call BuildPackage,nuci-ca-gen))
+$(eval $(call BuildPackage,nuci-openvpn-client))
