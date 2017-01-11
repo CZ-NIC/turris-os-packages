@@ -70,7 +70,6 @@ CONFIGURE_ARGS+= \
 	--without-attr \
 	--without-bzip2 \
 	--without-fam \
-	--without-gdbm \
 	--without-ldap \
 	--with-lua \
 	--without-memcache \
@@ -95,6 +94,11 @@ ifneq ($(SDK)$(CONFIG_PACKAGE_lighttpd-mod-mysql-vhost),)
 else
   CONFIGURE_ARGS+= \
 	--without-mysql
+endif
+
+ifneq ($(SDK)$(CONFIG_PACKAGE_lighttpd-mod-trigger_b4_dl),)
+  CONFIGURE_ARGS+= \
+	--with-gdbm=yes
 endif
 
 ifneq ($(SDK)$(CONFIG_PACKAGE_lighttpd-mod-webdav),)
@@ -179,7 +183,7 @@ $(eval $(call BuildPlugin,extforward,Extract client,,30))
 $(eval $(call BuildPlugin,fastcgi,FastCGI,,30))
 $(eval $(call BuildPlugin,flv_streaming,FLV streaming,,30))
 $(eval $(call BuildPlugin,magnet,Magnet,+liblua,30))
-$(eval $(call BuildPlugin,mysql_vhost,Mysql virtual hosting,+PACKAGE_lighttpd-mod-mysql_vhost:libmysqlclient,30))
+# $(eval $(call BuildPlugin,mysql_vhost,Mysql virtual hosting,+PACKAGE_lighttpd-mod-mysql_vhost:libmysqlclient,30))
 $(eval $(call BuildPlugin,proxy,Proxy,,30))
 $(eval $(call BuildPlugin,rewrite,URL rewriting,+PACKAGE_lighttpd-mod-rewrite:libpcre,30))
 $(eval $(call BuildPlugin,rrdtool,RRDtool,,30))
@@ -189,7 +193,7 @@ $(eval $(call BuildPlugin,setenv,Environment variable setting,,30))
 $(eval $(call BuildPlugin,simple_vhost,Simple virtual hosting,,30))
 $(eval $(call BuildPlugin,ssi,SSI,+libpcre,30))
 $(eval $(call BuildPlugin,status,Server status display,,30))
-$(eval $(call BuildPlugin,trigger_b4_dl,Trigger before download,+PACKAGE_lighttpd-mod-trigger_b4_dl:libpcre,30))
+$(eval $(call BuildPlugin,trigger_b4_dl,Trigger before download,+PACKAGE_lighttpd-mod-trigger_b4_dl:libpcre +PACKAGE_lighttpd-mod-trigger_b4_dl:libgdbm,30))
 $(eval $(call BuildPlugin,userdir,User directory,,30))
 $(eval $(call BuildPlugin,usertrack,User tracking,,30))
 $(eval $(call BuildPlugin,webdav,WebDAV,+PACKAGE_lighttpd-mod-webdav:libsqlite3 +PACKAGE_lighttpd-mod-webdav:libuuid +PACKAGE_lighttpd-mod-webdav:libxml2,30))
