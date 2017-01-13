@@ -122,7 +122,7 @@ load_uci_config_common() {
 		local SERVERS
 		SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' /tmp/resolv.conf.auto | sort)
 		if [ "$SERVERS" ] ; then
-			echo "policy:add(policy.all(policy.FORWARD({">>$CONFIGFILE
+			echo "policy.add(policy.all(policy.FORWARD({">>$CONFIGFILE
 			for SERVER in $SERVERS ; do
 				echo "	'$SERVER',">>$CONFIGFILE
 			done
