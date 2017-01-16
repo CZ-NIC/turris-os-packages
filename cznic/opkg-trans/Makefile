@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opkg-trans
-PKG_VERSION:=49
+PKG_VERSION:=50
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -22,11 +22,11 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/opkg-trans
 	TITLE:=opkg-trans
-	DEPENDS:=+liblua +libevent2 +usign +curl
+	DEPENDS:=+liblua +libevent2 +usign +libcurl +busybox-static
 endef
 
 define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION)
+	$(MAKE_VARS) BUSYBOX_EXEC=$(STAGING_DIR)/bin/busybox-static $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION)
 endef
 
 define Package/opkg-trans/install
