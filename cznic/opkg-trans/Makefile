@@ -22,7 +22,8 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/opkg-trans
 	TITLE:=opkg-trans
-	DEPENDS:=+liblua +libevent2 +usign +libcurl +busybox-static
+	DEPENDS:=+liblua +libevent2 +usign +libcurl
+	PKG_BUILD_DEPENDS:=busybox-static
 endef
 
 define Build/Compile
