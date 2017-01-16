@@ -33,7 +33,7 @@ init_header() {
 	echo "--Automatically generated file; DO NOT EDIT" > $CONFIGFILE
 	echo "modules = {" >> $CONFIGFILE
 	config_get_bool prefetch common prefetch 0
-	echo "    'hints'"  >> $CONFIGFILE
+	echo "    'hints > iterate'"  >> $CONFIGFILE
 	echo "  , 'policy'" >> $CONFIGFILE
 	if [ "$prefetch" \!= 0 ]; then
 		echo "  , 'stats'" >> $CONFIGFILE
