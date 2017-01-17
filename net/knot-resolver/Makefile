@@ -10,8 +10,8 @@ PKG_RELRO_FULL:=0
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
-PKG_VERSION:=1.1.1
-PKG_RELEASE:=13
+PKG_VERSION:=1.2.0-rc2
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/knot/resolver.git
@@ -21,7 +21,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
-PKG_MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
+PKG_MAINTAINER:=Ondřej Surý <ondrej.sury@nic.cz>
 PKG_LICENSE:=GPL-3.0
 
 PKG_INSTALL:=1
