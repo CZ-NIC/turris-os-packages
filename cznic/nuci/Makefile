@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=146
+PKG_VERSION:=147
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=71681829e297affb1084776e17d7c089b81cbfe6
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
@@ -122,6 +122,8 @@ define Package/nuci-ca-gen/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/ca/openssl.cnf $(1)/usr/share/nuci/ca/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/ca-gen.yin $(1)/usr/share/nuci/lua_plugins/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_plugins/ca-gen.lua $(1)/usr/share/nuci/lua_plugins/
+	$(INSTALL_DIR) $(1)/etc/cron.d/
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/ca/nuci-ca.cron $(1)/etc/cron.d/
 endef
 
 define Package/nuci-openvpn-client
