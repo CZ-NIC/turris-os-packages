@@ -1,0 +1,1 @@
+15 * * * * root /usr/bin/suricata_update_rules.sh
