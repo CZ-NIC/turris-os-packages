@@ -6,54 +6,70 @@ config_load foris
 config_get SCRIPTNAME server scriptname "/"
 config_get_bool DEBUG server debug "0"
 config_get_bool NOAUTH auth noauth "0"
+config_get_bool FASTCGI server fastcgi "1"
 
 # scriptname must not contain escape codes (avoid CRLF injection in sed later)
-# and for the sake of UX, training and leading slashes are trimmed
+# and for the sake of UX, trailing and leading slashes are trimmed
 SCRIPTNAME=$(echo "$SCRIPTNAME" | sed -e 's;\\;\\\\;g' | sed -e 's;/*$;;g' | sed -e 's;^/*;;g')
+[ "$SCRIPTNAME" != "" ] && SCRIPTNAME="/$SCRIPTNAME"
 
 EXTRA_FLAGS=""
 [ "$DEBUG" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS -d"
 [ "$NOAUTH" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS --noauth"
+[ "$FASTCGI" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS -s flup"
 
-STATIC_PREFIX="/"
-FIX_ROOT_DISABLER=""
+echo 'var.foris.bin = "/usr/bin/foris"'
+echo 'var.foris.cgi = "/usr/bin/foris"'
+echo "var.foris.scriptname = \"$SCRIPTNAME\""
+echo
 
-if [ "$SCRIPTNAME" != "" ] ; then
-	STATIC_PREFIX="/$SCRIPTNAME/"
-	FIX_ROOT_DISABLER="#"
+# Foris config would not have to know about cgi-bin or luci-static paths were
+# Foris in its own URL namespace (e.g. "/foris") instead of at URL root ("/")
+if [ "$SCRIPTNAME" == "" ]; then
+	echo -n '$HTTP["url"] !~ "^/(?:static|cgi-bin|luci-static|plugins)" '
+else
+	echo '$HTTP["url"] =~ "^" + var.foris.scriptname + "(?:/|$)" {'
+	echo
+	echo -n '$HTTP["url"] !~ "^" + var.foris.scriptname + "/(?:static|plugins)/" '
+fi
+echo '{'
+
+if [ "$FASTCGI" == "1" ]; then
+	FASTCGI_URI="$SCRIPTNAME"
+	[ "$SCRIPTNAME" == "" ] && FASTCGI_URI=/
+	cat - <<FASTCGI_TEMPLATE
+	fastcgi.debug = 0
+	fastcgi.server = (
+		"$FASTCGI_URI" => (
+			"python-fcgi" =>	(
+				"socket" => "/tmp/fastcgi.foris.socket",
+				"bin-path" => var.foris.bin + "$EXTRA_FLAGS",
+				"fix-root-scriptname" => "enable",
+				"check-local" => "disable",
+				"max-procs" => 1,
+			)
+		)
+	)
+FASTCGI_TEMPLATE
+else
+	echo '    alias.url = ( var.foris.scriptname => var.foris.cgi )'
+	echo '    cgi.assign = ( "" => "" )'
 fi
 
-TEMPLATE="
-var.foris.bin = \"/usr/bin/foris\"\n\
-var.foris.flags = \"-s flup%EXTRA_FLAGS%\"\n\
-var.foris.scriptname = \"/%SCRIPTNAME%\"\n\
-\n\
-\$HTTP[\"url\"] =~ \"^\" + var.foris.scriptname + \"(?(?<!/)/|)(?!static|cgi-bin|luci-static|plugins)\" {\n\
-	fastcgi.debug = 0\n\
-	fastcgi.server = (\n\
-		var.foris.scriptname => (\n\
-			\"python-fcgi\" =>	(\n\
-				\"socket\" => \"/tmp/fastcgi.python.socket\",\n\
-				\"bin-path\" => var.foris.bin + \" \" + var.foris.flags,\n\
-%FIX_ROOT_DISABLER%				\"fix-root-scriptname\" => \"enable\",	# required for extension \"/\"\n\
-				\"check-local\" => \"disable\",\n\
-				\"max-procs\" => 1,\n\
-			)\n\
-		)\n\
-	)\n\
-}\n\
-\n\
-alias.url += ( \"%STATIC_PREFIX%\" + \"static/\" => \"/usr/lib/python2.7/site-packages/foris/static/\" )\n\
-"
+echo '}'
+echo
+echo 'alias.url += ( var.foris.scriptname + "/static/" => "/usr/lib/python2.7/site-packages/foris/static/" )'
+echo
 
 PLUGINS_DIR=/usr/share/foris/plugins
 
 for PLUGIN_PATH in $PLUGINS_DIR/*; do
 	PLUGIN_NAME=$(basename $PLUGIN_PATH)
 	[ -d "$PLUGIN_PATH/static" ] && {
-		TEMPLATE="$TEMPLATE\nalias.url += ( \"%STATIC_PREFIX%\" + \"plugins/$PLUGIN_NAME/static/\" => \"$PLUGIN_PATH/static/\" )"
+		echo "alias.url += ( var.foris.scriptname + \"/plugins/$PLUGIN_NAME/static/\" => \"$PLUGIN_PATH/static/\" )"
 	}
 done
 
-echo -e "$TEMPLATE" | sed "s;%SCRIPTNAME%;$SCRIPTNAME;g" | sed "s;%FIX_ROOT_DISABLER%;$FIX_ROOT_DISABLER;g" \
-	| sed "s;%STATIC_PREFIX%;$STATIC_PREFIX;g" | sed "s;%EXTRA_FLAGS%;$EXTRA_FLAGS;g"
+if [ "$SCRIPTNAME" != "" ]; then
+	echo '}'
+fi
