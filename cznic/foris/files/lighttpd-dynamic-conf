@@ -7,23 +7,18 @@ config_get SCRIPTNAME server scriptname "/"
 config_get_bool DEBUG server debug "0"
 config_get_bool NOAUTH auth noauth "0"
 config_get SESSION_TIMEOUT auth session_timeout ""
+config_get SERVER server server "flup"
 
 # scriptname must not contain escape codes (avoid CRLF injection in sed later)
-# and for the sake of UX, training and leading slashes are trimmed
-SCRIPTNAME=$(echo "$SCRIPTNAME" | sed -e 's;\\;\\\\;g' | sed -e 's;/*$;;g' | sed -e 's;^/*;;g')
+# and for the sake of UX, trailing and leading slashes are trimmed
+SCRIPTNAME=$(echo "$SCRIPTNAME" | sed -e 's;\\;\\\\;g' | sed -e 's;/*$;;g' | sed -e 's;^/*;;g' | sed -e 's;/+;/;g')
+[ "$SCRIPTNAME" != "" ] && SCRIPTNAME="/$SCRIPTNAME"
 
 EXTRA_FLAGS=""
 [ "$DEBUG" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS -d"
 [ "$NOAUTH" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS --noauth"
 [ "$SESSION_TIMEOUT" != "" ] && EXTRA_FLAGS="$EXTRA_FLAGS --session-timeout $SESSION_TIMEOUT"
-
-STATIC_PREFIX="/"
-FIX_ROOT_DISABLER=""
-
-if [ "$SCRIPTNAME" != "" ] ; then
-	STATIC_PREFIX="/$SCRIPTNAME/"
-	FIX_ROOT_DISABLER="#"
-fi
+EXTRA_FLAGS="$EXTRA_FLAGS -s $SERVER"
 
 FORIS_PATHS=""
 tmp_out=$(eval /usr/bin/foris -R $EXTRA_FLAGS)
@@ -31,37 +26,48 @@ for path in $tmp_out;  do
 	FORIS_PATHS="$FORIS_PATHS|${path:1}"  # remove first '/' character
 done
 
-TEMPLATE="
-var.foris.bin = \"/usr/bin/foris\"\n\
-var.foris.flags = \"-s flup%EXTRA_FLAGS%\"\n\
-var.foris.scriptname = \"/%SCRIPTNAME%\"\n\
-\n\
-\$HTTP[\"url\"] =~ \"^\" + var.foris.scriptname + \"($FORIS_PATHS)\$\" {\n\
-	fastcgi.debug = 0\n\
-	fastcgi.server = (\n\
-		var.foris.scriptname => (\n\
-			\"python-fcgi\" =>	(\n\
-				\"socket\" => \"/tmp/fastcgi.python.socket\",\n\
-				\"bin-path\" => var.foris.bin + \" \" + var.foris.flags,\n\
-%FIX_ROOT_DISABLER%				\"fix-root-scriptname\" => \"enable\",	# required for extension \"/\"\n\
-				\"check-local\" => \"disable\",\n\
-				\"max-procs\" => 1,\n\
-			)\n\
-		)\n\
-	)\n\
-}\n\
-\n\
-alias.url += ( \"%STATIC_PREFIX%\" + \"static/\" => \"/usr/lib/python2.7/site-packages/foris/static/\" )\n\
-"
+
+echo 'var.foris.bin = "/usr/bin/foris"'
+echo 'var.foris.cgi = "/usr/share/foris/foris-cgi"'
+echo "var.foris.scriptname = \"$SCRIPTNAME\""
+echo "var.foris.paths = \"$FORIS_PATHS\""
+echo "var.foris.flags = \"$EXTRA_FLAGS\""
+echo
+echo '$HTTP["url"] =~ "^" + var.foris.scriptname + "/(" + var.foris.paths + ")$" {'
+case $SERVER in
+	flup)
+		echo '	fastcgi.debug = 0'
+		echo '	fastcgi.server = ('
+		if [ -z "$SCRIPTNAME" ] ; then
+		echo '		"/" => ('
+		else
+		echo '		var.foris.scriptname => ('
+		fi
+		echo '			"python-fcgi" => ('
+		echo '				"socket" => "/tmp/fastcgi.python.socket",'
+		echo '				"bin-path" => var.foris.bin + var.foris.flags,'
+		[ -z "$SCRIPTNAME" ] && echo '				"fix-root-scriptname" => "enable",'
+		echo '				"check-local" => "disable",'
+		echo '				"max-procs" => 1,'
+		echo '			)'
+		echo '		)'
+		echo '	)'
+	;;
+	cgi)
+		echo '	alias.url = ( var.foris.scriptname => var.foris.cgi )'
+		echo '	cgi.assign = ( "" => "" )'
+	;;
+esac
+echo "}"
+
 
 PLUGINS_DIR=/usr/share/foris/plugins
 
 for PLUGIN_PATH in $PLUGINS_DIR/*; do
 	PLUGIN_NAME=$(basename $PLUGIN_PATH)
 	[ -d "$PLUGIN_PATH/static" ] && {
-		TEMPLATE="$TEMPLATE\nalias.url += ( \"%STATIC_PREFIX%\" + \"plugins/$PLUGIN_NAME/static/\" => \"$PLUGIN_PATH/static/\" )"
+		echo "alias.url += ( var.foris.scriptname + \"/plugins/$PLUGIN_NAME/static/\" => \"$PLUGIN_PATH/static/\" )"
 	}
 done
 
-echo -e "$TEMPLATE" | sed "s;%SCRIPTNAME%;$SCRIPTNAME;g" | sed "s;%FIX_ROOT_DISABLER%;$FIX_ROOT_DISABLER;g" \
-	| sed "s;%STATIC_PREFIX%;$STATIC_PREFIX;g" | sed "s;%EXTRA_FLAGS%;$EXTRA_FLAGS;g"
+echo 'alias.url += ( var.foris.scriptname + "/static/" => "/usr/lib/python2.7/site-packages/foris/static/" )'
