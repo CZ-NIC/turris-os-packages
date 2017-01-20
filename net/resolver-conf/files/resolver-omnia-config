@@ -21,6 +21,7 @@ config resolver 'kresd'
 	option forks '1'
 	#option include_config '/tmp/kresd.custom.conf'
 	#option hostname_config '/etc/hosts'
+	option dynamic_domains '0'
 
 config resolver 'unbound'
 	option outgoing_range '60'

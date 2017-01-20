@@ -5,6 +5,7 @@ SERVICE_USE_PID=0
 
 EXTRA_COMMANDS="convert"
 EXTRA_HELP="	convert Converts unbound config to /etc/config/resolver"
+DHCP_SCRIPT=/etc/kresd/dhcp_host_domain_ng.sh
 
 START=60
 
@@ -23,6 +24,28 @@ prefered_resolver() {
 }
 
 PREF_RESOLVER=$(prefered_resolver)
+
+run_dhcp_script() {
+	local action resolver dynamic_domains
+	action=$1
+	resolver=$2
+
+	# enable dynamic local domains
+	config_load resolver
+	config_get_bool dynamic_domains "kresd" dynamic_domains 0
+
+
+	if (	[ "$resolver" == "kresd" ] && \
+		[ "$dynamic_domains" == "1" ] ) && (    \
+		[ "$action" == "reload" ] ||  \
+		[ "$action" == "restart" ] || \
+		[ "$action" == "start" ] );   \
+	then
+		sleep 1
+		$DHCP_SCRIPT
+		echo "Called $DHCP_SCRIPT"
+	fi
+}
 
 run_cmd() {
 	#Prefers given resolver only if it's installed
@@ -72,6 +95,9 @@ run_cmd() {
 			exit 1
 		fi
 	fi
+
+	#run script to refresh dynamic domains
+	run_dhcp_script $param $LAST_SERVICE
 }
 save_resolver_info() {
         local pid_num
