@@ -158,6 +158,13 @@ set_dnsmasq_dhcp_script() {
 	uci_commit dhcp
 }
 
+add_rpz_file() {
+	local rpz_file="$1"
+	if [ -e "$rpz_file" ]; then
+		echo "policy.add(policy.rpz(policy.DENY, '$rpz_file'))" >>$CONFIGFILE
+	fi
+}
+
 load_uci_config_kresd() {
 	local addr config keyfile forks verbose rundir log_stderr log_stdout dynamic_domains hostname_config
 	local section="kresd"
@@ -188,6 +195,9 @@ load_uci_config_kresd() {
 
 	# enable dynamic local domains
 	config_get_bool dynamic_domains "$section" dynamic_domains 0
+
+	#add rpz files
+	config_list_foreach "$section" rpz_file add_rpz_file
 
 	config_load dhcp
 	config_foreach get_local_domain dnsmasq
