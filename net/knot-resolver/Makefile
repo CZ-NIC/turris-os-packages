@@ -45,6 +45,13 @@ MAKE_FLAGS += \
 	PREFIX=/usr \
 	ETCDIR=/etc/kresd
 
+define Build/Patch
+	$(Build/Patch/Default)
+	cd $(PKG_BUILD_DIR) && \
+	sed -i -e 's/\(.*find_lib,hiredis.*\)/HAS_hiredis := no/' \
+	       -e 's/\(.*find_lib,libmemcached.*\)/HAS_libmemcached := no/' Makefile
+endef
+
 define Package/knot-resolver/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/*bin/kresd $(1)/usr/bin/
