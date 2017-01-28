@@ -171,7 +171,7 @@ load_uci_config_kresd() {
 	procd_set_param stdout $log_stdout
 
 	# hostnames for local DNS
-	config_get hostname_config "$section" hostname_config "/etc/hosts"
+	config_get hostname_config "$section" hostname_config "/tmp/hosts/dhcp"
 	if [ -e "$hostname_config" ]; then
 		set_param_func "hints.config" "'$hostname_config'"
 	fi
