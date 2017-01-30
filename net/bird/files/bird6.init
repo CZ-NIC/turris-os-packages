@@ -1,5 +1,6 @@
 #!/bin/sh /etc/rc.common
 # Copyright (C) 2010-2014 OpenWrt.org
+#           (C) CZ.NIC, z.s.p.o.
 
 BIRD="bird6"
 
@@ -14,7 +15,7 @@ BIRD_BIN="/usr/sbin/$BIRD"
 BIRD_CONF="/etc/$BIRD.conf"
 
 start() {
-	service_start $BIRD_BIN -d -c $BIRD_CONF -P $SERVICE_PID_FILE
+	service_start $BIRD_BIN -d -u bird -g bird -c $BIRD_CONF -P $SERVICE_PID_FILE
 }
 
 stop() {
