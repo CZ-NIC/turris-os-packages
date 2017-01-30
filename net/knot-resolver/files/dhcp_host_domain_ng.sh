@@ -9,8 +9,53 @@ TTY_PATH=$DEFAULT_RUNDIR/tty/$(pidof kresd)
 LOCAL_DOMAIN=$(uci get dhcp.@dnsmasq[0].local| sed 's|/||g')
 DHCP_LEASES=/tmp/dhcp.leases
 
-clear_hints() {
-	#clear all hints record from kresd
+add_dhcp_record() {
+	local mac=$1
+	local ipv4=$2
+	if [[ ! -z "$ipv4" ]]; then
+
+		echo "$DNSMASQ_LEASE_EXPIRES $mac $ipv4 $DNSMASQ_SUPPLIED_HOSTNAME $DNSMASQ_CLIENT_ID">>/tmp/dhcp.leases
+		sort -u /tmp/dhcp.leases>/tmp/dhcp.leases.tmp
+		cat /tmp/dhcp.leases.tmp | sed '/^\s*$/d' > /tmp/dhcp.leases
+		rm /tmp/dhcp.leases.tmp
+	fi
+}
+
+del_dhcp_record() {
+	local mac=$1
+	local ipv4=$2
+
+	if [[ ! -z "$DNSMASQ_CLIENT_ID" ]]; then
+		cat /tm/dhcp.leases | grep -v "$DNSMASQ_CLIENT_ID" >/tmp/dhcp.leases.tmp
+		mv -f /tmp/dhcp.leases.tmp /tmp/dhcp.leases
+	fi
+}
+
+dhcp_record() {
+	local mac=$1
+	local ipv4=$2
+	local op=$3
+
+	if [[ -z "$DNSMASQ_SUPPLIED_HOSTNAME" ]]; then
+		DNSMASQ_SUPPLIED_HOSTNAME='*'
+	fi
+
+	if [ "$op" == "add" ]; then
+		add_dhcp_record $mac $ipv4
+	fi
+
+	if [ "$op" == "del" ]; then
+		del_dhcp_record $mac $ipv4
+	fi
+
+	if [ "$op" == "old" ]; then
+		del_dhcp_record $mac $ipv4
+		add_dhcp_record $mac $ipv4
+	fi
+
+}
+
+clear_hints() { #clear all hints record from kresd
 	echo "">$TMP_HINTS_CONFIG_EMPTY
 	echo "hints.config('$TMP_HINTS_CONFIG_EMPTY')" | socat - UNIX-CONNECT:$TTY_PATH > /dev/null 2>&1
 }
@@ -37,8 +82,15 @@ load_dynamic_hints() {
 	echo "hints.config('$TMP_HINTS_CONFIG_DYNAMIC')" | socat - UNIX-CONNECT:$TTY_PATH  > /dev/null 2>&1
 }
 
+
+arg_mac=$2
+arg_ipv4=$3
+arg_op=$1
+
 prefered_resolver=$(uci get resolver.common.prefered_resolver)
 enable_dynamic_domains=$(uci get resolver.kresd.dynamic_domains)
+
+dhcp_record $arg_mac $arg_ipv4 $arg_op
 
 if [ "$prefered_resolver" == "kresd" ] && [ "$enable_dynamic_domains" == "1" ]; then
 	clear_hints
