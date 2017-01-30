@@ -50,6 +50,7 @@ define Package/knot-libknot
 	$(call Package/knot-lib/Default)
 	TITLE+= library
 	DEPENDS=+libpthread +knot-libdnssec
+	EXTRA_DEPENDS:=knot-libdnssec (=$(PKG_VERSION)-$(PKG_RELEASE))
 endef
 
 define Package/knot-libzscanner
@@ -62,36 +63,28 @@ define Package/knot
 	$(call Package/knot/Default)
 	TITLE+= server
 	DEPENDS=+liburcu +libedit +knot-libdnssec +knot-libknot +knot-libzscanner
+	EXTRA_DEPENDS:=knot-libdnssec (=$(PKG_VERSION)-$(PKG_RELEASE)), knot-libknot (=$(PKG_VERSION)-$(PKG_RELEASE)), knot-libzscanner (=$(PKG_VERSION)-$(PKG_RELEASE))
 endef
 
 define Package/knot-dig
 	$(call Package/knot/Default)
 	TITLE+= advanced DNS lookup utility
 	DEPENDS=+knot-libdnssec +knot-libknot
+	EXTRA_DEPENDS:=knot-libdnssec (=$(PKG_VERSION)-$(PKG_RELEASE)), knot-libknot (=$(PKG_VERSION)-$(PKG_RELEASE))
 endef
 
 define Package/knot-host
 	$(call Package/knot/Default)
 	TITLE+= simple DNS lookup utility
 	DEPENDS=+knot-libdnssec +knot-libknot
+	EXTRA_DEPENDS:=knot-libdnssec (=$(PKG_VERSION)-$(PKG_RELEASE)), knot-libknot (=$(PKG_VERSION)-$(PKG_RELEASE))
 endef
 
 define Package/knot-nsupdate
 	$(call Package/knot/Default)
 	TITLE+= dynamic DNS update utility
 	DEPENDS=+knot-libdnssec +knot-libknot +knot-libzscanner
-endef
-
-define Package/knot-nsec3hash
-	$(call Package/knot/Default)
-	TITLE+= simple NSEC3 hash utility
-	DEPENDS=+knot-libdnssec
-endef
-
-define Package/knot-keymgr
-	$(call Package/knot/Default)
-	TITLE+= DNSSEC key management utility
-	DEPENDS=+knot-libdnssec +knot-libzscanner +knot-libknot +liburcu
+	EXTRA_DEPENDS:=knot-libdnssec (=$(PKG_VERSION)-$(PKG_RELEASE)), knot-libknot (=$(PKG_VERSION)-$(PKG_RELEASE)), knot-libzscanner (=$(PKG_VERSION)-$(PKG_RELEASE))
 endef
 
 define Package/knot-tests
@@ -126,14 +119,6 @@ endef
 
 define Package/knot-nsupdate/description
 	Knot DNS dynamic DNS update utility.
-endef
-
-define Package/knot-nsec3hash/description
-	Knot DNS simple NSEC3 hash utility.
-endef
-
-define Package/knot-keymgr/description
-	Knot DNS DNSSEC key management utility.
 endef
 
 define Package/knot-tests/description
@@ -201,6 +186,10 @@ define Package/knot/install
 	$(INSTALL_DIR) 						$(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/knotc	$(1)/usr/sbin/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/knotd	$(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/keymgr	$(1)/usr/sbin/
+
+	$(INSTALL_DIR)						$(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/knsec3hash	$(1)/usr/bin/
 
 	$(INSTALL_DIR) 							$(1)/etc/knot
 	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/etc/knot/knot.sample.conf	$(1)/etc/knot/knot.conf
@@ -222,16 +211,6 @@ endef
 define Package/knot-nsupdate/install
 	$(INSTALL_DIR)						$(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/knsupdate	$(1)/usr/bin/
-endef
-
-define Package/knot-nsec3hash/install
-	$(INSTALL_DIR)						$(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/knsec3hash	$(1)/usr/bin/
-endef
-
-define Package/knot-keymgr/install
-	$(INSTALL_DIR)						$(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/keymgr	$(1)/usr/sbin/
 endef
 
 define Package/knot-tests/install
@@ -269,6 +248,4 @@ $(eval $(call BuildPackage,knot))
 $(eval $(call BuildPackage,knot-dig))
 $(eval $(call BuildPackage,knot-host))
 $(eval $(call BuildPackage,knot-nsupdate))
-$(eval $(call BuildPackage,knot-nsec3hash))
-$(eval $(call BuildPackage,knot-keymgr))
 $(eval $(call BuildPackage,knot-tests))
