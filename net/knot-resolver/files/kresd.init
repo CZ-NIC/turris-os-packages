@@ -8,6 +8,8 @@ PROG=/usr/bin/kresd
 CONFIGFILE=/tmp/kresd.config
 ROOTKEYFILE=/etc/root.keys
 DEFAULT_RUNDIR=/tmp/kresd
+HINTS_CONFIG=$DEFAULT_RUNDIR/hints.tmp
+DHCP_SCRIPT=/etc/kresd/dhcp_host_domain_ng.sh
 
 # Check the /etc/unbound/root.keys is reasonable and try to fix it with given command
 check_root_key() {
@@ -43,6 +45,9 @@ init_header() {
 		echo "  }" >> $CONFIGFILE
 	fi
 	echo "}" >> $CONFIGFILE
+
+	# clear hints file
+	echo "" > $HINTS_CONFIG
 }
 
 set_param_func() {
@@ -144,12 +149,24 @@ set_local_host() {
 	config_get NAME $1 name
 	config_get IP $1 ip
 	if [ -n "$NAME" ] && [ -n "$DOMAIN" ] && [ -n "$IP" ]; then
-		echo "hints['$NAME.$DOMAIN'] = '$IP'" >> $CONFIGFILE
+		echo "$IP $NAME.$DOMAIN" >> $HINTS_CONFIG
+	fi
+}
+
+set_dnsmasq_dhcp_script() {
+	uci_set dhcp $1 dhcpscript $2
+	uci_commit dhcp
+}
+
+add_rpz_file() {
+	local rpz_file="$1"
+	if [ -e "$rpz_file" ]; then
+		echo "policy.add(policy.rpz(policy.DENY, '$rpz_file'))" >>$CONFIGFILE
 	fi
 }
 
 load_uci_config_kresd() {
-	local addr config keyfile forks verbose rundir log_stderr log_stdout
+	local addr config keyfile forks verbose rundir log_stderr log_stdout dynamic_domains hostname_config static_domains
 	local section="kresd"
 
 	# knot-resolver config
@@ -170,15 +187,34 @@ load_uci_config_kresd() {
 	config_get_bool log_stdout "$section" log_stdout  1
 	procd_set_param stdout $log_stdout
 
+	# enable static local domains
+	config_get_bool static_domains "$section" static_domains 1
+
 	# hostnames for local DNS
 	config_get hostname_config "$section" hostname_config "/etc/hosts"
-	if [ -e "$hostname_config" ]; then
-		set_param_func "hints.config" "'$hostname_config'"
+	if [ -e "$hostname_config" ] && [ "$static_domains" == "1" ]; then
+		cat $hostname_config >> $HINTS_CONFIG
 	fi
+
+	# enable dynamic local domains
+	config_get_bool dynamic_domains "$section" dynamic_domains 0
+
+	#add rpz files
+	config_list_foreach "$section" rpz_file add_rpz_file
+
 	config_load dhcp
 	config_foreach get_local_domain dnsmasq
-	config_foreach set_local_host host
+	if [ "$static_domains" == "1" ]; then
+		config_foreach set_local_host host
+		config_foreach set_local_host domain
+	fi
+	if [ "$dynamic_domains" == "1" ]; then
+		config_foreach set_dnsmasq_dhcp_script dnsmasq "$DHCP_SCRIPT"
+	fi
 	config_load resolver
+
+	# load hints config
+	set_param_func "hints.config" "'$HINTS_CONFIG'"
 }
 
 run_instance() {
