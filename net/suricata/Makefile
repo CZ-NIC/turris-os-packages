@@ -31,7 +31,7 @@ define Package/suricata
   SECTION:=net
   CATEGORY:=Network
   TITLE:=IDS
-  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +libpcap +luajit +libnetfilter-queue +libnfnetlink
+  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +libpcap +luajit +libnetfilter-queue +libnfnetlink +libiconv-full
 endef
 
 define Package/lighttpd/conffiles
