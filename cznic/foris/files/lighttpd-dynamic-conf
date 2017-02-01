@@ -6,6 +6,7 @@ config_load foris
 config_get SCRIPTNAME server scriptname "/"
 config_get_bool DEBUG server debug "0"
 config_get_bool NOAUTH auth noauth "0"
+config_get SESSION_TIMEOUT auth session_timeout ""
 
 # scriptname must not contain escape codes (avoid CRLF injection in sed later)
 # and for the sake of UX, training and leading slashes are trimmed
@@ -14,6 +15,7 @@ SCRIPTNAME=$(echo "$SCRIPTNAME" | sed -e 's;\\;\\\\;g' | sed -e 's;/*$;;g' | sed
 EXTRA_FLAGS=""
 [ "$DEBUG" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS -d"
 [ "$NOAUTH" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS --noauth"
+[ "$SESSION_TIMEOUT" != "" ] && EXTRA_FLAGS="$EXTRA_FLAGS --session-timeout $SESSION_TIMEOUT"
 
 STATIC_PREFIX="/"
 FIX_ROOT_DISABLER=""
