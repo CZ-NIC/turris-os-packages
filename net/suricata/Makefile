@@ -23,18 +23,21 @@ PKG_LICENSE:=GPL-2.0
 include $(INCLUDE_DIR)/package.mk
 
 CONFIGURE_ARGS+= \
+	--enable-nflog \
 	--enable-luajit \
 	--enable-nfqueue \
+	--disable-gccprotect \
+	--enable-non-bundled-htp \
 	--disable-gccmarch-native	
 
 define Package/suricata
   SECTION:=net
   CATEGORY:=Network
   TITLE:=IDS
-  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +libpcap +luajit +libnetfilter-queue +libnfnetlink +libiconv-full
+  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +libpcap +luajit +libnetfilter-queue +libnetfilter-log +libnfnetlink +libhtp
 endef
 
-define Package/lighttpd/conffiles
+define Package/suricata/conffiles
 /etc/suricata/*
 /etc/config/suricata
 /etc/suricata/rules/*
