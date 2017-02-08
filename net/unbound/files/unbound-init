@@ -167,7 +167,7 @@ init_unbound() {
     if [ -n "$hostname_config" ] && [ -e "$hostname_config" ] ; then
         set_local_zone $hostname_config
     fi
-    config_get_bool static_domains "unbound" static_domains 1
+    config_get_bool static_domains "common" static_domains 1
     config_load dhcp
     if [ "$static_domains" == "1" ] ; then
         config_foreach get_local_domain dnsmasq

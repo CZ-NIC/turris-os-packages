@@ -10,6 +10,7 @@ ROOTKEYFILE=/etc/root.keys
 DEFAULT_RUNDIR=/tmp/kresd
 HINTS_CONFIG=$DEFAULT_RUNDIR/hints.tmp
 DHCP_SCRIPT=/etc/kresd/dhcp_host_domain_ng.sh
+STATIC_DOMAINS=1
 
 # Check the /etc/unbound/root.keys is reasonable and try to fix it with given command
 check_root_key() {
@@ -136,6 +137,9 @@ load_uci_config_common() {
 		md5sum /tmp/resolv.conf.auto | cut -f1 -d\ >/tmp/resolv.conf.auto.last.md5
 	fi
 
+	# enable static local domains
+	config_get_bool STATIC_DOMAINS "$section" static_domains 1
+
 	# include custom kresd config
 	include_custom_config
 }
@@ -166,7 +170,7 @@ add_rpz_file() {
 }
 
 load_uci_config_kresd() {
-	local addr config keyfile forks verbose rundir log_stderr log_stdout dynamic_domains hostname_config static_domains
+	local addr config keyfile forks verbose rundir log_stderr log_stdout dynamic_domains hostname_config
 	local section="kresd"
 
 	# knot-resolver config
@@ -187,12 +191,9 @@ load_uci_config_kresd() {
 	config_get_bool log_stdout "$section" log_stdout  1
 	procd_set_param stdout $log_stdout
 
-	# enable static local domains
-	config_get_bool static_domains "$section" static_domains 1
-
 	# hostnames for local DNS
 	config_get hostname_config "$section" hostname_config "/etc/hosts"
-	if [ -e "$hostname_config" ] && [ "$static_domains" == "1" ]; then
+	if [ -e "$hostname_config" ] && [ "$STATIC_DOMAINS" == "1" ]; then
 		cat $hostname_config >> $HINTS_CONFIG
 	fi
 
@@ -204,7 +205,7 @@ load_uci_config_kresd() {
 
 	config_load dhcp
 	config_foreach get_local_domain dnsmasq
-	if [ "$static_domains" == "1" ]; then
+	if [ "$STATIC_DOMAINS" == "1" ]; then
 		config_foreach set_local_host host
 		config_foreach set_local_host domain
 	fi
