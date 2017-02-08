@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata
 PKG_VERSION:=3.2
-PKG_RELEASE=1
+PKG_RELEASE=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.openinfosecfoundation.org/download/
@@ -51,14 +51,13 @@ define Package/suricata/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/suricata* $(1)/usr/bin
 	$(INSTALL_BIN) ./files/update_rules.sh $(1)/usr/bin/suricata_update_rules.sh
-	$(INSTALL_DIR) $(1)/usr/lib
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/*.so.* $(1)/usr/lib
 	$(INSTALL_DIR) $(1)/etc/suricata
 	sed '/default-rule-path:/,/reference-config-file:/ s/^/#/' $(PKG_BUILD_DIR)/suricata.yaml > $(1)/etc/suricata/suricata.yaml
 	sed -i 's|^\(#default-rule-path:.*\)|# We use rules from file included lower\n# Those are part of downloaded ruleset\n# You can comment that include, and uncoment this section to customize\n\n\1|' $(1)/etc/suricata/suricata.yaml
 	sed -i 's|#classification-file:.*|include: /tmp/suricata-rules/suricata-include.yaml\nclassification-file: /tmp/suricata-rules/classification.config|' $(1)/etc/suricata/suricata.yaml
 
 	sed -i 's|#reference-config-file:.*|reference-config-file: /tmp/suricata-rules/reference.config|' $(1)/etc/suricata/suricata.yaml
+	sed -i '/outputs:/r ./files/ev.example' $(1)/etc/suricata/suricata.yaml
 	$(INSTALL_DIR) $(1)/etc/config
 	$(CP) ./files/suricata.config $(1)/etc/config/suricata
 	$(CP) $(PKG_BUILD_DIR)/classification.config $(1)/etc/suricata
