@@ -28,7 +28,7 @@ define Package/knot-lib/Default
 	SECTION:=libs
 	CATEGORY:=Libraries
 	TITLE:=Knot DNS
-	DEPENDS=+libatomic
+	DEPENDS=+libatomic +libpthread
 	URL:=https://www.knot-dns.cz
 endef
 
@@ -44,20 +44,19 @@ endef
 define Package/knot-libdnssec
 	$(call Package/knot-lib/Default)
 	TITLE+= DNSSEC library
-	DEPENDS=+libpthread +libgnutls +jansson
+	DEPENDS+=+libgnutls +jansson
 endef
 
 define Package/knot-libknot
 	$(call Package/knot-lib/Default)
 	TITLE+= library
-	DEPENDS=+libpthread +knot-libdnssec
+	DEPENDS+=+knot-libdnssec
 	EXTRA_DEPENDS:=knot-libdnssec (=$(PKG_VERSION)-$(PKG_RELEASE))
 endef
 
 define Package/knot-libzscanner
 	$(call Package/knot-lib/Default)
 	TITLE+= zone parser library
-	DEPENDS=+libpthread
 endef
 
 define Package/knot
