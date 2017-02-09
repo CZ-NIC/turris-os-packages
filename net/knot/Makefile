@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot
 PKG_VERSION:=2.4.0
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-dns/
@@ -28,6 +28,7 @@ define Package/knot-lib/Default
 	SECTION:=libs
 	CATEGORY:=Libraries
 	TITLE:=Knot DNS
+	DEPENDS=+libatomic
 	URL:=https://www.knot-dns.cz
 endef
 
@@ -137,6 +138,7 @@ CONFIGURE_ARGS += 			\
 	--with-conf-mapsize=50
 
 TARGET_CFLAGS += -DPSELECT_COMPAT -DNDEBUG
+TARGET_LDFLAGS += -latomic
 
 define Package/knot/conffiles
 /etc/knot/knot.conf
