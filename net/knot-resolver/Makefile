@@ -75,7 +75,6 @@ if [ -z "$$IPKG_INSTROOT" ]; then
 /etc/init.d/dnsmasq restart
 sleep 2 # Cooldown for above (problems in times of reinstall)
 /etc/kresd/kresd.postinst.sh && rm /etc/kresd/kresd.postinst.sh
-/etc/init.d/resolver restart
 fi
 endef
 
@@ -83,7 +82,6 @@ define Package/$(PKG_NAME)/prerm
 #!/bin/sh
 set -ex
 if [ -z "$$IPKG_INSTROOT" ]; then
-
 # Remove the script if it is there.
 if [ -e /etc/init.d/kresd ] ; then /etc/init.d/kresd stop ; /etc/init.d/kresd disable ;  fi
 fi
@@ -91,7 +89,9 @@ endef
 
 define Package/knot-resolver/postrm
 #!/bin/sh
+if [ -z "$$IPKG_INSTROOT" ]; then
 [ \! -x /etc/init.d/resolver ] || /etc/init.d/resolver restart
+fi
 endef
 
 $(eval $(call BuildPackage,knot-resolver))
