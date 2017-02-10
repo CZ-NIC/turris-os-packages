@@ -60,14 +60,9 @@ define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 # check if we are on real system
 if [ -z "$$IPKG_INSTROOT" ]; then
-if [ ! -f /etc/resolver/converted ]; then
-/etc/init.d/resolver convert
-touch /etc/resolver/converted
-fi
 /etc/init.d/resolver enable
-fi
 exit 0
+fi
 endef
 
 $(eval $(call BuildPackage,resolver-conf))
-
