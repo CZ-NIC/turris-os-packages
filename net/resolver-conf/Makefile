@@ -45,7 +45,7 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/resolver
-	$(INSTALL_BIN) .files/resolver-conv $(1)/etc/resolver/resolver-conv.sh
+	$(INSTALL_BIN) ./files/resolver-conv $(1)/etc/resolver/resolver-conv.sh
 ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
 	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolver
 else
