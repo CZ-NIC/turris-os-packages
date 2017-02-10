@@ -143,8 +143,6 @@ define Package/unbound/install
 	$(INSTALL_CONF) ./files/named.cache $(1)/etc/unbound/
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/unbound-init $(1)/etc/init.d/unbound
-	$(INSTALL_DIR) $(1)/etc/uci-defaults
-	$(INSTALL_BIN) ./files/unbound.defaults $(1)/etc/uci-defaults/unbound
 	$(INSTALL_DIR) $(1)/usr/share/unbound/
 	$(INSTALL_BIN) ./files/unbound.postinst $(1)/usr/share/unbound/postinst
 	$(LN) /var/etc/unbound/unbound.conf $(1)/etc/unbound/unbound.conf
@@ -161,18 +159,19 @@ endef
 define Package/unbound/prerm
 #!/bin/sh
 set -ex
+if [ -z "$$IPKG_INSTROOT" ]; then
 /etc/init.d/unbound disable
 /etc/init.d/unbound stop
-uci delete dhcp.@dnsmasq[0].port
+uci set resolver.common.prefered_resolver="kresd"
 uci commit
-sleep 2
-/etc/init.d/dnsmasq restart
-sleep 20 # Cooldown for above (problems in times of reinstall)
+fi
 endef
 
 define Package/unbound/postrm
 #!/bin/sh
+if [ -z "$$IPKG_INSTROOT" ]; then
 [ \! -x /etc/init.d/resolver ] || /etc/init.d/resolver restart
+fi
 endef
 
 define Package/unbound-anchor/install
