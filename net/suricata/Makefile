@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata
 PKG_VERSION:=3.2
-PKG_RELEASE=2
+PKG_RELEASE=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.openinfosecfoundation.org/download/
@@ -57,7 +57,6 @@ define Package/suricata/install
 	sed -i 's|#classification-file:.*|include: /tmp/suricata-rules/suricata-include.yaml\nclassification-file: /tmp/suricata-rules/classification.config|' $(1)/etc/suricata/suricata.yaml
 
 	sed -i 's|#reference-config-file:.*|reference-config-file: /tmp/suricata-rules/reference.config|' $(1)/etc/suricata/suricata.yaml
-	sed -i '/outputs:/r ./files/ev.example' $(1)/etc/suricata/suricata.yaml
 	$(INSTALL_DIR) $(1)/etc/config
 	$(CP) ./files/suricata.config $(1)/etc/config/suricata
 	$(CP) $(PKG_BUILD_DIR)/classification.config $(1)/etc/suricata
