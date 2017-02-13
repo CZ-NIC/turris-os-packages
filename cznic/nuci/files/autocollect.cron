@@ -1,0 +1,2 @@
+MAILTO=""
+@daily	root	/usr/bin/nuci-helper-autocollect

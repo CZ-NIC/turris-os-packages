@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2013-2015 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2013-2017 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=151
+PKG_VERSION:=152
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=nuci
-	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua +ip +socat +libatsha204 +coreutils +coreutils-base64 +bzip2 +thermometer +user_notify +ntpdate
+	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua +ip +socat +libatsha204 +coreutils +coreutils-base64 +bzip2 +thermometer +user_notify +ntpdate +vixie-cron
 endef
 
 define Build/Compile
@@ -42,6 +42,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/nuci-helper-config-restore $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/nuci-helper-config-backup $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/nuci-helper-checkconn $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/nuci-helper-autocollect $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/nucipty $(1)/usr/bin/nucipty
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_plugins
@@ -54,6 +55,15 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/backups.conf $(1)/etc/config/backups
+
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_DATA) ./files/autocollect.cron $(1)/etc/cron.d/autocollect
+endef
+
+define Package/$(PKG_NAME)/postinst
+[ -n "$$IPKG_INSTROOT" ] || {
+/usr/bin/nuci-helper-autocollect
+}
 endef
 
 define plugin
