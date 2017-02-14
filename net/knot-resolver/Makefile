@@ -67,6 +67,7 @@ define Package/knot-resolver/install
 	$(INSTALL_DIR) $(1)/etc/kresd
 	$(CP) $(PKG_BUILD_DIR)/etc/icann-ca.pem $(1)/etc/kresd
 	$(INSTALL_BIN) ./files/dhcp_host_domain_ng.sh $(1)/etc/kresd/dhcp_host_domain_ng.sh
+        $(INSTALL_BIN) ./files/kresd.postinst $(1)/etc/kresd/kresd.postinst.sh
 endef
 
 define Package/$(PKG_NAME)/postinst
@@ -75,6 +76,7 @@ set -ex
 if [ -z "$$IPKG_INSTROOT" ]; then
 /etc/init.d/dnsmasq restart
 sleep 2 # Cooldown for above (problems in times of reinstall)
+/etc/kresd/kresd.postinst.sh && rm /etc/kresd/kresd.postinst.sh
 /etc/init.d/resolver restart
 fi
 endef
