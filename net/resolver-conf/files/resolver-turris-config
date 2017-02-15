@@ -12,6 +12,7 @@ config resolver 'common'
 	option forward_upstream '1'
 	option prefered_resolver 'unbound'
 	option ignore_root_key '0'
+	option static_domains '1'
 
 config resolver 'kresd'
 	option rundir '/tmp/kresd'

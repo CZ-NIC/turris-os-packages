@@ -126,6 +126,7 @@ init_unbound() {
 
     local ignore_root_key
     local hostname_config
+    local static_domains
     config_get_bool ignore_root_key common ignore_root_key 0
 
     # Do not try to restore the root key if it's not used
@@ -166,9 +167,13 @@ init_unbound() {
     if [ -n "$hostname_config" ] && [ -e "$hostname_config" ] ; then
         set_local_zone $hostname_config
     fi
+    config_get_bool static_domains "common" static_domains 1
     config_load dhcp
-    config_foreach get_local_domain dnsmasq
-    config_foreach set_local_host host
+    if [ "$static_domains" == "1" ] ; then
+        config_foreach get_local_domain dnsmasq
+        config_foreach set_local_host host
+        config_foreach set_local_host domain
+    fi
     config_load resolver
 
     set_section unbound
@@ -236,6 +241,10 @@ start() {
     mkdir -p $(dirname "$CONFIGFILE")
 
     init_unbound
+    if [ -e /usr/sbin/unbound-checkconf ] ; then
+        echo "Check generated config $CONFIGFILE:"
+        unbound-checkconf "$CONFIGFILE"
+    fi
     unbound || (
     sleep 2 # There are temporary failures with ports in unbound sometimes, try again after a while
     unbound
