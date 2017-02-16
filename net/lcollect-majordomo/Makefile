@@ -8,7 +8,7 @@
 
 include ../ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,lcollect-majordomo,27))
+$(eval $(call UCOLLECT_BASE,lcollect-majordomo,28))
 
 define Package/lcollect-majordomo
 	SECTION:=net
