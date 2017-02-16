@@ -45,6 +45,7 @@ define Package/unbound
   SUBMENU:=IP Addresses and Names
   TITLE+= (daemon)
   DEPENDS+= +libunbound +cert-backup
+  EXTRA_DEPENDS:=libunbound (= $(PKG_VERSION)-$(PKG_RELEASE))
 endef
 
 define Package/unbound/description
@@ -97,6 +98,7 @@ define Package/unbound-host
   SUBMENU:=IP Addresses and Names
   TITLE+= (DNS lookup utility)
   DEPENDS+= +libunbound
+  EXTRA_DEPENDS:=libunbound (= $(PKG_VERSION)-$(PKG_RELEASE))
 endef
 
 define Package/unbound-host/description
