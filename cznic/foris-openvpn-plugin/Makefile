@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-openvpn-plugin
-PKG_VERSION:=5
+PKG_VERSION:=6
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -29,7 +29,7 @@ $(call include_mk, foris-plugin.mk)
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
-		+foris +nuci-openvpn-client +nuci-ca-gen +openvpn-openssl +ubus-ws
+		+foris +nuci-openvpn-client +nuci-ca-gen +openvpn-openssl +ubus-ws +dhparam
 	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
 endef
 
