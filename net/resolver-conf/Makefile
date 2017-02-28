@@ -45,6 +45,7 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/resolver
+	$(INSTALL_BIN) .files/resolver-conv $(1)/etc/resolver/resolver-conv.sh
 ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
 	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolver
 else
@@ -63,8 +64,8 @@ define Package/$(PKG_NAME)/postinst
 # check if we are on real system
 if [ -z "$$IPKG_INSTROOT" ]; then
 /etc/uci-defaults/resolver-defaults && rm /etc/uci-defaults/resolver-defaults
+[ ! -e "/etc/resovler/converted" ] && /etc/resolver/resolver-conv.sh && touch /etc/resovler/converted
 /etc/init.d/resolver enable
-/etc/init.d/resolver start
 exit 0
 fi
 endef
