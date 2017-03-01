@@ -13,11 +13,10 @@ add_dhcp_record() {
 	local mac=$1
 	local ipv4=$2
 	if [[ ! -z "$ipv4" ]]; then
-
-		echo "$DNSMASQ_LEASE_EXPIRES $mac $ipv4 $DNSMASQ_SUPPLIED_HOSTNAME $DNSMASQ_CLIENT_ID">>/tmp/dhcp.leases
-		sort -u /tmp/dhcp.leases>/tmp/dhcp.leases.tmp
-		cat /tmp/dhcp.leases.tmp | sed '/^\s*$/d' > /tmp/dhcp.leases
-		rm /tmp/dhcp.leases.tmp
+		echo "$DNSMASQ_LEASE_EXPIRES $mac $ipv4 $DNSMASQ_SUPPLIED_HOSTNAME $DNSMASQ_CLIENT_ID">>$DHCP_LEASES
+		sort -u $DHCP_LEASES>$DHCP_LEASES.tmp
+		cat $DHCP_LEASES.tmp | sed '/^\s*$/d' > $DHCP_LEASES
+		rm $DHCP_LEASES.tmp
 	fi
 }
 
@@ -26,8 +25,8 @@ del_dhcp_record() {
 	local ipv4=$2
 
 	if [[ ! -z "$DNSMASQ_CLIENT_ID" ]]; then
-		cat /tm/dhcp.leases | grep -v "$DNSMASQ_CLIENT_ID" >/tmp/dhcp.leases.tmp
-		mv -f /tmp/dhcp.leases.tmp /tmp/dhcp.leases
+		cat $DHCP_LEASES | grep -v "$DNSMASQ_CLIENT_ID" >$DHCP_LEASES.tmp
+		mv -f $DHCP_LEASES.tmp $DHCP_LEASES
 	fi
 }
 
@@ -38,6 +37,10 @@ dhcp_record() {
 
 	if [[ -z "$DNSMASQ_SUPPLIED_HOSTNAME" ]]; then
 		DNSMASQ_SUPPLIED_HOSTNAME='*'
+	fi
+
+	if [[ -z "$DNSMASQ_CLIENT_ID" ]]; then
+		DNSMASQ_CLIENT_ID='*'
 	fi
 
 	if [ "$op" == "add" ]; then
