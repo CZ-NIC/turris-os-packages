@@ -64,7 +64,14 @@ define Package/$(PKG_NAME)/postinst
 # check if we are on real system
 if [ -z "$$IPKG_INSTROOT" ]; then
 /etc/uci-defaults/resolver-defaults && rm /etc/uci-defaults/resolver-defaults
-[ ! -e "/etc/resovler/converted" ] && /etc/resolver/resolver-conv.sh && touch /etc/resovler/converted
+
+ifneq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+if [ ! -e "/etc/resovler/converted" ]; then
+/etc/resolver/resolver-conv.sh
+touch /etc/resovler/converted
+fi
+endif
+
 /etc/init.d/resolver enable
 exit 0
 fi
