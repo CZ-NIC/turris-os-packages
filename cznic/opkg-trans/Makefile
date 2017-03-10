@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opkg-trans
-PKG_VERSION:=56
+PKG_VERSION:=57
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -102,11 +102,25 @@ define Package/updater-migrate/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/migrator/updater-migrate.sh $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgmigrate $(1)/usr/bin
-
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/migrator/init $(1)/etc/init.d/updater-migrate
 endef
-#	$(INSTALL_DIR) $(1)/etc/cron.d
-#	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/pkgupdate/cron $(1)/etc/cron.d/updater-migrate
-#	sed -i -e 's/updater\.sh/updater-migrate.sh/' $(1)/etc/cron.d/updater-migrate
+
+define Package/updater-migrate/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/updater-migrate enable || true
+# Start migration
+/etc/init.d/updater-migrate start
+}
+endef
+
+define Package/updater-migrate/prerm
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/updater-migrate disable || true
+}
+endef
 
 $(eval $(call BuildPackage,opkg-trans))
 $(eval $(call BuildPackage,updater-ng))
