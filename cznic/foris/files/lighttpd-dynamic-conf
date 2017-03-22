@@ -25,12 +25,18 @@ if [ "$SCRIPTNAME" != "" ] ; then
 	FIX_ROOT_DISABLER="#"
 fi
 
+FORIS_PATHS=""
+tmp_out=$(eval /usr/bin/foris -R $EXTRA_FLAGS)
+for path in $tmp_out;  do
+	FORIS_PATHS="$FORIS_PATHS|${path:1}"  # remove first '/' character
+done
+
 TEMPLATE="
 var.foris.bin = \"/usr/bin/foris\"\n\
 var.foris.flags = \"-s flup%EXTRA_FLAGS%\"\n\
 var.foris.scriptname = \"/%SCRIPTNAME%\"\n\
 \n\
-\$HTTP[\"url\"] =~ \"^\" + var.foris.scriptname + \"(?(?<!/)/|)(?!static|cgi-bin|luci-static|plugins)\" {\n\
+\$HTTP[\"url\"] =~ \"^\" + var.foris.scriptname + \"($FORIS_PATHS)\$\" {\n\
 	fastcgi.debug = 0\n\
 	fastcgi.server = (\n\
 		var.foris.scriptname => (\n\
