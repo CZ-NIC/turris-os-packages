@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=83
+PKG_VERSION:=84
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -66,6 +66,7 @@ define Package/foris/install
 
 	$(INSTALL_DIR) $(1)/usr/share/foris
 	$(INSTALL_BIN) ./files/lighttpd-dynamic-conf $(1)/usr/share/foris/lighttpd-dynamic-conf
+	$(INSTALL_BIN) ./files/foris-cgi $(1)/usr/share/foris/foris-cgi
 
 	$(INSTALL_DIR) $(1)/usr/share/foris/plugins
 
