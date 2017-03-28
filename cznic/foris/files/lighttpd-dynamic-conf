@@ -3,7 +3,7 @@
 . /lib/functions.sh
 
 config_load foris
-config_get SCRIPTNAME server scriptname "/"
+config_get SCRIPTNAME server scriptname "/foris"
 config_get_bool DEBUG server debug "0"
 config_get_bool NOAUTH auth noauth "0"
 config_get SESSION_TIMEOUT auth session_timeout ""
@@ -71,3 +71,26 @@ for PLUGIN_PATH in $PLUGINS_DIR/*; do
 done
 
 echo 'alias.url += ( var.foris.scriptname + "/static/" => "/usr/lib/python2.7/site-packages/foris/static/" )'
+
+if [ -n "$SCRIPTNAME" ] ; then
+	# insert html page to /tmp/index.html
+	mkdir -p /tmp/foris/index.html
+	cat > /tmp/index.html << HTML
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Cache-Control" content="no-cache" />
+		<meta http-equiv="refresh" content="0; URL=$SCRIPTNAME/" />
+	</head>
+	<body style="background-color: white">
+		<a style="color: black; font-family: arial, helvetica, sans-serif;" href="$SCRIPTNAME/">Foris</a>
+	</body>
+</html>
+HTML
+
+echo '$HTTP["url"] =~ "^/*$" {'
+echo '	alias.url += ( "/" => "/tmp/index.html" )'
+echo '}'
+
+fi
