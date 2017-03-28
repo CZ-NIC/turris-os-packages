@@ -66,7 +66,7 @@ PLUGINS_DIR=/usr/share/foris/plugins
 for PLUGIN_PATH in $PLUGINS_DIR/*; do
 	PLUGIN_NAME=$(basename $PLUGIN_PATH)
 	[ -d "$PLUGIN_PATH/static" ] && {
-		echo "alias.url += ( var.foris.scriptname + \"/plugins/$PLUGIN_NAME/static/\" => \"$PLUGIN_PATH/static/\" )"
+		echo "alias.url += ( var.foris.scriptname + \"/static/plugins/$PLUGIN_NAME/\" => \"$PLUGIN_PATH/static/\" )"
 	}
 done
 
