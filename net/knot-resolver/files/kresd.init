@@ -169,6 +169,13 @@ add_rpz_file() {
 	fi
 }
 
+add_hostname_config() {
+	local hostname_config="$1"
+	if [ -e "$hostname_config" ] && [ "$STATIC_DOMAINS" == "1" ]; then
+		cat $hostname_config >> $HINTS_CONFIG
+	fi
+}
+
 load_uci_config_kresd() {
 	local addr config keyfile forks verbose rundir log_stderr log_stdout dynamic_domains hostname_config
 	local section="kresd"
@@ -192,10 +199,7 @@ load_uci_config_kresd() {
 	procd_set_param stdout $log_stdout
 
 	# hostnames for local DNS
-	config_get hostname_config "$section" hostname_config "/etc/hosts"
-	if [ -e "$hostname_config" ] && [ "$STATIC_DOMAINS" == "1" ]; then
-		cat $hostname_config >> $HINTS_CONFIG
-	fi
+	config_list_foreach "$section" hostname_config add_hostname_config
 
 	# enable dynamic local domains
 	config_get_bool dynamic_domains "$section" dynamic_domains 0

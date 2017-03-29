@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
 PKG_VERSION:=v1.2.1-115-g439fae2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/knot/resolver.git
@@ -68,6 +68,7 @@ define Package/knot-resolver/install
 	$(CP) $(PKG_BUILD_DIR)/etc/icann-ca.pem $(1)/etc/kresd
 	$(INSTALL_BIN) ./files/dhcp_host_domain_ng.sh $(1)/etc/kresd/dhcp_host_domain_ng.sh
 	$(INSTALL_BIN) ./files/kresd.postinst $(1)/etc/kresd/kresd.postinst.sh
+	$(INSTALL_BIN) ./files/convert_config.sh $(1)/etc/kresd/convert_config.sh
 endef
 
 define Package/$(PKG_NAME)/postinst
@@ -77,6 +78,7 @@ if [ -z "$$IPKG_INSTROOT" ]; then
 /etc/init.d/dnsmasq restart
 sleep 2 # Cooldown for above (problems in times of reinstall)
 /etc/kresd/kresd.postinst.sh && rm /etc/kresd/kresd.postinst.sh
+/etc/kresd/convert_config.sh && rm /etc/kresd/convert_config.sh
 fi
 endef
 
