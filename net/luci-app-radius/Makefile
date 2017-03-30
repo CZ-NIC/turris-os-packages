@@ -10,8 +10,9 @@ PKG_LICENSE_FILES:=LICENSE
 include $(INCLUDE_DIR)/package.mk
 
 define Package/luci-app-radius
-   SECTION:=luci
+   SECTION:=LuCI
    CATEGORY:=LuCI
+   SUBMENU:=3. Applications
    DEPENDS:=+freeradius2-democerts +freeradius2-mod-eap-mschapv2 +freeradius2-mod-eap-peap +freeradius2-mod-eap-tls +freeradius2-mod-files
    TITLE:=Radius Server Management
    MAINTAINER:=Jason Tse <jasontsecode@gmail.com>
