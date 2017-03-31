@@ -10,7 +10,7 @@ PKG_VERSION:=0.26
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=https://fedorahosted.org/releases/m/l/mlocate/
+PKG_SOURCE_URL:=http://pkgs.fedoraproject.org/repo/extras/mlocate/$(PKG_SOURCE)/539e6f86bf387358aa2b14d5f880e49a/
 PKG_MD5SUM:=539e6f86bf387358aa2b14d5f880e49a
 
 PKG_INSTALL:=1
