@@ -31,7 +31,7 @@ define Package/ntpd/Default
   TITLE:=ISC ntp
   MAINTAINER:=Peter Wagner <tripolar@gmx.at>
   URL:=http://www.ntp.org/
-  DEPENDS:=+libopenssl +libpthread +libcap
+  DEPENDS:=+libopenssl +libpthread +libcap +USE_UCLIBC:libssp
 endef
 
 define Package/ntpd/Default/description
