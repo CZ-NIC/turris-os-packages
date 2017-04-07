@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-diagnostics-plugin
-PKG_VERSION:=3
+PKG_VERSION:=4
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -23,8 +23,8 @@ PKG_LICENSE_FILE:=LICENSE
 PKG_BUILD_DEPENDS:=foris/host
 
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, foris-plugin.mk)
-
+include ../foris/files/foris-translations.mk
+include ../foris/files/foris-plugin.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
@@ -57,5 +57,13 @@ set -x
 }
 endef
 
+FORIS_TRANSLATIONS:=cs sk  # override when some translations are missing
+
+# Package install definition
 $(eval $(call ForisPlugin,$(PKG_NAME),diagnostics))
+
+# Translation definitions
+$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),diagnostics,$(trans))))
+
 $(eval $(call BuildPackage,$(PKG_NAME)))
+$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call BuildPackage,$(PKG_NAME)-l10n-$(trans))))

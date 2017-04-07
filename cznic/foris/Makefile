@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=85
+PKG_VERSION:=87
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -21,6 +21,8 @@ PKG_BUILD_DEPENDS:=ruby/host python-slimit/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
+include ./files/foris-translations.mk
+
 $(call include_mk, python-package.mk)
 
 define Package/foris
@@ -77,9 +79,14 @@ define Package/foris/install
 	$(INSTALL_BIN) ./files/foris.wrapper $(1)/usr/bin/foris
 
 	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)
+
 	$(CP) \
 		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
 		$(1)$(PYTHON_PKG_DIR)/
+	$(RM) -r $(1)$(PYTHON_PKG_DIR)/foris/locale/
+	$(RM) -r $(1)$(PYTHON_PKG_DIR)/foris/langs/??.py
+
+	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/foris/locale
 endef
 
 define Package/foris/postinst
@@ -120,6 +127,7 @@ endef
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(STAGING_DIR)/mk/
+	$(INSTALL_DATA) ./files/foris-translations.mk $(STAGING_DIR)/mk/
 	$(INSTALL_DATA) ./files/foris-plugin.mk $(STAGING_DIR)/mk/
 endef
 
@@ -134,7 +142,46 @@ define Host/Clean
 	$(RM) -rf $(STAGING_DIR_HOST)/bin/foris_compilemessages.sh
 endef
 
+# $1 = translation name
+define ForisTranslation
+ define Package/foris-l10n-$(1)
+	TITLE:=foris-l10n-$(1)
+	DEPENDS:=\
+		+foris
+	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+ endef
+
+ define Package/foris-l10n-$(1)/install
+	$(INSTALL_DIR) $$(1)$(PYTHON_PKG_DIR)/foris/locale/$(1)/LC_MESSAGES
+	$(CP) \
+		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/foris/locale/$(1)/LC_MESSAGES/*.mo \
+		$$(1)$(PYTHON_PKG_DIR)/foris/locale/$(1)/LC_MESSAGES/
+	$(INSTALL_DIR) $$(1)$(PYTHON_PKG_DIR)/foris/langs/
+	$(CP) \
+		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/foris/langs/$(1).py \
+		$$(1)$(PYTHON_PKG_DIR)/foris/langs/
+ endef
+
+ define Package/foris-l10n-$(1)/postrm
+#!/bin/sh
+set -x
+/etc/init.d/lighttpd restart
+ endef
+
+ define Package/foris-l10n-$(1)/postinst
+#!/bin/sh
+set -x
+/etc/init.d/lighttpd restart
+ endef
+
+endef
+
+# Translation definitions
+$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisTranslation,$(trans))))
+
 $(eval $(call BuildPackage,foris))
+$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call BuildPackage,foris-l10n-$(trans))))
+
 $(eval $(call PyPackage,foris))
 $(eval $(call BuildPackage,foris-oldconfig))
 $(eval $(call HostBuild))
