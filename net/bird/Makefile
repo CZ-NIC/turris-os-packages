@@ -21,7 +21,7 @@ define Package/bird/Default
   TITLE:=The BIRD Internet Routing Daemon
   URL:=http://bird.network.cz/
   DEPENDS:=+libpthread
-  USERID:=bird:bird
+  USERID:=bird=5170:bird=5170
 endef
 
 define Package/birdc/Default
