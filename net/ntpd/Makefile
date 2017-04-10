@@ -22,6 +22,14 @@ PKG_FIXUP:=autoreconf
 PKG_LIBTOOL_PATHS:=. sntp
 PKG_CHECK_FORMAT_SECURITY:=0
 
+ifdef CONFIG_LIBC_USE_UCLIBC
+define no_stack_protector
+        grep -Rl fstack-protector-all $(PKG_BUILD_DIR) | xargs sed -i 's|-fstack-protector-all||g'
+endef
+
+Hooks/Prepare/Post += no_stack_protector
+endif
+
 include $(INCLUDE_DIR)/package.mk
 
 define Package/ntpd/Default
