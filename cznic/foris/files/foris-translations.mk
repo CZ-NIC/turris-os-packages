@@ -1,1 +1,1 @@
-FORIS_TRANSLATIONS:=cs de sk
+FORIS_TRANSLATIONS:=cs de sk pl
