@@ -93,4 +93,7 @@ echo '$HTTP["url"] =~ "^/*$" {'
 echo '	alias.url += ( "/" => "/tmp/index.html" )'
 echo '}'
 
+# Make sure that wirzard passes during a migration from older image
+echo '	url.redirect += ( "^/wizard/(.*)" => "/foris/wizard/$1" )'
+
 fi
