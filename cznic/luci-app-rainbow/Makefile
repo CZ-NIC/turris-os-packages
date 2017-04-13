@@ -20,6 +20,12 @@ PKG_BUILD_DEPENDS:=luci-base/host
 
 include $(INCLUDE_DIR)/package.mk
 
+ifdef CONFIG_TARGET_mvebu_Turris-Omnia
+BOARD=omnia
+else
+BOARD=turris
+endif
+
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=+luci @(PACKAGE_rainbow-omnia||PACKAGE_rainbow)
@@ -31,10 +37,10 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/controller/rainbow/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/omnia-luasrc/controller/rainbow/rainbow.lua $(1)/usr/lib/lua/luci/controller/rainbow/rainbow.lua
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/$(BOARD)-luasrc/controller/rainbow/rainbow.lua $(1)/usr/lib/lua/luci/controller/rainbow/rainbow.lua
 
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/model/cbi/rainbow/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/omnia-luasrc/model/cbi/rainbow/rainbow.lua $(1)/usr/lib/lua/luci/model/cbi/rainbow/rainbow.lua
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/$(BOARD)-luasrc/model/cbi/rainbow/rainbow.lua $(1)/usr/lib/lua/luci/model/cbi/rainbow/rainbow.lua
 
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/i18n/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/rainbow.cs.lmo $(1)/usr/lib/lua/luci/i18n/rainbow.cs.lmo
