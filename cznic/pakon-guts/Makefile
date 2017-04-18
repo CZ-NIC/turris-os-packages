@@ -27,7 +27,7 @@ define Package/pakon-guts
 endef
 
 define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 RELEASE=1 MAX_LOG_LEVEL=DEBUG
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 RELEASE=1 MAX_LOG_LEVEL=DBG
 endef
 
 define Package/pakon-guts/install
