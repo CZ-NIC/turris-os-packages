@@ -8,10 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-diagnostics
-PKG_VERSION:=3
+PKG_VERSION:=4
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
-PKG_SOURCE_VERSION:=ad027c8c5668e47832339a0ab5ea5f262d79a9f4
+PKG_SOURCE_VERSION:=6a467a0ecf26d9fa6aa6422d3f51eb41a85a6d4c
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
