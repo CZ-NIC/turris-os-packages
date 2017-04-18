@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-guts
-PKG_VERSION:=4
+PKG_VERSION:=4.1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-guts.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
