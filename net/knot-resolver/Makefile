@@ -10,12 +10,12 @@ PKG_RELRO_FULL:=0
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
-PKG_VERSION:=1.2.3
-PKG_RELEASE:=2
+PKG_VERSION:=1.2.5
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-resolver
-PKG_MD5SUM:=81a773f182112b4e11935223f900cfbcca8624f2c382b1e39a68d7c3db81c921
+PKG_MD5SUM:=30e24f9681e40c79a0aadbbfd78aaa72534dd3bca3347de89dfeae055b2c99e4
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
@@ -33,7 +33,7 @@ define Package/knot-resolver
 	TITLE:=Knot DNS Resolver
 	URL:=https://gitlab.labs.nic.cz/knot/resolver
 	DEPENDS=+knot-libknot +libuv +luajit +knot-libzscanner +knot-libdnssec +dnssec-rootkey +resolver-conf +luasec +luasocket
-	EXTRA_DEPENDS:=knot-libknot (>= 2.4.0), knot-libknot (< 2.5.0)
+	EXTRA_DEPENDS:=knot-libknot (>= 2.4.2), knot-libknot (< 2.5.0)
 endef
 
 define Package/knot-resolver/description
