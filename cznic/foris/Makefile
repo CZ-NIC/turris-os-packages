@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
 PKG_VERSION:=88
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
@@ -87,6 +87,7 @@ define Package/foris/install
 	$(RM) -r $(1)$(PYTHON_PKG_DIR)/foris/langs/??.py
 
 	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/foris/locale
+	touch $(1)$(PYTHON_PKG_DIR)/foris/locale/.keep
 endef
 
 define Package/foris/postinst
