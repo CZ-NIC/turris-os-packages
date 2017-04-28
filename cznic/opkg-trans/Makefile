@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opkg-trans
 PKG_VERSION:=58.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -23,7 +23,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/opkg-trans
 	TITLE:=opkg-trans
-	DEPENDS:=+liblua +libevent2 +usign +curl
+	DEPENDS:=+liblua +libevent2 +usign +libcurl
 endef
 
 define Build/Compile
