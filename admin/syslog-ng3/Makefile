@@ -60,6 +60,9 @@ CONFIGURE_ARGS +=  \
 	--disable-glibtest \
 	--disable-spoof-source \
 	--disable-sql \
+	--disable-java \
+	--disable-java-modules \
+	--disable-sql \
 	--enable-prce \
 	--disable-linux-caps \
 
