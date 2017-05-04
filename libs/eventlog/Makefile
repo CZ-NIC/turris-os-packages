@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=eventlog
-PKG_VERSION:=0.2.9
-PKG_RELEASE:=2
+PKG_VERSION:=0.2.12
+PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=http://www.balabit.com/downloads/files/eventlog/0.2/
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION).tar.gz
-PKG_MD5SUM:=76e3d7a0b8f335c12099e9b91191fbf1
+PKG_MD5SUM:=3d6ebda8a161d36cb40d09328f78786b
 
 PKG_FIXUP:=autoreconf libtool
 PKG_INSTALL:=1
