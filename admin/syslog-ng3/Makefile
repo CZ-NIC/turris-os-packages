@@ -63,6 +63,7 @@ CONFIGURE_ARGS +=  \
 	--disable-java \
 	--disable-java-modules \
 	--disable-sql \
+	--disable-python \
 	--enable-prce \
 	--disable-linux-caps \
 
