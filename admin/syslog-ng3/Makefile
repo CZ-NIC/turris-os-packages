@@ -66,6 +66,7 @@ CONFIGURE_ARGS +=  \
 	--disable-python \
 	--enable-prce \
 	--disable-linux-caps \
+	--with-librabbitmq-client=no \
 
 TARGET_CFLAGS += -std=gnu99
 
