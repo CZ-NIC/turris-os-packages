@@ -79,6 +79,7 @@ define Package/syslog-ng3/install
 	cd $(PKG_BUILD_DIR); make DESTDIR=$(1) install
 	rm -rf $(1)/usr/lib/pkgconfig $(1)/usr/lib/*.a $(1)/usr/lib/*.la $(1)/usr/lib/syslog-ng/*.la
 	rm -rf $(1)/etc $(1)/usr/include
+	rmdir $(1)/var
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/syslog-ng.init $(1)/etc/init.d/syslog-ng
 	$(INSTALL_DIR) $(1)/etc
