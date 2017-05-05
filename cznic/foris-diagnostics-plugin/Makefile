@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-diagnostics-plugin
-PKG_VERSION:=5
+PKG_VERSION:=6
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -56,8 +56,6 @@ set -x
 /etc/init.d/lighttpd restart
 }
 endef
-
-FORIS_TRANSLATIONS:=cs sk pl # override when some translations are missing
 
 # Package install definition
 $(eval $(call ForisPlugin,$(PKG_NAME),diagnostics))
