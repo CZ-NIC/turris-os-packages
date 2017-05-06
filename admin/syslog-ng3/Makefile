@@ -62,8 +62,10 @@ CONFIGURE_ARGS +=  \
 	--disable-sql \
 	--disable-java \
 	--disable-java-modules \
+	--disable-redis \
 	--disable-sql \
 	--disable-python \
+	--disable-smtp \
 	--enable-prce \
 	--disable-linux-caps \
 	--with-librabbitmq-client=no \
