@@ -67,6 +67,7 @@ CONFIGURE_ARGS +=  \
 	--enable-prce \
 	--disable-linux-caps \
 	--with-librabbitmq-client=no \
+	--with-mongoc=no \
 
 TARGET_CFLAGS += -std=gnu99
 
