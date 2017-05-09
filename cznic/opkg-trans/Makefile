@@ -18,8 +18,11 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)
+HOST_BUILD_DEPENDS:=curl/host libevent2/host lua/host
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/host-build.mk
 
 define Package/opkg-trans
 	TITLE:=opkg-trans
@@ -125,6 +128,20 @@ define Package/updater-migrate/prerm
 }
 endef
 
+define Host/Compile
+	$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) $(HOST_MAKE_FLAGS) Q= NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION)
+endef
+
+define Host/Install
+	$(INSTALL_DIR) $(STAGING_DIR_HOST)/usr/lib/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/lib/libupdater.so $(STAGING_DIR_HOST)/usr/lib/
+
+	$(INSTALL_DIR) $(STAGING_DIR_HOST)/usr/bin
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/opkg-trans $(STAGING_DIR_HOST)/usr/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/pkgupdate $(STAGING_DIR_HOST)/usr/bin/
+endef
+
 $(eval $(call BuildPackage,opkg-trans))
 $(eval $(call BuildPackage,updater-ng))
 $(eval $(call BuildPackage,updater-migrate))
+$(eval $(call HostBuild))
