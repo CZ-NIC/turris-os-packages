@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ffmpeg
 PKG_VERSION:=2.7.6
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://ffmpeg.org/releases/
@@ -337,7 +337,7 @@ FFMPEG_CONFIGURE:= \
 	--disable-vaapi \
 	--disable-vda \
 	--disable-vdpau \
-	--disable-outdevs
+	--enable-outdev=fbdev
 
 ifeq ($(CONFIG_TARGET_mvebu),)
 FFMPEG_CONFIGURE+= \
