@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-dev-detect
-PKG_VERSION:=0.1
+PKG_VERSION:=0.2
 PKG_RELEASE:=1
 PKG_LICENSE:=GPLv2+
 PKG_LICENSE_FILES:=COPYING
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-dev-detect.git
-PKG_SOURCE_VERSION:=0d40fc3138eef68ee9ed3ad01d840a62a5d764a1
+PKG_SOURCE_VERSION:=1d17ca1821176784a210ac009b84944bb3c09937
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 MAINTAINER:=Martin Petracek <martin.petracek@nic.cz>
@@ -49,7 +49,16 @@ define Py3Package/pakon-dev-detect/install
 endef
 
 define Package/pakon-dev-detect/postinst
+#!/bin/sh
 	[ -f /usr/share/pakon-dev-detect/known_macs ] || /usr/share/pakon-dev-detect/init_known_macs.sh > /usr/share/pakon-dev-detect/known_macs
+	/etc/init.d/pakon-dev-detect enable
+	/etc/init.d/pakon-dev-detect start
+endef
+
+define Package/pakon-dev-detect/prerm
+#!/bin/sh
+	/etc/init.d/pakon-dev-detect disable
+	/etc/init.d/pakon-dev-detect stop
 endef
 
 
