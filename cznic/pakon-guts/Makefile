@@ -52,4 +52,16 @@ define Package/pakon-guts/conffiles
 /etc/config/pakon
 endef
 
+define Package/pakon-guts/postinst
+#!/bin/sh
+	/etc/init.d/pakond enable
+	/etc/init.d/pakond start
+endef
+
+define Package/pakon-guts/prerm
+#!/bin/sh
+	/etc/init.d/pakond disable
+	/etc/init.d/pakond stop
+endef
+
 $(eval $(call BuildPackage,pakon-guts))
