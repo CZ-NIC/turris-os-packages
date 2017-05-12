@@ -36,6 +36,8 @@ if [ -z "$${IPKG_INSTROOT}" ] && ! uci -q get updater.l10n; then
 	uci set updater.l10n=l10n
 	uci add_list updater.l10n.langs=cs
 	uci add_list updater.l10n.langs=de
+	LANG="$$(uci get foris.settings.lang)" && [ "$$LANG" != en ] && \
+		 uci add_list updater.l10n.langs=$$LANG
 	uci commit updater
 fi
 endef
