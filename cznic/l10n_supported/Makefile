@@ -33,7 +33,7 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 # When there is no l10n section then add it.
-UCIC="uci -c $${IPK_INSTROOT}/etc/config"
+UCIC="uci -c $${IPKG_INSTROOT}/etc/config"
 if ! uci -q get updater.l10n; then
 	$$UCIC set updater.l10n=l10n
 	$$UCIC add_list updater.l10n.langs=cs
