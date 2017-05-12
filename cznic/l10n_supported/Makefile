@@ -12,13 +12,12 @@ PKG_VERSION:=1.1
 PKG_RELEASE:=3
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-PKG_BUILD_DEPENDS:=uci/host
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=List of localizations available in Turris repository
-	DEPENDS:=+uci +updater-ng
+	DEPENDS:=+updater-ng
 endef
 
 define Build/Compile
@@ -33,12 +32,11 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 # When there is no l10n section then add it.
-UCIC="uci -c $${IPKG_INSTROOT}/etc/config"
-if ! uci -q get updater.l10n; then
-	$$UCIC set updater.l10n=l10n
-	$$UCIC add_list updater.l10n.langs=cs
-	$$UCIC add_list updater.l10n.langs=de
-	$$UCIC commit updater
+if [ -z "$${IPKG_INSTROOT}" ] && ! uci -q get updater.l10n; then
+	uci set updater.l10n=l10n
+	uci add_list updater.l10n.langs=cs
+	uci add_list updater.l10n.langs=de
+	uci commit updater
 fi
 endef
 
