@@ -1,0 +1,12 @@
+#!/bin/sh /etc/rc.common
+
+USE_PROCD=1
+
+#pakond has START=50 and we want to be started after pakond
+START=51
+
+start_service() {
+        procd_open_instance
+        procd_set_param command /usr/bin/dev-detect
+        procd_close_instance
+}

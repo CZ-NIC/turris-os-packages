@@ -23,6 +23,14 @@ lists = {
     title_de = 'Zertifikate der Zertifizierungsstellen',
     title_en = 'CA root certificates'
 },
+['dev-detect'] = {
+    description_cs = 'Software pro detekci nově připojených zařízení na lokální síti (EXPERIMENTÁLNÍ).',
+    description_de = 'Software für die Erkennung neuer Geräte im lokalen Netzwerk (EXPERIMENTELL).',
+    description_en = 'Software for detecting new devices on local network (EXPERIMENTAL).',
+    title_cs = 'Detekce připojených zařízení',
+    title_de = 'Geräterkennung',
+    title_en = 'Device detection'
+},
 ['dvb'] = {
     description_cs = 'Software na sdílení televizního vysílání přijímaného Turrisem. Neobsahuje ovladače pro zařízení.',
     description_de = 'Software für die Weiterleitung von Fernsehsignal, welcher mittels DVB-Tuner vom Turris empfangen wird. Gerätetreiber sind nicht enthalten.',
