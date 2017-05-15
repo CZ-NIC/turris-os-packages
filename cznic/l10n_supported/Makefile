@@ -17,7 +17,6 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=List of localizations available in Turris repository
-	DEPENDS:=+updater-ng
 endef
 
 define Build/Compile
