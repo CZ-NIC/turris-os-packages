@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-dev-detect
-PKG_VERSION:=0.2
+PKG_VERSION:=1.0
 PKG_RELEASE:=1
 PKG_LICENSE:=GPLv2+
 PKG_LICENSE_FILES:=COPYING
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-dev-detect.git
-PKG_SOURCE_VERSION:=1d17ca1821176784a210ac009b84944bb3c09937
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 MAINTAINER:=Martin Petracek <martin.petracek@nic.cz>
