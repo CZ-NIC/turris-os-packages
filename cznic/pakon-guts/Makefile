@@ -17,7 +17,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -26,8 +26,14 @@ define Package/pakon-guts
 	DEPENDS:=+liblua +libnetfilter-queue +iptables-mod-nfqueue +libstdcpp +libpthread +librt
 endef
 
+ifdef CONFIG_USE_MUSL
+MAKE_PARAMS:=HAVE_RECVMMSG=1
+else
+MAKE_PARAMS:=
+endif
+
 define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 RELEASE=1 MAX_LOG_LEVEL=DBG
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 RELEASE=1 MAX_LOG_LEVEL=DBG $(MAKE_PARAMS)
 endef
 
 define Package/pakon-guts/install
