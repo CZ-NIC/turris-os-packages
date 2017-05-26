@@ -7,7 +7,7 @@
 #
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=https-cert
+PKG_NAME:=lighttpd-https-cert
 PKG_VERSION:=4
 PKG_MAINTAINER:=Robin Obůrka <robin.oburka@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
