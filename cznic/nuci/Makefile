@@ -9,6 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
 PKG_VERSION:=157
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -87,7 +88,7 @@ $(eval $(call plugin,diagnostics,Nuci plugin for the diagnostics module,+turris-
 
 define Package/nuci-tls
 TITLE:=TLS access to nuci
-DEPENDS:=+nuci +socat +openssl-util
+DEPENDS:=+nuci +socat +openssl-util +dhparam
 endef
 
 define Package/nuci-tls/install
