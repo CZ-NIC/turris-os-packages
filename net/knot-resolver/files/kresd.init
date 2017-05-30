@@ -215,6 +215,8 @@ load_uci_config_kresd() {
 	fi
 	if [ "$dynamic_domains" == "1" ]; then
 		config_foreach set_dnsmasq_dhcp_script dnsmasq "$DHCP_SCRIPT"
+		#reload dhcp config with script param
+		/etc/init.d/dnsmasq reload
 	fi
 	config_load resolver
 
