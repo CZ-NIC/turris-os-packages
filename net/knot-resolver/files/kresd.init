@@ -162,6 +162,13 @@ set_dnsmasq_dhcp_script() {
 	uci_commit dhcp
 }
 
+get_dnsmasq_dhcp_script() {
+	local config="$1"
+	local DHCPSCRIPT
+	config_get DHCPSCRIPT "$config" dhcpscript
+	echo $DHCPSCRIPT
+}
+
 add_rpz_file() {
 	local rpz_file="$1"
 	if [ -e "$rpz_file" ]; then
@@ -177,7 +184,7 @@ add_hostname_config() {
 }
 
 load_uci_config_kresd() {
-	local addr config keyfile forks verbose rundir log_stderr log_stdout dynamic_domains hostname_config
+	local addr config keyfile forks verbose rundir log_stderr log_stdout dynamic_domains hostname_config dhcp_script_path
 	local section="kresd"
 
 	# knot-resolver config
@@ -209,15 +216,23 @@ load_uci_config_kresd() {
 
 	config_load dhcp
 	config_foreach get_local_domain dnsmasq
+
+	dhcp_script_path=$(config_foreach get_dnsmasq_dhcp_script dnsmasq)
 	if [ "$STATIC_DOMAINS" == "1" ]; then
 		config_foreach set_local_host host
 		config_foreach set_local_host domain
 	fi
 	if [ "$dynamic_domains" == "1" ]; then
+		echo "Enable dhcp script"
 		config_foreach set_dnsmasq_dhcp_script dnsmasq "$DHCP_SCRIPT"
 		#reload dhcp config with script param
 		/etc/init.d/dnsmasq reload
+	elif [ "$dynamic_domains" == "0" ] && [ "$dhcp_script_path" == "$DHCP_SCRIPT" ]; then
+		echo "Disable dhcp script"
+		config_foreach set_dnsmasq_dhcp_script dnsmasq ""
+		/etc/init.d/dnsmasq reload
 	fi
+
 	config_load resolver
 
 	# load hints config
