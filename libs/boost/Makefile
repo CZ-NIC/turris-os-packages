@@ -5,7 +5,7 @@
 # See /LICENSE for more information.
 #
 
-# 
+#
 # Original Boost 1.51 Makefile by Mirko Vogt <mirko@openwrt.org>
 # Dude, this "boost" is really one of the most crude stuff I ported yet.
 #
@@ -13,7 +13,7 @@
 
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/nls.mk
-include $(INCLUDE_DIR)/target.mk 
+include $(INCLUDE_DIR)/target.mk
 
 PKG_NAME:=boost
 PKG_VERSION:=1_58_0
@@ -27,7 +27,7 @@ PKG_MD5SUM:=5a5d5614d9a07672e1ab2a250b5defc5
 PKG_LICENSE:=Boost Software License <http://www.boost.org/users/license.html>
 PKG_MAINTAINER:=Carlos M. Ferreira <carlosmf.pt@gmail.com>
 
-PKG_BUILD_DEPENDS += boost/host 
+PKG_BUILD_DEPENDS += boost/host
 PKG_BUILD_PARALLEL:=0
 PKG_USE_MIPS16:=0
 
@@ -118,7 +118,7 @@ endef
 # 3: dependencies on other packages
 define DefineBoostLibrary
 
-  BOOST_DEPENDS+= +boost-$(1) 
+  BOOST_DEPENDS+= +boost-$(1)
   BOOST_LIBS+= $(1)
 
   PKG_CONFIG_DEPENDS+= CONFIG_PACKAGE_boost-$(1)
@@ -156,7 +156,7 @@ $(eval $(call DefineBoostLibrary,program_options,,))
 $(eval $(call DefineBoostLibrary,random,system,))
 
 # We need a beter way to provide this package, information regarding the Python packages
-#  such as Python version and directories locations. 
+#  such as Python version and directories locations.
 # Python 2.7 version is for now hard-coded. Python 3 is (until this date) broken in the trunk tree.
 $(eval $(call DefineBoostLibrary,python,,+PACKAGE_boost-python:python))
 $(eval $(call DefineBoostLibrary,regex,,))
@@ -200,6 +200,7 @@ define Build/Compile
 		) \
 		bjam \
 			'-sBUILD=release <optimization>space <inlining>on <debug-symbols>off' \
+			--ignore-site-config \
 			--toolset=gcc-$(ARCH) --build-type=minimal --layout=system abi=$(BOOST_ABI) \
 			--disable-long-double \
 			$(CONFIGURE_ARGS) \
