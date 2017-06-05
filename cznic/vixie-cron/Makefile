@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=vixie-cron
 PKG_VERSION:=7
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_URL:=ftp://ftp.isc.org/isc/cron/
 PKG_SOURCE_VERSION:=4.1
 PKG_SOURCE:=cron_$(PKG_SOURCE_VERSION).shar
@@ -22,6 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:= +syslog-ng3 @(!BUSYBOX_CONFIG_CROND&&!BUSYBOX_CONFIG_CRONTAB)
+	PROVIDES:=cron
 endef
 
 define Build/Prepare
