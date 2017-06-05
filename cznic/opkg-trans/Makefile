@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opkg-trans
-PKG_VERSION:=58.4
+PKG_VERSION:=58.4.1
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
@@ -118,6 +118,8 @@ define Package/updater-migrate/postinst
 /etc/init.d/updater-migrate enable || true
 # Start migration
 /etc/init.d/updater-migrate start
+# Notify user
+create_notification -s update "Updater je aktualizován na novou verzi. Pokud migrace selže, konzultujte dokumentaci: https://www.turris.cz/doc/cs/howto/updater_migration" "Updater is being updated to a new version. If the migration fails then consult the documentation: https://www.turris.cz/doc/cs/howto/updater_migration"
 }
 endef
 
