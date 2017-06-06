@@ -1,0 +1,133 @@
+--- a/extra/CMakeLists.txt
++++ b/extra/CMakeLists.txt
+@@ -28,6 +28,7 @@ ENDIF()
+ # mysqld_error.h results in rebuild of the almost whole server)
+ # To preserve timestamp, first generate a temp header file, then copy it
+ # to mysqld_error.h using cmake -E copy_if_different
++IF(NOT CMAKE_CROSSCOMPILING)
+ ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_BINARY_DIR}/include/mysqld_error.h.tmp
+    COMMAND comp_err
+ 	--charset=${PROJECT_SOURCE_DIR}/sql/share/charsets 
+@@ -40,6 +41,20 @@ ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_BINARY
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/include/mysqld_ername.h.tmp ${CMAKE_BINARY_DIR}/include/mysqld_ername.h
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/include/sql_state.h.tmp ${CMAKE_BINARY_DIR}/include/sql_state.h
+    DEPENDS comp_err ${PROJECT_SOURCE_DIR}/sql/share/errmsg-utf8.txt)
++ELSE()
++ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_BINARY_DIR}/include/mysqld_error.h.tmp
++   COMMAND ${IMPORT_EXECUTABLES}/extra/comp_err
++	--charset=${PROJECT_SOURCE_DIR}/sql/share/charsets 
++	--out-dir=${CMAKE_BINARY_DIR}/sql/share/
++	--header_file=${CMAKE_BINARY_DIR}/include/mysqld_error.h.tmp 
++	--name_file=${CMAKE_BINARY_DIR}/include/mysqld_ername.h.tmp
++	--state_file=${CMAKE_BINARY_DIR}/include/sql_state.h.tmp
++	--in_file=${PROJECT_SOURCE_DIR}/sql/share/errmsg-utf8.txt
++   COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/include/mysqld_error.h.tmp ${CMAKE_BINARY_DIR}/include/mysqld_error.h
++   COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/include/mysqld_ername.h.tmp ${CMAKE_BINARY_DIR}/include/mysqld_ername.h
++   COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/include/sql_state.h.tmp ${CMAKE_BINARY_DIR}/include/sql_state.h
++   DEPENDS ${IMPORT_EXECUTABLES}/extra/comp_err ${PROJECT_SOURCE_DIR}/sql/share/errmsg-utf8.txt)
++ENDIF()
+ 
+ ADD_CUSTOM_TARGET(GenError
+                   ALL
+--- a/sql/CMakeLists.txt
++++ b/sql/CMakeLists.txt
+@@ -72,11 +72,19 @@ IF(NOT CMAKE_CROSSCOMPILING)
+     ${CMAKE_CURRENT_BINARY_DIR}/sql_yacc.h)
+ ENDIF()
+ 
++IF(NOT CMAKE_CROSSCOMPILING)
+ ADD_CUSTOM_COMMAND(
+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/lex_token.h
+   COMMAND gen_lex_token > lex_token.h
+-  ${DEPENDS_gen_lex_token}
++  DEPENDS gen_lex_token
++)
++ELSE()
++ADD_CUSTOM_COMMAND(
++  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/lex_token.h
++  COMMAND ${IMPORT_EXECUTABLES}/sql/gen_lex_token > lex_token.h
++  DEPENDS ${IMPORT_EXECUTABLES}/sql/gen_lex_token
+ )
++ENDIF()
+ 
+ ADD_DEFINITIONS(-DMYSQL_SERVER -DHAVE_EVENT_SCHEDULER)
+ 
+@@ -332,11 +340,19 @@ IF(NOT CMAKE_CROSSCOMPILING)
+   ADD_EXECUTABLE(gen_lex_hash gen_lex_hash.cc)
+ ENDIF()
+ 
++IF(NOT CMAKE_CROSSCOMPILING)
+ ADD_CUSTOM_COMMAND(
+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/lex_hash.h
+   COMMAND gen_lex_hash > lex_hash.h
+-  ${DEPENDS_gen_lex_hash}
++  DEPENDS gen_lex_hash
++)
++ELSE()
++ADD_CUSTOM_COMMAND(
++  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/lex_hash.h
++  COMMAND ${IMPORT_EXECUTABLES}/sql/gen_lex_hash > lex_hash.h
++  DEPENDS ${IMPORT_EXECUTABLES}/sql/gen_lex_hash
+ )
++ENDIF()
+ 
+ MYSQL_ADD_EXECUTABLE(mysql_tzinfo_to_sql tztime.cc COMPONENT Server)
+ SET_TARGET_PROPERTIES(mysql_tzinfo_to_sql PROPERTIES COMPILE_FLAGS "-DTZINFO2SQL")
+--- a/dbug/CMakeLists.txt
++++ b/dbug/CMakeLists.txt
+@@ -36,6 +36,7 @@ IF(NOT WIN32 AND NOT CMAKE_GENERATOR MAT
+   MARK_AS_ADVANCED(NROFF)
+   SET(OUTPUT_INC output1.r output2.r output3.r output4.r output5.r)
+   SET(SOURCE_INC factorial.r main.r example1.r example2.r example3.r)
++IF(NOT CMAKE_CROSSCOMPILING)
+   ADD_CUSTOM_COMMAND(OUTPUT ${OUTPUT_INC}
+                      DEPENDS factorial
+                      COMMAND factorial 1 2 3 4 5 > output1.r
+@@ -43,6 +44,15 @@ IF(NOT WIN32 AND NOT CMAKE_GENERATOR MAT
+                      COMMAND factorial -\#d:t:o 3 > output3.r
+                      COMMAND factorial -\#d,result:o 4 > output4.r
+                      COMMAND factorial -\#d:f,factorial:F:L:o 3 > output5.r)
++ELSE()
++  ADD_CUSTOM_COMMAND(OUTPUT ${OUTPUT_INC}
++                     DEPENDS ${IMPORT_EXECUTABLES}/dbug/factorial
++                     COMMAND ${IMPORT_EXECUTABLES}/dbug/factorial 1 2 3 4 5 > output1.r
++                     COMMAND ${IMPORT_EXECUTABLES}/dbug/factorial -\#t:o 2 3 > output2.r
++                     COMMAND ${IMPORT_EXECUTABLES}/dbug/factorial -\#d:t:o 3 > output3.r
++                     COMMAND ${IMPORT_EXECUTABLES}/dbug/factorial -\#d,result:o 4 > output4.r
++                     COMMAND ${IMPORT_EXECUTABLES}/dbug/factorial -\#d:f,factorial:F:L:o 3 > output5.r)
++ENDIF()
+   FOREACH(file ${SOURCE_INC})
+     STRING(REGEX REPLACE "\\.r" ".c" srcfile ${file})
+     ADD_CUSTOM_COMMAND(OUTPUT ${file} DEPENDS ${srcfile}
+--- a/scripts/CMakeLists.txt
++++ b/scripts/CMakeLists.txt
+@@ -45,6 +45,7 @@ ELSE()
+ ENDIF()
+ 
+ # Build mysql_fix_privilege_tables.c
++IF(NOT CMAKE_CROSSCOMPILING)
+ ADD_CUSTOM_COMMAND(
+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/mysql_fix_privilege_tables_sql.c
+   ${CAT_COMMAND}
+@@ -58,6 +59,21 @@ ADD_CUSTOM_COMMAND(
+   ${CMAKE_CURRENT_SOURCE_DIR}/mysql_system_tables_fix.sql
+   ${CMAKE_CURRENT_SOURCE_DIR}/mysql_performance_tables.sql
+ )
++ELSE()
++ADD_CUSTOM_COMMAND(
++  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/mysql_fix_privilege_tables_sql.c
++  ${CAT_COMMAND}
++  COMMAND ${IMPORT_EXECUTABLES}/scripts/comp_sql
++  mysql_fix_privilege_tables
++  mysql_fix_privilege_tables.sql
++  mysql_fix_privilege_tables_sql.c
++  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
++  DEPENDS ${IMPORT_EXECUTABLES}/scripts/comp_sql
++  ${CMAKE_CURRENT_SOURCE_DIR}/mysql_system_tables.sql
++  ${CMAKE_CURRENT_SOURCE_DIR}/mysql_system_tables_fix.sql
++  ${CMAKE_CURRENT_SOURCE_DIR}/mysql_performance_tables.sql
++)
++ENDIF()
+ 
+ # Add target for the above to be built
+ ADD_CUSTOM_TARGET(GenFixPrivs
