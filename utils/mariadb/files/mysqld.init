@@ -1,0 +1,39 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2010-2011 OpenWrt.org
+
+START=95
+STOP=10
+
+USE_PROCD=1
+
+start_service() {
+  datadir="`/usr/sbin/mysqld --help --verbose | sed -n 's|^[[:blank:]]*datadir[[:blank:]]*/|/|p'`"
+  version="`mysqld --version | sed -n 's|.*Ver[[:blank:]]*\([0-9.]*\)-.*|\1|p'`"
+  if [ \! -d "$datadir" ]; then
+    mysql_install_db --skip-auth-anonymous-user --user=mysql --skip-name-resolve
+    echo "$version" > "$datadir"/.version
+  fi
+  if [ "`cat "$datadir"/.version 2> /dev/null`" \!= "$version" ]; then
+    mysqld --skip-networking --skip-grant-tables --socket=/tmp/mysql_upgrade.sock &
+    PID="$!"
+    mysql_upgrade --upgrade-system-tables --socket=/tmp/mysql_upgrade.sock
+    kill "$PID"
+    i=0
+    while [ "$i" -lt 60 ] && [ -n "`grep mysql /proc/15834/cmdline 2> /dev/null`" ]; do
+      sleep 1
+      [ "$i" -lt 30 ] || kill "$PID"
+    done
+    if [ -n "`grep mysql /proc/15834/cmdline 2> /dev/null`" ]; then
+      kill -9 "$PID"
+    fi
+  fi
+  procd_open_instance
+  procd_set_param command /usr/sbin/mysqld
+  procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
+  procd_set_param file /etc/my.cnf
+  procd_set_param stdout 1 # forward stdout of the command to logd
+  procd_set_param stderr 1 # same for stderr
+  procd_set_param user mysql # run service as user nobody
+  procd_close_instance
+}
+

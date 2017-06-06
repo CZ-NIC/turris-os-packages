@@ -1,0 +1,45 @@
+Index: mariadb-10.2.6/storage/innobase/dict/dict0dict.cc
+===================================================================
+--- mariadb-10.2.6.orig/storage/innobase/dict/dict0dict.cc
++++ mariadb-10.2.6/storage/innobase/dict/dict0dict.cc
+@@ -1983,7 +1983,8 @@ dict_table_rename_in_cache(
+ 	}
+ 
+ 	ut_a(table->foreign_set.empty());
+-	table->foreign_set.swap(fk_set);
++	table->foreign_set.clear();
++	table->foreign_set.insert(fk_set.begin(),fk_set.end());
+ 
+ 	for (dict_foreign_set::iterator it = table->referenced_set.begin();
+ 	     it != table->referenced_set.end();
+Index: mariadb-10.2.6/storage/innobase/dict/dict0stats.cc
+===================================================================
+--- mariadb-10.2.6.orig/storage/innobase/dict/dict0stats.cc
++++ mariadb-10.2.6/storage/innobase/dict/dict0stats.cc
+@@ -2571,7 +2571,7 @@ dict_stats_save(
+ 	     index != NULL;
+ 	     index = dict_table_get_next_index(index)) {
+ 
+-		indexes[index->name] = index;
++		indexes.insert(std::pair<const char*,dict_index_t*>(index->name,index));
+ 	}
+ 
+ 	index_map_t::const_iterator	it;
+Index: mariadb-10.2.6/storage/innobase/row/row0trunc.cc
+===================================================================
+--- mariadb-10.2.6.orig/storage/innobase/row/row0trunc.cc
++++ mariadb-10.2.6/storage/innobase/row/row0trunc.cc
+@@ -1617,10 +1617,9 @@ row_truncate_foreign_key_checks(
+ 	/* Check if the table is referenced by foreign key constraints from
+ 	some other table (not the table itself) */
+ 
+-	dict_foreign_set::iterator	it
+-		= std::find_if(table->referenced_set.begin(),
+-			       table->referenced_set.end(),
+-			       dict_foreign_different_tables());
++	std::_associative_citer<dict_foreign_t*, dict_foreign_compare, ut_allocator<dict_foreign_t*> > it;
++	for(it = table->referenced_set.begin(); it != table->referenced_set.end() && \
++		(*it)->foreign_table == (*it)->referenced_table; it++);
+ 
+ 	if (!srv_read_only_mode
+ 	    && it != table->referenced_set.end()
