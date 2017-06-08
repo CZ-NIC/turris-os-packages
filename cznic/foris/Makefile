@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=95.9
+PKG_VERSION:=96
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -28,9 +28,9 @@ $(call include_mk, python-package.mk)
 define Package/foris
 	TITLE:=foris
 	DEPENDS:=\
-		+python-light +python-bottle +python-bottle-i18n +python-beaker \
-		+python-flup +python-ncclient +nuci +lighttpd +lighttpd-mod-fastcgi \
-		+lighttpd-mod-redirect +luci +user_notify +l10n_supported \
+		+python-light +python-bottle +python-bottle-i18n +python-pbkdf2 \
+		+python-flup +python-ncclient +python-ubus +nuci +lighttpd +lighttpd-mod-fastcgi \
+		+lighttpd-mod-redirect +luci +user_notify +ubus-ws +l10n_supported \
 		+sqm-scripts
 	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
 endef
