@@ -2,6 +2,7 @@
 # Copyright (C) 2006-2011 OpenWrt.org
 
 USE_PROCD=1
+SERVICE_USE_PID=1
 
 # Start after the updater resume
 START=80
@@ -13,4 +14,9 @@ start_service() {
 	procd_set_param file /etc/lighttpd/lighttpd.conf
 	procd_set_param respawn 120 2 5
 	procd_close_instance
+}
+
+stop_service() {
+	# This ensures that when we are migrating to procd that we kill previous lighttpd version
+	service_stop /usr/sbin/lighttpd
 }
