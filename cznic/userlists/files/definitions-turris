@@ -15,14 +15,6 @@ lists = {
     title_de = 'Hausautomation',
     title_en = 'Home automation'
 },
-['cacerts'] = {
-    description_cs = 'Seznam certifikátů důvěryhodných autorit pro SSL/TLS (přejato z Debianu).',
-    description_de = 'Liste der Zertifikate vertrauenswürdiger Zertifizierungsstellen für SSL/TLS (ausgeborgt von Debian).',
-    description_en = 'List of trusted CA certificates for SSL/TLS (borrowed from Debian).',
-    title_cs = 'Certifikáty kořenových autorit',
-    title_de = 'Zertifikate der Zertifizierungsstellen',
-    title_en = 'CA root certificates'
-},
 ['dev-detect'] = {
     description_cs = 'Software pro detekci nově připojených zařízení na lokální síti (EXPERIMENTÁLNÍ).',
     description_de = 'Software für die Erkennung neuer Geräte im lokalen Netzwerk (EXPERIMENTELL).',
@@ -94,14 +86,6 @@ lists = {
     title_cs = 'Tiskový server',
     title_de = 'Druckserver',
     title_en = 'Print server'
-},
-['shell-utils'] = {
-    description_cs = 'Programy usnadňující používání příkazové řádky (např. bash či vim).',
-    description_de = 'Programme für eine bequemere Benutzung der Kommandozeile (wie z. B. bash oder vim).',
-    description_en = 'Programs making life in command line slightly easier (like bash or vim).',
-    title_cs = 'Pohodlnější příkazová řádka',
-    title_de = 'Komfortablere Kommandozeile',
-    title_en = 'More comfortable command line'
 },
 ['snd'] = {
     description_cs = 'Podpora pro připojení USB zvukové karty.',
