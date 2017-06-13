@@ -1,0 +1,11 @@
+--- a/pyHS100/pyHS100.py
++++ b/pyHS100/pyHS100.py
+@@ -27,7 +27,7 @@ import datetime
+ import logging
+ import socket
+
+-from pyHS100.protocol import TPLinkSmartHomeProtocol
++from protocol import TPLinkSmartHomeProtocol
+
+ _LOGGER = logging.getLogger(__name__)
+
