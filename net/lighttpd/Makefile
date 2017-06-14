@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd
 PKG_VERSION:=1.4.45
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://download.lighttpd.net/lighttpd/releases-1.4.x
@@ -150,6 +150,8 @@ define BuildPlugin
     endif
     TITLE:=$(2) module
   endef
+
+  Package/lighttpd-mod-$(1)/postinst = Package/lighttpd/postinst
 
   define Package/lighttpd-mod-$(1)/install
 	$(INSTALL_DIR) $$(1)/usr/lib/lighttpd
