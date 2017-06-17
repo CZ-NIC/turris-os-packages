@@ -193,6 +193,10 @@ init_unbound() {
     set_quoted_parameter target_fetch_policy target-fetch-policy "2 1 0 0 0 0"
     set_parameter harden_short_bufsize harden-short-bufsize yes
     set_parameter harden_large_queries harden-large-queries yes
+
+    set_parameter qname_minimisation qname-minimisation yes
+    set_parameter harden_below_nxdomain harden-below-nxdomain yes
+
     set_parameter key_cache_size key-cache-size 100k
     set_parameter key_cache_slabs key-cache-slabs 1
     set_parameter neg_cache_size neg-cache-size 10k
