@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=schnapps
-PKG_VERSION:=0.9
+PKG_VERSION:=1.0
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=34e9183878dcaacdcd9e9d4b4513390e2baf70f3
+PKG_SOURCE_VERSION:=3755ecd2c1f54fbf9af884e676df75635d8ff579
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -53,6 +53,9 @@ define Package/schnapps/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps/schnapps $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/updater/hook_preupdate
 	$(INSTALL_BIN) ./files/updater_hook.sh $(1)/etc/updater/hook_preupdate/05_schnapps.sh
+	$(INSTALL_DIR) $(1)/etc/schnapps/rollback.d/
+	$(INSTALL_BIN) ./files/cert-backup_hook.sh $(1)/etc/updater/hook_preupdate/10_cert-backup.sh
+	chmod a+rx $(1)/etc/updater/hook_preupdate/10_cert-backup.sh
 	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
 	cat ./files/updater_hook.sh | sed 's|pre|post|g' > $(1)/etc/updater/hook_postupdate/05_schnapps.sh
 	$(INSTALL_DIR) $(1)/etc/cron.d
