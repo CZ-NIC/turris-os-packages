@@ -9,11 +9,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=LuaJIT
-PKG_VERSION:=2.0.4
+PKG_VERSION:=2.0.5
 PKG_RELEASE:=1
 PKG_SOURCE_URL:=http://luajit.org/download
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_MD5SUM:=dd9c38307f2223a504cbfb96e477eca0
+PKG_MD5SUM:=874b1f8297c697821f561f9b73b57ffd419ed8f4278c82e05b48806d30c1e979
 include $(INCLUDE_DIR)/package.mk
 
 define Package/luajit
@@ -51,7 +51,7 @@ endef
 define Package/luajit/install
 	$(INSTALL_DIR) $(1)/usr/{lib,bin,share}
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libluajit*so* $(1)/usr/lib/
-	$(LN) libluajit-5.1.so.2.0.4 $(1)/usr/lib/libluajit-5.1.so.2
+	$(LN) libluajit-5.1.so.$(PKG_VERSION) $(1)/usr/lib/libluajit-5.1.so.2
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 	$(CP) $(PKG_INSTALL_DIR)/usr/share/luajit* $(1)/usr/share/
 endef
