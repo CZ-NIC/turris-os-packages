@@ -37,7 +37,7 @@ endef
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+cert-backup +vixie-cron +c-rehash
+	DEPENDS:=+cert-backup +c-rehash
 endef
 
 # The built is empty. But as there's no makefile in the git repo, we need to
