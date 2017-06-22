@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot
 PKG_VERSION:=2.5.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-dns/
@@ -69,21 +69,21 @@ endef
 define Package/knot-dig
 	$(call Package/knot/Default)
 	TITLE+= advanced DNS lookup utility
-	DEPENDS=+knot-libdnssec +knot-libknot
+	DEPENDS=+knot-libdnssec +knot-libknot +libedit
 	EXTRA_DEPENDS:=knot-libdnssec (=$(PKG_VERSION)-$(PKG_RELEASE)), knot-libknot (=$(PKG_VERSION)-$(PKG_RELEASE))
 endef
 
 define Package/knot-host
 	$(call Package/knot/Default)
 	TITLE+= simple DNS lookup utility
-	DEPENDS=+knot-libdnssec +knot-libknot
+	DEPENDS=+knot-libdnssec +knot-libknot +libedit
 	EXTRA_DEPENDS:=knot-libdnssec (=$(PKG_VERSION)-$(PKG_RELEASE)), knot-libknot (=$(PKG_VERSION)-$(PKG_RELEASE))
 endef
 
 define Package/knot-nsupdate
 	$(call Package/knot/Default)
 	TITLE+= dynamic DNS update utility
-	DEPENDS=+knot-libdnssec +knot-libknot +knot-libzscanner
+	DEPENDS=+knot-libdnssec +knot-libknot +knot-libzscanner +libedit
 	EXTRA_DEPENDS:=knot-libdnssec (=$(PKG_VERSION)-$(PKG_RELEASE)), knot-libknot (=$(PKG_VERSION)-$(PKG_RELEASE)), knot-libzscanner (=$(PKG_VERSION)-$(PKG_RELEASE))
 endef
 
