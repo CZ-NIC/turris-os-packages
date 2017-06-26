@@ -42,13 +42,13 @@ define ForisPluginTranslation
  define Package/$(1)-l10n-$(3)/postrm
 #!/bin/sh
 set -x
-[ -n "$$$${IPKG_INSTROOT}" ] && /etc/init.d/lighttpd restart
+[ -n "$$$${IPKG_INSTROOT}" ] && /etc/init.d/lighttpd restart || true
  endef
 
  define Package/$(1)-l10n-$(3)/postinst
 #!/bin/sh
 set -x
-[ -n "$$$${IPKG_INSTROOT}" ] && /etc/init.d/lighttpd restart
+[ -n "$$$${IPKG_INSTROOT}" ] && /etc/init.d/lighttpd restart || true
  endef
 endef
 
