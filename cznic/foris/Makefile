@@ -166,13 +166,13 @@ define ForisTranslation
  define Package/foris-l10n-$(1)/postrm
 #!/bin/sh
 set -x
-[ -n "$$$${IPKG_INSTROOT}" ] && /etc/init.d/lighttpd restart || true
+[ -n "$$$${IPKG_INSTROOT}" ] || /etc/init.d/lighttpd restart
  endef
 
  define Package/foris-l10n-$(1)/postinst
 #!/bin/sh
 set -x
-[ -n "$$$${IPKG_INSTROOT}" ] && /etc/init.d/lighttpd restart || true
+[ -n "$$$${IPKG_INSTROOT}" ] || /etc/init.d/lighttpd restart
  endef
 
 endef
