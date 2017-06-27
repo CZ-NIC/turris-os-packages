@@ -115,7 +115,7 @@ reflash () {
 	# find image (give it 10 tries with 1 sec delay)
 	for i in `seq 1 10`; do
 		$BIN_MDEV
-		for dev in `$BIN_AWK '$4 ~ /sd[a-z]+[0-9]+/ { print $4 }' /proc/partitions`; do
+		for dev in `$BIN_AWK '$4 ~ /sd[a-z]+[0-9]?/ { print $4 }' /proc/partitions`; do
 			d "Testing FS on device $dev"
 			[ -b "/dev/$dev" ] || continue
 			mount_fs "/dev/$dev" $SRCFS_MOUNTPOINT
