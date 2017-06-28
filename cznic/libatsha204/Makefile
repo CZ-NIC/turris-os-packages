@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2013 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2017 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
 PKG_PYTHON_NAME:=python-$(PKG_NAME)
-PKG_VERSION:=26
+PKG_VERSION:=27
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/libatsha204.git
 PKG_SOURCE_VERSION:=60222da1508d0fade850c523f0f4b132766613df
@@ -86,7 +86,7 @@ endef
 
 define Package/$(PKG_PYTHON_NAME)
 	TITLE:=$(PKG_PYTHON_NAME)
-	DEPENDS:=+python +libatsha204
+	DEPENDS:=+python-light +libatsha204
 endef
 
 define Package/$(PKG_PYTHON_NAME)/install
