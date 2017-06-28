@@ -72,7 +72,7 @@ endef
 define Package/transmission-web
   $(call Package/transmission/template)
   TITLE+= (webinterface)
-  DEPENDS:=PACKAGE_transmission-daemon-openssl
+  DEPENDS:=@PACKAGE_transmission-daemon-openssl
 endef
 
 
