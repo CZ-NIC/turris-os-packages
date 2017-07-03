@@ -7,9 +7,9 @@
 #
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=opkg-trans
+PKG_NAME:=updater-ng
 PKG_VERSION:=59.0.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -24,16 +24,13 @@ HOST_BUILD_DEPENDS:=curl/host libevent2/host lua/host
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
 
-define Package/opkg-trans
-	TITLE:=opkg-trans
-	DEPENDS:=+liblua +libevent2 +usign +libcurl
+define Package/$(PKG_NAME)
+	TITLE:=The next generation updater
+	DEPENDS:=+liblua +libevent2 +usign +libcurl +vixie-cron
+	PROVIDES:=opkg-trans
 endef
 
-define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION)
-endef
-
-define Package/opkg-trans/install
+define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libupdater.so $(1)/usr/lib/
 
@@ -41,6 +38,9 @@ define Package/opkg-trans/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/opkg-trans $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgupdate $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/opkg $(1)/usr/bin/opkg-pkgupdate-wrapper.sh
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/updater.sh $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/updater-unstuck.sh $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/updater-wipe.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/updater
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/* $(1)/etc/updater
@@ -51,26 +51,6 @@ define Package/opkg-trans/install
 	touch $(1)/etc/updater/hook_preupdate/.keep
 	touch $(1)/etc/updater/hook_postupdate/.keep
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/hook_reboot_required/50-create-notification.sh $(1)/etc/updater/hook_reboot_required/50-create-notification.sh
-endef
-
-define Package/opkg-trans/conffiles
-/etc/updater/auto.lua
-/etc/updater/user.lua
-endef
-
-define Package/updater-ng
-	TITLE:=The next generation updater
-	DEPENDS:=+opkg-trans +vixie-cron
-endef
-
-define Package/updater-ng/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/updater.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/updater-unstuck.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/updater-wipe.sh $(1)/usr/bin/
-
-	$(INSTALL_DIR) $(1)/etc/ssl
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/legacy/updater.pem $(1)/etc/ssl/updater.pem
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/updater.config $(1)/etc/config/updater
@@ -82,15 +62,20 @@ endif
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/init $(1)/etc/init.d/updater
 
+	$(INSTALL_DIR) $(1)/etc/ssl
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/legacy/updater.pem $(1)/etc/ssl/updater.pem
+
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/updater.defaults $(1)/etc/uci-defaults/updater
 endef
 
-define Package/updater-ng/conffiles
+define Package/$(PKG_NAME)/conffiles
+/etc/updater/auto.lua
+/etc/updater/user.lua
 /etc/config/updater
 endef
 
-define Package/updater-ng/postinst
+define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 /etc/init.d/updater enable || true
@@ -99,39 +84,12 @@ define Package/updater-ng/postinst
 }
 endef
 
-define Package/updater-migrate
-	TITLE:=Automatic migration to the updater-ng
-	DEPENDS:=+opkg-trans +vixie-cron
-endef
-
-define Package/updater-migrate/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/migrator/updater-migrate.sh $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgmigrate $(1)/usr/bin
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/migrator/init $(1)/etc/init.d/updater-migrate
-endef
-
-define Package/updater-migrate/postinst
-#!/bin/sh
-[ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/updater-migrate enable || true
-# Start migration
-/etc/init.d/updater-migrate start
-# Notify user
-create_notification -s update "Updater je aktualizován na novou verzi. Pokud migrace selže, konzultujte dokumentaci: https://www.turris.cz/doc/cs/howto/updater_migration" "Updater is being updated to a new version. If the migration fails then consult the documentation: https://www.turris.cz/doc/cs/howto/updater_migration"
-}
-endef
-
-define Package/updater-migrate/prerm
-#!/bin/sh
-[ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/updater-migrate disable || true
-}
+define Build/Compile
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION)
 endef
 
 define Host/Compile
-	$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) $(HOST_MAKE_FLAGS) Q= NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION)
+	$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) $(HOST_MAKE_FLAGS) NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION)
 endef
 
 define Host/Install
@@ -143,7 +101,5 @@ define Host/Install
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/pkgupdate $(STAGING_DIR_HOST)/usr/bin/
 endef
 
-$(eval $(call BuildPackage,opkg-trans))
 $(eval $(call BuildPackage,updater-ng))
-$(eval $(call BuildPackage,updater-migrate))
 $(eval $(call HostBuild))
