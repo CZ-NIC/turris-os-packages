@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
 PKG_VERSION:=59.0.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -27,8 +27,7 @@ include $(INCLUDE_DIR)/host-build.mk
 define Package/$(PKG_NAME)
 	TITLE:=The next generation updater
 	DEPENDS:=+liblua +libevent2 +usign +libcurl +vixie-cron
-	#CONFLICTS:=opkg-trans updater # This is commented for now as previous versions are broken. Uncomment this with new version.
-	PROVIDES:=opkg-trans updater
+	PROVIDES:=updater
 endef
 
 define Package/$(PKG_NAME)/install
@@ -102,5 +101,22 @@ define Host/Install
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/pkgupdate $(STAGING_DIR_HOST)/usr/bin/
 endef
 
+# Current implementation of updater can't remove package before replan and so we
+# can't let updater-ng steal opkg-trans files. With dependency:
+# 	if (installed['opkg-trans'] or {}).version < '59.0.2' then
+# 		Package 'updater-ng' { deps = 'opkg-trans' }
+# 	end
+# this empty package should ensure that we correctly move packages from opkg-trans
+# to updater-ng even with old version of updater. Unfortunately this won't work
+# with downgrade.
+define Package/opkg-trans
+	TITLE:=Dummy opkg-trans package
+endef
+
+define Package/opkg-trans/install
+	true
+endef
+
 $(eval $(call BuildPackage,updater-ng))
+$(eval $(call BuildPackage,opkg-trans))
 $(eval $(call HostBuild))
