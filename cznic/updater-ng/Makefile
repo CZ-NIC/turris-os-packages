@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=59.0.1
-PKG_RELEASE:=3
+PKG_VERSION:=59.0.2
+PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -27,7 +27,8 @@ include $(INCLUDE_DIR)/host-build.mk
 define Package/$(PKG_NAME)
 	TITLE:=The next generation updater
 	DEPENDS:=+liblua +libevent2 +usign +libcurl +vixie-cron
-	PROVIDES:=opkg-trans
+	#CONFLICTS:=opkg-trans updater # This is commented for now as previous versions are broken. Uncomment this with new version.
+	PROVIDES:=opkg-trans updater
 endef
 
 define Package/$(PKG_NAME)/install
