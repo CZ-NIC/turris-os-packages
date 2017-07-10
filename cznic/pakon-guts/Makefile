@@ -8,16 +8,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-guts
-PKG_VERSION:=4.3
+PKG_VERSION:=4.4
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-guts.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=ab4adc39e38dee59a13da8eba7591492e3f460d3
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-PKG_RELEASE:=5
+PKG_RELEASE:=1
 
 include $(INCLUDE_DIR)/package.mk
 
