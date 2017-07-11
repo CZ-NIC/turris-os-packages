@@ -58,6 +58,7 @@ define Package/schnapps/install
 	chmod a+rx $(1)/etc/updater/hook_preupdate/10_cert-backup.sh
 	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
 	cat ./files/updater_hook.sh | sed 's|pre|post|g' > $(1)/etc/updater/hook_postupdate/05_schnapps.sh
+	chmod +x $(1)/etc/updater/hook_postupdate/05_schnapps.sh
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps/schnapps.cron $(1)/etc/cron.d/schnapps
 endef
