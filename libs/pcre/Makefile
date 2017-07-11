@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pcre
-PKG_VERSION:=8.39
+PKG_VERSION:=8.41
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/
-PKG_MD5SUM:=e3fca7650a0556a2647821679d81f585
+PKG_MD5SUM:=c160d22723b1670447341b08c58981c1
 PKG_MAINTAINER:=Thomas Heil <heil@terminal-consulting.de>
 
 PKG_LICENSE:=BSD-3-Clause
