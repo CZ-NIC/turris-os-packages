@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata
-PKG_VERSION:=3.2
-PKG_RELEASE=3
+PKG_VERSION:=3.2.2
+PKG_RELEASE=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.openinfosecfoundation.org/download/
-PKG_MD5SUM:=05854b3390ea86fabe73bdb5a90db36c
+PKG_MD5SUM:=a686400bf8eaa9eced918eed11e92bbe
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
