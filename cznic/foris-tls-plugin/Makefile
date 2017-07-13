@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-tls-plugin
-PKG_VERSION:=9
+PKG_VERSION:=10
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -62,6 +62,7 @@ endef
 $(eval $(call ForisPlugin,$(PKG_NAME),tls))
 
 # Translation definitions
+FORIS_TRANSLATIONS:=cs de sk pl fr ru lt
 $(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),tls,$(trans))))
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
