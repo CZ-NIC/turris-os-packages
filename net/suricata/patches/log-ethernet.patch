@@ -302,7 +302,7 @@ index 0f75547..660f583 100644
          return 0;
  
 -    json_t *js = CreateJSONHeader((Packet *)p, 1, "tls");
-+    json_t *js = CreateJSONHeader((Packet *)p, 1, "tls"
++    json_t *js = CreateJSONHeader((Packet *)p, 1, "tls",
 +                                  tls_ctx->file_ctx->options_flags);
      if (unlikely(js == NULL))
          return 0;
