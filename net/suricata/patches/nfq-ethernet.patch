@@ -1,0 +1,101 @@
+From 77c73f060533cbb6ae304d6752b33040a068129d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Martin=20Petr=C3=A1=C4=8Dek?= <martin@petracek.net>
+Date: Sat, 15 Jul 2017 20:18:22 +0200
+Subject: [PATCH] ethernet headers for NFQ
+
+---
+ src/flow.c       | 14 ++++++++++++++
+ src/flow.h       |  6 ++++++
+ src/source-nfq.c |  9 +++++++++
+ src/source-nfq.h |  2 ++
+ 4 files changed, 31 insertions(+)
+
+diff --git a/src/flow.c b/src/flow.c
+index df4a79a7af..33f4c9f0a6 100644
+--- a/src/flow.c
++++ b/src/flow.c
+@@ -277,6 +277,13 @@ void FlowHandlePacketUpdate(Flow *f, Packet *p)
+             f->flags &= ~FLOW_PROTO_DETECT_TS_DONE;
+             p->flags |= PKT_PROTO_DETECT_TS_DONE;
+         }
++#ifdef NFQ
++    if (!f->hw_address_src_known && p->nfq_v.hw_address_known){
++        SCLogInfo("setting src MAC address %02x:%02x:%02x:%02x:%02x:%02x", p->nfq_v.hw_address[0], p->nfq_v.hw_address[1], p->nfq_v.hw_address[2], p->nfq_v.hw_address[3], p->nfq_v.hw_address[4], p->nfq_v.hw_address[5]);
++        f->hw_address_src_known = 1;
++        memcpy(f->hw_address_src, p->nfq_v.hw_address, 6);
++    }
++#endif
+     } else {
+         f->tosrcpktcnt++;
+         f->tosrcbytecnt += GET_PKT_LEN(p);
+@@ -292,6 +299,13 @@ void FlowHandlePacketUpdate(Flow *f, Packet *p)
+             f->flags &= ~FLOW_PROTO_DETECT_TC_DONE;
+             p->flags |= PKT_PROTO_DETECT_TC_DONE;
+         }
++#ifdef NFQ
++    if (!f->hw_address_dst_known && p->nfq_v.hw_address_known){
++        SCLogInfo("setting dst MAC address %02x:%02x:%02x:%02x:%02x:%02x", p->nfq_v.hw_address[0], p->nfq_v.hw_address[1], p->nfq_v.hw_address[2], p->nfq_v.hw_address[3], p->nfq_v.hw_address[4], p->nfq_v.hw_address[5]);
++        f->hw_address_dst_known = 1;
++        memcpy(f->hw_address_dst, p->nfq_v.hw_address, 6);
++    }
++#endif
+     }
+ 
+     if ((f->flags & (FLOW_TO_DST_SEEN|FLOW_TO_SRC_SEEN)) == (FLOW_TO_DST_SEEN|FLOW_TO_SRC_SEEN)) {
+diff --git a/src/flow.h b/src/flow.h
+index d6660dd00c..549dee9138 100644
+--- a/src/flow.h
++++ b/src/flow.h
+@@ -428,6 +428,12 @@ typedef struct Flow_
+     uint32_t tosrcpktcnt;
+     uint64_t todstbytecnt;
+     uint64_t tosrcbytecnt;
++#ifdef NFQ
++    uint8_t hw_address_src[6];
++    uint8_t hw_address_src_known;
++    uint8_t hw_address_dst[6];
++    uint8_t hw_address_dst_known;
++#endif
+ } Flow;
+ 
+ enum FlowState {
+diff --git a/src/source-nfq.c b/src/source-nfq.c
+index a53d080c36..4a5e764615 100644
+--- a/src/source-nfq.c
++++ b/src/source-nfq.c
+@@ -426,6 +426,7 @@ int NFQSetupPkt (Packet *p, struct nfq_q_handle *qh, void *data)
+     int ret;
+     char *pktdata;
+     struct nfqnl_msg_packet_hdr *ph;
++    struct nfqnl_msg_packet_hw *hwaddr;
+ 
+     ph = nfq_get_msg_packet_hdr(tb);
+     if (ph != NULL) {
+@@ -433,6 +434,14 @@ int NFQSetupPkt (Packet *p, struct nfq_q_handle *qh, void *data)
+         //p->nfq_v.hw_protocol = ntohs(p->nfq_v.ph->hw_protocol);
+         p->nfq_v.hw_protocol = ph->hw_protocol;
+     }
++    hwaddr = nfq_get_packet_hw(tb);
++    if (hwaddr != NULL) {
++        p->nfq_v.hw_address_known = 1;
++        memcpy(p->nfq_v.hw_address, hwaddr->hw_addr, 6);
++        SCLogInfo("MAC address of packet: %02x:%02x:%02x:%02x:%02x:%02x", p->nfq_v.hw_address[0], p->nfq_v.hw_address[1], p->nfq_v.hw_address[2], p->nfq_v.hw_address[3], p->nfq_v.hw_address[4], p->nfq_v.hw_address[5]);
++    } else {
++        p->nfq_v.hw_address_known = 0;
++    }
+     /* coverity[missing_lock] */
+     p->nfq_v.mark = nfq_get_nfmark(tb);
+     if (nfq_config.mode == NFQ_REPEAT_MODE) {
+diff --git a/src/source-nfq.h b/src/source-nfq.h
+index 41a54b78d1..9e780a37a1 100644
+--- a/src/source-nfq.h
++++ b/src/source-nfq.h
+@@ -49,6 +49,8 @@ typedef struct NFQPacketVars_
+     uint32_t ifi;
+     uint32_t ifo;
+     uint16_t hw_protocol;
++    uint8_t hw_address_known;
++    uint8_t hw_address[6];
+ } NFQPacketVars;
+ 
+ typedef struct NFQQueueVars_
