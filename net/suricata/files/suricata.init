@@ -84,7 +84,7 @@ start_service() {
 	mkdir -p /var/log/suricata
 	mkdir -p /var/run/suricata
 	mkdir -p /tmp/suricata
-	suricata_update_rules.sh -f
+	[ -f /usr/bin/suricata_update_rules.sh ] && /usr/bin/suricata_update_rules.sh -f
 	build_iptables
 	iptables_activate
 	procd_open_instance

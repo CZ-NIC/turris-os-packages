@@ -40,7 +40,6 @@ endef
 define Package/suricata/conffiles
 /etc/suricata/*
 /etc/config/suricata
-/etc/suricata/rules/*
 /etc/suricata/output_conf.d/*
 endef
 
@@ -48,15 +47,11 @@ define Package/suricata/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/suricata.init $(1)/etc/init.d/suricata
 
-	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(CP) ./files/suricata.cron $(1)/etc/cron.d/suricata
-
 	$(INSTALL_DIR) $(1)/etc/firewall.d/with_reload
 	$(INSTALL_BIN) ./files/suricata.fw $(1)/etc/firewall.d/with_reload/99_suricata.fw
 
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/suricata* $(1)/usr/bin
-	$(INSTALL_BIN) ./files/update_rules.sh $(1)/usr/bin/suricata_update_rules.sh
 
 	$(INSTALL_DIR) $(1)/etc/suricata
 	$(INSTALL_CONF) ./files/suricata.yaml $(1)/etc/suricata/suricata.yaml
@@ -66,10 +61,11 @@ define Package/suricata/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(CP) ./files/suricata.config $(1)/etc/config/suricata
 
+	$(INSTALL_DIR) $(1)/etc/suricata/conf.d
+
 	$(CP) $(PKG_BUILD_DIR)/classification.config $(1)/etc/suricata
 	$(CP) $(PKG_BUILD_DIR)/reference.config $(1)/etc/suricata
 	$(CP) $(PKG_BUILD_DIR)/threshold.config $(1)/etc/suricata
-	$(CP) $(PKG_BUILD_DIR)/rules $(1)/etc/suricata
 endef
 
 

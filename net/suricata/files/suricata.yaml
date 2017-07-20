@@ -58,8 +58,9 @@ vars:
 # - drop.rules
 #
 include_dir: /etc/suricata/conf.d
-
-# threshold-file: /etc/suricata/threshold.config
+classification-file: /etc/suricata/classification.config
+reference-config-file: /etc/suricata/reference.config
+threshold-file: /etc/suricata/threshold.config
 
 
 ##
