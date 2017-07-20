@@ -2,14 +2,92 @@
 
 USE_PROCD=1
 START=95
+EXTRA_COMMANDS="status"
+EXTRA_HELP="        status Get suricata status (as exit code)"
+IPTABLES_RULES="/tmp/suricata/suricata.fw"
+IP6TABLES_RULES="/tmp/suricata/suricata.fw6"
+PID_FILE="/var/run/suricata.pid"
+QUEUE_NUM=10
+
+
+build_iptables() {
+	# prepare iptables chain. The chain is not referenced yet.
+	echo "*filter" > $IPTABLES_RULES
+	echo "*filter" > $IP6TABLES_RULES
+	echo ":suricata - [0:0]" >> $IPTABLES_RULES
+	echo ":suricata - [0:0]" >> $IP6TABLES_RULES
+	IFACES=$(uci -q get suricata.suricata.interface) || { echo >&2 "Interfaces not set in configuration (configuration file might be missing)."; exit 1; }
+	for IFACE in $IFACES; do
+		echo "-A suricata -i $IFACE -m mark ! --mark 1/1 -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IPTABLES_RULES
+		echo "-A suricata -i $IFACE -m mark ! --mark 1/1 -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IP6TABLES_RULES
+		echo "-A suricata -o $IFACE -m mark ! --mark 1/1 -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IPTABLES_RULES
+		echo "-A suricata -o $IFACE -m mark ! --mark 1/1 -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IP6TABLES_RULES
+	done
+	echo "COMMIT" >> $IPTABLES_RULES
+	echo "COMMIT" >> $IP6TABLES_RULES
+	iptables-restore --noflush < $IPTABLES_RULES
+	ip6tables-restore --noflush < $IP6TABLES_RULES
+}
+
+status() {
+	if [ -s $PID_FILE ]; then
+		busybox ps | awk '{print $1;}' | grep `cat $PID_FILE` &> /dev/null
+		if [ $? -eq 0 ]; then
+			# echo "Running."
+			return 0
+		else
+			# echo "Not running."
+			return 1
+		fi
+	else
+		# echo "Not running."
+		return 1
+	fi
+}
+
+iptables_activate() {
+	iptables -I forwarding_rule -j suricata
+	ip6tables -I forwarding_rule -j suricata
+	iptables -I input_rule -j suricata
+	ip6tables -I input_rule -j suricata
+	iptables -I output_rule -j suricata
+	ip6tables -I output_rule -j suricata
+	iptables -t mangle -I POSTROUTING -m mark --mark 1/1 -j CONNMARK --save-mark
+	ip6tables -t mangle -I POSTROUTING -m mark --mark 1/1 -j CONNMARK --save-mark
+	iptables -t mangle -I PREROUTING -m connmark --mark 1/1 -j CONNMARK --restore-mark
+	ip6tables -t mangle -I PREROUTING -m connmark --mark 1/1 -j CONNMARK --restore-mark
+}
+
+iptables_deactivate() {
+	iptables -F suricata
+	ip6tables -F suricata
+	iptables -D forwarding_rule -j suricata
+	ip6tables -D forwarding_rule -j suricata
+	iptables -D input_rule -j suricata
+	ip6tables -D input_rule -j suricata
+	iptables -D output_rule -j suricata
+	ip6tables -D output_rule -j suricata
+	iptables -X suricata
+	ip6tables -X suricata
+	iptables -t mangle -D POSTROUTING -m mark --mark 1/1 -j CONNMARK --save-mark
+	ip6tables -t mangle -D POSTROUTING -m mark --mark 1/1 -j CONNMARK --save-mark
+	iptables -t mangle -D PREROUTING -m connmark --mark 1/1 -j CONNMARK --restore-mark
+	ip6tables -t mangle -D PREROUTING -m connmark --mark 1/1 -j CONNMARK --restore-mark
+}
+
+stop_service() {
+	iptables_deactivate
+	rm -f $PID_FILE
+}
 
 start_service() {
-  mkdir -p /var/log/suricata
-  mkdir -p /var/run/suricata
-  interface=$(uci -q get suricata.suricata.interface)
-  [ "$interface" ] || interface=br-lan
-  suricata_update_rules.sh -f
-  procd_open_instance
-  procd_set_param command /usr/bin/suricata -c /etc/suricata/suricata.yaml -i $interface --init-errors-fatal --pidfile /var/run/suricata/suricata.pid
-  procd_close_instance
+	mkdir -p /var/log/suricata
+	mkdir -p /var/run/suricata
+	mkdir -p /tmp/suricata
+	suricata_update_rules.sh -f
+	build_iptables
+	iptables_activate
+	procd_open_instance
+	procd_set_param command /usr/bin/suricata -c /etc/suricata/suricata.yaml -q $QUEUE_NUM --init-errors-fatal --pidfile $PID_FILE
+	procd_close_instance
 }

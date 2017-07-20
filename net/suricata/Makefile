@@ -34,33 +34,57 @@ define Package/suricata
   SECTION:=net
   CATEGORY:=Network
   TITLE:=IDS
-  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +librt +libpcap +luajit +libnetfilter-queue +libnetfilter-log +libnfnetlink +libhtp
+  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +librt +libpcap +luajit +libnetfilter-queue +iptables-mod-nfqueue +libnetfilter-log +libnfnetlink +libhtp
 endef
 
 define Package/suricata/conffiles
 /etc/suricata/*
 /etc/config/suricata
 /etc/suricata/rules/*
+/etc/suricata/output_conf.d/*
 endef
 
 define Package/suricata/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/suricata.init $(1)/etc/init.d/suricata
+
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(CP) ./files/suricata.cron $(1)/etc/cron.d/suricata
+
+	$(INSTALL_DIR) $(1)/etc/firewall.d/with_reload
+	$(INSTALL_BIN) ./files/suricata.fw $(1)/etc/firewall.d/with_reload/99_suricata.fw
+
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/suricata* $(1)/usr/bin
 	$(INSTALL_BIN) ./files/update_rules.sh $(1)/usr/bin/suricata_update_rules.sh
+
 	$(INSTALL_DIR) $(1)/etc/suricata
 	$(INSTALL_CONF) ./files/suricata.yaml $(1)/etc/suricata/suricata.yaml
+
 	$(INSTALL_DIR) $(1)/etc/suricata/output_conf.d
 	$(INSTALL_CONF) ./files/output_common.yaml $(1)/etc/suricata/output_conf.d/common.yaml
 	$(INSTALL_DIR) $(1)/etc/config
 	$(CP) ./files/suricata.config $(1)/etc/config/suricata
+
 	$(CP) $(PKG_BUILD_DIR)/classification.config $(1)/etc/suricata
 	$(CP) $(PKG_BUILD_DIR)/reference.config $(1)/etc/suricata
 	$(CP) $(PKG_BUILD_DIR)/threshold.config $(1)/etc/suricata
 	$(CP) $(PKG_BUILD_DIR)/rules $(1)/etc/suricata
+endef
+
+
+define Package/suricata/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+	/etc/init.d/suricata enable
+	/etc/init.d/suricata start
+}
+endef
+
+define Package/suricata/prerm
+#!/bin/sh
+	/etc/init.d/suricata disable
+	/etc/init.d/suricata stop
 endef
 
 $(eval $(call BuildPackage,suricata))
