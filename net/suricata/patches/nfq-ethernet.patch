@@ -16,7 +16,6 @@ index c371b54e..20bb4029 100644
 --- a/src/flow.c
 +++ b/src/flow.c
 @@ -309,6 +309,13 @@ void FlowHandlePacketUpdate(Flow *f, Packet *p)
-
              f->flags &= ~FLOW_PROTO_DETECT_TS_DONE;
              p->flags |= PKT_PROTO_DETECT_TS_DONE;
          }
@@ -30,7 +29,6 @@ index c371b54e..20bb4029 100644
      } else {
          f->tosrcpktcnt++;
          f->tosrcbytecnt += GET_PKT_LEN(p);
-
 @@ -324,6 +331,13 @@ void FlowHandlePacketUpdate(Flow *f, Packet *p)
              f->flags &= ~FLOW_PROTO_DETECT_TC_DONE;
              p->flags |= PKT_PROTO_DETECT_TC_DONE;

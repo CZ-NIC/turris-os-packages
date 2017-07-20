@@ -36,10 +36,14 @@ index c04ce1b1..88b0f4be 100644
  /**
   * \brief Include a file in the configuration.
   *
-@@ -155,6 +157,50 @@ ConfYamlHandleInclude(ConfNode *parent, const char *filename)
+@@ -155,6 +157,55 @@ ConfYamlHandleInclude(ConfNode *parent, const char *filename)
      return 0;
  }
- 
+
++/*
++include_dir: basically only concatenate all files *.yaml in directory
++ into single file and pass that file to normal include
++*/
 +static int
 +ConfYamlHandleIncludeDir(ConfNode *parent, const char *filename)
 +{
@@ -60,7 +64,7 @@ index c04ce1b1..88b0f4be 100644
 +        }
 +        write(tmpfile, "%YAML 1.1\n---\n", strlen("%YAML 1.1\n---\n"));
 +        while ((dir = readdir(d)) != NULL){
-+             if (dir->d_type == DT_REG){
++             if (dir->d_type == DT_REG && strcmp(dir->d_name+strlen(dir->d_name)-5,".yaml")==0){
 +                 strcpy(filename_buf+strlen(filename)+1,dir->d_name);
 +                 FILE * conf_file = fopen(filename_buf, "r");
 +                 if (conf_file) {
@@ -68,6 +72,7 @@ index c04ce1b1..88b0f4be 100644
 +                    char buffer[4096];
 +                    while ((n = fread(buffer, sizeof(char), 4096, conf_file))) write(tmpfile, buffer, n);
 +                    fclose(conf_file);
++                    write(tmpfile,"\n",1);
 +                 }
 +            }
 +        }
@@ -75,7 +80,7 @@ index c04ce1b1..88b0f4be 100644
 +        closedir(d);
 +        if (ConfYamlHandleInclude(parent, tmpname)==-1) {
 +            close(tmpfile);
-+            unlink(tmpname);
++            //unlink(tmpname);
 +            return -1;
 +        }
 +        close(tmpfile);
@@ -103,12 +108,11 @@ index c04ce1b1..88b0f4be 100644
                      SCLogInfo("Including configuration file %s.", value);
                      if (ConfYamlHandleInclude(parent, value) != 0) {
                          goto fail;
-@@ -246,6 +299,11 @@ ConfYamlParse(yaml_parser_t *parser, ConfNode *parent, int inseq)
+@@ -246,6 +299,10 @@ ConfYamlParse(yaml_parser_t *parser, ConfNode *parent, int inseq)
                  }
                  else if (state == CONF_KEY) {
  
 +                    if (strcmp(value, "include_dir") == 0) {
-+                        printf("include_dir in CONF_KEY\n");
 +                        state = CONF_INCLUDE_DIR;
 +                        goto next;
 +                    }
