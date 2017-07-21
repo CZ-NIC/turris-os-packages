@@ -10,16 +10,15 @@ PKG_RELRO_FULL:=0
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
-PKG_VERSION:=a3306b09ac475f125150d66a1b1f0388fbbda353
-PKG_RELEASE:=1
+PKG_VERSION:=1.3.1
+PKG_RELEASE:=3
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/knot/resolver.git
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-resolver
+PKG_MD5SUM:=cc9631fe1a92628e81e74b324a7f70c0b29840d426de05d7d045fdf85ab01117
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+
 PKG_MAINTAINER:=Knot DNS <knot-dns@labs.nic.cz>
 PKG_LICENSE:=GPL-3.0
 
@@ -34,7 +33,8 @@ define Package/knot-resolver
 	TITLE:=Knot DNS Resolver
 	URL:=https://gitlab.labs.nic.cz/knot/resolver
 	DEPENDS=+knot-libknot +libuv +luajit +knot-libzscanner +knot-libdnssec +dnssec-rootkey +resolver-conf +luasec +luasocket
-	EXTRA_DEPENDS:=knot-libknot (>= 2.4.2), knot-libknot (< 2.5.0)
+	EXTRA_DEPENDS:=knot-libknot (>= 2.5.0), knot-libknot (< 2.6.0)
+	PROVIDES:=dns-resolver
 endef
 
 define Package/knot-resolver/description
@@ -65,7 +65,6 @@ define Package/knot-resolver/install
 
 	$(INSTALL_DIR) $(1)/etc/kresd
 	$(CP) $(PKG_BUILD_DIR)/etc/icann-ca.pem $(1)/etc/kresd
-	$(INSTALL_BIN) ./files/dhcp_host_domain_ng.sh $(1)/etc/kresd/dhcp_host_domain_ng.sh
 	$(INSTALL_BIN) ./files/kresd.postinst $(1)/etc/kresd/kresd.postinst.sh
 	$(INSTALL_BIN) ./files/convert_config.sh $(1)/etc/kresd/convert_config.sh
 endef
