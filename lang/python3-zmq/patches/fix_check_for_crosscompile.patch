@@ -1,0 +1,81 @@
+diff --git a/buildutils/detect.py b/buildutils/detect.py
+index 7a6c115..40f287e 100644
+--- a/buildutils/detect.py
++++ b/buildutils/detect.py
+@@ -58,7 +58,7 @@ def test_compilation(cfile, compiler=None, **compiler_attrs):
+     cc.link_executable(objs, efile, extra_preargs=lpreargs)
+     return efile
+ 
+-def compile_and_run(basedir, src, compiler=None, **compiler_attrs):
++def compile_and_forget(basedir, src, compiler=None, **compiler_attrs):
+     if not os.path.exists(basedir):
+         os.makedirs(basedir)
+     cfile = pjoin(basedir, os.path.basename(src))
+@@ -66,16 +66,16 @@ def compile_and_run(basedir, src, compiler=None, **compiler_attrs):
+     try:
+         cc = get_compiler(compiler, **compiler_attrs)
+         efile = test_compilation(cfile, compiler=cc)
+-        patch_lib_paths(efile, cc.library_dirs)
+-        result = Popen(efile, stdout=PIPE, stderr=PIPE)
+-        so, se = result.communicate()
+-        # for py3k:
+-        so = so.decode()
+-        se = se.decode()
++        # patch_lib_paths(efile, cc.library_dirs)
++        # result = Popen(efile, stdout=PIPE, stderr=PIPE)
++        # so, se = result.communicate()
++        # # for py3k:
++        # so = so.decode()
++        # se = se.decode()
+     finally:
+         shutil.rmtree(basedir)
+     
+-    return result.returncode, so, se
++    return None
+     
+     
+ def detect_zmq(basedir, compiler=None, **compiler_attrs):
+@@ -117,13 +117,15 @@ def detect_zmq(basedir, compiler=None, **compiler_attrs):
+     
+     cc = get_compiler(compiler=compiler, **compiler_attrs)
+     efile = test_compilation(cfile, compiler=cc)
+-    patch_lib_paths(efile, cc.library_dirs)
++    #patch_lib_paths(efile, cc.library_dirs)
+     
+-    rc, so, se = get_output_error([efile])
+-    if rc:
+-        msg = "Error running version detection script:\n%s\n%s" % (so,se)
+-        logging.error(msg)
+-        raise IOError(msg)
++    #rc, so, se = get_output_error([efile])
++    # if rc:
++    #     msg = "Error running version detection script:\n%s\n%s" % (so,se)
++    #     logging.error(msg)
++    #     raise IOError(msg)
++
++    so = "vers: 4.1.4"
+ 
+     handlers = {'vers':  lambda val: tuple(int(v) for v in val.split('.'))}
+ 
+diff --git a/setup.py b/setup.py
+index c3a2879..b8b0aaf 100755
+--- a/setup.py
++++ b/setup.py
+@@ -54,7 +54,7 @@ from buildutils import (
+     info, warn, fatal, debug, line, copy_and_patch_libzmq, localpath,
+     fetch_libzmq, stage_platform_hpp,
+     bundled_version, customize_mingw,
+-    compile_and_run,
++    compile_and_forget,
+     patch_lib_paths,
+     )
+ 
+@@ -327,7 +327,7 @@ class Configure(build_ext):
+             except Exception:
+                 pass
+             try:
+-                compile_and_run(self.tempdir,
++                compile_and_forget(self.tempdir,
+                     pjoin('buildutils', 'check_sys_un.c'),
+                     **minus_zmq
+                 )
