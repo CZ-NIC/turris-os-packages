@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ubus-ws
 PKG_VERSION:=0.6
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/ubus-ws
@@ -25,7 +25,7 @@ $(call include_mk, python-package.mk)
 define Package/ubus-ws
 	TITLE:=ubus-ws
 	URL:=https://gitlab.labs.nic.cz/turris/ubus-ws
-	DEPENDS:=+python +python-websocket-server +python-prctl +socat +rpcd +lighttpd-https-cert
+	DEPENDS:=+python-light +python-websocket-server +python-prctl +socat +rpcd +lighttpd-https-cert
 	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
 endef
 
@@ -63,7 +63,7 @@ set -x
 }
 endef
 
-define Package/foris/prerm
+define Package/ubus-ws/prerm
 #!/bin/sh
 set -x
 /etc/init.d/ubus-ws stop
