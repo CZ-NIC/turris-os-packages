@@ -3,7 +3,7 @@
 
 SERVICE_USE_PID=0
 
-DHCP_SCRIPT=/etc/kresd/dhcp_host_domain_ng.sh
+DHCP_SCRIPT=/etc/resolver/dhcp_host_domain_ng.py
 
 START=60
 
@@ -30,11 +30,10 @@ run_dhcp_script() {
 
 	# enable dynamic local domains
 	config_load resolver
-	config_get_bool dynamic_domains "kresd" dynamic_domains 0
+	config_get_bool dynamic_domains "common" dynamic_domains 0
 
 
-	if (	[ "$resolver" == "kresd" ] && \
-		[ "$dynamic_domains" == "1" ] ) && (    \
+	if 	[ "$dynamic_domains" == "1" ] && (    \
 		[ "$action" == "reload" ] ||  \
 		[ "$action" == "restart" ] || \
 		[ "$action" == "start" ] );   \
