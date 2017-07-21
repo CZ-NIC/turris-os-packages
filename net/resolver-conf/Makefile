@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.1
-PKG_RELEASE:=9
+PKG_RELEASE:=11
 
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -26,6 +26,11 @@ define Package/resolver-conf
 	CATEGORY:=Network
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Resolver configuration
+ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+	DEPENDS:=+unbound-control
+else
+	DEPENDS:=+unbound-control
+endif
 endef
 
 define Package/$(PKG_NAME)/description
@@ -46,6 +51,8 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/resolver
 	$(INSTALL_BIN) ./files/resolver-conv $(1)/etc/resolver/resolver-conv.sh
+	$(INSTALL_BIN) ./files/dhcp_host_domain_ng.py $(1)/etc/resolver/dhcp_host_domain_ng.py
+	$(INSTALL_BIN) ./files/dynamic-domain-conv $(1)/etc/resolver/dynamic-domain-conv.sh
 ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
 	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolver
 else
@@ -57,6 +64,7 @@ endif
 	$(INSTALL_BIN) ./files/resolver-reload $(1)/etc/hotplug.d/iface/40-resolver-reload
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/resolver-defaults $(1)/etc/uci-defaults/resolver-defaults
+
 endef
 
 define Package/$(PKG_NAME)/postinst
@@ -66,6 +74,7 @@ if [ -z "$$IPKG_INSTROOT" ]; then
 	/etc/uci-defaults/resolver-defaults && rm /etc/uci-defaults/resolver-defaults
 	$(if $(CONFIG_TARGET_mvebu_Turris-Omnia),,
 	if [ ! -e "/etc/resolver/converted" ]; then
+		/etc/resolver/dynamic-domain-conv.sh
 		/etc/resolver/resolver-conv.sh
 		touch /etc/resolver/converted
 	fi)
