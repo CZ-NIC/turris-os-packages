@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
-PKG_VERSION:=1.6.0
+PKG_VERSION:=1.6.4
 PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.unbound.net/downloads
-PKG_MD5SUM:=78409eccf7260d260b6463f85e59c66b
+PKG_MD5SUM:=df0a88816ec31ccb8284c9eb132e1166fbf6d9cde71fbc4b8cd08a91ee777fed
 
 PKG_BUILD_DEPENDS:=libexpat
 PKG_BUILD_PARALLEL:=1
@@ -26,6 +26,7 @@ define Package/unbound/Default
   TITLE:=A validating, recursive & caching DNS resolver
   URL:=http://www.unbound.net/
   DEPENDS:=+libldns +libopenssl +dnssec-rootkey +resolver-conf
+  PROVIDES:=dns-resolver
 endef
 
 ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
