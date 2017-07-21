@@ -1,0 +1,27 @@
+From 92bea6d9691da4eab28051ec282f312b8b4c4bf2 Mon Sep 17 00:00:00 2001
+From: Martin Petracek <martin@petracek.net>
+Date: Wed, 19 Jul 2017 15:11:09 +0200
+Subject: [PATCH] try fixing bypass
+
+---
+ src/stream-tcp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/stream-tcp.c b/src/stream-tcp.c
+index c43331d9..fca54df8 100644
+--- a/src/stream-tcp.c
++++ b/src/stream-tcp.c
+@@ -4649,7 +4649,9 @@ int StreamTcpPacket (ThreadVars *tv, Packet *p, StreamTcpThread *stt,
+             p->flags |= PKT_STREAM_NOPCAPLOG;
+         }
+ 
+-        if (ssn->flags & STREAMTCP_FLAG_BYPASS) {
++        if ((ssn->client.flags & STREAMTCP_STREAM_FLAG_NOREASSEMBLY) &&
++             (ssn->server.flags & STREAMTCP_STREAM_FLAG_NOREASSEMBLY))
++        {
+             /* we can call bypass callback, if enabled */
+             if (StreamTcpBypassEnabled()) {
+                 PacketBypassCallback(p);
+-- 
+2.11.0
+
