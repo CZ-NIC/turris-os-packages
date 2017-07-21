@@ -13,6 +13,7 @@ config resolver 'common'
 	option prefered_resolver 'unbound'
 	option ignore_root_key '0'
 	option static_domains '1'
+	option dynamic_domains '0'
 
 config resolver 'kresd'
 	option rundir '/tmp/kresd'
@@ -50,7 +51,8 @@ config resolver 'unbound_python'
 	list python_script "/etc/unbound/ubmodule-tst.py"
 
 config resolver 'unbound_remote_control'
-	option control_enable 'no'
+	option control_enable 'yes'
+	option control_use_cert 'no'
 	list control_interface '0.0.0.0'
 	list control_interface '::0'
 
