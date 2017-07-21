@@ -9,8 +9,9 @@ CONFIGFILE=/tmp/kresd.config
 ROOTKEYFILE=/etc/root.keys
 DEFAULT_RUNDIR=/tmp/kresd
 HINTS_CONFIG=$DEFAULT_RUNDIR/hints.tmp
-DHCP_SCRIPT=/etc/kresd/dhcp_host_domain_ng.sh
+DHCP_SCRIPT=/etc/resolver/dhcp_host_domain_ng.py
 STATIC_DOMAINS=1
+DYNAMIC_DOMAINS=0
 
 # Check the /etc/unbound/root.keys is reasonable and try to fix it with given command
 check_root_key() {
@@ -144,6 +145,9 @@ load_uci_config_common() {
 	# enable static local domains
 	config_get_bool STATIC_DOMAINS "$section" static_domains 1
 
+	# get dynamic domains
+	config_get_bool DYNAMIC_DOMAINS "$section" dynamic_domains 1
+
 	# include custom kresd config
 	include_custom_config
 }
@@ -181,7 +185,7 @@ add_hostname_config() {
 }
 
 load_uci_config_kresd() {
-	local addr config keyfile forks verbose rundir log_stderr log_stdout dynamic_domains hostname_config
+	local addr config keyfile forks verbose rundir log_stderr log_stdout hostname_config dhcp_script_path
 	local section="kresd"
 
 	# knot-resolver config
@@ -205,19 +209,19 @@ load_uci_config_kresd() {
 	# hostnames for local DNS
 	config_list_foreach "$section" hostname_config add_hostname_config
 
-	# enable dynamic local domains
-	config_get_bool dynamic_domains "$section" dynamic_domains 0
-
 	#add rpz files
 	config_list_foreach "$section" rpz_file add_rpz_file
 
 	config_load dhcp
 	config_foreach get_local_domain dnsmasq
+
+	dhcp_script_path=$(config_foreach get_dnsmasq_dhcp_script dnsmasq)
 	if [ "$STATIC_DOMAINS" = "1" ]; then
 		config_foreach set_local_host host
 		config_foreach set_local_host domain
 	fi
-	if [ "$dynamic_domains" = "1" ]; then
+	if [ "$DYNAMIC_DOMAINS" = "1" ]; then
+		echo "Enable dhcp script"
 		config_foreach set_dnsmasq_dhcp_script dnsmasq "$DHCP_SCRIPT"
 		#reload dhcp config with script param
 		/etc/init.d/dnsmasq reload
