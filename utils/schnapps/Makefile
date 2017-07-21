@@ -27,7 +27,7 @@ define Package/schnapps
   SECTION:=utils
   CATEGORY:=Utilities
   SUBMENU:=Filesystem
-  DEPENDS:=+btrfs-progs @TARGET_mvebu_Turris-Omnia
+  DEPENDS:=+btrfs-progs
   TITLE:=Btrfs snapshots management tool
 endef
 
