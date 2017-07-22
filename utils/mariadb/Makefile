@@ -58,7 +58,7 @@ endef
 define Package/mariadb-server
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libmariadbclient +libpthread +libncurses +libreadline +zlib +libpcre +libstdcpp +libxml2 +libpam +libedit +liblzma +libaio +liblz4 +libodbc
+  DEPENDS:=+libmariadbclient +libpthread +libncurses +libreadline +zlib +libpcre +libstdcpp +libxml2 +libpam +libedit +liblzma +libaio +liblz4 +unixodbc
   TITLE:=MariaDB Server
   URL:=http://dev.mysql.com/
   SUBMENU:=database
