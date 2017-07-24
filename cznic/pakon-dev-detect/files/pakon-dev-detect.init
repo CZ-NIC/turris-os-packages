@@ -1,12 +1,11 @@
 #!/bin/sh /etc/rc.common
 
 USE_PROCD=1
-
-#pakond has START=50 and we want to be started after pakond
-START=51
+START=95
 
 start_service() {
+        IFACES=$(uci -q get suricata.suricata.interface) || { echo >&2 "Interfaces not set in configuration (configuration file might be missing)."; exit 1; }
         procd_open_instance
-        procd_set_param command /usr/bin/dev-detect
+        procd_set_param command /usr/bin/dev-detect $IFACES
         procd_close_instance
 }

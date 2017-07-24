@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-dev-detect
-PKG_VERSION:=1.1
-PKG_RELEASE:=2
+PKG_VERSION:=1.2
+PKG_RELEASE:=6
 PKG_LICENSE:=GPLv2+
 PKG_LICENSE_FILES:=COPYING
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-dev-detect.git
-PKG_SOURCE_VERSION:=7f28890dfdf86c67d04f0d102c5920d3a001f2bc
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 MAINTAINER:=Martin Petracek <martin.petracek@nic.cz>
@@ -26,11 +26,11 @@ $(call include_mk, python3-package.mk)
 
 define Package/pakon-dev-detect
   TITLE:=pakon-dev-detect
-  DEPENDS:=+python3 +python3-setuptools +pakon-guts +ouidb
+  DEPENDS:=+python3 +python3-setuptools +suricata +ouidb
 endef
 
 define Package/pakon-dev-detect/description
- This package provides a utility to detect new devices on LAN (using pakon-guts).
+ This package provides a utility to detect new devices on LAN (using suricata).
 endef
 
 define Build/Compile
@@ -44,15 +44,21 @@ define Py3Package/pakon-dev-detect/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/pakon-dev-detect.init $(1)/etc/init.d/pakon-dev-detect
 
+	$(INSTALL_DIR) $(1)/etc/suricata/output_conf.d
+	$(INSTALL_BIN) ./files/output_dev_detect.yaml $(1)/etc/suricata/output_conf.d/dev_detect.yaml
+
 	$(INSTALL_DIR) $(1)/usr/share/pakon-dev-detect
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/init_known_macs.sh $(1)/usr/share/pakon-dev-detect/
 endef
 
 define Package/pakon-dev-detect/postinst
 #!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
 	[ -f /usr/share/pakon-dev-detect/known_macs ] || /usr/share/pakon-dev-detect/init_known_macs.sh > /usr/share/pakon-dev-detect/known_macs
+        /etc/init.d/suricata restart
 	/etc/init.d/pakon-dev-detect enable
 	/etc/init.d/pakon-dev-detect start
+}
 endef
 
 define Package/pakon-dev-detect/prerm
@@ -61,6 +67,10 @@ define Package/pakon-dev-detect/prerm
 	/etc/init.d/pakon-dev-detect stop
 endef
 
+define Package/pakon-dev-detect/postrm
+#!/bin/sh
+        /etc/init.d/suricata restart || true
+endef
 
 $(eval $(call Py3Package,pakon-dev-detect))
 $(eval $(call BuildPackage,pakon-dev-detect))
