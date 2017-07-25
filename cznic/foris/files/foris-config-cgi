@@ -1,0 +1,20 @@
+#!/bin/sh
+
+. /lib/functions.sh
+
+config_load foris
+config_get_bool DEBUG server debug "0"
+config_get_bool NOAUTH auth noauth "0"
+config_get SESSION_TIMEOUT auth session_timeout ""
+config_get SCRIPTNAME server scriptname "/foris"
+
+EXTRA_FLAGS=""
+[ "$DEBUG" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS -d"
+[ "$NOAUTH" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS --noauth"
+[ "$SESSION_TIMEOUT" != "" ] && EXTRA_FLAGS="$EXTRA_FLAGS --session-timeout $SESSION_TIMEOUT"
+
+if [ -z "$SCRIPTNAME" ]; then
+	export PATH_INFO="/"
+fi
+
+exec /usr/bin/foris -s cgi $EXTRA_FLAGS -a config

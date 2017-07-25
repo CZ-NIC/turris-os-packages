@@ -9,6 +9,8 @@ config_get_bool NOAUTH auth noauth "0"
 config_get SESSION_TIMEOUT auth session_timeout ""
 config_get SERVER server server "flup"
 
+APP="$1"
+
 # scriptname must not contain escape codes (avoid CRLF injection in sed later)
 # and for the sake of UX, trailing and leading slashes are trimmed
 SCRIPTNAME=$(echo "$SCRIPTNAME" | sed -e 's;\\;\\\\;g' | sed -e 's;/*$;;g' | sed -e 's;^/*;;g' | sed -e 's;/+;/;g')
@@ -21,32 +23,27 @@ EXTRA_FLAGS=""
 EXTRA_FLAGS="$EXTRA_FLAGS -s $SERVER"
 
 FORIS_PATHS=""
-tmp_out=$(eval /usr/bin/foris -R $EXTRA_FLAGS)
+tmp_out=$(eval /usr/bin/foris -R $EXTRA_FLAGS -a $APP)
 for path in $tmp_out;  do
 	FORIS_PATHS="$FORIS_PATHS|${path:1}"  # remove first '/' character
 done
 
 
-echo 'var.foris.bin = "/usr/bin/foris"'
-echo 'var.foris.cgi = "/usr/share/foris/foris-cgi"'
-echo "var.foris.scriptname = \"$SCRIPTNAME\""
-echo "var.foris.paths = \"$FORIS_PATHS\""
-echo "var.foris.flags = \"$EXTRA_FLAGS\""
+echo "var.foris-$APP.bin = \"/usr/bin/foris\""
+echo "var.foris-$APP.cgi = \"/usr/share/foris/foris-$APP-cgi\""
+echo "var.foris-$APP.scriptname = \"$SCRIPTNAME/$APP\""
+echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP\""
+echo "var.foris-$APP.paths = \"$FORIS_PATHS\""
 echo
-echo '$HTTP["url"] =~ "^" + var.foris.scriptname + "/(" + var.foris.paths + ")$" {'
+echo "\$HTTP[\"url\"] =~ \"^\" + var.foris-$APP.scriptname + \"/(\" + var.foris-$APP.paths + \")$\" {"
 case $SERVER in
 	flup)
 		echo '	fastcgi.debug = 0'
 		echo '	fastcgi.server = ('
-		if [ -z "$SCRIPTNAME" ] ; then
-		echo '		"/" => ('
-		else
-		echo '		var.foris.scriptname => ('
-		fi
+		echo "		var.foris-$APP.scriptname => ("
 		echo '			"python-fcgi" => ('
-		echo '				"socket" => "/tmp/fastcgi.python.socket",'
-		echo '				"bin-path" => var.foris.bin + var.foris.flags,'
-		[ -z "$SCRIPTNAME" ] && echo '				"fix-root-scriptname" => "enable",'
+		echo "				\"socket\" => \"/tmp/fastcgi.foris-$APP.socket\","
+		echo "				\"bin-path\" => var.foris-$APP.bin + var.foris-$APP.flags,"
 		echo '				"check-local" => "disable",'
 		echo '				"max-procs" => 1,'
 		echo '			)'
@@ -54,7 +51,7 @@ case $SERVER in
 		echo '	)'
 	;;
 	cgi)
-		echo '	alias.url = ( var.foris.scriptname => var.foris.cgi )'
+		echo "	alias.url = ( var.foris-$APP.scriptname => var.foris-$APP.cgi )"
 		echo '	cgi.assign = ( "" => "" )'
 	;;
 esac
@@ -66,34 +63,8 @@ PLUGINS_DIR=/usr/share/foris/plugins
 for PLUGIN_PATH in $PLUGINS_DIR/*; do
 	PLUGIN_NAME=$(basename $PLUGIN_PATH)
 	[ -d "$PLUGIN_PATH/static" ] && {
-		echo "alias.url += ( var.foris.scriptname + \"/static/plugins/$PLUGIN_NAME/\" => \"$PLUGIN_PATH/static/\" )"
+		echo "alias.url += ( var.foris-$APP.scriptname + \"/static/plugins/$PLUGIN_NAME/\" => \"$PLUGIN_PATH/static/\" )"
 	}
 done
 
-echo 'alias.url += ( var.foris.scriptname + "/static/" => "/usr/lib/python2.7/site-packages/foris/static/" )'
-
-if [ -n "$SCRIPTNAME" ] ; then
-	# insert html page to /tmp/index.html
-	mkdir -p /tmp/foris/index.html
-	cat > /tmp/index.html << HTML
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<meta http-equiv="Cache-Control" content="no-cache" />
-		<meta http-equiv="refresh" content="0; URL=$SCRIPTNAME/" />
-	</head>
-	<body style="background-color: white">
-		<a style="color: black; font-family: arial, helvetica, sans-serif;" href="$SCRIPTNAME/">Foris</a>
-	</body>
-</html>
-HTML
-
-echo '$HTTP["url"] =~ "^/*$" {'
-echo '	alias.url += ( "/" => "/tmp/index.html" )'
-echo '}'
-
-# Make sure that wirzard passes during a migration from older image
-echo '	url.redirect += ( "^/wizard/(.*)" => "/foris/wizard/$1" )'
-
-fi
+echo "alias.url += ( var.foris-$APP.scriptname + \"/static/\" => \"/usr/lib/python2.7/site-packages/foris/static/\" )"

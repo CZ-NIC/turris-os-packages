@@ -17,4 +17,4 @@ if [ -z "$SCRIPTNAME" ]; then
 	export PATH_INFO="/"
 fi
 
-exec /usr/bin/foris -s cgi $EXTRA_FLAGS
+exec /usr/bin/foris -s cgi $EXTRA_FLAGS -a wizard

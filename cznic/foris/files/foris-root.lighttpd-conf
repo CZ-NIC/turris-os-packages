@@ -1,0 +1,8 @@
+# root page dynamic redirect via script
+$HTTP["url"] =~ "^/*$" {
+	alias.url = ( "/" => "/usr/share/foris/foris-root-cgi" )
+	cgi.assign = ( "" => "" )
+}
+
+# Make sure that wirzard passes during a migration from older image
+url.redirect += ( "^/wizard/(.*)" => "/foris/wizard/main/$1" )
