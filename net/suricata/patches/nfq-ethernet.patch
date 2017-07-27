@@ -21,7 +21,7 @@ index c371b54e..20bb4029 100644
          }
 +#ifdef NFQ
 +    if (!f->hw_address_src_known && p->nfq_v.hw_address_known){
-+        SCLogInfo("setting src MAC address %02x:%02x:%02x:%02x:%02x:%02x", p->nfq_v.hw_address[0], p->nfq_v.hw_address[1], p->nfq_v.hw_address[2], p->nfq_v.hw_address[3], p->nfq_v.hw_address[4], p->nfq_v.hw_address[5]);
++        SCLogDebug("setting src MAC address %02x:%02x:%02x:%02x:%02x:%02x", p->nfq_v.hw_address[0], p->nfq_v.hw_address[1], p->nfq_v.hw_address[2], p->nfq_v.hw_address[3], p->nfq_v.hw_address[4], p->nfq_v.hw_address[5]);
 +        f->hw_address_src_known = 1;
 +        memcpy(f->hw_address_src, p->nfq_v.hw_address, 6);
 +    }
@@ -35,7 +35,7 @@ index c371b54e..20bb4029 100644
          }
 +#ifdef NFQ
 +    if (!f->hw_address_dst_known && p->nfq_v.hw_address_known){
-+        SCLogInfo("setting dst MAC address %02x:%02x:%02x:%02x:%02x:%02x", p->nfq_v.hw_address[0], p->nfq_v.hw_address[1], p->nfq_v.hw_address[2], p->nfq_v.hw_address[3], p->nfq_v.hw_address[4], p->nfq_v.hw_address[5]);
++        SCLogDebug("setting dst MAC address %02x:%02x:%02x:%02x:%02x:%02x", p->nfq_v.hw_address[0], p->nfq_v.hw_address[1], p->nfq_v.hw_address[2], p->nfq_v.hw_address[3], p->nfq_v.hw_address[4], p->nfq_v.hw_address[5]);
 +        f->hw_address_dst_known = 1;
 +        memcpy(f->hw_address_dst, p->nfq_v.hw_address, 6);
 +    }
