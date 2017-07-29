@@ -1,0 +1,11 @@
+--- a/setup.py
++++ b/setup.py
+@@ -31,6 +31,8 @@ def get_extension():
+         glob.glob('../libpcap*') + glob.glob('../wpdpack*') + \
+         glob.glob('/Applications/Xcode.app/Contents/Developer/Platforms/' +
+                   'MacOSX.platform/Developer/SDKs/*')
++    if "FIRST_SEARCH_PATH" in os.environ:
++        dirs.insert(0, os.environ["FIRST_SEARCH_PATH"])
+
+     for d in dirs:
+         search_dirs = [
