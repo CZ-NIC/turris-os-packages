@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata
 PKG_VERSION:=4.0.0
-PKG_RELEASE=1
+PKG_RELEASE=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.openinfosecfoundation.org/download/
@@ -34,35 +34,53 @@ define Package/suricata
   SECTION:=net
   CATEGORY:=Network
   TITLE:=IDS
-  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +librt +libpcap +luajit +libnetfilter-queue +libnetfilter-log +libnfnetlink +libhtp
+  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +librt +libpcap +luajit +libnetfilter-queue +iptables-mod-nfqueue +libnetfilter-log +libnfnetlink +libhtp
 endef
 
 define Package/suricata/conffiles
 /etc/suricata/*
 /etc/config/suricata
-/etc/suricata/rules/*
+/etc/suricata/output_conf.d/*
 endef
 
 define Package/suricata/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/suricata.init $(1)/etc/init.d/suricata
-	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(CP) ./files/suricata.cron $(1)/etc/cron.d/suricata
+
+	$(INSTALL_DIR) $(1)/etc/firewall.d/with_reload
+	$(INSTALL_BIN) ./files/suricata.fw $(1)/etc/firewall.d/with_reload/99_suricata.fw
+
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/suricata* $(1)/usr/bin
-	$(INSTALL_BIN) ./files/update_rules.sh $(1)/usr/bin/suricata_update_rules.sh
+
 	$(INSTALL_DIR) $(1)/etc/suricata
-	sed '/default-rule-path:/,/reference-config-file:/ s/^/#/' $(PKG_BUILD_DIR)/suricata.yaml > $(1)/etc/suricata/suricata.yaml
-	sed -i 's|^\(#default-rule-path:.*\)|# We use rules from file included lower\n# Those are part of downloaded ruleset\n# You can comment that include, and uncoment this section to customize\n\n\1|' $(1)/etc/suricata/suricata.yaml
-	sed -i 's|#classification-file:.*|include: /tmp/suricata-rules/suricata-include.yaml\nclassification-file: /tmp/suricata-rules/classification.config|' $(1)/etc/suricata/suricata.yaml
-	sed -i 's|^outputs:|outputs:\n  - eve-log:\n      enabled: yes\n      filetype: unix_dgram\n      filename: /var/run/suricata_monitor.sock\n      types:\n        - alert\n        - flow\n        - dns:\n            query: no\n        - tls:\n            extended: yes|' $(1)/etc/suricata/suricata.yaml
-	sed -i 's|#reference-config-file:.*|reference-config-file: /tmp/suricata-rules/reference.config|' $(1)/etc/suricata/suricata.yaml
+	$(INSTALL_CONF) ./files/suricata.yaml $(1)/etc/suricata/suricata.yaml
+
+	$(INSTALL_DIR) $(1)/etc/suricata/output_conf.d
+	$(INSTALL_CONF) ./files/output_common.yaml $(1)/etc/suricata/output_conf.d/common.yaml
 	$(INSTALL_DIR) $(1)/etc/config
 	$(CP) ./files/suricata.config $(1)/etc/config/suricata
+
+	$(INSTALL_DIR) $(1)/etc/suricata/conf.d
+
 	$(CP) $(PKG_BUILD_DIR)/classification.config $(1)/etc/suricata
 	$(CP) $(PKG_BUILD_DIR)/reference.config $(1)/etc/suricata
 	$(CP) $(PKG_BUILD_DIR)/threshold.config $(1)/etc/suricata
-	$(CP) $(PKG_BUILD_DIR)/rules $(1)/etc/suricata
+endef
+
+
+define Package/suricata/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+	/etc/init.d/suricata enable
+	/etc/init.d/suricata start
+}
+endef
+
+define Package/suricata/prerm
+#!/bin/sh
+	/etc/init.d/suricata disable
+	/etc/init.d/suricata stop
 endef
 
 $(eval $(call BuildPackage,suricata))
