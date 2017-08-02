@@ -10,7 +10,7 @@ include $(INCLUDE_DIR)/uclibc++.mk
 
 PKG_NAME:=mariadb
 PKG_VERSION:=10.2.7
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=\
@@ -96,6 +96,11 @@ define Host/Configure
                         -DCMAKE_SKIP_RPATH=TRUE  \
 			-DCURSES_INCLUDE_PATH=$(STAGING_DIR_HOST)/usr/include \
 			-DCURSES_LIBRARY=$(STAGING_DIR_HOST)/usr/lib \
+                	-DINSTALL_MYSQLSHAREDIR=share/mariadb \
+                	-DINSTALL_LAYOUT=RPM \
+                	-DINSTALL_PLUGINDIR=lib/mariadb/plugin \
+                	-DINSTALL_MYSQLDATADIR=/srv/mysql \
+                	-DINSTALL_UNIX_ADDRDIR=/var/run/mysql.sock
                         $(CMAKE_HOST_OPTIONS) \
 	..
 endef
@@ -139,6 +144,7 @@ define Package/mariadb-server/install
 	$(INSTALL_DIR) $(1)/usr/share/mariadb
 	$(INSTALL_DIR) $(1)/usr/share/mariadb/english
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/share/mariadb/english/errmsg.sys $(1)/usr/share/mariadb/english
+	$(CP) $(PKG_INSTALL_DIR)/usr/share/mariadb/charsets $(1)/usr/share/mariadb
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/share/mariadb/*.sql $(1)/usr/share/mariadb/
 endef
 
