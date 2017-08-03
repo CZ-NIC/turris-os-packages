@@ -93,13 +93,13 @@ define Host/Configure
 			-DOPENSSL_INCLUDE_DIR=$(STAGING_DIR_HOST)/openssl-host/include \
 			-DOPENSSL_SSL_LIBRARY=$(STAGING_DIR_HOST)/openssl-host/lib/libssl.so \
 			-DOPENSSL_CRYPTO_LIBRARY=$(STAGING_DIR_HOST)/openssl-host/lib/libcrypto.so \
-                        -DCMAKE_SKIP_RPATH=TRUE  \
+			-DCMAKE_SKIP_RPATH=TRUE \
 			-DCURSES_INCLUDE_PATH=$(STAGING_DIR_HOST)/usr/include \
 			-DCURSES_LIBRARY=$(STAGING_DIR_HOST)/usr/lib \
-                	-DINSTALL_MYSQLSHAREDIR=share/mariadb \
-                	-DINSTALL_MYSQLDATADIR=/srv/mysql \
-                	-DINSTALL_UNIX_ADDRDIR=/var/run/mysql.sock
-                        $(CMAKE_HOST_OPTIONS) \
+			-DINSTALL_MYSQLSHAREDIR=share/mariadb \
+			-DINSTALL_MYSQLDATADIR=/srv/mysql \
+			-DINSTALL_UNIX_ADDRDIR=/var/run/mysql.sock \
+			$(CMAKE_HOST_OPTIONS) \
 	..
 endef
 
