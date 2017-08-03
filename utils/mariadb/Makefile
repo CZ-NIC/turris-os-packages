@@ -97,8 +97,6 @@ define Host/Configure
 			-DCURSES_INCLUDE_PATH=$(STAGING_DIR_HOST)/usr/include \
 			-DCURSES_LIBRARY=$(STAGING_DIR_HOST)/usr/lib \
                 	-DINSTALL_MYSQLSHAREDIR=share/mariadb \
-                	-DINSTALL_LAYOUT=RPM \
-                	-DINSTALL_PLUGINDIR=lib/mariadb/plugin \
                 	-DINSTALL_MYSQLDATADIR=/srv/mysql \
                 	-DINSTALL_UNIX_ADDRDIR=/var/run/mysql.sock
                         $(CMAKE_HOST_OPTIONS) \
