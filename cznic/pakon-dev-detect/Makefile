@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-dev-detect
-PKG_VERSION:=1.2
-PKG_RELEASE:=6
+PKG_VERSION:=1.2.1
+PKG_RELEASE:=1
 PKG_LICENSE:=GPLv2+
 PKG_LICENSE_FILES:=COPYING
 
@@ -48,13 +48,12 @@ define Py3Package/pakon-dev-detect/install
 	$(INSTALL_BIN) ./files/output_dev_detect.yaml $(1)/etc/suricata/output_conf.d/dev_detect.yaml
 
 	$(INSTALL_DIR) $(1)/usr/share/pakon-dev-detect
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/init_known_macs.sh $(1)/usr/share/pakon-dev-detect/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/get_mac_iface.sh $(1)/usr/share/pakon-dev-detect/
 endef
 
 define Package/pakon-dev-detect/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-	[ -f /usr/share/pakon-dev-detect/known_macs ] || /usr/share/pakon-dev-detect/init_known_macs.sh > /usr/share/pakon-dev-detect/known_macs
         /etc/init.d/suricata restart
 	/etc/init.d/pakon-dev-detect enable
 	/etc/init.d/pakon-dev-detect start
