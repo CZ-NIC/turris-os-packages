@@ -121,17 +121,6 @@ set_local_host() {
     fi
 }
 
-set_dynamic_domains() {
-    filename=$DHCPLEASES
-    while read -r line
-    do
-        domain=$(echo $line|awk '{print $2}')
-        ipaddr=$(echo $line|awk '{print $1}')
-        echo "	local-zone: \"$domain.\" static" >> "$CONFIGFILE"
-        echo "	local-data: \"$domain. IN A $ipaddr\"" >> "$CONFIGFILE"
-    done < "$filename"
-}
-
 #initialize everything
 init_unbound() {
     config_load resolver
@@ -179,11 +168,6 @@ init_unbound() {
     config_get hostname_config "unbound" hostname_config ""
     if [ -n "$hostname_config" ] && [ -e "$hostname_config" ] ; then
         set_local_zone $hostname_config
-    fi
-
-    config_get_bool dynamic_domains "common" dynamic_domains 1
-    if [ "$dynamic_domains" == "1" ] ; then
-        set_dynamic_domains
     fi
 
     config_get_bool static_domains "common" static_domains 1
