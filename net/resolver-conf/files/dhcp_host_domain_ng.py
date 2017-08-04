@@ -4,6 +4,46 @@ import subprocess
 import sys
 import syslog
 from syslog import LOG_ERR, LOG_INFO, LOG_DEBUG, LOG_WARNING
+import re
+import socket
+import os
+from os import listdir
+
+
+def is_valid_hostname(hostname):
+    if len(hostname) > 255:
+        return False
+    if hostname == "":
+        return False
+    if hostname[-1] == ".":
+        hostname = hostname[:-1]
+    allowed = re.compile("(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
+    for x in hostname.split("."):
+        if allowed.match(x) is None:
+            return False
+    return True
+
+
+def is_valid_ipv4(address):
+    try:
+        socket.inet_pton(socket.AF_INET, address)
+    except AttributeError:  # no inet_pton here, sorry
+        try:
+            socket.inet_aton(address)
+        except socket.error:
+            return False
+        return address.count('.') == 3
+    except socket.error:  # not a valid
+        return False
+    return True
+
+
+def is_valid_ipv6(address):
+    try:
+        socket.inet_pton(socket.AF_INET6, address)
+    except socket.error:  # not a valid
+        return False
+    return True
 
 
 def log(text, priority=LOG_INFO):
@@ -12,31 +52,28 @@ def log(text, priority=LOG_INFO):
 
 
 def call_cmd(cmd):
-    task = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    assert isinstance(cmd, list)
+    task = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE)
     data = task.stdout.read()
     return data
 
 
-def call_pidof(process):
-    pid = call_cmd("pidof %s" % process).strip()
-    if pid.isdigit():
-        return int(pid)
-    else:
-        return None
-
-
 def uci_get(path):
-    return call_cmd("uci get %s" % path)
+    return call_cmd(["uci", "get", "%s" % path]).rstrip()
 
-def uci_get_bool(path):
-    ret=uci_get(path).rstrip()
-    if ret == "1" or ret.lower() == "true":
+
+def uci_get_bool(path, default):
+    ret = uci_get(path)
+    if ret in ('1', 'on', 'true', 'yes', 'enabled'):
         return True
-    else:
+    elif ret in ('0', 'off', 'false', 'no', 'disabled'):
         return False
+    else:
+        return default
+
 
 def uci_set(path, val):
-    call_cmd("uci set %s=%s" % (path, val))
+    return call_cmd(["uci", "set", "%s=%s" % (path, val)])
 
 
 class Kresd:
@@ -47,29 +84,132 @@ class Kresd:
         self.__empty_file = empty_file
         self.__static_leases = dhcp_static_leases
         self.__dynamic_leases = dhcp_dynamic_leases
-        self.__static_leases_enabled = uci_get_bool("resolver.common.static_domains")
-        self.__dynamic_leases_enabled = uci_get_bool("resolver.common.dynamic_domains")
+        self.__static_leases_enabled = uci_get_bool("resolver.common.static_domains", True)
+        self.__dynamic_leases_enabled = uci_get_bool("resolver.common.dynamic_domains", False)
+        self.__socket_path = self._get_socket_path()
 
-    def __call_kresd(self, cmd):
-        pid_kresd = call_pidof("kresd")
-        return call_cmd("%s | socat - UNIX-CONNECT:/tmp/kresd/tty/%i > /dev/null 2>&1" % (cmd, pid_kresd))
+    def _get_socket_path(self):
+        path = os.path.join(uci_get("resolver.kresd.rundir"), "tty")
+        try:
+            files = [f for f in listdir(path)]
+            return os.path.join(path, files[0])
+        except:
+            log("Kresd is probably not running no socket found.", LOG_ERR)
+            sys.exit(1)
 
-    def __clean_hints(self):
+    def _call_kresd(self, cmd):
+        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        sock.settimeout(2)
+        try:
+            sock.connect(self.__socket_path)
+            sock.sendall(cmd + "\n")
+            print "__call_kresd", cmd
+            ret = sock.recv(4096)
+            print "ret", ret
+            sock.close()
+            return ret
+        except socket.error, msg:
+            log("Kresd socket failed:%s,%s" % (socket.error, msg), LOG_ERR)
+            sys.exit(1)
+
+    def _clean_hints(self):
         open(self.__empty_file, "a").close()
         # load empty file to clear kresd hints
-        self.__call_kresd("echo hints.config('%s')" % self.__empty_file)
+        self._call_kresd("hints.config('%s')" % self.__empty_file)
 
     def refresh_leases(self):
-        self.__clean_hints()
+        self._clean_hints()
         if self.__static_leases_enabled:
-            self.__call_kresd("echo \"hints.add_hosts('%s')\"" % self.__static_leases)
+            self._call_kresd("hints.add_hosts('%s')" % self.__static_leases)
         if self.__dynamic_leases_enabled:
-            self.__call_kresd("echo \"hints.add_hosts('%s')\"" % self.__dynamic_leases)
+            self._call_kresd("hints.add_hosts('%s')" % self.__dynamic_leases)
 
 
 class Unbound:
+    def __init__(self, dhcp_dynamic_leases="/tmp/dhcp.leases.dynamic"):
+        # check if files exists.....
+        self._dhcp_dynamic_leases = dhcp_dynamic_leases
+        self.__dynamic_leases_enabled = uci_get_bool("resolver.common.dynamic_domains", False)
+        self.__local_suffix = uci_get("dhcp.@dnsmasq[0].local").replace("/", "")
+
+    def _call_unbound(self, cmd, arg=""):
+        if arg == "":
+            ret = call_cmd(["unbound-control", cmd])
+        else:
+            ret = call_cmd(["unbound-control", cmd, arg])
+        return ret
+
+    def _get_unbound_list(self, unbound_list, filter_local, suffix):
+        """ list_local_data, list_local_zones """
+        ret = []
+        cmd_ret = self._call_unbound(unbound_list)
+        for item in filter(None, cmd_ret.splitlines()):
+            item_list = item.split()
+            if filter_local:
+                if item_list[0].endswith("." + suffix + "."):
+                    ret.append(item_list)
+            else:
+                ret.append(item_list)
+        return ret
+
+    def _get_dynamic_leases(self):
+        ret = []
+        with open(self._dhcp_dynamic_leases, "r") as fp:
+            for line in fp.read().splitlines():
+                ret.append(line.split())
+        return ret
+
+    def _add_local_zone(self, domain):
+        domain = self._fix_domain(domain)
+        ret = self._call_unbound("local_zone", "%s static" % domain)
+        return ret
+
+    def _add_local_data(self, domain, ip):
+        domain = self._fix_domain(domain)
+        ret = self._call_unbound("local_data", "%s IN A %s" % (domain, ip))
+        return ret
+
+    def _fix_domain(self, domain):
+        if not domain.endswith("."):
+            domain = domain + "."
+        return domain
+
+    def _remove_local(self, local_type, domain):
+        """local_zone_remove ,local_data_remove"""
+        domain = self._fix_domain(domain)
+        ret = self._call_unbound(local_type, "%s" % domain).strip()
+        if ret == "ok":
+            return True
+        else:
+            return False
+
+    def _remove_local_data(self, domain):
+        return self._remove_local("local_data_remove", domain)
+
+    def _remove_local_zone(self, domain):
+        return self._remove_local("local_zone_remove", domain)
+
     def refresh_leases(self):
-        call_cmd("/etc/init.d/resolver restart")
+        self._clean_leases()
+        if self.__dynamic_leases_enabled:
+            domain__leases_list = self._get_dynamic_leases()
+            for ip, domain in domain__leases_list:
+                self._add_local_zone(domain)
+                self._add_local_data(domain, ip)
+
+    def _clean_leases(self):
+        local_zones_list = self._get_unbound_list("list_local_zones",
+                                                  filter_local=True,
+                                                  suffix="lan")
+        local_data_list = self._get_unbound_list("list_local_data",
+                                                 filter_local=True,
+                                                 suffix="lan")
+        for item in local_zones_list:
+            domain = item[0]
+            self._remove_local_zone(domain)
+        for item in local_data_list:
+            domain = item[0]
+            self._remove_local_data(domain)
 
 
 class DHCPv4:
@@ -77,19 +217,19 @@ class DHCPv4:
         self.__dhcp_leases_file = dhcp_leases
         self.__dhcp_leases_out_file = dhcp_leases_out
         self.__leases_list = []
-        self.__resolver = uci_get("resolver.common.prefered_resolver").rstrip()
-        self.__local_suffix = uci_get("dhcp.@dnsmasq[0].local").rstrip().replace("/", "")
-        self.__load_hints()
+        self.__resolver = uci_get("resolver.common.prefered_resolver")
+        self.__local_suffix = uci_get("dhcp.@dnsmasq[0].local").replace("/", "")
+        self._load_hints()
 
     def update_dhcp(self, op, hostname, ipv4):
         if op == "add":
-            self.__add_lease(hostname, ipv4)
+            self._add_lease(hostname, ipv4)
             log("DHCP add new hostname [%s,%s]" % (hostname, ipv4), LOG_INFO)
         elif op == "del":
-            self.__del_lease(hostname, ipv4)
+            self._del_lease(hostname, ipv4)
             log("DHCP delete hostname [%s,%s]" % (op, hostname, ipv4), LOG_INFO)
         elif op == "old":
-            self.__del_lease(hostname, ipv4)
+            self._del_lease(hostname, ipv4)
             log("DHCP remove old hostname [%s,%s]" % (op, hostname, ipv4), LOG_INFO)
         else:
             log("DHCP unknown update operation", LOG_WARNING)
@@ -112,40 +252,44 @@ class DHCPv4:
         else:
             log("Refresh failed. Unknown resolver", LOG_WARNING)
 
-    def __load_hints(self):
+    def _load_hints(self):
         try:
             with open(self.__dhcp_leases_file, "r") as fp:
                 for line in fp.read().splitlines():
                     if len(line.split()) >= 4:
                         timestamp, mac, ipv4, hostname = line.split()[:4]
-                        self.__add_lease(hostname, ipv4)
+                        self._add_lease(hostname, ipv4)
         except IOError:
-            log("DHCP leases file does not exist %s " % 
+            log("DHCP leases file does not exist %s " %
                 self.__dhcp_leases_file, LOG_WARNING)
 
-    def __add_lease(self, hostname, ipv4):
-        if self.__check_hostname(hostname):
-            # hostname with suffix
-            hostname_suffix = "%s.%s" % (hostname, self.__local_suffix)
-            for index, item in enumerate(self.__leases_list):
-                if item[0] == hostname_suffix:
-                    self.__leases_list[index][1] = ipv4
-                    return
-            self.__leases_list.append([hostname_suffix, ipv4])
-
-    def __del_lease(self, hostname, ipv4=None):
-        hostname_suffix = "%s.%s" % (hostname, self.__local_suffix)
-        if self.__check_hostname(hostname):
-            for index, item in enumerate(self.__leases_list):
-                if item[0] == hostname_suffix:
-                    self.__leases_list.remove(self.__leases_list[index])
-
-    def __check_hostname(self, hostname):
-        if hostname != "" and not(hostname.isspace()) and hostname != "*":
-            return True
-        else:
-            log("Hostname check failed", LOG_WARNING)
+    def _add_lease(self, hostname, ipv4):
+        if is_valid_hostname(hostname) is False:
+            log("Add_lease, hostname check failed", LOG_WARNING)
             return False
+        if is_valid_ipv4(ipv4) is False:
+            log("Add_lease, ipv4 check failed", LOG_WARNING)
+            return False
+        # hostname with suffix
+        hostname_suffix = "%s.%s" % (hostname, self.__local_suffix)
+        for index, item in enumerate(self.__leases_list):
+            if item[0] == hostname_suffix:
+                self.__leases_list[index][1] = ipv4
+                return True
+        self.__leases_list.append([hostname_suffix, ipv4])
+        return True
+
+    def _del_lease(self, hostname, ipv4=None):
+        hostname_suffix = "%s.%s" % (hostname, self.__local_suffix)
+        if is_valid_hostname(hostname) is False:
+            log("Del_lease, hosname check failed", LOG_WARNING)
+            return False
+        for index, item in enumerate(self.__leases_list):
+            if item[0] == hostname_suffix:
+                del self.__leases_list[index]
+                break
+        return True
+
 
 if __name__ == "__main__":
     if len(sys.argv) == 2 and sys.argv[1] == "ipv6":

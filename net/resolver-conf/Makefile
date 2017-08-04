@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.1
-PKG_RELEASE:=12
+PKG_RELEASE:=18
 
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -26,6 +26,11 @@ define Package/resolver-conf
 	CATEGORY:=Network
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Resolver configuration
+ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+	DEPENDS:=+unbound-control
+else
+	DEPENDS:=+unbound-control
+endif
 endef
 
 define Package/$(PKG_NAME)/description
