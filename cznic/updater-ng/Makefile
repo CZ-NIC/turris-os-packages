@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=59.0.3
+PKG_VERSION:=59.1
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
@@ -82,6 +82,13 @@ define Package/$(PKG_NAME)/postinst
 # Run the uci-defaults now if we are installed at runtime and not flashed
 /etc/uci-defaults/updater && rm /etc/uci-defaults/updater
 }
+# Remove morphered syntax from auto.lua
+# This matches all Install and Package commands not follwed by brackets. Whole
+# line is enclosed with brackets and between strings and tables are added commas.
+sed -iE '/^(Install|Package) +[^(]/{
+		s/(Install|Package) +(.*)/\1(\2)/;
+		s/("|\}) ("|\{)/\1, \2/g
+	}' "$$IPKG_INSTROOT/etc/updater/auto.lua"
 endef
 
 define Build/Compile
@@ -103,12 +110,15 @@ endef
 
 # Current implementation of updater can't remove package before replan and so we
 # can't let updater-ng steal opkg-trans files. With dependency:
-# 	if (installed['opkg-trans'] or {}).version < '59.0.2' then
+#   if not version_match then
 # 		Package 'updater-ng' { deps = 'opkg-trans' }
 # 	end
 # this empty package should ensure that we correctly move packages from opkg-trans
 # to updater-ng even with old version of updater. Unfortunately this won't work
 # with downgrade.
+# Note that because version_match was defined after package rename we can't use it
+# to check version. But if it isn't defined than we know that we are using some
+# old version of updater.
 define Package/opkg-trans
 	TITLE:=Dummy opkg-trans package
 endef
