@@ -1,0 +1,31 @@
+From d7d7cae5a339ec4b0a280184af3a46d89c08bc09 Mon Sep 17 00:00:00 2001
+From: Vladimír Čunát <vladimir.cunat@nic.cz>
+Date: Thu, 3 Aug 2017 13:55:04 +0200
+Subject: [PATCH] dnssec: guard against out-of-bailiwick signatures
+
+---
+ lib/dnssec.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/lib/dnssec.c b/lib/dnssec.c
+index dcfd829..5fb56be 100644
+--- a/lib/dnssec.c
++++ b/lib/dnssec.c
+@@ -157,6 +157,14 @@ int kr_rrset_validate_with_key(kr_rrset_validation_ctx_t *vctx,
+ 	uint32_t timestamp            = vctx->timestamp;
+ 	bool has_nsec3		      = vctx->has_nsec3;
+ 	struct dseckey *created_key = NULL;
++
++	/* It's just caller's approximation that the RR is in that particular zone.
++	 * We MUST guard against attempts of zones signing out-of-bailiwick records. */
++	if (!knot_dname_in(zone_name, covered->owner)) {
++		vctx->result = kr_error(ENOENT);
++		return vctx->result;
++	}
++
+ 	if (key == NULL) {
+ 		const knot_rdata_t *krr = knot_rdataset_at(&keys->rrs, key_pos);
+ 		int ret = kr_dnssec_key_from_rdata(&created_key, keys->owner,
+--
+libgit2 0.25.0
+
