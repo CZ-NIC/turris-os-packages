@@ -208,6 +208,9 @@ init_unbound() {
     set_parameter prefetch prefetch yes
     set_parameter prefetch_key prefetch-key yes
 
+    #Includes
+    config_list_foreach unbound_includes include_path add_include
+
     #Python section
     add_section unbound_python python
     set_multiple_parameters python_script python-script
@@ -216,14 +219,12 @@ init_unbound() {
     add_section unbound_remote_control remote-control
     set_parameter control_enable control-enable no
     set_multiple_parameters control_interface control-interface
+    set_parameter control_use_cert control-use-cert yes
     set_parameter control_port control-port 8953
     set_quoted_parameter server_key_file server-key-file "/etc/unbound/unbound_server.key"
     set_quoted_parameter server_cert_file server-cert-file "/etc/unbound/unbound_server.pem"
     set_quoted_parameter control_key_file control-key-file "/etc/unbound/unbound_control.key"
     set_quoted_parameter control_cert_file control-cert-file "/etc/unbound/unbound_control.pem"
-
-    #Includes
-    config_list_foreach unbound_includes include_path add_include
 
     local do_forward
     config_get_bool do_forward common forward_upstream 1
