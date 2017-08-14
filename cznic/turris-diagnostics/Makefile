@@ -33,10 +33,10 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/diagnostics/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/diagnostics/diagnostics.sh $(1)/usr/share/diagnostics/diagnostics.sh
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/diagnostics.sh $(1)/usr/share/diagnostics/diagnostics.sh
 	$(INSTALL_DIR) $(1)/usr/share/diagnostics/modules
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/diagnostics/modules/module.sh $(1)/usr/share/diagnostics/modules/module.sh
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/diagnostics/modules/*.module $(1)/usr/share/diagnostics/modules/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/modules/module.sh $(1)/usr/share/diagnostics/modules/module.sh
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/modules/*.module $(1)/usr/share/diagnostics/modules/
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
