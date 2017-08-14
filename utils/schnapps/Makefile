@@ -48,9 +48,9 @@ endef
 
 define Package/schnapps/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/schnapps/schnapps.sh $(1)/usr/bin/schnapps
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/schnapps.sh $(1)/usr/bin/schnapps
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps/schnapps $(1)/etc/config
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/updater/hook_preupdate
 	$(INSTALL_BIN) ./files/updater_hook.sh $(1)/etc/updater/hook_preupdate/05_schnapps.sh
 	$(INSTALL_DIR) $(1)/etc/schnapps/rollback.d/
@@ -60,7 +60,7 @@ define Package/schnapps/install
 	cat ./files/updater_hook.sh | sed 's|pre|post|g' > $(1)/etc/updater/hook_postupdate/05_schnapps.sh
 	chmod +x $(1)/etc/updater/hook_postupdate/05_schnapps.sh
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps/schnapps.cron $(1)/etc/cron.d/schnapps
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps.cron $(1)/etc/cron.d/schnapps
 endef
 
 $(eval $(call BuildPackage,schnapps))
