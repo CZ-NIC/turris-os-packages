@@ -142,7 +142,8 @@ define Package/mariadb-server/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/mariadb/plugin/* $(1)/usr/lib/mariadb/plugin
 	$(INSTALL_DIR) $(1)/etc/init.d/
 	$(INSTALL_BIN) files/mysqld.init $(1)/etc/init.d/mysqld
-	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/usr/share/mysql/my-small.cnf $(1)/etc/my.cnf
+	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/usr/share/mysql/my-small.cnf $(1)/etc/my.cnf && \
+	sed -i 's|\(\[mysqld\]\)|\1\nbind-address = 127.0.0.1|g' $(1)/etc/my.cnf
 	$(INSTALL_DIR) $(1)/usr/share/mariadb
 	$(INSTALL_DIR) $(1)/usr/share/mariadb/english
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/share/mariadb/english/errmsg.sys $(1)/usr/share/mariadb/english
