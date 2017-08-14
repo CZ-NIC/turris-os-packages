@@ -10,7 +10,7 @@ include $(INCLUDE_DIR)/uclibc++.mk
 
 PKG_NAME:=mariadb
 PKG_VERSION:=10.2.7
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=\
@@ -52,6 +52,7 @@ define Package/libmariadbclient
   CATEGORY:=Libraries
   DEPENDS:=$(CXX_DEPENDS) +zlib +libpthread +libopenssl
   TITLE:=MariaDB client library
+  PROVIDES:=libmysqlclient
   URL:=http://dev.mysql.com/
 endef
 
@@ -62,6 +63,7 @@ define Package/mariadb-server
   TITLE:=MariaDB Server
   URL:=http://dev.mysql.com/
   SUBMENU:=database
+  PROVIDES:=mysql-server
   USERID:=mysql=6446:mysql=6446
 endef
 
@@ -126,6 +128,8 @@ endef
 define Package/libmariadbclient/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libmariadb*.so.* $(1)/usr/lib/
+	$(LN) libmariadb.so.3 $(1)/usr/lib/libmysqlclient.so.16
+	$(LN) libmariadb.so.3 $(1)/usr/lib/libmysqlclient.so.16.0.0
 endef
 
 define Package/mariadb-server/install
