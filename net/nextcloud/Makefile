@@ -7,7 +7,7 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=nexcloud
+PKG_NAME:=nextcloud
 PKG_VERSION:=12.0.1
 PKG_RELEASE:=0
 
@@ -30,7 +30,7 @@ define Package/nextcloud
 	DEPENDS=+php7-mod-opcache +php7-fpm +php7-cli +sudo +php7-mod-ctype +php7-mod-fileinfo +php7-mod-xmlreader +php7-mod-openssl +php7-mod-hash +php7-mod-gd +php7-mod-xml +php7-mod-xmlwriter +php7-mod-json +php7-mod-mbstring +php7-mod-pcntl +php7-mod-opcache +php7-mod-session +php7-mod-simplexml +php7-mod-iconv +php7-mod-curl +php7-mod-zip +php7-mod-dom +coreutils-stat
 endef
 
-define Package/nextcloud_install
+define Package/nextcloud-install
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Nextcloud server installation script
@@ -62,7 +62,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) ./files/nextcloud.conf $(1)/etc/lighttpd/conf.d/
 endef
 
-define Package/$(PKG_NAME)_install/install
+define Package/$(PKG_NAME)-install/install
 	$(INSTALL_BIN) ./files/easy_install.sh $(1)/usr/bin/nextcloud_install
 endef
 
@@ -78,4 +78,4 @@ fi
 chown -R nobody:nobody "$$IPKG_INSTROOT"/srv/www/nextcloud/
 endef
 
-$(eval $(call BuildPackage,resolver-conf))
+$(eval $(call BuildPackage,nextcloud))
