@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
 PKG_VERSION:=59.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -85,10 +85,13 @@ define Package/$(PKG_NAME)/postinst
 # Remove morphered syntax from auto.lua
 # This matches all Install and Package commands not follwed by brackets. Whole
 # line is enclosed with brackets and between strings and tables are added commas.
-sed -iE '/^(Install|Package) +[^(]/{
+AUTOTMP="$$(mktemp)"
+sed -E '/^(Install|Package) +[^(]/{
 		s/(Install|Package) +(.*)/\1(\2)/;
 		s/("|\}) ("|\{)/\1, \2/g
-	}' "$$IPKG_INSTROOT/etc/updater/auto.lua"
+	}' "$$IPKG_INSTROOT/etc/updater/auto.lua" > "$$AUTOTMP"
+# Note: Edit in place in busybox limits regexp syntax so we are using our temporally file
+mv "$$AUTOTMP" "$$IPKG_INSTROOT/etc/updater/auto.lua"
 endef
 
 define Build/Compile
