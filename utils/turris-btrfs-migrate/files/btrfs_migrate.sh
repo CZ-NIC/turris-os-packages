@@ -50,7 +50,7 @@ umount /boot/tefi
 EOF
 
 ANS=""
-echo "Are you sure you want to loose everythin on mmcblk0? (yes/no)"
+echo "Are you sure you want to loose everything on mmcblk0? (yes/no)"
 read ANS
 if [ "$ANS" \!= "yes" ]; then
 	exit 0
@@ -128,3 +128,4 @@ norboot max6370_wdt_off; setenv bootargs \$bootargsnor; bootm 0xef020000 - 0xef0
 bootargsmmc root=/dev/mmcblk0p2 rootwait rw rootfstype=btrfs rootflags=subvol=@,commit=5 console=ttyS0,115200
 mmcboot max6370_wdt_off; fatload mmc 0:1 \$nandfdtaddr fdt; setenv bootargs \$bootargsmmc; bootm \$nandbootaddr - \$nandfdtaddr
 EOF
+echo "Migration successful, please reboot!"
