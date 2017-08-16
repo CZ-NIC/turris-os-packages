@@ -1,0 +1,50 @@
+#!/bin/sh /etc/rc.common
+
+#Copyright 2017, CZ.NIC z.s.p.o. (http://www.nic.cz/)
+#
+#This file is part of foris-controller configuration server.
+#
+#foris-controller is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#foris-controller is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with foris-controller.  If not, see <http://www.gnu.org/licenses/>.
+
+START=99
+STOP=1
+
+USE_PROCD=1
+PROG=/usr/bin/foris-controller
+
+start_service() {
+	config_load foris-controller
+	config_get bus main bus ubus
+	config_get backend main backend openwrt
+	config_get_bool debug main debug 0
+
+	if [ "$debug" == "1" ]; then
+		debug_arg="-d"
+	fi
+
+	procd_open_instance
+	if [ "$bus" == "ubus" ]; then
+		config_get path ubus path "/var/run/ubus.sock"
+		config_get_bool single ubus single 0
+		if [ "$single" == "1" ]; then
+			single_arg="--single"
+		fi
+		procd_set_param command "$PROG" ${debug_arg:-} -b "$backend" ubus --path "$path" ${single_arg:-}
+	elif [ "$bus" == "unix-socket" ]; then
+		config_get path unix path "/tmp/foris-controller.soc"
+		procd_set_param command "$PROG" ${debug_arg:-} -b "$backend" unix-socket --path "$path"
+	fi
+	procd_set_param respawn
+	procd_close_instance
+}
