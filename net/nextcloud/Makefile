@@ -34,7 +34,7 @@ define Package/nextcloud-install
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Nextcloud server installation script
-	DEPENDS=+nexcloud +mariadb-server +php7-mod-pdo-mysql
+	DEPENDS=+nextcloud +mariadb-server +php7-mod-pdo-mysql
 endef
 
 define Package/$(PKG_NAME)/description
@@ -78,7 +78,7 @@ if [ -z "$$IPKG_INSTROOT" ]; then
 		sudo -u nobody php-cli ./occ upgrade --no-app-disable --no-interaction
 	fi
 fi
-chown -R nobody:nobody "$$IPKG_INSTROOT"/srv/www/nextcloud/
+chown -R nobody "$$IPKG_INSTROOT"/srv/www/nextcloud/
 endef
 
 $(eval $(call BuildPackage,nextcloud))

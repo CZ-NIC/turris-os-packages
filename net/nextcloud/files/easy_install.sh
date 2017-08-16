@@ -72,5 +72,8 @@ if [ -z "$IP" ]; then
 fi
 sudo -u nobody php-cli ./occ config:system:set --value 192.168.4.1 trusted_domains 1
 
+/etc/init.d/php7-fpm restart
+/etc/init.d/lighttpd restart
+
 echo "Your Nextcloud installation should be available at http://$IP/nextcloud"
 echo "Your username is '$ALOGIN' and password '$APASS'"
