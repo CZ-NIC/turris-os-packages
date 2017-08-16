@@ -15,7 +15,7 @@ PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).zip
 PKG_MD5SUM:=f3e408438dafcb6305b9f6b4567c7e67
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0
 
@@ -27,7 +27,7 @@ define Package/nextcloud
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Nextcloud server
-	DEPENDS=+php7-mod-opcache +php7-fpm +php7-cli +sudo +php7-mod-ctype +php7-mod-fileinfo +php7-mod-xmlreader +php7-mod-openssl +php7-mod-hash +php7-mod-gd +php7-mod-xml +php7-mod-xmlwriter +php7-mod-json +php7-mod-mbstring +php7-mod-pcntl +php7-mod-opcache +php7-mod-session +php7-mod-simplexml +php7-mod-iconv +php7-mod-curl +php7-mod-zip +php7-mod-dom +coreutils-stat
+	DEPENDS=+php7-mod-opcache +php7-fpm +php7-cli +sudo +php7-mod-ctype +php7-mod-fileinfo +php7-mod-xmlreader +php7-mod-openssl +php7-mod-hash +php7-mod-gd +php7-mod-xml +php7-mod-xmlwriter +php7-mod-json +php7-mod-mbstring +php7-mod-pcntl +php7-mod-opcache +php7-mod-session +php7-mod-simplexml +php7-mod-iconv +php7-mod-curl +php7-mod-zip +php7-mod-dom +coreutils-stat +php7
 endef
 
 define Package/nextcloud-install
@@ -57,12 +57,15 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/srv/www/nextcloud
-	$(CP) $(PKG_BUILD_DIR)/* $(1)/srv/www/nextcloud
+	for i in `ls -1 $(PKG_BUILD_DIR)`; do \
+		expr $$$$i : ipkg || $(CP) -r $(PKG_BUILD_DIR)/$$$$i $(1)/srv/www/nextcloud;\
+	done
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_DATA) ./files/nextcloud.conf $(1)/etc/lighttpd/conf.d/
 endef
 
 define Package/$(PKG_NAME)-install/install
+	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/easy_install.sh $(1)/usr/bin/nextcloud_install
 endef
 
@@ -79,3 +82,4 @@ chown -R nobody:nobody "$$IPKG_INSTROOT"/srv/www/nextcloud/
 endef
 
 $(eval $(call BuildPackage,nextcloud))
+$(eval $(call BuildPackage,nextcloud-install))
