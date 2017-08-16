@@ -17,6 +17,8 @@ build_iptables() {
 	echo ":suricata - [0:0]" >> $IPTABLES_RULES
 	echo ":suricata - [0:0]" >> $IP6TABLES_RULES
 	IFACES=$(uci -q get suricata.suricata.interface) || { echo >&2 "Interfaces not set in configuration (configuration file might be missing)."; exit 1; }
+	echo "-I suricata -m mark --mark 2/2 -j RETURN" >> $IPTABLES_RULES
+	echo "-I suricata -m mark --mark 2/2 -j RETURN" >> $IP6TABLES_RULES
 	for IFACE in $IFACES; do
 		echo "-A suricata -i $IFACE -m mark ! --mark 1/1 -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IPTABLES_RULES
 		echo "-A suricata -i $IFACE -m mark ! --mark 1/1 -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IP6TABLES_RULES

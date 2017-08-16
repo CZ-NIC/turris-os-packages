@@ -1100,9 +1100,9 @@ profiling:
 # on packet of a flow that need to be bypassed. The Nefilter ruleset has to
 # directly accept all packets of a flow once a packet has been marked.
 nfq:
-#  mode: accept
-#  repeat-mark: 1
-#  repeat-mask: 1
+  mode: repeat
+  repeat-mark: 2
+  repeat-mask: 2
   bypass-mark: 1
   bypass-mask: 1
 #  route-queue: 2
