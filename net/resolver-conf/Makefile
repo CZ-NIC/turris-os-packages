@@ -26,11 +26,6 @@ define Package/resolver-conf
 	CATEGORY:=Network
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Resolver configuration
-ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
-	DEPENDS:=+unbound-control
-else
-	DEPENDS:=+unbound-control
-endif
 endef
 
 define Package/$(PKG_NAME)/description
