@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
 PKG_VERSION:=1.6.4
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.unbound.net/downloads
@@ -63,15 +63,6 @@ endef
 
 define Package/unbound-anchor/description
   This package contains the Unbound anchor utility.
-endef
-
-define Package/unbound-control
-  $(call Package/unbound/Default)
-  SECTION:=net
-  CATEGORY:=Network
-  SUBMENU:=IP Addresses and Names
-  TITLE+= (control utility)
-  DEPENDS+= +unbound
 endef
 
 define Package/unbound-control/description
@@ -140,6 +131,8 @@ define Package/unbound/install
 		$(PKG_INSTALL_DIR)/usr/sbin/unbound \
 		$(PKG_INSTALL_DIR)/usr/sbin/unbound-checkconf \
 		$(1)/usr/sbin/
+
+	$(CP) $(PKG_INSTALL_DIR)/usr/sbin/unbound-control $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/unbound
 	$(INSTALL_CONF) ./files/named.cache $(1)/etc/unbound/
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -202,7 +195,6 @@ endef
 
 $(eval $(call BuildPackage,unbound))
 $(eval $(call BuildPackage,unbound-anchor))
-$(eval $(call BuildPackage,unbound-control))
 $(eval $(call BuildPackage,unbound-control-setup))
 $(eval $(call BuildPackage,unbound-host))
 $(eval $(call BuildPackage,libunbound))
