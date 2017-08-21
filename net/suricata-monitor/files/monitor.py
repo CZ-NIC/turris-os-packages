@@ -58,12 +58,12 @@ def timestamp2unixtime(timestamp):
 
 # check what is enabled
 notifications = False
-if uci_get('suricata-monitor.notifications.enabled') in ('1', 'yes', 'true'):
+if uci_get('suricata-monitor.notifications.enabled') in ('1', 'yes', 'true', 'enabled', 'on'):
     notifications = True
 log_traffic = False
-if uci_get('suricata-monitor.logger.enabled') in ('1', 'yes', 'true'):
+if uci_get('suricata-monitor.logger.enabled') in ('1', 'yes', 'true', 'enabled', 'on'):
     log_traffic = True
-if uci_get('suricata-monitor.logger.debug') in ('1', 'yes', 'true'):
+if uci_get('suricata-monitor.logger.debug') in ('1', 'yes', 'true', 'enabled', 'on'):
     debug = True
 
 if not notifications and not log_traffic:
