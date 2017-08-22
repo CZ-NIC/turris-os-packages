@@ -107,6 +107,17 @@ define Package/lcollect/install
 	#$(INSTALL_DATA) $(PKG_BUILD_DIR)/bin/lcollect.debug $(1)/usr/lib/debug/usr/bin/
 endef
 
+
+define Package/ucollect-config/postrm
+#!/bin/sh
+[ -f "$$IPKG_INSTROOT/etc/config/ucollect" ] || touch "$$IPKG_INSTROOT/etc/config/ucollect"
+endef
+
+define Package/ucollect-config/preinst
+#!/bin/sh
+[ -n "`cat "$$IPKG_INSTROOT/etc/config/ucollect"`" ] || rm "$$IPKG_INSTROOT/etc/config/ucollect"
+endef
+
 define Package/lcollect/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
