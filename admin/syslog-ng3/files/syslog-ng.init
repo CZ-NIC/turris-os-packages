@@ -5,8 +5,50 @@ START=50
 
 SERVICE_USE_PID=1
 
+REMOTE_CONF_NAME=syslog.remote.conf
+
+create_tmp_conf() {
+	# create symlink from /etc/syslog-ng.d to /tmp
+	# config files are stored in /tmp for writing minimization to eMMC
+	local name=$1
+	local syslog_path=/etc/syslog-ng.d
+	if [ ! -f "/tmp/$name" ]; then
+		touch /tmp/$name
+	fi
+	if [ ! -L "$syslog_path/$name" ]; then
+		/bin/ln -s /tmp/$name "$syslog_path/$name"
+	fi
+}
+
+set_remote_logging() {
+	# create config for remote syslog logging
+	# setting is accesible from uci and luci
+	local config="$1"
+	local output_conf="$2"
+
+	config_get port "$config" log_port ""
+	config_get ip "$config" log_ip ""
+	config_get proto "$config" log_proto ""
+	if [ ! -z "$port" ] && [ ! -z "$ip" ] && [ ! -z "$proto" ]; then
+		if [ "$proto" = "udp" ] || [ "$proto" = "tcp" ]; then
+			echo "destination d_loghost { $proto(\"$ip\"); };" > $output_conf
+			echo "log {" >> $output_conf
+			echo "	source(src);" >> $output_conf
+			echo "	source(kernel);" >> $output_conf
+			echo "	destination(d_loghost);" >> $output_conf
+			echo "};" >> $output_conf
+		else
+			echo "Unknown protocol for remote syslog"
+			exit
+		fi
+	fi
+}
+
 start() {
 	[ -f /etc/syslog-ng.conf ] || return 1
+	config_load system
+	create_tmp_conf "$REMOTE_CONF_NAME"
+	config_foreach set_remote_logging system "/tmp/$REMOTE_CONF_NAME"
 	service_start /usr/sbin/syslog-ng
 }
 
