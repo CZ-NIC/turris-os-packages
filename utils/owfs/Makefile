@@ -66,6 +66,7 @@ endef
 define Package/owfs/Library
   $(call Package/owfs/Default)
   SECTION:=libs
+  DEPENDS:=+libavahi-client +libavahi
   CATEGORY:=Libraries
 endef
 
