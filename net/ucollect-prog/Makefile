@@ -110,12 +110,12 @@ endef
 
 define Package/ucollect-config/postrm
 #!/bin/sh
-[ -f "$$IPKG_INSTROOT/etc/config/ucollect" ] || touch "$$IPKG_INSTROOT/etc/config/ucollect"
+[ -f "$$IPKG_INSTROOT/etc/config/ucollect" ] || touch "$$IPKG_INSTROOT/etc/config/ucollect" || true
 endef
 
 define Package/ucollect-config/preinst
 #!/bin/sh
-[ -n "`cat "$$IPKG_INSTROOT/etc/config/ucollect"`" ] || rm "$$IPKG_INSTROOT/etc/config/ucollect"
+[ -n "`cat "$$IPKG_INSTROOT/etc/config/ucollect" 2 >/dev/null`" ] || rm -f "$$IPKG_INSTROOT/etc/config/ucollect"
 endef
 
 define Package/lcollect/postinst
