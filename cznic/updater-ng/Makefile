@@ -26,7 +26,7 @@ include $(INCLUDE_DIR)/host-build.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=The next generation updater
-	DEPENDS:=+liblua +libevent2 +usign +libcurl +vixie-cron @LIBCURL_ZLIB
+	DEPENDS:=+liblua +libevent2 +usign +libcurl +vixie-cron
 	PROVIDES:=updater
 endef
 
