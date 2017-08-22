@@ -135,7 +135,7 @@ endef
 define Build/Configure
 	$(call Build/Configure/Default)
 ifeq ($(CONFIG_USE_UCLIBC),y)
-	sed -i 's|\(.*HAVE_ATOMIC.*\)1|\10|' src/config.h
+	sed -i 's|\(.*HAVE_ATOMIC.*\)1|\10|' $(PKG_BUILD_DIR)/src/config.h
 endif
 endef
 
