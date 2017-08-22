@@ -132,6 +132,13 @@ define Package/knot/conffiles
 /etc/knot/knot.conf
 endef
 
+define Build/Configure
+	$(call Build/Configure/Default)
+ifeq ($(CONFIG_USE_UCLIBC),y)
+	sed -i 's|\(.*HAVE_ATOMIC.*\)1|\10|' src/config.h
+endif
+endef
+
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR)
 	$(MAKE) -C $(PKG_BUILD_DIR)/libtap check
