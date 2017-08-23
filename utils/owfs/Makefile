@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=owfs
 PKG_VERSION:=3.1p5
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@SF/$(PKG_NAME)
@@ -66,7 +66,6 @@ endef
 define Package/owfs/Library
   $(call Package/owfs/Default)
   SECTION:=libs
-  DEPENDS:=+libavahi-client +libavahi
   CATEGORY:=Libraries
 endef
 
@@ -86,7 +85,8 @@ define Package/libow
   DEPENDS:= \
     +libpthread \
     +LIBOW_MASTER_USB:libusb-compat \
-    +LIBOW_MASTER_W1:kmod-w1
+    +LIBOW_MASTER_W1:kmod-w1 \
+    +libavahi-client +libavahi
   TITLE:=OWFS - common shared library
 endef
 
