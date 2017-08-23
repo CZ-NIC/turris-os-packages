@@ -44,7 +44,7 @@ endef
 define Package/knot-libs
 	$(call Package/knot-lib/Default)
 	TITLE+= common DNS and DNSSEC libraries
-	DEPENDS+=+libgnutls
+	DEPENDS+=+libgnutls +USE_UCLIBC:libatomic
 endef
 
 define Package/knot-libzscanner
@@ -135,7 +135,7 @@ endef
 define Build/Configure
 	$(call Build/Configure/Default)
 ifeq ($(CONFIG_USE_UCLIBC),y)
-	sed -i 's|\(.*HAVE_ATOMIC.*\)1|\10|' $(PKG_BUILD_DIR)/src/config.h
+	sed -i 's|\(AM_LDFLAGS)\)|\1 -latomic|' $(PKG_BUILD_DIR)/src/Makefile
 endif
 endef
 
