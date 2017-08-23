@@ -126,6 +126,7 @@ if con:
         c.execute('CREATE TABLE alerts '
                   '(count integer, timestamp integer, src_ip text, '
                     'src_port integer, dest_ip text, dest_port integer, '
+                    'src_eth text, dst_eth text, '
                     'category text, signature text, hostname text)')
     except:
         print('Table "alerts" already exists')
@@ -134,7 +135,7 @@ if con:
                   '(flow_id integer, start integer, stop integer, src_ip text, '
                   'src_port integer, dest_ip text, dest_port integer, '
                   'proto text, app_proto text, bytes_send integer, '
-                  'bytes_received integer, sni text, cname text)')
+                  'bytes_received integer, sni text, tls_subject text)')
     except:
         print('Table "traffic" already exists')
     try:
@@ -180,9 +181,16 @@ try:
                                              '--tls=on', to ], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
                     out, err = chld.communicate(text)
                 if con:
+                    src_eth = ''
+                    if 'ether' in data.keys() and 'src' in data['ether'].keys():
+                        src_eth = data['ether']['src']
+                    dst_eth = ''
+                    if 'ether' in data.keys() and 'dst' in data['ether'].keys():
+                        dst_eth = data['ether']['dst']
                     c.execute('INSERT INTO alerts VALUES (?,?,?,?,?,?,?,?,?)',
                               (1, timestamp2unixtime(data['timestamp']), data['src_ip'],
                                data['src_port'], data['dest_ip'], data['dest_port'],
+                               src_eth, dst_eth,
                                data['alert']['category'], data['alert']['signature'],
                                data['hostname']))
 
