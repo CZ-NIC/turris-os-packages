@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata
 PKG_VERSION:=4.0.0
-PKG_RELEASE=5
+PKG_RELEASE=6
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.openinfosecfoundation.org/download/
@@ -34,7 +34,7 @@ define Package/suricata
   SECTION:=net
   CATEGORY:=Network
   TITLE:=IDS
-  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +librt +libpcap +luajit +libnetfilter-queue +iptables-mod-nfqueue +libnetfilter-log +libnfnetlink +iptables-mod-conntrack-extra +libhtp
+  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +librt +libpcap +luajit +libnetfilter-queue +iptables-mod-nfqueue +libnetfilter-log +libnfnetlink +iptables-mod-conntrack-extra +libhtp +libnet-1.2.x
 endef
 
 define Package/suricata/conffiles
