@@ -24,7 +24,6 @@ PKG_LICENSE:=GPL-3.0
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
-PKG_SSP:=0
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -45,6 +44,9 @@ endef
 define Build/Configure
 	(cd $(PKG_BUILD_DIR); ./autogen.sh )
 	$(call Build/Configure/Default)
+ifeq ($(CONFIG_USE_UCLIBC),y)
+	find $(PKG_BUILD_DIR) -name 'Makefile' -exec sed -i 's|--param ssp-buffer-size=1 -fstack-protector-all||' \{\} \+
+endif
 endef
 
 define Build/Compile
