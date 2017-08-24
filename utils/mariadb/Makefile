@@ -26,6 +26,8 @@ PKG_BUILD_PARALLEL:=1
 HOST_BUILD_DEPENDS:=ncurses/host openssl/host pkg-config
 
 PKG_FIXUP:=libtool
+PKG_CC_STACKPROTECTOR_REGULAR = 0
+PKG_CC_STACKPROTECTOR_STRONG = 0
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
