@@ -70,7 +70,7 @@ if [ -z "$IP" ]; then
     echo "Autodetection of your router IP failed, what is your routers IP address?"
     read IP
 fi
-sudo -u nobody php-cli ./occ config:system:set --value 192.168.4.1 trusted_domains 1
+sudo -u nobody php-cli ./occ config:system:set --value $IP trusted_domains 1
 
 /etc/init.d/php7-fpm restart
 /etc/init.d/lighttpd restart
