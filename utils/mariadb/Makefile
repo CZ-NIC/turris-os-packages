@@ -31,8 +31,15 @@ include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/cmake.mk
 
+ifneq ($(CONFIG_USE_UCLIBC),)
+ICONV_PREFIX:=$(STAGING_DIR)/usr/lib/libiconv-stub
+TARGET_CFLAGS:=-I$(ICONV_PREFIX)/include
+TARGET_LDFLAGS:=-L$(ICONV_PREFIX)/lib -liconv-stub -latomic
+endif
+
 CMAKE_OPTIONS:= -DSTACK_DIRECTION=-1 \
                 -DHAVE_IB_GCC_ATOMIC_BUILTINS=1 \
+                -DHAVE_GCC_ATOMIC_BUILTINS=1 \
                 -DIMPORT_EXECUTABLES=$(STAGING_DIR_HOST)/mariadb-import_executables \
                 -DPLUGIN_HANDLERSOCKET=NO \
                 -DPLUGIN_XTRADB=DYNAMIC \
@@ -50,7 +57,7 @@ CMAKE_OPTIONS:= -DSTACK_DIRECTION=-1 \
 define Package/libmariadbclient
   SECTION:=libs
   CATEGORY:=Libraries
-  DEPENDS:=$(CXX_DEPENDS) +zlib +libpthread +libopenssl
+  DEPENDS:=$(CXX_DEPENDS) +zlib +libpthread +libopenssl +USE_UCLIBC:libiconv +USE_UCLIBC:libatomic
   TITLE:=MariaDB client library
   PROVIDES:=libmysqlclient
   URL:=http://dev.mysql.com/
