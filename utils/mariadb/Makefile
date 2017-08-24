@@ -10,7 +10,7 @@ include $(INCLUDE_DIR)/uclibc++.mk
 
 PKG_NAME:=mariadb
 PKG_VERSION:=10.2.7
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=\
@@ -26,8 +26,6 @@ PKG_BUILD_PARALLEL:=1
 HOST_BUILD_DEPENDS:=ncurses/host openssl/host pkg-config
 
 PKG_FIXUP:=libtool
-PKG_CC_STACKPROTECTOR_REGULAR = 0
-PKG_CC_STACKPROTECTOR_STRONG = 0
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
@@ -35,15 +33,17 @@ include $(INCLUDE_DIR)/cmake.mk
 
 ifneq ($(CONFIG_USE_UCLIBC),)
 ICONV_PREFIX:=$(STAGING_DIR)/usr/lib/libiconv-stub
-TARGET_CFLAGS:=-I$(ICONV_PREFIX)/include
+TARGET_CFLAGS:=-I$(ICONV_PREFIX)/include -DHAVE_LIB_ATOMIC=1
 TARGET_LDFLAGS:=-L$(ICONV_PREFIX)/lib -liconv-stub -latomic
 endif
 
 CMAKE_OPTIONS:= -DSTACK_DIRECTION=-1 \
                 -DHAVE_IB_GCC_ATOMIC_BUILTINS=1 \
                 -DHAVE_GCC_ATOMIC_BUILTINS=1 \
+		-DSECURITY_HARDENED=0 \
                 -DIMPORT_EXECUTABLES=$(STAGING_DIR_HOST)/mariadb-import_executables \
                 -DPLUGIN_HANDLERSOCKET=NO \
+		-DPLUGIN_AUTH_PAM=NO \
                 -DPLUGIN_XTRADB=DYNAMIC \
                 -DPLUGIN_TOKUDB=DYNAMIC \
                 -DWITH_UNIT_TESTS=OFF \

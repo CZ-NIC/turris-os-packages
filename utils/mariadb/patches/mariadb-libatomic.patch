@@ -1,0 +1,59 @@
+Index: mariadb-10.2.7/include/atomic/libatomic.h
+===================================================================
+--- /dev/null
++++ mariadb-10.2.7/include/atomic/libatomic.h
+@@ -0,0 +1,41 @@
++#ifndef ATOMIC_LIBATOMIC_INCLUDED
++#define ATOMIC_LIBATOMIC_INCLUDED
++
++/* Copyright (c) 2008, 2010, Oracle and/or its affiliates. All rights reserved.
++
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; version 2 of the License.
++
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this program; if not, write to the Free Software
++   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
++
++#define make_atomic_add_body(S)                     \
++  v= __atomic_add_fetch(a, v, __ATOMIC_RELAXED);
++#define make_atomic_fas_body(S)                     \
++  v= __atomic_exchange_n(a, v, __ATOMIC_RELAXED);
++#define make_atomic_cas_body(S)                     \
++  int ## S cmp_val= *cmp;                           \
++  __atomic_compare_exchange_n(a, &cmp_val, set, 0, __ATOMIC_RELAXED, __ATOMIC_RELAXED);\
++  if (!(ret= (*cmp == cmp_val))) *cmp= cmp_val
++
++#ifdef MY_ATOMIC_MODE_DUMMY
++#define make_atomic_load_body(S)   ret= *a
++#define make_atomic_store_body(S)  *a= v
++#define MY_ATOMIC_MODE "libatomic-up"
++
++#else
++#define MY_ATOMIC_MODE "libatomic-smp"
++#define make_atomic_load_body(S)                    \
++  ret= __atomic_fetch_or(a, 0, __ATOMIC_RELAXED);
++#define make_atomic_store_body(S)                   \
++  (void) __atomic_exchange_n(a, v, __ATOMIC_RELAXED);
++#endif
++
++#endif /* ATOMIC_LIBATOMIC_INCLUDED */
+Index: mariadb-10.2.7/include/my_atomic.h
+===================================================================
+--- mariadb-10.2.7.orig/include/my_atomic.h
++++ mariadb-10.2.7/include/my_atomic.h
+@@ -126,6 +126,8 @@
+ #include "atomic/generic-msvc.h"
+ #elif defined(HAVE_SOLARIS_ATOMIC)
+ #include "atomic/solaris.h"
++#elif defined(HAVE_LIB_ATOMIC)
++#include "atomic/libatomic.h"
+ #elif defined(HAVE_GCC_ATOMIC_BUILTINS)
+ #include "atomic/gcc_builtins.h"
+ #elif defined(__GNUC__) && (defined(__i386__) || defined(__x86_64__))
