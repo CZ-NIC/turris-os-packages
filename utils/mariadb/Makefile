@@ -130,8 +130,8 @@ define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/mysql $(1)/usr/include/
 	# NOTE: needed for MySQL-Python
 	$(CP) $(PKG_BUILD_DIR)/include/mysqld_error.h $(1)/usr/include/mysql/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/mariadb $(1)/usr/lib/
-	rm -f $(1)/usr/lib/*.la
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib/
+	rm -f $(1)/usr/lib/*.la $(1)/usr/lib/mysql/*.la $(1)/usr/lib/mariadb/*.la
 endef
 
 define Package/libmariadbclient/install
