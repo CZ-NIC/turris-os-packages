@@ -70,6 +70,7 @@ if [ -z "$IP" ]; then
     echo "Autodetection of your router IP failed, what is your routers IP address?"
     read IP
 fi
+sudo -u nobody php-cli ./occ config:system:set --value false updatechecker
 sudo -u nobody php-cli ./occ config:system:set --value $IP trusted_domains 1
 
 /etc/init.d/php7-fpm restart
