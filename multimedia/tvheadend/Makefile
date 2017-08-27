@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tvheadend
 PKG_VERSION:=4.2.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -73,6 +73,7 @@ CONFIGURE_ARGS += \
 	--arch=$(ARCH) \
 	--disable-dbus_1 \
 	--enable-libav \
+	--enable-bundle \
 	--disable-ffmpeg_static
 
 define Build/Prepare
