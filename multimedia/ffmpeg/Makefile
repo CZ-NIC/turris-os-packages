@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ffmpeg
-PKG_VERSION:=2.7.6
-PKG_RELEASE:=2
+PKG_VERSION:=3.3.3
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://ffmpeg.org/releases/
-PKG_MD5SUM:=578c88242872e58cf0db5f23faa4b2af
+PKG_MD5SUM:=743dc66ebe67180283b92d029f690d0f
 PKG_MAINTAINER:=Ted Hess <thess@kitschensync.net>
 
 PKG_LICENSE:=LGPL-2.1+ GPL-2+ LGPL-3
@@ -328,7 +328,6 @@ FFMPEG_CONFIGURE:= \
 	--disable-inline-asm \
 	--disable-yasm \
 	--disable-mips32r2 \
-	--disable-mipsdspr1 \
 	--disable-mipsdspr2 \
 	--disable-mipsfpu \
 	\
@@ -337,7 +336,8 @@ FFMPEG_CONFIGURE:= \
 	--disable-vaapi \
 	--disable-vda \
 	--disable-vdpau \
-	--enable-outdev=fbdev
+	--enable-outdev=fbdev \
+	--enable-avresample
 
 ifeq ($(CONFIG_TARGET_mvebu),)
 FFMPEG_CONFIGURE+= \
@@ -365,11 +365,11 @@ endef
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include
-	$(CP) $(PKG_INSTALL_DIR)/usr/include/lib{avcodec,avdevice,avfilter,avformat,avutil,postproc,swresample,swscale} $(1)/usr/include/
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/lib{avcodec,avdevice,avfilter,avformat,avresample,avutil,postproc,swresample,swscale} $(1)/usr/include/
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib{avcodec,avdevice,avfilter,avformat,avutil,postproc,swresample,swscale}.{a,so*} $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib{avcodec,avdevice,avfilter,avformat,avresample,avutil,postproc,swresample,swscale}.{a,so*} $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/lib{avcodec,avdevice,avfilter,avformat,avutil,postproc,swresample,swscale}.pc $(1)/usr/lib/pkgconfig/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/lib{avcodec,avdevice,avfilter,avformat,avresample,avutil,postproc,swresample,swscale}.pc $(1)/usr/lib/pkgconfig/
 endef
 
 define Package/ffmpeg/install
@@ -389,7 +389,7 @@ endef
 
 define Package/libffmpeg/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib{avcodec,avdevice,avfilter,avformat,avutil,postproc,swresample,swscale}.so.* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lib{avcodec,avdevice,avfilter,avformat,avresample,avutil,postproc,swresample,swscale}.so.* $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,ffmpeg))
