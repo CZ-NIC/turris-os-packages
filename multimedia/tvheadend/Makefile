@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tvheadend
 PKG_VERSION:=4.2.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -73,7 +73,7 @@ CONFIGURE_ARGS += \
 	--arch=$(ARCH) \
 	--disable-dbus_1 \
 	--enable-libav \
-	--enable-bundle \
+	--disable-bundle \
 	--disable-ffmpeg_static
 
 define Build/Prepare
@@ -92,8 +92,7 @@ define Package/tvheadend/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/tvheadend.config $(1)/etc/config/tvheadend
 
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/build.linux/tvheadend $(1)/usr/bin/
+	$(MAKE) -C $(PKG_BUILD_DIR) install DESTDIR=$(1)
 endef
 
 $(eval $(call BuildPackage,tvheadend))
