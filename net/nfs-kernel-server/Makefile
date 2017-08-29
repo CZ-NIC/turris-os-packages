@@ -7,9 +7,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nfs-kernel-server
-PKG_VERSION:=1.3.3
-PKG_RELEASE:=3
-PKG_MD5SUM:=9b87d890669eaaec8e97a2b0a35b2665
+PKG_VERSION:=2.1.1
+PKG_RELEASE:=1
+PKG_MD5SUM:=1157abcfaa8670f990f408cf280426b4
 
 PKG_SOURCE_URL:=@SF/nfs
 PKG_SOURCE:=nfs-utils-$(PKG_VERSION).tar.bz2
@@ -35,7 +35,7 @@ endef
 define Package/nfs-kernel-server
   $(call Package/nfs-kernel-server/Default)
   TITLE:=Kernel NFS server support
-  DEPENDS+= +kmod-fs-nfsd +kmod-fs-nfs +portmap
+  DEPENDS+= +kmod-fs-nfsd +kmod-fs-nfs +portmap +PACKAGE_kmod-fs-nfs-common-v4:libdevmapper +PACKAGE_kmod-fs-nfs-common-v4:libnfsidmap
 endef
 
 define Package/nfs-kernel-server/description
@@ -60,7 +60,7 @@ define Package/nfs-utils
   $(call Package/nfs-kernel-server/Default)
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS+= +libevent2 +USE_UCLIBC:librpc
+  DEPENDS+= +libevent2 +USE_UCLIBC:librpc +PACKAGE_kmod-fs-nfs-common-v4:libdevmapper +PACKAGE_kmod-fs-nfs-common-v4:libnfsidmap
   TITLE:=updated mount utility (includes nfs4)
 endef
 
@@ -75,14 +75,23 @@ TARGET_LDFLAGS += -Wl,-rpath-link=$(STAGING_DIR)/usr/lib $(LIBRPC) \
 
 CONFIGURE_ARGS += \
 	--disable-gss \
-	--disable-nfsv4 \
-	--disable-nfsv41 \
 	--disable-ipv6 \
 	--enable-static \
 	--enable-shared \
 	--disable-caps \
 	--disable-tirpc \
+	--disable-nfsdcltrack \
 	--disable-nfsdcld
+
+ifneq ($(CONFIG_PACKAGE_kmod-fs-nfs-common-v4),)
+CONFIGURE_ARGS += \
+	--enable-nfsv4 \
+	--enable-nfsv41
+else
+CONFIGURE_ARGS += \
+	--disable-nfsv4 \
+	--disable-nfsv41
+endif
 
 CONFIGURE_VARS += \
 	libblkid_cv_is_recent=yes \
@@ -93,18 +102,21 @@ MAKE_FLAGS += \
 	OPT="$(TARGET_CFLAGS)" \
 	INSTALLSUID="install -m 4755" \
 	DESTDIR="$(PKG_INSTALL_DIR)" \
-	RPCGEN_PATH=$(STAGING_DIR)/host/bin/rpcgen \
-	RPCGEN=$(STAGING_DIR)/host/bin/rpcgen
+	RPCGEN_PATH=$(STAGING_DIR_HOST)/bin/rpcgen \
+	RPCGEN=$(STAGING_DIR_HOST)/bin/rpcgen
 
 HOST_CFLAGS += -Dlinux
 
 HOST_CONFIGURE_ARGS += \
 	--disable-gss \
-	--disable-nfsv4 \
-	--disable-nfsv41 \
 	--disable-ipv6 \
 	--disable-tirpc \
-	--without-tcp-wrappers
+	--disable-nfsdcltrack \
+	--disable-nfsdcld \
+	--without-tcp-wrappers \
+	--disable-nfsv4 \
+	--disable-nfsv41
+
 
 HOST_CONFIGURE_VARS += \
 	ac_cv_lib_event_event_dispatch=yes \
@@ -125,8 +137,8 @@ define Host/Compile
 endef
 
 define Host/Install
-	$(INSTALL_DIR) $(STAGING_DIR)/host/bin
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/tools/rpcgen/rpcgen $(STAGING_DIR)/host/bin/rpcgen
+	$(INSTALL_DIR) $(STAGING_DIR_HOST)/bin
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/tools/rpcgen/rpcgen $(STAGING_DIR_HOST)/bin/rpcgen
 endef
 
 define Package/nfs-kernel-server/install
