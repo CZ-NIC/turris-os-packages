@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=websocket_server
 PKG_VERSION:=0.4
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/74/64/e86581ee7775a2e08aca530b41e1a1e3ee6b320233b1eff301dcb86d1636/
@@ -27,7 +27,7 @@ define Package/python-websocket-server
 	SUBMENU:=Python
 	TITLE:=python-websocket-server
 	URL:=https://github.com/Pithikos/python-websocket-server
-	DEPENDS:=+python
+	DEPENDS:=+python-light
 endef
 
 define Package/python-websocket-server/description
