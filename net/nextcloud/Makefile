@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nextcloud
 PKG_VERSION:=12.0.2
-PKG_RELEASE:=0
+PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).zip

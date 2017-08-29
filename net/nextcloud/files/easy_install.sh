@@ -1,5 +1,23 @@
 #!/bin/sh
 
+if [ -f /srv/www/nextcloud/config/config.php ]; then
+    echo "You seem to have Nextcloud already installed."
+    echo "If you want to continue, please delete file"
+    echo
+    echo "    /srv/www/nextcloud/config/config.php"
+    echo
+    echo "Also drop Nextcloud database and user from your database."
+    echo "For example using the following commands inside MySQL console"
+    echo
+    echo "    DROP DATABASE nextcloud;"
+    echo "    DROP USER 'nextcloud'@'localhost';"
+    echo
+    echo "You can enter MySQL console using 'mysql -u root' command"
+    echo
+    echo "WARNING: This will delete all your data from Nextcloud!!"
+    exit 1
+fi
+
 echo "This script will setup Nextcloud for you automatically."
 echo "It will try to create MySQL database, change files on your filesystem and more."
 echo "If you know what you are doing, you can set it up manually."
