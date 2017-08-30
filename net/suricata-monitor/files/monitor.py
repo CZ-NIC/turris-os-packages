@@ -31,14 +31,16 @@ def uci_get(opt):
 def fill_hostname(data):
     if debug:
         print('Filling hostname')
-    with open('/tmp/dhcp.leases','r').readlines() as line:
-        for line in file.readlines():
-            variables=line.split(' ')
-            if data['src_ip'] == variables[2]:
-                data['src_host'] = variables[3]
-            if data['dest_ip'] == variables[2]:
-                data['dest_host'] = variables[3]
-    hostname = 'unknown'
+    try:
+        with open('/tmp/dhcp.leases','r').readlines() as line:
+            for line in file.readlines():
+                variables=line.split(' ')
+                if data['src_ip'] == variables[2]:
+                    data['src_host'] = variables[3]
+                if data['dest_ip'] == variables[2]:
+                    data['dest_host'] = variables[3]
+    except:
+        hostname = 'unknown'
     if 'dest_host' in data:
         hostname = data['dest_host']
     if 'src_host' in data:
@@ -121,19 +123,20 @@ if log_traffic:
         con = False
 
 if con:
+    # Create database if it was empty
     c = con.cursor()
     try:
         c.execute('CREATE TABLE alerts '
-                  '(count integer, timestamp integer, src_ip text, '
-                    'src_port integer, dest_ip text, dest_port integer, '
+                  '(timestamp integer, src_ip text, src_port integer, '
+                    'dest_ip text, dest_port integer, '
                     'src_eth text, dst_eth text, '
                     'category text, signature text, hostname text)')
     except:
         print('Table "alerts" already exists')
     try:
         c.execute('CREATE TABLE traffic '
-                  '(flow_id integer, start integer, stop integer, src_ip text, '
-                  'src_port integer, dest_ip text, dest_port integer, '
+                  '(gen integer, flow_id integer, start integer, stop integer, '
+                  'src_ip text, src_port integer, dest_ip text, dest_port integer, '
                   'proto text, app_proto text, bytes_send integer, '
                   'bytes_received integer, sni text, tls_subject text)')
     except:
@@ -143,10 +146,42 @@ if con:
                   '(time integer, client text, name text, type text, data text)')
     except:
         print('Table "dns" already exists')
+    try:
+        c.execute('CREATE TABLE settings '
+                  '(key text, value integer)')
+        c.execute('INSERT INTO settings VALUES (?, ?)', ('db_schema_version', 1))
+    except:
+        print('Table "settings" already exists')
+
+    # Create some indexes
+    try:
+        c.execute('CREATE INDEX dns_lookup ON dns(client,name)')
+    except:
+        print('Index "dns_lookup" already exists')
+    try:
+        c.execute('CREATE INDEX dns_reverse_lookup ON dns(client,data)')
+    except:
+        print('Index "dns_reverse_lookup" already exists')
+
+    # Set generation - flow ids have to be unique only within one generation
+    if debug:
+        print('Geting DB settings.')
+    gen = 0;
+    c.execute('SELECT value FROM settings WHERE key = "generation"')
+    row = c.fetchone()
+    if row is not None:
+        gen = row[0];
+    if gen > 0:
+        c.execute('UPDATE settings SET value = ? WHERE key = ?', (gen + 1, 'generation'))
+    else:
+        c.execute('INSERT INTO settings VALUES (?, ?)', ('generation', 1))
+    c.execute('UPDATE settings SET value = ? WHERE key = ?', (1, 'db_schema_version'))
 
 # Main loop
 try:
     while True:
+        if debug:
+           print('Getting data...')
         line = server.recv(4092)
         if not line:
             continue
@@ -160,7 +195,7 @@ try:
             continue
 
         # Handle alerts
-        if data['event_type'] == 'alert' and notifications:
+        if data['event_type'] == 'alert':
             if debug:
                 print('Got alert!')
             for regex in res:
@@ -171,15 +206,16 @@ try:
             if skip == False and data['alert']['severity'] < sev:
                 if debug:
                     print('Sending mail to ' + to + ' about ' + data['alert']['category'])
-                with open('/etc/suricata/message.tmpl','r') as file:
-                    tmpl = file.read() 
-                    text = template(tmpl, data)
-                    chld = subprocess.Popen(['/usr/bin/msmtp', '--host=' + smtp_server,
-                                             '--tls-trust-file=/etc/ssl/ca-bundle.pem',
-                                             '--from=' + fr, '--auth=on', '--protocol=smtp',
-                                             '--user=' + smtp_login, '--passwordeval=echo "' + smtp_password + '"',
-                                             '--tls=on', to ], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-                    out, err = chld.communicate(text)
+                if notifications:
+                    with open('/etc/suricata/message.tmpl','r') as file:
+                        tmpl = file.read()
+                        text = template(tmpl, data)
+                        chld = subprocess.Popen(['/usr/bin/msmtp', '--host=' + smtp_server,
+                                                 '--tls-trust-file=/etc/ssl/ca-bundle.pem',
+                                                 '--from=' + fr, '--auth=on', '--protocol=smtp',
+                                                 '--user=' + smtp_login, '--passwordeval=echo "' + smtp_password + '"',
+                                                 '--tls=on', to ], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+                        out, err = chld.communicate(text)
                 if con:
                     src_eth = ''
                     if 'ether' in data.keys() and 'src' in data['ether'].keys():
@@ -187,8 +223,8 @@ try:
                     dst_eth = ''
                     if 'ether' in data.keys() and 'dst' in data['ether'].keys():
                         dst_eth = data['ether']['dst']
-                    c.execute('INSERT INTO alerts VALUES (?,?,?,?,?,?,?,?,?)',
-                              (1, timestamp2unixtime(data['timestamp']), data['src_ip'],
+                    c.execute('INSERT INTO alerts VALUES (?,?,?,?,?,?,?,?,?,?)',
+                              (timestamp2unixtime(data['timestamp']), data['src_ip'],
                                data['src_port'], data['dest_ip'], data['dest_port'],
                                src_eth, dst_eth,
                                data['alert']['category'], data['alert']['signature'],
@@ -199,39 +235,47 @@ try:
             if debug:
                 print('Got dns!')
             if data['dns'] and data['dns']['type'] == 'answer' and 'rrtype' in data['dns'].keys() and data['dns']['rrtype'] in ('A', 'AAAA', 'CNAME') and con:
-                c.execute('SELECT type,data FROM dns WHERE client = ? AND name = ? ORDER BY time LIMIT 1',
+                c.execute('SELECT data FROM dns WHERE client = ? AND name = ? ORDER BY time LIMIT 1',
                           (data['dest_ip'], data['dns']['rrname']))
                 row = c.fetchone()
-                if not row or row[0] != data['dns']['rrtype'] or row[1] != data['dns']['rdata']:
-                    print 'Saving DNS data'
+                if row is None or row[0] != data['dns']['rdata']:
+                    if debug:
+                        print 'Saving DNS data'
+                        if row:
+                            print ' -> ' + row[0] + ' != ' + data['dns']['rdata']
                     c.execute('INSERT INTO dns VALUES (?,?,?,?,?)',
                               (timestamp2unixtime(data['timestamp']),
                               data['dest_ip'], data['dns']['rrname'], data['dns']['rrtype'],
                               data['dns']['rdata']))
+
+        # Insert or update flow - it might already exist from TLS connection
         if data['event_type'] == 'flow' and data['flow'] and con and data['proto'] in ['TCP', 'UDP']:
             if debug:
                 print('Got flow!')
             if 'app_proto' not in data.keys():
                 data['app_proto'] = ''
-            if 'src_port' not in data.keys():
-                data['src_port'] = ''
-            try:
-                c.execute('UPDATE traffic VALUES SET start = ?, stop = ?, src_ip = ?, '
+            if data['app_proto'] not in ['failed', 'dns']:
+                if 'src_port' not in data.keys():
+                    data['src_port'] = ''
+                try:
+                    c.execute('UPDATE traffic VALUES SET start = ?, stop = ?, src_ip = ?, '
                           'src_port = ?, dest_ip = ?, dest_port = ?, proto = ?, '
                           'app_proto = ?, bytes_send = ?, bytes_received = ? WHERE '
-                          'flow_id = ?',
+                          'flow_id = ? AND gen = ?',
                           timestamp2unixtime(data['flow']['start']),
                           timestamp2unixtime(data['flow']['end']),
                           data['src_ip'], data['src_port'], data['dest_ip'], data['dest_port'],
                           data['proto'], data['app_proto'], data['flow']['bytes_toserver'],
-                          data['flow']['bytes_toclient'], data['flow_id'])
-            except:
-                c.execute('INSERT INTO traffic VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                          (data['flow_id'], timestamp2unixtime(data['flow']['start']),
-                           timestamp2unixtime(data['flow']['end']), data['src_ip'],
-                           data['src_port'], data['dest_ip'], data['dest_port'],
-                           data['proto'], data['app_proto'], data['flow']['bytes_toserver'],
-                           data['flow']['bytes_toclient'], '', ''))
+                          data['flow']['bytes_toclient'], data['flow_id'], gen)
+                except:
+                    c.execute('INSERT INTO traffic VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                              (gen, data['flow_id'], timestamp2unixtime(data['flow']['start']),
+                               timestamp2unixtime(data['flow']['end']), data['src_ip'],
+                               data['src_port'], data['dest_ip'], data['dest_port'],
+                               data['proto'], data['app_proto'], data['flow']['bytes_toserver'],
+                               data['flow']['bytes_toclient'], '', ''))
+
+        # Store TLS details of flow
         if data['event_type'] == 'tls' and data['tls'] and con:
             if debug:
                 print('Got tls!')
@@ -239,14 +283,16 @@ try:
                 data['tls']['sni'] = ''
             if 'subject' not in data['tls'].keys():
                 data['tls']['subject'] = ''
-            c.execute('INSERT INTO traffic VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                      (data['flow_id'], 0, 0, data['src_ip'], data['src_port'],
+            c.execute('INSERT INTO traffic VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                      (gen, data['flow_id'], 0, 0, data['src_ip'], data['src_port'],
                        data['dest_ip'], data['dest_port'], data['proto'], '', 0,
                        0, data['tls']['sni'], data['tls']['subject']))
+
+        # Commit everything
         if con:
             con.commit()
 
-except:
+except KeyboardInterrupt:
     if con:
         con.close()
     server.close()
