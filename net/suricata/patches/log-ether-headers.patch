@@ -1,16 +1,3 @@
-From 0ffb0dc90450011ebd2270c3c2069ac901ee9687 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Martin=20Petr=C3=A1=C4=8Dek?= <martin@petracek.net>
-Date: Sat, 15 Jul 2017 20:18:22 +0200
-Subject: [PATCH 2/2] ethernet headers for NFQ
-
----
- src/flow.c        | 14 ++++++++++++++
- src/flow.h        |  6 ++++++
- src/output-json.c | 57 ++++++++++++++++++++++++++++++++-----------------------
- src/source-nfq.c  |  8 ++++++++
- src/source-nfq.h  |  2 ++
- 5 files changed, 63 insertions(+), 24 deletions(-)
-
 diff --git a/src/flow.c b/src/flow.c
 index c371b54e..20bb4029 100644
 --- a/src/flow.c
@@ -60,52 +47,75 @@ index 93ca7afc..fe696676 100644
  } Flow;
  
  enum FlowState {
+diff --git a/src/output-json-flow.c b/src/output-json-flow.c
+index f715cc04..69b5c15e 100644
+--- a/src/output-json-flow.c
++++ b/src/output-json-flow.c
+@@ -174,6 +174,42 @@ static json_t *CreateJSONHeaderFromFlow(Flow *f, const char *event_type)
+                     json_integer(f->code));
+             break;
+     }
++
++#ifdef NFQ
++      // flow doesn't know ether header - unless it's our hacked NFQ
++      if  (f->hw_address_src_known || f->hw_address_dst_known) {
++        json_t *ejs = json_object();
++        if (ejs != NULL) {
++            char eth_addr[19];
++            const uint8_t *src=NULL, *dst=NULL;
++
++            if (f->hw_address_src_known) src=f->hw_address_src;
++            if (f->hw_address_dst_known) dst=f->hw_address_dst;
++            if (src) {
++                snprintf(eth_addr, 19, "%02x:%02x:%02x:%02x:%02x:%02x",
++                        src[0],
++                        src[1],
++                        src[2],
++                        src[3],
++                        src[4],
++                        src[5]);
++                json_object_set_new(ejs, "src", json_string(eth_addr));
++            }
++            if (dst) {
++                snprintf(eth_addr, 19, "%02x:%02x:%02x:%02x:%02x:%02x",
++                        dst[0],
++                        dst[1],
++                        dst[2],
++                        dst[3],
++                        dst[4],
++                        dst[5]);
++                json_object_set_new(ejs, "dst", json_string(eth_addr));
++            }
++            json_object_set_new(js, "ether", ejs);
++        }
++    }
++#endif
++
+     return js;
+ }
+ 
 diff --git a/src/output-json.c b/src/output-json.c
-index 78d7a69d..d6850140 100644
+index 32495d41..d6850140 100644
 --- a/src/output-json.c
 +++ b/src/output-json.c
-@@ -470,37 +470,46 @@ json_t *CreateJSONHeader(const Packet *p, int direction_sensitive,
+@@ -470,6 +470,50 @@ json_t *CreateJSONHeader(const Packet *p, int direction_sensitive,
              break;
      }
  
--    if (p->ethh) {
 +    if (p->ethh
 +#ifdef NFQ
 +        || (p->flow && (p->flow->hw_address_src_known || p->flow->hw_address_dst_known))
 +#endif
 +    ) {
-         json_t *ejs = json_object();
-         if (ejs != NULL) {
-             char eth_addr[19];
--            uint8_t *src, *dst;
++        json_t *ejs = json_object();
++        if (ejs != NULL) {
++            char eth_addr[19];
 +            const uint8_t *src=NULL, *dst=NULL;
- 
--            if ((PKT_IS_TOSERVER(p))) {
--                src = p->ethh->eth_dst;
--                dst = p->ethh->eth_src;
--            } else {
++
 +            if (p->ethh) {
-                 src = p->ethh->eth_src;
-                 dst = p->ethh->eth_dst;
-             }
--
--            json_object_set_new(ejs, "type", json_integer(ntohs(p->ethh->eth_type)));
--            snprintf(eth_addr, 19, "%02x:%02x:%02x:%02x:%02x:%02x",
--                    src[0],
--                    src[1],
--                    src[2],
--                    src[3],
--                    src[4],
--                    src[5]);
--            json_object_set_new(ejs, "src", json_string(eth_addr));
--            snprintf(eth_addr, 19, "%02x:%02x:%02x:%02x:%02x:%02x",
--                    dst[0],
--                    dst[1],
--                    dst[2],
--                    dst[3],
--                    dst[4],
--                    dst[5]);
--            json_object_set_new(ejs, "dst", json_string(eth_addr));
++                src = p->ethh->eth_src;
++                dst = p->ethh->eth_dst;
++            }
 +#ifdef NFQ
 +            else {
 +                if (p->flow->hw_address_src_known) src=p->flow->hw_address_src;
@@ -132,9 +142,13 @@ index 78d7a69d..d6850140 100644
 +                        dst[5]);
 +                json_object_set_new(ejs, "dst", json_string(eth_addr));
 +            }
-             json_object_set_new(js, "ether", ejs);
-         }
-     }
++            json_object_set_new(js, "ether", ejs);
++        }
++    }
++
+     return js;
+ }
+ 
 diff --git a/src/source-nfq.c b/src/source-nfq.c
 index 4c13f5a7..0acb1099 100644
 --- a/src/source-nfq.c
@@ -174,6 +188,3 @@ index 374b3332..98af68f1 100644
  } NFQPacketVars;
  
  typedef struct NFQQueueVars_
--- 
-2.11.0
-
