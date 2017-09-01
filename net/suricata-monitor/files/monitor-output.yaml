@@ -9,4 +9,6 @@
             query: no
         - tls:
             extended: yes
+        - http:
+            extended: yes
 

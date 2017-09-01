@@ -11,6 +11,8 @@ import re
 import time
 import datetime
 import sqlite3
+import signal
+import errno
 from bottle import template
 
 delimiter = '__uci__delimiter__'
@@ -121,7 +123,6 @@ if log_traffic:
         con = sqlite3.connect('/var/lib/suricata-monitor.db')
     except:
         con = False
-
 if con:
     # Create database if it was empty
     c = con.cursor()
@@ -135,10 +136,10 @@ if con:
         print('Table "alerts" already exists')
     try:
         c.execute('CREATE TABLE traffic '
-                  '(gen integer, flow_id integer, start integer, stop integer, '
-                  'src_ip text, src_port integer, dest_ip text, dest_port integer, '
+                  '(start integer, duration integer, '
+                  'src_mac text, src_ip text, src_port integer, dest_ip text, dest_port integer, '
                   'proto text, app_proto text, bytes_send integer, '
-                  'bytes_received integer, sni text, tls_subject text)')
+                  'bytes_received integer, app_level_hostname text)')
     except:
         print('Table "traffic" already exists')
     try:
@@ -152,6 +153,9 @@ if con:
         c.execute('INSERT INTO settings VALUES (?, ?)', ('db_schema_version', 1))
     except:
         print('Table "settings" already exists')
+'''
+    We don't want indexes for now. We are not using them now, so it's a waste of space.
+    Besides, I think that DNS cache should be implemented in the program itself, not in database.
 
     # Create some indexes
     try:
@@ -162,6 +166,9 @@ if con:
         c.execute('CREATE INDEX dns_reverse_lookup ON dns(client,data)')
     except:
         print('Index "dns_reverse_lookup" already exists')
+'''
+'''
+    Generation is not used now. Flow IDs are discarded when we have complete info about them (we won't need it anymore).
 
     # Set generation - flow ids have to be unique only within one generation
     if debug:
@@ -176,16 +183,36 @@ if con:
     else:
         c.execute('INSERT INTO settings VALUES (?, ?)', ('generation', 1))
     c.execute('UPDATE settings SET value = ? WHERE key = ?', (1, 'db_schema_version'))
+'''
 
 # Main loop
-try:
-    while True:
+
+def exit_gracefully(signum, frame):
+    global c, con, active_flows, server
+    if not con:
+        return
+    for flow in active_flows.itervalues():
+         c.execute('INSERT INTO traffic VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (flow[0], 0, flow[1], flow[2], flow[3], flow[4], flow[5], flow[6], flow[7], 0, 0, flow[8]))
+    con.commit()
+    if con:
+         con.close()
+    server.close()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, exit_gracefully)
+signal.signal(signal.SIGTERM, exit_gracefully)
+
+active_flows={}
+while True:
+    try:
         if debug:
            print('Getting data...')
         line = server.recv(4092)
         if not line:
             continue
         line = string.strip(line)
+        if debug:
+            print(line)
         if not line:
             continue
         skip = False
@@ -193,7 +220,9 @@ try:
             data = json.loads(line)
         except:
             continue
-
+        if 'ether' not in data.keys() or 'src' not in data['ether'].keys():
+            data['ether']={}
+            data['ether']['src']=''
         # Handle alerts
         if data['event_type'] == 'alert':
             if debug:
@@ -217,16 +246,10 @@ try:
                                                  '--tls=on', to ], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
                         out, err = chld.communicate(text)
                 if con:
-                    src_eth = ''
-                    if 'ether' in data.keys() and 'src' in data['ether'].keys():
-                        src_eth = data['ether']['src']
-                    dst_eth = ''
-                    if 'ether' in data.keys() and 'dst' in data['ether'].keys():
-                        dst_eth = data['ether']['dst']
                     c.execute('INSERT INTO alerts VALUES (?,?,?,?,?,?,?,?,?,?)',
                               (timestamp2unixtime(data['timestamp']), data['src_ip'],
                                data['src_port'], data['dest_ip'], data['dest_port'],
-                               src_eth, dst_eth,
+                               data['ether']['src'], data['ether']['dst'],
                                data['alert']['category'], data['alert']['signature'],
                                data['hostname']))
 
@@ -255,44 +278,52 @@ try:
             if 'app_proto' not in data.keys():
                 data['app_proto'] = ''
             if data['app_proto'] not in ['failed', 'dns']:
+                if data['flow_id'] in active_flows.keys():
+                    hostname = active_flows[data['flow_id']][8]
+                    del active_flows[data['flow_id']]
+                else:
+                    hostname = ''
                 if 'src_port' not in data.keys():
                     data['src_port'] = ''
+                if int(data['flow']['bytes_toserver'])==0 or int(data['flow']['bytes_toclient'])==0:
+                    continue
                 try:
-                    c.execute('UPDATE traffic VALUES SET start = ?, stop = ?, src_ip = ?, '
-                          'src_port = ?, dest_ip = ?, dest_port = ?, proto = ?, '
-                          'app_proto = ?, bytes_send = ?, bytes_received = ? WHERE '
-                          'flow_id = ? AND gen = ?',
-                          timestamp2unixtime(data['flow']['start']),
-                          timestamp2unixtime(data['flow']['end']),
-                          data['src_ip'], data['src_port'], data['dest_ip'], data['dest_port'],
-                          data['proto'], data['app_proto'], data['flow']['bytes_toserver'],
-                          data['flow']['bytes_toclient'], data['flow_id'], gen)
-                except:
-                    c.execute('INSERT INTO traffic VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                              (gen, data['flow_id'], timestamp2unixtime(data['flow']['start']),
-                               timestamp2unixtime(data['flow']['end']), data['src_ip'],
+                    c.execute('INSERT INTO traffic VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                              (timestamp2unixtime(data['flow']['start']),
+                               timestamp2unixtime(data['flow']['end'])-timestamp2unixtime(data['flow']['start']), data['ether']['src'], data['src_ip'],
                                data['src_port'], data['dest_ip'], data['dest_port'],
                                data['proto'], data['app_proto'], data['flow']['bytes_toserver'],
-                               data['flow']['bytes_toclient'], '', ''))
+                               data['flow']['bytes_toclient'], hostname))
+                except Exception as e:
+                    print(e)
 
         # Store TLS details of flow
         if data['event_type'] == 'tls' and data['tls'] and con:
             if debug:
                 print('Got tls!')
-            if 'sni' not in data['tls'].keys():
-                data['tls']['sni'] = ''
-            if 'subject' not in data['tls'].keys():
-                data['tls']['subject'] = ''
-            c.execute('INSERT INTO traffic VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                      (gen, data['flow_id'], 0, 0, data['src_ip'], data['src_port'],
-                       data['dest_ip'], data['dest_port'], data['proto'], '', 0,
-                       0, data['tls']['sni'], data['tls']['subject']))
-
+            hostname = ''
+            if 'sni' in data['tls'].keys():
+                hostname = data['tls']['sni']
+            elif 'subject' in data['tls'].keys():
+                hostname = data['tls']['subject']
+                #get only CN from suject
+                m = re.search('(?<=CN=)[^,]*', hostname)
+                if m:
+                     hostname = m.group(0)
+            if not hostname:
+                continue
+            active_flows[data['flow_id']]=(int(time.time()), data['ether']['src'], data['src_ip'], data['src_port'], data['dest_ip'], data['dest_port'], data['proto'], 'tls', hostname)
+        if data['event_type'] == 'http' and data['http'] and con:
+            if 'hostname' not in data['http'].keys():
+                continue
+            active_flows[data['flow_id']]=(int(time.time()), data['ether']['src'], data['src_ip'], data['src_port'],data['dest_ip'], data['dest_port'], data['proto'], 'http', data['http']['hostname'])
         # Commit everything
         if con:
             con.commit()
 
-except KeyboardInterrupt:
-    if con:
-        con.close()
-    server.close()
+    except KeyboardInterrupt:
+        exit_gracefully()
+
+    except IOError as e:
+        if e.errno != errno.EINTR:
+            raise
