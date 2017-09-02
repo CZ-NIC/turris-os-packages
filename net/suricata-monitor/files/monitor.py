@@ -136,7 +136,7 @@ if con:
         print('Table "alerts" already exists')
     try:
         c.execute('CREATE TABLE traffic '
-                  '(start integer, duration integer, '
+                  '(end integer, duration integer, '
                   'src_mac text, src_ip text, src_port integer, dest_ip text, dest_port integer, '
                   'proto text, app_proto text, bytes_send integer, '
                   'bytes_received integer, app_level_hostname text)')
@@ -289,7 +289,7 @@ while True:
                     continue
                 try:
                     c.execute('INSERT INTO traffic VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                              (timestamp2unixtime(data['flow']['start']),
+                              (timestamp2unixtime(data['flow']['end']),
                                timestamp2unixtime(data['flow']['end'])-timestamp2unixtime(data['flow']['start']), data['ether']['src'], data['src_ip'],
                                data['src_port'], data['dest_ip'], data['dest_port'],
                                data['proto'], data['app_proto'], data['flow']['bytes_toserver'],
