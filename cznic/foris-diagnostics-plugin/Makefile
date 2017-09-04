@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-diagnostics-plugin
-PKG_VERSION:=7
+PKG_VERSION:=8
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -29,7 +29,7 @@ include ../foris/files/foris-plugin.mk
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
-		+foris +nuci-diagnostics
+		+foris +foris-controller-diagnostics-module
 	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
 endef
 
