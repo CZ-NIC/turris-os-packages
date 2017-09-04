@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller
-PKG_VERSION:=0.2
+PKG_VERSION:=0.3
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -25,7 +25,9 @@ $(call include_mk, python-package.mk)
 define Package/foris-controller
 	TITLE:=foris-controller
 	URL:=https://gitlab.labs.nic.cz/turris/foris-controller
-	DEPENDS:=+python-light +python-ubus +python-prctl +python-multiprocessing +foris-schema
+	DEPENDS:=\
+		+python-light +python-ubus +python-prctl +python-multiprocessing +foris-schema \
+		+server-uplink
 	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
 endef
 
