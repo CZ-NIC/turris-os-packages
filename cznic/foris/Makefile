@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=96.1
+PKG_VERSION:=96.3
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -31,7 +31,7 @@ define Package/foris-common
 		+python-light +python-bottle +python-bottle-i18n +python-pbkdf2 \
 		+python-flup +python-ncclient +python-ubus +nuci +lighttpd +lighttpd-mod-fastcgi \
 		+lighttpd-mod-redirect +user_notify +ubus-ws +l10n_supported \
-		+sqm-scripts
+		+sqm-scripts +foris-client
 	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
 endef
 
