@@ -24,7 +24,8 @@ die() {
 [ -b /dev/mmcblk0 ]         || die "No MicroSD card present!"
 [ -n "`mount | grep ubi`" ] || die "1.1 firmware required!"
 
-echo 'ROOT_DEV="/dev/mmcblk0p2"' > /etc/schnapps
+mkdir -p /etc/schnapps
+echo 'ROOT_DEV="/dev/mmcblk0p2"' > /etc/schnapps/config
 
 ANS=""
 echo "Are you sure you want to loose everything on mmcblk0? (yes/no)"
