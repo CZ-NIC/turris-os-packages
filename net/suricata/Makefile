@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata
 PKG_VERSION:=4.0.0
-PKG_RELEASE=8
+PKG_RELEASE=9
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.openinfosecfoundation.org/download/
@@ -34,7 +34,7 @@ define Package/suricata
   SECTION:=net
   CATEGORY:=Network
   TITLE:=IDS
-  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +librt +libpcap +luajit +libnetfilter-queue +iptables-mod-nfqueue +libnetfilter-log +libnfnetlink +iptables-mod-conntrack-extra +libhtp +libnet-1.2.x
+  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +librt +libpcap +luajit +libnetfilter-queue +iptables-mod-nfqueue +libnetfilter-log +libnfnetlink +iptables-mod-conntrack-extra +libhtp +libnet-1.2.x +python3-light +python3-logging
 endef
 
 define Package/suricata/conffiles
@@ -52,6 +52,7 @@ define Package/suricata/install
 
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/suricata* $(1)/usr/bin
+	$(INSTALL_BIN) ./files/flows_conntrack.py $(1)/usr/bin/suricata_conntrack_flows.py
 
 	$(INSTALL_DIR) $(1)/etc/suricata
 	$(INSTALL_CONF) ./files/suricata.yaml $(1)/etc/suricata/suricata.yaml

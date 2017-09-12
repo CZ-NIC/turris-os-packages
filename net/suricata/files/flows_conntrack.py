@@ -34,16 +34,25 @@ import string
 import sys
 import os
 import datetime
+import signal
 from datetime import datetime, timezone
 import re
-from threading import Thread, Lock
+from threading import Thread, Lock, Condition
 from time import sleep
 import subprocess
+import logging, sys
 
-active_flows={}
+logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+
+new_flows={} #keeps new flows, not yet monitored by conntrack_monitor - needs to be verified, if they really are in conntrack
+active_flows={} #keeps active_flows, is monitored by conntrack_monitor
+closed_flows={} #keeps closed flows, it just waits until conntrack_get gets their counters and they are deleted (actually also conntrack_monitor checks them, if it doesn't see DESTROY)
+
 active_flows_lock=Lock()
-closed_flows={}
-closed_flows_lock=Lock()
+#new_flows and closed_flows share the same lock new_and_closed_flows_lock - this is because it's easier for implementation
+# - it's actually conditional variable, not just lock and it's easier like that then having 2 separate locks
+new_and_closed_flows_lock=Condition()
+
 send_socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
 send_socket_path = ""
 send_socket_lock=Lock() #unfortunatelly sockets are not thread-safe in Python...
@@ -55,7 +64,7 @@ def send_line(line):
 	try:
 		send_socket.sendto((line+"\n").encode(), send_socket_path)
 	except IOError as e:
-		print(e)
+		logging.warning(e)
 	send_socket_lock.release()
 
 def send_json(json_dict):
@@ -68,11 +77,14 @@ def suricata_timestamp():
 	#should return current timestamp in suricata format. Eg. '2017-09-08T13:52:25.821230+0200'
 	return str(datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%dT%H:%M:%S.%f%z"))
 
+#this reads lines from `conntrack -E` - conntrack events
+# - when it sees 'DESTROY ...', it removes flow from active_flows and outputs it (it also checks closed_flows, because between getting the counters by conntrack_get, the flow may (and does) disappear)
+# - when it sees 'UPDATE FIN_WAIT ...', it moves flow from active_flows to closed_flows
 def conntrack_monitor():
-	global active_flows, active_flows_lock, closed_flows, closed_flows_lock
+	global active_flows, active_flows_lock, closed_flows, new_and_closed_flows_lock
 	destroy_pattern = re.compile(r'src=([0-9a-fA-F.:]+)\s+dst=([0-9a-fA-F.:]+)\s+sport=([0-9]+)\s+dport=([0-9]+)\s+packets=([0-9]+)\s+bytes=([0-9]+)')
 	update_pattern = re.compile(r'src=([0-9a-fA-F.:]+)\s+dst=([0-9a-fA-F.:]+)\s+sport=([0-9]+)\s+dport=([0-9]+)')
-	with os.popen('/usr/sbin/conntrack -E') as conntrack:
+	with os.popen('/usr/sbin/conntrack -E 2>/dev/null') as conntrack:
 		for line in conntrack:
 			line=line.strip()
 			if line.startswith("[DESTROY]"):
@@ -84,14 +96,11 @@ def conntrack_monitor():
 					continue
 				original = matches[0]
 				reply = matches[1]
-				#unfortunatelly, it's not only uncertain if local addresses are to be found in original (first match) or reply (second match)
-				#but also suricata might get the direction wrong (it's guessing based on higher/lower ports sometimes)
-				#so we need to check all four possibilities
 				key1=hash_flow(original[0], original[1], original[2], original[3], proto)
 				key2=hash_flow(reply[0], reply[1], reply[2], reply[3], proto)
-				closed_flows_lock.acquire()
+				new_and_closed_flows_lock.acquire()
 				if key1 in closed_flows:
-					print("destroy_closed_found1")
+					logging.debug("closed flow destroyed")
 					closed_flows[key1]["timestamp"]=suricata_timestamp()
 					closed_flows[key1]["flow"]["pkts_toserver"]=original[4]
 					closed_flows[key1]["flow"]["pkts_toclient"]=reply[4]
@@ -101,7 +110,7 @@ def conntrack_monitor():
 					send_json(closed_flows[key1])
 					del closed_flows[key1]
 				elif key2 in closed_flows:
-					print("destroy_closed_found2")
+					logging.debug("closed flow destroyed")
 					closed_flows[key2]["timestamp"]=suricata_timestamp()
 					closed_flows[key2]["flow"]["pkts_toserver"]=reply[4]
 					closed_flows[key2]["flow"]["pkts_toclient"]=original[4]
@@ -110,10 +119,10 @@ def conntrack_monitor():
 					closed_flows[key2]["flow"]["state"]="closed"
 					send_json(closed_flows[key2])
 					del closed_flows[key2]
-				closed_flows_lock.release()
+				new_and_closed_flows_lock.release()
 				active_flows_lock.acquire()
 				if key1 in active_flows:
-					print("destroy_found1")
+					logging.debug("active flow destroyed")
 					active_flows[key1]["timestamp"]=suricata_timestamp()
 					active_flows[key1]["flow"]["pkts_toserver"]=original[4]
 					active_flows[key1]["flow"]["pkts_toclient"]=reply[4]
@@ -123,7 +132,7 @@ def conntrack_monitor():
 					send_json(active_flows[key1])
 					del active_flows[key1]
 				elif key2 in active_flows:
-					print("destroy_found2")
+					logging.debug("active flow destroyed")
 					active_flows[key2]["timestamp"]=suricata_timestamp()
 					active_flows[key2]["flow"]["pkts_toserver"]=reply[4]
 					active_flows[key2]["flow"]["pkts_toclient"]=original[4]
@@ -133,7 +142,6 @@ def conntrack_monitor():
 					send_json(active_flows[key2])
 					del active_flows[key2]
 				active_flows_lock.release()
-				print(str(len(active_flows))+" flows remaining")
 			if line.startswith("[UPDATE]"):
 				#example of line: ' [UPDATE] tcp      6 120 FIN_WAIT src=192.168.1.126 dst=216.58.209.36 sport=54428 dport=443 src=216.58.209.36 dst=172.20.6.144 sport=443 dport=54428 ...'
 				#unfortunatelly doesn't provide packet/bytes counters, but we get time of flow end
@@ -154,36 +162,38 @@ def conntrack_monitor():
 				key2=hash_flow(reply[0], reply[1], reply[2], reply[3], proto)
 				active_flows_lock.acquire()
 				if key1 in active_flows:
-					print("update_found1")
+					logging.debug("active flow moved to closed_flows")
 					active_flows[key1]["flow"]["end"]=suricata_timestamp()
 					active_flows[key1]["flow"]["state"]="closed"
-					closed_flows_lock.acquire()
+					new_and_closed_flows_lock.acquire()
 					closed_flows[key1]=active_flows[key1]
 					del active_flows[key1]
-					closed_flows_lock.release()
+					new_and_closed_flows_lock.notify()
+					new_and_closed_flows_lock.release()
 				elif key2 in active_flows:
-					print("update_found2")
+					logging.debug("active flow moved to closed_flows")
 					active_flows[key2]["flow"]["end"]=suricata_timestamp()
 					active_flows[key2]["flow"]["state"]="closed"
-					closed_flows_lock.acquire()
+					new_and_closed_flows_lock.acquire()
 					closed_flows[key2]=active_flows[key2]
 					del active_flows[key2]
-					closed_flows_lock.release()
+					new_and_closed_flows_lock.notify()
+					new_and_closed_flows_lock.release()
 				active_flows_lock.release()
-				print(str(len(active_flows))+" flows remaining")
 
+#this reads `conntrack -L` and searches for new flows (to verify they are there, they might disappear between receiving report from suricata and reading conntrack)
+#if they are there, it moves them from new_flows to active_flows
+#also, it it searches for closed flows (marked as closed by conntrack_monitor, when it sees 'UPDATE FIN_WAIT ...' - that doesn't provide counters, so it gets them and outputs and deletes the flow)
 def conntrack_get():
-	global closed_flows, closed_flows_lock
-	print("closed flows thread")
+	global closed_flows, new_and_closed_flows_lock, new_flows
 	pattern = re.compile(r'src=([0-9a-fA-F.:]+)\s+dst=([0-9a-fA-F.:]+)\s+sport=([0-9]+)\s+dport=([0-9]+)\s+packets=([0-9]+)\s+bytes=([0-9]+)')
 	while 1:
-		sleep(5)
-		if len(closed_flows)==0:
-			continue
-		print(closed_flows.keys())
-		devnull = open(os.devnull, 'w')
-		f = subprocess.check_output(['/usr/sbin/conntrack', '-L'], stderr=devnull).decode()
-		devnull.close()
+		new_and_closed_flows_lock.acquire()
+		if len(new_flows)==0 and len(closed_flows)==0:
+			new_and_closed_flows_lock.wait()
+		logging.debug("conntrack_get woken up: new_flows len "+str(len(new_flows))+", closed_flows len "+str(len(closed_flows))) 
+		new_and_closed_flows_lock.release()
+		f = subprocess.check_output(['/usr/sbin/conntrack', '-L'], stderr=subprocess.DEVNULL).decode()
 		flows=f.split('\n')
 		for line in flows:
 			proto=line[:4].strip().upper()
@@ -194,8 +204,21 @@ def conntrack_get():
 			reply = matches[1]
 			key1=hash_flow(original[0], original[1], original[2], original[3], proto)
 			key2=hash_flow(reply[0], reply[1], reply[2], reply[3], proto)
-			closed_flows_lock.acquire()
+			new_and_closed_flows_lock.acquire()
+			if key1 in new_flows:
+					logging.debug("new flow moved to active_flows")
+					active_flows_lock.acquire()
+					active_flows[key1]=new_flows[key1]
+					del new_flows[key1]
+					active_flows_lock.release()
+			elif key2 in new_flows:
+					logging.debug("new flow moved to active_flows")
+					active_flows_lock.acquire()
+					active_flows[key2]=new_flows[key2]
+					del new_flows[key2]
+					active_flows_lock.release()
 			if key1 in closed_flows:
+					logging.debug("closed flow send and removed")
 					closed_flows[key1]["timestamp"]=suricata_timestamp()
 					closed_flows[key1]["flow"]["pkts_toserver"]=original[4]
 					closed_flows[key1]["flow"]["pkts_toclient"]=reply[4]
@@ -203,20 +226,29 @@ def conntrack_get():
 					closed_flows[key1]["flow"]["bytes_toclient"]=reply[5]
 					send_json(closed_flows[key1])
 					del closed_flows[key1]
-			if key2 in closed_flows:
+			elif key2 in closed_flows:
+					logging.debug("closed flow send and removed")
 					closed_flows[key2]["timestamp"]=suricata_timestamp()
-					closed_flows[key2]["flow"]["pkts_toserver"]=original[4]
-					closed_flows[key2]["flow"]["pkts_toclient"]=reply[4]
-					closed_flows[key2]["flow"]["bytes_toserver"]=original[5]
-					closed_flows[key2]["flow"]["bytes_toclient"]=reply[5]
+					closed_flows[key2]["flow"]["pkts_toserver"]=reply[4]
+					closed_flows[key2]["flow"]["pkts_toclient"]=original[4]
+					closed_flows[key2]["flow"]["bytes_toserver"]=reply[5]
+					closed_flows[key2]["flow"]["bytes_toclient"]=original[5]
 					send_json(closed_flows[key2])
 					del closed_flows[key2]
-			closed_flows_lock.release()
-		closed_flows_lock.acquire()
+			new_and_closed_flows_lock.release()
+		new_and_closed_flows_lock.acquire()
 		if len(closed_flows)>0:
-			print("there are some closed_flows after running conntrack_get loop. This shouldn't happen.")
-		closed_flows_lock.release()
+			logging.error("there are some closed_flows after running conntrack_get loop. This shouldn't happen.")
+			closed_flows.clear()
+		if len(new_flows)>0:
+			#new flows wasn't found in conntrack - might be DESTROYed before - just output it as it was
+			for _,v in new_flows.items():
+				send_json(v)
+			new_flows.clear()
+		new_and_closed_flows_lock.release()
 
+#this reads socket from suricata and when it sees "flow" report with "state"="bypassed", it adds it into new_flows (and wakes up suricata_get_flow thread)
+#all other reports are passed immediatelly
 def suricata_get_flow(recv_socket_path):
 	try:
 		os.unlink(recv_socket_path) #remove stray socket
@@ -248,19 +280,55 @@ def suricata_get_flow(recv_socket_path):
 				src_port=data["src_port"]
 				dest_port=data["dest_port"]
 				flow_id=data["flow_id"]
-				print("NEW FLOW: {}: {}:{} -> {}:{} (proto {})".format(flow_id,src_ip,src_port,dest_ip,dest_port,proto))
 				key=hash_flow(src_ip, dest_ip, src_port, dest_port, proto.upper())
-				active_flows_lock.acquire()
-				active_flows[key]=data
-				active_flows_lock.release()
+				new_and_closed_flows_lock.acquire()
+				new_flows[key]=data
+				new_and_closed_flows_lock.notify()
+				new_and_closed_flows_lock.release()
+				logging.debug("new flow (added to new_flows):  {}: {}:{} -> {}:{} (proto {})".format(flow_id,src_ip,src_port,dest_ip,dest_port,proto))
+				logging.debug("new_flows len "+str(len(new_flows))+", active_flows len "+str(len(active_flows))+", closed_flows len "+str(len(closed_flows))) 
 			else: #if this is anything else then flow...
 				send_line(l) #...just resend immediatelly
 
+
+def exit_gracefully(signum, frame):
+	logging.debug("asked to quit, sending all remaining flows")
+	global new_flows, active_flows, closed_flows, active_flows_lock, new_and_closed_flows_lock
+	active_flows_lock.acquire()
+	for _,v in active_flows.items():
+		v["flow"]["state"]="closed"
+		v["flow"]["reason"]="shutdown"
+		v["timestamp"]=suricata_timestamp()
+		v["flow"]["end"]=suricata_timestamp()
+		send_json(v)
+	active_flows.clear()
+	active_flows_lock.release()
+	new_and_closed_flows_lock.acquire()
+	for _,v in closed_flows.items():
+		v["flow"]["state"]="closed"
+		v["flow"]["reason"]="shutdown"
+		v["timestamp"]=suricata_timestamp()
+		v["flow"]["end"]=suricata_timestamp()
+		send_json(v)
+	closed_flows.clear()
+	for _,v in new_flows.items():
+		v["flow"]["state"]="closed"
+		v["flow"]["reason"]="shutdown"
+		v["timestamp"]=suricata_timestamp()
+		v["flow"]["end"]=suricata_timestamp()
+		send_json(v)
+	new_flows.clear()
+	new_and_closed_flows_lock.release()
+	sys.exit(0)
+
+signal.signal(signal.SIGINT, exit_gracefully)
+signal.signal(signal.SIGTERM, exit_gracefully)
+
+
 def main(argv = sys.argv):
 	global send_socket_path
-	print(suricata_timestamp())
 	if len(argv) < 3:
-		print("usage: {} recv_socket send_socket".format(argv[0]))
+		logging.error("usage: {} recv_socket send_socket".format(argv[0]))
 		return 1
 	send_socket_path=argv[2]
 	thread1 = Thread(target = conntrack_monitor)
