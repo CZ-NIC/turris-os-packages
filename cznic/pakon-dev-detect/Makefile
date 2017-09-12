@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-dev-detect
 PKG_VERSION:=1.2.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_LICENSE:=GPLv2+
 PKG_LICENSE_FILES:=COPYING
 
@@ -26,7 +26,7 @@ $(call include_mk, python3-package.mk)
 
 define Package/pakon-dev-detect
   TITLE:=pakon-dev-detect
-  DEPENDS:=+python3 +python3-setuptools +suricata +ouidb
+  DEPENDS:=+python3-light +python3-logging +python3-setuptools +suricata +ouidb
 endef
 
 define Package/pakon-dev-detect/description
