@@ -25,8 +25,8 @@
 # It utilizes conntrack, kernel module for connection tracking. It monitors conntrack output to find out the counters and flow end time.
 #
 # To use it, just point suricata "flow" output to UNIX-DGRAM socket and run this script with that path as argv[1].
-# This script acts like "proxy", it ouputs flows in suricata json format, just with updated counters. All other suricata events are passed to output immediatelly.
-# This script outputs its data UNIX-DRGAM socket argv[2].
+# This script acts like "proxy", it ouputs flows (to stdout) in suricata json format, just with updated counters.
+# All other suricata events are passed to output immediatelly.
 
 import socket
 import json
@@ -53,19 +53,17 @@ active_flows_lock=Lock()
 # - it's actually conditional variable, not just lock and it's easier like that then having 2 separate locks
 new_and_closed_flows_lock=Condition()
 
-send_socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-send_socket_path = ""
-send_socket_lock=Lock() #unfortunatelly sockets are not thread-safe in Python...
+output_lock=Lock()
 
 
 def send_line(line):
-	global send_socket_path, send_socket, send_socket_lock
-	send_socket_lock.acquire()
+	global output_lock
+	output_lock.acquire()
 	try:
-		send_socket.sendto((line+"\n").encode(), send_socket_path)
+		print(line)
 	except IOError as e:
 		logging.warning(e)
-	send_socket_lock.release()
+	output_lock.release()
 
 def send_json(json_dict):
 	send_line(json.dumps(json_dict))
@@ -326,11 +324,9 @@ signal.signal(signal.SIGTERM, exit_gracefully)
 
 
 def main(argv = sys.argv):
-	global send_socket_path
-	if len(argv) < 3:
-		logging.error("usage: {} recv_socket send_socket".format(argv[0]))
+	if len(argv) < 2:
+		logging.error("usage: {} recv_socket".format(argv[0]))
 		return 1
-	send_socket_path=argv[2]
 	thread1 = Thread(target = conntrack_monitor)
 	thread1.daemon = True
 	thread1.start()
