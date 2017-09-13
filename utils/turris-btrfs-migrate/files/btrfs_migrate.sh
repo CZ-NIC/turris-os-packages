@@ -65,7 +65,7 @@ mkdir -p /tmp/btrfs-convert/target/@/etc/schnapps/rollback.d/
 mkdir -p /boot/tefi
 mount /dev/mmcblk0p1 /boot/tefi
 cmp /boot/zImage /boot/tefi/zImage || cp /boot/zImage /boot/tefi/zImage
-cmp /boot/ftp /boot/tefi/ftd || cp /boot/ftd /boot/tefi/ftd
+cmp /boot/fdt /boot/tefi/fdt || cp /boot/fdt /boot/tefi/fdt
 umount /boot/tefi
 EOF
 chmod a+rx /etc/schnapps/rollback.d/kernel-rollback
@@ -77,7 +77,7 @@ mkdir -p /tmp/btrfs-convert/target/@/etc/updater/hook_postupdate/
 mkdir -p /boot/tefi
 mount /dev/mmcblk0p1 /boot/tefi
 cmp /boot/zImage /boot/tefi/zImage || cp /boot/zImage /boot/tefi/zImage
-cmp /boot/ftp /boot/tefi/ftd || cp /boot/ftd /boot/tefi/ftd
+cmp /boot/fdt /boot/tefi/fdt || cp /boot/fdt /boot/tefi/fdt
 umount /boot/tefi
 EOF
 
