@@ -54,8 +54,8 @@ define Package/schnapps/install
 	$(INSTALL_DIR) $(1)/etc/updater/hook_preupdate
 	$(INSTALL_BIN) ./files/updater_hook.sh $(1)/etc/updater/hook_preupdate/05_schnapps.sh
 	$(INSTALL_DIR) $(1)/etc/schnapps/rollback.d/
-	$(INSTALL_BIN) ./files/cert-backup_hook.sh $(1)/etc/schnapps/rollback.d//10_cert-backup.sh
-	chmod a+rx $(1)/etc/updater/hook_preupdate/10_cert-backup.sh
+	$(INSTALL_BIN) ./files/cert-backup_hook.sh $(1)/etc/schnapps/rollback.d/10_cert-backup.sh
+	chmod a+rx $(1)/etc/schnapps/rollback.d/10_cert-backup.sh
 	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
 	cat ./files/updater_hook.sh | sed 's|pre|post|g' > $(1)/etc/updater/hook_postupdate/05_schnapps.sh
 	chmod +x $(1)/etc/updater/hook_postupdate/05_schnapps.sh
