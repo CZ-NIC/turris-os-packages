@@ -105,16 +105,6 @@ if sev == "":
 else:
     sev = int(sev)
 
-if os.path.exists( "/var/run/suricata_monitor.sock" ):
-    os.remove( "/var/run/suricata_monitor.sock" )
-
-print("Opening socket...")
-
-server = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-server.bind("/var/run/suricata_monitor.sock")
-
-print("Listening...")
-
 con = False
 
 # prepare the database for storing logged data
@@ -188,7 +178,7 @@ if con:
 # Main loop
 
 def exit_gracefully(signum, frame):
-    global c, con, active_flows, server
+    global c, con, active_flows
     if not con:
         return
     for flow in active_flows.itervalues():
@@ -196,20 +186,33 @@ def exit_gracefully(signum, frame):
     con.commit()
     if con:
          con.close()
-    server.close()
     sys.exit(0)
 
 signal.signal(signal.SIGINT, exit_gracefully)
 signal.signal(signal.SIGTERM, exit_gracefully)
+conntrack=None
+
+devnull = open(os.devnull, 'w')
 
 active_flows={}
+
+try:
+    conntrack = subprocess.Popen(["/usr/bin/python3","/usr/bin/suricata_conntrack_flows.py","/var/run/suricata_monitor.sock"], shell=False, stdout=subprocess.PIPE, stderr=devnull)
+except Exception as e:
+    print("Can't get data from flows_conntrack.py")
+    print(e)
+    sys.exit(1)
+
+print("Listening...")
+
+
 while True:
     try:
         if debug:
            print('Getting data...')
-        line = server.recv(4092)
+        line = conntrack.stdout.readline()
         if not line:
-            continue
+            break
         line = string.strip(line)
         if debug:
             print(line)
@@ -327,3 +330,6 @@ while True:
     except IOError as e:
         if e.errno != errno.EINTR:
             raise
+
+print("End of data?")
+print("This may mean that suricata_conntrack_flows.py doesn't exist/is broken...")
