@@ -36,7 +36,7 @@ def reverse_lookup(q_in, q_out):
             pass
         signal.alarm(0)
 
-con = sqlite3.connect('/var/lib/pakon.db')
+con = sqlite3.connect('/var/lib/suricata-monitor.db')
 c = con.cursor()
 
 def get_name_from_cache(time, client, ip):

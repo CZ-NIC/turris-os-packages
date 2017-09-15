@@ -111,7 +111,7 @@ con = False
 # prepare the database for storing logged data
 if log_traffic:
     try:
-        con = sqlite3.connect('/var/lib/pakon.db')
+        con = sqlite3.connect('/var/lib/suricata-monitor.db')
     except:
         con = False
 if con:
