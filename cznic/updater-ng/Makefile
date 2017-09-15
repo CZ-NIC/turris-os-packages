@@ -130,6 +130,17 @@ define Package/opkg-trans/install
 	true
 endef
 
+# This is same case as opkg-trans. Updater is package with originally obsolete
+# updater version.
+define Package/updater
+	TITLE:=Dummy updater package
+endef
+
+define Package/updater/install
+	true
+endef
+
 $(eval $(call BuildPackage,updater-ng))
 $(eval $(call BuildPackage,opkg-trans))
+$(eval $(call BuildPackage,updater))
 $(eval $(call HostBuild))
