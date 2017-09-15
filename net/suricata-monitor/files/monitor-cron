@@ -1,0 +1,5 @@
+MAILTO=""
+01	*	*	*	*	root	/usr/bin/python /usr/libexec/suricata-fill_dns.py
+03	*	*	*	*	root	/usr/bin/python /usr/libexec/suricata-squash_flows.py
+
+30	*/6	*	*	*	root	xz -9 --stdout /var/lib/suricata-monitor.db > /srv/suricata/suricata-monitor.db.xz

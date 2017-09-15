@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata-monitor
 PKG_VERSION:=1.0
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -57,6 +57,12 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/monitor-init $(1)/etc/init.d/suricata-monitor
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./files/monitor-uci $(1)/etc/config/suricata-monitor
+	$(INSTALL_DIR) $(1)/etc/cron.d/
+	$(INSTALL_DATA) ./files/monitor-cron $(1)/etc/cron.d/suricata-monitor
+	$(INSTALL_DIR) $(1)/usr/libexec/
+	$(INSTALL_DATA) ./files/fill_dns.py $(1)/usr/libexec/suricata-fill-dns.py
+	$(INSTALL_DATA) ./files/squash_flows.py $(1)/usr/libexec/suricata-squash_flows.py
+
 endef
 
 $(eval $(call BuildPackage,suricata-monitor))
