@@ -77,26 +77,19 @@ if [ -z "$$IPKG_INSTROOT" ]; then
 sleep 2 # Cooldown for above (problems in times of reinstall)
 /etc/kresd/kresd.postinst.sh && rm /etc/kresd/kresd.postinst.sh
 /etc/kresd/convert_config.sh && rm /etc/kresd/convert_config.sh
-ping -c 1 api.turris.cz 2> /dev/null >&2
-WORKED_BEFORE="$$?"
-/etc/init.d/resolver restart
-if [ $$WORKED_BEFORE -eq 0 ] && [ "`uci -q get resolver.common.prefered_resolver`" = kresd ] && [ -n "`uci -q get resolver.common.forward_upstream | egrep '(1|yes|true|enabled|on)'`" ]; then
-	ping -c 1 api.turris.cz 2> /dev/null >&2
-	WORKS_NOW="$$?"
-	if [ "$$WORKS_NOW" -ne 0 ]; then
+if [ "`uci -q get resolver.common.prefered_resolver`" = kresd ] && uci -q get resolver.common.forward_upstream | egrep -q '(1|yes|true|enabled|on)'; then
+	ping -c 1 api.turris.cz 2> /dev/null >&2 || {
 		uci set resolver.common.forward_upstream=0
 		uci commit
 		/etc/init.d/resolver restart
-		ping -c 1 api.turris.cz 2> /dev/null >&2
-		FIXED="$$?"
-		if [ $$FIXED -eq 0 ]; then
+		if ping -c 1 api.turris.cz 2> /dev/null >&2; then
 			create_notification -s error "DNS servery vašeho poskytovatele internetu nefungují úplně dobře - pravděpodobně nepodporují DNSSEC. Bylo proto vypnuto forwardování a váš router bude nyní vyhodnocovat DNS dotazy sám." "Your ISPs DNS servers does not work properly - most likely they don't support DNSSEC. Therefore DNS forwarding was turned off and your router will now resolve all DNS queries by itself."
 		else
 			uci set resolver.common.forward_upstream=1
 			uci commit
 			/etc/init.d/resolver restart
 		fi
-	fi
+	}
 fi
 fi
 endef
