@@ -170,6 +170,13 @@ set_dnsmasq_dhcp_script() {
 	uci_commit dhcp
 }
 
+get_dnsmasq_dhcp_script() {
+	local config="$1"
+	local DHCPSCRIPT
+	config_get DHCPSCRIPT "$config" dhcpscript
+	echo $DHCPSCRIPT
+}
+
 add_rpz_file() {
 	local rpz_file="$1"
 	if [ -e "$rpz_file" ]; then
@@ -226,6 +233,7 @@ load_uci_config_kresd() {
 		#reload dhcp config with script param
 		/etc/init.d/dnsmasq reload
 	fi
+
 	config_load resolver
 
 	# load hints config
