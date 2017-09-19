@@ -15,7 +15,7 @@ new file mode 100644
 index 00000000..704b3774
 --- /dev/null
 +++ b/src/output-json-flowstart.c
-@@ -0,0 +1,284 @@
+@@ -0,0 +1,282 @@
 +/* Copyright (C) 2007-2017 Open Information Security Foundation
 + *
 + * You can copy, redistribute or modify this Program under the terms of
@@ -62,6 +62,7 @@ index 00000000..704b3774
 +#include "output.h"
 +#include "output-json.h"
 +#include "output-json-alert.h"
++#include "output-json-flow.h"
 +#include "output-json-flowstart.h"
 +
 +#include "util-unittest.h"
@@ -103,13 +104,10 @@ index 00000000..704b3774
 +    json_t *js = CreateJSONHeader((Packet *)p, 0, "flow_start");//TODO const
 +    if (unlikely(js == NULL))
 +        return TM_ECODE_OK;
-+#ifdef NFQ
-+    if (p->nfq_v.ifi != 0) {
-+        char name[IFNAMSIZ];
-+        if_indextoname (p->nfq_v.ifi, name);
-+        json_object_set_new(js, "in_dev", json_string(name));
-+    }
-+#endif /*NFQ*/
++    json_t * hjs = json_object();
++    if (unlikely(hjs == NULL)) return TM_ECODE_OK;
++    JsonAddFlow(((Packet *)p)->flow,js,hjs);
++    json_object_set_new(js, "flow", hjs);
 +    MemBufferReset(aft->buffer);
 +    OutputJSONBuffer(js, aft->flowstart_ctx->file_ctx, &aft->buffer);
 +    json_object_clear(js);
@@ -119,7 +117,7 @@ index 00000000..704b3774
 +}
 +
 +#define OUTPUT_BUFFER_SIZE 65535
-+static TmEcode JsonFlowstartLogThreadInit(ThreadVars *t, void *initdata, void **data)
++static TmEcode JsonFlowstartLogThreadInit(ThreadVars *t, const void *initdata, void **data)
 +{
 +    JsonFlowstartLogThread *aft = SCMalloc(sizeof(JsonFlowstartLogThread));
 +    if (unlikely(aft == NULL))
