@@ -1,0 +1,14 @@
+- eve-log:
+      enabled: yes
+      filetype: unix_dgram
+      filename: /var/run/pakon.sock
+      types:
+        - flow
+        - flow_start
+        - dns:
+            query: no
+        - tls:
+            extended: yes
+        - http:
+            extended: yes
+

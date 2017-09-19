@@ -1,0 +1,5 @@
+MAILTO=""
+01	*	*	*	*	root	/usr/bin/python /usr/libexec/pakon-light/fill_dns.py
+03	*	*	*	*	root	/usr/bin/python /usr/libexec/pakon-light/squash_flows.py
+
+30	*/6	*	*	*	root	xz -9 --stdout /var/lib/pakon.db > /srv/suricata/pakon.db.xz
