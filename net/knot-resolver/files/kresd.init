@@ -248,6 +248,12 @@ run_instance() {
 	load_uci_config_kresd
 	load_uci_config_common
 	procd_close_instance
+	( sleep 15 # Wait for resolver to start working and system to boot up
+	  if ! ip -6 r s | grep -q '^default' &&\
+	     ping -c 1 api.turris.cz > /dev/null 2>&1 && \
+	     ! ping -6 -c 1 api.turris.cz > /dev/null 2>&1; then
+		echo "net.ipv6 = false" | socat - UNIX-CONNECT:$(sleep 5; ls -1 /tmp/kresd/tty/*) > /dev/null 2>&1
+	  fi) &
 }
 
 start_service() {
