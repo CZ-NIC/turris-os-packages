@@ -64,6 +64,8 @@ CMAKE_OPTIONS += \
 	-DUSE_PYTHON=no
 
 define Build/Prepare
+	$(PKG_UNPACK)
+	mv $(BUILD_DIR)/domoticz-$(PKG_VERSION)/* $(PKG_BUILD_DIR)
 	$(call Build/Prepare/Default)
 	# Fix APPVERSION to suppress update popup
 	sed -i 's/#define APPVERSION.*/#define APPVERSION $(PKG_VERSION_PATCH)/' \
