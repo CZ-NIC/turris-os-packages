@@ -14,14 +14,22 @@ start_service() {
     echo "$version" > "$datadir"/.version
   fi
   if [ "`cat "$datadir"/.version 2> /dev/null`" \!= "$version" ]; then
-    mysqld --skip-networking --skip-grant-tables --socket=/tmp/mysql_upgrade.sock &
+    sudo -u mysql mysqld --skip-networking --skip-grant-tables --socket=/tmp/mysql_upgrade.sock &
     PID="$!"
+    i=0
+    while [ "$i" -lt 15 ] && [ \! -S /tmp/mysql_upgrade.sock ]; do
+      sleep 1
+      i="`expr $i + 1`"
+    done
+    [ -S /tmp/mysql_upgrade.sock ] || exit 1
     mysql_upgrade --upgrade-system-tables --socket=/tmp/mysql_upgrade.sock
+    echo "$version" > "$datadir"/.version
     kill "$PID"
     i=0
     while [ "$i" -lt 60 ] && [ -n "`grep mysql /proc/$PID/cmdline 2> /dev/null`" ]; do
       sleep 1
       [ "$i" -lt 30 ] || kill "$PID"
+      i="`expr $i + 1`"
     done
     if [ -n "`grep mysql /proc/$PID/cmdline 2> /dev/null`" ]; then
       kill -9 "$PID"
