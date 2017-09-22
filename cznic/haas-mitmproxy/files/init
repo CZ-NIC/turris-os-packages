@@ -1,0 +1,12 @@
+#!/bin/sh /etc/rc.common
+
+USE_PROCD=1
+
+start_service() {
+	[ -f /etc/mitmkeys/id_rsa.pub ] || /usr/bin/mitmkeygen
+	procd_open_instance
+	procd_set_param command /usr/bin/mitmproxy_wrapper /etc/mitmproxy_wrapper.conf
+	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
+	procd_set_param file /etc/mitmproxy_wrapper.conf
+	procd_close_instance
+}
