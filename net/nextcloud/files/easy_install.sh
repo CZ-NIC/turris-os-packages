@@ -60,25 +60,34 @@ fi
 sleep $DELAY
 sudo -u mysql mysqld --skip-networking --skip-grant-tables --socket=/tmp/mysql_nextcloud.sock > /dev/null 2>&1 &
 PID="$!"
-sleep $DELAY
+i=0
+while [ "$i" -lt 15 ] && [ \! -S /tmp/mysql_nextcloud.sock ]; do
+    sleep 1
+    i="`expr $i + 1`"
+done
 echo "
 CREATE DATABASE nextcloud; \
 FLUSH PRIVILEGES;
 CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY '$DBPASS'; \
 GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost';
 " | mysql -u root -B --socket=/tmp/mysql_nextcloud.sock
-sleep 5
+sleep 1
 kill "$PID"
 i=0
 while [ "$i" -lt 60 ] && [ -n "`grep mysql /proc/$PID/cmdline 2> /dev/null`" ]; do
-  sleep 1
-  [ "$i" -lt 30 ] || kill "$PID"
+    sleep 1
+    [ "$i" -lt 30 ] || kill "$PID"
+    i="`expr $i + 1`"
 done
 if [ -n "`grep mysql /proc/$PID/cmdline 2> /dev/null`" ]; then
-  kill -9 "$PID"
+    kill -9 "$PID"
 fi
 /etc/init.d/mysqld start 2> /dev/null
-sleep $DELAY
+i=0
+while [ "$i" -lt 60 ] && [ \! -S /var/run/mysql.sock ]; do
+    sleep 1
+    i="`expr $i + 1`"
+done
 
 # Setup the server
 cd /srv/www/nextcloud
