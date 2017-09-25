@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=e49c3bd5c9a8ac12eceb8c47c537de711dd762fa
+PKG_SOURCE_VERSION:=737fb33fe0d34a3e10eaf1dbc3bdc9150cb95688
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -54,12 +54,13 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/pakon-init $(1)/etc/init.d/pakon
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(INSTALL_BIN) ./files/pakon-cron $(1)/etc/cron.d/pakon
+	$(INSTALL_DATA) ./files/pakon-cron $(1)/etc/cron.d/pakon
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/monitor.py $(1)/usr/bin/pakon-monitor
 	$(INSTALL_DIR) $(1)/usr/libexec/pakon-light
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/fill_dns.py $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/group_services.py $(1)/usr/libexec/pakon-light/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/monitor.py $(1)/usr/libexec/pakon-light/
 endef
 
 $(eval $(call BuildPackage,pakon-light))

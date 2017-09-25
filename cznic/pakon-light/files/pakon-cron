@@ -1,5 +1,5 @@
 MAILTO=""
-01	*	*	*	*	root	/usr/bin/python /usr/libexec/pakon-light/fill_dns.py
-03	*	*	*	*	root	/usr/bin/python /usr/libexec/pakon-light/group_services.py
+01	*	*	*	*	root	/usr/bin/python /usr/libexec/pakon-light/fill_dns.py && /usr/bin/python /usr/libexec/pakon-light/group_services.py
+05	02	*	*	*	root	/usr/bin/python /usr/libexec/pakon-light/archive.py && xz -9 --stdout /var/lib/pakon.db > /srv/suricata/pakon.db.xz.tmp && mv /srv/suricata/pakon.db.xz.tmp /srv/suricata/pakon.db.xz && cp /var/lib/pakon-archive.db /srv/suricata/pakon-archive.db.tmp && mv /srv/suricata/pakon-archive.db.tmp /srv/suricata/pakon-archive.db
 
-30	*/6	*	*	*	root	xz -9 --stdout /var/lib/pakon.db > /srv/suricata/pakon.db.xz
+30	*/6	*	*	*	root	xz -9 --stdout /var/lib/pakon.db > /srv/suricata/pakon.db.xz.tmp && mv /srv/suricata/pakon.db.xz.tmp /srv/suricata/pakon.db.xz

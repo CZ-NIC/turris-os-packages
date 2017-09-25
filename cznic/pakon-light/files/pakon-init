@@ -15,5 +15,5 @@ start_service() {
 
 stop_service() {
   mkdir -p /srv/suricata
-  [ \! -f /var/lib/pakon.db ] || xz --stdout -9 /var/lib/pakon.db > /srv/suricata/pakon.db.xz
+  [ \! -f /var/lib/pakon.db ] || xz -9 --stdout /var/lib/pakon.db > /srv/suricata/pakon.db.xz.tmp && mv /srv/suricata/pakon.db.xz.tmp /srv/suricata/pakon.db.xz
 }
