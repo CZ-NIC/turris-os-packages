@@ -10,13 +10,12 @@ PKG_RELRO_FULL:=0
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
-PKG_VERSION:=1.3.2
+PKG_VERSION:=1.4.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-resolver
-PKG_MD5SUM:=846b7496cb6273b831fd52eca09078c0454b06a8a6b792e2125c7b6818246edb
-
+PKG_MD5SUM:=ac19c121fd687c7e4f5f907b46932d26f8f9d9e01626c4dadb3847e25ea31ceb
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_MAINTAINER:=Knot DNS <knot-dns@labs.nic.cz>
@@ -32,8 +31,8 @@ define Package/knot-resolver
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Knot DNS Resolver
 	URL:=https://gitlab.labs.nic.cz/knot/resolver
-	DEPENDS=+knot-libknot +libuv +luajit +knot-libzscanner +knot-libdnssec +dnssec-rootkey +resolver-conf +luasec +luasocket
-	EXTRA_DEPENDS:=knot-libknot (>= 2.5.0), knot-libknot (< 2.6.0)
+	DEPENDS=+knot-libs +knot-libzscanner +libuv +luajit +dnssec-rootkey +resolver-conf +luasec +luasocket
+	EXTRA_DEPENDS:=knot-libs (>= 2.5.0), knot-libs (< 2.6.0)
 	PROVIDES:=dns-resolver
 endef
 
@@ -71,12 +70,26 @@ endef
 
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
-set -ex
+set -x
 if [ -z "$$IPKG_INSTROOT" ]; then
 /etc/init.d/dnsmasq restart
 sleep 2 # Cooldown for above (problems in times of reinstall)
 /etc/kresd/kresd.postinst.sh && rm /etc/kresd/kresd.postinst.sh
 /etc/kresd/convert_config.sh && rm /etc/kresd/convert_config.sh
+if [ "`uci -q get resolver.common.prefered_resolver`" = kresd ] && uci -q get resolver.common.forward_upstream | egrep -q '(1|yes|true|enabled|on)'; then
+	ping -c 1 api.turris.cz 2> /dev/null >&2 || {
+		uci set resolver.common.forward_upstream=0
+		uci commit
+		/etc/init.d/resolver restart
+		if ping -c 1 api.turris.cz 2> /dev/null >&2; then
+			create_notification -s error "DNS servery vašeho poskytovatele internetu nefungují úplně dobře - pravděpodobně nepodporují DNSSEC. Bylo proto vypnuto forwardování a váš router bude nyní vyhodnocovat DNS dotazy sám." "Your ISPs DNS servers does not work properly - most likely they don't support DNSSEC. Therefore DNS forwarding was turned off and your router will now resolve all DNS queries by itself."
+		else
+			uci set resolver.common.forward_upstream=1
+			uci commit
+			/etc/init.d/resolver restart
+		fi
+	}
+fi
 fi
 endef
 
