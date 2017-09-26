@@ -64,7 +64,7 @@ define Package/knot-resolver/install
 
 	$(INSTALL_DIR) $(1)/etc/kresd
 	$(CP) $(PKG_BUILD_DIR)/etc/icann-ca.pem $(1)/etc/kresd
-	$(CP) $(PKG_BUILD_DIR)/etc/kresd/root.hints $(1)/etc/kresd
+	$(CP) $(PKG_BUILD_DIR)/etc/root.hints $(1)/etc/kresd
 	$(INSTALL_BIN) ./files/kresd.postinst $(1)/etc/kresd/kresd.postinst.sh
 	$(INSTALL_BIN) ./files/convert_config.sh $(1)/etc/kresd/convert_config.sh
 endef
