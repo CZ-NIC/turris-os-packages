@@ -101,7 +101,6 @@ COLLECTD_PLUGINS_DISABLED:= \
 	write_kafka \
 	write_log \
 	write_mongodb \
-	write_prometheus \
 	write_redis \
 	write_riemann \
 	write_sensu \
@@ -176,6 +175,7 @@ COLLECTD_PLUGINS_SELECTED:= \
 	users \
 	vmem \
 	wireless \
+	write_prometheus \
 	write_graphite \
 	write_http \
 
@@ -194,7 +194,7 @@ endef
 
 define Package/collectd
 $(call Package/collectd/Default)
-  DEPENDS:= +libpthread +zlib +libltdl +libip4tc
+  DEPENDS:= +libpthread +zlib +libltdl +libip4tc +libmicrohttpd +protobuf-c
   MENU:=1
 endef
 
