@@ -14,7 +14,7 @@ test_log() {
 }
 
 run_kresd_command () {
-	KRESD_TTY="$(uci get resolver.kresd.rundir)/tty/$(pidof kresd)"
+	KRESD_TTY="$(uci get resolver.kresd.rundir)/tty/$(pidof kresd|awk '{print $1}')"
 	echo "${1}" | socat - "unix-connect:${KRESD_TTY}"
 }
 
@@ -61,12 +61,22 @@ run_nslookup () {
 	nslookup "${1}" 127.0.0.1 | test_log
 }
 
+set_kresd_log() {
+	uci set resolver.kresd.log_stderr="$1"
+	uci set resolver.kresd.log_stdout="$1"
+	uci commit resolver
+	/etc/init.d/resolver restart 2>&1 | logger &
+}
+
 start_debug () {
 	local resolver
 
 	resolver="$(uci get resolver.common.prefered_resolver)"
 	if [ "${resolver}" == "kresd" ]; then
 		echo "== enable verbose logging (reboot to disable it) ==" |test_log
+		set_kresd_log 1
+		run_kresd_command "policy.add(policy.all(policy.QTRACE))"
+		run_kresd_command "table.insert(policy.rules, 1, table.remove(policy.rules))"
 		run_kresd_command "verbose(true)"
 	elif [ "${resolver}" == "unbound" ]; then
 		echo "== enable verbose logging (reboot to disable it) ==" |test_log
@@ -81,6 +91,7 @@ stop_debug () {
 
 	if [ "${resolver}" == "kresd" ]; then
 		echo "== kresd disabled verbose logging ==" |test_log
+		set_kresd_log 0
 		run_kresd_command "verbose(false)"
 	elif [ "${resolver}" == "unbound" ]; then
 		echo "== unbound disabled verbose logging ==" |test_log
