@@ -227,10 +227,10 @@ class DHCPv4:
             log("DHCP add new hostname [%s,%s]" % (hostname, ipv4), LOG_INFO)
         elif op == "del":
             self._del_lease(hostname, ipv4)
-            log("DHCP delete hostname [%s,%s]" % (op, hostname, ipv4), LOG_INFO)
+            log("DHCP delete hostname [%s,%s,%s]" % (op, hostname, ipv4), LOG_INFO)
         elif op == "old":
             self._del_lease(hostname, ipv4)
-            log("DHCP remove old hostname [%s,%s]" % (op, hostname, ipv4), LOG_INFO)
+            log("DHCP remove old hostname [%s,%s,%s]" % (op, hostname, ipv4), LOG_INFO)
         else:
             log("DHCP unknown update operation", LOG_WARNING)
 
