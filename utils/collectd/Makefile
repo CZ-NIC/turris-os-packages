@@ -14,7 +14,7 @@ PKG_RELEASE:=2
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://collectd.org/files/ \
 	https://github.com/collectd/collectd/releases/download/collectd-$(PKG_VERSION)
-PKG_HASH:=9d20a0221569a8d6b80bbc52b86e5e84965f5bafdbf5dfc3790e0fed0763e592
+PKG_MD5SUM:=9d20a0221569a8d6b80bbc52b86e5e84965f5bafdbf5dfc3790e0fed0763e592
 
 PKG_FIXUP:=autoreconf
 PKG_REMOVE_FILES:=aclocal.m4 libltdl/aclocal.m4
@@ -95,7 +95,6 @@ COLLECTD_PLUGINS_DISABLED:= \
 	write_kafka \
 	write_log \
 	write_mongodb \
-	write_prometheus \
 	write_redis \
 	write_riemann \
 	write_sensu \
@@ -169,6 +168,7 @@ COLLECTD_PLUGINS_SELECTED:= \
 	users \
 	vmem \
 	wireless \
+	write_prometheus \
 	write_graphite \
 	write_http \
 
@@ -187,7 +187,7 @@ endef
 
 define Package/collectd
 $(call Package/collectd/Default)
-  DEPENDS:= +libpthread +zlib +libltdl +libip4tc
+  DEPENDS:= +libpthread +zlib +libltdl +libip4tc +libmicrohttpd +protobuf-c
   MENU:=1
 endef
 
