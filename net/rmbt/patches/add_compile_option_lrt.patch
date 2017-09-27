@@ -1,0 +1,13 @@
+diff --git a/src/Makefile.am b/src/Makefile.am
+index dd3320a..6615d89 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -16,6 +16,8 @@ AM_CFLAGS += $(if $(GIT_VERSION),-DGIT_VERSION=\"$(GIT_VERSION)\",)
+ 
+ AM_LDFLAGS = -pthread
+ 
++AM_LDFLAGS += -lrt
++
+ bin_PROGRAMS = rmbt
+ rmbt_SOURCES = rmbt.c \
+     rmbt_common.h \
