@@ -33,19 +33,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/rmbt $(1)/usr/bin/rmbt-client
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/rmbt $(1)/usr/bin/rmbt
 endef
-
-#define Package/$(PKG_NAME)/conffiles
-#endef
-
-#define Package/$(PKG_NAME)/postinst
-##!/bin/sh
-#[ -n "$$IPKG_INSTROOT" ] || {
-#/etc/init.d/updater enable || true
-## Run the uci-defaults now if we are installed at runtime and not flashed
-#/etc/uci-defaults/updater && rm /etc/uci-defaults/updater
-#}
-#endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
