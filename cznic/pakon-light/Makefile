@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=737fb33fe0d34a3e10eaf1dbc3bdc9150cb95688
+PKG_SOURCE_VERSION:=ea568e81c4deb7d0437f7260ec7b31d4a8f0db59
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -30,7 +30,7 @@ define Package/pakon-light
 	CATEGORY:=Network
 	SUBMENU:=Collect traffic events from suricata IDS
 	TITLE:=PArental KONtrol - light
-	DEPENDS:=+suricata +python-sqlite3
+	DEPENDS:=+suricata +python-sqlite3 +python-multiprocessing
 endef
 
 define Package/$(PKG_NAME)/description
@@ -55,12 +55,29 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/pakon-init $(1)/etc/init.d/pakon
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/pakon-cron $(1)/etc/cron.d/pakon
+	$(INSTALL_DIR) $(1)/usr/share/pakon-light
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_replace.json $(1)/usr/share/pakon-light/
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/monitor.py $(1)/usr/bin/pakon-monitor
 	$(INSTALL_DIR) $(1)/usr/libexec/pakon-light
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/fill_dns.py $(1)/usr/libexec/pakon-light/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/group_services.py $(1)/usr/libexec/pakon-light/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/domains_replace.py $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/monitor.py $(1)/usr/libexec/pakon-light/
 endef
+
+define Package/pakon-light/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+        /etc/init.d/pakon enable
+        /etc/init.d/pakon start
+}
+endef
+
+define Package/pakon-light/prerm
+#!/bin/sh
+        /etc/init.d/pakon disable
+        /etc/init.d/pakon stop
+endef
+
 
 $(eval $(call BuildPackage,pakon-light))
