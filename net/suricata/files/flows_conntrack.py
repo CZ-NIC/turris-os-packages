@@ -191,7 +191,7 @@ def conntrack_get():
 			new_and_closed_flows_lock.wait()
 		logging.debug("conntrack_get woken up: new_flows len "+str(len(new_flows))+", closed_flows len "+str(len(closed_flows))) 
 		new_and_closed_flows_lock.release()
-		time.sleep(1)
+		sleep(1)
 		f = subprocess.check_output(['/usr/sbin/conntrack', '-L'], stderr=subprocess.DEVNULL).decode()
 		flows=f.split('\n')
 		for line in flows:
