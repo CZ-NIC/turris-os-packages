@@ -15,7 +15,7 @@ new file mode 100644
 index 00000000..704b3774
 --- /dev/null
 +++ b/src/output-json-flowstart.c
-@@ -0,0 +1,282 @@
+@@ -0,0 +1,285 @@
 +/* Copyright (C) 2007-2017 Open Information Security Foundation
 + *
 + * You can copy, redistribute or modify this Program under the terms of
@@ -276,7 +276,10 @@ index 00000000..704b3774
 +    }
 +    
 +    if (p->flow == NULL) return FALSE;
-+    if ((p->flow->todstpktcnt + p->flow->tosrcpktcnt) == 1) return TRUE;
++    if (PKT_IS_TCP(p)) {
++        if ((p->flow->todstpktcnt==1 && p->flow->tosrcpktcnt>1) || (p->flow->tosrcpktcnt==1 && p->flow->todstpktcnt>1)) return TRUE;
++    }
++    else if ((p->flow->todstpktcnt + p->flow->tosrcpktcnt) == 1) return TRUE;
 +    return FALSE;
 +}
 +
