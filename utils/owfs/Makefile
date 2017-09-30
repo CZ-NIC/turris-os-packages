@@ -86,7 +86,7 @@ define Package/libow
     +libpthread \
     +LIBOW_MASTER_USB:libusb-compat \
     +LIBOW_MASTER_W1:kmod-w1 \
-    +libavahi-client 
+    +libavahi-client +libavahi
   TITLE:=OWFS - common shared library
 endef
 
