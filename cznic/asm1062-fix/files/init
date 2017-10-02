@@ -1,0 +1,34 @@
+#!/bin/sh /etc/rc.common
+
+START=35
+
+CLASS="0x010601"
+DEVICE="0x0612"
+VENDOR="0x1b21"
+
+status() {
+	return 0
+}
+
+start() {
+	cd /sys/bus/pci/devices
+	for D in *; do
+		if [ "$(cat "$D/class")" = "$CLASS" -a "$(cat "$D/device")" = "$DEVICE" -a "$(cat "$D/vendor")" = "$VENDOR" ]; then
+			for QD in $(find "$D/" -name queue_depth); do
+				echo 1 > "$QD"
+			done
+		fi
+	done
+}
+
+stop() {
+	:
+}
+
+restart() {
+	:
+}
+
+reload() {
+	:
+}
