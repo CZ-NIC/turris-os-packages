@@ -31,7 +31,7 @@ define Package/foris-tls-plugin
 	TITLE:=foris-tls-plugin
 	DEPENDS:=\
 		+foris +nuci-tls
-	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/foris-tls-plugin/description

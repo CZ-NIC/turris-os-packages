@@ -28,7 +28,7 @@ define Package/python-beaker
 	TITLE:=python-beaker
 	URL:=http://beaker.readthedocs.org
 	DEPENDS:=+python-light +python-logging +python-openssl
-	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/python-beaker/description

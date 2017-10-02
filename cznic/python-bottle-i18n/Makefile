@@ -28,7 +28,7 @@ define Package/python-bottle-i18n
 	TITLE:=python-bottle-i18n
 	URL:=https://github.com/iocast/bottle-i18n
 	DEPENDS:=+python-light +python-bottle
-	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/python-bottle-i18n/description

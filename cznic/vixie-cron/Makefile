@@ -14,7 +14,7 @@ PKG_SOURCE_URL:=ftp://ftp.isc.org/isc/cron/
 PKG_SOURCE_VERSION:=4.1
 PKG_SOURCE:=cron_$(PKG_SOURCE_VERSION).shar
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk

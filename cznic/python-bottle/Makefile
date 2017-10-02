@@ -28,7 +28,7 @@ define Package/python-bottle
 	TITLE:=python-bottle
 	URL:=http://bottlepy.org
 	DEPENDS:=+python-light +python-codecs +python-email
-	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/python-bottle/description

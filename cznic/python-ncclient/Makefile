@@ -27,7 +27,7 @@ define Package/python-ncclient
 	TITLE:=python-ncclient
 	URL:=http://beaker.readthedocs.org
 	DEPENDS:=+python-light +python-logging +python-xml
-	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/python-ncclient/description

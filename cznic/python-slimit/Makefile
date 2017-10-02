@@ -31,7 +31,7 @@ define Package/python-slimit
 	TITLE:=python-slimit
 	URL:=http://slimit.readthedocs.org
 	DEPENDS:=+python +python-ply
-	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/python-slimit/description

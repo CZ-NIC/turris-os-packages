@@ -28,7 +28,7 @@ define Package/python-pbkdf2
 	TITLE:=python-pbkdf2
 	URL:=https://www.dlitz.net/software/python-pbkdf2/
 	DEPENDS:=+python
-	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/python-pbkdf2/description

@@ -14,7 +14,7 @@ PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/smrt.git
 PKG_SOURCE_VERSION:=d3f4a37a88207beb41e01d2e77cc7dfa6b7edd8b
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
