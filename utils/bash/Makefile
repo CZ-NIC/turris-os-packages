@@ -11,7 +11,7 @@ BASE_VERSION:=4.4
 
 PKG_NAME:=bash
 PKG_VERSION:=$(BASE_VERSION).11
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(BASE_VERSION).tar.gz
 PKG_SOURCE_URL:=@GNU/bash
@@ -43,6 +43,7 @@ endef
 define Build/Configure
 	$(call Build/Configure/Default, \
 		--without-bash-malloc \
+		--enable-job-control \
                 --bindir=/bin \
 	)
 endef
