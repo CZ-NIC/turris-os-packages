@@ -90,6 +90,7 @@ define Build/Prepare
 endef
 
 define Package/domoticz_upstream/install
+	$(INSTALL_DIR) $(1)/var/lib/domoticz
 	$(INSTALL_DIR) $(1)/etc/config $(1)/etc/hotplug.d/tty $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/domoticz.hotplug $(1)/etc/hotplug.d/tty/domoticz
 	$(INSTALL_BIN) ./files/domoticz.init $(1)/etc/init.d/domoticz
