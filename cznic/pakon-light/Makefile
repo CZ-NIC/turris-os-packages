@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-light
-PKG_VERSION:=1.0
+PKG_VERSION:=0.9
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=ea568e81c4deb7d0437f7260ec7b31d4a8f0db59
+PKG_SOURCE_VERSION:=3714278a71f42249ab8bc530ea41e62335436833
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -56,13 +56,13 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/pakon-cron $(1)/etc/cron.d/pakon
 	$(INSTALL_DIR) $(1)/usr/share/pakon-light
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_replace.json $(1)/usr/share/pakon-light/
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_replace.conf $(1)/usr/share/pakon-light/
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/monitor.py $(1)/usr/bin/pakon-monitor
 	$(INSTALL_DIR) $(1)/usr/libexec/pakon-light
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/fill_dns.py $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/domains_replace.py $(1)/usr/libexec/pakon-light/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/monitor.py $(1)/usr/libexec/pakon-light/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/archive.py $(1)/usr/libexec/pakon-light/
 endef
 
 define Package/pakon-light/postinst
