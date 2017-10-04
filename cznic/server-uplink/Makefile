@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=server-uplink
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 

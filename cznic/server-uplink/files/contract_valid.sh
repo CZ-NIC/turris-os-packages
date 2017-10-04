@@ -23,11 +23,11 @@ set -e
 TIMEOUT=120
 CA_FILE=/etc/ssl/www_turris_cz_ca.pem
 OUTPUT_FILE=/usr/share/server-uplink/contract_valid
-CONTRACT_URL='https://www.turris.cz/api/contract-valid.txt?registration_code='
+CONTRACT_URL='https://www.turris.cz/api/contract-valid.txt'
 
 
 CODE=$(cat /usr/share/server-uplink/registration_code)
-RESULT=$(curl -s -S -L -H "Accept: plain/text" --cacert "$CA_FILE" --cert-status -m "$TIMEOUT" "$CONTRACT_URL$CODE" | sed -ne 's/^result: *\(..*\)/\1/p')
+RESULT=$(curl -s -S -L -G --data-urlencode "registration_code=$CODE" -H "Accept: plain/text" --cacert "$CA_FILE" --cert-status -m "$TIMEOUT" "$CONTRACT_URL" | sed -ne 's/^result: *\(..*\)/\1/p')
 
 
 # test whether the code is the same
