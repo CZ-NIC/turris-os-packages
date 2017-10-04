@@ -68,7 +68,7 @@ cmp /boot/zImage /boot/tefi/zImage || cp /boot/zImage /boot/tefi/zImage
 cmp /boot/fdt /boot/tefi/fdt || cp /boot/fdt /boot/tefi/fdt
 umount /boot/tefi
 EOF
-chmod a+rx /etc/schnapps/rollback.d/kernel-rollback
+chmod a+rx /tmp/btrfs-convert/target/@/etc/schnapps/rollback.d/kernel-rollback
 
 # Deploy updater hook
 mkdir -p /tmp/btrfs-convert/target/@/etc/updater/hook_postupdate/
@@ -80,7 +80,7 @@ cmp /boot/zImage /boot/tefi/zImage || cp /boot/zImage /boot/tefi/zImage
 cmp /boot/fdt /boot/tefi/fdt || cp /boot/fdt /boot/tefi/fdt
 umount /boot/tefi
 EOF
-
+chmod a+rx /tmp/btrfs-convert/target/@/etc/updater/hook_postupdate/10_kernel-install
 
 
 mkdir -p /tmp/btrfs-convert/target/@/boot/tefi
