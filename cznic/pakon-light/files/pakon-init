@@ -4,9 +4,7 @@ USE_PROCD=1
 START=90
 
 start_service() {
-  mkdir -p /var/lib
-  mkdir -p /srv/suricata
-  [ \! -f /srv/suricata/pakon.db.xz ] || xz --stdout -d /srv/suricata/pakon.db.xz > /var/lib/pakon.db
+  [ \! -f /srv/pakon/pakon.db.xz ] || xz --stdout -d /srv/pakon/pakon.db.xz > /var/lib/pakon.db
   procd_open_instance
   procd_set_param command /usr/bin/pakon-monitor
   procd_set_param respawn ${respawn_threshold:-600} ${respawn_timeout:-5} ${respawn_retry:-5}
@@ -15,5 +13,5 @@ start_service() {
 
 stop_service() {
   mkdir -p /srv/suricata
-  [ \! -f /var/lib/pakon.db ] || xz -9 --stdout /var/lib/pakon.db > /srv/suricata/pakon.db.xz.tmp && mv /srv/suricata/pakon.db.xz.tmp /srv/suricata/pakon.db.xz
+  [ -f /var/lib/pakon.db ] && /usr/libexec/pakon-light/backup_sqlite.sh /var/lib/pakon.db /srv/pakon/pakon.db.xz 
 }

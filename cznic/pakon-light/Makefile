@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-light
 PKG_VERSION:=0.9
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=3714278a71f42249ab8bc530ea41e62335436833
+PKG_SOURCE_VERSION:=39e0fae259145b03b9987ded0c6dde5293ae2157
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -30,7 +30,7 @@ define Package/pakon-light
 	CATEGORY:=Network
 	SUBMENU:=Collect traffic events from suricata IDS
 	TITLE:=PArental KONtrol - light
-	DEPENDS:=+suricata +python-sqlite3 +python-multiprocessing
+	DEPENDS:=+suricata +python-sqlite3 +python-multiprocessing +sqlite3-cli
 endef
 
 define Package/$(PKG_NAME)/description
@@ -63,6 +63,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/fill_dns.py $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/domains_replace.py $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/archive.py $(1)/usr/libexec/pakon-light/
+	$(INSTALL_BIN) ./files/backup_sqlite.sh $(1)/usr/libexec/pakon-light/
 endef
 
 define Package/pakon-light/postinst
