@@ -1,5 +1,5 @@
 MAILTO=""
 01	*	*	*	*	root	/usr/bin/python /usr/libexec/pakon-light/fill_dns.py && /usr/bin/python /usr/libexec/pakon-light/domains_replace.py
-05	02	*	*	*	root	/usr/bin/python /usr/libexec/pakon-light/archive.py && /usr/libexec/pakon-light/backup_sqlite.sh /var/lib/pakon-archive.db /srv/pakon/pakon-archive.db && rm /var/lib/pakon-archive.db && /usr/libexec/pakon-light/backup_sqlite.sh /var/lib/pakon.db /srv/pakon/pakon.db.xz 
+05	02	*	*	*	root	/usr/bin/python /usr/libexec/pakon-light/archive.py && /usr/libexec/pakon-light/backup_sqlite.sh /var/lib/pakon.db /srv/pakon/pakon.db.xz 
 
 05	10,18	*	*	*	root	/usr/libexec/pakon-light/backup_sqlite.sh /var/lib/pakon.db /srv/pakon/pakon.db.xz

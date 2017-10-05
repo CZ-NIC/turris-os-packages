@@ -15,4 +15,5 @@ if [[ $DST_EXT == "xz" ]]; then
 else
 	cp "$TMP_FILE" "$DST.tmp"
 fi
+rm -f "$TMP_FILE"
 mv "$DST.tmp" "$DST"
