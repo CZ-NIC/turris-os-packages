@@ -1,0 +1,2 @@
+MAILTO=""
+00 	02 	* 	* 	* 	root	sleep `head /dev/urandom | tr -dc "0123456789" | head -c3` && netmetr &
