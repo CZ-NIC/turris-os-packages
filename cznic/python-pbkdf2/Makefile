@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pbkdf2
 PKG_VERSION:=1.3
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=pbkdf2-1.3.tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/p/pbkdf2/
@@ -27,8 +27,8 @@ define Package/python-pbkdf2
 	CATEGORY:=Languages
 	TITLE:=python-pbkdf2
 	URL:=https://www.dlitz.net/software/python-pbkdf2/
-	DEPENDS:=+python-light
-	MAINTAINER:=Jan Cermak <jan.cermak@nic.cz>
+	DEPENDS:=+python-light +python-openssl
+	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
 endef
 
 define Package/python-pbkdf2/description
