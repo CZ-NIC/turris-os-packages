@@ -184,14 +184,21 @@ def conntrack_monitor():
 #also, it it searches for closed flows (marked as closed by conntrack_monitor, when it sees 'UPDATE FIN_WAIT ...' - that doesn't provide counters, so it gets them and outputs and deletes the flow)
 def conntrack_get():
 	global closed_flows, new_and_closed_flows_lock, new_flows
+	conntrack_get.sleep_for = 1
 	pattern = re.compile(r'src=([0-9a-fA-F.:]+)\s+dst=([0-9a-fA-F.:]+)\s+sport=([0-9]+)\s+dport=([0-9]+)\s+packets=([0-9]+)\s+bytes=([0-9]+)')
 	while 1:
 		new_and_closed_flows_lock.acquire()
 		if len(new_flows)==0 and len(closed_flows)==0:
 			new_and_closed_flows_lock.wait()
-		logging.debug("conntrack_get woken up: new_flows len "+str(len(new_flows))+", closed_flows len "+str(len(closed_flows))) 
 		new_and_closed_flows_lock.release()
-		sleep(1)
+		sleep(conntrack_get.sleep_for)
+		new_and_closed_flows_lock.acquire()
+		logging.debug("conntrack_get woken up: new_flows len "+str(len(new_flows))+", closed_flows len "+str(len(closed_flows)))
+		new_flows_local = new_flows.copy()
+		new_flows.clear()
+		closed_flows_local = closed_flows.copy()
+		closed_flows.clear()
+		new_and_closed_flows_lock.release()
 		f = subprocess.check_output(['/usr/sbin/conntrack', '-L'], stderr=subprocess.DEVNULL).decode()
 		flows=f.split('\n')
 		for line in flows:
@@ -203,48 +210,42 @@ def conntrack_get():
 			reply = matches[1]
 			key1=hash_flow(original[0], original[1], original[2], original[3], proto)
 			key2=hash_flow(reply[0], reply[1], reply[2], reply[3], proto)
-			new_and_closed_flows_lock.acquire()
-			if key1 in new_flows:
+			if key1 in new_flows_local:
 					logging.debug("new flow moved to active_flows")
 					active_flows_lock.acquire()
-					active_flows[key1]=new_flows[key1]
-					del new_flows[key1]
+					active_flows[key1]=new_flows_local[key1]
+					del new_flows_local[key1]
 					active_flows_lock.release()
-			elif key2 in new_flows:
+			elif key2 in new_flows_local:
 					logging.debug("new flow moved to active_flows")
 					active_flows_lock.acquire()
-					active_flows[key2]=new_flows[key2]
-					del new_flows[key2]
+					active_flows[key2]=new_flows_local[key2]
+					del new_flows_local[key2]
 					active_flows_lock.release()
-			if key1 in closed_flows:
+			if key1 in closed_flows_local:
 					logging.debug("closed flow send and removed")
-					closed_flows[key1]["timestamp"]=suricata_timestamp()
-					closed_flows[key1]["flow"]["pkts_toserver"]=original[4]
-					closed_flows[key1]["flow"]["pkts_toclient"]=reply[4]
-					closed_flows[key1]["flow"]["bytes_toserver"]=original[5]
-					closed_flows[key1]["flow"]["bytes_toclient"]=reply[5]
-					send_json(closed_flows[key1])
-					del closed_flows[key1]
-			elif key2 in closed_flows:
+					closed_flows_local[key1]["timestamp"]=suricata_timestamp()
+					closed_flows_local[key1]["flow"]["pkts_toserver"]=original[4]
+					closed_flows_local[key1]["flow"]["pkts_toclient"]=reply[4]
+					closed_flows_local[key1]["flow"]["bytes_toserver"]=original[5]
+					closed_flows_local[key1]["flow"]["bytes_toclient"]=reply[5]
+					send_json(closed_flows_local[key1])
+					del closed_flows_local[key1]
+			elif key2 in closed_flows_local:
 					logging.debug("closed flow send and removed")
-					closed_flows[key2]["timestamp"]=suricata_timestamp()
-					closed_flows[key2]["flow"]["pkts_toserver"]=reply[4]
-					closed_flows[key2]["flow"]["pkts_toclient"]=original[4]
-					closed_flows[key2]["flow"]["bytes_toserver"]=reply[5]
-					closed_flows[key2]["flow"]["bytes_toclient"]=original[5]
-					send_json(closed_flows[key2])
-					del closed_flows[key2]
-			new_and_closed_flows_lock.release()
-		new_and_closed_flows_lock.acquire()
-		if len(closed_flows)>0:
+					closed_flows_local[key2]["timestamp"]=suricata_timestamp()
+					closed_flows_local[key2]["flow"]["pkts_toserver"]=reply[4]
+					closed_flows_local[key2]["flow"]["pkts_toclient"]=original[4]
+					closed_flows_local[key2]["flow"]["bytes_toserver"]=reply[5]
+					closed_flows_local[key2]["flow"]["bytes_toclient"]=original[5]
+					send_json(closed_flows_local[key2])
+					del closed_flows_local[key2]
+		if len(closed_flows_local)>0:
 			logging.error("there are some closed_flows after running conntrack_get loop. This shouldn't happen.")
-			closed_flows.clear()
-		if len(new_flows)>0:
+		if len(new_flows_local)>0:
 			#new flows wasn't found in conntrack - might be DESTROYed before - just output it as it was
-			for _,v in new_flows.items():
+			for _,v in new_flows_local.items():
 				send_json(v)
-			new_flows.clear()
-		new_and_closed_flows_lock.release()
 
 #this reads socket from suricata and when it sees "flow" report with "state"="bypassed", it adds it into new_flows (and wakes up suricata_get_flow thread)
 #all other reports are passed immediatelly
@@ -293,23 +294,16 @@ def suricata_get_flow(recv_socket_path):
 def exit_gracefully(signum, frame):
 	logging.debug("asked to quit, sending all remaining flows")
 	global new_flows, active_flows, closed_flows, active_flows_lock, new_and_closed_flows_lock
+	conntrack_get.sleep_for = 0
 	active_flows_lock.acquire()
-	for _,v in active_flows.items():
-		v["flow"]["state"]="closed"
-		v["flow"]["reason"]="shutdown"
-		v["timestamp"]=suricata_timestamp()
-		v["flow"]["end"]=suricata_timestamp()
-		send_json(v)
-	active_flows.clear()
-	active_flows_lock.release()
 	new_and_closed_flows_lock.acquire()
-	for _,v in closed_flows.items():
-		v["flow"]["state"]="closed"
-		v["flow"]["reason"]="shutdown"
-		v["timestamp"]=suricata_timestamp()
-		v["flow"]["end"]=suricata_timestamp()
-		send_json(v)
-	closed_flows.clear()
+	closed_flows.update(active_flows)
+	active_flows.clear()
+	new_and_closed_flows_lock.notify()
+	new_and_closed_flows_lock.release()
+	active_flows_lock.release()
+	sleep(2)
+	new_and_closed_flows_lock.acquire()
 	for _,v in new_flows.items():
 		v["flow"]["state"]="closed"
 		v["flow"]["reason"]="shutdown"
@@ -318,15 +312,16 @@ def exit_gracefully(signum, frame):
 		send_json(v)
 	new_flows.clear()
 	new_and_closed_flows_lock.release()
+	os.unlink(sys.argv[1])
 	sys.exit(0)
 
 signal.signal(signal.SIGINT, exit_gracefully)
 signal.signal(signal.SIGTERM, exit_gracefully)
 
 
-def main(argv = sys.argv):
-	if len(argv) < 2:
-		logging.error("usage: {} recv_socket".format(argv[0]))
+def main():
+	if len(sys.argv) < 2:
+		logging.error("usage: {} recv_socket".format(sys.argv[0]))
 		return 1
 	thread1 = Thread(target = conntrack_monitor)
 	thread1.daemon = True
@@ -334,11 +329,7 @@ def main(argv = sys.argv):
 	thread2 = Thread(target = conntrack_get)
 	thread2.daemon = True
 	thread2.start()
-	try:
-		suricata_get_flow(argv[1])
-	except KeyboardInterrupt:
-		os.unlink(argv[1])
-		return 0
+	suricata_get_flow(sys.argv[1])
 		
 if __name__ == "__main__":
 	main()

@@ -15,7 +15,7 @@ new file mode 100644
 index 00000000..704b3774
 --- /dev/null
 +++ b/src/output-json-flowstart.c
-@@ -0,0 +1,285 @@
+@@ -0,0 +1,286 @@
 +/* Copyright (C) 2007-2017 Open Information Security Foundation
 + *
 + * You can copy, redistribute or modify this Program under the terms of
@@ -101,7 +101,7 @@ index 00000000..704b3774
 + */
 +static int FlowstartLogJSON (JsonFlowstartLogThread *aft, const Packet *p)
 +{
-+    json_t *js = CreateJSONHeader((Packet *)p, 0, "flow_start");//TODO const
++    json_t *js = CreateJSONHeaderFromFlow(p->flow, "flow_start");
 +    if (unlikely(js == NULL))
 +        return TM_ECODE_OK;
 +    json_t * hjs = json_object();
@@ -277,7 +277,8 @@ index 00000000..704b3774
 +    
 +    if (p->flow == NULL) return FALSE;
 +    if (PKT_IS_TCP(p)) {
-+        if ((p->flow->todstpktcnt==1 && p->flow->tosrcpktcnt>1) || (p->flow->tosrcpktcnt==1 && p->flow->todstpktcnt>1)) return TRUE;
++        if ((p->flowflags & (FLOW_PKT_TOCLIENT_FIRST | FLOW_PKT_TOSERVER_FIRST)) != 0 &&
++           ((p->flow->flags & (FLOW_TO_DST_SEEN|FLOW_TO_SRC_SEEN)) == (FLOW_TO_DST_SEEN|FLOW_TO_SRC_SEEN))) return TRUE;
 +    }
 +    else if ((p->flow->todstpktcnt + p->flow->tosrcpktcnt) == 1) return TRUE;
 +    return FALSE;
@@ -370,3 +371,17 @@ index 41e969ab..0aa752a2 100644
      LOGGER_JSON_ALERT,
      LOGGER_JSON_DROP,
      LOGGER_JSON_SSH,
+diff --git a/src/output-json-flow.h b/src/output-json-flow.h
+index 4919c3c0..14dd80cb 100644
+--- a/src/output-json-flow.h
++++ b/src/output-json-flow.h
+@@ -27,1 +27,2 @@
+ void JsonFlowLogRegister(void);
++json_t *CreateJSONHeaderFromFlow(Flow *f, const char *event_type);
+diff --git a/src/output-json-flow.c b/src/output-json-flow.c
+index 4919c3c0..14dd80cb 100644
+--- a/src/output-json-flow.c
++++ b/src/output-json-flow.c
+@@ -72,1 +72,1 @@
+-static json_t *CreateJSONHeaderFromFlow(Flow *f, const char *event_type)
++json_t *CreateJSONHeaderFromFlow(Flow *f, const char *event_type)
