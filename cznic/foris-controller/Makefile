@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller
 PKG_VERSION:=0.5
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller
@@ -64,8 +64,10 @@ endef
 define Package/foris-controller/prerm
 #!/bin/sh
 set -x
+[ -n "$$IPKG_INSTROOT" ] || {
 /etc/init.d/foris-controller stop
 /etc/init.d/foris-controller disable
+}
 endef
 
 $(eval $(call BuildPackage,foris-controller))
