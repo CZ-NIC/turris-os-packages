@@ -58,31 +58,6 @@ btrfs subvolume create /tmp/btrfs-convert/target/@ || die "Can't create subvolum
 mount -o bind / /tmp/btrfs-convert/src || die "Can't bind btrfs mount."
 tar -C /tmp/btrfs-convert/src -cf - . | tar -C /tmp/btrfs-convert/target/@ -xf - || die "Filesystem copy failed!"
 
-# Deploy schnapps hook
-mkdir -p /tmp/btrfs-convert/target/@/etc/schnapps/rollback.d/
-[ -f /tmp/btrfs-convert/target/@/etc/schnapps/rollback.d/kernel-rollback ] || cat > /tmp/btrfs-convert/target/@/etc/schnapps/rollback.d/kernel-rollback << EOF
-#!/bin/sh
-mkdir -p /boot/tefi
-mount /dev/mmcblk0p1 /boot/tefi
-cmp /boot/zImage /boot/tefi/zImage || cp /boot/zImage /boot/tefi/zImage
-cmp /boot/fdt /boot/tefi/fdt || cp /boot/fdt /boot/tefi/fdt
-umount /boot/tefi
-EOF
-chmod a+rx /tmp/btrfs-convert/target/@/etc/schnapps/rollback.d/kernel-rollback
-
-# Deploy updater hook
-mkdir -p /tmp/btrfs-convert/target/@/etc/updater/hook_postupdate/
-[ -f /tmp/btrfs-convert/target/@/etc/updater/hook_postupdate/10_kernel-install ] || cat > /tmp/btrfs-convert/target/@/etc/updater/hook_postupdate/10_kernel-install << EOF
-#!/bin/sh
-mkdir -p /boot/tefi
-mount /dev/mmcblk0p1 /boot/tefi
-cmp /boot/zImage /boot/tefi/zImage || cp /boot/zImage /boot/tefi/zImage
-cmp /boot/fdt /boot/tefi/fdt || cp /boot/fdt /boot/tefi/fdt
-umount /boot/tefi
-EOF
-chmod a+rx /tmp/btrfs-convert/target/@/etc/updater/hook_postupdate/10_kernel-install
-
-
 mkdir -p /tmp/btrfs-convert/target/@/boot/tefi
 mount /dev/mmcblk0p1 /tmp/btrfs-convert/target/@/boot/tefi || die "Can't mount fat"
 cp /boot/zImage /boot/fdt /tmp/btrfs-convert/target/@/boot/tefi || die "Can't copy kernel"
