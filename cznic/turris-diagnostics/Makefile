@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-diagnostics
-PKG_VERSION:=7
-PKG_RELEASE:=2
+PKG_VERSION:=8
+PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/diagnostics.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
