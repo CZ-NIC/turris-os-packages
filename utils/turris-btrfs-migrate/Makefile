@@ -39,9 +39,9 @@ define Package/turris-btrfs-migrate/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/btrfs_migrate.sh $(1)/usr/bin/btrfs_migrate
 	$(INSTALL_DIR) $(1)/etc/schnapps/rollback.d
-	$(INSTALL_BIN) ./files/kernel-rollback.sh $(1)/etc/schnapps/rollback.d/kernel-rollback
+	$(INSTALL_BIN) ./files/kernel-rollback $(1)/etc/schnapps/rollback.d/kernel-rollback
 	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate/
-	$(INSTALL_BIN) ./files/kernel-install.sh $(1)/etc/updater/hook_postupdate/10_kernel-install
+	$(INSTALL_BIN) ./files/kernel-install $(1)/etc/updater/hook_postupdate/10_kernel-install
 endef
 
 define Package/turris-btrfs-migrate/prerm
