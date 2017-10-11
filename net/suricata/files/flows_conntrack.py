@@ -266,27 +266,61 @@ def suricata_get_flow(recv_socket_path):
 				break
 			data = json.loads(l)
 			if data["event_type"] == "flow" and "flow" in data:
-				if data["flow"]["state"]!="bypassed":
-					send_line(l)
-					continue
 				proto=data["proto"]
 				if proto != "TCP" and proto != "UDP":
 					send_line(l)
 					continue
-				if "bypass" in data["flow"]:
-					del data["flow"]["bypass"]
 				src_ip=data["src_ip"]
 				dest_ip=data["dest_ip"]
 				src_port=data["src_port"]
 				dest_port=data["dest_port"]
 				flow_id=data["flow_id"]
 				key=hash_flow(src_ip, dest_ip, src_port, dest_port, proto.upper())
+				key2=hash_flow(dest_ip, src_ip, dest_port, src_port, proto.upper())
+				active_flows_lock.acquire()
+				#workaround for suricata issue: sometimes flow is not bypassed correctly (eg. in case of SSH)
+				#and we continue to get notifications about it
+				#in that case, silently discard that notification
+				#this should be fixed on suricata side, but I don't know where the problem could be, so at least this for now...
+				#also, the flow could be reported in the other direction, that's why I'm checking key2 as well
+				if key in active_flows or key2 in active_flows:
+					active_flows_lock.release()
+					continue
+				active_flows_lock.release()
+				if data["flow"]["state"]!="bypassed":
+					send_line(l)
+					continue
+				if "bypass" in data["flow"]:
+					del data["flow"]["bypass"]
 				new_and_closed_flows_lock.acquire()
 				new_flows[key]=data
 				new_and_closed_flows_lock.notify()
 				new_and_closed_flows_lock.release()
 				logging.debug("new flow (added to new_flows):  {}: {}:{} -> {}:{} (proto {})".format(flow_id,src_ip,src_port,dest_ip,dest_port,proto))
 				logging.debug("new_flows len "+str(len(new_flows))+", active_flows len "+str(len(active_flows))+", closed_flows len "+str(len(closed_flows))) 
+			elif data["event_type"] == "flow_start":
+				proto=data["proto"]
+				if proto != "TCP" and proto != "UDP":
+					send_line(l)
+					continue
+				src_ip=data["src_ip"]
+				dest_ip=data["dest_ip"]
+				src_port=data["src_port"]
+				dest_port=data["dest_port"]
+				flow_id=data["flow_id"]
+				key=hash_flow(src_ip, dest_ip, src_port, dest_port, proto.upper())
+				key2=hash_flow(dest_ip, src_ip, dest_port, src_port, proto.upper())
+				active_flows_lock.acquire()
+				#workaround for suricata issue: sometimes flow is not bypassed correctly (eg. in case of SSH)
+				#and we continue to get notifications about it
+				#in that case, silently discard that notification
+				#this should be fixed on suricata side, but I don't know where the problem could be, so at least this for now...
+				#also, the flow could be reported in the other direction, that's why I'm checking key2 as well
+				if key in active_flows or key2 in active_flows:
+					active_flows_lock.release()
+					continue
+				active_flows_lock.release()
+				send_line(l)
 			else: #if this is anything else then flow...
 				send_line(l) #...just resend immediatelly
 
