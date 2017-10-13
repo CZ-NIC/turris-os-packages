@@ -5,9 +5,27 @@ START=99
 
 start_service() {
 	[ -f /etc/mitmkeys/id_rsa.pub ] || /usr/bin/mitmkeygen
+	TOKEN="`uci -q get haas.settings.token`"
+	PORT="`uci -q get haas.settings.local_port`"
+	FW_SETUP="`uci -q get haas.settings.setup_fw | egrep -i '(1|yes|true|enabled|on)'`"
+	cp /etc/mitmproxy_wrapper.conf /tmp/mitmproxy_wrapper.conf
+	[ -z "$TOKEN" ] || sed -i "s|^device_token.*|device_token = $TOKEN|" /tmp/mitmproxy_wrapper.conf
+	[ -z "$PORT" ]  || sed -i "s|^local_port.*|local_port = $TOKEN|" /tmp/mitmproxy_wrapper.conf
+	if [ "$FW_SETUP" -a "$TOKEN" ]; then
+		iptables -t nat -A zone_wan_prerouting -p tcp -m tcp --dport 22 -m comment --comment "haas" -j DNAT --to-destination 127.0.0.1:$PORT
+	fi
 	procd_open_instance
-	procd_set_param command /usr/bin/mitmproxy_wrapper /etc/mitmproxy_wrapper.conf
+	procd_set_param command /usr/bin/mitmproxy_wrapper /tmp/mitmproxy_wrapper.conf
 	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
 	procd_set_param file /etc/mitmproxy_wrapper.conf
+	procd_set_param file /etc/config/haas
 	procd_close_instance
+}
+
+stop_service() {
+	FW_SETUP="`uci -q get haas.settings.setup_fw | egrep -i '(1|yes|true|enabled|on)'`"
+	PORT="`uci -q get haas.settings.local_port`"
+	if [ "$FW_SETUP" -a "$TOKEN" ]; then
+		iptables -t nat -D zone_wan_prerouting -p tcp -m tcp --dport 22 -m comment --comment "haas" -j DNAT --to-destination 127.0.0.1:$PORT
+	fi
 }

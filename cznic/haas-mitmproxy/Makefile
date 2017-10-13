@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-mitmproxy
 PKG_VERSION:=0.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/labs/mitmproxy.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -44,12 +44,15 @@ endef
 define Build/Compile
 	$(call Build/Compile/PyMod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
 	$(INSTALL_DIR) $(PKG_INSTALL_DIR)/etc/init.d/
+	$(INSTALL_DIR) $(PKG_INSTALL_DIR)/etc/config
 	$(INSTALL_DATA) ./files/wrapper.conf $(PKG_INSTALL_DIR)/etc/mitmproxy_wrapper.conf
+	$(INSTALL_DATA) ./files/haas.uci $(PKG_INSTALL_DIR)/etc/config/haas
 	$(INSTALL_BIN) ./files/init $(PKG_INSTALL_DIR)/etc/init.d/haas-mitmproxy
 endef
 
 define Package/schnapps/conffiles
 /etc/mitmproxy_wrapper.conf
+/etc/config/haas
 endef
 
 define Package/haas-mitmproxy/install
@@ -57,13 +60,6 @@ define Package/haas-mitmproxy/install
 	$(CP) \
 		$(PKG_INSTALL_DIR)/* \
 		$(1)
-endef
-
-define Package/haas-mitmproxy/postinst
-#!/bin/sh
-if [ -z "$${IPKG_INSTROOT}" ]; then
-	sed -i "s|<INTERFACE>|$$(jsonfilter -s "$$(ubus call network.interface dump)" -e "@.interface[@.interface='wan'].l3_device")|" /etc/mitmproxy_wrapper.conf
-fi
 endef
 
 define Package/haas-mitmproxy/prerm

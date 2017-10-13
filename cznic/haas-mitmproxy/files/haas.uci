@@ -1,0 +1,4 @@
+config haas 'settings'
+	option token ''
+	option local_port '2525'
+	option setup_fw '1'
