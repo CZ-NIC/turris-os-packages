@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-mitmproxy
 PKG_VERSION:=0.1
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/labs/mitmproxy.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -26,7 +26,7 @@ define Package/haas-mitmproxy
   CATEGORY:=Network
   TITLE:=mitmproxy
   URL:=https://haas.nic.cz
-  DEPENDS:=+python +python-twisted +python-crypto +python-service-identity
+  DEPENDS:=+python-base +python-twisted +python-crypto +python-service-identity +server-uplink
   CONFLICTS:=mitmproxy
 endef
 
@@ -48,6 +48,10 @@ define Build/Compile
 	$(INSTALL_DATA) ./files/wrapper.conf $(PKG_INSTALL_DIR)/etc/mitmproxy_wrapper.conf
 	$(INSTALL_DATA) ./files/haas.uci $(PKG_INSTALL_DIR)/etc/config/haas
 	$(INSTALL_BIN) ./files/init $(PKG_INSTALL_DIR)/etc/init.d/haas-mitmproxy
+	$(INSTALL_DIR) $(PKG_INSTALL_DIR)/usr/share/haas/
+	$(INSTALL_BIN) ./files/register.sh $(PKG_INSTALL_DIR)/usr/share/haas/register.sh
+	$(INSTALL_DIR) $(PKG_INSTALL_DIR)/etc/cron.d
+	$(INSTALL_DATA) ./files/haas.cron $(PKG_INSTALL_DIR)/etc/cron.d/haas
 endef
 
 define Package/schnapps/conffiles

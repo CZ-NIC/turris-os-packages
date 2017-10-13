@@ -1,0 +1,3 @@
+MAILTO=""
+
+30	4	*	*	*	root	/usr/share/haas/register.sh
