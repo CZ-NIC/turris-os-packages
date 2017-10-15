@@ -10,7 +10,7 @@ start_service() {
 	FW_SETUP="`uci -q get haas.settings.setup_fw | egrep -i '(1|yes|true|enabled|on)'`"
 	cp /etc/mitmproxy_wrapper.conf /tmp/mitmproxy_wrapper.conf
 	[ -z "$TOKEN" ] || sed -i "s|^device_token.*|device_token = $TOKEN|" /tmp/mitmproxy_wrapper.conf
-	[ -z "$PORT" ]  || sed -i "s|^local_port.*|local_port = $TOKEN|" /tmp/mitmproxy_wrapper.conf
+	[ -z "$PORT" ]  || sed -i "s|^local_port.*|local_port = $PORT|" /tmp/mitmproxy_wrapper.conf
 	if [ "$FW_SETUP" -a "$TOKEN" ]; then
 		iptables -t nat -A zone_wan_prerouting -p tcp -m tcp --dport 22 -m comment --comment "haas" -j DNAT --to-destination 127.0.0.1:$PORT
 	fi
