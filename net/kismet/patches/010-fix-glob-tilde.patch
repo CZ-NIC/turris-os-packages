@@ -1,0 +1,18 @@
+--- a/configfile.cc
++++ b/configfile.cc
+@@ -34,6 +34,15 @@
+ #include "configfile.h"
+ #include "messagebus.h"
+
++/* fixes build with musl libc */
++#ifndef GLOB_TILDE
++#define GLOB_TILDE 0
++#endif
++
++#ifndef GLOB_BRACE
++#define GLOB_BRACE 0
++#endif
++
+ #ifndef GLOB_TILDE_CHECK
+ #define GLOB_TILDE_CHECK GLOB_TILDE
+ #endif
