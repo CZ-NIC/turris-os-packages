@@ -6,13 +6,13 @@
 #
 
 include $(TOPDIR)/rules.mk
-PKG_NAME:=haas-mitmproxy
-PKG_VERSION:=0.1
-PKG_RELEASE:=5
+PKG_NAME:=haas-proxy
+PKG_VERSION:=1.0
+PKG_RELEASE:=0
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/labs/mitmproxy.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=1ac8c6f97a8bb7c3a4f2aeb74aba80211d5eb69d
+PKG_SOURCE_VERSION:=792727a9a3b702c5062cc8225a80273d4255973a
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=CZ.NIC <packaging@nic.cz>
@@ -21,54 +21,46 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python-package.mk)
 
-define Package/haas-mitmproxy
+define Package/haas-proxy
   SECTION:=net
   CATEGORY:=Network
-  TITLE:=mitmproxy
   URL:=https://haas.nic.cz
-  DEPENDS:=+python-base +python-twisted +python-crypto +python-service-identity +server-uplink
+  DEPENDS:=+python-base +python-twisted +python-crypto +python-service-identity +server-uplink +sshpass
   CONFLICTS:=mitmproxy
 endef
 
-define Package/haas-mitmproxy/description
-Logging proxy/replay servers for multiple protocols.
-
-Supported protocols:
- * Telnet
- * HTTP
- * SSL
- * SSH
- * SNMP
+define Package/haas-proxy/description
+HaaS proxy application forwards incoming traffic from port 22 (commonly used
+for SSH) to the HaaS server, where Cowrie honeypot simulates a device and
+records executed commands.
 endef
 
 define Build/Compile
 	$(call Build/Compile/PyMod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
 	$(INSTALL_DIR) $(PKG_INSTALL_DIR)/etc/init.d/
 	$(INSTALL_DIR) $(PKG_INSTALL_DIR)/etc/config
-	$(INSTALL_DATA) ./files/wrapper.conf $(PKG_INSTALL_DIR)/etc/mitmproxy_wrapper.conf
 	$(INSTALL_DATA) ./files/haas.uci $(PKG_INSTALL_DIR)/etc/config/haas
-	$(INSTALL_BIN) ./files/init $(PKG_INSTALL_DIR)/etc/init.d/haas-mitmproxy
+	$(INSTALL_BIN) ./files/init $(PKG_INSTALL_DIR)/etc/init.d/haas-proxy
 	$(INSTALL_DIR) $(PKG_INSTALL_DIR)/usr/share/haas/
 	$(INSTALL_BIN) ./files/register.sh $(PKG_INSTALL_DIR)/usr/share/haas/register.sh
 	$(INSTALL_DIR) $(PKG_INSTALL_DIR)/etc/cron.d
 	$(INSTALL_DATA) ./files/haas.cron $(PKG_INSTALL_DIR)/etc/cron.d/haas
 endef
 
-define Package/schnapps/conffiles
-/etc/mitmproxy_wrapper.conf
+define Package/haas-proxy/conffiles
 /etc/config/haas
 endef
 
-define Package/haas-mitmproxy/install
+define Package/haas-proxy/install
 	$(INSTALL_DIR) $(1)
 	$(CP) \
 		$(PKG_INSTALL_DIR)/* \
 		$(1)
 endef
 
-define Package/haas-mitmproxy/prerm
-	/etc/init.d/mitmproxy_wrapper stop || true
-	/etc/init.d/mitmproxy_wrapper disable || true
+define Package/haas-proxy/prerm
+	/etc/init.d/haas-proxy stop || true
+	/etc/init.d/haas-proxy disable || true
 endef
 
-$(eval $(call BuildPackage,haas-mitmproxy))
+$(eval $(call BuildPackage,haas-proxy))
