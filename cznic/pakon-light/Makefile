@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-light
 PKG_VERSION:=0.9
-PKG_RELEASE:=6
+PKG_RELEASE:=7
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
