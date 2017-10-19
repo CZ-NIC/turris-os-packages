@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-light
 PKG_VERSION:=0.9
-PKG_RELEASE:=8
+PKG_RELEASE:=9
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=e62a8121af57a29e841b4f4d463d9bedc1039ade
+PKG_SOURCE_VERSION:=683ffbce4716aed7ffc41ab87ddb2e819450aae4
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -30,7 +30,7 @@ define Package/pakon-light
 	CATEGORY:=Network
 	SUBMENU:=Collect traffic events from suricata IDS
 	TITLE:=PArental KONtrol - light
-	DEPENDS:=+suricata +python-sqlite3 +python-multiprocessing +sqlite3-cli
+	DEPENDS:=+suricata +python3-light +python3-sqlite3 +sqlite3-cli
 endef
 
 define Package/$(PKG_NAME)/description
@@ -38,6 +38,7 @@ define Package/$(PKG_NAME)/description
 endef
 
 define Package/$(PKG_NAME)/conffiles
+/usr/share/pakon-light/domains_replace/dist.conf
 endef
 
 define Build/Compile
@@ -55,14 +56,12 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/pakon-init $(1)/etc/init.d/pakon
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/pakon-cron $(1)/etc/cron.d/pakon
-	$(INSTALL_DIR) $(1)/usr/share/pakon-light
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_replace.conf $(1)/usr/share/pakon-light/
+	$(INSTALL_DIR) $(1)/usr/share/pakon-light/domains_replace
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_replace.conf $(1)/usr/share/pakon-light/domains_replace/dist.conf
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/monitor.py $(1)/usr/bin/pakon-monitor
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/show.py $(1)/usr/bin/pakon-show
 	$(INSTALL_DIR) $(1)/usr/libexec/pakon-light
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/fill_dns.py $(1)/usr/libexec/pakon-light/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/domains_replace.py $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/archive.py $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/create_db.py $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) ./files/backup_sqlite.sh $(1)/usr/libexec/pakon-light/
