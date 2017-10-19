@@ -24,6 +24,7 @@ $(call include_mk, python-package.mk)
 define Package/haas-proxy
   SECTION:=net
   CATEGORY:=Network
+  TITLE:=haas-proxy
   URL:=https://haas.nic.cz
   DEPENDS:=+python-base +python-twisted +python-crypto +python-service-identity +server-uplink +sshpass
   CONFLICTS:=mitmproxy
