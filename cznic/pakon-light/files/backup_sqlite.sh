@@ -11,7 +11,7 @@ TMP_FILE=$(mktemp)
 [ -s "$SRC" ] || exit 1
 /usr/bin/sqlite3 $SRC ".backup '$TMP_FILE'" || { rm -f "$TMP_FILE"; exit 1; }
 if [[ $DST_EXT == "xz" ]]; then
-	xz -c "$TMP_FILE" > "$DST.tmp"|| { rm -f "$TMP_FILE"; exit 1; }
+	/usr/bin/xz -c "$TMP_FILE" > "$DST.tmp"|| { rm -f "$TMP_FILE"; exit 1; }
 else
 	cp "$TMP_FILE" "$DST.tmp"
 fi
