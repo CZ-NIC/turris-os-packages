@@ -43,7 +43,8 @@ start_service() {
 		procd_set_param command "$PROG" ${debug_arg:-} -b "$backend" ubus --path "$path" ${single_arg:-}
 	elif [ "$bus" == "unix-socket" ]; then
 		config_get path unix path "/tmp/foris-controller.soc"
-		procd_set_param command "$PROG" ${debug_arg:-} -b "$backend" unix-socket --path "$path"
+		config_get notification_path unix notification_path "/tmp/foris-controller-notifications.soc"
+		procd_set_param command "$PROG" ${debug_arg:-} -b "$backend" unix-socket --path "$path" --notifications-path "${notification_path}"
 	fi
 	procd_set_param respawn
 	procd_close_instance
