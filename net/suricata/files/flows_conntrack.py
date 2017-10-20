@@ -62,7 +62,8 @@ def send_line(line):
 	try:
 		print(line)
 	except IOError as e:
-		logging.warning(e)
+		os.unlink(sys.argv[1])
+		sys.exit(1)
 	output_lock.release()
 
 def send_json(json_dict):
