@@ -9,7 +9,6 @@ CONFIGFILE=/tmp/kresd.config
 ROOTKEYFILE=/etc/root.keys
 DEFAULT_RUNDIR=/tmp/kresd
 HINTS_CONFIG=$DEFAULT_RUNDIR/hints.tmp
-DHCP_SCRIPT=/etc/resolver/dhcp_host_domain_ng.py
 STATIC_DOMAINS=1
 DYNAMIC_DOMAINS=0
 
@@ -165,11 +164,6 @@ set_local_host() {
 	fi
 }
 
-set_dnsmasq_dhcp_script() {
-	uci_set dhcp $1 dhcpscript $2
-	uci_commit dhcp
-}
-
 get_dnsmasq_dhcp_script() {
 	local config="$1"
 	local DHCPSCRIPT
@@ -192,7 +186,7 @@ add_hostname_config() {
 }
 
 load_uci_config_kresd() {
-	local addr config keyfile forks verbose rundir log_stderr log_stdout hostname_config dhcp_script_path
+	local addr config keyfile forks verbose rundir log_stderr log_stdout hostname_config
 	local section="kresd"
 
 	# knot-resolver config
@@ -222,16 +216,9 @@ load_uci_config_kresd() {
 	config_load dhcp
 	config_foreach get_local_domain dnsmasq
 
-	dhcp_script_path=$(config_foreach get_dnsmasq_dhcp_script dnsmasq)
 	if [ "$STATIC_DOMAINS" = "1" ]; then
 		config_foreach set_local_host host
 		config_foreach set_local_host domain
-	fi
-	if [ "$DYNAMIC_DOMAINS" = "1" ]; then
-		echo "Enable dhcp script"
-		config_foreach set_dnsmasq_dhcp_script dnsmasq "$DHCP_SCRIPT"
-		#reload dhcp config with script param
-		/etc/init.d/dnsmasq reload
 	fi
 
 	config_load resolver
