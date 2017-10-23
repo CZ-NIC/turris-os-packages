@@ -4,6 +4,7 @@
 SERVICE_USE_PID=0
 
 DHCP_SCRIPT=/etc/resolver/dhcp_host_domain_ng.py
+DHCP_SCRIPT_OLD=/etc/kresd/dhcp_host_domain_ng.sh
 
 START=60
 
@@ -23,10 +24,35 @@ prefered_resolver() {
 
 PREF_RESOLVER=$(prefered_resolver)
 
+get_dhcp_script() {
+        local config="$1"
+        local tmp_dhcpscript
+
+	#config_load dhcp
+        config_get tmp_dhcpscript "$config" dhcpscript
+        echo $tmp_dhcpscript
+}
+
 set_dhcp_script() {
 	uci_set dhcp "@dnsmasq[0]" dhcpscript "$DHCP_SCRIPT"
 	uci_commit dhcp
 }
+
+remove_dhcp_script() {
+	local script
+
+	config_load dhcp
+	script=$(config_foreach get_dhcp_script dnsmasq)
+
+	if 	[ "$script" == "$DHCP_SCRIPT" ] || \
+		[ "$script" == "$DHCP_SCRIPT_OLD" ]; \
+	then
+		echo $script
+		uci_set dhcp "@dnsmasq[0]" dhcpscript ""
+		uci_commit dhcp
+	fi
+}
+
 
 run_dhcp_script() {
 	local action resolver dynamic_domains
@@ -54,6 +80,7 @@ run_cmd() {
 	local pref=$2	#unbound
 	local param=$1	#parameter for init script
 	local cur
+	local dynamic_domains
 
 	if [ -f /var/run/resolver.name ]; then
 	#special handling when running resolver is
@@ -99,9 +126,18 @@ run_cmd() {
 	fi
 
 	#run script to refresh dynamic domains
-	set_dhcp_script
-	run_dhcp_script $param $LAST_SERVICE
+	config_load resolver
+	config_get_bool dynamic_domains "common" dynamic_domains 0
+	if [ "$dynamic_domains" == "1" ]; then
+		echo "set dhcp script"
+		set_dhcp_script
+		run_dhcp_script $param $LAST_SERVICE
+	else
+		echo "remove dhcp script"
+		remove_dhcp_script
+	fi
 }
+
 save_resolver_info() {
 	local pid_num
 	rm -f /var/run/resolver.pid
@@ -109,7 +145,7 @@ save_resolver_info() {
 		cp /var/run/unbound.pid /var/run/resolver.pid
 	else #kresd
 		sleep 1
-		pid_num=$(pidof kresd )
+		pid_num=$(pidof kresd|awk '{print $1}')
 		echo $pid_num>/var/run/resolver.pid
 	fi
 	echo $LAST_SERVICE>/var/run/resolver.name

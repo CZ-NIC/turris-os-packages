@@ -26,6 +26,9 @@ define Package/resolver-conf
 	CATEGORY:=Network
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Resolver configuration
+ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
+	DEPENDS:=+unbound-control
+endif
 endef
 
 define Package/$(PKG_NAME)/description
