@@ -109,7 +109,7 @@ save_resolver_info() {
 		cp /var/run/unbound.pid /var/run/resolver.pid
 	else #kresd
 		sleep 1
-		pid_num=$(pidof kresd )
+		pid_num=$(pidof kresd|awk '{print $1}')
 		echo $pid_num>/var/run/resolver.pid
 	fi
 	echo $LAST_SERVICE>/var/run/resolver.name
