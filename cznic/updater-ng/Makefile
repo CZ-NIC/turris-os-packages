@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=59.3.3
+PKG_VERSION:=59.4
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
@@ -58,14 +58,15 @@ ifneq ($(PKG_BRANCH),)
 	echo "config override 'override'" >> $(1)/etc/config/updater
 	echo "	option branch '$(PKG_BRANCH)'" >> $(1)/etc/config/updater
 endif
+
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/init $(1)/etc/init.d/updater
 
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/cron $(1)/etc/cron.d/updater
+
 	$(INSTALL_DIR) $(1)/etc/ssl
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater.pem $(1)/etc/ssl/updater.pem
-
-	$(INSTALL_DIR) $(1)/etc/uci-defaults
-	$(INSTALL_BIN) ./files/updater.defaults $(1)/etc/uci-defaults/updater
 endef
 
 define Package/$(PKG_NAME)/conffiles
@@ -77,12 +78,10 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/updater enable || true
-# Run the uci-defaults now if we are installed at runtime and not flashed
-/etc/uci-defaults/updater && rm /etc/uci-defaults/updater
+	/etc/init.d/updater enable || true
 }
 # Remove morphered syntax from auto.lua
-# This matches all Install and Package commands not follwed by brackets. Whole
+# This matches all Install and Package commands not followed by brackets. Whole
 # line is enclosed with brackets and between strings and tables are added commas.
 AUTOTMP="$$(mktemp)"
 sed -E '/^(Install|Package) +[^(]/{
