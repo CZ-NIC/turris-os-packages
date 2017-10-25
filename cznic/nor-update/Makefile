@@ -28,14 +28,14 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/nor-update/turris
 	$(INSTALL_DATA) ./files/mtd* $(1)/usr/share/nor-update/turris
-	$(INSTALL_DIR) ./files/init $(1)/etc/init.d/nor-update
+	$(INSTALL_BIN) ./files/init $(1)/etc/init.d/nor-update
 	sed -i "s|@VERSION@|${PKG_VERSION}|" $(1)/etc/init.d/nor-update
 endef
 
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 if [ -z "$${IPKG_INSTROOT}" ] ; then
-	/etc/init.d/nor-update enable && /etc/init.d/nor-update start
+	/etc/init.d/nor-update enable
 fi
 endef
 
