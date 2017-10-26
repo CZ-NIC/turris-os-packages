@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
 PKG_VERSION:=59.4
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -63,7 +63,7 @@ endif
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/init $(1)/etc/init.d/updater
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/cron $(1)/etc/cron.d/updater
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/cron $(1)/etc/cron.d/updater
 
 	$(INSTALL_DIR) $(1)/etc/ssl
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/updater.pem $(1)/etc/ssl/updater.pem
