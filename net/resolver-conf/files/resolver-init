@@ -53,7 +53,6 @@ remove_dhcp_script() {
 	fi
 }
 
-
 run_dhcp_script() {
 	local action resolver dynamic_domains
 	action=$1
@@ -125,16 +124,21 @@ run_cmd() {
 		fi
 	fi
 
-	#run script to refresh dynamic domains
-	config_load resolver
-	config_get_bool dynamic_domains "common" dynamic_domains 0
-	if [ "$dynamic_domains" == "1" ]; then
-		echo "set dhcp script"
-		set_dhcp_script
-		run_dhcp_script $param $LAST_SERVICE
+	#check dnsmasq resolver
+	if [ "$pref" == "dnsmasq" ]; then
+		LAST_SERVICE=dnsmasq
 	else
-		echo "remove dhcp script"
-		remove_dhcp_script
+		#run script to refresh dynamic domains
+		config_load resolver
+		config_get_bool dynamic_domains "common" dynamic_domains 0
+		if [ "$dynamic_domains" == "1" ]; then
+			echo "set dhcp script"
+			set_dhcp_script
+			run_dhcp_script $param $LAST_SERVICE
+		else
+			echo "remove dhcp script"
+			remove_dhcp_script
+		fi
 	fi
 }
 
@@ -143,6 +147,8 @@ save_resolver_info() {
 	rm -f /var/run/resolver.pid
 	if [ "$LAST_SERVICE" == "unbound" ]; then
 		cp /var/run/unbound.pid /var/run/resolver.pid
+	elif [ "$LAST_SERVICE" == "dnsmasq" ]; then
+		ln -s /var/run/dnsmasq/dnsmasq.pid /var/run/resolver.pid
 	else #kresd
 		sleep 1
 		pid_num=$(pidof kresd|awk '{print $1}')
