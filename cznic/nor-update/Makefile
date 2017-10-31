@@ -28,6 +28,7 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/nor-update/turris
 	$(INSTALL_DATA) ./files/mtd* $(1)/usr/share/nor-update/turris
+	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/init $(1)/etc/init.d/nor-update
 	sed -i "s|@VERSION@|${PKG_VERSION}|" $(1)/etc/init.d/nor-update
 endef
