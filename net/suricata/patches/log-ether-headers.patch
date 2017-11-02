@@ -188,3 +188,31 @@ index 374b3332..98af68f1 100644
  } NFQPacketVars;
  
  typedef struct NFQQueueVars_
+diff --git a/src/flow-util.h b/src/flow-util.h
+index 374b3332..98af68f1 100644
+--- a/src/flow-util.h
++++ b/src/flow-util.h
+@@ -29,12 +29,23 @@
+ 
+ #define COPY_TIMESTAMP(src,dst) ((dst)->tv_sec = (src)->tv_sec, (dst)->tv_usec = (src)->tv_usec)
+ 
++#ifdef NFQ
+ #define RESET_COUNTERS(f) do { \
+         (f)->todstpktcnt = 0; \
+         (f)->tosrcpktcnt = 0; \
+         (f)->todstbytecnt = 0; \
+         (f)->tosrcbytecnt = 0; \
++       (f)->hw_address_src_known = 0; \
++       (f)->hw_address_dst_known = 0; \
+     } while (0)
++#else
++#define RESET_COUNTERS(f) do { \
++        (f)->todstpktcnt = 0; \
++        (f)->tosrcpktcnt = 0; \
++        (f)->todstbytecnt = 0; \
++        (f)->tosrcbytecnt = 0; \
++    } while (0)
++#endif
+ 
+ #define FLOW_INITIALIZE(f) do { \
+         (f)->sp = 0; \
