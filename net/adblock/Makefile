@@ -18,6 +18,7 @@ define Package/adblock
 	CATEGORY:=Network
 	TITLE:=Powerful adblock script to block ad/abuse domains
 	PKGARCH:=all
+	DEPENDS:=+wget
 endef
 
 define Package/adblock/description
@@ -60,5 +61,20 @@ endif
 	$(INSTALL_CONF) ./files/adblock.blacklist $(1)/etc/adblock/
 	$(INSTALL_CONF) ./files/adblock.whitelist $(1)/etc/adblock/
 endef
+
+ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+define Package/adblock/postinst
+#!/bin/sh
+set -x
+[ -n "$$IPKG_INSTROOT" ] || {
+block_list="/etc/kresd/adb_list.overall"
+ret=$(uci get resolver.kresd.rpz_file|grep $block_list)
+if [ "$ret" == "" ]; then
+        uci add_list resolver.kresd.rpz_file="$block_list"
+        uci commit resolver
+fi
+}
+endef
+endif
 
 $(eval $(call BuildPackage,adblock))
