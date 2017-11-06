@@ -68,9 +68,9 @@ define Package/adblock/postinst
 set -x
 [ -n "$$IPKG_INSTROOT" ] || {
 block_list="/etc/kresd/adb_list.overall"
-ret=$(uci get resolver.kresd.rpz_file|grep $block_list)
-if [ "$ret" == "" ]; then
-        uci add_list resolver.kresd.rpz_file="$block_list"
+ret=$$(uci get resolver.kresd.rpz_file|grep $$block_list)
+if [ "$$ret" == "" ]; then
+        uci add_list resolver.kresd.rpz_file="$$block_list"
         uci commit resolver
 fi
 }
