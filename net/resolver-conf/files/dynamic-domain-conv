@@ -17,12 +17,22 @@ dd_val=$(uci get resolver.common.dynamic_domains)
 if [ $? -eq 1 ] && [ ! -f /etc/resolver/dd_converted ]; then
 	echo uci set resolver.common.dynamic_domains=$(get_kresd_dd)
 	uci set resolver.common.dynamic_domains=$(get_kresd_dd)
-	uci set resolver.unbound_remote_control.control_enable='yes'
-	uci set resolver.unbound_remote_control.control_use_cert='no'
 	uci commit resolver
 	touch /etc/resolver/dd_converted
 else
 	echo "nothing done"
+fi
+
+# unbound_remote_control setting
+if [ ! -f /etc/resolver/uc_converted ]; then
+	uci set resolver.unbound_remote_control.control_enable='yes'
+	uci set resolver.unbound_remote_control.control_use_cert='no'
+	uci del_list resolver.unbound_remote_control.control_interface='::0'
+	uci del_list resolver.unbound_remote_control.control_interface='0.0.0.0'
+	uci del_list resolver.unbound_remote_control.control_interface='127.0.0.1'
+	uci add_list resolver.unbound_remote_control.control_interface='127.0.0.1'
+	uci commit resolver
+	touch /etc/resolver/uc_converted
 fi
 
 #convert dhcp.@dnsmasq[0].dhcpscript to /etc/resolver/dhcp_host_domain_ng.py

@@ -56,8 +56,7 @@ config resolver 'unbound'
 config resolver 'unbound_remote_control'
 	option control_enable 'yes'
 	option control_use_cert 'no'
-	list control_interface '0.0.0.0'
-	list control_interface '::0'
+	list control_interface '127.0.0.1'
 
 # config resolver 'unbound_includes'
 # 	list include_path "/etc/unbound/unbound-part.conf"
