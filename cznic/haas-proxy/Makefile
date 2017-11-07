@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-proxy
 PKG_VERSION:=1.2
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/haas/proxy.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -57,6 +57,7 @@ define Package/haas-proxy/install
 	$(CP) \
 		$(PKG_INSTALL_DIR)/* \
 		$(1)
+	$(RM) $(1)/usr/lib/python2.7/site-packages/haas_proxy-1.2*
 endef
 
 define Package/haas-proxy/prerm
