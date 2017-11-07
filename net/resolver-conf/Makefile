@@ -67,12 +67,11 @@ define Package/$(PKG_NAME)/postinst
 # check if we are on real system
 if [ -z "$$IPKG_INSTROOT" ]; then
 	/etc/uci-defaults/resolver-defaults && rm /etc/uci-defaults/resolver-defaults
-	$(if $(CONFIG_TARGET_mvebu_Turris-Omnia),,
 	if [ ! -e "/etc/resolver/converted" ]; then
-		/etc/resolver/dynamic-domain-conv.sh
 		/etc/resolver/resolver-conv.sh
 		touch /etc/resolver/converted
-	fi)
+	fi
+	/etc/resolver/dynamic-domain-conv.sh
 fi
 endef
 

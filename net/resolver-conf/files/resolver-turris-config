@@ -47,14 +47,13 @@ config resolver 'unbound'
 	option prefetch_key 'yes'
 	#option hostname_config '/etc/hosts'
 
-config resolver 'unbound_python'
-	list python_script "/etc/unbound/ubmodule-tst.py"
+#config resolver 'unbound_python'
+#	list python_script "/etc/unbound/ubmodule-tst.py"
 
 config resolver 'unbound_remote_control'
 	option control_enable 'yes'
 	option control_use_cert 'no'
-	list control_interface '0.0.0.0'
-	list control_interface '::0'
+	list control_interface '127.0.0.1'
 
 # config resolver 'unbound_includes'
 # 	list include_path "/etc/unbound/unbound-part.conf"
