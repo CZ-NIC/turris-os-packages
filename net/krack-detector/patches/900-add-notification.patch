@@ -1,0 +1,10 @@
+--- a/krack_detect.py
++++ b/krack_detect.py
+@@ -114,6 +114,7 @@ class KRACKDetector(object):
+                 print 'Detected packet 3/4 to %s, nonce %s' % (sta, key_nonce.encode('hex'))
+                 if key_nonce in self.nonces:
+                     print 'Detected duplicate packet 3!'
++                    os.system("/usr/bin/create_notification -s error 'KRACK attack detected!' 'KRACK attack detected!'")
+                     if not self.dry_run:
+                         self._disassociate(sta)
+                         self._deauthenticate(sta)

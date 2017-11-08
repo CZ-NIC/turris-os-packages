@@ -1,0 +1,28 @@
+#!/bin/sh /etc/rc.common
+
+START=90
+STOP=0
+
+SCRIPT="/usr/bin/krack_detect.py"
+
+start() {
+	local iface
+	local disconnect
+
+	echo "Start detector"
+	config_load krack-detector
+	config_get iface "common" interface
+	config_get disconnect "common" disconnect_suspect
+
+	if [ "$disconnect" = "1" ]; then
+		python "$SCRIPT" -n $iface &
+	else
+		python "$SCRIPT" $iface &
+	fi
+}
+
+stop() {
+	pid=$(ps|grep "/usr/bin/krack_detect.py"|head -n 1|awk '{print $1}')
+	echo "Stop krack-detection"
+	kill $pid
+}
