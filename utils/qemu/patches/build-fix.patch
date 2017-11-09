@@ -1,0 +1,43 @@
+--- a/linux-user/syscall.c
++++ b/linux-user/syscall.c
+@@ -116,6 +116,16 @@ int __clone2(int (*fn)(void *), void *ch
+ 
+ #include "qemu.h"
+ 
++#ifndef F_EXLCK
++#define F_EXLCK 4
++#endif
++#ifndef F_SHLCK
++#define F_SHLCK 8
++#endif
++#ifndef SIOCGSTAMPNS
++#define SIOCGSTAMPNS 0x8907
++#endif
++
+ #ifndef CLONE_IO
+ #define CLONE_IO                0x80000000      /* Clone io context */
+ #endif
+@@ -7035,7 +7045,6 @@ static inline abi_long target_to_host_si
+     host_sevp->sigev_signo =
+         target_to_host_signal(tswap32(target_sevp->sigev_signo));
+     host_sevp->sigev_notify = tswap32(target_sevp->sigev_notify);
+-    host_sevp->_sigev_un._tid = tswap32(target_sevp->_sigev_un._tid);
+ 
+     unlock_user_struct(target_sevp, target_addr, 1);
+     return 0;
+--- a/linux-user/signal.c
++++ b/linux-user/signal.c
+@@ -26,6 +26,13 @@
+ #include "target_signal.h"
+ #include "trace.h"
+ 
++#ifndef __SIGRTMIN
++#define __SIGRTMIN 32
++#endif
++#ifndef __SIGRTMAX
++#define __SIGRTMAX (_NSIG - 1)
++#endif
++
+ static struct target_sigaltstack target_sigaltstack_used = {
+     .ss_sp = 0,
+     .ss_size = 0,
