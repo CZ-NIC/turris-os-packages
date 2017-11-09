@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-light
 PKG_VERSION:=0.9
-PKG_RELEASE:=16
+PKG_RELEASE:=17
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=0a3de0631eade4d19d641ce9af01cc68c6e01571
+PKG_SOURCE_VERSION:=f77619bfe6923f55f5b8cddccb2821c8e7148267
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -53,7 +53,8 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/suricata/output_conf.d
 	$(INSTALL_DATA) ./files/pakon-output.yaml $(1)/etc/suricata/output_conf.d/pakon.yaml
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/pakon-init $(1)/etc/init.d/pakon
+	$(INSTALL_BIN) ./files/pakon-monitor-init $(1)/etc/init.d/pakon-monitor
+	$(INSTALL_BIN) ./files/pakon-handler-init $(1)/etc/init.d/pakon-handler
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/pakon-cron $(1)/etc/cron.d/pakon
 	$(INSTALL_DIR) $(1)/usr/share/pakon-light/domains_replace
@@ -62,9 +63,10 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_ignore/ads_downloaded.txt $(1)/usr/share/pakon-light/domains_ignore/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_ignore/rubbish.txt $(1)/usr/share/pakon-light/domains_ignore/
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/monitor.py $(1)/usr/bin/pakon-monitor
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/show.py $(1)/usr/bin/pakon-show
 	$(INSTALL_DIR) $(1)/usr/libexec/pakon-light
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/monitor.py $(1)/usr/libexec/pakon-light/pakon-monitor.py
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/handler.py $(1)/usr/libexec/pakon-light/pakon-handler.py
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/archive.py $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/create_db.py $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/domains_reapply.py $(1)/usr/libexec/pakon-light/
@@ -75,15 +77,19 @@ endef
 define Package/pakon-light/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-        /etc/init.d/pakon enable
-        /etc/init.d/pakon start
+        /etc/init.d/pakon-monitor enable
+        /etc/init.d/pakon-monitor start
+        /etc/init.d/pakon-handler enable
+        /etc/init.d/pakon-handler start
 }
 endef
 
 define Package/pakon-light/prerm
 #!/bin/sh
-        /etc/init.d/pakon disable
-        /etc/init.d/pakon stop
+        /etc/init.d/pakon-monitor disable
+        /etc/init.d/pakon-monitor stop
+        /etc/init.d/pakon-handler disable
+        /etc/init.d/pakon-handler stop
 endef
 
 
