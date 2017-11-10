@@ -22,7 +22,7 @@ define Package/qemu
   CATEGORY:=Utilities
   TITLE:=QEMU
   URL:=http://www.qemu.org
-  DEPENDS:=+glib2 +libpthread +libstdcpp +librt
+  DEPENDS:=+glib2 +libpthread +libstdcpp +librt +libgnutls +libnettle
 endef
 
 define Package/qemu/description
