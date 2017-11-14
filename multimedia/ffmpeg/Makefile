@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ffmpeg
 PKG_VERSION:=3.3.4
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://ffmpeg.org/releases/
@@ -275,7 +275,7 @@ $(call Package/ffmpeg/Default)
  SECTION:=libs
  CATEGORY:=Libraries
  TITLE+= libraries (full)
- DEPENDS+= +libpthread +zlib +libbz2 +libspeex +alsa-lib
+ DEPENDS+= +libpthread +zlib +libbz2 +libspeex +alsa-lib +libfreetype
  PROVIDES:= libffmpeg-mini libffmpeg-full libffmpeg-custom libffmpeg-audio-dec
  VARIANT:=full
 endef
@@ -337,7 +337,8 @@ FFMPEG_CONFIGURE:= \
 	--disable-vda \
 	--disable-vdpau \
 	--enable-outdev=fbdev \
-	--enable-avresample
+	--enable-avresample \
+	--enable-libfreetype
 
 ifeq ($(CONFIG_TARGET_mvebu),)
 FFMPEG_CONFIGURE+= \
