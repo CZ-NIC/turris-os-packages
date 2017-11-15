@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netmetr
-PKG_VERSION:=1.0
-PKG_RELEASE:=2
+PKG_VERSION:=1.1
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=775d0337bd142220c6e05abc9f39e9f28dcdfba6
+PKG_SOURCE_VERSION:=5066ca326e7b010a4337847e5ac6dece6fb50136
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -24,7 +24,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/$(PKG_NAME)
 	TITLE:=Speed measurement application
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
-	DEPENDS:=+rmbt-client +vixie-cron +python-base
+	DEPENDS:=+rmbt-client +vixie-cron +python-light
 endef
 define Package/$(PKG_NAME)/description
   Python wrapper for RMBT C application that
