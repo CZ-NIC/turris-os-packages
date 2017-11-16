@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=qemu
 PKG_VERSION:=2.10.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://wiki.qemu-project.org/download/
 PKG_SOURCE_MD5SUM:=0c4d98038480c5c19a95990eb8d04a51
@@ -55,6 +55,21 @@ CONFIGURE_ARGS+=			\
 
 define Package/qemu/install
 	$(MAKE) -C $(PKG_BUILD_DIR) DESTDIR="$(1)" install
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) files/qemu-refgister $(1)/etc/init.d/qemu
+endef
+
+define Package/qemu/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/qemu enable
+/etc/init.d/qemu restart
+}
+endef
+
+define Package/qemu/prerm
+#!/bin/sh
+/etc/init.d/qemu disable
 endef
 
 $(eval $(call BuildPackage,qemu))
