@@ -275,7 +275,7 @@ $(call Package/ffmpeg/Default)
  SECTION:=libs
  CATEGORY:=Libraries
  TITLE+= libraries (full)
- DEPENDS+= +libpthread +zlib +libbz2 +libspeex +alsa-lib +libfreetype
+ DEPENDS+= +libpthread +zlib +libbz2 +libspeex +alsa-lib +TARGET_mvebu_Turris-Omnia:libfreetype
  PROVIDES:= libffmpeg-mini libffmpeg-full libffmpeg-custom libffmpeg-audio-dec
  VARIANT:=full
 endef
