@@ -56,7 +56,7 @@ CONFIGURE_ARGS+=			\
 define Package/qemu/install
 	$(MAKE) -C $(PKG_BUILD_DIR) DESTDIR="$(1)" install
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) files/qemu-refgister $(1)/etc/init.d/qemu
+	$(INSTALL_BIN) files/qemu-register $(1)/etc/init.d/qemu
 endef
 
 define Package/qemu/postinst
