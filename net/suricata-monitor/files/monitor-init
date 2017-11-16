@@ -16,5 +16,5 @@ start_service() {
 
 stop_service() {
   mkdir -p /srv/suricata
-  [ \! -f /var/lib/suricata-monitor.db ] || xz --stdout -9 /var/lib/suricata-monitor.db > /srv/suricata/suricata-monitor.db.xz
+  [ \! -f /var/lib/suricata-monitor.db ] || xz --stdout /var/lib/suricata-monitor.db > /srv/suricata/suricata-monitor.db.xz
 }

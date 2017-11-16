@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata-monitor
 PKG_VERSION:=1.0
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -50,7 +50,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/suricata/output_conf.d
 	$(INSTALL_DATA) ./files/monitor-output.yaml $(1)/etc/suricata/output_conf.d/suricata-monitor.yaml
 	$(INSTALL_DIR) $(1)/usr/suricata-monitor
-	$(INSTALL_DATA) ./files/alert.tmpl $(1)/usr/suricata-monitor/alert.tmpl
+	$(INSTALL_DATA) ./files/alert.tmpl $(1)/etc/suricata-monitor/alert.tmpl
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/monitor.py $(1)/usr/bin/suricata-monitor
 	$(INSTALL_DIR) $(1)/etc/init.d

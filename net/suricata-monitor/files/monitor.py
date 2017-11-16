@@ -179,7 +179,7 @@ while True:
             if skip == False and data['alert']['severity'] < sev:
                 logging.debug('Sending mail to ' + to + ' about ' + data['alert']['category'])
                 if notifications:
-                    with open('/etc/suricata/message.tmpl','r') as file:
+                    with open('/etc/suricata-monitor/alert.tmpl','r') as file:
                         tmpl = file.read()
                         text = template(tmpl, data)
                         chld = subprocess.Popen(['/usr/bin/msmtp', '--host=' + smtp_server,
