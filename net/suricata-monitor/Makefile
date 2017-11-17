@@ -49,7 +49,7 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/suricata/output_conf.d
 	$(INSTALL_DATA) ./files/monitor-output.yaml $(1)/etc/suricata/output_conf.d/suricata-monitor.yaml
-	$(INSTALL_DIR) $(1)/usr/suricata-monitor
+	$(INSTALL_DIR) $(1)/etc/suricata-monitor
 	$(INSTALL_DATA) ./files/alert.tmpl $(1)/etc/suricata-monitor/alert.tmpl
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/monitor.py $(1)/usr/bin/suricata-monitor
