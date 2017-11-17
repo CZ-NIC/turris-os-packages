@@ -338,7 +338,11 @@ FFMPEG_CONFIGURE:= \
 	--disable-vdpau \
 	--enable-outdev=fbdev \
 	--enable-avresample \
+ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
 	--enable-libfreetype
+else
+	--disable-libfreetype
+endif
 
 ifeq ($(CONFIG_TARGET_mvebu),)
 FFMPEG_CONFIGURE+= \
