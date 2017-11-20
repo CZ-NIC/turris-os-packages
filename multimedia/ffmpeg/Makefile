@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ffmpeg
-PKG_VERSION:=3.3.4
-PKG_RELEASE:=2
+PKG_VERSION:=3.4
+PKG_RELEASE:=0
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://ffmpeg.org/releases/
-PKG_MD5SUM:=e14a0200c78ce5c918427e57cd406a0d
+PKG_MD5SUM:=4d368db3431895d140e6f5f7b4987911
 PKG_MAINTAINER:=Ted Hess <thess@kitschensync.net>
 
 PKG_LICENSE:=LGPL-2.1+ GPL-2+ LGPL-3
@@ -275,7 +275,7 @@ $(call Package/ffmpeg/Default)
  SECTION:=libs
  CATEGORY:=Libraries
  TITLE+= libraries (full)
- DEPENDS+= +libpthread +zlib +libbz2 +libspeex +alsa-lib +TARGET_mvebu_Turris-Omnia:libfreetype
+ DEPENDS+= +libpthread +zlib +libbz2 +libspeex +alsa-lib +LIBC_USE_MUSL:libfreetype
  PROVIDES:= libffmpeg-mini libffmpeg-full libffmpeg-custom libffmpeg-audio-dec
  VARIANT:=full
 endef
@@ -337,10 +337,13 @@ FFMPEG_CONFIGURE:= \
 	--disable-vda \
 	--disable-vdpau \
 	--enable-outdev=fbdev \
-	--enable-avresample \
-ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+	--enable-avresample
+
+ifeq ($(CONFIG_LIBC_USE_MUSL),y)
+FFMPEG_CONFIGURE+= \
 	--enable-libfreetype
 else
+FFMPEG_CONFIGURE+= \
 	--disable-libfreetype
 endif
 
