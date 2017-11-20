@@ -31,7 +31,7 @@
                    ALL
 --- a/sql/CMakeLists.txt
 +++ b/sql/CMakeLists.txt
-@@ -72,11 +72,19 @@ IF(NOT CMAKE_CROSSCOMPILING)
+@@ -61,11 +61,19 @@ IF(NOT CMAKE_CROSSCOMPILING)
      ${CMAKE_CURRENT_BINARY_DIR}/sql_yacc.h)
  ENDIF()
  
@@ -39,20 +39,19 @@
  ADD_CUSTOM_COMMAND(
    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/lex_token.h
    COMMAND gen_lex_token > lex_token.h
--  ${DEPENDS_gen_lex_token}
-+  DEPENDS gen_lex_token
-+)
+   DEPENDS gen_lex_token
+ )
 +ELSE()
 +ADD_CUSTOM_COMMAND(
 +  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/lex_token.h
 +  COMMAND ${IMPORT_EXECUTABLES}/sql/gen_lex_token > lex_token.h
 +  DEPENDS ${IMPORT_EXECUTABLES}/sql/gen_lex_token
- )
++)
 +ENDIF()
  
  ADD_DEFINITIONS(-DMYSQL_SERVER -DHAVE_EVENT_SCHEDULER)
  
-@@ -332,11 +340,19 @@ IF(NOT CMAKE_CROSSCOMPILING)
+@@ -356,11 +364,19 @@ IF(NOT CMAKE_CROSSCOMPILING)
    ADD_EXECUTABLE(gen_lex_hash gen_lex_hash.cc)
  ENDIF()
  
@@ -60,15 +59,14 @@
  ADD_CUSTOM_COMMAND(
    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/lex_hash.h
    COMMAND gen_lex_hash > lex_hash.h
--  ${DEPENDS_gen_lex_hash}
-+  DEPENDS gen_lex_hash
-+)
+   DEPENDS gen_lex_hash
+ )
 +ELSE()
 +ADD_CUSTOM_COMMAND(
 +  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/lex_hash.h
 +  COMMAND ${IMPORT_EXECUTABLES}/sql/gen_lex_hash > lex_hash.h
 +  DEPENDS ${IMPORT_EXECUTABLES}/sql/gen_lex_hash
- )
++)
 +ENDIF()
  
  MYSQL_ADD_EXECUTABLE(mysql_tzinfo_to_sql tztime.cc COMPONENT Server)
@@ -101,7 +99,7 @@
      ADD_CUSTOM_COMMAND(OUTPUT ${file} DEPENDS ${srcfile}
 --- a/scripts/CMakeLists.txt
 +++ b/scripts/CMakeLists.txt
-@@ -45,6 +45,7 @@ ELSE()
+@@ -46,6 +46,7 @@ ELSE()
  ENDIF()
  
  # Build mysql_fix_privilege_tables.c
@@ -109,7 +107,7 @@
  ADD_CUSTOM_COMMAND(
    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/mysql_fix_privilege_tables_sql.c
    ${CAT_COMMAND}
-@@ -58,6 +59,21 @@ ADD_CUSTOM_COMMAND(
+@@ -59,6 +60,21 @@ ADD_CUSTOM_COMMAND(
    ${CMAKE_CURRENT_SOURCE_DIR}/mysql_system_tables_fix.sql
    ${CMAKE_CURRENT_SOURCE_DIR}/mysql_performance_tables.sql
  )
