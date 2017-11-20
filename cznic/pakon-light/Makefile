@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-light
 PKG_VERSION:=0.9
-PKG_RELEASE:=19
+PKG_RELEASE:=20
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -30,7 +30,7 @@ define Package/pakon-light
 	CATEGORY:=Network
 	SUBMENU:=Collect traffic events from suricata IDS
 	TITLE:=PArental KONtrol - light
-	DEPENDS:=+suricata +python3-light +python3-sqlite3 +sqlite3-cli
+	DEPENDS:=+suricata +python3-light +python3-sqlite3 +sqlite3-cli +pakon-light-lists
 endef
 
 define Package/$(PKG_NAME)/description
@@ -58,10 +58,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/pakon-cron $(1)/etc/cron.d/pakon
 	$(INSTALL_DIR) $(1)/usr/share/pakon-light/domains_replace
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_replace/dist.conf $(1)/usr/share/pakon-light/domains_replace/
 	$(INSTALL_DIR) $(1)/usr/share/pakon-light/domains_ignore
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_ignore/ads_downloaded.txt $(1)/usr/share/pakon-light/domains_ignore/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_ignore/rubbish.txt $(1)/usr/share/pakon-light/domains_ignore/
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/show.py $(1)/usr/bin/pakon-show
 	$(INSTALL_DIR) $(1)/usr/libexec/pakon-light
