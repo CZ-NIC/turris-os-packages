@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=59.4
-PKG_RELEASE:=2
+PKG_VERSION:=60.0
+PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -35,13 +35,15 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/opkg-trans $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgupdate $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/opkg $(1)/usr/bin/opkg-pkgupdate-wrapper.sh
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/updater.sh $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/updater-unstuck.sh $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/updater-wipe.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/updater
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/* $(1)/etc/updater
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/entry.lua $(1)/etc/updater
+	$(INSTALL_DIR) $(1)/etc/updater/conf.d
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/base.lua $(1)/etc/updater/conf.d/base.lua
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/example.lua $(1)/etc/updater/conf.d/example.lua
 
 	$(INSTALL_DIR) $(1)/etc/updater/hook_preupdate
 	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
@@ -69,8 +71,8 @@ endif
 endef
 
 define Package/$(PKG_NAME)/conffiles
-/etc/updater/auto.lua
-/etc/updater/user.lua
+/etc/updater/conf.d/base.lua
+/etc/updater/conf.d/example.lua
 /etc/config/updater
 endef
 
@@ -79,6 +81,7 @@ define Package/$(PKG_NAME)/postinst
 [ -n "$$IPKG_INSTROOT" ] || {
 	/etc/init.d/updater enable || true
 }
+
 # Remove morphered syntax from auto.lua
 # This matches all Install and Package commands not followed by brackets. Whole
 # line is enclosed with brackets and between strings and tables are added commas.
@@ -89,6 +92,14 @@ sed -E '/^(Install|Package) +[^(]/{
 	}' "$$IPKG_INSTROOT/etc/updater/auto.lua" > "$$AUTOTMP"
 # Note: Edit in place in busybox limits regexp syntax so we are using our temporally file
 mv "$$AUTOTMP" "$$IPKG_INSTROOT/etc/updater/auto.lua"
+
+# With updater version 60.0 all configurations were moved to /etc/updater/conf.d/
+conf_move() {
+	[ ! -f "$$IPKG_INSTROOT/etc/updater/$$1" ] || \
+		mv "$$IPKG_INSTROOT/etc/updater/$$1" "$$IPKG_INSTROOT/etc/updater/conf.d/$$2"
+}
+conf_move user.lua user.lua
+conf_move auto.lua opkg-auto.lua
 endef
 
 define Build/Compile
@@ -106,6 +117,43 @@ define Host/Install
 	$(INSTALL_DIR) $(STAGING_DIR_HOST)/usr/bin
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/opkg-trans $(STAGING_DIR_HOST)/usr/bin/
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/pkgupdate $(STAGING_DIR_HOST)/usr/bin/
+endef
+
+
+define Package/$(PKG_NAME)-localrepo
+	TITLE:=Next generation updater local repository manager
+	DEPENDS:=+python-light
+endef
+
+define Package/$(PKG_NAME)-localrepo/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/localrepo/localrepo $(1)/usr/bin/localrepo
+	$(INSTALL_DIR) $(1)/etc/updater/conf.d
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/localrepo/localrepo.lua $(1)/etc/updater/conf.d/localrepo.lua
+endef
+
+
+define Package/$(PKG_NAME)-opkg
+	TITLE:=OPKG compatibility wrapper for next generation updater
+	DEPENDS:=+opkg +$(PKG_NAME)-localrepo
+endef
+
+define Package/$(PKG_NAME)-opkg/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/opkg-wrapper/opkg $(1)/usr/bin/opkg-pkgupdate-wrapper.sh
+	$(INSTALL_DIR) $(1)/usr/share/updater
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/localrepo/content2localrepo $(1)/usr/share/updater/opkg-content2localrepo.sh
+	$(INSTALL_DIR) $(1)/etc/updater/conf.d
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/opkg-wrapper/opkg.lua $(1)/etc/updater/conf.d/opkg.lua
+endef
+
+# We are calling migration to localrepo from updater-ng-opkg package posinst as
+# this one is called after updater-ng-localrepo one and script expect both of
+# these packages.
+define Package/$(PKG_NAME)-opkg/postinst
+[ -n "$$IPKG_INSTROOT" ] || {
+	/usr/share/updater/opkg-content2localrepo.sh
+}
 endef
 
 # Current implementation of updater can't remove package before replan and so we
@@ -138,6 +186,8 @@ define Package/updater/install
 endef
 
 $(eval $(call BuildPackage,updater-ng))
+$(eval $(call BuildPackage,updater-ng-localrepo))
+$(eval $(call BuildPackage,updater-ng-opkg))
 $(eval $(call BuildPackage,opkg-trans))
 $(eval $(call BuildPackage,updater))
 $(eval $(call HostBuild))
