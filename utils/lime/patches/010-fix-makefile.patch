@@ -1,0 +1,50 @@
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -24,32 +24,36 @@ obj-m := lime.o
+ lime-objs := tcp.o disk.o main.o
+
+ KVER ?= $(shell uname -r)
++PWD ?= $(shell pwd)
+
+-PWD := $(shell pwd)
++KERNEL_SRC_DIR ?= /lib/modules/$(KVER)/build
++KERNEL_CROSS_COMPILE ?= arm-openwrt-linux-muslgnueabi-
++KERNEL_ARCH ?= arm
+
+ .PHONY: modules modules_install clean distclean debug
+
+ default:
+-	$(MAKE) -C /lib/modules/$(KVER)/build M="$(PWD)" modules
++	$(MAKE) CROSS_COMPILE=$(KERNEL_CROSS_COMPILE) ARCH=$(KERNEL_ARCH) -C $(KERNEL_SRC_DIR) M="$(PWD)" modules
+ 	strip --strip-unneeded lime.ko
+-	mv lime.ko lime-$(KVER).ko
++	#mv lime.ko lime-$(KVER).ko
+
+ debug:
+-	KCFLAGS="-DLIME_DEBUG" $(MAKE) -C /lib/modules/$(KVER)/build M="$(PWD)" modules
++	KCFLAGS="-DLIME_DEBUG" $(MAKE) -C $(KERNEL_SRC_DIR) M="$(PWD)" modules
+ 	strip --strip-unneeded lime.ko
+-	mv lime.ko lime-$(KVER).ko
++	#mv lime.ko lime-$(KVER).ko
+
+ modules:    main.c disk.c tcp.c lime.h
+-	$(MAKE) -C /lib/modules/$(KVER)/build M="$(PWD)" $@
++	$(MAKE) CROSS_COMPILE=$(KERNEL_CROSS_COMPILE) ARCH=$(KERNEL_ARCH) -C $(KERNEL_SRC_DIR) M="$(PWD)" $@
++	#$(MAKE) -C /lib/modules/$(KVER)/build M="$(PWD)" $@
+ 	strip --strip-unneeded lime.ko
+
+-modules_install:    modules
+-	$(MAKE) -C /lib/modules/$(KVER)/build M="$(PWD)" $@
++#modules_install:    modules
++#	$(MAKE) -C /lib/modules/$(KVER)/build M="$(PWD)" $@
+
+ clean:
+ 	rm -f *.o *.mod.c Module.symvers Module.markers modules.order \.*.o.cmd \.*.ko.cmd \.*.o.d
+ 	rm -rf \.tmp_versions
+
+-distclean: mrproper
+-mrproper:    clean
+-	rm -f *.ko
++#distclean: mrproper
++#mrproper:    clean
++#	rm -f *.ko
