@@ -38,7 +38,7 @@ CA_FILE=/etc/ssl/www_turris_cz_ca.pem
 
 
 CODE=$(cat /usr/share/server-uplink/registration_code)
-URL="https://www.turris.cz/api/registration-lookup.txt"
+URL="https://project.turris.cz/api/registration-lookup.txt"
 curl -G -s -S -L -H "Accept: plain/text" -H "Accept-Language: $LANG" \
 	--data-urlencode "registration_code=${CODE}" --data-urlencode "email=${EMAIL}" \
 	--cacert "$CA_FILE" \

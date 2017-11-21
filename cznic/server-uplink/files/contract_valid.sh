@@ -23,7 +23,7 @@ set -e
 TIMEOUT=120
 CA_FILE=/etc/ssl/www_turris_cz_ca.pem
 OUTPUT_FILE=/usr/share/server-uplink/contract_valid
-CONTRACT_URL='https://www.turris.cz/api/contract-valid.txt'
+CONTRACT_URL='https://project.turris.cz/api/contract-valid.txt'
 
 
 CODE=$(cat /usr/share/server-uplink/registration_code)
