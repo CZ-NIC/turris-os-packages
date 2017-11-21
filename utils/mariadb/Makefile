@@ -41,7 +41,7 @@ CMAKE_OPTIONS:= -DSTACK_DIRECTION=-1 \
                 -DHAVE_IB_GCC_ATOMIC_BUILTINS=1 \
                 -DHAVE_GCC_ATOMIC_BUILTINS=1 \
 		-DSECURITY_HARDENED=0 \
-                -DIMPORT_EXECUTABLES=$(STAGING_DIR_HOST)/mariadb-import_executables \
+                -DIMPORT_EXECUTABLES=$(STAGING_DIR_HOST)/mariadb-import_executables/import_executables.cmake \
                 -DPLUGIN_HANDLERSOCKET=NO \
 		-DPLUGIN_AUTH_PAM=NO \
                 -DPLUGIN_XTRADB=DYNAMIC \
