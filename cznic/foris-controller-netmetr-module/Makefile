@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-netmetr-module
 PKG_VERSION:=0.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-netmetr-module.git
@@ -28,7 +28,7 @@ $(call include_mk, python-package.mk)
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
-		+foris-controller +turris-netmetr +netmetr
+		+foris-controller +netmetr
 	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
 endef
 
