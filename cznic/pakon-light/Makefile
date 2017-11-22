@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-light
 PKG_VERSION:=0.9
-PKG_RELEASE:=22
+PKG_RELEASE:=23
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -71,9 +71,9 @@ define Package/pakon-light/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
         /etc/init.d/pakon-monitor enable
-        /etc/init.d/pakon-monitor start
+        /etc/init.d/pakon-monitor restart
         /etc/init.d/pakon-handler enable
-        /etc/init.d/pakon-handler start
+        /etc/init.d/pakon-handler restart
 }
 endef
 
