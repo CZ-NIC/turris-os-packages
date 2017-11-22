@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-light
 PKG_VERSION:=0.9
-PKG_RELEASE:=20
+PKG_RELEASE:=21
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=a3a094f07a460b606013ac58532d2d5d700c2283
+PKG_SOURCE_VERSION:=ee3c9de9e6bb3b2cd60e41ac11a01cae22584a8c
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -35,10 +35,6 @@ endef
 
 define Package/$(PKG_NAME)/description
   Simple daemon that is able to collect events from suricata, store them locally to SQLite DB.
-endef
-
-define Package/$(PKG_NAME)/conffiles
-/usr/share/pakon-light/domains_replace/dist.conf
 endef
 
 define Build/Compile
