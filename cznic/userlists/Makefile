@@ -22,14 +22,12 @@ define Build/Compile
 	true
 endef
 
-BRAND?=turris
-ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
-BRAND:=omnia
-endif
-
 define Package/userlists/install
 	$(INSTALL_DIR) $(1)/usr/share/updater/
-	$(INSTALL_DATA) ./files/definitions-$(BRAND) $(1)/usr/share/updater/definitions
+	$(INSTALL_DATA) ./files/definitions $(1)/usr/share/updater/definitions
+ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nor_TURRISNOR)$(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
+	sed -i "/^\['lxc'\]/,/},/d" $(1)/usr/share/updater/definitions
+endif
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
