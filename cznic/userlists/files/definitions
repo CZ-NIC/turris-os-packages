@@ -79,6 +79,14 @@ lists = {
     title_de = 'Netzwerkprotokoll-Erweiterungen',
     title_en = 'Extensions of network protocols'
 },
+['netmetr'] = {
+    description_cs = 'Provádí aktivní měření rychlosti připojení k Internetu pomocí služby netmetr.cz (EXPERIMENTÁLNÍ).',
+    description_de = 'Führt eine aktive Messung der Internet-Geschwindigkeit mit Hilfe des Dienstes netmetr.cz durch (EXPERIMENTELL)',
+    description_en = 'Actively measures speed of Internet connection using netmetr.cz service (EXPERIMENTAL).',
+    title_cs = 'Měření rychlostí připojení k Internetu',
+    title_de = 'Messung der Internet-Geschwindigkeit',
+    title_en = 'Internet connection speed measurement'
+},
 ['openvpn'] = {
     description_cs = 'Jednoduché nastavení OpenVPN serveru z Forisu.',
     description_de = 'Einfache Einstellung des OpenVPN server von Foris.',
