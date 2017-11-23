@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-light-lists
-PKG_VERSION:=2
+PKG_VERSION:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light-lists.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=c2c228f2d63bcf2110daa3fecaa772dc2a37c076
+PKG_SOURCE_VERSION:=ca4059dfa5286bc5b948d391509b8592d735c476
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Petráček <martin.petracek@nic.cz>
