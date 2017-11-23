@@ -7,9 +7,9 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=pakon-light
-PKG_VERSION:=0.9
-PKG_RELEASE:=24
+PKG_NAME:=pakon
+PKG_VERSION:=1
+PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -25,12 +25,12 @@ PKG_INSTALL:=0
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/pakon-light
+define Package/pakon
 	SECTION:=net
 	CATEGORY:=Network
 	SUBMENU:=Collect traffic events from suricata IDS
 	TITLE:=PArental KONtrol - light
-	DEPENDS:=+suricata +python3-light +python3-sqlite3 +sqlite3-cli +pakon-light-lists
+	DEPENDS:=+suricata +python3-light +python3-sqlite3 +sqlite3-cli +pakon-lists
 endef
 
 define Package/$(PKG_NAME)/description
@@ -67,7 +67,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/backup_sqlite.sh $(1)/usr/libexec/pakon-light/
 endef
 
-define Package/pakon-light/postinst
+define Package/pakon/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
         /etc/init.d/pakon-monitor enable
@@ -77,7 +77,7 @@ define Package/pakon-light/postinst
 }
 endef
 
-define Package/pakon-light/prerm
+define Package/pakon/prerm
 #!/bin/sh
         /etc/init.d/pakon-monitor disable
         /etc/init.d/pakon-monitor stop
@@ -85,5 +85,4 @@ define Package/pakon-light/prerm
         /etc/init.d/pakon-handler stop
 endef
 
-
-$(eval $(call BuildPackage,pakon-light))
+$(eval $(call BuildPackage,$(PKG_NAME)))

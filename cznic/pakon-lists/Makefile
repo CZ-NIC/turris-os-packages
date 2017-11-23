@@ -7,8 +7,8 @@
 #
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=pakon-light-lists
-PKG_VERSION:=3
+PKG_NAME:=pakon-lists
+PKG_VERSION:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light-lists.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -22,12 +22,6 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-endef
-
-define Package/$(PKG_NAME)/conffiles
-/usr/share/pakon-light/domains_replace/dist.conf
-/usr/share/pakon-light/domains_ignore/ads_dist.txt
-/usr/share/pakon-light/domains_ignore/rubbish_dist.txt
 endef
 
 
