@@ -44,4 +44,13 @@ endef
 # Package install definition
 $(eval $(call ForisControllerModule,$(PKG_NAME)))
 
+define Package/$(1)/postinst
+#!/bin/sh
+set -x
+if [ -z "$$$${IPKG_INSTROOT}" ]; then
+	/etc/init.d/foris-controller restart
+	netmetr
+fi
+endef
+
 $(eval $(call BuildPackage,$(PKG_NAME)))
