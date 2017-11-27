@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
 PKG_VERSION:=60.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -71,7 +71,6 @@ endif
 endef
 
 define Package/$(PKG_NAME)/conffiles
-/etc/updater/conf.d/base.lua
 /etc/updater/conf.d/example.lua
 /etc/config/updater
 endef
@@ -95,8 +94,9 @@ mv "$$AUTOTMP" "$$IPKG_INSTROOT/etc/updater/auto.lua"
 
 # With updater version 60.0 all configurations were moved to /etc/updater/conf.d/
 conf_move() {
-	[ ! -f "$$IPKG_INSTROOT/etc/updater/$$1" ] || \
+	if [ -f "$$IPKG_INSTROOT/etc/updater/$$1" -a ! -f "$$IPKG_INSTROOT/etc/updater/conf.d/$$2" ]; then
 		mv "$$IPKG_INSTROOT/etc/updater/$$1" "$$IPKG_INSTROOT/etc/updater/conf.d/$$2"
+	fi
 }
 conf_move user.lua user.lua
 conf_move auto.lua opkg-auto.lua
