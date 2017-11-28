@@ -30,7 +30,7 @@ define Package/pakon
 	CATEGORY:=Network
 	SUBMENU:=Collect traffic events from suricata IDS
 	TITLE:=PArental KONtrol - light
-	DEPENDS:=+suricata +python3-light +python3-sqlite3 +sqlite3-cli +pakon-lists
+	DEPENDS:=+suricata +xz +python3-light +python3-sqlite3 +sqlite3-cli +pakon-lists
 endef
 
 define Package/$(PKG_NAME)/description
