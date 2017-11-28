@@ -7,7 +7,7 @@ EXTRA_COMMANDS="status"
 EXTRA_HELP="        status Get suricata status (as exit code)"
 IPTABLES_RULES="/tmp/suricata/suricata.fw"
 IP6TABLES_RULES="/tmp/suricata/suricata.fw6"
-PID_FILE="/var/run/suricata.pid"
+PID_FILE="/var/run/suricata/suricata.pid"
 QUEUE_NUM=10
 
 
@@ -84,6 +84,7 @@ stop_service() {
 }
 
 start_service() {
+	status && echo "already running" && exit 0
 	mkdir -p /var/log/suricata
 	mkdir -p /var/run/suricata
 	mkdir -p /tmp/suricata

@@ -74,7 +74,7 @@ define Package/suricata/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 	/etc/init.d/suricata enable
-	/etc/init.d/suricata start
+	/etc/init.d/suricata restart
 }
 endef
 
