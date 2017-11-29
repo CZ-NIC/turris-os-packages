@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-btrfs-migrate
-PKG_VERSION:=1.4
+PKG_VERSION:=1.5
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -22,7 +22,7 @@ define Package/turris-btrfs-migrate
   SECTION:=utils
   CATEGORY:=Utilities
   SUBMENU:=Filesystem
-  DEPENDS:=+btrfs-progs +uboot-envtools +fdisk +mkdosfs +schnapps @TARGET_mpc85xx_p2020_nand +kmod-fs-vfat
+  DEPENDS:=+btrfs-progs +uboot-envtools +fdisk +mkdosfs +schnapps @TARGET_mpc85xx_p2020_nand +kmod-fs-vfat +kmod-nls-cp437 +kmod-nls-iso8859-1
   TITLE:=Btrfs migration tool for old Turris routers
 endef
 
