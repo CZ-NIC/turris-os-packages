@@ -28,7 +28,7 @@ mkdir -p /etc/schnapps
 echo 'ROOT_DEV="/dev/mmcblk0p2"' > /etc/schnapps/config
 
 ANS=""
-echo "Are you sure you want to loose everything on mmcblk0? (yes/no)"
+echo "Are you sure you want to lose everything on mmcblk0? (yes/no)"
 read ANS
 if [ "$ANS" \!= "yes" ]; then
 	exit 0
