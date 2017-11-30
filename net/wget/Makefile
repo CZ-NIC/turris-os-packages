@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wget
 PKG_VERSION:=1.18
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
@@ -92,6 +92,22 @@ endef
 define Package/wget-nossl/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/wget $(1)/usr/bin/wget-nossl
+endef
+
+define Package/wget/postinst
+#!/bin/sh
+if [ -z "$${IPKG_INSTROOT}" ] &&  [ "`readlink "/bin/wget"`" = "busybox" ]; then
+	rm /bin/wget
+	ln -s /usr/bin/wget /bin/wget
+fi
+endef
+
+define Package/wget/postrm
+#!/bin/sh
+if [ -z "$${IPKG_INSTROOT}" ] &&  [ "`readlink "/bin/wget"`" = "/usr/bin/wget" ]; then
+	rm /bin/wget
+        cd /bin && ln -s busybox /bin/wget
+fi
 endef
 
 define Package/wget-nossl/postinst
