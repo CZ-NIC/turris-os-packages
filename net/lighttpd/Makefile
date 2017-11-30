@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd
-PKG_VERSION:=1.4.45
-PKG_RELEASE:=5
+PKG_VERSION:=1.4.47
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://download.lighttpd.net/lighttpd/releases-1.4.x
-PKG_MD5SUM:=a128e1eda76899ce3fd115efae5fe631
+PKG_MD5SUM:=e47e64a9cc2b824c45792a6b1a5542945956e77ede3454845f42548495946c1c
 
 PKG_LICENSE:=BSD-3c
 PKG_LICENSE_FILES:=COPYING
@@ -60,6 +60,8 @@ config LIGHTTPD_SSL
 	  option is required if you enable the SSL engine in your
 	  lighttpd confguration file.
 endef
+
+TARGET_CFLAGS += --std=c99
 
 CONFIGURE_ARGS+= \
 	--libdir=/usr/lib/lighttpd \
@@ -181,6 +183,7 @@ $(eval $(call BuildPlugin,compress,Compress output,+PACKAGE_lighttpd-mod-compres
 $(eval $(call BuildPlugin,evasive,Evasive,,30))
 $(eval $(call BuildPlugin,evhost,Exnhanced Virtual-Hosting,,30))
 $(eval $(call BuildPlugin,expire,Expire,,30))
+$(eval $(call BuildPlugin,openssl,Openssl,,30))
 $(eval $(call BuildPlugin,extforward,Extract client,,30))
 $(eval $(call BuildPlugin,fastcgi,FastCGI,,30))
 $(eval $(call BuildPlugin,flv_streaming,FLV streaming,,30))
