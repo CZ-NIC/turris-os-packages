@@ -63,7 +63,7 @@ endef
 $(eval $(call ForisPlugin,$(PKG_NAME),openvpn))
 
 # Translation definitions
-FORIS_TRANSLATIONS:=cs de sk pl fr ru
+FORIS_TRANSLATIONS:=cs de sk pl fr ru hu
 $(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),openvpn,$(trans))))
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
