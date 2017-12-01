@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
 PKG_VERSION:=60.0.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -77,20 +77,24 @@ endef
 
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
-[ -n "$$IPKG_INSTROOT" ] || {
+if [ -z "$$IPKG_INSTROOT" ]; then
 	/etc/init.d/updater enable || true
-}
+fi
 
 # Remove morphered syntax from auto.lua
 # This matches all Install and Package commands not followed by brackets. Whole
 # line is enclosed with brackets and between strings and tables are added commas.
-AUTOTMP="$$(mktemp)"
-sed -E '/^(Install|Package) +[^(]/{
-		s/(Install|Package) +(.*)/\1(\2)/;
-		s/("|\}) ("|\{)/\1, \2/g
-	}' "$$IPKG_INSTROOT/etc/updater/auto.lua" > "$$AUTOTMP"
-# Note: Edit in place in busybox limits regexp syntax so we are using our temporally file
-mv "$$AUTOTMP" "$$IPKG_INSTROOT/etc/updater/auto.lua"
+# Note: we don't have to check opkg-auto.lua as we do this migration before we
+# move auto.lua to that name.
+if [ -f "$$IPKG_INSTROOT/etc/updater/auto.lua" ]; then
+	AUTOTMP="$$(mktemp)"
+	sed -E '/^(Install|Package) +[^(]/{
+			s/(Install|Package) +(.*)/\1(\2)/;
+			s/("|\}) ("|\{)/\1, \2/g
+		}' "$$IPKG_INSTROOT/etc/updater/auto.lua" > "$$AUTOTMP"
+	# Note: Edit in place in busybox limits regexp syntax so we are using our temporally file
+	mv "$$AUTOTMP" "$$IPKG_INSTROOT/etc/updater/auto.lua"
+fi
 
 # With updater version 60.0 all configurations were moved to /etc/updater/conf.d/
 conf_move() {
