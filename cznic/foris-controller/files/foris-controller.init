@@ -17,8 +17,8 @@
 #You should have received a copy of the GNU General Public License
 #along with foris-controller.  If not, see <http://www.gnu.org/licenses/>.
 
-START=99
-STOP=1
+# Should start before lighttpd starts foris
+START=70
 
 USE_PROCD=1
 PROG=/usr/bin/foris-controller
