@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-netmetr-module
 PKG_VERSION:=0.1.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-netmetr-module.git
@@ -47,7 +47,7 @@ $(eval $(call ForisControllerModule,$(PKG_NAME)))
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 set -x
-if [ -z "$$$${IPKG_INSTROOT}" ]; then
+if [ -z "$${IPKG_INSTROOT}" ]; then
 	/etc/init.d/foris-controller restart
 	netmetr
 fi
