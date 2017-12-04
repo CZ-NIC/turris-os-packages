@@ -35,5 +35,5 @@ else
 		"${URL}" | sed -e 's/^[^"]*"token":\s*"\([^"]*\)".*/\1/')
 
 	uci set haas.settings.token="${TOKEN}" && uci commit
-	/etc/init.d/haas-mitmproxy restart
+	/etc/init.d/haas-proxy restart
 fi
