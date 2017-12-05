@@ -28,6 +28,7 @@ define Package/haas-proxy
   URL:=https://haas.nic.cz
   DEPENDS:=+python-base +python-twisted +python-crypto +python-service-identity +server-uplink +sshpass
   CONFLICTS:=mitmproxy
+  PROVIDES:=mitmproxy
 endef
 
 define Package/haas-proxy/description
