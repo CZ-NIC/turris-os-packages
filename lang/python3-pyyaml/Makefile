@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-pyyaml
-PKG_VERSION:=3.11
+PKG_VERSION:=3.12
 PKG_RELEASE:=1
 
 PKG_SOURCE:=PyYAML-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://pypi.python.org/packages/source/P/PyYAML/
-PKG_MD5SUM:=f50e08ef0fe55178479d3a618efe21db
+PKG_SOURCE_URL:=https://pyyaml.org/download/pyyaml/
+PKG_MD5SUM:=4c129761b661d181ebf7ff4eb2d79950
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/PyYAML-$(PKG_VERSION)
 
@@ -26,7 +26,7 @@ define Package/python3-pyyaml
   CATEGORY:=Languages
   TITLE:=YAML parser and emitter for Python
   URL:=http://pyyaml.org/wiki/PyYAML
-  DEPENDS:=+python3
+  DEPENDS:=+python3-light
 endef
 
 define Package/python3-pyyaml/description
