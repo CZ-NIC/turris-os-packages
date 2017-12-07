@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon
-PKG_VERSION:=1
-PKG_RELEASE:=4
+PKG_VERSION:=1.1
+PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=16262221566f182acbe4dfb23f7db1edb01ea382
+PKG_SOURCE_VERSION:=c58c97fbf4c06aadfb7c7f63ba6cca47de68cde8
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -45,6 +45,10 @@ define Build/Install
   true
 endef
 
+define Package/$(PKG_NAME)/conffiles
+/etc/config/pakon
+endef
+
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/suricata/output_conf.d
 	$(INSTALL_DATA) ./files/pakon-output.yaml $(1)/etc/suricata/output_conf.d/pakon.yaml
@@ -64,6 +68,8 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/create_db.py $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/domains_reapply.py $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) ./files/backup_sqlite.sh $(1)/usr/libexec/pakon-light/
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/pakon-uci.example $(1)/etc/config/pakon
 endef
 
 define Package/pakon/postinst
