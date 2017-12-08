@@ -1,7 +1,6 @@
-diff -u -r socat-1.7.3.0/socat.c socat-1.7.3.0b/socat.c
---- socat-1.7.3.0/socat.c	2015-01-24 11:15:22.000000000 +0100
-+++ socat-1.7.3.0b/socat.c	2015-07-03 13:24:23.326489458 +0200
-@@ -298,7 +298,6 @@
+--- a/socat.c
++++ b/socat.c
+@@ -298,7 +298,6 @@ int main(int argc, const char *argv[]) {
        Sigaction(SIGABRT, &act, NULL);
        Sigaction(SIGBUS,  &act, NULL);
        Sigaction(SIGFPE,  &act, NULL);
