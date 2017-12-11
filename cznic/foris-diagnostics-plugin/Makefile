@@ -61,7 +61,7 @@ endef
 $(eval $(call ForisPlugin,$(PKG_NAME),diagnostics))
 
 # Translation definitions
-FORIS_TRANSLATIONS:=cs de sk pl fr ru lt
+FORIS_TRANSLATIONS:=cs de sk pl fr ru lt hu
 $(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),diagnostics,$(trans))))
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
