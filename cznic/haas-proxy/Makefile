@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-proxy
 PKG_VERSION:=1.2
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/haas/proxy.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -60,9 +60,18 @@ define Package/haas-proxy/install
 	$(RM) -rf $(1)/usr/lib/python2.7/site-packages/haas_proxy-1.2*
 endef
 
+define Package/haas-proxy/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/haas-proxy enable || true
+/usr/share/haas/register.sh || true
+}
+endef
+
 define Package/haas-proxy/prerm
-	/etc/init.d/haas-proxy stop || true
-	/etc/init.d/haas-proxy disable || true
+#!/bin/sh
+/etc/init.d/haas-proxy stop || true
+/etc/init.d/haas-proxy disable || true
 endef
 
 $(eval $(call BuildPackage,haas-proxy))
