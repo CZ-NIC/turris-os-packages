@@ -32,7 +32,7 @@ else
 		-X POST -d "{\"registration_code\": \"${CODE}\"}" \
 		--cacert "$CA_FILE" \
 		-m "${TIMEOUT}" \
-		"${URL}" | sed -e 's/^[^"]*"token":\s*"\([^"]*\)".*/\1/')
+		"${URL}" | sed -n -e 's/^[^"]*"token":\s*"\([^"]*\)".*/\1/p')
 
 	uci set haas.settings.token="${TOKEN}" && uci commit
 	/etc/init.d/haas-proxy restart
