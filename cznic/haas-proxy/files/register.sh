@@ -22,13 +22,13 @@
 TIMEOUT=120
 CA_FILE=/etc/ssl/www_turris_cz_ca.pem  # let's encrypt inside
 
-if uci -q get haas.settings.token 2>&1 >/dev/null ; then
+if [ -n "`uci -q get haas.settings.token 2>&1 >/dev/null`" ]; then
 	:
 else
 	set -e
 	CODE=$(cat /usr/share/server-uplink/registration_code)
 	URL="https://haas.nic.cz/api/turris/register"
-	TOKEN=$(curl -s -H "Content-Type: application/json" \
+	TOKEN=$(curl --faill -s -H "Content-Type: application/json" \
 		-X POST -d "{\"registration_code\": \"${CODE}\"}" \
 		--cacert "$CA_FILE" \
 		-m "${TIMEOUT}" \
