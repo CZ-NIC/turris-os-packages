@@ -22,7 +22,7 @@
 TIMEOUT=120
 CA_FILE=/etc/ssl/www_turris_cz_ca.pem  # let's encrypt inside
 
-if [ -n "`uci -q get haas.settings.token 2>&1 >/dev/null`" ]; then
+if [ -n "`uci -q get haas.settings.token 2>/dev/null`" ]; then
 	:
 else
 	set -e
