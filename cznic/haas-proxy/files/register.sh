@@ -28,7 +28,7 @@ else
 	set -e
 	CODE=$(cat /usr/share/server-uplink/registration_code)
 	URL="https://haas.nic.cz/api/turris/register"
-	TOKEN=$(curl --faill -s -H "Content-Type: application/json" \
+	TOKEN=$(curl --fail -s -H "Content-Type: application/json" \
 		-X POST -d "{\"registration_code\": \"${CODE}\"}" \
 		--cacert "$CA_FILE" \
 		-m "${TIMEOUT}" \
