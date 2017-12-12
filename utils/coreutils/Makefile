@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=coreutils
-PKG_VERSION:=8.23
+PKG_VERSION:=8.28
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GNU/coreutils
-PKG_MD5SUM:=abed135279f87ad6762ce57ff6d89c41
+PKG_MD5SUM:=e7cb20d0572cc40d9f47ede6454406d1
 PKG_BUILD_DEPENDS:=libpthread
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 
