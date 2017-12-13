@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon
 PKG_VERSION:=1.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -79,6 +79,7 @@ define Package/pakon/postinst
         /etc/init.d/pakon-monitor restart
         /etc/init.d/pakon-handler enable
         /etc/init.d/pakon-handler restart
+	/etc/init.d/suricata restart
 }
 endef
 
