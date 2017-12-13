@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
 PKG_VERSION:=60.0.5
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -134,6 +134,15 @@ define Package/$(PKG_NAME)-localrepo/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/localrepo/localrepo $(1)/usr/bin/localrepo
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/localrepo/localrepo.lua $(1)/etc/updater/conf.d/localrepo.lua
+endef
+
+# Repository should be consistent when updater is executed successfully but this
+# ensures that we will fix any problems that can be caused by older version of
+# localrepo
+define Package/$(PKG_NAME)-localrepo/postinst
+[ -n "$$IPKG_INSTROOT" ] || {
+	localrepo check --fix
+}
 endef
 
 
