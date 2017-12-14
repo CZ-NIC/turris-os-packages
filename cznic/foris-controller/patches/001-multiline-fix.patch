@@ -1,0 +1,26 @@
+diff --git a/foris_controller_backends/cmdline/__init__.py b/foris_controller_backends/cmdline/__init__.py
+index 96a41b6..624e65e 100644
+--- a/foris_controller_backends/cmdline/__init__.py
++++ b/foris_controller_backends/cmdline/__init__.py
+@@ -101,7 +101,7 @@ class BaseCmdLine(object):
+         if not retval == 0:
+             logger.error("Command %s failed." % str(args))
+             raise BackendCommandFailed(retval, args)
+-        match = re.search(regex, stdout)
++        match = re.search(regex, stdout, re.MULTILINE)
+         if not match:
+             logger.error("Failed to parse output of %s." % str(args))
+             raise FailedToParseCommandOutput(args, stdout)
+diff --git a/foris_controller_backends/files/__init__.py b/foris_controller_backends/files/__init__.py
+index de3e857..d985d71 100644
+--- a/foris_controller_backends/files/__init__.py
++++ b/foris_controller_backends/files/__init__.py
+@@ -61,7 +61,7 @@ class BaseFile(object):
+         :rtype: tuple
+         """
+         content = self._file_content(path)
+-        match = re.search(regex, content)
++        match = re.search(regex, content, re.MULTILINE)
+         if not match:
+             logger.error("Failed to parse content of '%s'." % path)
+             raise FailedToParseFileContent(path, content)
