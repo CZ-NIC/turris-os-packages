@@ -6,3 +6,4 @@ $HTTP["url"] =~ "^/*$" {
 
 # Make sure that wirzard passes during a migration from older image
 url.redirect += ( "^/wizard/(.*)" => "/foris/wizard/main/$1" )
+url.redirect += ( "^/foris/wizard/(step/.*)" => "/foris/wizard/main/$1" )
