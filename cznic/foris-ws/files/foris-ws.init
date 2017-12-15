@@ -22,12 +22,10 @@ STOP=1
 
 USE_PROCD=1
 PROG=/usr/bin/foris-ws
-SOCAT=/usr/share/foris-ws/bin/socat.sh
 
 start_service() {
 	config_load foris-ws
-	config_get secure_port main secure_port 9443
-	config_get insecure_port main insecure_port 9080
+	config_get port main port 9080
 	config_get_bool debug main debug 0
 	config_get bus main bus ubus
 
@@ -38,15 +36,11 @@ start_service() {
 	procd_open_instance
 	if [ "$bus" == "ubus" ]; then
 		config_get path ubus path "/var/run/ubus.sock"
-		procd_set_param command "$PROG" ${debug_arg:-} -a ubus --host "0.0.0.0" --port "$insecure_port" ubus --path "$path"
+		procd_set_param command "$PROG" ${debug_arg:-} -a ubus --host "127.0.0.1" --port "$port" ubus --path "$path"
 	elif [ "$bus" == "unix-socket" ]; then
 		config_get path unix path "/var/run/ubus.sock"
-		procd_set_param command "$PROG" ${debug_arg:-} -a ubus --host "0.0.0.0" --port "$insecure_port" unix-socket --path "$path"
+		procd_set_param command "$PROG" ${debug_arg:-} -a ubus --host "127.0.0.1" --port "$port" unix-socket --path "$path"
 	fi
 	procd_set_param respawn
-	procd_close_instance
-
-	procd_open_instance
-	procd_set_param command "$SOCAT" "$insecure_port" "$secure_port"
 	procd_close_instance
 }

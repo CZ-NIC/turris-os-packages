@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-ws
 PKG_VERSION:=0.1.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-ws
@@ -25,7 +25,7 @@ $(call include_mk, python-package.mk)
 define Package/foris-ws
 	TITLE:=foris-ws
 	URL:=https://gitlab.labs.nic.cz/turris/foris-ws
-	DEPENDS:=+python-light +python-websocket-server +python-prctl +socat +rpcd +lighttpd-https-cert +python-ubus
+	DEPENDS:=+python-light +python-websocket-server +python-prctl +rpcd +foris-client +python-ubus +lighttpd-mod-proxy
 	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
 endef
 
@@ -52,6 +52,8 @@ define Package/foris-ws/install
 	$(INSTALL_BIN) ./files/websocket-listen $(1)/usr/libexec/rpcd/websocket-listen
 	$(INSTALL_DIR) $(1)/usr/share/foris-ws/bin/
 	$(INSTALL_BIN) ./files/socat.sh $(1)/usr/share/foris-ws/bin/socat.sh
+	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
+	$(INSTALL_DATA) ./files/lighttpd-foris-ws.conf $(1)/etc/lighttpd/conf.d/foris-ws.conf
 endef
 
 define Package/foris-ws/postinst
