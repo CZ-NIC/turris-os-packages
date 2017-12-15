@@ -1,0 +1,14 @@
+diff --git a/foris_controller_backends/about/__init__.py b/foris_controller_backends/about/__init__.py
+index a7f4cb0..f8c0a1c 100644
+--- a/foris_controller_backends/about/__init__.py
++++ b/foris_controller_backends/about/__init__.py
+@@ -134,7 +134,8 @@ class SystemInfoFiles(BaseFile):
+         :returns: os version
+         :rtype: str
+         """
+-        return self._read_and_parse(SystemInfoFiles.OS_RELEASE_PATH, r'^([0-9]+\.[0-9]+)$', (1, ))
++        return self._read_and_parse(
++            SystemInfoFiles.OS_RELEASE_PATH, r'^([0-9]+(\.[0-9]+)*)$', (1, ))
+ 
+     @readlock(file_lock, logger)
+     def get_model(self):
