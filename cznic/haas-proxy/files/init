@@ -3,16 +3,25 @@
 USE_PROCD=1
 START=99
 STOP=10
+EXTRA_COMMANDS="check_fw"
+
+check_fw() {
+	FW_SETUP="`uci -q get haas.settings.setup_fw | egrep -i '(1|yes|true|enabled|on)'`"
+	PORT="`uci -q get haas.settings.local_port`"
+	WAN_IP="`ubus call network.interface.wan status | sed -n 's|.*address":[[:blank:]]*"\([0-9.]*\)".*|\1|p'`"
+	if [ "$FW_SETUP" -a "$PORT" -a "$WAN_IP" -a -z "`iptables -t nat -S | grep "zone_wan_prerouting -p tcp -m tcp --dport 22 -m comment --comment haas -j DNAT --to-destination $WAN_IP:$PORT"`" ]; then
+		iptables -t nat -I zone_wan_prerouting -p tcp -m tcp --dport 22 -m comment --comment "haas" -j DNAT --to-destination $WAN_IP:$PORT
+		echo "iptables -t nat -D zone_wan_prerouting -p tcp -m tcp --dport 22 -m comment --comment \"haas\" -j DNAT --to-destination $WAN_IP:$PORT" >> /tmp/haas-remove-iptables
+	fi
+}
 
 start_service() {
 	TOKEN="`uci -q get haas.settings.token`"
 	PORT="`uci -q get haas.settings.local_port`"
 	FW_SETUP="`uci -q get haas.settings.setup_fw | egrep -i '(1|yes|true|enabled|on)'`"
 	WAN_IP="`ubus call network.interface.wan status | sed -n 's|.*address":[[:blank:]]*"\([0-9.]*\)".*|\1|p'`"
-	if [ "$FW_SETUP" -a "$TOKEN" -a "$PORT" -a "$WAN_IP" ]; then
-		iptables -t nat -I zone_wan_prerouting -p tcp -m tcp --dport 22 -m comment --comment "haas" -j DNAT --to-destination $WAN_IP:$PORT
-		echo "iptables -t nat -D zone_wan_prerouting -p tcp -m tcp --dport 22 -m comment --comment \"haas\" -j DNAT --to-destination $WAN_IP:$PORT" > /tmp/haas-remove-iptables
-	fi
+	[ "$TOKEN" ] || exit 1
+	check_fw
 	procd_open_instance
 	procd_set_param command /usr/bin/python2.7 -m haas_proxy -n --pidfile=/tmp/haas.pid --syslog haas_proxy --device-token $TOKEN --port $PORT
 	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}

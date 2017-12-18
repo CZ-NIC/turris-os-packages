@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-proxy
 PKG_VERSION:=1.2
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/haas/proxy.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
