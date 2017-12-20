@@ -117,7 +117,13 @@ function interfaceStatus()
 	end
 
 	-- overview status log
-	local mwanLog = ut.trim(sys.exec("logread | grep mwan3 | tail -n 50 | sed 'x;1!H;$!d;x' 2>/dev/null"))
+	local mwanLog
+	if nixio.fs.access("/var/log/messages") then
+		mwanLog = ut.trim(sys.exec("cat /var/log/messages | grep mwan3 | tail -n 50 | sed 'x;1!H;$!d;x'"))
+	else
+		mwanLog = ut.trim(sys.exec("logread | grep mwan3 | tail -n 50 | sed 'x;1!H;$!d;x'"))
+	end
+
 	if mwanLog ~= "" then
 		mArray.mwanlog = { mwanLog }
 	end
