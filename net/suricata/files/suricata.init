@@ -18,13 +18,17 @@ build_iptables() {
 	echo ":suricata - [0:0]" >> $IPTABLES_RULES
 	echo ":suricata - [0:0]" >> $IP6TABLES_RULES
 	IFACES=$(uci -q get suricata.suricata.interface) || { echo >&2 "Interfaces not set in configuration (configuration file might be missing)."; exit 1; }
-	echo "-I suricata -m mark --mark 2/2 -j RETURN" >> $IPTABLES_RULES
-	echo "-I suricata -m mark --mark 2/2 -j RETURN" >> $IP6TABLES_RULES
+	echo "-I suricata -m connmark --mark 1/1 -j RETURN" >> $IPTABLES_RULES
+	echo "-I suricata -m connmark --mark 1/1 -j RETURN" >> $IP6TABLES_RULES
+	echo "-A suricata -m mark --mark 1/1 -j CONNMARK --set-mark 1/1" >> $IPTABLES_RULES
+	echo "-A suricata -m mark --mark 1/1 -j CONNMARK --set-mark 1/1" >> $IP6TABLES_RULES
+	echo "-A suricata -m mark --mark 2/2 -j RETURN" >> $IPTABLES_RULES
+	echo "-A suricata -m mark --mark 2/2 -j RETURN" >> $IP6TABLES_RULES
 	for IFACE in $IFACES; do
-		echo "-A suricata -i $IFACE -m mark ! --mark 1/1 -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IPTABLES_RULES
-		echo "-A suricata -i $IFACE -m mark ! --mark 1/1 -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IP6TABLES_RULES
-		echo "-A suricata -o $IFACE -m mark ! --mark 1/1 -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IPTABLES_RULES
-		echo "-A suricata -o $IFACE -m mark ! --mark 1/1 -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IP6TABLES_RULES
+		echo "-A suricata -i $IFACE -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IPTABLES_RULES
+		echo "-A suricata -i $IFACE -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IP6TABLES_RULES
+		echo "-A suricata -o $IFACE -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IPTABLES_RULES
+		echo "-A suricata -o $IFACE -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IP6TABLES_RULES
 	done
 	echo "COMMIT" >> $IPTABLES_RULES
 	echo "COMMIT" >> $IP6TABLES_RULES
@@ -55,10 +59,6 @@ iptables_activate() {
 	ip6tables -I input_rule -j suricata
 	iptables -I output_rule -j suricata
 	ip6tables -I output_rule -j suricata
-	iptables -t mangle -I POSTROUTING -m mark --mark 1/1 -j CONNMARK --save-mark
-	ip6tables -t mangle -I POSTROUTING -m mark --mark 1/1 -j CONNMARK --save-mark
-	iptables -t mangle -I PREROUTING -m connmark --mark 1/1 -j CONNMARK --restore-mark
-	ip6tables -t mangle -I PREROUTING -m connmark --mark 1/1 -j CONNMARK --restore-mark
 }
 
 iptables_deactivate() {
@@ -72,10 +72,6 @@ iptables_deactivate() {
 	ip6tables -D output_rule -j suricata
 	iptables -X suricata
 	ip6tables -X suricata
-	iptables -t mangle -D POSTROUTING -m mark --mark 1/1 -j CONNMARK --save-mark
-	ip6tables -t mangle -D POSTROUTING -m mark --mark 1/1 -j CONNMARK --save-mark
-	iptables -t mangle -D PREROUTING -m connmark --mark 1/1 -j CONNMARK --restore-mark
-	ip6tables -t mangle -D PREROUTING -m connmark --mark 1/1 -j CONNMARK --restore-mark
 }
 
 stop_service() {
