@@ -1,11 +1,5 @@
 #!/bin/sh
 
-[ -x /usr/sbin/ip ] || exit 4
-[ -x /usr/sbin/ipset ] || exit 5
-[ -x /usr/sbin/iptables ] || exit 6
-[ -x /usr/sbin/ip6tables ] || exit 7
-[ -x /usr/bin/logger ] || exit 8
-
 . /lib/functions.sh
 . /lib/functions/network.sh
 . /lib/mwan3/mwan3.sh
@@ -19,13 +13,13 @@ Available commands:
 	start           Load iptables rules, ip rules and ip routes
 	stop            Unload iptables rules, ip rules and ip routes
 	restart         Reload iptables rules, ip rules and ip routes
-        ifup <iface>    Load rules and routes for specific interface
-        ifdown <iface>  Unload rules and routes for specific interface
-        interfaces      Show interfaces status
-        policies        Show currently active policy
-	connected	Show directly connected networks
-        rules           Show active rules
-        status          Show all status
+	ifup <iface>    Load rules and routes for specific interface
+	ifdown <iface>  Unload rules and routes for specific interface
+	interfaces      Show interfaces status
+	policies        Show currently active policy
+	connected       Show directly connected networks
+	rules           Show active rules
+	status          Show all status
 
 EOF
 }
@@ -42,10 +36,8 @@ ifdown()
 
 	ACTION=ifdown INTERFACE=$1 /sbin/hotplug-call iface
 
-	if [ -e /var/run/mwan3track-$1.pid ] ; then
-		kill $(cat /var/run/mwan3track-$1.pid)
-		rm /var/run/mwan3track-$1.pid
-	fi
+	kill $(pgrep -f "mwan3track $1 $2") &> /dev/null
+	mwan3_track_clean $1
 }
 
 ifup()
@@ -129,7 +121,9 @@ stop()
 	local ipset route rule table IP IPT
 
 	killall mwan3track &> /dev/null
-	rm /var/run/mwan3track-* &> /dev/null
+
+	config_load mwan3
+	config_foreach mwan3_track_clean interface
 
 	for IP in "$IP4" "$IP6"; do
 
@@ -163,6 +157,9 @@ stop()
 	for ipset in $($IPS -n list | grep mwan3 | grep -E '_v4|_v6'); do
 		$IPS -q destroy $ipset
 	done
+
+	mwan3_lock_clean
+	rm -rf $MWAN3_STATUS_DIR $MWAN3TRACK_STATUS_DIR
 }
 
 restart() {
