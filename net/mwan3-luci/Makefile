@@ -1,16 +1,17 @@
 #
 # Copyright (C) 2006-2014 OpenWrt.org
+# Copyright (C) 2017 Dan Luedtke <mail@danrl.com>
 #
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
+# This is free software, licensed under the Apache License, Version 2.0 .
 #
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-mwan3
 PKG_VERSION:=1.4
-PKG_RELEASE:=4
-PKG_MAINTAINER:=Aedan Renner <chipdankly@gmail.com>
+PKG_RELEASE:=5
+PKG_MAINTAINER:=Aedan Renner <chipdankly@gmail.com> \
+		Florian Eckert <fe@dev.tdt.de>
 PKG_LICENSE:=GPLv2
 
 include $(INCLUDE_DIR)/package.mk

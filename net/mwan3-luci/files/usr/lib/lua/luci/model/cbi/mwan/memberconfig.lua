@@ -14,7 +14,7 @@ dsp = require "luci.dispatcher"
 arg[1] = arg[1] or ""
 
 
-m5 = Map("mwan3", translate("MWAN Member Configuration - ") .. arg[1])
+m5 = Map("mwan3", translatef("MWAN Member Configuration - %s", arg[1]))
 	m5.redirect = dsp.build_url("admin", "network", "mwan", "configuration", "member")
 
 
@@ -27,8 +27,8 @@ interface = mwan_member:option(Value, "interface", translate("Interface"))
 	cbi_add_interface(interface)
 
 metric = mwan_member:option(Value, "metric", translate("Metric"),
-	translate("Acceptable values: 1-1000. Defaults to 1 if not set"))
-	metric.datatype = "range(1, 1000)"
+	translate("Acceptable values: 1-256. Defaults to 1 if not set"))
+	metric.datatype = "range(1, 256)"
 
 weight = mwan_member:option(Value, "weight", translate("Weight"),
 	translate("Acceptable values: 1-1000. Defaults to 1 if not set"))

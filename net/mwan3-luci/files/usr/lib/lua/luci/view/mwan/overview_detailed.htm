@@ -17,7 +17,7 @@
 			}
 			else
 			{
-				status.innerHTML = '<strong>No detailed status information available</strong>';
+				status.innerHTML = '<strong><%:No detailed status information available%></strong>';
 			}
 		}
 	);
@@ -26,22 +26,11 @@
 <div id="mwan_detail_status">
 	<fieldset class="cbi-section">
 		<legend><%:MWAN Detailed Status%></legend>
-		<div id="mwan_detail_text"><img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" /> Collecting data...</div>
+		<div id="mwan_detail_text"><img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" /><%:Collecting data...%></div>
 	</fieldset>
 </div>
 
 <style type="text/css">
-  .container {	/* container for entire page. fixes bootstrap theme's ridiculously small page width */
-	max-width: none;
-	margin-left: 30px;
-	padding-right: 30px;
-	width: auto;
-  }
-  #mwan_detail_status {
-	border: 1px dotted #555555;
-	background-color: #FFFFFF;
-	padding: 20px;
-  }
   #mwan_detail_text {
 	padding: 20px;
 	text-align: left;

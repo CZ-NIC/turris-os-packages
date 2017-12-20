@@ -59,24 +59,24 @@ end
 function interfaceWarnings() -- display status and warning messages at the top of the page
 	local warnings = ""
 	if interfaceNumber <= 250 then
-		warnings = "<strong>There are currently " .. interfaceNumber .. " of 250 supported interfaces configured</strong>"
+		warnings = "<strong>" .. translatef("There are currently %d of 250 supported interfaces configured", interfaceNumber) .. "</strong>"
 	else
-		warnings = "<font color=\"ff0000\"><strong>WARNING: " .. interfaceNumber .. " interfaces are configured exceeding the maximum of 250!</strong></font>"
+		warnings = "<font color=\"ff0000\"><strong>" .. translatef("WARNING: %d interfaces are configured exceeding the maximum of 250!", interfaceNumber) .. "</strong></font>"
 	end
 	if errorReliabilityList ~= " " then
-		warnings = warnings .. "<br /><br /><font color=\"ff0000\"><strong>WARNING: some interfaces have a higher reliability requirement than there are tracking IP addresses!</strong></font>"
+		warnings = warnings .. "<br /><br /><font color=\"ff0000\"><strong>" .. translate("WARNING: Some interfaces have a higher reliability requirement than there are tracking IP addresses!") .. "</strong></font>"
 	end
 	if errorRouteList ~= " " then
-		warnings = warnings .. "<br /><br /><font color=\"ff0000\"><strong>WARNING: some interfaces have no default route in the main routing table!</strong></font>"
+		warnings = warnings .. "<br /><br /><font color=\"ff0000\"><strong>" .. translate("WARNING: Some interfaces have no default route in the main routing table!") .. "</strong></font>"
 	end
 	if errorNetConfigList ~= " " then
-		warnings = warnings .. "<br /><br /><font color=\"ff0000\"><strong>WARNING: some interfaces are configured incorrectly or not at all in /etc/config/network!</strong></font>"
+		warnings = warnings .. "<br /><br /><font color=\"ff0000\"><strong>" .. translate("WARNING: Some interfaces are configured incorrectly or not at all in /etc/config/network!") .. "</strong></font>"
 	end
 	if errorNoMetricList ~= " " then
-		warnings = warnings .. "<br /><br /><font color=\"ff0000\"><strong>WARNING: some interfaces have no metric configured in /etc/config/network!</strong></font>"
+		warnings = warnings .. "<br /><br /><font color=\"ff0000\"><strong>" .. translate("WARNING: Some interfaces have no metric configured in /etc/config/network!") .. "</strong></font>"
 	end
 	if errorDuplicateMetricList ~= " " then
-		warnings = warnings .. "<br /><br /><font color=\"ff0000\"><strong>WARNING: some interfaces have duplicate metrics configured in /etc/config/network!</strong></font>"
+		warnings = warnings .. "<br /><br /><font color=\"ff0000\"><strong>" .. translate("WARNING: Some interfaces have duplicate metrics configured in /etc/config/network!") .. "</strong></font>"
 	end
 	return warnings
 end
@@ -99,7 +99,7 @@ interfaceCheck()
 
 
 m5 = Map("mwan3", translate("MWAN Interface Configuration"),
-	translate(interfaceWarnings()))
+	interfaceWarnings())
 	m5:append(Template("mwan/config_css"))
 
 
@@ -111,8 +111,8 @@ mwan_interface = m5:section(TypedSection, "interface", translate("Interfaces"),
 	"Interfaces may not share the same name as configured members, policies or rules"))
 	mwan_interface.addremove = true
 	mwan_interface.dynamic = false
-	mwan_interface.sectionhead = "Interface"
-	mwan_interface.sortable = true
+	mwan_interface.sectionhead = translate("Interface")
+	mwan_interface.sortable = false
 	mwan_interface.template = "cbi/tblsection"
 	mwan_interface.extedit = dsp.build_url("admin", "network", "mwan", "configuration", "interface", "%s")
 	function mwan_interface.create(self, section)
@@ -142,6 +142,16 @@ track_ip = mwan_interface:option(DummyValue, "track_ip", translate("Tracking IP"
 				ipList = ipList .. v .. "<br />"
 			end
 			return ipList
+		else
+			return "&#8212;"
+		end
+	end
+
+track_method = mwan_interface:option(DummyValue, "track_method", translate("Tracking method"))
+	track_method.rawhtml = true
+	function track_method.cfgvalue(self, s)
+		if tracked then
+			return self.map:get(s, "track_method") or "&#8212;"
 		else
 			return "&#8212;"
 		end
