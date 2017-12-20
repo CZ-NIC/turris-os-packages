@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=97.1
+PKG_VERSION:=97.2
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -28,7 +28,7 @@ $(call include_mk, python-package.mk)
 define Package/foris-common
 	TITLE:=foris-common
 	DEPENDS:=\
-		+python-light +python-bottle +python-bottle-i18n +python-pbkdf2 \
+		+python-light +python-bottle +python-bottle-i18n \
 		+python-flup +python-ncclient +python-ubus +nuci +lighttpd +lighttpd-mod-fastcgi \
 		+lighttpd-mod-redirect +user_notify +foris-ws +l10n_supported \
 		+sqm-scripts +foris-client +turris-maintain
