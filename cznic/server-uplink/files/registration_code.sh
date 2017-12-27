@@ -27,6 +27,11 @@ OUTPUT_FILE=/usr/share/server-uplink/registration_code
 
 CODE=$(curl -s -k -m $TIMEOUT "$CHALLENGE_URL" | atsha204cmd challenge-response | head -c 16)
 
+if [ -z "$CODE" ] ; then
+	logger -t server_uplink -p error "Failed to get registration code"
+	exit 1
+fi
+
 # test whether the code is the same
 if [ -f "$OUTPUT_FILE" ] ; then
 	if [ "$CODE" == "$(cat "$OUTPUT_FILE")" ] ; then
