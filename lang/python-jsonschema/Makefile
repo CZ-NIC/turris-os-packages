@@ -48,20 +48,12 @@ define Build/Compile
 	)
 endef
 
-define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/
-	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
-		$(1)$(PYTHON_PKG_DIR)/usr/lib/python2.7/site-packages/
-endef
-
-
 define Host/Compile
 	#$(call Build/Compile/HostPyMod,,build)
 endef
 
 define Host/Install
-	$(call Build/Compile/HostPyMod,,install --prefix="" --root="$(STAGING_DIR)/host")
+	$(call Build/Compile/HostPyMod,,install --prefix="" --root="$(STAGING_DIR_HOST)")
 endef
 
 $(eval $(call HostBuild))
