@@ -47,11 +47,11 @@ define Host/Compile
 endef
 
 define Host/Install
-	$(call Build/Compile/HostPyMod,,install --prefix="" --root="$(STAGING_DIR)/host")
-	$(INSTALL_BIN) ./files/slimit-wrapper.sh $(STAGING_DIR_HOST)/bin/slimit
+	$(call Build/Compile/HostPyMod,,install --prefix="" --root="$(STAGING_DIR_HOSTPKG)")
+	$(INSTALL_BIN) ./files/slimit-wrapper.sh $(STAGING_DIR_HOSTPKG)/bin/slimit
 	# copy a wrapper script so just "slimit" can be called from buildroot environment
-	$(SED) 's~export PYTHONPATH=.*~export PYTHONPATH="$(HOST_PYTHONPATH)"~' $(STAGING_DIR_HOST)/bin/slimit
-	$(SED) 's~python~$(HOST_PYTHON_BIN)~' $(STAGING_DIR_HOST)/bin/slimit
+	$(SED) 's~export PYTHONPATH=.*~export PYTHONPATH="$(HOST_PYTHONPATH)"~' $(STAGING_DIR_HOSTPKG)/bin/slimit
+	$(SED) 's~python~$(HOST_PYTHON_BIN)~' $(STAGING_DIR_HOSTPKG)/bin/slimit
 endef
 
 define Package/python-slimit/install
