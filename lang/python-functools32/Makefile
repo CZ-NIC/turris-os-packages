@@ -13,7 +13,7 @@ PKG_VERSION:=3.2.3-$(PKG_RELEASE)
 
 PKG_SOURCE:=functools32-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/f/functools32/
-PKG_MD5SUM:=
+PKG_MD5SUM:=09f24ffd9af9f6cd0f63cb9f4e23d4b2
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/functools32-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/functools32-$(PKG_VERSION)
