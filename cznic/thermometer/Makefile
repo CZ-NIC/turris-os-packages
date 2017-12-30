@@ -24,7 +24,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
-ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nor_TURRISNOR)$(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
+ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nor_TURRISNOR)$(CONFIG_TARGET_mpc85xx_p2020_TURRIS)$(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
 	$(INSTALL_BIN) ./files/thermometer.turris $(1)/usr/bin/thermometer
 else ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
 	$(INSTALL_BIN) ./files/thermometer.omnia $(1)/usr/bin/thermometer
