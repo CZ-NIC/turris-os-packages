@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tvheadend
-PKG_VERSION:=4.2.4
+PKG_VERSION:=4.2.5
 PKG_RELEASE:=0
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
