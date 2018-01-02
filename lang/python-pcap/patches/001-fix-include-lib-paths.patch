@@ -1,0 +1,23 @@
+--- a/setup.py
++++ b/setup.py
+@@ -31,9 +31,10 @@ def get_extension():
+         glob.glob('../libpcap*') + glob.glob('../wpdpack*') + \
+         glob.glob('/Applications/Xcode.app/Contents/Developer/Platforms/' +
+                   'MacOSX.platform/Developer/SDKs/*')
+-
++    pcap_location = os.environ.get('PCAP_HOME')
+     for d in dirs:
+         search_dirs = [
++            os.path.join(pcap_location,"include"),
+             os.path.join(d, 'local', 'include'),
+             os.path.join(d, 'usr', 'include'),
+             os.path.join(d, 'include'),
+@@ -67,6 +68,8 @@ def get_extension():
+             ''
+         )
+     ]
++    # Openwrt add staging_dir path
++    lib_sub_dirs.append(os.path.join(pcap_location,"lib"))
+
+     # For Mac OSX the default system pcap lib is in /usr/lib
+     lib_sub_dirs.append('/usr/lib')
