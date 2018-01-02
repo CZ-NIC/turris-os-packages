@@ -1,0 +1,10 @@
+--- a/setup.py
++++ b/setup.py
+@@ -200,6 +200,7 @@ class OoniInstall(InstallCommand):
+         self.set_data_files(prefix)
+
+     def run(self):
++        self.prefix = "/tmp/ooniprobeinstall" # hack just for now
+         self.pre_install()
+         self.do_egg_install()
+         if is_lepidopter() and not is_updater_installed():
