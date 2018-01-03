@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netmetr
 PKG_VERSION:=1.2.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
@@ -45,6 +45,10 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR)  $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/netmetr.cron 		$(1)/etc/cron.d/netmetr
+endef
+
+define Package/$(PKG_NAME)/conffiles
+/etc/config/netmetr
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
