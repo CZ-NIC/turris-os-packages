@@ -20,6 +20,7 @@ config resolver 'kresd'
 	option log_stderr '0'
 	option log_stdout '0'
 	option forks '1'
+	option keep_cache '1'
 
 config resolver 'unbound'
 	option outgoing_range '60'
