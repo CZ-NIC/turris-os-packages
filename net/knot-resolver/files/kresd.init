@@ -77,7 +77,7 @@ include_custom_config() {
 }
 
 load_uci_config_common() {
-	local interface keyfile verbose port msg_buffer_size net_ipv4 net_ipv6 msg_cache_size do_forward ignore_root_key
+	local interface keyfile verbose port msg_buffer_size net_ipv4 net_ipv6 msg_cache_size do_forward ignore_root_key keep_cache_bool
 	local section="common"
 
 	# port
@@ -121,7 +121,12 @@ load_uci_config_common() {
 	config_get msg_cache_size "$section" msg_cache_size
 	conv_msg_cache_size=$(echo "$msg_cache_size"|sed -e 's/k$/*kB/gi' -e 's/M$/*MB/gi' -e 's/G$/*GB/gi')
 	set_param_func "cache.open" "$conv_msg_cache_size"
-	set_param_func "cache.clear" ""
+
+	# clear cache
+	config_get_bool keep_cache_bool "kresd" keep_cache 1
+	if [ "$keep_cache_bool" = "0" ]; then
+		set_param_func "cache.clear" ""
+	fi
 
 	config_get_bool do_forward "$section" forward_upstream 1
 	if [ "$do_forward" = "1" ] ; then
