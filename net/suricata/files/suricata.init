@@ -75,7 +75,7 @@ iptables_deactivate() {
 }
 
 stop_service() {
-	iptables_deactivate
+	iptables_deactivate 2>/dev/null
 	rm -f $PID_FILE
 }
 
