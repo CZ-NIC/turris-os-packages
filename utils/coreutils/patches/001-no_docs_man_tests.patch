@@ -1,7 +1,7 @@
-Index: coreutils-8.28/Makefile.am
+Index: coreutils-8.29/Makefile.am
 ===================================================================
---- coreutils-8.28.orig/Makefile.am
-+++ coreutils-8.28/Makefile.am
+--- coreutils-8.29.orig/Makefile.am
++++ coreutils-8.29/Makefile.am
 @@ -17,7 +17,7 @@
  
  ALL_RECURSIVE_TARGETS =
@@ -19,11 +19,11 @@ Index: coreutils-8.28/Makefile.am
 -include $(top_srcdir)/man/local.mk
 -include $(top_srcdir)/tests/local.mk
 +
-Index: coreutils-8.28/Makefile.in
+Index: coreutils-8.29/Makefile.in
 ===================================================================
---- coreutils-8.28.orig/Makefile.in
-+++ coreutils-8.28/Makefile.in
-@@ -2337,11 +2337,7 @@ RECURSIVE_TARGETS = all-recursive check-
+--- coreutils-8.29.orig/Makefile.in
++++ coreutils-8.29/Makefile.in
+@@ -2339,11 +2339,7 @@ RECURSIVE_TARGETS = all-recursive check-
  	install-ps-recursive install-recursive installcheck-recursive \
  	installdirs-recursive pdf-recursive ps-recursive \
  	tags-recursive uninstall-recursive
@@ -36,7 +36,7 @@ Index: coreutils-8.28/Makefile.in
  am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
  am__vpath_adj = case $$p in \
      $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
-@@ -2592,11 +2588,11 @@ am__DIST_COMMON = $(doc_coreutils_TEXINF
+@@ -2594,11 +2590,11 @@ am__DIST_COMMON = $(doc_coreutils_TEXINF
  	$(top_srcdir)/build-aux/missing \
  	$(top_srcdir)/build-aux/test-driver \
  	$(top_srcdir)/build-aux/texinfo.tex \
@@ -48,10 +48,10 @@ Index: coreutils-8.28/Makefile.in
  	$(top_srcdir)/src/local.mk $(top_srcdir)/src/single-binary.mk \
 -	$(top_srcdir)/tests/local.mk ABOUT-NLS AUTHORS COPYING \
 +	ABOUT-NLS AUTHORS COPYING \
- 	ChangeLog INSTALL NEWS README THANKS TODO build-aux/compile \
- 	build-aux/config.guess build-aux/config.rpath \
- 	build-aux/config.sub build-aux/depcomp build-aux/install-sh \
-@@ -2695,7 +2691,7 @@ EOVERFLOW_HIDDEN = @EOVERFLOW_HIDDEN@
+ 	ChangeLog INSTALL NEWS README THANKS TODO build-aux/ar-lib \
+ 	build-aux/compile build-aux/config.guess \
+ 	build-aux/config.rpath build-aux/config.sub build-aux/depcomp \
+@@ -2697,7 +2693,7 @@ EOVERFLOW_HIDDEN = @EOVERFLOW_HIDDEN@
  EOVERFLOW_VALUE = @EOVERFLOW_VALUE@
  ERRNO_H = @ERRNO_H@
  EXEEXT = @EXEEXT@
@@ -60,7 +60,7 @@ Index: coreutils-8.28/Makefile.in
  FLOAT_H = @FLOAT_H@
  FNMATCH_H = @FNMATCH_H@
  GETADDRINFO_LIB = @GETADDRINFO_LIB@
-@@ -3972,7 +3968,7 @@ libexecdir = @libexecdir@
+@@ -3978,7 +3974,7 @@ libexecdir = @libexecdir@
  lispdir = @lispdir@
  localedir = @localedir@
  localstatedir = @localstatedir@
@@ -69,7 +69,7 @@ Index: coreutils-8.28/Makefile.in
  mandir = @mandir@
  mkdir_p = @mkdir_p@
  oldincludedir = @oldincludedir@
-@@ -3995,7 +3991,7 @@ top_build_prefix = @top_build_prefix@
+@@ -4001,7 +3997,7 @@ top_build_prefix = @top_build_prefix@
  top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
  ALL_RECURSIVE_TARGETS = distcheck-hook check-root
@@ -78,7 +78,7 @@ Index: coreutils-8.28/Makefile.in
  
  #if GNU_MAKE
  #	[nicer features that work only with GNU Make]
-@@ -5981,7 +5977,7 @@ all: $(BUILT_SOURCES)
+@@ -5993,7 +5989,7 @@ all: $(BUILT_SOURCES)
  .SUFFIXES: .1 .c .dvi .log .o .obj .pl .pl$(EXEEXT) .ps .sed .sh .sh$(EXEEXT) .sin .trs .x .xpl .xpl$(EXEEXT) .y
  am--refresh: Makefile
  	@:
@@ -87,7 +87,7 @@ Index: coreutils-8.28/Makefile.in
  	@for dep in $?; do \
  	  case '$(am__configure_deps)' in \
  	    *$$dep*) \
-@@ -6003,7 +5999,7 @@ Makefile: $(srcdir)/Makefile.in $(top_bu
+@@ -6015,7 +6011,7 @@ Makefile: $(srcdir)/Makefile.in $(top_bu
  	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)'; \
  	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe);; \
  	esac;
