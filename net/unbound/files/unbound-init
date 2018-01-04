@@ -5,6 +5,7 @@ START=61
 CONFIGFILE="/var/etc/unbound/unbound.conf"
 ROOTKEYFILE="/etc/root.keys"
 DHCPLEASES="/tmp/dhcp.leases.dynamic"
+STATICLEASES="/var/etc/unbound/static.leases"
 
 header() {
     cat > "$CONFIGFILE" <<-EOF
@@ -36,6 +37,9 @@ set_local_zone() {
         -e 's|^[[:blank:]]*\([0-9a-f:]\+\)[[:blank:]]\+\([^#[:blank:]]\+\)$|\tlocal-zone: "\2." static\n\tlocal-data: "\2. IN AAAA \1\"|p' \
         -e 's|^[[:blank:]]*\([0-9.]\+\)[[:blank:]]\+\([^#[:blank:]]\+\)[[:blank:]#].*|\tlocal-zone: "\2." static\n\tlocal-data: "\2. IN A \1\"|p' \
         -e 's|^[[:blank:]]*\([0-9a-f:]\+\)[[:blank:]]\+\([^#[:blank:]]\+\)[[:blank:]#].*|\tlocal-zone: "\2." static\n\tlocal-data: "\2. IN AAAA \1\"|p' "$host_filename" >> "$CONFIGFILE"
+        sed -n \
+        -e 's|^[[:blank:]]*\([0-9.]\+\)[[:blank:]]\+\([^#[:blank:]]\+\)$|\1 \2.|p' \
+        -e 's|^[[:blank:]]*\([0-9a-f:]\+\)[[:blank:]]\+\([^#[:blank:]]\+\)$|\1 \2.|p' "$host_filename" >> "$STATICLEASES"
     fi
 }
 
@@ -118,6 +122,7 @@ set_local_host() {
     if [ -n "$NAME" ] && [ -n "$DOMAIN" ] && [ -n "$IP" ]; then
         echo "  local-data: \"$NAME.$DOMAIN. IN A $IP\"" >> "$CONFIGFILE"
         echo "  local-data-ptr: \"$IP $NAME.$DOMAIN\"" >> "$CONFIGFILE"
+        echo "$IP $NAME.$DOMAIN.">>$STATICLEASES
     fi
 }
 
@@ -141,8 +146,11 @@ init_unbound() {
         # No more ideas what to do, so just try running unbound, something of the above may have worked.
     fi
 
-    #Clear the config and set header
+    # Clear the config and set header
     header
+
+    # Clear static leases
+    echo "">$STATICLEASES
 
     config_load resolver
 
