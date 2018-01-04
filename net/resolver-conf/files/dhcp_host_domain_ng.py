@@ -105,9 +105,7 @@ class Kresd:
         try:
             sock.connect(self.__socket_path)
             sock.sendall(cmd + "\n")
-            print "__call_kresd", cmd
             ret = sock.recv(4096)
-            print "ret", ret
             sock.close()
             return ret
         except socket.error, msg:
@@ -128,10 +126,14 @@ class Kresd:
 
 
 class Unbound:
-    def __init__(self, dhcp_dynamic_leases="/tmp/dhcp.leases.dynamic"):
+    def __init__(self,
+                 dhcp_dynamic_leases="/tmp/dhcp.leases.dynamic",
+                 static_leases="/var/etc/unbound/static.leases"):
         # check if files exists.....
-        self._dhcp_dynamic_leases = dhcp_dynamic_leases
+        self.__dhcp_dynamic_leases = dhcp_dynamic_leases
+        self.__static_leases = static_leases
         self.__dynamic_leases_enabled = uci_get_bool("resolver.common.dynamic_domains", False)
+        self.__static_leases_enabled = uci_get_bool("resolver.common.static_domains", False)
         self.__local_suffix = uci_get("dhcp.@dnsmasq[0].local").replace("/", "")
 
     def _call_unbound(self, cmd, arg=""):
@@ -154,9 +156,20 @@ class Unbound:
                 ret.append(item_list)
         return ret
 
+    def _get_static_leases(self):
+        ret = []
+        with open(self.__static_leases, "r") as fp:
+            for line in fp.read().splitlines():
+                if not line.startswith("#"):
+                    line = " ".join(line.split())  # remove multiple white spaces
+                    items = line.split()
+                    if len(items) >= 2:
+                        ret.append(items[:2])  # insert only first items
+        return ret
+
     def _get_dynamic_leases(self):
         ret = []
-        with open(self._dhcp_dynamic_leases, "r") as fp:
+        with open(self.__dhcp_dynamic_leases, "r") as fp:
             for line in fp.read().splitlines():
                 ret.append(line.split())
         return ret
@@ -193,9 +206,13 @@ class Unbound:
 
     def refresh_leases(self):
         self._clean_leases()
+        domain_list = []
+        if self.__static_leases_enabled:
+            domain_list += self._get_static_leases()
         if self.__dynamic_leases_enabled:
-            domain__leases_list = self._get_dynamic_leases()
-            for ip, domain in domain__leases_list:
+            domain_list += self._get_dynamic_leases()
+        if domain_list:
+            for ip, domain in domain_list:
                 self._add_local_zone(domain)
                 self._add_local_data(domain, ip)
 
@@ -244,7 +261,8 @@ class DHCPv4:
 
     def refresh_resolver(self):
         if self.__resolver == "kresd":
-            tmp_res = Kresd()
+            static_leases = os.path.join(uci_get("resolver.kresd.rundir"), "hints.tmp")
+            tmp_res = Kresd(dhcp_static_leases=static_leases)
             tmp_res.refresh_leases()
             log("Refresh kresd leases", LOG_INFO)
         elif self.__resolver == "unbound":
