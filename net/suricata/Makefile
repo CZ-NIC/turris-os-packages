@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata
 PKG_VERSION:=4.0.0
-PKG_RELEASE=19
+PKG_RELEASE=20
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.openinfosecfoundation.org/download/
@@ -26,6 +26,7 @@ CONFIGURE_ARGS+= \
 	--enable-nflog \
 	--enable-luajit \
 	--enable-nfqueue \
+        --disable-libmagic \
 	--disable-gccprotect \
 	--enable-non-bundled-htp \
 	--disable-gccmarch-native	
