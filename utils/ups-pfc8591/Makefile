@@ -14,7 +14,7 @@ PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENCE.txt
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=http://git.cynerd.cz/turris-i2c-collect
+PKG_SOURCE_URL:=https://git.cynerd.cz/turris-i2c-collect
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
@@ -24,7 +24,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/ups-pfc8591
   TITLE:=ups-pfc8591
-  URL:=http://git.cynerd.cz/turris-i2c-collect
+  URL:=https://git.cynerd.cz/turris-i2c-collect
   DEPENDS:=+python +python-perifery +ubus +python-sqlite3
 endef
 
