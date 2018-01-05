@@ -1,0 +1,14 @@
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -1,8 +1,8 @@
+ ## see also dev-requirements.txt to build
+ ## hmm, travis-ci doesn't like this since we need a GeoIP-dev package
+ ##GeoIP>=1.2.9
+-Twisted[tls]>=15.5.0
+-ipaddress>=1.0.16
+-zope.interface>=3.6.1
++#Twisted[tls]>=15.5.0
++#ipaddress>=1.0.16
++#zope.interface>=3.6.1
+ incremental
+ automat
