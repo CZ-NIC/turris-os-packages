@@ -30,7 +30,7 @@ define Package/$(PKG_NAME)
 	CATEGORY:=Languages
 	TITLE:=ooniprobe
 	URL:=https://ooni.torproject.org/
-	DEPENDS:=+python +pydumbnet +pypcap +twisted +python-cryptography \
+	DEPENDS:=+python-light +pydumbnet +pypcap +twisted +python-cryptography \
 		+python-openssl +python-pyasn1 python-pyasn1-modules +python-txsocksx \
 		+scapy +python-pyopenssl +python-service-identity +python-ipaddress \
 		+klein +txtorcon
