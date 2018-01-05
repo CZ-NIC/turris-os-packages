@@ -28,7 +28,7 @@ define Package/$(PKG_NAME)
 	CATEGORY:=Languages
 	TITLE:=pypcap
 	URL:=https://github.com/pynetwork/pypcap
-	DEPENDS:=+python +libpcap
+	DEPENDS:=+python-light +libpcap
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
