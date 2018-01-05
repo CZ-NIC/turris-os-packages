@@ -30,7 +30,7 @@ define Package/$(PKG_NAME)
 	CATEGORY:=Languages
 	TITLE:=txtorcon
 	URL:=https://github.com/meejah/txtorcon
-	DEPENDS:=+python +twisted +python-ipaddress +zope-interface
+	DEPENDS:=+python-light +twisted +python-ipaddress +zope-interface
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
