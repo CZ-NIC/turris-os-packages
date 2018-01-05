@@ -29,7 +29,7 @@ define Package/$(PKG_NAME)
 	CATEGORY:=Languages
 	TITLE:=klein
 	URL:=https://github.com/twisted/klein
-	DEPENDS:=+python +twisted
+	DEPENDS:=+python-light +twisted
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
