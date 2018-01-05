@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-btrfs-migrate
 PKG_VERSION:=1.5
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -18,10 +18,11 @@ PKG_LICENSE:=GPL-2.0
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/turris-btrfs-migrate
+define Package/turris-btrfs
   SECTION:=utils
   CATEGORY:=Utilities
   SUBMENU:=Filesystem
+	PROVIDES:=turris-btrfs-migrate
   DEPENDS:=+btrfs-progs +uboot-envtools +fdisk +mkdosfs +schnapps @TARGET_mpc85xx_p2020_nand
   TITLE:=Btrfs migration tool for old Turris routers
 endef
@@ -35,7 +36,7 @@ define Build/Compile
 	true
 endef
 
-define Package/turris-btrfs-migrate/install
+define Package/turris-btrfs/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/btrfs_migrate.sh $(1)/usr/bin/btrfs_migrate
 	$(INSTALL_DIR) $(1)/etc/schnapps/rollback.d
@@ -44,8 +45,8 @@ define Package/turris-btrfs-migrate/install
 	$(INSTALL_BIN) ./files/kernel-install $(1)/etc/updater/hook_postupdate/10_kernel-install
 endef
 
-define Package/turris-btrfs-migrate/prerm
+define Package/turris-btrfs/prerm
 	[ -z "`cat /proc/mounts | grep '^/dev/mmcblk0p2 / btrfs'`" ] || create_notification -s error "Odinstalovali jste podporu btrfs, ale stále ji používáte, váš router se pravděpodobně rozbije" "You deinstalled btrfs support but your router is still using it, so it will likelly break."
 endef
 
-$(eval $(call BuildPackage,turris-btrfs-migrate))
+$(eval $(call BuildPackage,turris-btrfs))
