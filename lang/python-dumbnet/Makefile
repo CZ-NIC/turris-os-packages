@@ -30,7 +30,7 @@ define Package/$(PKG_NAME)
 	CATEGORY:=Languages
 	TITLE:=pydumbnet
 	URL:=https://github.com/pynetwork/pydumbnet
-	DEPENDS:=+python +libdnet
+	DEPENDS:=+python-light +libdnet
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
