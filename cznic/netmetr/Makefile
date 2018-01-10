@@ -51,4 +51,18 @@ define Package/$(PKG_NAME)/conffiles
 /etc/config/netmetr
 endef
 
+define Package/$(PKG_NAME)/preinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+[ \! -f /etc/config/netmetr ] || cp /etc/config/netmetr /tmp
+}
+endef
+
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+[ \! -f /tmp/netmetr ] || cp /tmp/netmetr /etc/config
+}
+endef
+
 $(eval $(call BuildPackage,$(PKG_NAME)))
