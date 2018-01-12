@@ -8,20 +8,23 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ssbackups
-PKG_VERSION:=1.0
+PKG_VERSION:=1.0.2
 PKG_RELEASE:=0
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/server-side-backups-client.git
-PKG_SOURCE_VERSION:=58afbf5282d0fcb67d7ac134209dd58d28babc71
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_LICENSE:=GPL-3.0
 
 include $(INCLUDE_DIR)/package.mk
+$(call include_mk, python-package.mk)
 
 define Package/$(PKG_NAME)
 	TITLE:=Server side backups
+	URL:=https://gitlab.labs.nic.cz/turris/server-side-backups-client
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 	DEPENDS:=+curl +gnupg +python-base
 endef
@@ -32,12 +35,16 @@ define Package/$(PKG_NAME)/description
 endef
 
 define Build/Compile
-  true
+	$(call Build/Compile/PyMod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
 endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) 	$(1)/usr/bin
-	$(INSTALL_BIN) 	$(PKG_BUILD_DIR)/bin/ssbackups.py $(1)/usr/bin/ssbackups
+	$(INSTALL_BIN) 	./files/ssbackups $(1)/usr/bin/ssbackups
+	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/
+	$(CP) \
+		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
+		$(1)$(PYTHON_PKG_DIR)/
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
