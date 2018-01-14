@@ -33,7 +33,7 @@ define Package/$(PKG_NAME)
 	DEPENDS:=+python-light +pydumbnet +pypcap +twisted +python-cryptography \
 		+python-openssl +python-pyasn1 python-pyasn1-modules +python-txsocksx \
 		+scapy +python-pyopenssl +python-service-identity +python-ipaddress \
-		+klein +txtorcon
+		+klein +txtorcon +libgeoip
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
