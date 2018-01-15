@@ -63,13 +63,6 @@ ifneq ($(CONFIG_SOCAT_SSL),y)
   CONFIGURE_ARGS+= --disable-openssl
 endif
 
-CONFIGURE_VARS += \
-	sc_cv_termios_ispeed="no" \
-	sc_cv_sys_crdly_shift=9 \
-	sc_cv_sys_tabdly_shift=11 \
-	sc_cv_sys_csize_shift=4 \
-	BUILD_DATE=$(SOURCE_DATE_EPOCH)
-
 define Package/socat/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/socat $(1)/usr/bin/
