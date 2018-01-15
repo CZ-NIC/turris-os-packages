@@ -1,0 +1,2 @@
+#!/bin/sh
+python -m ssbackups_client.ssbackups $@
