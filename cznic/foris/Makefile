@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2018 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=97.2
-PKG_RELEASE:=2
+PKG_VERSION:=97.3
+PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
