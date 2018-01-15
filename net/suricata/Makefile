@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata
 PKG_VERSION:=4.0.0
-PKG_RELEASE=22
+PKG_RELEASE=23
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.openinfosecfoundation.org/download/
@@ -73,6 +73,7 @@ endef
 define Package/suricata/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
+	grep "max_dgram_qlen" /etc/sysctl.conf || printf "\nnet.unix.max_dgram_qlen=50" >> /etc/sysctl.conf
 	/etc/init.d/suricata enable
 	/etc/init.d/suricata restart
 }
