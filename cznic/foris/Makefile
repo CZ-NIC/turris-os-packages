@@ -32,7 +32,7 @@ define Package/foris-common
 		+python-flup +python-ncclient +python-ubus +nuci +lighttpd +lighttpd-mod-fastcgi \
 		+lighttpd-mod-redirect +lighttpd-mod-setenv +user_notify +foris-ws +l10n_supported \
 		+sqm-scripts +foris-client +turris-maintain
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/foris-common/description
@@ -99,7 +99,7 @@ define Package/foris-wizard
 	TITLE:=foris-wizard
 	DEPENDS:=\
 		+foris-common
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/foris-wizard/description
@@ -110,7 +110,7 @@ define Package/foris-config
 	TITLE:=foris-config
 	DEPENDS:=\
 		+foris-common +luci
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/foris-wizard/description
@@ -121,7 +121,7 @@ define Package/foris
 	TITLE:=foris
 	DEPENDS:=\
 		+foris-wizard +foris-config
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/foris/description
@@ -254,7 +254,7 @@ define ForisTranslation
 	TITLE:=foris-l10n-$(1)
 	DEPENDS:=\
 		+foris
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
  endef
 
  define Package/foris-l10n-$(1)/install

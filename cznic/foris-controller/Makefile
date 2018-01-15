@@ -28,7 +28,7 @@ define Package/foris-controller
 	DEPENDS:=\
 		+python-light +python-ubus +python-prctl +python-multiprocessing +python-pbkdf2 \
 		+foris-schema +server-uplink
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/foris-controller/description

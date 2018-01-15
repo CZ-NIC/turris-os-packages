@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2018 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -33,7 +33,7 @@ define Package/$(PKG_NAME)
 	TITLE:=python-functools32
 	URL:=https://pypi.python.org/pypi/functools32
 	DEPENDS:=+python-light
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/$(PKG_NAME)/description
