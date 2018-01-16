@@ -18,19 +18,25 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #
 
+set -e
 
 TIMEOUT=120
 CA_FILE=/etc/ssl/www_turris_cz_ca.pem  # let's encrypt inside
+URL='https://haas.nic.cz/api/turris/register'
 
 if [ -z "$(uci -q get haas.settings.token 2>/dev/null)" ]; then
-	set -e
 	CODE=$(cat /usr/share/server-uplink/registration_code)
-	URL="https://haas.nic.cz/api/turris/register"
-	TOKEN=$(curl --fail -s -H "Content-Type: application/json" \
+	TOKEN=$(curl -sS -H "Content-Type: application/json" \
 		-X POST -d "{\"registration_code\": \"${CODE}\"}" \
 		--cacert "$CA_FILE" \
 		-m "${TIMEOUT}" \
 		"${URL}" | sed -n -e 's/^[^"]*"token":\s*"\([^"]*\)".*/\1/p')
+
+	if [ -z "$TOKEN" ] ; then
+		[ -t 2 ] && echo "Failed to get haas registration token" >&2
+		logger -t haas-proxy -p error "Failed to get haas registration token"
+		exit 1
+	fi
 
 	uci set haas.settings.token="${TOKEN}" && uci commit
 	/etc/init.d/haas-proxy restart
