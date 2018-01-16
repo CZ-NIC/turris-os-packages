@@ -28,6 +28,7 @@ OUTPUT_FILE=/usr/share/server-uplink/registration_code
 CODE=$(curl -sS --cacert "$CA_FILE" -m $TIMEOUT "$CHALLENGE_URL" | atsha204cmd challenge-response | head -c 16)
 
 if [ -z "$CODE" ] ; then
+	[ -t 2 ] && echo "Failed to get registration code" >&2
 	logger -t server_uplink -p error "Failed to get registration code"
 	exit 1
 fi
