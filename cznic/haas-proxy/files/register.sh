@@ -30,7 +30,7 @@ if [ -z "$(uci -q get haas.settings.token 2>/dev/null)" ]; then
 		-X POST -d "{\"registration_code\": \"${CODE}\"}" \
 		--cacert "$CA_FILE" \
 		-m "${TIMEOUT}" \
-		"${URL}" | sed -n -e 's/^[^"]*"token":\s*"\([^"]*\)".*/\1/p')
+		"${URL}" | sed -n -e 's/^.*"token":[[:blank:]]*"\([^"]*\)".*/\1/p')
 
 	if [ -z "$TOKEN" ] ; then
 		[ -t 2 ] && echo "Failed to get haas registration token" >&2
