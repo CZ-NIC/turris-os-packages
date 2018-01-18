@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-ssbackups-plugin
 PKG_VERSION:=1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-ssbackups-plugin.git
@@ -34,7 +34,7 @@ define Package/$(PKG_NAME)
 endef
 
 define Package/$(PKG_NAME)/description
- Foris plugin for netmetr program
+ Foris plugin for ssbackups program
 endef
 
 define Build/Compile
@@ -58,11 +58,11 @@ set -x
 endef
 
 # Package install definition
-$(eval $(call ForisPlugin,$(PKG_NAME),netmetr))
+$(eval $(call ForisPlugin,$(PKG_NAME),ssbackups))
 
 # Translation definitions
 FORIS_TRANSLATIONS:=
-$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),netmetr,$(trans))))
+$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),ssbackups,$(trans))))
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
 $(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call BuildPackage,$(PKG_NAME)-l10n-$(trans))))
