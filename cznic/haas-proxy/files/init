@@ -26,6 +26,7 @@ start_service() {
 	procd_set_param command /usr/bin/python2.7 -m haas_proxy -n --pidfile=/tmp/haas.pid --syslog haas_proxy --device-token $TOKEN --port $PORT
 	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
 	procd_set_param file /etc/config/haas
+	procd_set_param user nobody
 	procd_close_instance
 }
 
