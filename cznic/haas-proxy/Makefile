@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-proxy
 PKG_VERSION:=1.4
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/haas/proxy.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -26,7 +26,7 @@ define Package/haas-proxy
   CATEGORY:=Network
   TITLE:=haas-proxy
   URL:=https://haas.nic.cz
-  DEPENDS:=+python-base +python-cachetools +python-twisted +python-crypto +python-service-identity +server-uplink +sshpass
+  DEPENDS:=+python-base +python-cachetools +python-requests +python-twisted +python-crypto +python-service-identity +server-uplink +sshpass
   CONFLICTS:=mitmproxy
 endef
 
