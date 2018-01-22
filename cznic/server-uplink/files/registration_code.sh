@@ -21,11 +21,17 @@
 set -e
 
 TIMEOUT=120
-CA_FILE=/etc/ssl/www_turris_cz_ca.pem
+CA_FILE='/etc/ssl/turris.pem'
 CHALLENGE_URL=https://api.turris.cz/challenge.cgi
 OUTPUT_FILE=/usr/share/server-uplink/registration_code
 
-CODE=$(curl -s -k -m $TIMEOUT "$CHALLENGE_URL" | atsha204cmd challenge-response | head -c 16)
+CODE=$(curl -sS --cacert "$CA_FILE" -m $TIMEOUT "$CHALLENGE_URL" | atsha204cmd challenge-response | head -c 16)
+
+if [ -z "$CODE" ] ; then
+	[ -t 2 ] && echo "Failed to get registration code" >&2
+	logger -t server_uplink -p error "Failed to get registration code"
+	exit 1
+fi
 
 # test whether the code is the same
 if [ -f "$OUTPUT_FILE" ] ; then
