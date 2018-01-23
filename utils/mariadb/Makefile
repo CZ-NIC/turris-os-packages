@@ -45,6 +45,7 @@ CMAKE_OPTIONS:= -DSTACK_DIRECTION=-1 \
                 -DPLUGIN_HANDLERSOCKET=NO \
 		-DPLUGIN_AUTH_PAM=NO \
                 -DPLUGIN_XTRADB=DYNAMIC \
+                -DPLUGIN_MROONGA=NO \
                 -DPLUGIN_TOKUDB=DYNAMIC \
                 -DWITH_UNIT_TESTS=OFF \
                 -DWITH_WSREP=OFF \
