@@ -8,23 +8,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-functools32
-PKG_RELEASE:=2
-PKG_VERSION:=3.2.3-$(PKG_RELEASE)
+PKG_RELEASE:=0
+PKG_VERSION:=3.2.3-2
 
 PKG_SOURCE:=functools32-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/f/functools32/
-PKG_MD5SUM:=09f24ffd9af9f6cd0f63cb9f4e23d4b2
+PKG_HASH:=09f24ffd9af9f6cd0f63cb9f4e23d4b2
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/functools32-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/functools32-$(PKG_VERSION)
 
-HOST_BUILD_DEPENDS:=python/host
-PKG_BUILD_DEPENDS:=python
-
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
-$(call include_mk, python-package.mk)
-$(call include_mk, python-host.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 
 define Package/$(PKG_NAME)
 	SUBMENU:=Python
@@ -41,9 +37,7 @@ define Package/$(PKG_NAME)/description
 endef
 
 define Build/Compile
-	$(call Build/Compile/PyMod,., \
-		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)" \
-	)
+	$(call Build/Compile/PyMod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
 endef
 
 define Package/$(PKG_NAME)/install
@@ -63,6 +57,4 @@ define Host/Install
 endef
 
 $(eval $(call HostBuild))
-
-$(eval $(call PyPackage,$(PKG_NAME)))
 $(eval $(call BuildPackage,$(PKG_NAME)))
