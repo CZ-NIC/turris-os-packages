@@ -22,7 +22,7 @@ MAINTAINER:=Martin Petracek <martin.petracek@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python3-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/pakon-dev-detect
   TITLE:=pakon-dev-detect

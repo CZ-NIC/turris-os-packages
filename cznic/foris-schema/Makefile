@@ -21,7 +21,7 @@ PKG_LICENSE:=GPL-3.0
 PKG_BUILD_DEPENDS:=python-jsonschema/host
 
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 
 
 define Package/foris-schema

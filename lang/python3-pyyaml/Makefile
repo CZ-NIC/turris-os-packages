@@ -18,7 +18,7 @@ PKG_MD5SUM:=4c129761b661d181ebf7ff4eb2d79950
 PKG_BUILD_DIR:=$(BUILD_DIR)/PyYAML-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python3-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/python3-pyyaml
   SUBMENU:=Python

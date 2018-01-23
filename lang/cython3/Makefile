@@ -10,7 +10,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/cython-$(PKG_VERSION)
 PKG_MD5SUM:=212d50002f72bcdd928f036a46b3ae09
 
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python3-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/cython3
   SUBMENU:=Python

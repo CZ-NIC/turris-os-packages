@@ -19,7 +19,7 @@ PKG_LICENSE:=MIT
 PKG_MAINTAINER:=Stepah Henek <stepan.henek@nic.cz>
 
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 
 define Package/python-websocket-server
 	SECTION:=lang
