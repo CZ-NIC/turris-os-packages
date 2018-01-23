@@ -244,6 +244,7 @@ run_instance() {
 	procd_open_instance
 	procd_set_param file /etc/config/resolver
 	procd_set_param command "$PROG"
+	procd_set_param respawn
         modify_rundir
 	init_header
 	load_uci_config_kresd
