@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-ssbackups-module
-PKG_VERSION:=0.1
+PKG_VERSION:=0.2
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -28,7 +28,7 @@ $(call include_mk, python-package.mk)
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
-		+foris-controller +ssbackups
+		+foris-controller +ssbackups +python-pbkdf2
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
@@ -43,5 +43,16 @@ endef
 #
 # Package install definition
 $(eval $(call ForisControllerModule,$(PKG_NAME)))
+
+# redefine install
+define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)
+	if [ -d $(PKG_INSTALL_DIR)/usr/bin ]; then find $(PKG_INSTALL_DIR)/usr/bin -mindepth 1 -maxdepth 1 -type f -exec $(CP) \{\} $(1)/usr/bin/ \; ; fi
+	find $(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR) -mindepth 1 -maxdepth 1 \( -type f -o -type d \) -exec $(CP) \{\} $(1)$(PYTHON_PKG_DIR)/ \;
+	$(RM) $(1)/usr/lib/python2.7/site-packages/foris_controller_modules/__init__.py
+	$(RM) $(1)/usr/lib/python2.7/site-packages/foris_controller_backends/__init__.py
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_DATA) ./files/ssbackups.cron $(1)/etc/cron.d/ssbackups
+endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
