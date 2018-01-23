@@ -7,8 +7,8 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=suricata_conntrack_flows
-PKG_VERSION:=2
+PKG_NAME:=suricata-conntrack-flows
+PKG_VERSION:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/suricata_conntrack_flows.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -24,7 +24,7 @@ PKG_INSTALL:=0
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/suricata_conntrack_flows
+define Package/suricata-conntrack-flows
 	SECTION:=net
 	CATEGORY:=Network
 	SUBMENU:=Helper script to track flows bypassed by suricata
