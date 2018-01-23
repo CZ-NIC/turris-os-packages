@@ -153,7 +153,7 @@ define BuildPlugin
     TITLE:=$(2) module
   endef
 
-  Package/lighttpd-mod-$(1)/postinst = Package/lighttpd/postinst
+  Package/lighttpd-mod-$(1)/postinst = $$(Package/lighttpd/postinst)
 
   define Package/lighttpd-mod-$(1)/install
 	$(INSTALL_DIR) $$(1)/usr/lib/lighttpd
