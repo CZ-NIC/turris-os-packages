@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-ssbackups-module
 PKG_VERSION:=0.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-ssbackups-module.git
@@ -53,6 +53,8 @@ define Package/$(PKG_NAME)/install
 	$(RM) $(1)/usr/lib/python2.7/site-packages/foris_controller_backends/__init__.py
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/ssbackups.cron $(1)/etc/cron.d/ssbackups
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/ssbackups.uci $(1)/etc/config/ssbackups
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
