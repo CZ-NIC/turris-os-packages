@@ -8,12 +8,14 @@ USE_PROCD=1
 
 NFS_D=/var/lib/nfs
 LOCK_D=/var/lib/nfs/sm
+RECOVERY_D=/var/lib/nfs/v4recovery
 
 start_service() {
 	grep -q /proc/fs/nfsd /proc/mounts || \
 		mount -t nfsd nfsd /proc/fs/nfsd
 	mkdir -p $NFS_D
 	mkdir -p $LOCK_D
+	mkdir -p $RECOVERY_D
 	touch $NFS_D/rmtab
 
         sysctl -w fs.nfs.nlm_tcpport=32777 fs.nfs.nlm_udpport=32777 > /dev/null
