@@ -22,6 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
+	DEPENDS:=+pakon
 endef
 
 
@@ -38,5 +39,15 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_ignore/ads_downloaded.txt $(1)/usr/share/pakon-light/domains_ignore/ads_dist.txt
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_ignore/rubbish.txt $(1)/usr/share/pakon-light/domains_ignore/rubbish_dist.txt
 endef
+
+define Package/pakon/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+	/etc/init.d/pakon-monitor restart
+	/etc/init.d/pakon-handler restart
+	/usr/libexec/pakon-light/domains_reapply.py
+}
+endef
+
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
