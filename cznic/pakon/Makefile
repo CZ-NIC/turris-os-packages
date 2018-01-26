@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon
 PKG_VERSION:=1.1
-PKG_RELEASE:=7
+PKG_RELEASE:=8
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=c0d39f31f7c648adf9180f8f5c9240effedeaffb
+PKG_SOURCE_VERSION:=5500a231f623a8228b47750d1cc66f8a6fa38b1f
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -75,6 +75,11 @@ endef
 define Package/pakon/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
+	# migrate configuration
+	ARCHIVE_KEEP=$(/sbin/uci get pakon.archive.keep)
+	/sbin/uci get pakon.common.notify_new_devices || mv /etc/config/pakon-opkg /etc/config/pakon
+	/sbin/uci set pakon.archive.keep="$ARCHIVE_KEEP"
+	/sbin/uci commit pakon
         /etc/init.d/pakon-monitor enable
         /etc/init.d/pakon-monitor restart
         /etc/init.d/pakon-handler enable
