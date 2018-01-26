@@ -50,4 +50,12 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/suricata_conntrack_flows.py $(1)/usr/libexec/
 endef
 
+define Package/suricata/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+	grep "max_dgram_qlen" /etc/sysctl.conf || printf "\nnet.unix.max_dgram_qlen=100" >> /etc/sysctl.conf
+}
+endef
+
+
 $(eval $(call BuildPackage,$(PKG_NAME)))

@@ -57,10 +57,7 @@ vars:
 #rule-files:
 # - drop.rules
 #
-include_dir: /etc/suricata/conf.d
-classification-file: /etc/suricata/classification.config
-reference-config-file: /etc/suricata/reference.config
-threshold-file: /etc/suricata/threshold.config
+include_dir: /etc/suricata-pakon/conf.d
 
 
 ##
@@ -80,7 +77,7 @@ stats:
   interval: 8
 
 # Configure the type of alert (and other) logging you would like.
-outputs: !include_dir /etc/suricata/output_conf.d
+outputs: !include_dir /etc/suricata-pakon/output_conf.d
 
 # Logging configuration.  This is not about logging IDS alerts/events, but
 # output about what Suricata is doing, like startup messages, errors, etc.

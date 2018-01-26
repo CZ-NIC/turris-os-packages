@@ -17,7 +17,7 @@ define Package/suricata-emergingthreats-rules
   SECTION:=net
   CATEGORY:=Network
   TITLE:=IDS
-  DEPENDS:=+suricata
+  DEPENDS:=+suricata-pakon
 endef
 
 define Build/Compile
@@ -31,21 +31,21 @@ define Package/suricata-emergingthreats-rules/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/update_rules.sh $(1)/usr/bin/suricata_update_rules.sh
 
-	$(INSTALL_DIR) $(1)/etc/suricata/conf.d
-	$(INSTALL_CONF) ./files/rules.yaml $(1)/etc/suricata/conf.d/rules.yaml
+	$(INSTALL_DIR) $(1)/etc/suricata-pakon/conf.d
+	$(INSTALL_CONF) ./files/rules.yaml $(1)/etc/suricata-pakon/conf.d/rules.yaml
 endef
 
 
 define Package/suricata-emergingthreats-rules/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-	/etc/init.d/suricata restart
+	/etc/init.d/suricata-pakon restart
 }
 endef
 
 define Package/suricata-emergingthreats-rules/postrm
 #!/bin/sh
-	/etc/init.d/suricata restart
+	/etc/init.d/suricata-pakon restart
 endef
 
 

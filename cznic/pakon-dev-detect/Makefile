@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-dev-detect
 PKG_VERSION:=1.2.1
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_LICENSE:=GPLv2+
 PKG_LICENSE_FILES:=COPYING
 
@@ -26,7 +26,7 @@ $(call include_mk, python3-package.mk)
 
 define Package/pakon-dev-detect
   TITLE:=pakon-dev-detect
-  DEPENDS:=+python3-light +python3-logging +python3-setuptools +suricata +ouidb
+  DEPENDS:=+python3-light +python3-logging +python3-setuptools +suricata-pakon +ouidb
 endef
 
 define Package/pakon-dev-detect/description
@@ -44,8 +44,8 @@ define Py3Package/pakon-dev-detect/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/pakon-dev-detect.init $(1)/etc/init.d/pakon-dev-detect
 
-	$(INSTALL_DIR) $(1)/etc/suricata/output_conf.d
-	$(INSTALL_BIN) ./files/output_dev_detect.yaml $(1)/etc/suricata/output_conf.d/dev_detect.yaml
+	$(INSTALL_DIR) $(1)/etc/suricata-pakon/output_conf.d
+	$(INSTALL_BIN) ./files/output_dev_detect.yaml $(1)/etc/suricata-pakon/output_conf.d/dev_detect.yaml
 
 	$(INSTALL_DIR) $(1)/usr/share/pakon-dev-detect
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/get_mac_iface.sh $(1)/usr/share/pakon-dev-detect/
@@ -54,7 +54,7 @@ endef
 define Package/pakon-dev-detect/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-        /etc/init.d/suricata restart
+        /etc/init.d/suricata-pakon restart
 	/etc/init.d/pakon-dev-detect enable
 	/etc/init.d/pakon-dev-detect start
 }
@@ -68,7 +68,7 @@ endef
 
 define Package/pakon-dev-detect/postrm
 #!/bin/sh
-        /etc/init.d/suricata restart || true
+        /etc/init.d/suricata-pakon restart || true
 endef
 
 $(eval $(call Py3Package,pakon-dev-detect))
