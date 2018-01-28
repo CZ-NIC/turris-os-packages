@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd-https-cert
-PKG_VERSION:=5
+PKG_VERSION:=6
 PKG_MAINTAINER:=Robin Obůrka <robin.oburka@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -23,7 +23,7 @@ define Build/Compile
 	true
 endef
 
-define Package/https-cert/conffiles
+define Package/$(PKG_NAME)/conffiles
 /etc/lighttpd/conf.d/ssl-enable.conf
 endef
 
