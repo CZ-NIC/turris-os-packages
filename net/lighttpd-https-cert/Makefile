@@ -23,10 +23,6 @@ define Build/Compile
 	true
 endef
 
-define Package/https-cert/conffiles
-/etc/lighttpd/conf.d/ssl-enable.conf
-endef
-
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_CONF) ./files/ssl-enable.conf $(1)/etc/lighttpd/conf.d/ssl-enable.conf
