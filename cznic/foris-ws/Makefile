@@ -25,7 +25,7 @@ $(call include_mk, python-package.mk)
 define Package/foris-ws
 	TITLE:=foris-ws
 	URL:=https://gitlab.labs.nic.cz/turris/foris-ws
-	DEPENDS:=+python-light +python-websocket-server +python-prctl +socat +rpcd +lighttpd-https-cert +python-ubus
+	DEPENDS:=+python-light +python-websocket-server +python-prctl +rpcd +python-ubus
 	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
 endef
 
