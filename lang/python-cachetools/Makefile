@@ -9,7 +9,8 @@ PKG_SOURCE_URL:=https://github.com/tkem/cachetools/archive/
 PKG_MD5SUM:=b559f0ff7e2707e777e59a9cc50eec72
 PKG_SOURCE:=v$(PKG_VERSION).tar.gz
 PKG_BUILD_DEPENDS:=python-light python-setuptools
-PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
+PKG_BUILD_DIR:=$(BUILD_DIR)/cachetools-p2-$(PKG_VERSION)
+PKG_UNPACK:=tar -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python-package.mk)
