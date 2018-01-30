@@ -81,10 +81,10 @@ define Package/pakon/postinst
 	[ "${ARCHIVE_KEEP}" ] && /sbin/uci set pakon.archive.keep="${ARCHIVE_KEEP}"
         /sbin/uci commit pakon
         /etc/init.d/pakon-monitor enable
-        /etc/init.d/pakon-monitor restart
+        /etc/init.d/pakon-monitor restart 2>/dev/null
         /etc/init.d/pakon-handler enable
-        /etc/init.d/pakon-handler restart
-	/etc/init.d/suricata-pakon restart
+        /etc/init.d/pakon-handler restart 2>/dev/null
+	/etc/init.d/suricata-pakon restart 2>/dev/null
 }
 endef
 

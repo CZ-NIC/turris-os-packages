@@ -52,7 +52,7 @@ define Package/suricata-pakon/postinst
 [ -n "$$IPKG_INSTROOT" ] || {
 	/etc/init.d/suricata-pakon enable
 	[ -f /etc/init.d/suricata ] && /etc/init.d/suricata stop 2>/dev/null #migration from suricata package, to be removed later
-	/etc/init.d/suricata-pakon restart
+	/etc/init.d/suricata-pakon restart 2>/dev/null
 }
 endef
 
