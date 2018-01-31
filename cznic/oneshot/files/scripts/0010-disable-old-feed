@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# We are using separate feeds nowadays so disable old feed as it does not exist anymore
+
+sed -i 's|^\([^#]*https://api.turris.cz/openwrt-repo/turris/packages\)|# deprecated \1|' /etc/opkg.conf

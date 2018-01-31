@@ -9,21 +9,14 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netmetr
 PKG_VERSION:=1.2.1
-PKG_RELEASE:=2
-
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
-PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=b5accc608c9b57194486282dac4b5380b097b7f4
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
+PKG_RELEASE:=3
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=Speed measurement application
-	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 	DEPENDS:=+rmbt-client +vixie-cron +python-light
 endef
 define Package/$(PKG_NAME)/description
@@ -38,7 +31,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) 	$(1)/usr/bin
-	$(INSTALL_BIN) 	$(PKG_BUILD_DIR)/netmetr/netmetr $(1)/usr/bin/netmetr
+	$(INSTALL_BIN) 	./files/netmetr $(1)/usr/bin/netmetr
 
 	$(INSTALL_DIR)  $(1)/etc/config
 	$(INSTALL_CONF)	./files/netmetr.config		$(1)/etc/config/netmetr

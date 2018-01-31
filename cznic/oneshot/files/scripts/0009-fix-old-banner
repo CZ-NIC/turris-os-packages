@@ -1,0 +1,9 @@
+#!/bin/sh
+if [ "`md5sum /etc/banner | cut -f 1 -d ' '`" = ff598dce1de580401bf2a4e1c24a4489 ]; then
+	if [ -f /etc/banner-opkg ]; then
+		mv /etc/banner-opkg /etc/banner
+	elif [ -z "`grep /etc/banner /usr/lib/opkg/info/base-files.conffiles`" ]; then
+		echo /etc/banner >> /usr/lib/opkg/info/base-files.conffiles
+		sed -i 's|^\(.*/etc/rc.local.*\)| /etc/banner ff598dce1de580401bf2a4e1c24a4489\n\1|' /usr/lib/opkg/status
+	fi
+fi

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -ex
+
+sed -ie 's#http://api.turris.cz/#https://api.turris.cz/#' /etc/opkg.conf

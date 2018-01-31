@@ -1,0 +1,1 @@
+sed -i -e 's/^\([^/]\)/\/\1/' /usr/lib/opkg/info/*.list
