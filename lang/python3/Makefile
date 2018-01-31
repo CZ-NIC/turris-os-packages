@@ -14,12 +14,12 @@ PYTHON_VERSION:=$(PYTHON3_VERSION)
 PYTHON_VERSION_MICRO:=$(PYTHON3_VERSION_MICRO)
 
 PKG_NAME:=python3
-PKG_RELEASE:=1
+PKG_RELEASE:=4
 PKG_VERSION:=$(PYTHON_VERSION).$(PYTHON_VERSION_MICRO)
 
 PKG_SOURCE:=Python-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://www.python.org/ftp/python/$(PKG_VERSION)
-PKG_MD5SUM:=159b932bf56aeaa76fd66e7420522d8c8853d486b8567c459b84fe2ed13bcaba
+PKG_MD5SUM:=8906efbacfcdc7c3c9198aeefafd159e
 
 PKG_LICENSE:=PSF
 PKG_LICENSE_FILES:=LICENSE Modules/_ctypes/libffi_msvc/LICENSE Modules/_ctypes/darwin/LICENSE Modules/_ctypes/libffi/LICENSE Modules/_ctypes/libffi_osx/LICENSE Tools/pybench/LICENSE
@@ -126,7 +126,7 @@ CONFIGURE_ARGS+= \
 	--enable-shared \
 	--without-cxx-main \
 	--with-threads \
-	--with-system-ffi \
+	--with-system-ffi="$(STAGING_DIR)/usr" \
 	--without-pymalloc \
 	--without-ensurepip \
 	$(ENABLE_IPV6) \
@@ -150,21 +150,16 @@ define Build/InstallDev
 		$(STAGING_DIR)/host/lib/python$(PYTHON_VERSION) \
 		$(PKG_INSTALL_DIR)/usr/lib/libpython$(PYTHON_VERSION).so* \
 		$(1)/usr/lib/
-
 	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/python$(PYTHON_VERSION)/config-$(PYTHON_VERSION)-arm-linux-gnueabihf \
-		$(PKG_INSTALL_DIR)/usr/lib/python$(PYTHON_VERSION)/config-$(PYTHON_VERSION)
-
-	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/lib/python$(PYTHON_VERSION)/config-$(PYTHON_VERSION)-arm-linux-gnueabihf \
-		$(1)/usr/lib/python$(PYTHON_VERSION)/config-3.6
+		$(PKG_INSTALL_DIR)/usr/lib/python$(PYTHON_VERSION)/config-$(PYTHON_VERSION) \
+		$(1)/usr/lib/python$(PYTHON_VERSION)/
 endef
-
 
 PYTHON3_BASE_LIB_FILES:= \
 	/usr/lib/python$(PYTHON_VERSION)/encodings \
 	/usr/lib/python$(PYTHON_VERSION)/_collections_abc.py \
 	/usr/lib/python$(PYTHON_VERSION)/_sitebuiltins.py \
+	/usr/lib/python$(PYTHON_VERSION)/_sysconfigdata.py \
 	/usr/lib/python$(PYTHON_VERSION)/_weakrefset.py \
 	/usr/lib/python$(PYTHON_VERSION)/abc.py \
 	/usr/lib/python$(PYTHON_VERSION)/codecs.py \
@@ -228,13 +223,13 @@ HOST_CONFIGURE_ARGS+= \
 	--localstatedir=$(STAGING_DIR)/host/var \
 	--sbindir=$(STAGING_DIR)/host/bin \
 	--with-system-expat=$(STAGING_DIR)/host \
-	--with-system-ffi \
+	--with-system-ffi=$(STAGING_DIR)/host \
 	--with-ensurepip=upgrade \
 	CONFIG_SITE= \
 	CFLAGS="$(HOST_CFLAGS)"
 
 define Host/Compile
-	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) python Parser/pgen Programs/_freeze_importlib
+	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) python Parser/pgen
 	+$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) sharedmods
 endef
 
