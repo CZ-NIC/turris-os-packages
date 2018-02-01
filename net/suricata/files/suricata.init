@@ -20,6 +20,7 @@ build_iptables() {
 	IFACES=$(uci -q get suricata.suricata.interface) || { echo >&2 "Interfaces not set in configuration (configuration file might be missing)."; exit 1; }
 	echo "-I suricata -m connmark --mark 1/1 -j RETURN" >> $IPTABLES_RULES
 	echo "-I suricata -m connmark --mark 1/1 -j RETURN" >> $IP6TABLES_RULES
+	echo "-I suricata -p icmp -j RETURN" >> $IP6TABLES_RULES #workaround: ignore ICMPv6
 	echo "-A suricata -m mark --mark 1/1 -j CONNMARK --set-mark 1/1" >> $IPTABLES_RULES
 	echo "-A suricata -m mark --mark 1/1 -j CONNMARK --set-mark 1/1" >> $IP6TABLES_RULES
 	echo "-A suricata -m mark --mark 2/2 -j RETURN" >> $IPTABLES_RULES
