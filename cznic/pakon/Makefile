@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon
-PKG_VERSION:=1.1
-PKG_RELEASE:=8
+PKG_VERSION:=1.2
+PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -80,6 +80,8 @@ define Package/pakon/postinst
         /sbin/uci -q get pakon.monitor.interface || mv /etc/config/pakon-opkg /etc/config/pakon
 	[ "${ARCHIVE_KEEP}" ] && /sbin/uci set pakon.archive.keep="${ARCHIVE_KEEP}"
         /sbin/uci commit pakon
+	#archivation changes - records with dest_ip "" shouldn't appear anymore
+	[ -f /srv/pakon/pakon-archive.db ] && /usr/bin/sqlite3 /srv/pakon/pakon-archive.db 'UPDATE traffic SET dest_ip="unknown address" WHERE dest_ip LIKE "" AND app_hostname IS NULL'
         /etc/init.d/pakon-monitor enable
         /etc/init.d/pakon-monitor restart 2>/dev/null
         /etc/init.d/pakon-handler enable
