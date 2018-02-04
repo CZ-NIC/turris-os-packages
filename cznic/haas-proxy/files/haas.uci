@@ -2,3 +2,6 @@ config haas 'settings'
 	option token ''
 	option local_port '2525'
 	option setup_fw '1'
+	# This options specifies where to log if anywhere, valid values are
+    # absolute path to the file, 'syslog' or 'none'
+	option log 'none'
