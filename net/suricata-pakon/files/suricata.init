@@ -20,7 +20,7 @@ build_iptables() {
 	IFACES=$(uci -q get pakon.monitor.interface || echo "br-lan br-guest_turris")
 	echo "-I suricata-pakon -m connmark --mark 1/1 -j RETURN" >> $IPTABLES_RULES
 	echo "-I suricata-pakon -m connmark --mark 1/1 -j RETURN" >> $IP6TABLES_RULES
-	echo "-I suricata-pakon -p icmp -j RETURN" >> $IP6TABLES_RULES #workaround: ignore ICMPv6
+	echo "-I suricata-pakon -p icmpv6 -j RETURN" >> $IP6TABLES_RULES #workaround: ignore ICMPv6
 	echo "-A suricata-pakon -m mark --mark 1/1 -j CONNMARK --set-mark 1/1" >> $IPTABLES_RULES
 	echo "-A suricata-pakon -m mark --mark 1/1 -j CONNMARK --set-mark 1/1" >> $IP6TABLES_RULES
 	echo "-A suricata-pakon -m mark --mark 2/2 -j RETURN" >> $IPTABLES_RULES

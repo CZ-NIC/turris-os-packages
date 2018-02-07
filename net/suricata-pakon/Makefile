@@ -9,8 +9,10 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata-pakon
 PKG_VERSION:=1
-PKG_INSTALL:=1
+PKG_RELEASE:=2
+
 PKG_LICENSE:=GPL-2.0
+PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
