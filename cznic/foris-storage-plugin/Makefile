@@ -23,8 +23,6 @@ PKG_LICENSE_FILE:=LICENSE
 PKG_BUILD_DEPENDS:=foris/host
 
 include $(INCLUDE_DIR)/package.mk
-include ../foris/files/foris-translations.mk
-include ../foris/files/foris-plugin.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
@@ -38,7 +36,15 @@ define Package/$(PKG_NAME)/description
 endef
 
 define Build/Compile
-	$(call Build/Compile/ForisPlugin)
+	echo Nothing
+endef
+
+define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)/$(FORIS_PLUGIN_DIR)/$(PKG_NAME)
+
+	$(CP) \
+		$(PKG_BUILD_DIR)/src/* \
+		$(1)/$(FORIS_PLUGIN_DIR)/$(PKG_NAME)/
 endef
 
 define Package/$(PKG_NAME)/postinst
@@ -57,12 +63,4 @@ set -x
 }
 endef
 
-# Package install definition
-$(eval $(call ForisPlugin,$(PKG_NAME),storage))
-
-# Translation definitions
-FORIS_TRANSLATIONS:=
-$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),storage,$(trans))))
-
 $(eval $(call BuildPackage,$(PKG_NAME)))
-$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call BuildPackage,$(PKG_NAME)-l10n-$(trans))))
