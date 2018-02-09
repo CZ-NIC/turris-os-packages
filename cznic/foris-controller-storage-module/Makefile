@@ -27,7 +27,7 @@ $(call include_mk, python-package.mk)
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
-		+foris-controller +e2fsprogs
+		+foris-controller +e2fsprogs +coreutils-stat +rsync
 	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
 endef
 
