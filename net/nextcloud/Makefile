@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2018 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nextcloud
-PKG_VERSION:=12.0.5
+PKG_VERSION:=13.0.0
 PKG_RELEASE:=0
 
 PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).zip
-PKG_MD5SUM:=f642b87fc25a0e5e90ffa8e7241b5bac
+PKG_MD5SUM:=7c1db09afcbdbcceadd99534b6e51475
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -75,7 +75,10 @@ define Package/$(PKG_NAME)/postinst
 if [ -z "$$IPKG_INSTROOT" ]; then
 	if [ -f /srv/www/nextcloud/config/config.php ]; then
 		cd /srv/www/nextcloud/
-		sudo -u nobody php-cli ./occ upgrade --no-app-disable --no-interaction
+		VER="`cat ./config/config.php | sed -n 's|.*version[^0-9]*\([0-9]\+\)\.\([0-9]\+\)\.\([0-9]\+\)\..*|\1\2\3|p'`"
+		if [ -n "$$VER" ] && [ $$VER -lt "`echo $(PKG_VERSION) | sed 's|\.||g'`" ]; then
+			sudo -u nobody php-cli ./occ upgrade --no-app-disable --no-interaction
+		fi
 	fi
 fi
 chown -R nobody "$$IPKG_INSTROOT"/srv/www/nextcloud/
