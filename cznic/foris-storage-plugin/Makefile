@@ -41,11 +41,11 @@ define Build/Compile
 endef
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/$(FORIS_PLUGIN_DIR)/$(PKG_NAME)
+	$(INSTALL_DIR) $(1)/$(FORIS_PLUGIN_DIR)/storage
 
 	$(CP) \
 		$(PKG_BUILD_DIR)/src/* \
-		$(1)/$(FORIS_PLUGIN_DIR)/$(PKG_NAME)/
+		$(1)/$(FORIS_PLUGIN_DIR)/storage/
 endef
 
 define Package/$(PKG_NAME)/postinst
