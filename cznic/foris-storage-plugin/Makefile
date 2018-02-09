@@ -23,6 +23,7 @@ PKG_LICENSE_FILE:=LICENSE
 PKG_BUILD_DEPENDS:=foris/host
 
 include $(INCLUDE_DIR)/package.mk
+include ../foris/files/foris-plugin.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
