@@ -38,8 +38,7 @@ start_service() {
 
 stop_service() {
 	FW_SETUP="`uci -q get haas.settings.setup_fw | egrep -i '(1|yes|true|enabled|on)'`"
-	PORT="`uci -q get haas.settings.local_port`"
-	if [ "$FW_SETUP" -a "$TOKEN" ] && [ -f /tmp/haas-remove-iptables ]; then
+	if [ "$FW_SETUP" ] && [ -f /tmp/haas-remove-iptables ]; then
 		sh /tmp/haas-remove-iptables
 		rm -f /tmp/haas-remove-iptables
 	fi
