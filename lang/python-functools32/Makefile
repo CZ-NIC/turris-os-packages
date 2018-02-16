@@ -17,6 +17,7 @@ PKG_HASH:=09f24ffd9af9f6cd0f63cb9f4e23d4b2
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/functools32-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/functools32-$(PKG_VERSION)
+HOST_BUILD_DEPENDS:=python/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
