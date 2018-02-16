@@ -1,0 +1,10 @@
+Oneshot
+=======
+
+Utility for making sure a script is run exactly once. Whatever is in the
+scripts directory and installed on the turris router, it is run the first time
+oneshot is run since then. Then oneshot notes it was run and never runs it
+again.
+
+It is expected the scripts whose effect is already included in the image are
+noted not to be run as well, by whatever installs them.

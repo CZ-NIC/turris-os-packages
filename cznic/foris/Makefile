@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2018 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=97.2
+PKG_VERSION:=97.5
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -30,9 +30,9 @@ define Package/foris-common
 	DEPENDS:=\
 		+python-light +python-bottle +python-bottle-i18n \
 		+python-flup +python-ncclient +python-ubus +nuci +lighttpd +lighttpd-mod-fastcgi \
-		+lighttpd-mod-redirect +user_notify +foris-ws +l10n_supported \
+		+lighttpd-mod-redirect +lighttpd-mod-setenv +user_notify +foris-ws +l10n_supported \
 		+sqm-scripts +foris-client +turris-maintain
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/foris-common/description
@@ -99,7 +99,7 @@ define Package/foris-wizard
 	TITLE:=foris-wizard
 	DEPENDS:=\
 		+foris-common
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/foris-wizard/description
@@ -110,7 +110,7 @@ define Package/foris-config
 	TITLE:=foris-config
 	DEPENDS:=\
 		+foris-common +luci
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/foris-wizard/description
@@ -121,7 +121,7 @@ define Package/foris
 	TITLE:=foris
 	DEPENDS:=\
 		+foris-wizard +foris-config
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/foris/description
@@ -254,7 +254,7 @@ define ForisTranslation
 	TITLE:=foris-l10n-$(1)
 	DEPENDS:=\
 		+foris
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
  endef
 
  define Package/foris-l10n-$(1)/install

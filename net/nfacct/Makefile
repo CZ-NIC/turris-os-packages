@@ -18,7 +18,7 @@ PKG_SOURCE_URL:=\
 	ftp://ftp.netfilter.org/pub/${PKG_NAME}/
 PKG_MD5SUM:=992e863409d144350dbc8f0554a0f478
 
-PKG_MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2018 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -16,7 +16,7 @@ PKG_SOURCE_URL:=https://pypi.python.org/packages/74/64/e86581ee7775a2e08aca530b4
 PKG_MD5SUM:=0026f2a6696e2ebdb4c70a35568ff22c
 
 PKG_LICENSE:=MIT
-PKG_MAINTAINER:=Stepah Henek <stepan.henek@nic.cz>
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python-package.mk

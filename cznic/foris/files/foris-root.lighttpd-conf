@@ -2,6 +2,7 @@
 $HTTP["url"] =~ "^/*$" {
 	alias.url = ( "/" => "/usr/share/foris/foris-root-cgi" )
 	cgi.assign = ( "" => "" )
+	setenv.add-response-header = ( "Content-Type" => "text/html")
 }
 
 # Make sure that wirzard passes during a migration from older image

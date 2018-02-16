@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon
-PKG_VERSION:=1.1
-PKG_RELEASE:=3
+PKG_VERSION:=1.2
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=ee5f178172d902dc169beb29334f61c7f025ea59
+PKG_SOURCE_VERSION:=5a08434fa14c56e9792de4825e420141efcd2381
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -30,7 +30,7 @@ define Package/pakon
 	CATEGORY:=Network
 	SUBMENU:=Collect traffic events from suricata IDS
 	TITLE:=PArental KONtrol - light
-	DEPENDS:=+suricata +xz +python3-light +python3-sqlite3 +sqlite3-cli +pakon-lists
+	DEPENDS:=+suricata-pakon +xz +python3-light +python3-logging +python3-cachetools +python3-sqlite3 +sqlite3-cli +pakon-lists +ouidb +suricata-conntrack-flows
 endef
 
 define Package/$(PKG_NAME)/description
@@ -50,8 +50,8 @@ define Package/$(PKG_NAME)/conffiles
 endef
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/etc/suricata/output_conf.d
-	$(INSTALL_DATA) ./files/pakon-output.yaml $(1)/etc/suricata/output_conf.d/pakon.yaml
+	$(INSTALL_DIR) $(1)/etc/suricata-pakon/output_conf.d
+	$(INSTALL_DATA) ./files/pakon-output.yaml $(1)/etc/suricata-pakon/output_conf.d/pakon.yaml
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/pakon-monitor-init $(1)/etc/init.d/pakon-monitor
 	$(INSTALL_BIN) ./files/pakon-handler-init $(1)/etc/init.d/pakon-handler
@@ -75,11 +75,18 @@ endef
 define Package/pakon/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
+        # migrate configuration
+        ARCHIVE_KEEP=$(/sbin/uci -q get pakon.archive.keep)
+        /sbin/uci -q get pakon.monitor.interface || mv /etc/config/pakon-opkg /etc/config/pakon
+	[ "${ARCHIVE_KEEP}" ] && /sbin/uci set pakon.archive.keep="${ARCHIVE_KEEP}"
+        /sbin/uci commit pakon
+	#archivation changes - records with dest_ip "" shouldn't appear anymore
+	[ -f /srv/pakon/pakon-archive.db ] && /usr/bin/sqlite3 /srv/pakon/pakon-archive.db 'UPDATE traffic SET dest_ip="unknown address" WHERE dest_ip LIKE "" AND app_hostname IS NULL'
         /etc/init.d/pakon-monitor enable
-        /etc/init.d/pakon-monitor restart
+        /etc/init.d/pakon-monitor restart 2>/dev/null
         /etc/init.d/pakon-handler enable
-        /etc/init.d/pakon-handler restart
-	/etc/init.d/suricata restart
+        /etc/init.d/pakon-handler restart 2>/dev/null
+	/etc/init.d/suricata-pakon restart 2>/dev/null
 }
 endef
 

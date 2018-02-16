@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2013 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2018 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -28,7 +28,7 @@ define Package/python-pbkdf2
 	TITLE:=python-pbkdf2
 	URL:=https://www.dlitz.net/software/python-pbkdf2/
 	DEPENDS:=+python-light +python-openssl
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/python-pbkdf2/description

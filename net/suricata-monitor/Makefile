@@ -26,7 +26,7 @@ define Package/suricata-monitor
 	CATEGORY:=Network
 	SUBMENU:=Collect events from suricata IDS
 	TITLE:=Suricata monitor
-	DEPENDS:=+suricata +python-bottle +python-sqlite3
+	DEPENDS:=+suricata-pakon +python-bottle +python-sqlite3
 endef
 
 define Package/$(PKG_NAME)/description
@@ -36,7 +36,7 @@ endef
 
 define Package/$(PKG_NAME)/conffiles
 /etc/suricata-monitor/alert.tmpl
-/etc/suricata/output_conf.d/monitor.yaml
+/etc/suricata-pakon/output_conf.d/monitor.yaml
 /etc/config/suricata-monitor
 endef
 
@@ -47,8 +47,8 @@ define Build/Install
 endef
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/etc/suricata/output_conf.d
-	$(INSTALL_DATA) ./files/monitor-output.yaml $(1)/etc/suricata/output_conf.d/suricata-monitor.yaml
+	$(INSTALL_DIR) $(1)/etc/suricata-pakon/output_conf.d
+	$(INSTALL_DATA) ./files/monitor-output.yaml $(1)/etc/suricata-pakon/output_conf.d/suricata-monitor.yaml
 	$(INSTALL_DIR) $(1)/etc/suricata-monitor
 	$(INSTALL_DATA) ./files/alert.tmpl $(1)/etc/suricata-monitor/alert.tmpl
 	$(INSTALL_DIR) $(1)/usr/bin

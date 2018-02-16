@@ -1,0 +1,3 @@
+if [ -x /etc/init.d/samba ] ; then
+	/etc/init.d/samba enabled || /etc/init.d/samba stop || true
+fi

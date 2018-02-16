@@ -1,8 +1,8 @@
 lists = {
 ['api-token'] = {
-    description_cs = 'Možnost ve Forisu generovat tokeny pro vzdálený API přístup (např. pro Spectator).',
-    description_de = 'Ein Plugin für Foris, welcher zur Generierung von Token für das Fernzugriff-API (z. B. für Spectator).',
-    description_en = 'A Foris plugin allowing to generate remote API access tokens (for example for use in Spectator).',
+    description_cs = 'Správa tokenů pro vzdálený API přístup (např. pro Spectator, nebo Android aplikaci) ve Forisu.',
+    description_de = 'Ein Plugin für Foris, welcher Management von Tokens für das Fernzugriff-API (z. B. für Anwendung in Spectator oder Android Applikationen) erlaubt.',
+    description_en = 'A Foris plugin allowing to manage remote API access tokens (for example for use in Spectator or Android application).',
     title_cs = 'Přístupové tokeny',
     title_de = 'Zugangsverwaltung',
     title_en = 'Access tokens'

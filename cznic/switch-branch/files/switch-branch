@@ -1,0 +1,169 @@
+#!/bin/sh
+set -e
+
+BRANCH=
+VERIFY=false
+FORCE=false
+while [ $# -gt 0 ]; do
+	case "$1" in
+		-h|--help)
+			echo "Script for easier branch switching."
+			echo "Usage: switch-branch [OPTION]... [BRANCH]"
+			echo
+			echo "Options:"
+			echo "  --verify Verify and fix branch settings"
+			echo "  --force  "
+			echo "  --help   Print this help text"
+			exit 0
+			;;
+		--verify)
+			VERIFY=true
+			;;
+		--force)
+			FORCE=true
+			;;
+		*)
+			BRANCH="$1"
+			;;
+	esac
+	shift
+done
+
+if [ ! -f /etc/opkg/distfeeds.conf ] || ! grep -q "repo.turris.cz" /etc/opkg/distfeeds.conf; then
+	echo "File /etc/opkg/distfeeds.conf is unknown. Are we running on Turris?" >&2
+	exit 1
+fi
+if [ ! -f /etc/turris-version ]; then
+	echo "File /etc/turris-version is missing. Are we running on Turris?" >&2
+	exit 1
+fi
+if ! which opkg-cl >/dev/null 2>&1; then
+	echo "opkg-cl missing. Are we running on Turris?" >&2
+	exit 1
+fi
+if ! which updater.sh >/dev/null 2>&1; then
+	echo "updater.sh missing. Are we running on Turris?" >&2
+	exit 1
+fi
+
+# Return current branch
+get_branch() {
+	uci get updater.override.branch 2>/dev/null || echo "deploy"
+}
+
+# Checks if branch is supported (accept any branch if forced, otherwise only the
+# selected ones)
+check_branch() {
+	$FORCE || echo "$BRANCH" | grep -qE '^(deploy|rc|prerc|daily|nightly|test)$'
+}
+
+# Get branch from uci in case of no branch is specified and veryfication
+if $VERIFY && [ -z "$BRANCH" ]; then
+	BRANCH="$(get_branch)"
+fi
+
+# Interactive selection of branch
+while [ -z "$BRANCH" ]; do
+	# Note: branch prerc is not here as it's mostly for internal use only
+cat <<EOF
+You are currently in: $(get_branch)
+
+You can choose from one of these branches:
+  deploy
+    Default and most stable branch. Suggested for unexperienced users.
+  rc
+    Release candidate. This branch contains next Turris OS release. Please join
+    this branch to help us test next release. It's more stable than daily but it
+    can contain bugs.
+  daily
+    This branch is same as nightly except it is updated only when automatic
+    tests are successful. Should be more stable than nightly but manual
+    intervention might be sometimes required too.
+  nightly
+    Branch built every night containing latest software. Suggested only for
+    experienced users as it's sometimes broken and requires manual intervention.
+  test
+    Branch used during development. It's often broken. It's usage is highly
+    discouraged.
+EOF
+	echo -n "Please enter name of a branch branch: "
+	read BRANCH
+	check_branch || BRANCH=
+done
+
+if ! check_branch; then
+	echo "Branch $BRANCH isn't supported branch!" >&2
+	exit 1
+fi
+
+set -x
+
+## Install test keys if we need it
+case "$BRANCH" in
+	deploy|rc)
+		# We don't have to remove cznic-repo-keys-test as it's removed automaticaly by updater
+		;;
+	*)
+		if [ -z "$(opkg list-installed cznic-repo-keys-test 2>/dev/null)" ]; then # if not installed
+			# We use opkg-cl instead of opkg to bypass updater wrapper and not to add it to /etc/updater/auto.lua
+			opkg-cl update
+			opkg-cl install cznic-repo-keys-test
+		fi
+		;;
+esac
+
+## Tweak opkg distribution feeds
+[ "$BRANCH" = "deploy" ] && VBRANCH="" || VBRANCH="-$BRANCH"
+sed -i "/\(turris\|omnia\)_nightly_/d;s#\(https://repo\.turris\.cz/\(turris\|omnia\)\)[^/]*/#\1$VBRANCH/#" /etc/opkg/distfeeds.conf # Note that this sed also removes all nightly fallbacks
+case "$BRANCH" in
+	test|dev-*) # for non-full branches add nightly as fallback
+		TFD="$(mktemp)"
+		cat /etc/opkg/distfeeds.conf > "$TFD"
+		sed "/\(turris\|omnia\)_/!d;s#\(turris\|omnia\)_#\1_nightly_#;s#\(https://repo\.turris\.cz/\(turris\|omnia\)\)[^/]*/#\1-nightly/#" /etc/opkg/distfeeds.conf >> "$TFD"
+		mv "$TFD" /etc/opkg/distfeeds.conf
+		;;
+esac
+
+## Set uci configuration
+uci set updater.override=override
+[ "$BRANCH" = "deploy" ] && VBRANCH="" || VBRANCH="$BRANCH"
+uci set updater.override.branch="$VBRANCH"
+uci commit updater.override.branch
+
+# If we are verifying configuration than the work is done.
+# We don't want to run updater nor printing info about branch.
+if $VERIFY; then
+	exit 0
+fi
+
+## Run updater
+updater.sh || echo "Updater execution exited with error. Please see previous output to know what went wrong." >&2
+
+set +x
+
+# Print some info about new branch
+echo
+case "$BRANCH" in
+	deploy)
+		echo "You are now in the most stable branch." >&2
+		echo "With problems please contact Turris support (https://www.turris.cz/doc/en/howto/error_reporting)." >&2
+		;;
+	rc|prerc)
+		echo "You are now in branch containing next release candidate." >&2
+		echo "You can discuss problems on forum (https://forum.turris.cz)." >&2
+		echo "Please report unknown problems to support (https://www.turris.cz/doc/en/howto/error_reporting)." >&2
+		;;
+	nightly|daily)
+		# TODO split off daily when we have some support for it
+		echo "You are now in branch containing software build every night. It often contains bugs and sometimes requires manual intervention!" >&2
+		echo "Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz)." >&2
+		echo "If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz)," >&2
+		echo "You shouldn't be in this branch unless you are advanced user!" >&2
+		echo "To return to deploy run this command: switch-branch deploy" >&2
+		;;
+	*) # test and any other branch
+		echo "You are now in development branch. Unless you are developer you shouldn't use this branch!" >&2
+		echo "Turris team provides no guarantees and no support for this branch." >&2
+		echo "To return to deploy run this command: switch-branch deploy" >&2
+		;;
+esac

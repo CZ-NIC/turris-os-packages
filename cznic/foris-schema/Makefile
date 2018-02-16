@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2018 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -28,7 +28,7 @@ define Package/foris-schema
 	TITLE:=foris-schema
 	URL:=https://gitlab.labs.nic.cz/turris/foris-schema
 	DEPENDS:=+python-jsonschema
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/foris-schema/description

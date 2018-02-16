@@ -7,16 +7,13 @@
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-proxy
-PKG_VERSION:=1.2
+PKG_VERSION:=1.4
 PKG_RELEASE:=6
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/haas/proxy.git
-PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=2429e510a51f66fcd6328ce857719fbc7c77c919
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
+PKG_SOURCE_VERSION:=2860305b13cca1e21d7677b903e9f41b37b6fb16
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/haas/proxy/raw/$(PKG_SOURCE_VERSION)/release/
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_MAINTAINER:=CZ.NIC <packaging@nic.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
@@ -26,7 +23,7 @@ define Package/haas-proxy
   CATEGORY:=Network
   TITLE:=haas-proxy
   URL:=https://haas.nic.cz
-  DEPENDS:=+python-base +python-twisted +python-crypto +python-service-identity +server-uplink +sshpass
+  DEPENDS:=+python-base +python-cachetools +python-requests +python-twisted +python-crypto +python-service-identity +server-uplink +sshpass
   CONFLICTS:=mitmproxy
 endef
 

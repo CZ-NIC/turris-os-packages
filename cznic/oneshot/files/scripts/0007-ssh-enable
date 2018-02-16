@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# If we have ssh, ensure that in the config root login is permitted by default
+#
+# As config contains examples of match sections (by default commented out), we
+# want to ensure to enable root logins only in openssh section. Thus we use
+# '/config openssh/,/config/' range with seds
+
+if [ -x /etc/init.d/sshd ] && \
+   [ -n "$(sed -n '/config openssh/,/config/ p' /etc/config/sshd | grep '#option PermitRootLogin')" ]; then
+	# Use sed as uci would delete comments
+	sed -i '/config openssh/,/config/ s|#option PermitRootLogin.*|option PermitRootLogin yes|' /etc/config/sshd
+	if /etc/init.d/sshd enabled; then
+		/etc/init.d/sshd restart
+	fi
+fi

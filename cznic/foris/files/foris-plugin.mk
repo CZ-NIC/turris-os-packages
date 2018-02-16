@@ -29,7 +29,7 @@ define ForisPluginTranslation
 	TITLE:=$(1)-l10n-$(3)
 	DEPENDS:=\
 		+foris +foris-l10n-$(3)
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
  endef
 
  define Package/$(1)-l10n-$(3)/install
