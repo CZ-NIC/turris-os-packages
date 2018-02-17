@@ -25,18 +25,24 @@ include $(INCLUDE_DIR)/package.mk
 
 CONFIGURE_ARGS+= \
 	--enable-nflog \
-	--enable-luajit \
 	--enable-nfqueue \
         --disable-libmagic \
 	--disable-gccprotect \
 	--enable-non-bundled-htp \
 	--disable-gccmarch-native	
 
+ifneq($(ARCH),powerpc)
+CONFIGURE_ARGS+= \
+	--enable-luajit
+
+LUAJIT_DEP=+luajit
+endif
+
 define Package/suricata-bin
   SECTION:=net
   CATEGORY:=Network
   TITLE:=IDS
-  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +librt +libpcap +luajit +libnetfilter-queue +iptables-mod-nfqueue +libnetfilter-log +libnfnetlink +iptables-mod-conntrack-extra +libhtp +libnet-1.2.x
+  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +librt +libpcap $(LUAJIT_DEP) +libnetfilter-queue +iptables-mod-nfqueue +libnetfilter-log +libnfnetlink +iptables-mod-conntrack-extra +libhtp +libnet-1.2.x
 endef
 
 define Package/suricata-bin/install
