@@ -12,7 +12,7 @@ PKG_VERSION:=2.10.1
 PKG_RELEASE:=2
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=http://wiki.qemu-project.org/download/
-PKG_SOURCE_MD5SUM:=0c4d98038480c5c19a95990eb8d04a51
+PKG_MD5SUM:=0c4d98038480c5c19a95990eb8d04a51
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
