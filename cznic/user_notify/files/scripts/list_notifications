@@ -38,6 +38,7 @@ export_notification() {
 json_init
 json_add_array notifications
 for notification_dir in "$base_dir/"??????????-* ; do
+	[ ! -e "${notification_dir}" ] && continue
 	json_add_object
 	export_notification "$notification_dir" "    "
 	json_close_object
