@@ -49,6 +49,7 @@ msg_id="$(/bin/busybox date +%s)-$$"
 if $compat; then
 	export LANG="$(uci -q get foris.settings.lang)"
 	export LANGUAGE="$LANG"
+	[ -n "$GETTEXT_DOMAIN" ] || export GETTEXT_DOMAIN="user_notify"
 fi
 
 mkdir -p "$base_dir"
