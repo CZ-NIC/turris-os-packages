@@ -21,7 +21,6 @@ if [ "$1" = -d ] ; then
 fi
 
 if [ $# -eq 3 ]; then
-	echo "Backwards compatibility mode: using only single language. Please provide both languages." >&2
 	compat=true
 elif [ $# -ne 4 ]; then
 	usage
@@ -47,11 +46,20 @@ message_en="$4"
 # This should be unique
 msg_id="$(/bin/busybox date +%s)-$$"
 
+if $compat; then
+	export LANG="$(uci -q get foris.settings.lang)"
+	export LANGUAGE="$LANG"
+fi
+
 mkdir -p "$base_dir"
 mkdir "$base_dir/tmp.$msg_id"
 echo "$severity" > "$base_dir/tmp.$msg_id/severity"
 if $compat ; then
-	echo "$message_cs" > "$base_dir/tmp.$msg_id/message"
+	if [ -x "$(which gettext_filter > /dev/null 2>&1)" ]; then
+		echo "$message_cs" | gettext_filter > "$base_dir/tmp.$msg_id/message"
+	else
+		echo "$message_cs" > "$base_dir/tmp.$msg_id/message"
+	fi
 else
 	echo "$message_cs" > "$base_dir/tmp.$msg_id/message_cs"
 	echo "$message_en" > "$base_dir/tmp.$msg_id/message_en"
