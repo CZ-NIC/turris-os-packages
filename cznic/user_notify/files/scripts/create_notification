@@ -31,7 +31,7 @@ else
 fi
 
 if [ "$1" = "-s" ]; then
-	if [ "$2" = "restart" ] || [ "$2" = "error" ] || [ "$2" = "update" ] || [ "$2" = "news" ] || [ "$2" = "test" ] ; then
+	if [ "$2" = "restart" ] || [ "$2" = "error" ] || [ "$2" = "update" ] || [ "$2" = "news" ] ; then
 		severity="$2"
 	else
 		usage
