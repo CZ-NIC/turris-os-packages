@@ -23,7 +23,7 @@ start_service() {
 	if [ "$LOG" = syslog ]; then
 		LOG="--syslog"
 	elif [ -z "$LOG" ] || [ "$LOG" = none ]; then
-		LOG="--logfile=/dev/null"
+		LOG=""
 	else
 		LOG="--logfile=$LOG"
 	fi
