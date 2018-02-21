@@ -1,4 +1,0 @@
-    Mail notifier
-=====================
-
-Notifier is a script that should be run right after the updater.sh script. It will check notification queue stored in a folder in /tmp and try to send every message to the recipient set in /etc/config/user_notfication file. 
