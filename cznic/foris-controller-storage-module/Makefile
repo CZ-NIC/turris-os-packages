@@ -45,7 +45,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR) $(1)/usr/libexec $(1)/etc/init.d $(1)/etc/config
-	echo -e "config srv 'srv'\\n\\toption uuid ''\\n\\toption old_uuid ''" > $(1)/etc/init.d $(1)/etc/config/storage
+	echo -e "config srv 'srv'\\n\\toption uuid ''\\n\\toption old_uuid ''" > $(1)/etc/config/storage
 	find $(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR) -mindepth 1 -maxdepth 1 \( -type f -o -type d \) -exec $(CP) \{\} $(1)$(PYTHON_PKG_DIR)/ \;
 	$(RM) $(1)/usr/lib/python2.7/site-packages/foris_controller_modules/__init__.py
 	$(RM) $(1)/usr/lib/python2.7/site-packages/foris_controller_backends/__init__.py
