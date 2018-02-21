@@ -1,7 +1,7 @@
 #!/bin/sh
 # Copyright (C) 2017 CZ.NIC z.s.p.o. (http://www.nic.cz/)
-IPTABLES_RULES="/tmp/pakon/suricata.fw"
-IP6TABLES_RULES="/tmp/pakon/suricata.fw6"
+IPTABLES_RULES="/tmp/suricata/suricata.fw"
+IP6TABLES_RULES="/tmp/suricata/suricata.fw6"
 
 iptables_insert_once() {
 	COMMAND="$1"
@@ -12,19 +12,15 @@ iptables_insert_once() {
 
 check_references() {
 	#verify that all the references to suricata chain are on the right places
-	iptables_insert_once iptables "forwarding_rule -j suricata"
-	iptables_insert_once ip6tables "forwarding_rule -j suricata"
-	iptables_insert_once iptables "input_rule -j suricata"
-	iptables_insert_once ip6tables "input_rule -j suricata"
-	iptables_insert_once iptables "output_rule -j suricata"
-	iptables_insert_once ip6tables "output_rule -j suricata"
-	iptables_insert_once iptables "POSTROUTING -t mangle -m mark --mark 1/1 -j CONNMARK --save-mark"
-	iptables_insert_once ip6tables "POSTROUTING -t mangle -m mark --mark 1/1 -j CONNMARK --save-mark"
-	iptables_insert_once iptables "PREROUTING -t mangle -m connmark --mark 1/1 -j CONNMARK --restore-mark"
-	iptables_insert_once ip6tables "PREROUTING -t mangle -m connmark --mark 1/1 -j CONNMARK --restore-mark"
+	iptables_insert_once iptables "forwarding_rule -j suricata-pakon"
+	iptables_insert_once ip6tables "forwarding_rule -j suricata-pakon"
+	iptables_insert_once iptables "input_rule -j suricata-pakon"
+	iptables_insert_once ip6tables "input_rule -j suricata-pakon"
+	iptables_insert_once iptables "output_rule -j suricata-pakon"
+	iptables_insert_once ip6tables "output_rule -j suricata-pakon"
 }
 
-/etc/init.d/suricata status || exit 0 #don't insert iptables rules if suricata is not running
+/etc/init.d/suricata-pakon status || exit 0 #don't insert iptables rules if suricata is not running
 
 [ -f $IPTABLES_RULES ] || exit 1
 iptables-restore --noflush < $IPTABLES_RULES
