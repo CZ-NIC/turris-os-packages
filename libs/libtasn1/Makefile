@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libtasn1
-PKG_VERSION:=4.8
-PKG_RELEASE:=2
+PKG_VERSION:=4.13
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=ftp://ftp.gnu.org/gnu/libtasn1
-PKG_MD5SUM:=9a6767705725544f2b86670dcfb34107
+PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
+PKG_MD5SUM:=7e528e8c317ddd156230c4e31d082cd13e7ddeb7a54824be82632209550c8cca
 PKG_LICENSE:=LGPLv2.1+
 PKG_LICENSE_FILES:=COPYING.LIB
 
@@ -27,7 +27,7 @@ define Package/libtasn1
   CATEGORY:=Libraries
   TITLE:=An ASN.1 and DER structures manipulation library
   MAINTAINER:=Nikos Mavrogiannopoulos <n.mavrogiannopoulos@gmail.com>
-  URL:=ftp://ftp.gnu.org/gnu/libtasn1/
+  URL:=https://www.gnu.org/software/libtasn1/
 endef
 
 define Package/libtasn1/description
@@ -39,6 +39,7 @@ TARGET_CFLAGS += $(FPIC)
 
 CONFIGURE_ARGS += \
 		--enable-shared \
+		--disable-gcc-warnings \
 		--enable-static
 
 define Build/InstallDev
