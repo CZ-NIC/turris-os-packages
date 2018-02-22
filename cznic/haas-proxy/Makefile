@@ -7,9 +7,9 @@
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-proxy
-PKG_VERSION:=1.4
-PKG_RELEASE:=6
-DOWNLOAD_HASH:=2860305b13cca1e21d7677b903e9f41b37b6fb16
+PKG_VERSION:=1.6
+PKG_RELEASE:=0
+DOWNLOAD_HASH:=23f35089b0cccbdf2b4557f9bf6bab4b0bbdac57
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/haas/proxy/raw/$(DOWNLOAD_HASH)/release/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_MD5SUM:=3399e7cb9d52f43051594cf8b3bd5c00
