@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2015 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2015-2018 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
 PKG_VERSION:=2.1.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-resolver
@@ -31,6 +31,7 @@ define Package/knot-resolver
 	CATEGORY:=Network
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Knot DNS Resolver
+	USERID=kresd=653:kresd=653
 	URL:=https://gitlab.labs.nic.cz/knot/resolver
 	DEPENDS=+knot-libs +knot-libzscanner +libuv +luajit +dnssec-rootkey +resolver-conf +luasec +luasocket +libstdcpp
 	PROVIDES:=dns-resolver
