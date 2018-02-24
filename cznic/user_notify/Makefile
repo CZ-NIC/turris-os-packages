@@ -26,7 +26,7 @@ endef
 
 define Package/user_notify_locales
 	TITLE:=user_notify_locales
-	DEPENDS:=+gettext
+	DEPENDS:=+gettext-tools
 endef
 
 define Build/Compile
