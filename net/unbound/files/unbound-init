@@ -6,6 +6,8 @@ CONFIGFILE="/var/etc/unbound/unbound.conf"
 ROOTKEYFILE="/etc/root.keys"
 DHCPLEASES="/tmp/dhcp.leases.dynamic"
 STATICLEASES="/var/etc/unbound/static.leases"
+USERNAME=unbound
+GROUP=unbound
 
 header() {
     cat > "$CONFIGFILE" <<-EOF
@@ -96,7 +98,11 @@ set_rootkey() {
     local val
 
     config_get val "$section" "$var"
-    ROOTKEYFILE="$val"
+
+    # copy root.key to temp directory
+    cp $val $(dirname $CONFIGFILE)
+    ROOTKEYFILE=$(dirname $CONFIGFILE)/$(basename $val)
+    echo $ROOTKEYFILE
 }
 
 # Check the /etc/unbound/root.key is reasonable and try to fix it with given command
@@ -163,7 +169,7 @@ init_unbound() {
 
     if [ "$ignore_root_key" = "0" ] ; then
         set_rootkey keyfile
-        set_quoted_parameter keyfile auto-trust-anchor-file "$ROOTKEYFILE"
+	add_parameter "$ROOTKEYFILE" "auto-trust-anchor-file"
     fi
 
     set_parameter msg_buffer_size msg-buffer-size 8192
@@ -200,7 +206,7 @@ init_unbound() {
     set_parameter infra_cache_slabs infra-cache-slabs 1
     set_parameter infra_cache_numhosts infra-cache-numhosts 200
     set_multiple_parameters access_control access-control
-    set_quoted_parameter username username ""
+    set_quoted_parameter username username "$USERNAME"
     set_quoted_parameter pidfile pidfile "/var/run/unbound.pid"
     set_quoted_parameter root_hints root-hints "/etc/unbound/named.cache"
     set_quoted_parameter target_fetch_policy target-fetch-policy "2 1 0 0 0 0"
@@ -257,6 +263,7 @@ init_unbound() {
 start() {
 
     mkdir -p $(dirname "$CONFIGFILE")
+    chown $USERNAME:$GROUP $(dirname "$CONFIGFILE")
 
     init_unbound
     if [ -e /usr/sbin/unbound-checkconf ] ; then
@@ -272,6 +279,7 @@ start() {
 reload() {
 
     mkdir -p $(dirname "$CONFIGFILE")
+    chown $USERNAME:$GROUP $(dirname "$CONFIGFILE")
 
     init_unbound
 
