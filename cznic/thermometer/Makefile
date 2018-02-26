@@ -29,8 +29,7 @@ ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nor_TURRISNOR)$(CONFIG_TARGET_mpc85xx_p2020_
 else ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
 	$(INSTALL_BIN) ./files/thermometer.omnia $(1)/usr/bin/thermometer
 else
-	echo "This target is not supported by the thermometer package."
-	exit 1
+	$(INSTALL_BIN) ./files/thermometer.fake $(1)/usr/bin/thermometer
 endif
 endef
 
