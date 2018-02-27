@@ -11,7 +11,6 @@ import os
 from random import randint
 import argparse
 import datetime
-import re
 import tempfile
 
 
@@ -20,9 +19,11 @@ HIST_FILE = "/tmp/netmetr-history.json"
 # FALLBACK_CTRL_SRV = "netmetr-control.labs.nic.cz"
 FALLBACK_CTRL_SRV = "control.netmetr.cz"
 FALLBACK_MAX_HISTORY_LOGS = 10
+DEBUG = None
+COLORED_OUTPUT = None
 
 
-class Settings:
+class Netmetr:
     def __init__(self):
         self.language = locale.getdefaultlocale()[0]
         self.timezone = subprocess.check_output(["date", "+%Z"])[:-1]
@@ -68,6 +69,428 @@ class Settings:
     def get_time(cls):
         return str(int(round(calendar.timegm(time.gmtime())*1000)))
 
+    def load_uuid(self):
+        """Checks the uci config for uuid and loads it to the
+        script. If no uuid is found a https request is send to the control
+        server to download it.
+        """
+        # Load uuid saved in config file via uci
+        if os.path.isfile("/sbin/uci"):
+            process = subprocess.Popen(
+                ["uci", "-q", "get", "netmetr.settings.uuid"],
+                stdout=subprocess.PIPE
+            )
+            if process.wait() == 0:
+                self.uuid = process.stdout.read()[:-1]
+            else:
+                print_info('Uuid not found, requesting new one.')
+                self.uuid = 0
+        else:
+            print_info('Uuid not found (uci missing), requesting new one.')
+            self.uuid = 0
+
+        # the download request must be sent all the time - either to raquest
+        # new uuid or to check the existing one
+        self.download_uuid()
+
+    def download_uuid(self):
+        """Creates a http request and ask the control server for correct uuid
+        """
+        print_progress("Checking uuid on the control server...")
+        # Create json to request uuid
+        req_json = {
+            "uuid": self.uuid,
+            "language": self.language,
+            "timezone": self.timezone,
+            "name": "RMBT",
+            "terms_and_conditions_accepted": "true",
+            "type": "DESKTOP",
+            "version_code": "1",
+            "version_name": "1.0",
+        }
+
+        # Creating GET request to obtain / check uuid
+        req = urllib2.Request(
+                'https://' + self.control_server
+                + '/RMBTControlServer/settings'
+        )
+        req.add_header(
+                'Accept',
+                'application/json, text/javascript, */*; q=0.01'
+        )
+        req.add_header('Content-Type', 'application/json')
+        if print_debug("Test settings request:"):
+            print(json.dumps(req_json, indent=2))
+        # Send the request
+        resp = urllib2.urlopen(req, json.dumps(req_json))
+        resp_json = json.loads(resp.read())
+        uuid_new = resp_json["settings"][0].get("uuid", '')
+        if uuid_new:  # New uuid was received
+            self.uuid = uuid_new
+            if os.path.isfile("/sbin/uci"):
+                subprocess.call([
+                    "uci", "set",
+                    "netmetr.settings.uuid="+self.uuid
+                ])
+                subprocess.call([
+                    "uci", "-q", "delete",
+                    "netmetr.settings.sync_code"
+                ])
+                subprocess.call(["uci", "commit"])
+        else:
+            self.uuid = req_json['uuid']
+        if print_debug("Test settings response:"):
+            print(json.dumps(resp_json, indent=2))
+
+    def request_settings(self):
+        """Creates a http request to get test token, number of threads, number
+        of pings, server address and port and so on.
+        """
+        print_progress("Requesting test config from the control server...")
+        # Create request to start a test
+        req = urllib2.Request(
+                'https://' + self.control_server
+                + '/RMBTControlServer/testRequest'
+        )
+        # Add headers
+        req.add_header(
+                'Accept',
+                'application/json, text/javascript, */*; q=0.01'
+        )
+        req.add_header('Content-Type', 'application/json')
+        # Create the json to send
+        req_json = {
+            "client": "RMBT",
+            "language": self.language,
+            "time": self.get_time(),
+            "timezone": self.timezone,
+            "type": "DESKTOP",
+            "uuid": self.uuid,
+            "version": "0.1",
+            "version_code": "1"
+        }
+        if print_debug("Test testRequest request"):
+            print(json.dumps(req_json, indent=2))
+
+        # Send the request
+        resp = urllib2.urlopen(req, json.dumps(req_json))
+        # Read the content
+        resp_json = json.loads(resp.read())
+
+        if print_debug("Test testRequest response:"):
+            print(json.dumps(resp_json, indent=2))
+
+        self.test_server_address = resp_json["test_server_address"]
+        self.test_server_port = resp_json["test_server_port"]
+        self.test_token = resp_json["test_token"]
+        self.test_uuid = resp_json["test_uuid"]
+        self.test_numthreads = resp_json["test_numthreads"]
+        self.test_numpings = resp_json["test_numpings"]
+        self.test_server_encryption = resp_json["test_server_encryption"]
+        self.test_duration = resp_json["test_duration"]
+
+    def measure_pings(self):
+        """Run serie of pings to the test server and computes & saves
+         the lowest one
+        """
+
+        print_progress("Starting ping test...")
+        ping_values = list()
+        for i in range(1, int(self.test_numpings)+1):
+            process = subprocess.Popen([
+                "ping", "-c1",
+                self.test_server_address
+            ], stdout=subprocess.PIPE)
+            if (process.wait() == 0):
+                try:
+                    ping_result = process.stdout.read()
+                    start = ping_result.index("time=") + len("time=")
+                    end = ping_result.index(" ms")
+                    ping = float(ping_result[start:end])
+                    print("ping_"+str(i)+"_msec = "+format(ping, '.2f'))
+                    ping = int(ping * 1000000)
+                    ping_values.append(ping)
+                except:
+                    print("Problem decoding pings.")
+                    return ''
+                time.sleep(0.5)
+        try:
+            return min(int(s) for s in ping_values)
+        except:
+            return ''
+
+    def measure_speed(self):
+        """Start RMBT client with saved arguments to measure the speed
+        """
+        # Create config file needed by rmbt-client
+        _, self.config_file = tempfile.mkstemp()
+        _, self.flows_file = tempfile.mkstemp()
+        try:
+            with open(self.config_file, "w") as config_file:
+                config_file.write(
+                        '{"cnf_file_flows": "'+self.flows_file+'.xz"}'
+                )
+        except Exception, e:
+            print("Error creating config file")
+            print(e)
+            return ''
+
+        encryption = {True: " -e "}
+        print_progress("Starting speed test...")
+        test_result = subprocess.check_output(shlex.split(
+            RMBT_BIN +
+            encryption.get(self.test_server_encryption, "") +
+            " -h " + self.test_server_address +
+            " -p " + str(self.test_server_port) +
+            " -t " + self.test_token +
+            " -f " + self.test_numthreads +
+            " -d " + self.test_duration +
+            " -u " + self.test_duration +
+            " -c " + self.config_file
+        ))
+        if print_debug("Speed test result:"):
+            print(test_result)
+        return json.loads(test_result.split("}")[1] + "}")
+
+    def import_speed_flows(self):
+        """The speedtest flow is saved to a file during the test. This function
+        imports it so it could be sent to the control server.
+        """
+        directions = {
+            "dl": "download",
+            "ul": "upload"
+        }
+        try:
+            subprocess.call(shlex.split("unxz -f "+self.flows_file+".xz"))
+            with open(self.flows_file, 'r') as json_data:
+                flows_json = json.load(json_data)
+        except Exception, e:
+            print('Problem reading/decoding flows data.')
+            print(e)
+            return
+
+        speed_array = list()
+        for d_short, d_long in directions.iteritems():
+            thread = 0
+            # Each direction has multiple threads
+            for flow in flows_json["res_details"][d_short]:
+                last_time = 0
+                # Each thread has plenty of samples
+                # We want to use a small amount of them
+                for sample in flow["time_series"]:
+                    if (sample.get("t") - last_time) > 30000000:
+                        last_time = sample["t"]
+                        speed_array.append({
+                            "direction": d_long,
+                            "thread": thread,
+                            "time": sample["t"],
+                            "bytes": sample["b"]
+                         })
+                thread += 1
+
+        # Remove generated files
+        try:
+            os.remove(self.flows_file)
+        except Exception, e:
+            print(e)
+        try:
+            os.remove(self.config_file)
+        except Exception, e:
+            print(e)
+        return speed_array
+
+    def upload_result(self, pres, test_result_json, speed_array):
+        """Uploads the tests result to the control server.
+        """
+        req_json = {
+            "client_language": self.language,
+            "client_name": "RMBT",
+            "client_uuid": self.uuid,
+            "client_version": "0.1",
+            "client_software_version": "0.3",
+            "geoLocations": [],
+            "model": self.model,
+            "network_type": 98,
+            "platform": "RMBT",
+            "product": "os: "+self.os_version+" hw: "+self.hw_version,
+            "test_bytes_download": test_result_json.get("res_total_bytes_dl"),
+            "test_bytes_upload": test_result_json.get("res_total_bytes_ul"),
+            "test_nsec_download": test_result_json.get("res_dl_time_ns"),
+            "test_nsec_upload": test_result_json.get("res_ul_time_ns"),
+            "test_num_threads": test_result_json.get("res_dl_num_flows"),
+            "test_ping_shortest": pres,
+            "num_threads_ul": test_result_json.get("res_ul_num_flows"),
+            "test_speed_download": test_result_json.get(
+                "res_dl_throughput_kbps"
+            ),
+            "test_speed_upload": test_result_json.get(
+                "res_ul_throughput_kbps"
+            ),
+            "test_token": self.test_token,
+            "test_uuid": self.test_uuid,
+            "timezone": self.timezone,
+            "type": "DESKTOP",
+            "version_code": "1",
+            "developer_code": 0
+        }
+        if print_debug("Save result request (without speed array and pings)"):
+            print(json.dumps(req_json, indent=2))
+
+        req_json["speed_detail"] = speed_array
+        req_json["pings"] = []
+
+        # Create GET request
+        req = urllib2.Request(
+                'https://' + self.control_server + '/RMBTControlServer/result'
+        )
+        # Add headers
+        req.add_header(
+                'Accept',
+                'application/json, text/javascript, */*; q=0.01'
+        )
+        req.add_header('Content-Type', 'application/json')
+        # Send the request
+        resp = urllib2.urlopen(req, json.dumps(req_json))
+        resp_json = json.loads(resp.read())
+        if print_debug("Save result response:"):
+            print(json.dumps(resp_json, indent=2))
+
+    def download_history(self):
+        """Creates a http request and ask the control server for a measurement
+        history.
+        """
+
+        def save_max_hist_logs():
+            max_history_logs = FALLBACK_MAX_HISTORY_LOGS
+            if os.path.isfile("/sbin/uci"):
+                subprocess.call([
+                    "uci", "set",
+                    "netmetr.settings.max_history_logs="+str(max_history_logs)
+                ])
+                subprocess.call(["uci", "commit"])
+            return max_history_logs
+
+        # Load number of max hostory logs thaht can be downloaded - via uci
+        if os.path.isfile("/sbin/uci"):
+            process = subprocess.Popen(
+                    ["uci", "-q", "get", "netmetr.settings.max_history_logs"],
+                    stdout=subprocess.PIPE
+            )
+            if process.wait() == 0:
+                max_history_logs = process.stdout.read()[:-1]
+            else:
+                print_info(
+                    'Max history logs not found, falling to ' +
+                    str(FALLBACK_MAX_HISTORY_LOGS)
+                )
+                max_history_logs = save_max_hist_logs()
+        else:
+            print_info(
+                'Max history logs not found (uci missing), falling to ' +
+                str(FALLBACK_MAX_HISTORY_LOGS)
+            )
+            max_history_logs = save_max_hist_logs()
+
+        # Create json to request history
+        req_json = {
+            "language": self.language,
+            "timezone": self.timezone,
+            "result_limit": str(max_history_logs),
+            "uuid": self.uuid,
+        }
+        # Creating POST request to get history
+        req = urllib2.Request(
+                'https://' + self.control_server + '/RMBTControlServer/history'
+        )
+        req.add_header(
+                'Accept',
+                'application/json, text/javascript, */*; q=0.01'
+        )
+        req.add_header('Content-Type', 'application/json')
+
+        if print_debug(
+                "Downloading measurement history from the control server."):
+            print(json.dumps(req_json, indent=2))
+        # Send the request
+        resp = urllib2.urlopen(req, json.dumps(req_json))
+        resp_json = json.loads(resp.read())
+        if print_debug("Measurement history response:"):
+            print(json.dumps(resp_json, indent=2))
+        _, self.hist_file = tempfile.mkstemp()
+        try:
+            with open(self.hist_file, "w") as hist_file:
+                    hist_file.write(json.dumps(resp_json, indent=2))
+            os.rename(self.hist_file, HIST_FILE)
+        except Exception, e:
+            print("Error saving measurement history.")
+            print(e)
+
+    def download_sync_code(self):
+        """Creates a http request and ask the control server for a
+        synchronization code that can be used to view saved measurements from
+        different devices. The new code is saved via uci.
+        """
+        # Create json to request synchronization code
+        req_json = {
+            "language": self.language,
+            "timezone": self.timezone,
+            "uuid": self.uuid,
+        }
+        # Creating POST request to get the sync code
+        req = urllib2.Request(
+                'https://' + self.control_server + '/RMBTControlServer/sync'
+        )
+        req.add_header(
+                'Accept',
+                'application/json, text/javascript, */*; q=0.01'
+        )
+        req.add_header('Content-Type', 'application/json')
+
+        if print_debug(
+            "Downloading synchronization code from the control server."
+        ):
+            print(json.dumps(req_json, indent=2))
+        # Send the request
+        resp = urllib2.urlopen(req, json.dumps(req_json))
+        resp_json = json.loads(resp.read())
+        if print_debug("Synchronization token response:"):
+            print(json.dumps(resp_json, indent=2))
+
+        if not resp_json["error"]:
+            self.sync_code = resp_json["sync"][0].get("sync_code", '')
+            # If we have uci and VALID sync code:
+            if (os.path.isfile("/sbin/uci") and self.sync_code):
+                subprocess.call([
+                    "uci", "set",
+                    "netmetr.settings.sync_code="+self.sync_code
+                ])
+                subprocess.call(["uci", "commit"])
+        else:
+            self.sync_code = ''
+            print("Error downloading synchronization code.")
+
+    def load_sync_code(self):
+        """Checks the uci config for sychronization code and loads it to the\
+        script. If no synchronization code is found a https request is send to\
+        download it.
+        """
+        # Load synchronization code saved in config file via uci
+        if os.path.isfile("/sbin/uci"):
+            process = subprocess.Popen(
+                    ["uci", "-q", "get", "netmetr.settings.sync_code"],
+                    stdout=subprocess.PIPE
+            )
+            if process.wait() == 0:
+                self.sync_code = process.stdout.read()[:-1]
+            else:
+                print_info('Sync code not found, requesting new one.')
+                self.download_sync_code()
+        else:
+            print_info(
+                    'Sync code not found (uci missing), requesting new one.'
+            )
+            self.download_sync_code()
+
 
 def print_debug(msg):
     if DEBUG:
@@ -100,510 +523,114 @@ def print_error(msg, error_code):
     exit(error_code)
 
 
-def load_uuid(sets):
-    """Checks the uci config for uuid and loads it to the
-    script. If no uuid is found a https request is send to the control server
-    to download it.
-    """
-    # Load uuid saved in config file via uci
-    if os.path.isfile("/sbin/uci"):
+def prepare_parser():
+    # Prepare argument parsing
+    parser = argparse.ArgumentParser(
+            description="NetMetr - client"
+            " application for download and upload speed measurement."
+    )
+    parser.add_argument(
+        '--rwait', nargs=1, type=int, default=[0],
+        help='delay for a random amount of time up to RWAIT seconds before'
+        ' the test starts'
+    )
+    parser.add_argument(
+        '--autostart', action='store_true', help='use this'
+        ' option only when running as an automated service - to check whether'
+        ' it is right time to run the test'
+    )
+    parser.add_argument(
+        '--dwlhist',
+        action='store_true',
+        help='download measurement history from the control server and save'
+        ' it to {}'.format(HIST_FILE)
+    )
+    parser.add_argument(
+        '--debug', action='store_true', help='enables debug'
+        ' printouts'
+    )
+    parser.add_argument(
+        '--no-color', action='store_true', help='disables'
+        ' colored text output'
+    )
+    parser.add_argument(
+        '--no-run', action='store_true', help='this option '
+        'prevents from running the test. It could be used only to obtain sync'
+        ' code or (with --dwlhist) to download measurement history'
+    )
+
+    return parser
+
+
+if __name__ == "__main__":
+    # When autostarted - check whether autostart is enabled and
+    # if it is right time to run the test.
+    # In uci config, we expect hours of a day separated by commas (,)
+    # these hours
+    # are the time the test should be run. So whenever the script is started,
+    # it looks to it's config and if it finds the current hour of day in it,
+    # it will start the test
+
+    args = prepare_parser().parse_args()
+
+    DEBUG = args.debug
+    COLORED_OUTPUT = not args.no_color
+
+    if (args.autostart and os.path.isfile("/sbin/uci")):
         process = subprocess.Popen(
-                ["uci", "-q", "get", "netmetr.settings.uuid"],
-                stdout=subprocess.PIPE
+            ["uci", "-q", "get", "netmetr.settings.autostart_enabled"],
+            stdout=subprocess.PIPE
         )
-        if process.wait() == 0:
-            sets.uuid = process.stdout.read()[:-1]
-        else:
-            print_info('Uuid not found, requesting new one.')
-            sets.uuid = 0
-    else:
-        print_info('Uuid not found (uci missing), requesting new one.')
-        sets.uuid = 0
-
-    # the download request must be sent all the time - either to raquest new
-    # uuid or to check the existing one
-    download_uuid(sets)
-
-
-def download_uuid(sets):
-    """Creates a http request and ask the control server for correct uuid"""
-    print_progress("Checking uuid on the control server...")
-    # Create json to request uuid
-    req_json = {
-        "uuid": sets.uuid,
-        "language": sets.language,
-        "timezone": sets.timezone,
-        "name": "RMBT",
-        "terms_and_conditions_accepted": "true",
-        "type": "DESKTOP",
-        "version_code": "1",
-        "version_name": "1.0",
-    }
-
-    # Creating GET request to obtain / check uuid
-    req = urllib2.Request(
-            'https://' + sets.control_server + '/RMBTControlServer/settings'
-    )
-    req.add_header('Accept', 'application/json, text/javascript, */*; q=0.01')
-    req.add_header('Content-Type', 'application/json')
-    if print_debug("Test settings request:"):
-        print(json.dumps(req_json, indent=2))
-    # Send the request
-    resp = urllib2.urlopen(req, json.dumps(req_json))
-    resp_json = json.loads(resp.read())
-    uuid_new = resp_json["settings"][0].get("uuid", '')
-    if uuid_new:  # New uuid was received
-        sets.uuid = uuid_new
-        if os.path.isfile("/sbin/uci"):
-            subprocess.call([
-                "uci", "set",
-                "netmetr.settings.uuid="+sets.uuid
-            ])
-            subprocess.call([
-                "uci", "-q", "delete",
-                "netmetr.settings.sync_code"
-            ])
-            subprocess.call(["uci", "commit"])
-    else:
-        sets.uuid = req_json['uuid']
-    if print_debug("Test settings response:"):
-        print(json.dumps(resp_json, indent=2))
-
-
-def request_settings(sets):
-    """Creates a http request to get test token, number of threads, number
-    of pings, server address and port and so on.
-    """
-    print_progress("Requesting test config from the control server...")
-    # Create request to start a test
-    req = urllib2.Request(
-            'https://' + sets.control_server + '/RMBTControlServer/testRequest'
-    )
-    # Add headers
-    req.add_header('Accept', 'application/json, text/javascript, */*; q=0.01')
-    req.add_header('Content-Type', 'application/json')
-    # Create the json to send
-    req_json = {
-        "client": "RMBT",
-        "language": sets.language,
-        "time": sets.get_time(),
-        "timezone": sets.timezone,
-        "type": "DESKTOP",
-        "uuid": sets.uuid,
-        "version": "0.1",
-        "version_code": "1"
-    }
-    if print_debug("Test testRequest request"):
-        print(json.dumps(req_json, indent=2))
-
-    # Send the request
-    resp = urllib2.urlopen(req, json.dumps(req_json))
-    # Read the content
-    resp_json = json.loads(resp.read())
-
-    if print_debug("Test testRequest response:"):
-        print(json.dumps(resp_json, indent=2))
-
-    sets.test_server_address = resp_json["test_server_address"]
-    sets.test_server_port = resp_json["test_server_port"]
-    sets.test_token = resp_json["test_token"]
-    sets.test_uuid = resp_json["test_uuid"]
-    sets.test_numthreads = resp_json["test_numthreads"]
-    sets.test_numpings = resp_json["test_numpings"]
-    sets.test_server_encryption = resp_json["test_server_encryption"]
-    sets.test_duration = resp_json["test_duration"]
-
-
-def measure_pings(sets):
-    """Run serie of pings to the test server and computes & saves
-     the lowest one
-    """
-
-    print_progress("Starting ping test...")
-    ping_values = list()
-    for i in range(1, int(sets.test_numpings)+1):
-        process = subprocess.Popen([
-            "ping", "-c1",
-            sets.test_server_address
-        ], stdout=subprocess.PIPE)
         if (process.wait() == 0):
-            try:
-                ping_result = process.stdout.read()
-                start = ping_result.index("time=") + len("time=")
-                end = ping_result.index(" ms")
-                ping = float(ping_result[start:end])
-                print("ping_"+str(i)+"_msec = "+format(ping, '.2f'))
-                ping = int(ping * 1000000)
-                ping_values.append(ping)
-            except:
-                print("Problem decoding pings.")
-                return ''
-            time.sleep(0.5)
-    try:
-        return min(int(s) for s in ping_values)
-    except:
-        return ''
-
-
-def measure_speed(sets):
-    """Start RMBT client with saved arguments to measure the speed
-    """
-    # Create config file needed by rmbt-client
-    _, sets.config_file = tempfile.mkstemp()
-    _, sets.flows_file = tempfile.mkstemp()
-    try:
-        with open(sets.config_file, "w") as config_file:
-            config_file.write('{"cnf_file_flows": "'+sets.flows_file+'.xz"}')
-    except Exception, e:
-        print("Error creating config file")
-        print(e)
-        return ''
-
-    encryption = {True: " -e "}
-    print_progress("Starting speed test...")
-    test_result = subprocess.check_output(shlex.split(
-        RMBT_BIN +
-        encryption.get(sets.test_server_encryption, "") +
-        " -h " + sets.test_server_address +
-        " -p " + str(sets.test_server_port) +
-        " -t " + sets.test_token +
-        " -f " + sets.test_numthreads +
-        " -d " + sets.test_duration +
-        " -u " + sets.test_duration +
-        " -c " + sets.config_file
-    ))
-    if print_debug("Speed test result:"):
-        print(test_result)
-    return json.loads(test_result.split("}")[1] + "}")
-
-
-def import_speed_flows(sets):
-    """The speedtest flow is saved to a file during the test. This function
-    imports it so it could be sent to the control server.
-    """
-    directions = {
-        "dl": "download",
-        "ul": "upload"
-    }
-    try:
-        subprocess.call(shlex.split("unxz -f "+sets.flows_file+".xz"))
-        with open(sets.flows_file, 'r') as json_data:
-            flows_json = json.load(json_data)
-    except Exception, e:
-        print('Problem reading/decoding flows data.')
-        print(e)
-        return
-
-    speed_array = list()
-    for d_short, d_long in directions.iteritems():
-        thread = 0
-        # Each direction has multiple threads
-        for flow in flows_json["res_details"][d_short]:
-            last_time = 0
-            # Each thread has plenty of samples
-            # We want to use a small amount of them
-            for sample in flow["time_series"]:
-                if (sample.get("t") - last_time) > 30000000:
-                    last_time = sample["t"]
-                    speed_array.append({
-                        "direction": d_long,
-                        "thread": thread,
-                        "time": sample["t"],
-                        "bytes": sample["b"]
-                     })
-            thread += 1
-
-    # Remove generated files
-    try:
-        os.remove(sets.flows_file)
-    except Exception, e:
-        print(e)
-    try:
-        os.remove(sets.config_file)
-    except Exception, e:
-        print(e)
-    return speed_array
-
-
-def upload_result(sets, pres, test_result_json, speed_array):
-    """Uploads the tests result to the control server.
-    """
-    req_json = {
-        "client_language": sets.language,
-        "client_name": "RMBT",
-        "client_uuid": sets.uuid,
-        "client_version": "0.1",
-        "client_software_version": "0.3",
-        "geoLocations": [],
-        "model": sets.model,
-        "network_type": 98,
-        "platform": "RMBT",
-        "product": "os: "+sets.os_version+" hw: "+sets.hw_version,
-        "test_bytes_download": test_result_json.get("res_total_bytes_dl", {}),
-        "test_bytes_upload": test_result_json.get("res_total_bytes_ul", {}),
-        "test_nsec_download": test_result_json.get("res_dl_time_ns", {}),
-        "test_nsec_upload": test_result_json.get("res_ul_time_ns", {}),
-        "test_num_threads": test_result_json.get("res_dl_num_flows", {}),
-        "test_ping_shortest": pres,
-        "num_threads_ul": test_result_json.get("res_ul_num_flows", {}),
-        "test_speed_download": test_result_json.get(
-            "res_dl_throughput_kbps", {}
-        ),
-        "test_speed_upload": test_result_json.get(
-            "res_ul_throughput_kbps", {}
-        ),
-        "test_token": sets.test_token,
-        "test_uuid": sets.test_uuid,
-        "timezone": sets.timezone,
-        "type": "DESKTOP",
-        "version_code": "1",
-        "developer_code": 0
-    }
-    if print_debug("Save result request (without speed array and pings)"):
-        print(json.dumps(req_json, indent=2))
-
-    req_json["speed_detail"] = speed_array
-    req_json["pings"] = []
-
-    # Create GET request
-    req = urllib2.Request(
-            'https://' + sets.control_server + '/RMBTControlServer/result'
-    )
-    # Add headers
-    req.add_header('Accept', 'application/json, text/javascript, */*; q=0.01')
-    req.add_header('Content-Type', 'application/json')
-    # Send the request
-    resp = urllib2.urlopen(req, json.dumps(req_json))
-    resp_json = json.loads(resp.read())
-    if print_debug("Save result response:"):
-        print(json.dumps(resp_json, indent=2))
-
-
-def purge(dir, pattern):
-    """Lists a directory and removes every file matching the pattern
-    """
-    for f in os.listdir(dir):
-        if re.search(pattern, f):
-            try:
-                os.remove(os.path.join(dir, f))
-            except OSError:
-                pass
-
-
-def download_history(sets):
-    """Creates a http request and ask the control server for a measurement
-    history.
-    """
-
-    def save_max_hist_logs():
-        max_history_logs = FALLBACK_MAX_HISTORY_LOGS
-        if os.path.isfile("/sbin/uci"):
-            subprocess.call([
-                "uci", "set",
-                "netmetr.settings.max_history_logs="+str(max_history_logs)
-            ])
-            subprocess.call(["uci", "commit"])
-        return max_history_logs
-
-    # Load number of max hostory logs thaht can be downloaded - via uci
-    if os.path.isfile("/sbin/uci"):
-        process = subprocess.Popen(
-                ["uci", "-q", "get", "netmetr.settings.max_history_logs"],
-                stdout=subprocess.PIPE
-        )
-        if process.wait() == 0:
-            max_history_logs = process.stdout.read()[:-1]
+            autostart_enabled = process.stdout.read()[:-1]
         else:
-            print_info(
-                'Max history logs not found, falling to ' +
-                str(FALLBACK_MAX_HISTORY_LOGS)
-            )
-            max_history_logs = save_max_hist_logs()
-    else:
-        print_info(
-            'Max history logs not found (uci missing), falling to ' +
-            str(FALLBACK_MAX_HISTORY_LOGS)
-        )
-        max_history_logs = save_max_hist_logs()
-
-    # Create json to request history
-    req_json = {
-        "language": sets.language,
-        "timezone": sets.timezone,
-        "result_limit": str(max_history_logs),
-        "uuid": sets.uuid,
-    }
-    # Creating POST request to get history
-    req = urllib2.Request(
-            'https://' + sets.control_server + '/RMBTControlServer/history'
-    )
-    req.add_header('Accept', 'application/json, text/javascript, */*; q=0.01')
-    req.add_header('Content-Type', 'application/json')
-
-    if print_debug("Downloading measurement history from the control server."):
-        print(json.dumps(req_json, indent=2))
-    # Send the request
-    resp = urllib2.urlopen(req, json.dumps(req_json))
-    resp_json = json.loads(resp.read())
-    if print_debug("Measurement history response:"):
-        print(json.dumps(resp_json, indent=2))
-    _, sets.hist_file = tempfile.mkstemp()
-    try:
-        with open(sets.hist_file, "w") as hist_file:
-                hist_file.write(json.dumps(resp_json, indent=2))
-        os.rename(sets.hist_file, HIST_FILE)
-    except Exception, e:
-        print("Error saving measurement history.")
-        print(e)
-
-
-def download_sync_code(sets):
-    """Creates a http request and ask the control server for a synchronization
-    code that can be used to view saved measurements from different devices.
-    The new code is saved via uci.
-    """
-    # Create json to request synchronization code
-    req_json = {
-        "language": sets.language,
-        "timezone": sets.timezone,
-        "uuid": sets.uuid,
-    }
-    # Creating POST request to get the sync code
-    req = urllib2.Request(
-            'https://' + sets.control_server + '/RMBTControlServer/sync'
-    )
-    req.add_header('Accept', 'application/json, text/javascript, */*; q=0.01')
-    req.add_header('Content-Type', 'application/json')
-
-    if print_debug(
-        "Downloading synchronization code from the control server."
-    ):
-        print(json.dumps(req_json, indent=2))
-    # Send the request
-    resp = urllib2.urlopen(req, json.dumps(req_json))
-    resp_json = json.loads(resp.read())
-    if print_debug("Synchronization token response:"):
-        print(json.dumps(resp_json, indent=2))
-
-    if not resp_json["error"]:
-        sets.sync_code = resp_json["sync"][0].get("sync_code", '')
-        # If we have uci and VALID sync code:
-        if (os.path.isfile("/sbin/uci") and sets.sync_code):
-            subprocess.call([
-                "uci", "set",
-                "netmetr.settings.sync_code="+sets.sync_code
-            ])
-            subprocess.call(["uci", "commit"])
-    else:
-        sets.sync_code = ''
-        print("Error downloading synchronization code.")
-
-
-def load_sync_code(sets):
-    """Checks the uci config for sychronization code and loads it to the\
-    script. If no synchronization code is found a https request is send to\
-    download it.
-    """
-    # Load synchronization code saved in config file via uci
-    if os.path.isfile("/sbin/uci"):
+            print("Failed to load autostart uci settings.")
+            exit()
         process = subprocess.Popen(
-                ["uci", "-q", "get", "netmetr.settings.sync_code"],
-                stdout=subprocess.PIPE
+            ["uci", "-q", "get", "netmetr.settings.hours_to_run"],
+            stdout=subprocess.PIPE
         )
-        if process.wait() == 0:
-            sets.sync_code = process.stdout.read()[:-1]
+        if (process.wait() == 0):
+            hours = process.stdout.read()[:-1].split(' ')
+            hours = map(int, hours)
         else:
-            print_info('Sync code not found, requesting new one.')
-            download_sync_code(sets)
-    else:
-        print_info('Sync code not found (uci missing), requesting new one.')
-        download_sync_code(sets)
+            print("Failed to load autostart time uci settings.")
+            exit()
+        if (
+            autostart_enabled != '1'
+            or datetime.datetime.now().hour not in hours
+        ):
+            exit()
 
+    # Wait appropriate amount of time
+    time.sleep(randint(0, args.rwait[0]))
 
-# Prepare argument parsing
-parser = argparse.ArgumentParser(description='NetMetr - client application for\
-    download and upload speed measurement.')
-parser.add_argument('--rwait', nargs=1, type=int, default=[0], help='delay for\
-    a random amount of time up to RWAIT seconds before the test starts')
-parser.add_argument('--autostart', action='store_true', help='use this\
-    option only when running as an automated service - to check whether it is\
-    right time to run the test')
-parser.add_argument(
-    '--dwlhist',
-    action='store_true',
-    help='download measurement history from the control server and save it to'
-    + HIST_FILE
-)
-parser.add_argument('--debug', action='store_true', help='enables debug \
-        printouts')
-parser.add_argument('--no-color', action='store_true', help='disables colored \
-        text output')
-parser.add_argument('--no-run', action='store_true', help='this option\
-    prevents from running the test. It could be used only to obtain sync code\
-    or (with --dwlhist) to download measurement history')
-args = parser.parse_args()
+    netmetr = Netmetr()
+    # Request uuid from the control server
+    netmetr.load_uuid()
 
-DEBUG = args.debug
-COLORED_OUTPUT = not args.no_color
+    if (not args.no_run):
+        # Request test settings from the control server
+        netmetr.request_settings()
 
-# When autostarted - check whether autostart is enabled and
-# if it is right time to run the test.
-# In uci config, we expect hours of a day separated by commas (,) - these hours
-# are the time the test should be run. So whenever the script is started, it
-# looks to it's config and if it finds the current hour of day in it,
-# it will start the test
-if (args.autostart and os.path.isfile("/sbin/uci")):
-    process = subprocess.Popen(
-        ["uci", "-q", "get", "netmetr.settings.autostart_enabled"],
-        stdout=subprocess.PIPE
-    )
-    if (process.wait() == 0):
-        autostart_enabled = process.stdout.read()[:-1]
-    else:
-        print("Failed to load autostart uci settings.")
-        exit()
-    process = subprocess.Popen(
-        ["uci", "-q", "get", "netmetr.settings.hours_to_run"],
-        stdout=subprocess.PIPE
-    )
-    if (process.wait() == 0):
-        hours = process.stdout.read()[:-1].split(' ')
-        hours = map(int, hours)
-    else:
-        print("Failed to load autostart time uci settings.")
-        exit()
-    if (autostart_enabled != '1' or datetime.datetime.now().hour not in hours):
-        exit()
+        # Get the ping measurement result
+        shortest_ping = netmetr.measure_pings()
 
-# Wait appropriate amount of time
-time.sleep(randint(0, args.rwait[0]))
+        # Get the speed measurement result
+        speed_result = netmetr.measure_speed()
+        if speed_result == '':
+            quit()
 
-settings = Settings()
-# Request uuid from the control server
-load_uuid(settings)
+        # Get detailed test statistics
+        speed_flows = netmetr.import_speed_flows()
 
-if (not args.no_run):
-    # Request test settings from the control server
-    request_settings(settings)
+        # Upload result to the control server
+        netmetr.upload_result(shortest_ping, speed_result, speed_flows)
 
-    # Get the ping measurement result
-    shortest_ping = measure_pings(settings)
+    # Optionally download measurement history from the control server
+    if (args.dwlhist):
+        netmetr.download_history()
 
-    # Get the speed measurement result
-    speed_result = measure_speed(settings)
-    if speed_result == '':
-        quit()
-
-    # Get detailed test statistics
-    speed_flows = import_speed_flows(settings)
-
-    # Upload result to the control server
-    upload_result(settings, shortest_ping, speed_result, speed_flows)
-
-# Optionally download measurement history from the control server
-if (args.dwlhist):
-    download_history(settings)
-
-load_sync_code(settings)
-if (settings.sync_code):
-    print_info("Your Sync code is: " + settings.sync_code)
+    netmetr.load_sync_code()
+    if (netmetr.sync_code):
+        print_info("Your Sync code is: " + netmetr.sync_code)
