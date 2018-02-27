@@ -12,6 +12,7 @@ from random import randint
 import argparse
 import datetime
 import tempfile
+import ssl
 
 
 RMBT_BIN = "rmbt"
@@ -26,14 +27,18 @@ COLORED_OUTPUT = None
 class Netmetr:
     def __init__(self):
         self.language = locale.getdefaultlocale()[0]
-        self.timezone = subprocess.check_output(["date", "+%Z"])[:-1]
+        self.timezone = subprocess.check_output([
+            "date",
+            "+%Z"
+        ])[:-1]
         if os.path.isfile("/sbin/uci"):
             process = subprocess.Popen(
                 ["uci", "-q", "get", "netmetr.settings.control_server"],
                 stdout=subprocess.PIPE
             )
             if process.wait() == 0:
-                self.control_server = process.stdout.read()[:-1]
+                self.control_server = \
+                    process.stdout.read()[:-1]
             else:
                 print_info(
                     'Control server not found, falling to: ' +
@@ -64,10 +69,30 @@ class Netmetr:
         else:
             self.os_version = "unknown"
             self.hw_version = "unknown"
-            self.model = "unknown"
+            self.model = "default"
 
     def get_time(cls):
         return str(int(round(calendar.timegm(time.gmtime())*1000)))
+
+    def send_request(self, req_json, uri):
+        req = urllib2.Request(
+            "https://{}/RMBTControlServer/{}".format(
+                self.control_server,
+                uri
+            )
+        )
+        req.add_header('Accept', 'application/json')
+        req.add_header('Content-Type', 'application/json')
+        data = json.dumps(req_json)
+
+        ctx = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+        ctx.verify_mode = ssl.CERT_REQUIRED
+        ctx.set_default_verify_paths()
+        # ctx.load_verify_locations("/etc/ssl/www_turris_cz_ca.pem")
+
+        resp = urllib2.urlopen(req, data, context=ctx)
+
+        return json.loads(resp.read())
 
     def load_uuid(self):
         """Checks the uci config for uuid and loads it to the
@@ -109,21 +134,10 @@ class Netmetr:
             "version_name": "1.0",
         }
 
-        # Creating GET request to obtain / check uuid
-        req = urllib2.Request(
-                'https://' + self.control_server
-                + '/RMBTControlServer/settings'
-        )
-        req.add_header(
-                'Accept',
-                'application/json, text/javascript, */*; q=0.01'
-        )
-        req.add_header('Content-Type', 'application/json')
         if print_debug("Test settings request:"):
             print(json.dumps(req_json, indent=2))
         # Send the request
-        resp = urllib2.urlopen(req, json.dumps(req_json))
-        resp_json = json.loads(resp.read())
+        resp_json = self.send_request(req_json, 'settings')
         uuid_new = resp_json["settings"][0].get("uuid", '')
         if uuid_new:  # New uuid was received
             self.uuid = uuid_new
@@ -147,18 +161,6 @@ class Netmetr:
         of pings, server address and port and so on.
         """
         print_progress("Requesting test config from the control server...")
-        # Create request to start a test
-        req = urllib2.Request(
-                'https://' + self.control_server
-                + '/RMBTControlServer/testRequest'
-        )
-        # Add headers
-        req.add_header(
-                'Accept',
-                'application/json, text/javascript, */*; q=0.01'
-        )
-        req.add_header('Content-Type', 'application/json')
-        # Create the json to send
         req_json = {
             "client": "RMBT",
             "language": self.language,
@@ -173,9 +175,7 @@ class Netmetr:
             print(json.dumps(req_json, indent=2))
 
         # Send the request
-        resp = urllib2.urlopen(req, json.dumps(req_json))
-        # Read the content
-        resp_json = json.loads(resp.read())
+        resp_json = self.send_request(req_json, 'testRequest')
 
         if print_debug("Test testRequest response:"):
             print(json.dumps(resp_json, indent=2))
@@ -204,8 +204,8 @@ class Netmetr:
             if (process.wait() == 0):
                 try:
                     ping_result = process.stdout.read()
-                    start = ping_result.index("time=") + len("time=")
-                    end = ping_result.index(" ms")
+                    start = ping_result.index(b"time=") + len("time=")
+                    end = ping_result.index(b" ms")
                     ping = float(ping_result[start:end])
                     print("ping_"+str(i)+"_msec = "+format(ping, '.2f'))
                     ping = int(ping * 1000000)
@@ -230,7 +230,7 @@ class Netmetr:
                 config_file.write(
                         '{"cnf_file_flows": "'+self.flows_file+'.xz"}'
                 )
-        except Exception, e:
+        except Exception as e:
             print("Error creating config file")
             print(e)
             return ''
@@ -264,13 +264,13 @@ class Netmetr:
             subprocess.call(shlex.split("unxz -f "+self.flows_file+".xz"))
             with open(self.flows_file, 'r') as json_data:
                 flows_json = json.load(json_data)
-        except Exception, e:
+        except Exception as e:
             print('Problem reading/decoding flows data.')
             print(e)
             return
 
         speed_array = list()
-        for d_short, d_long in directions.iteritems():
+        for d_short, d_long in directions.items():
             thread = 0
             # Each direction has multiple threads
             for flow in flows_json["res_details"][d_short]:
@@ -291,11 +291,11 @@ class Netmetr:
         # Remove generated files
         try:
             os.remove(self.flows_file)
-        except Exception, e:
+        except Exception as e:
             print(e)
         try:
             os.remove(self.config_file)
-        except Exception, e:
+        except Exception as e:
             print(e)
         return speed_array
 
@@ -339,19 +339,7 @@ class Netmetr:
         req_json["speed_detail"] = speed_array
         req_json["pings"] = []
 
-        # Create GET request
-        req = urllib2.Request(
-                'https://' + self.control_server + '/RMBTControlServer/result'
-        )
-        # Add headers
-        req.add_header(
-                'Accept',
-                'application/json, text/javascript, */*; q=0.01'
-        )
-        req.add_header('Content-Type', 'application/json')
-        # Send the request
-        resp = urllib2.urlopen(req, json.dumps(req_json))
-        resp_json = json.loads(resp.read())
+        resp_json = self.send_request(req_json, 'result')
         if print_debug("Save result response:"):
             print(json.dumps(resp_json, indent=2))
 
@@ -398,30 +386,22 @@ class Netmetr:
             "result_limit": str(max_history_logs),
             "uuid": self.uuid,
         }
-        # Creating POST request to get history
-        req = urllib2.Request(
-                'https://' + self.control_server + '/RMBTControlServer/history'
-        )
-        req.add_header(
-                'Accept',
-                'application/json, text/javascript, */*; q=0.01'
-        )
-        req.add_header('Content-Type', 'application/json')
 
         if print_debug(
                 "Downloading measurement history from the control server."):
             print(json.dumps(req_json, indent=2))
         # Send the request
-        resp = urllib2.urlopen(req, json.dumps(req_json))
-        resp_json = json.loads(resp.read())
+        resp_json = self.send_request(req_json, 'history')
+
         if print_debug("Measurement history response:"):
             print(json.dumps(resp_json, indent=2))
+
         _, self.hist_file = tempfile.mkstemp()
         try:
             with open(self.hist_file, "w") as hist_file:
                     hist_file.write(json.dumps(resp_json, indent=2))
             os.rename(self.hist_file, HIST_FILE)
-        except Exception, e:
+        except Exception as e:
             print("Error saving measurement history.")
             print(e)
 
@@ -436,23 +416,14 @@ class Netmetr:
             "timezone": self.timezone,
             "uuid": self.uuid,
         }
-        # Creating POST request to get the sync code
-        req = urllib2.Request(
-                'https://' + self.control_server + '/RMBTControlServer/sync'
-        )
-        req.add_header(
-                'Accept',
-                'application/json, text/javascript, */*; q=0.01'
-        )
-        req.add_header('Content-Type', 'application/json')
 
         if print_debug(
             "Downloading synchronization code from the control server."
         ):
             print(json.dumps(req_json, indent=2))
         # Send the request
-        resp = urllib2.urlopen(req, json.dumps(req_json))
-        resp_json = json.loads(resp.read())
+        resp_json = self.send_request(req_json, 'sync')
+
         if print_debug("Synchronization token response:"):
             print(json.dumps(resp_json, indent=2))
 
