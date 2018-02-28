@@ -20,6 +20,7 @@ HIST_FILE = "/tmp/netmetr-history.json"
 # FALLBACK_CTRL_SRV = "netmetr-control.labs.nic.cz"
 FALLBACK_CTRL_SRV = "control.netmetr.cz"
 FALLBACK_MAX_HISTORY_LOGS = 10
+FALLBACK_CLIENT_TYPE = "HW-PROBE"
 DEBUG = None
 COLORED_OUTPUT = None
 
@@ -32,6 +33,7 @@ class Netmetr:
             "+%Z"
         ])[:-1]
         if os.path.isfile("/sbin/uci"):
+            # Loading control server
             process = subprocess.Popen(
                 ["uci", "-q", "get", "netmetr.settings.control_server"],
                 stdout=subprocess.PIPE
@@ -52,7 +54,33 @@ class Netmetr:
                     + self.control_server
                 ])
                 subprocess.call(["uci", "commit"])
-        else:
+            # Loading client type
+            process = subprocess.Popen(
+                ["uci", "-q", "get", "netmetr.settings.client"],
+                stdout=subprocess.PIPE
+            )
+            if process.wait() == 0:
+                self.client = \
+                    process.stdout.read()[:-1]
+            else:
+                print_info(
+                    'Client type not found, falling to: ' +
+                    FALLBACK_CLIENT_TYPE
+                )
+                self.client = FALLBACK_CLIENT_TYPE
+                subprocess.call([
+                    "uci",
+                    "set",
+                    "netmetr.settings.client="
+                    + self.client
+                ])
+                subprocess.call(["uci", "commit"])
+        else:  # without uci
+            print_info(
+                'Client type not found (uci missing), falling to: '
+                + FALLBACK_CLIENT_TYPE
+            )
+            self.client = FALLBACK_CLIENT_TYPE
             print_info(
                 'Control server not found (uci missing), falling to: '
                 + FALLBACK_CTRL_SRV
@@ -162,7 +190,7 @@ class Netmetr:
         """
         print_progress("Requesting test config from the control server...")
         req_json = {
-            "client": "RMBT",
+            "client": "HW-PROBE",
             "language": self.language,
             "time": self.get_time(),
             "timezone": self.timezone,
