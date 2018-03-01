@@ -192,6 +192,17 @@ init_unbound() {
     fi
 
 
+    config_get_bool rebind_protection "common" rebind_protection 1
+    if [ "$rebind_protection" = "1" ] ; then
+        # For DNS Rebinding prevention
+        add_parameter "10.0.0.0/8" "private-address"
+        add_parameter "172.16.0.0/12" "private-address"
+        add_parameter "192.168.0.0/16" "private-address"
+        add_parameter "192.254.0.0/16" "private-address"
+        add_parameter "fd00::/8" "private-address"
+        add_parameter "fe80::/10" "private-address"
+    fi
+
     config_load resolver
 
     set_section unbound
