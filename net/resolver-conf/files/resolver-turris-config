@@ -14,6 +14,7 @@ config resolver 'common'
 	option ignore_root_key '0'
 	option static_domains '1'
 	option dynamic_domains '0'
+        option rebind_protection '1'
 
 config resolver 'kresd'
 	option rundir '/tmp/kresd'
