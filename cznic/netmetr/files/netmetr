@@ -13,6 +13,7 @@ import argparse
 import datetime
 import tempfile
 import ssl
+import serial
 
 
 RMBT_BIN = "rmbt"
@@ -361,6 +362,17 @@ class Netmetr:
             "version_code": "1",
             "developer_code": 0
         }
+        if self.gps_console_path:
+            req_json["geoLocations"] = [{
+                "geo_lat": self.lat,
+                "geo_long": self.lon,
+                "accuracy": 5*float(self.hdop),
+                "altitude": self.altitude,
+                "bearing": self.bearing,
+                "speed": self.speed,
+                "tstamp": self.get_time(),
+                "provider": "gps"
+            }]
         if print_debug("Save result request (without speed array and pings)"):
             print(json.dumps(req_json, indent=2))
 
@@ -490,6 +502,127 @@ class Netmetr:
             )
             self.download_sync_code()
 
+    def load_gps_console(self):
+        if os.path.isfile("/sbin/uci"):
+            process = subprocess.Popen(
+                    ["uci", "-q", "get", "netmetr.settings.gps_console_path"],
+                    stdout=subprocess.PIPE
+            )
+            if process.wait() == 0:
+                self.gps_console_path = process.stdout.read()[:-1]
+            else:
+                self.gps_console_path = None
+        else:
+            self.gps_console_path = None
+            print_info(
+                    "GPS console path can't be loaded (uci missing)."
+                    " You can specify it via CLI."
+            )
+
+    def set_gps_console(self, path):
+        self.gps_console_path = path
+        if os.path.isfile("/sbin/uci"):
+            subprocess.call([
+                    "uci",
+                    "set",
+                    "netmetr.settings.gps_console_path="
+                    + self.gps_console_path
+                ])
+            subprocess.call(["uci", "commit"])
+        else:
+            print_info(
+                'GPS console path not saved (uci missing).'
+            )
+
+    def disable_gps(self):
+        self.gps_console_path = None
+        if os.path.isfile("/sbin/uci"):
+            subprocess.call([
+                    "uci",
+                    "delete",
+                    "netmetr.settings.gps_console_path"
+                ])
+            subprocess.call(["uci", "commit"])
+
+    def measure_gps(self):
+        if not self.gps_console_path:
+            return
+        if not os.path.exists(self.gps_console_path):
+            print_error("GPS special file not found!")
+            self.gps_console_path = None
+            return
+        print_progress("Starting GPS measurement.")
+        try:
+            with serial.Serial(self.gps_console_path, timeout=5) as ser:
+                self.parse_gps_console(ser)
+        except:
+            print_error("GPS problem.")
+            self.gps_console_path = None
+
+    def parse_gps_console(self, console):
+        GGA = False
+        VTG = False
+        for i in range(1, 100 + 1):
+            line = console.readline()
+            if len(line) > 0 and line[0] == "$":
+                splitted = line.split(",")
+                if splitted[0] == "$GPGGA" and not GGA:
+                    GGA = self.parse_gps_GGA(splitted, i)
+                elif splitted[0] == "$GPVTG" and not VTG:
+                    VTG = self.parse_gps_VTG(splitted, i)
+                if GGA and VTG:
+                    print_debug("GPS measured (line {}). Closing console.".format(i))
+                    break
+        if not GGA or not VTG:
+            self.gps_console_path = None
+            print_error("GPS problem: no valid data. Console closed.")
+
+    def parse_gps_GGA(self, text, i):
+        lat = text[2]
+        if lat == '':
+            if print_debug("Empty latitude (line {})".format(i)):
+                print(text)
+            return False
+        lon = text[4]
+        if lon == '':
+            if print_debug("Empty longitude (line {})".format(i)):
+                print(text)
+            return False
+        if text[8] == '':
+            if print_debug("Empty hdop (line {})".format(i)):
+                print(text)
+            return False
+        else:
+            self.hdop = text[8]
+        if text[9] == '':
+            if print_debug("Empty altitude (line {})".format(i)):
+                print(text)
+            return False
+        else:
+            self.altitude = text[9]
+        self.lat = int(lat[0:2])+float(lat[2:])/60
+        self.lon = int(lon[0:3])+float(lon[3:])/60
+        if text[3] == "S":
+            self.lat = -self.lat
+        if text[5] == "W":
+            self.lon = -self.lon
+        return True
+
+    def parse_gps_VTG(self, text, i):
+        if text[7] == '':
+            if print_debug("Empty speed (line {})".format(i)):
+                print(text)
+            return False
+        else:
+            self.speed = text[7]
+        if text[1] == '':
+            if print_debug("Empty bearing (line {})".format(i)):
+                print(text)
+            return False
+        else:
+            self.bearing = text[1]
+        return True
+
 
 def print_debug(msg):
     if DEBUG:
@@ -514,12 +647,11 @@ def print_progress(msg):
         print(msg)
 
 
-def print_error(msg, error_code):
+def print_error(msg):
     if COLORED_OUTPUT:
-        print('\033[41m' + msg + '\033[0m')
+        print('\033[41mERROR: ' + msg + '\033[0m')
     else:
-        print(msg)
-    exit(error_code)
+        print('ERROR: {}'.format(msg))
 
 
 def prepare_parser():
@@ -532,6 +664,11 @@ def prepare_parser():
         '--rwait', nargs=1, type=int, default=[0],
         help='delay for a random amount of time up to RWAIT seconds before'
         ' the test starts'
+    )
+    parser.add_argument(
+        '--set-gps-console', nargs=1,
+        help='set path to GPS modul serial console. The GPS must be enabled to'
+        ' measure location with every speed test.'
     )
     parser.add_argument(
         '--autostart', action='store_true', help='use this'
@@ -551,6 +688,10 @@ def prepare_parser():
     parser.add_argument(
         '--no-color', action='store_true', help='disables'
         ' colored text output'
+    )
+    parser.add_argument(
+        '--disable-gps', action='store_true', help='disable'
+        ' gps location monitoring'
     )
     parser.add_argument(
         '--no-run', action='store_true', help='this option '
@@ -608,7 +749,19 @@ if __name__ == "__main__":
     # Request uuid from the control server
     netmetr.load_uuid()
 
+    # GPS
+    if args.disable_gps:
+        netmetr.disable_gps()
+    else:
+        if args.set_gps_console:
+            netmetr.set_gps_console(args.set_gps_console[0])
+        else:
+            netmetr.load_gps_console()
+
     if (not args.no_run):
+        # Run gps first
+        netmetr.measure_gps()
+
         # Request test settings from the control server
         netmetr.request_settings()
 
