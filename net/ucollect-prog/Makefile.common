@@ -47,7 +47,7 @@ endef
 
 define Package/ucollect-$(1)/postrm
 #!/bin/sh
-/etc/init.d/ucollect reload
+/etc/init.d/ucollect reload || :
 endef
 
 define Package/ucollect-$(1)/install
