@@ -9,7 +9,7 @@
 
 include ../ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,ucollect-prog,119))
+$(eval $(call UCOLLECT_BASE,ucollect-prog,120))
 
 BASE_LIB_DEPS:=+libpcap +librt +libopenssl +libuci +libatsha204 +socat +zlib +gdb
 
@@ -54,12 +54,6 @@ define Package/ucollect-prog/postinst
 /etc/init.d/ucollect enable
 /etc/init.d/ucollect restart
 }
-endef
-
-define Package/ucollect-prog/prerm
-#!/bin/sh
-/etc/init.d/ucollect disable
-/etc/init.d/ucollect stop
 endef
 
 define Package/ucollect-prog/install
