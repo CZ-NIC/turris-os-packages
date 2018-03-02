@@ -23,7 +23,7 @@ PKG_LICENSE_FILE:=LICENSE
 include $(INCLUDE_DIR)/package.mk
 include ../foris-controller/files/foris-controller-module.mk
 
-$(call include_mk, python-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
