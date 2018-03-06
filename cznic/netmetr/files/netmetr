@@ -14,6 +14,7 @@ import datetime
 import tempfile
 import ssl
 import serial
+import csv
 
 
 RMBT_BIN = "rmbt"
@@ -279,7 +280,9 @@ class Netmetr:
         ))
         if print_debug("Speed test result:"):
             print(test_result)
-        return json.loads(test_result.split("}")[1] + "}")
+        test_result_json = json.loads(test_result.split("}")[1] + "}")
+        self.dl_speed = test_result_json.get("res_dl_throughput_kbps")
+        return test_result_json
 
     def import_speed_flows(self):
         """The speedtest flow is saved to a file during the test. This function
@@ -349,9 +352,7 @@ class Netmetr:
             "test_num_threads": test_result_json.get("res_dl_num_flows"),
             "test_ping_shortest": pres,
             "num_threads_ul": test_result_json.get("res_ul_num_flows"),
-            "test_speed_download": test_result_json.get(
-                "res_dl_throughput_kbps"
-            ),
+            "test_speed_download": self.dl_speed,
             "test_speed_upload": test_result_json.get(
                 "res_ul_throughput_kbps"
             ),
@@ -727,6 +728,43 @@ class Netmetr:
                 line = console.readline()
                 self.lte["DL EARFCN"] = line.split()[0]
 
+    def export_csv(self, path):
+        table = list()
+        table.append(time.strftime('%d.%m.%Y %H:%M'))
+        table.extend([''] * 19)
+        table[7] = round(self.dl_speed)
+        if self.lte_console_path:
+            table[3] = self.lte['RSRP']
+            table[4] = self.lte['SINR Rx[0]']
+            table[5] = self.lte['RSRQ']
+            table[6] = self.lte['RSSI']
+            table[8] = self.lte['MCC']
+            table[9] = self.lte['MNC']
+            table[10] = self.lte['LAC']
+            table[11] = self.lte['Cell Id']
+            table[12] = self.lte['PCI']
+            table[13] = self.lte['DL EARFCN']
+            table[14] = self.lte['Bandwidth']
+        if self.gps_console_path:
+            table[1] = "{:.6f}".format(float(self.lat))
+            table[2] = "{:.6f}".format(float(self.lon))
+        if os.path.isfile(path):
+            with open(path, 'a') as csvfile:
+                    writer = csv.writer(csvfile, delimiter=',')
+                    writer.writerow(table)
+        else:
+            with open(path, 'w') as csvfile:
+                writer = csv.writer(csvfile, delimiter=',')
+                writer.writerows([(
+                    time.strftime('%d.%m.%Y %H:%M'), "Lat", "Long",
+                    "RSRP", "SINR Rx[0]",
+                    "RSRQ", "RSSI", "IP Thrpt DL", "MCC", "MNC", "LAC",
+                    "Cell Id", "PCI", "DL EARFCN", "Bandwidth", "QPSK Rate",
+                    "16-QAM Rate", "64-QAM Rate", "256-QAM Rate",
+                    "Carrier Aggregation DL"
+                )])
+                writer.writerow(table)
+
 
 def print_debug(msg):
     if DEBUG:
@@ -810,6 +848,11 @@ def prepare_parser():
     parser.add_argument(
         '--disable-lte', action='store_true', help='disable'
         ' lte parametres monitoring'
+    )
+    parser.add_argument(
+        '--export-csv', nargs=1,
+        help='set export of LTE, GPS and other measurement results to a CSV'
+        ' file. If the file already exists the output will be appended.'
     )
 
     return parser
@@ -902,6 +945,10 @@ if __name__ == "__main__":
 
         # Upload result to the control server
         netmetr.upload_result(shortest_ping, speed_result, speed_flows)
+
+    # Optionally export csv
+    if (args.export_csv):
+        netmetr.export_csv(args.export_csv[0])
 
     # Optionally download measurement history from the control server
     if (args.dwlhist):
