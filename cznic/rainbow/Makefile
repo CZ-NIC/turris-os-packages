@@ -22,10 +22,10 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=@(TARGET_mpc85xx_p2020_nand||TARGET_mpc85xx_p2020_nor)
+	DEPENDS:=@(TARGET_mpc85xx_p2020_nand||TARGET_mpc85xx_p2020_nor||TARGET_mpc85xx_p2020_TURRIS)
 endef
 
-ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+ifneq ($(CONFIG_TARGET_mpc85xx_p2020_TURRIS),y)
 # FIXME: Temporary, until rainbow is ported.
 
 define Build/Compile
