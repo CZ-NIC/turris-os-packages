@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=userlists
-PKG_VERSION:=10
+PKG_VERSION:=11
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -22,12 +22,16 @@ define Build/Compile
 	true
 endef
 
-define Package/userlists/install
+define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/updater/
-	$(INSTALL_DATA) ./files/definitions $(1)/usr/share/updater/definitions
-ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nor_TURRISNOR)$(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
-	sed -i "/^\['lxc'\]/,/},/d" $(1)/usr/share/updater/definitions
-endif
+	$(INSTALL_DATA) ./files/definitions.json $(1)/usr/share/updater/definitions.json
+endef
+
+define Package/$(PKG_NAME)/postinst
+[ -n "$$IPKG_INSTROOT" ] || {
+	# Rename i_agree_honeypot to honeypot
+	sed -i "s/list lists 'i_agree_honeypot'/list lists 'honeypot'/" /etc/config/updater
+}
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

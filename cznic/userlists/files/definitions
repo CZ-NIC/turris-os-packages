@@ -31,7 +31,7 @@ lists = {
     title_de = 'DVB-Tuner',
     title_en = 'DVB tuner'
 },
-['i_agree_honeypot'] = {
+['honeypot'] = {
     description_cs = 'Past na roboty zkoušející hesla na SSH.',
     description_de = 'Falle für Roboter, die das Kennwort für den SSH-Zugriff zu erraten versuchen.',
     description_en = 'Trap for password-guessing robots on SSH.',
