@@ -110,7 +110,6 @@ handle_openssh_section(){
     set_parameter "$config" PrintLastLog PrintLastLog
     set_parameter "$config" TCPKeepAlive TCPKeepAlive
     set_parameter "$config" UseLogin UseLogin
-    set_parameter "$config" UsePrivilegeSeparation UsePrivilegeSeparation sandbox
     set_parameter "$config" PermitUserEnvironment PermitUserEnvironment
     set_parameter "$config" Compression Compression
     set_parameter "$config" ClientAliveInterval ClientAliveInterval
