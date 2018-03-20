@@ -172,6 +172,7 @@ $(eval $(call BuildPlugin,redirect,URL redirection,+PACKAGE_lighttpd-mod-redirec
 
 # Next, permit authentication.
 $(eval $(call BuildPlugin,auth,Authentication,,20))
+$(eval $(call BuildPlugin,authn_file,File-based authentication,,20))
 
 # Finally, everything else.
 $(eval $(call BuildPlugin,access,Access restrictions,,30))
