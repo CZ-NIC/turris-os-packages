@@ -766,6 +766,44 @@ class Netmetr:
                 writer.writerow(table)
 
 
+def uci_get(var):
+    if os.path.isfile("/sbin/uci"):
+        # Loading control server
+        process = subprocess.Popen(
+            ["uci", "-q", "get", "netmetr.settings.{}".format(var)],
+            stdout=subprocess.PIPE
+        )
+        if process.wait() == 0:
+            return process.stdout.read()[:-1]
+    return None
+
+
+def uci_set(var, value):
+    if os.path.isfile("/sbin/uci"):
+        retcode = subprocess.call([
+            "uci", "set",
+            "netmetr.settings.{}={}".format(var, value)
+        ])
+        if retcode != 0:
+            return False
+        retcode = subprocess.call(["uci", "commit"])
+        return retcode == 0
+    return False
+
+
+def uci_del(var):
+    if os.path.isfile("/sbin/uci"):
+        retcode = subprocess.call([
+            "uci", "-q", "delete",
+            "netmetr.settings.{}".format(var)
+        ])
+        if retcode != 0:
+            return False
+        retcode = subprocess.call(["uci", "commit"])
+        return retcode == 0
+    return False
+
+
 def print_debug(msg):
     if DEBUG:
         if COLORED_OUTPUT:
