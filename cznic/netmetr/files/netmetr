@@ -399,48 +399,6 @@ class Netmetr:
             print_info("Sync code not found, requesting new one.")
             self.download_sync_code()
 
-    def load_gps_console(self):
-        if os.path.isfile("/sbin/uci"):
-            process = subprocess.Popen(
-                    ["uci", "-q", "get", "netmetr.settings.gps_console_path"],
-                    stdout=subprocess.PIPE
-            )
-            if process.wait() == 0:
-                self.gps_console_path = process.stdout.read()[:-1]
-            else:
-                self.gps_console_path = None
-        else:
-            self.gps_console_path = None
-            print_info(
-                    "GPS console path can't be loaded (uci missing)."
-                    " You can specify it via CLI."
-            )
-
-    def set_gps_console(self, path):
-        self.gps_console_path = path
-        if os.path.isfile("/sbin/uci"):
-            subprocess.call([
-                    "uci",
-                    "set",
-                    "netmetr.settings.gps_console_path="
-                    + self.gps_console_path
-                ])
-            subprocess.call(["uci", "commit"])
-        else:
-            print_info(
-                'GPS console path not saved (uci missing).'
-            )
-
-    def disable_gps(self):
-        self.gps_console_path = None
-        if os.path.isfile("/sbin/uci"):
-            subprocess.call([
-                    "uci",
-                    "delete",
-                    "netmetr.settings.gps_console_path"
-                ])
-            subprocess.call(["uci", "commit"])
-
     def measure_gps(self):
         if not self.gps_console_path:
             return
