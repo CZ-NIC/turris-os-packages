@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-uci
-PKG_VERSION:=0.1
+PKG_VERSION:=0.3
 PKG_RELEASE:=1
 PKG_LICENSE:=GPLv3
 
@@ -21,15 +21,26 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python-package.mk)
+$(call include_mk, python3-package.mk)
 
-define Package/$(PKG_NAME)
-  TITLE:=$(PKG_NAME)
+define Package/Common
   SUBMENU:=Python
   SECTION:=lang
   CATEGORY:=Languages
   URL:=https://gitlab.labs.nic.cz/turris/pyuci/
   MAINTAINER:=CZ.NIC <packaging@turris.cz>
+endef
+
+define Package/python-uci
+  $(call Package/Common)
+  TITLE:=python-uci
   DEPENDS:=+python-light +libuci
+endef
+
+define Package/python3-uci
+  $(call Package/Common)
+  TITLE:=python3-uci
+  DEPENDS:=+python3-light +libuci
 endef
 
 define Package/$(PKG_NAME)/description
@@ -37,8 +48,16 @@ define Package/$(PKG_NAME)/description
 endef
 
 define Build/Compile
-	$(call Build/Compile/PyMod,,install --prefix="/usr" --root=$(PKG_INSTALL_DIR))
+	$(call Build/Compile/PyMod,,install --prefix="/usr" --root=$(PKG_INSTALL_DIR)/py2)
+	$(call Build/Compile/Py3Mod,,install --prefix="/usr" --root=$(PKG_INSTALL_DIR)/py3)
 endef
 
-$(eval $(call PyPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)))
+PKG_INSTALL_DIR_ORIG:="$(PKG_INSTALL_DIR)"
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py2"
+$(eval $(call PyPackage,python-uci))
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py3"
+$(eval $(call Py3Package,python3-uci))
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)"
+
+$(eval $(call BuildPackage,python-uci))
+$(eval $(call BuildPackage,python3-uci))
