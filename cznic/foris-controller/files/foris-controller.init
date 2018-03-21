@@ -27,6 +27,7 @@ start_service() {
 	config_load foris-controller
 	config_get bus main bus ubus
 	config_get backend main backend openwrt
+	config_get client_socket main client_socket /var/run/foris-controller-client.sock
 	config_get_bool debug main debug 0
 
 	if [ "$debug" == "1" ]; then
@@ -40,11 +41,11 @@ start_service() {
 		if [ "$single" == "1" ]; then
 			single_arg="--single"
 		fi
-		procd_set_param command "$PROG" ${debug_arg:-} -b "$backend" ubus --path "$path" ${single_arg:-}
+		procd_set_param command "$PROG" ${debug_arg:-} -b "$backend" -C "$client_socket" ubus --path "$path" ${single_arg:-}
 	elif [ "$bus" == "unix-socket" ]; then
 		config_get path unix path "/tmp/foris-controller.soc"
 		config_get notification_path unix notification_path "/tmp/foris-controller-notifications.soc"
-		procd_set_param command "$PROG" ${debug_arg:-} -b "$backend" unix-socket --path "$path" --notifications-path "${notification_path}"
+		procd_set_param command "$PROG" ${debug_arg:-} -b "$backend" -C "$client_socket" unix-socket --path "$path" --notifications-path "${notification_path}"
 	fi
 	procd_set_param respawn
 	procd_close_instance
