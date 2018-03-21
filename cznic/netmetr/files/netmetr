@@ -34,60 +34,18 @@ class Netmetr:
             "date",
             "+%Z"
         ])[:-1]
-        if os.path.isfile("/sbin/uci"):
-            # Loading control server
-            process = subprocess.Popen(
-                ["uci", "-q", "get", "netmetr.settings.control_server"],
-                stdout=subprocess.PIPE
-            )
-            if process.wait() == 0:
-                self.control_server = \
-                    process.stdout.read()[:-1]
-            else:
-                print_info(
-                    'Control server not found, falling to: ' +
-                    FALLBACK_CTRL_SRV
-                )
-                self.control_server = FALLBACK_CTRL_SRV
-                subprocess.call([
-                    "uci",
-                    "set",
-                    "netmetr.settings.control_server="
-                    + self.control_server
-                ])
-                subprocess.call(["uci", "commit"])
-            # Loading client type
-            process = subprocess.Popen(
-                ["uci", "-q", "get", "netmetr.settings.client"],
-                stdout=subprocess.PIPE
-            )
-            if process.wait() == 0:
-                self.client = \
-                    process.stdout.read()[:-1]
-            else:
-                print_info(
-                    'Client type not found, falling to: ' +
-                    FALLBACK_CLIENT_TYPE
-                )
-                self.client = FALLBACK_CLIENT_TYPE
-                subprocess.call([
-                    "uci",
-                    "set",
-                    "netmetr.settings.client="
-                    + self.client
-                ])
-                subprocess.call(["uci", "commit"])
-        else:  # without uci
-            print_info(
-                'Client type not found (uci missing), falling to: '
-                + FALLBACK_CLIENT_TYPE
-            )
-            self.client = FALLBACK_CLIENT_TYPE
-            print_info(
-                'Control server not found (uci missing), falling to: '
-                + FALLBACK_CTRL_SRV
-            )
+
+        self.control_server = uci_get("control_server")
+        if not self.control_server:
+            print_info("Control server not found, falling to: {}".format(FALLBACK_CTRL_SRV))
             self.control_server = FALLBACK_CTRL_SRV
+            uci_set("control_server", FALLBACK_CTRL_SRV)
+        self.client = uci_get("client")
+        if not self.client:
+            print_info("Client type not found, falling to: {}".format(FALLBACK_CLIENT_TYPE))
+            self.client = FALLBACK_CLIENT_TYPE
+            uci_set("client", FALLBACK_CLIENT_TYPE)
+
         if os.path.isfile("/etc/turris-version"):
             with open("/etc/turris-version", 'r') as turris_version:
                 self.os_version = turris_version.read().split('\n')[0]
@@ -129,19 +87,9 @@ class Netmetr:
         script. If no uuid is found a https request is send to the control
         server to download it.
         """
-        # Load uuid saved in config file via uci
-        if os.path.isfile("/sbin/uci"):
-            process = subprocess.Popen(
-                ["uci", "-q", "get", "netmetr.settings.uuid"],
-                stdout=subprocess.PIPE
-            )
-            if process.wait() == 0:
-                self.uuid = process.stdout.read()[:-1]
-            else:
-                print_info('Uuid not found, requesting new one.')
-                self.uuid = 0
-        else:
-            print_info('Uuid not found (uci missing), requesting new one.')
+        self.uuid = uci_get("uuid")
+        if not self.uuid:
+            print_info('Uuid not found, requesting new one.')
             self.uuid = 0
 
         # the download request must be sent all the time - either to raquest
@@ -171,16 +119,8 @@ class Netmetr:
         uuid_new = resp_json["settings"][0].get("uuid", '')
         if uuid_new:  # New uuid was received
             self.uuid = uuid_new
-            if os.path.isfile("/sbin/uci"):
-                subprocess.call([
-                    "uci", "set",
-                    "netmetr.settings.uuid="+self.uuid
-                ])
-                subprocess.call([
-                    "uci", "-q", "delete",
-                    "netmetr.settings.sync_code"
-                ])
-                subprocess.call(["uci", "commit"])
+            uci_set("uuid", self.uuid)
+            uci_del("sync_code")
         else:
             self.uuid = req_json['uuid']
         if print_debug("Test settings response:"):
@@ -388,37 +328,11 @@ class Netmetr:
         """Creates a http request and ask the control server for a measurement
         history.
         """
-
-        def save_max_hist_logs():
+        max_history_logs = uci_get("max_history_logs")
+        if not max_history_logs:
+            print_info("Max history logs not found, falling to {}".format(FALLBACK_MAX_HISTORY_LOGS))
             max_history_logs = FALLBACK_MAX_HISTORY_LOGS
-            if os.path.isfile("/sbin/uci"):
-                subprocess.call([
-                    "uci", "set",
-                    "netmetr.settings.max_history_logs="+str(max_history_logs)
-                ])
-                subprocess.call(["uci", "commit"])
-            return max_history_logs
-
-        # Load number of max hostory logs thaht can be downloaded - via uci
-        if os.path.isfile("/sbin/uci"):
-            process = subprocess.Popen(
-                    ["uci", "-q", "get", "netmetr.settings.max_history_logs"],
-                    stdout=subprocess.PIPE
-            )
-            if process.wait() == 0:
-                max_history_logs = process.stdout.read()[:-1]
-            else:
-                print_info(
-                    'Max history logs not found, falling to ' +
-                    str(FALLBACK_MAX_HISTORY_LOGS)
-                )
-                max_history_logs = save_max_hist_logs()
-        else:
-            print_info(
-                'Max history logs not found (uci missing), falling to ' +
-                str(FALLBACK_MAX_HISTORY_LOGS)
-            )
-            max_history_logs = save_max_hist_logs()
+            uci_set("max_history_logs", max_history_logs)
 
         # Create json to request history
         req_json = {
@@ -470,13 +384,7 @@ class Netmetr:
 
         if not resp_json["error"]:
             self.sync_code = resp_json["sync"][0].get("sync_code", '')
-            # If we have uci and VALID sync code:
-            if (os.path.isfile("/sbin/uci") and self.sync_code):
-                subprocess.call([
-                    "uci", "set",
-                    "netmetr.settings.sync_code="+self.sync_code
-                ])
-                subprocess.call(["uci", "commit"])
+            uci_set("sync_code", self.sync_code)
         else:
             self.sync_code = ''
             print("Error downloading synchronization code.")
@@ -486,21 +394,9 @@ class Netmetr:
         script. If no synchronization code is found a https request is send to\
         download it.
         """
-        # Load synchronization code saved in config file via uci
-        if os.path.isfile("/sbin/uci"):
-            process = subprocess.Popen(
-                    ["uci", "-q", "get", "netmetr.settings.sync_code"],
-                    stdout=subprocess.PIPE
-            )
-            if process.wait() == 0:
-                self.sync_code = process.stdout.read()[:-1]
-            else:
-                print_info('Sync code not found, requesting new one.')
-                self.download_sync_code()
-        else:
-            print_info(
-                    'Sync code not found (uci missing), requesting new one.'
-            )
+        self.sync_code = uci_get("sync_code")
+        if not self.sync_code:
+            print_info("Sync code not found, requesting new one.")
             self.download_sync_code()
 
     def load_gps_console(self):
@@ -910,30 +806,15 @@ if __name__ == "__main__":
     DEBUG = args.debug
     COLORED_OUTPUT = not args.no_color
 
-    if (args.autostart and os.path.isfile("/sbin/uci")):
-        process = subprocess.Popen(
-            ["uci", "-q", "get", "netmetr.settings.autostart_enabled"],
-            stdout=subprocess.PIPE
-        )
-        if (process.wait() == 0):
-            autostart_enabled = process.stdout.read()[:-1]
-        else:
-            print("Failed to load autostart uci settings.")
+    if args.autostart:
+        if uci_get("autostart_enabled") != '1':
             exit()
-        process = subprocess.Popen(
-            ["uci", "-q", "get", "netmetr.settings.hours_to_run"],
-            stdout=subprocess.PIPE
-        )
-        if (process.wait() == 0):
-            hours = process.stdout.read()[:-1].split(' ')
-            hours = map(int, hours)
-        else:
-            print("Failed to load autostart time uci settings.")
+        hours = uci_get("hours_to_run")
+        if not hours:
             exit()
-        if (
-            autostart_enabled != '1'
-            or datetime.datetime.now().hour not in hours
-        ):
+        hours = hours.split()
+        hours = map(int, hours)
+        if datetime.datetime.now().hour not in hours:
             exit()
 
     # Wait appropriate amount of time
@@ -945,20 +826,24 @@ if __name__ == "__main__":
 
     # LTE
     if args.disable_lte:
-        netmetr.disable_lte()
+        netmetr.lte_console_path = None
+        uci_del("lte_console_path")
     else:
         if args.set_lte_console:
-            netmetr.set_lte_console(args.set_lte_console[0])
+            netmetr.lte_console_path = args.set_lte_console[0]
+            uci_set("lte_console_path", netmetr.lte_console_path)
         else:
-            netmetr.load_lte_console()
+            netmetr.lte_console_path = uci_get("lte_console_path")
     # GPS
     if args.disable_gps:
-        netmetr.disable_gps()
+        netmetr.gps_console_path = None
+        uci_del("gps_console_path")
     else:
         if args.set_gps_console:
-            netmetr.set_gps_console(args.set_gps_console[0])
+            netmetr.gps_console_path = args.set_gps_console[0]
+            uci_set("gps_console_path", netmetr.gps_console_path)
         else:
-            netmetr.load_gps_console()
+            netmetr.gps_console_path = uci_get("gps_console_path")
 
     if (not args.no_run):
         # Run gps first
