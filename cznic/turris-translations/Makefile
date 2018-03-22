@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-translations
-PKG_VERSION:=1.0
+PKG_VERSION:=1.0.1
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/turris-translations.git
@@ -38,7 +38,7 @@ define Package/$(1)-l10n-$(2)
 endef
 
 define Package/$(1)-l10n-$(2)/install
-	$(MAKE) -C $(PKG_BUILD_DIR) DESTDIR="$$(1)" install-$(1)
+	$(MAKE) -C $(PKG_BUILD_DIR) DESTDIR="$$(1)" install-$(1)-$(2)
 endef
 
 $$(eval $$(call BuildPackage,$(1)-l10n-$(2)))
