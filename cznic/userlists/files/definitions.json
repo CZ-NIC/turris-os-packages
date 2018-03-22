@@ -1,7 +1,4 @@
 {
-	"i_agree_datacollect": {
-		"visible": false
-	},
 	"api-token": {
 		"title": "Access tokens",
 		"description": "A Foris plugin allowing to manage remote API access tokens (for example for use in Spectator or Android application).",
