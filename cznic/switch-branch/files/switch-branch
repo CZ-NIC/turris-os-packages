@@ -137,7 +137,9 @@ if $VERIFY; then
 fi
 
 ## Run updater
-updater.sh || echo "Updater execution exited with error. Please see previous output to know what went wrong." >&2
+UPDATER_ARGS=
+[ "$(uci get "updater.approvals.need" 2>/dev/null)" != "1" ] || UPDATER_ARGS="--batch"
+pkgupdate $UPDATER_ARGS || echo "Updater execution exited with error. Please see previous output to know what went wrong." >&2
 
 set +x
 
