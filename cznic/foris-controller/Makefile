@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller
 PKG_VERSION:=0.9
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller
@@ -27,7 +27,8 @@ define Package/foris-controller
 	URL:=https://gitlab.labs.nic.cz/turris/foris-controller
 	DEPENDS:=\
 		+python-light +python-ubus +python-prctl +python-multiprocessing +python-pbkdf2 \
-		+foris-schema +server-uplink
+		+foris-schema +server-uplink +turris-maintain +updater-ng-supervisor +user_notify \
+		+l10n_supported +sqm-scripts
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
