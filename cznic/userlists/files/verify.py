@@ -7,11 +7,11 @@ def main():
         content = json.load(file)
 
     for name, list in content.items():
-        if list['visible'] == 'yes':
+        if list['visible']:
             assert 'title' in list
             assert 'description' in list
         else:
-            assert list['visible'] == 'no'
+            assert not list['visible']
 
 
 if __name__ == '__main__':

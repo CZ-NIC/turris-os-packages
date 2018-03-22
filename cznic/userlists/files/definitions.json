@@ -67,6 +67,11 @@
 		"description": "Services allowing to connect a printer to the router and use it for remote printing.",
 		"visible": true
 	},
+	"ssbackup": {
+		"title": "Server-side Backups",
+		"description": "Service for storing backups on remote server.",
+		"visible": true
+	},
 	"snd": {
 		"title": "Sound card",
 		"description": "Support for USB sound card.",
