@@ -65,7 +65,7 @@
 		"visible": true
 	},
 	"ssbackup": {
-		"title": "Server-side Backups",
+		"title": "Cloud Backups",
 		"description": "Service for storing backups on remote server.",
 		"visible": true
 	},
