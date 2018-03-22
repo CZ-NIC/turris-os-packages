@@ -22,7 +22,7 @@
 		"description": "Software for sharing television received by a DVB tuner on Turris. Does not include device drivers.",
 		"visible": true
 	},
-	"luci_controls": {
+	"luci-controls": {
 		"title": "LuCI extensions",
 		"description": "Several addional tabs and controls for the advanced LuCI interface.",
 		"visible": true
