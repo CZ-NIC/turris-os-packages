@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
 PKG_VERSION:=60.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -28,7 +28,7 @@ $(call include_mk, python3-package.mk)
 
 define Package/$(PKG_NAME)
 	TITLE:=The next generation updater
-	DEPENDS:=+liblua +libevent2 +usign +libcurl +vixie-cron +ca-certificates
+	DEPENDS:=+liblua +libevent2 +usign +libcurl +ca-certificates
 endef
 
 define Package/$(PKG_NAME)/install
@@ -38,6 +38,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/opkg-trans $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgupdate $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/supervisor/updater.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/updater
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/entry.lua $(1)/etc/updater
@@ -122,13 +123,12 @@ endef
 
 define Package/$(PKG_NAME)-supervisor
 	TITLE:=Next generation updater supervisor
-	DEPENDS:=+updater-ng-py2-supervisor
+	DEPENDS:=+updater-ng-py2-supervisor +updater-ng +vixie-cron
 endef
 
 define Package/$(PKG_NAME)-supervisor/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/supervisor/updater-supervisor $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/supervisor/updater.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/supervisor/cron $(1)/etc/cron.d/updater
@@ -226,6 +226,24 @@ define Package/updater/install
 	true
 endef
 
+# We are migrating away from Nuci for Foris. But during this migration there is
+# a problem where updater update it self and then requests approval. But because
+# we dropped some files nuci expects and Foris is not yet updated there is no way
+# user can easily approve update. Solution is to have package providing those
+# missing file and install it temporally just to fix that problem.
+define Package/$(PKG_NAME)-migrate-helper
+	TITLE:=Package for smoot migration of updater-ng
+endef
+
+define Package/$(PKG_NAME)-migrate-helper/install
+	$(INSTALL_DIR) $(1)/usr/bin	
+	echo '#!/bin/sh' > $(1)/usr/bin/updater-unstuck.sh
+	chmod +x $(1)/usr/bin/updater-unstuck.sh
+	echo '#!/bin/sh' > $(1)/usr/bin/updater-wipe.sh
+	chmod +x $(1)/usr/bin/updater-wipe.sh
+endef
+
+
 PKG_INSTALL_DIR_ORIG:="$(PKG_INSTALL_DIR)"
 PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py2"
 $(eval $(call PyPackage,updater-ng-py2-supervisor))
@@ -241,4 +259,5 @@ $(eval $(call BuildPackage,updater-ng-localrepo))
 $(eval $(call BuildPackage,updater-ng-opkg))
 $(eval $(call BuildPackage,opkg-trans))
 $(eval $(call BuildPackage,updater))
+$(eval $(call BuildPackage,updater-ng-migration-helper))
 $(eval $(call HostBuild))
