@@ -231,11 +231,11 @@ endef
 # we dropped some files nuci expects and Foris is not yet updated there is no way
 # user can easily approve update. Solution is to have package providing those
 # missing file and install it temporally just to fix that problem.
-define Package/$(PKG_NAME)-migrate-helper
+define Package/$(PKG_NAME)-migration-helper
 	TITLE:=Package for smoot migration of updater-ng
 endef
 
-define Package/$(PKG_NAME)-migrate-helper/install
+define Package/$(PKG_NAME)-migration-helper/install
 	$(INSTALL_DIR) $(1)/usr/bin	
 	echo '#!/bin/sh' > $(1)/usr/bin/updater-unstuck.sh
 	chmod +x $(1)/usr/bin/updater-unstuck.sh
