@@ -1,0 +1,12 @@
+diff --git a/src/templates/pakon/_results.tpl b/src/templates/pakon/_results.tpl
+index 04bd328..12e10b7 100644
+--- a/src/templates/pakon/_results.tpl
++++ b/src/templates/pakon/_results.tpl
+@@ -1,6 +1,6 @@
+ <div id="pakon-results">
+ %if results:
+-<table id="pakon-results-table">
++<table id="pakon-results-table" class="sortable">
+     <tbody>
+   %for record in results:
+     <tr>
