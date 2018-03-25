@@ -31,7 +31,7 @@
 	},
 	"pakon": {
 		"title": "Pakon",
-		"description": "Software for in depth monitoring of your traffic.",
+		"description": "Software for in depth monitoring of your traffic (EXPERIMENTAL).",
 		"visible": true
 	},
 	"nas": {
@@ -56,7 +56,7 @@
 	},
 	"netmetr": {
 		"title": "Internet connection speed measurement",
-		"description": "Actively measures speed of Internet connection using netmetr.cz service (EXPERIMENTAL).",
+		"description": "Actively measures speed of Internet connection using netmetr.cz service.",
 		"visible": true
 	},
 	"openvpn": {
@@ -71,7 +71,7 @@
 	},
 	"ssbackup": {
 		"title": "Cloud Backups",
-		"description": "Service for storing configuration backups on remote servers.",
+		"description": "Service for storing configuration backups on remote servers (EXPERIMENTAL).",
 		"visible": true
 	},
 	"snd": {
