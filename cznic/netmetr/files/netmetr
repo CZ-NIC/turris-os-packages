@@ -750,7 +750,7 @@ def prepare_parser():
     return parser
 
 
-if __name__ == "__main__":
+def main():
     # When autostarted - check whether autostart is enabled and
     # if it is right time to run the test.
     # In uci config, we expect hours of a day separated by commas (,)
@@ -761,19 +761,22 @@ if __name__ == "__main__":
 
     args = prepare_parser().parse_args()
 
+    global DEBUG
+    global COLORED_OUTPUT
+
     DEBUG = args.debug
     COLORED_OUTPUT = not args.no_color
 
     if args.autostart:
         if uci_get("autostart_enabled") != '1':
-            exit()
+            return
         hours = uci_get("hours_to_run")
         if not hours:
-            exit()
+            return
         hours = hours.split()
         hours = map(int, hours)
         if datetime.datetime.now().hour not in hours:
-            exit()
+            return
 
     # Wait appropriate amount of time
     time.sleep(randint(0, args.rwait[0]))
@@ -838,3 +841,7 @@ if __name__ == "__main__":
     netmetr.load_sync_code()
     if (netmetr.sync_code):
         print_info("Your Sync code is: " + netmetr.sync_code)
+
+
+if __name__ == "__main__":
+    main()
