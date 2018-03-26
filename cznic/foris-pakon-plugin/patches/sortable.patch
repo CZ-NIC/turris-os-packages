@@ -1,9 +1,0 @@
-Index: foris-pakon-plugin/src/templates/pakon/_results.tpl
-===================================================================
---- foris-pakon-plugin.orig/src/templates/pakon/_results.tpl
-+++ foris-pakon-plugin/src/templates/pakon/_results.tpl
-@@ -1,3 +1,3 @@
- <div id="pakon-results">
--    <table id="pakon-results-table"></table>
-+    <table id="pakon-results-table" class="sortable"></table>
- </div>
