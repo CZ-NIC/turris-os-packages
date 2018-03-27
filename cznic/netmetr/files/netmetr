@@ -705,6 +705,28 @@ class Netmetr:
                 if value_name:
                     self.lte[value_name] = value_pair[1].split()[0]
 
+        console.write("AT!LTEINFO?\r")
+        while True:
+            line = console.readline()
+            if len(line) < 3:
+                continue
+            split_line = line.split()
+            if len(line) == 4:  # this is "OK\r\n"
+                if print_debug("LTE results:"):
+                    print(json.dumps(self.lte, indent=2))
+                break
+            if split_line[0] == "Serving:":
+                line = console.readline()
+                split_line = line.split()
+                self.lte["MCC"] = split_line[1]
+                self.lte["MNC"] = split_line[2]
+                self.lte["LAC"] = split_line[3]
+                self.lte["Cell Id"] = int(split_line[4], 16)
+                self.lte["PCI"] = split_line[9]
+            if split_line[0] == "InterFreq:" and split_line[1] == "EARFCN":
+                line = console.readline()
+                self.lte["DL EARFCN"] = line.split()[0]
+
 
 def print_debug(msg):
     if DEBUG:
