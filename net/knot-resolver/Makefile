@@ -10,12 +10,12 @@ PKG_RELRO_FULL:=0
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
-PKG_VERSION:=2.1.1
+PKG_VERSION:=2.2.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-resolver
-PKG_MD5SUM:=0b9caee03d7cd30e1dc8fa0ce5fafade31fc1785314986bbf77cad446522a1b3
+PKG_MD5SUM:=7bb7f0cd8bbb1d99706d56ed119bdffce094628479438896f3740644efe614fa
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
