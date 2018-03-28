@@ -1,0 +1,29 @@
+#!/bin/sh
+
+uci -q batch <<-EOF >/dev/null
+    delete ucitrack.@radius[-1]
+    add ucitrack radius
+    set ucitrack.@radius[-1].exec="/usr/lib/radius.sh rebuild"
+    commit ucitrack
+EOF
+
+cat <<-EOF >/etc/freeradius2/sites/default
+authorize {
+	eap {
+		ok = return
+	}
+	files
+}
+authenticate {
+	Auth-Type MS-CHAP {
+		mschap
+	}
+	eap
+}
+accounting {
+}
+session {
+}
+EOF
+
+/usr/lib/radius.sh rebuild

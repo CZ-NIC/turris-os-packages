@@ -1,0 +1,9 @@
+
+config client
+	option name 'localhost'
+	option ipaddr '127.0.0.1'
+	option secret 'testing123'
+
+config user
+	option username 'example'
+	option password '12345678'
