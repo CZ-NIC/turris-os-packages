@@ -248,8 +248,8 @@ class DHCPv4:
             self._del_lease(hostname, ipv4)
             log("DHCP delete hostname [%s,%s,%s]" % (op, hostname, ipv4), LOG_INFO)
         elif op == "old":
-            self._del_lease(hostname, ipv4)
-            log("DHCP remove old hostname [%s,%s,%s]" % (op, hostname, ipv4), LOG_INFO)
+            self._add_lease(hostname, ipv4)
+            log("DHCP update hostname [%s,%s,%s]" % (op, hostname, ipv4), LOG_INFO)
         else:
             log("DHCP unknown update operation", LOG_WARNING)
 
