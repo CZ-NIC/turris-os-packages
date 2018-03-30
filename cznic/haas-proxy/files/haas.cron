@@ -1,4 +1,4 @@
 MAILTO=""
 
-30	4	*	*	*	root	/usr/share/haas/register.sh
+30	*/2	*	*	*	root	/usr/share/haas/register.sh
 */5	*	*	*	*	root	/etc/init.d/haas-proxy enabled && /etc/init.d/haas-proxy check_fw

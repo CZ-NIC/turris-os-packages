@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=97.6
-PKG_RELEASE:=1
+PKG_VERSION:=97.8
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
@@ -30,8 +30,8 @@ define Package/foris-common
 	DEPENDS:=\
 		+python-light +python-bottle +python-bottle-i18n \
 		+python-flup +python-ncclient +python-ubus +nuci +lighttpd +lighttpd-mod-fastcgi \
-		+lighttpd-mod-redirect +lighttpd-mod-setenv +user_notify +foris-ws +l10n_supported \
-		+sqm-scripts +foris-client +turris-maintain
+		+lighttpd-mod-redirect +lighttpd-mod-setenv +foris-ws \
+		+foris-client
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 

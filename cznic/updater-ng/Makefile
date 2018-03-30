@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=60.0.8
-PKG_RELEASE:=1
+PKG_VERSION:=60.2.2
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -23,10 +23,12 @@ PKG_BUILD_DEPENDS+=busybox-static
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
+$(call include_mk, python-package.mk)
+$(call include_mk, python3-package.mk)
 
 define Package/$(PKG_NAME)
 	TITLE:=The next generation updater
-	DEPENDS:=+liblua +libevent2 +usign +libcurl +vixie-cron +ca-certificates
+	DEPENDS:=+liblua +libevent2 +usign +libcurl +ca-certificates
 endef
 
 define Package/$(PKG_NAME)/install
@@ -36,9 +38,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/opkg-trans $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgupdate $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/updater.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/updater-unstuck.sh $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/updater-wipe.sh $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/supervisor/updater.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/updater
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/entry.lua $(1)/etc/updater
@@ -63,9 +63,6 @@ endif
 
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/init $(1)/etc/init.d/updater
-
-	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/cron $(1)/etc/cron.d/updater
 endef
 
 define Package/$(PKG_NAME)/conffiles
@@ -106,6 +103,8 @@ endef
 
 define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION) BUSYBOX_EXEC=$(STAGING_DIR)/bin/busybox-static
+	$(call Build/Compile/PyMod,src/supervisor,install --prefix="/usr" --root=$(PKG_INSTALL_DIR)/py2)
+	$(call Build/Compile/Py3Mod,src/supervisor,install --prefix="/usr" --root=$(PKG_INSTALL_DIR)/py3)
 endef
 
 define Host/Compile
@@ -119,6 +118,37 @@ define Host/Install
 	$(INSTALL_DIR) $(STAGING_DIR_HOST)/usr/bin
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/opkg-trans $(STAGING_DIR_HOST)/usr/bin/
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/pkgupdate $(STAGING_DIR_HOST)/usr/bin/
+endef
+
+
+define Package/$(PKG_NAME)-supervisor
+	TITLE:=Next generation updater supervisor
+	DEPENDS:=+updater-ng-py2-supervisor +updater-ng +vixie-cron
+endef
+
+define Package/$(PKG_NAME)-supervisor/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/supervisor/updater-supervisor $(1)/usr/bin/
+
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/supervisor/cron $(1)/etc/cron.d/updater
+
+	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/supervisor/hook_postupdate $(1)/etc/updater/hook_postupdate/99_approvals_cleanup
+endef
+
+
+define Package/$(PKG_NAME)-py2-supervisor
+	TITLE:=Next generation updater supervisor Python 2 library
+	DEPENDS:=+updater-ng +python-light +python-uci +userlists +l10n_supported
+	EXTRA_DEPENDS:=userlists (>=11)
+endef
+
+
+define Package/$(PKG_NAME)-py3-supervisor
+	TITLE:=Next generation updater supervisor Python3 library
+	DEPENDS:=+updater-ng +python3-light python3-uci +userlists +l10n_supported
+	EXTRA_DEPENDS:=userlists (>=11)
 endef
 
 
@@ -196,9 +226,38 @@ define Package/updater/install
 	true
 endef
 
+# We are migrating away from Nuci for Foris. But during this migration there is
+# a problem where updater update it self and then requests approval. But because
+# we dropped some files nuci expects and Foris is not yet updated there is no way
+# user can easily approve update. Solution is to have package providing those
+# missing file and install it temporally just to fix that problem.
+define Package/$(PKG_NAME)-migration-helper
+	TITLE:=Package for smoot migration of updater-ng
+endef
+
+define Package/$(PKG_NAME)-migration-helper/install
+	$(INSTALL_DIR) $(1)/usr/bin	
+	echo '#!/bin/sh' > $(1)/usr/bin/updater-unstuck.sh
+	chmod +x $(1)/usr/bin/updater-unstuck.sh
+	echo '#!/bin/sh' > $(1)/usr/bin/updater-wipe.sh
+	chmod +x $(1)/usr/bin/updater-wipe.sh
+endef
+
+
+PKG_INSTALL_DIR_ORIG:="$(PKG_INSTALL_DIR)"
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py2"
+$(eval $(call PyPackage,updater-ng-py2-supervisor))
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py3"
+$(eval $(call Py3Package,updater-ng-py3-supervisor))
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)"
+
 $(eval $(call BuildPackage,updater-ng))
+$(eval $(call BuildPackage,updater-ng-supervisor))
+$(eval $(call BuildPackage,updater-ng-py2-supervisor))
+$(eval $(call BuildPackage,updater-ng-py3-supervisor))
 $(eval $(call BuildPackage,updater-ng-localrepo))
 $(eval $(call BuildPackage,updater-ng-opkg))
 $(eval $(call BuildPackage,opkg-trans))
 $(eval $(call BuildPackage,updater))
+$(eval $(call BuildPackage,updater-ng-migration-helper))
 $(eval $(call HostBuild))

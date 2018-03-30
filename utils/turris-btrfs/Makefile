@@ -18,6 +18,19 @@ PKG_LICENSE:=GPL-2.0
 
 include $(INCLUDE_DIR)/package.mk
 
+define Package/turris-btrfs-migrate
+  SECTION:=utils
+  CATEGORY:=Utilities
+  SUBMENU:=Filesystem
+  DEPENDS:=+turris-btrfs
+  TITLE:=Btrfs migration tool for old Turris routers
+endef
+
+define Package/turris-btrfs-migrate/description
+ Empty wrapper to provide easy migration.
+endef
+
+
 define Package/turris-btrfs
   SECTION:=utils
   CATEGORY:=Utilities
@@ -36,6 +49,10 @@ define Build/Compile
 	true
 endef
 
+define Package/turris-btrfs-migrate/install
+	true
+endef
+
 define Package/turris-btrfs/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/btrfs_migrate.sh $(1)/usr/bin/btrfs_migrate
@@ -45,8 +62,17 @@ define Package/turris-btrfs/install
 	$(INSTALL_BIN) ./files/kernel-install $(1)/etc/updater/hook_postupdate/10_kernel-install
 endef
 
+define Package/turris-btrfs-migrate/postinst
+[ -n "$$IPKG_INSTROOT" ] || {
+	sed -i 's|Install("turris-btrfs-migrate")|Install("turris-btrfs")|' /etc/updater/conf.d/opkg-auto.lua
+}
+endef
+
 define Package/turris-btrfs/prerm
+[ -n "$$IPKG_INSTROOT" ] || {
 	[ -z "`cat /proc/mounts | grep '^/dev/mmcblk0p2 / btrfs'`" ] || create_notification -s error "Odinstalovali jste podporu btrfs, ale stále ji používáte, váš router se pravděpodobně rozbije" "You deinstalled btrfs support but your router is still using it, so it will likelly break."
+}
 endef
 
 $(eval $(call BuildPackage,turris-btrfs))
+$(eval $(call BuildPackage,turris-btrfs-migrate))

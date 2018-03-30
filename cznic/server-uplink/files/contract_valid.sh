@@ -29,6 +29,12 @@ CONTRACT_URL='https://project.turris.cz/api/contract-valid.txt'
 CODE=$(cat /usr/share/server-uplink/registration_code)
 RESULT=$(curl -s -S -L -G --data-urlencode "registration_code=$CODE" -H "Accept: plain/text" --cacert "$CA_FILE" --cert-status -m "$TIMEOUT" "$CONTRACT_URL" | sed -ne 's/^result: *\(..*\)/\1/p')
 
+if [ -z "$RESULT" ] ; then
+	# failed to download
+	[ -t 2 ] && echo "Failed to download contract status" >&2
+	logger -t server_uplink -p error "Failed to download contract status"
+	exit 1
+fi
 
 # test whether the code is the same
 if [ -f "$OUTPUT_FILE" ] ; then

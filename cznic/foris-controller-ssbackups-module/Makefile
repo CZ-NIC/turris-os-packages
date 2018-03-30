@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-ssbackups-module
-PKG_VERSION:=0.2
+PKG_VERSION:=0.2.1
 PKG_RELEASE:=3
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git

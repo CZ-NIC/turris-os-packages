@@ -103,7 +103,7 @@ ubiboot max6370_wdt_off; setenv bootargs \$bootargsubi; ubi part rootfs; ubifsmo
 uboot u-boot.bin
 backbootcmd setexpr.b reflash *0xFFA0001F;if test \$reflash -ge \$reflash_timeout; then echo BOOT NOR; run norboot; else echo BOOT NAND; run ubiboot; fi
 bootcmd setexpr.b reflash *0xFFA0001F;if test \$reflash -ge \$reflash_timeout; then echo BOOT NOR; run norboot; else echo BOOT NAND; mmc rescan; if fatload mmc 0:1 \$nandbootaddr zImage; then run mmcboot; else run ubiboot; fi; fi
-norboot max6370_wdt_off; setenv bootargs \$bootargsnor; bootm 0xef020000 - 0xef000000
+norboot max6370_wdt_off; env default -a; saveenv; setenv bootargs \$bootargsnor; bootm 0xef020000 - 0xef000000
 bootargsmmc root=/dev/mmcblk0p2 rootwait rw rootfstype=btrfs rootflags=subvol=@,commit=5 console=ttyS0,115200
 mmcboot max6370_wdt_off; fatload mmc 0:1 \$nandfdtaddr fdt; setenv bootargs \$bootargsmmc; bootm \$nandbootaddr - \$nandfdtaddr
 EOF
