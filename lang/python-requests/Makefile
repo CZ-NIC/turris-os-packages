@@ -19,7 +19,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/requests-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=python-setuptools
 
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 
 define Package/python-requests
   SUBMENU:=Python

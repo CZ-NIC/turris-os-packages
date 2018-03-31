@@ -13,7 +13,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/cachetools-p2-$(PKG_VERSION)
 PKG_UNPACK:=tar -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 
 define Package/$(PKG_NAME)
   SUBMENU:=Python

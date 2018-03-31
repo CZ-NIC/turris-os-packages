@@ -23,8 +23,8 @@ PKG_BUILD_DEPENDS+=busybox-static
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
-$(call include_mk, python-package.mk)
-$(call include_mk, python3-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=The next generation updater
