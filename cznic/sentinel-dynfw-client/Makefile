@@ -11,9 +11,9 @@ PKG_NAME:=sentinel-dynfw-client
 PKG_VERSION:=1
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=git@gitlab.labs.nic.cz:turris/sentinel/dynfw.git
+PKG_SOURCE_URL:=git@gitlab.labs.nic.cz:turris/sentinel/dynfw-client.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=acecf694d1e922c6c9fc599cb0313a409a167e27
+PKG_SOURCE_VERSION:=e9a91e3148393ba44055af50ae4a7656aaf33194
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -49,7 +49,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) files/sentinel-dynfw-client.init $(1)/etc/init.d/sentinel-dynfw-client
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/dynfw_client.py $(1)/usr/bin/sentinel-dynfw-client
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/client.py $(1)/usr/bin/sentinel-dynfw-client
 endef
 
 define Package/sentinel-dynfw-client/postinst
