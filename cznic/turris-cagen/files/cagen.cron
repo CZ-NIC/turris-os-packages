@@ -1,0 +1,2 @@
+MAILTO=""
+1	1	*	*	*	root	/usr/bin/turris-cagen refresh

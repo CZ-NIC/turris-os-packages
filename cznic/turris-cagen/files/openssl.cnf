@@ -1,0 +1,147 @@
+HOME			= .
+RANDFILE		= $ENV::HOME/.rnd
+oid_section		= new_oids
+
+[ new_oids ]
+tsa_policy1 = 1.2.3.4.1
+tsa_policy2 = 1.2.3.4.5.6
+tsa_policy3 = 1.2.3.4.5.7
+
+[ ca ]
+default_ca	= CA_default
+
+[ CA_default ]
+dir		= .
+certs		= $dir
+crl_dir		= $dir
+database	= $dir/index.txt
+unique_subject	= no
+new_certs_dir	= $dir
+certificate	= $dir/ca.crt
+serial		= $dir/serial
+crlnumber	= $dir/crlnumber
+crl		= $dir/crl.pem
+private_key	= $dir/ca.key
+RANDFILE	= $dir/.rand
+
+x509_extensions	= usr_server		# The extentions to add to the cert
+
+# Comment out the following two lines for the "traditional"
+# (and highly broken) format.
+#name_opt 	= ca_default		# Subject Name options
+#cert_opt 	= ca_default		# Certificate field options
+
+# Extension copying option: use with caution.
+# copy_extensions = copy
+
+# Extensions to add to a CRL. Note: Netscape communicator chokes on V2 CRLs
+# so this is commented out by default to leave a V1 CRL.
+# crlnumber must also be commented out to leave a V1 CRL.
+# crl_extensions	= crl_ext
+
+default_days	= 3650
+default_crl_days= 30
+default_md	= default
+preserve	= no
+
+policy		= policy_match
+
+[ policy_match ]
+countryName		= optional
+stateOrProvinceName	= optional
+organizationName	= optional
+organizationalUnitName	= optional
+commonName		= supplied
+emailAddress		= optional
+
+[ req ]
+default_bits		= 4096
+default_keyfile		= privkey.pem
+distinguished_name	= req_distinguished_name
+attributes		= req_attributes
+x509_extensions	= v3_ca	# The extentions to add to the self signed cert
+
+string_mask = utf8only
+
+# req_extensions = v3_req # The extensions to add to a certificate request
+
+[ req_distinguished_name ]
+
+commonName			= Common Name (e.g. server FQDN or YOUR name)
+commonName_max			= 64
+
+
+# SET-ex3			= SET extension number 3
+
+[ req_attributes ]
+
+[ usr_server ]
+
+basicConstraints=CA:FALSE
+
+nsCertType			= server
+extendedKeyUsage = serverAuth
+keyUsage = digitalSignature, keyEncipherment
+
+[ usr_client ]
+
+basicConstraints=CA:FALSE
+
+nsCertType			= client
+
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+
+issuerAltName=issuer:copy
+
+#nsCaRevocationUrl		= http://www.domain.dom/ca-crl.pem
+#nsBaseUrl
+#nsRevocationUrl
+#nsRenewalUrl
+#nsCaPolicyUrl
+#nsSslServerName
+
+[ v3_req ]
+
+# Extensions to add to a certificate request
+
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+
+[ v3_ca ]
+
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid:always,issuer
+
+# This is what PKIX recommends but some broken software chokes on critical
+# extensions.
+basicConstraints = critical,CA:true
+# So we do this instead.
+#basicConstraints = CA:true
+
+# Key usage: this is typical for a CA certificate. However since it will
+# prevent it being used as an test self-signed certificate it is best
+# left out by default.
+keyUsage = cRLSign, keyCertSign
+
+# Some might want this also
+nsCertType = sslCA
+
+# Include email address in subject alt name: another PKIX recommendation
+subjectAltName=email:copy
+# Copy issuer details
+issuerAltName=issuer:copy
+
+# DER hex encoding of an extension: beware experts only!
+# obj=DER:02:03
+# Where 'obj' is a standard or added object
+# You can even override a supported extension:
+# basicConstraints= critical, DER:30:03:01:01:FF
+
+[ crl_ext ]
+
+# CRL extensions.
+# Only issuerAltName and authorityKeyIdentifier make any sense in a CRL.
+
+# issuerAltName=issuer:copy
+authorityKeyIdentifier=keyid:always
