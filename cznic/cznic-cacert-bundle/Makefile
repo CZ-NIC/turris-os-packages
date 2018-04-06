@@ -25,9 +25,6 @@ TURRIS_DEPS:=+cert-backup
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 
-cd "$${IPKG_INSTROOT}"/etc/ssl/certs
-c_rehash .
-
 [ -n "$$IPKG_INSTROOT" ] || {
 	# TODO: If ever anything gets removed from this list, use -r, not delete it manually.
 	/usr/sbin/cert-backup \
@@ -64,12 +61,6 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/get-crl.cron $(1)/etc/cron.d/get-api
-endef
-
-define Package/$(PKG_NAME)/postrm
-#!/bin/sh
-
-( cd /etc/ssl/certs && c_rehash . ) || true
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
