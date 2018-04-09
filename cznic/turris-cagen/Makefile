@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-cagen
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -38,6 +38,7 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) files/cagen.sh $(1)/usr/bin/turris-cagen
+	$(INSTALL_BIN) files/cagen-status.sh $(1)/usr/bin/turris-cagen-status
 endef
 
 
