@@ -13,8 +13,19 @@ QUEUE_NUM=10
 
 build_iptables() {
 	# prepare iptables chain. The chain is not referenced yet.
-	echo "*filter" > $IPTABLES_RULES
-	echo "*filter" > $IP6TABLES_RULES
+	echo "*raw" > $IPTABLES_RULES
+	echo "*raw" > $IP6TABLES_RULES
+	echo ":suricata-pakon - [0:0]" >> $IPTABLES_RULES
+	echo ":suricata-pakon - [0:0]" >> $IP6TABLES_RULES
+	echo "-I suricata-pakon -p icmpv6 -j RETURN" >> $IP6TABLES_RULES #workaround: ignore ICMPv6
+	echo "-A suricata-pakon -m mark --mark 2/2 -j RETURN" >> $IPTABLES_RULES
+	echo "-A suricata-pakon -m mark --mark 2/2 -j RETURN" >> $IP6TABLES_RULES
+	echo "-A suricata-pakon -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IPTABLES_RULES
+	echo "-A suricata-pakon -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IP6TABLES_RULES
+	echo "COMMIT" >> $IPTABLES_RULES
+	echo "COMMIT" >> $IP6TABLES_RULES
+	echo "*filter" >> $IPTABLES_RULES
+	echo "*filter" >> $IP6TABLES_RULES
 	echo ":suricata-pakon - [0:0]" >> $IPTABLES_RULES
 	echo ":suricata-pakon - [0:0]" >> $IP6TABLES_RULES
 	IFACES=$(uci -q get pakon.monitor.interface || echo "br-lan br-guest_turris")
@@ -54,6 +65,10 @@ status() {
 }
 
 iptables_activate() {
+	iptables -t raw -I PREROUTING ! -p tcp -j suricata-pakon
+	ip6tables -t raw -I PREROUTING ! -p tcp -j suricata-pakon
+	iptables -t raw -I OUTPUT ! -p tcp -j suricata-pakon
+	ip6tables -t raw -I OUTPUT ! -p tcp -j suricata-pakon
 	iptables -I forwarding_rule -j suricata-pakon
 	ip6tables -I forwarding_rule -j suricata-pakon
 	iptables -I input_rule -j suricata-pakon
@@ -63,6 +78,14 @@ iptables_activate() {
 }
 
 iptables_deactivate() {
+	iptables -t raw -F suricata-pakon
+	ip6tables -t raw -F suricata-pakon
+	iptables -t raw -D PREROUTING ! -p tcp -j suricata-pakon
+	ip6tables -t raw -D PREROUTING ! -p tcp -j suricata-pakon
+	iptables -t raw -D OUTPUT ! -p tcp -j suricata-pakon
+	ip6tables -t raw -D OUTPUT ! -p tcp -j suricata-pakon
+	iptables -t raw -X suricata-pakon
+	ip6tables -t raw -X suricata-pakon
 	iptables -F suricata-pakon
 	ip6tables -F suricata-pakon
 	iptables -D forwarding_rule -j suricata-pakon

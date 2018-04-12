@@ -10,8 +10,19 @@ iptables_insert_once() {
 	$COMMAND -C $ARGS >/dev/null 2>&1 || $COMMAND -I $ARGS >/dev/null 2>&1
 }
 
+iptables_raw_insert_once() {
+	COMMAND="$1"
+	ARGS="$2"
+	shift 2
+	$COMMAND -t raw -C $ARGS >/dev/null 2>&1 || $COMMAND -t raw -I $ARGS >/dev/null 2>&1
+}
+
 check_references() {
 	#verify that all the references to suricata chain are on the right places
+	iptables_raw_insert_once iptables "PREROUTING ! -p tcp -j suricata-pakon"
+	iptables_raw_insert_once ip6tables "PREROUTING ! -p tcp -j suricata-pakon"
+	iptables_raw_insert_once iptables "OUTPUT ! -p tcp -j suricata-pakon"
+	iptables_raw_insert_once ip6tables "OUTPUT ! -p tcp -j suricata-pakon"
 	iptables_insert_once iptables "forwarding_rule -j suricata-pakon"
 	iptables_insert_once ip6tables "forwarding_rule -j suricata-pakon"
 	iptables_insert_once iptables "input_rule -j suricata-pakon"
