@@ -24,7 +24,7 @@ include $(INCLUDE_DIR)/nls.mk
 define Package/w_scan
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+BUILD_NLS:libiconv-full +librt
+  DEPENDS:=+libiconv-full +librt
   TITLE:=Performd frequency scans for DVB and ATSC transmissions
   URL:=https://www.linuxtv.org/wiki/index.php/W_scan
 endef
@@ -43,9 +43,9 @@ endef
 CONFIGURE_ARGS+= \
 	--with-libiconv="$(ICONV_PREFIX)"
 
-ifeq ($(CONFIG_BUILD_NLS),y)
-TARGET_LDFLAGS+="-liconv"
-endif
+TARGET_CFLAGS+="-I$(STAGING_DIR)/usr/lib/libintl-full/include"
+TARGET_CPPFLAGS+="-I$(STAGING_DIR)/usr/lib/libintl-full/include"
+TARGET_LDFLAGS+="-L$(STAGING_DIR)/usr/lib/libintl-full/lib -liconv"
 
 define Build/Configure
 	$(call Build/Configure/Default)
