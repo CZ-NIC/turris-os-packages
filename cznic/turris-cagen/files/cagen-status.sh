@@ -33,10 +33,13 @@ echo "## Certs:"
 if [ -f notes.txt ]; then
 	while read line; do
 		id=$(echo $line | sed 's/^\([0-9A-Za-z][0-9A-Za-z]\).*$/\1/')
-		if grep -q "^R\t[0-9]*Z\t[0-9]*Z\t$id" index.txt ; then
+		name=$(echo $line | sed 's/^[0-9A-Za-z][0-9A-Za-z] [^ ]* \([^ ]*\)$/\1/')
+		if grep -q "^R\t[0-9]*Z\t[0-9]*Z\t${id}.*CN=${name}.*" index.txt ; then
 			line="$line revoked"
-		else
+		elif grep -q "^V\t[0-9]*Z\t\t$id.*CN=${name}.*" index.txt ; then
 			line="$line valid"
+		else
+			line="$line generating"
 		fi
 		echo $line
 	done < notes.txt
