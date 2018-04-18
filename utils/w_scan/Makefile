@@ -43,7 +43,14 @@ endef
 CONFIGURE_ARGS+= \
 	--with-libiconv="$(ICONV_PREFIX)"
 
-TARGET_LDFLAGS+="-liconv"
+TARGET_CFLAGS+="-I$(STAGING_DIR)/usr/lib/libintl-full/include"
+TARGET_CPPFLAGS+="-I$(STAGING_DIR)/usr/lib/libintl-full/include"
+TARGET_LDFLAGS+="-L$(STAGING_DIR)/usr/lib/libintl-full/lib -liconv"
+
+define Build/Configure
+	$(call Build/Configure/Default)
+	$(call Build/Compile/Default, version)
+endef
 
 define Package/w_scan/install
 	$(INSTALL_DIR) $(1)/usr/bin

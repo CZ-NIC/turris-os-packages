@@ -1,0 +1,13 @@
+Index: w_scan-20170107/descriptors.h
+===================================================================
+--- w_scan-20170107.orig/descriptors.h
++++ w_scan-20170107/descriptors.h
+@@ -28,6 +28,8 @@
+ #ifndef __DESCRIPTORS_H__
+ #define __DESCRIPTORS_H__
+ 
++#include <time.h>
++
+ #include "extended_frontend.h"
+ 
+ /******************************************************************************

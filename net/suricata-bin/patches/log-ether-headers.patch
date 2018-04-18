@@ -2,11 +2,12 @@ diff --git a/src/flow.c b/src/flow.c
 index c371b54e..20bb4029 100644
 --- a/src/flow.c
 +++ b/src/flow.c
-@@ -309,6 +309,13 @@ void FlowHandlePacketUpdate(Flow *f, Packet *p)
+@@ -309,6 +309,14 @@ void FlowHandlePacketUpdate(Flow *f, Packet *p)
              f->flags &= ~FLOW_PROTO_DETECT_TS_DONE;
              p->flags |= PKT_PROTO_DETECT_TS_DONE;
          }
 +#ifdef NFQ
++    if (f->if_src==0) f->if_src=p->nfq_v.ifi;
 +    if (!f->hw_address_src_known && p->nfq_v.hw_address_known){
 +        SCLogDebug("setting src MAC address %02x:%02x:%02x:%02x:%02x:%02x", p->nfq_v.hw_address[0], p->nfq_v.hw_address[1], p->nfq_v.hw_address[2], p->nfq_v.hw_address[3], p->nfq_v.hw_address[4], p->nfq_v.hw_address[5]);
 +        f->hw_address_src_known = 1;
@@ -16,11 +17,12 @@ index c371b54e..20bb4029 100644
      } else {
          f->tosrcpktcnt++;
          f->tosrcbytecnt += GET_PKT_LEN(p);
-@@ -324,6 +331,13 @@ void FlowHandlePacketUpdate(Flow *f, Packet *p)
+@@ -324,6 +331,14 @@ void FlowHandlePacketUpdate(Flow *f, Packet *p)
              f->flags &= ~FLOW_PROTO_DETECT_TC_DONE;
              p->flags |= PKT_PROTO_DETECT_TC_DONE;
          }
 +#ifdef NFQ
++    if (f->if_dst==0) f->if_dst=p->nfq_v.ifo;
 +    if (!f->hw_address_dst_known && p->nfq_v.hw_address_known){
 +        SCLogDebug("setting dst MAC address %02x:%02x:%02x:%02x:%02x:%02x", p->nfq_v.hw_address[0], p->nfq_v.hw_address[1], p->nfq_v.hw_address[2], p->nfq_v.hw_address[3], p->nfq_v.hw_address[4], p->nfq_v.hw_address[5]);
 +        f->hw_address_dst_known = 1;
@@ -34,7 +36,7 @@ diff --git a/src/flow.h b/src/flow.h
 index 93ca7afc..fe696676 100644
 --- a/src/flow.h
 +++ b/src/flow.h
-@@ -435,6 +435,12 @@ typedef struct Flow_
+@@ -435,6 +435,14 @@ typedef struct Flow_
      uint32_t tosrcpktcnt;
      uint64_t todstbytecnt;
      uint64_t tosrcbytecnt;
@@ -43,6 +45,8 @@ index 93ca7afc..fe696676 100644
 +    uint8_t hw_address_src_known;
 +    uint8_t hw_address_dst[6];
 +    uint8_t hw_address_dst_known;
++    uint32_t if_src;
++    uint32_t if_dst;
 +#endif
  } Flow;
  

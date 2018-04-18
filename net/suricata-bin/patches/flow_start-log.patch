@@ -15,7 +15,7 @@ new file mode 100644
 index 00000000..704b3774
 --- /dev/null
 +++ b/src/output-json-flowstart.c
-@@ -0,0 +1,302 @@
+@@ -0,0 +1,300 @@
 +/* Copyright (C) 2007-2017 Open Information Security Foundation
 + *
 + * You can copy, redistribute or modify this Program under the terms of
@@ -105,19 +105,17 @@ index 00000000..704b3774
 +    if (unlikely(js == NULL))
 +        return TM_ECODE_OK;
 +#ifdef NFQ
-+    uint32_t ifi=(PKT_IS_TOSERVER(p))?p->nfq_v.ifi:p->nfq_v.ifo;
-+    uint32_t ifo=(PKT_IS_TOSERVER(p))?p->nfq_v.ifo:p->nfq_v.ifi;
-+    if (ifi!=0){
-+	    char ifi_name[IF_NAMESIZE];
-+	    if (if_indextoname(ifi, ifi_name)){
-+		    json_object_set_new(js, "src_iface", json_string(ifi_name));
-+	    }
++    if (p->flow->if_src){
++            char ifi_name[IF_NAMESIZE];
++            if (if_indextoname(p->flow->if_src, ifi_name)){
++                    json_object_set_new(js, "src_iface", json_string(ifi_name));
++            }
 +    }
-+    if (ifo!=0){
-+	    char ifo_name[IF_NAMESIZE];
-+	    if (if_indextoname(ifo, ifo_name)){
-+		    json_object_set_new(js, "dst_iface", json_string(ifo_name));
-+	    }
++    if (p->flow->if_dst){
++            char ifo_name[IF_NAMESIZE];
++            if (if_indextoname(p->flow->if_dst, ifo_name)){
++                    json_object_set_new(js, "dst_iface", json_string(ifo_name));
++            }
 +    }
 +#endif
 +    json_t * hjs = json_object();

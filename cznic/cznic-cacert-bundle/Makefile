@@ -25,13 +25,16 @@ TURRIS_DEPS:=+cert-backup
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 
-cd "$${IPKG_INSTROOT}"/etc/ssl/certs
-c_rehash .
-
 [ -n "$$IPKG_INSTROOT" ] || {
-# TODO: If ever anything gets removed from this list, use -r, not delete it manually.
-/usr/sbin/cert-backup /etc/ssl/ucollect-server.pem /etc/ssl/startcom.pem /etc/ssl/api.turris.pem /etc/ssl/turris.pem /usr/bin/get-api-crl
-get-api-crl
+	# TODO: If ever anything gets removed from this list, use -r, not delete it manually.
+	/usr/sbin/cert-backup \
+		/etc/ssl/www_turris_cz_ca.pem \
+		/etc/ssl/turris.pem \
+		/usr/bin/get-api-crl \
+		-r /etc/ssl/ucollect-server.pem \
+		-r /etc/ssl/startcom.pem \
+		-r /etc/ssl/api.turris.pem
+	get-api-crl
 }
 endef
 
@@ -49,29 +52,15 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/ssl/
 	# TODO: If anything is modified here, it needs to be updated in the postinst too
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/api.turris.pem $(1)/etc/ssl/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/emergency-ca/ca.crt $(1)/etc/ssl/turris.pem
-	cat $(PKG_BUILD_DIR)/cacerts/startcom.pem >>$(1)/etc/ssl/turris.pem
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/letsencrypt.pem $(1)/etc/ssl/www_turris_cz_ca.pem
-	cat $(PKG_BUILD_DIR)/cacerts/startcom.pem >>$(1)/etc/ssl/www_turris_cz_ca.pem
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/ucollect-server.pem $(1)/etc/ssl/
 	ln -s /tmp/crl.pem $(1)/etc/ssl/crl.pem
-
-	$(INSTALL_DIR) $(1)/etc/ssl/certs
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/startcom.pem $(1)/etc/ssl/certs
 
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/cacerts/get-api-crl $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/get-crl.cron $(1)/etc/cron.d/get-api
-endef
-
-define Package/$(PKG_NAME)/postrm
-#!/bin/sh
-
-( cd /etc/ssl/certs && c_rehash . ) || true
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
