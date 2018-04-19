@@ -29,7 +29,7 @@ define Package/foris-common
 	TITLE:=foris-common
 	DEPENDS:=\
 		+python-light +python-bottle +python-bottle-i18n \
-		+python-flup +python-ncclient +python-ubus +nuci +lighttpd +lighttpd-mod-fastcgi \
+		+python-flup +python-ncclient +python-ubus +lighttpd +lighttpd-mod-fastcgi \
 		+lighttpd-mod-redirect +lighttpd-mod-setenv +foris-ws \
 		+foris-client
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -125,7 +125,7 @@ define Package/foris
 endef
 
 define Package/foris/description
- Web administration interface using nuci for communication.
+ Web administration interface for router Turris
 endef
 
 define Package/foris/install
