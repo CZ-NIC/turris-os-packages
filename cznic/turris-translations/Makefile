@@ -17,7 +17,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-PKG_BUILD_DEPENDS:=gettext
+PKG_BUILD_DEPENDS:=gettext-tools
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -34,7 +34,7 @@ define TRANSLATION_LANG
 
 define Package/$(1)-l10n-$(2)
 	TITLE:=Translation for package $(1): $(2)
-	DEPENDS:=+$(1) +gettext
+	DEPENDS:=+$(1) +gettext-tools
 endef
 
 define Package/$(1)-l10n-$(2)/install
