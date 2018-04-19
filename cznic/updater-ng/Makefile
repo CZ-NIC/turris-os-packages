@@ -28,7 +28,7 @@ $(call include_mk, python3-package.mk)
 
 define Package/$(PKG_NAME)
 	TITLE:=The next generation updater
-	DEPENDS:=+liblua +libevent2 +usign +libcurl +ca-certificates
+	DEPENDS:=+liblua +libuci-lua +libevent2 +usign +libcurl +ca-certificates
 endef
 
 define Package/$(PKG_NAME)/install
