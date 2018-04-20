@@ -1,0 +1,11 @@
+Index: foris-pakon-plugin/src/static/sass/pakon.sass
+===================================================================
+--- foris-pakon-plugin.orig/src/static/sass/pakon.sass
++++ foris-pakon-plugin/src/static/sass/pakon.sass
+@@ -10988,4 +10988,4 @@ dialog.loading
+   background-color: #ff9d3b
+ 
+ .bc-color-zopim, .bc-color-zopim-1
+-  color: #ff9d3b
+\ No newline at end of file
++  color: #ff9d3b
