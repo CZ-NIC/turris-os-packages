@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-pakon-plugin
 PKG_VERSION:=1
-PKG_RELEASE:=8
+PKG_RELEASE:=9
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-pakon-plugin.git
-PKG_SOURCE_VERSION:=184bdf80ad7ec8beda6a75c9abf7730f292db153
+PKG_SOURCE_VERSION:=233d380a2f8c9fb68f71748f27a3e12de156ee1b
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
