@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-storage-module
 PKG_VERSION:=0.1
-PKG_RELEASE:=10
+PKG_RELEASE:=11
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-storage-module.git
-PKG_SOURCE_VERSION:=0d3dbd3fa973b7922d3e68606f4ade3e6a351bd1
+PKG_SOURCE_VERSION:=65bfeb7e398819a12f55bd84f93505cd0e294e63
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -27,8 +27,8 @@ $(call include_mk, python-package.mk)
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
-		+foris-controller +e2fsprogs +coreutils-stat +rsync +partx-utils +blkid
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+		+foris-controller +btrfs-progs +coreutils-stat +rsync +partx-utils +blkid
+	MAINTAINER:=Michal Hrusecky <michal.hrusecky@nic.cz>
 endef
 
 define Package/$(PKG_NAME)/description
