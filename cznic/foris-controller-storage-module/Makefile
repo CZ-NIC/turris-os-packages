@@ -51,6 +51,9 @@ define Package/$(PKG_NAME)/install
 	$(RM) $(1)/usr/lib/python2.7/site-packages/foris_controller_backends/__init__.py
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/srv.init $(1)/etc/init.d/srv
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/format_and_set_srv.sh $(1)/usr/libexec
+ifneq ($(CONFIG_RSYNC_xattr),y)
+	sed -i 's|\(.*rsync .*\)X\(.*\)|\1\2|' $(1)/etc/init.d/srv
+endif
 endef
 
 define Package/$(PKG_NAME)/postrm
