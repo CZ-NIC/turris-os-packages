@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=btrfs-progs
-PKG_VERSION:=4.11
-PKG_RELEASE:=2
+PKG_VERSION:=4.16.1
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-v$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@KERNEL/linux/kernel/people/kdave/btrfs-progs/
-PKG_MD5SUM:=25ba238f44b9a1a54e62f7b361bdc9d8
+PKG_MD5SUM:=d7a4598d58fc91d49ee8e7c342b3b919
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-v$(PKG_VERSION)
 
 PKG_LICENSE:=GPL-2.0
@@ -44,11 +44,11 @@ define Package/btrfs-progs/description
 endef
 
 progs = btrfs btrfs-debug-tree btrfs-find-root btrfs-image btrfs-map-logical \
-	btrfs-select-super btrfstune btrfs-zero-log fsck.btrfs mkfs.btrfs
+	btrfs-select-super btrfstune btrfs-zero-log fsck.btrfs mkfs.btrfs btrfs-convert
 
 CONFIGURE_ARGS += \
 	--disable-backtrace \
-	--disable-convert \
+	--enable-convert \
 	--disable-documentation
 
 EXTRA_CFLAGS=$(TARGET_CPPFLAGS)
