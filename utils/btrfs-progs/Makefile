@@ -49,7 +49,9 @@ progs = btrfs btrfs-debug-tree btrfs-find-root btrfs-image btrfs-map-logical \
 CONFIGURE_ARGS += \
 	--disable-backtrace \
 	--enable-convert \
-	--disable-documentation
+	--disable-documentation \
+	--disable-zstd \
+	--disable-python
 
 EXTRA_CFLAGS=$(TARGET_CPPFLAGS)
 
