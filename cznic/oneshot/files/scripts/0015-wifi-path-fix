@@ -1,0 +1,2 @@
+#!/bin/sh
+sed -i 's|platform/soc/soc:pcie-controller|soc/soc:pcie-controller|' /etc/config/wireless
