@@ -31,7 +31,7 @@ define Package/btrfs-progs
   SECTION:=utils
   CATEGORY:=Utilities
   SUBMENU:=Filesystem
-  DEPENDS:=+libattr +libuuid +zlib +libblkid +liblzo +libpthread +libext2fs +e2fsprogs
+  DEPENDS:=+libattr +libuuid +zlib +libblkid +liblzo +libpthread
   TITLE:=Btrfs filesystems utilities
   URL:=http://btrfs.wiki.kernel.org/
 endef
@@ -43,8 +43,26 @@ define Package/btrfs-progs/description
  GPL and open for contribution from anyone.
 endef
 
+define Package/btrfs-convert
+  SECTION:=utils
+  CATEGORY:=Utilities
+  SUBMENU:=Filesystem
+  DEPENDS:=+btrfs-progs +libext2fs +e2fsprogs
+  TITLE:=Converts Ext to Btrfs
+  URL:=http://btrfs.wiki.kernel.org/
+endef
+
+define Package/btrfs-convert/description
+ Btrfs is a new copy on write filesystem for Linux aimed at implementing
+ advanced features while focusing on fault tolerance, repair and easy
+ administration. Initially developed by Oracle, Btrfs is licensed under the
+ GPL and open for contribution from anyone.
+
+ This package provides utility to migrate your old filesystem to Btrfs.
+endef
+
 progs = btrfs btrfs-find-root btrfs-image btrfs-map-logical \
-	btrfs-select-super btrfstune fsck.btrfs mkfs.btrfs btrfs-convert
+	btrfs-select-super btrfstune fsck.btrfs mkfs.btrfs
 
 CONFIGURE_ARGS += \
 	--disable-backtrace \
@@ -65,4 +83,10 @@ define Package/btrfs-progs/install
 	$(INSTALL_BIN) ./files/btrfs-scan.init $(1)/etc/init.d/btrfs-scan
 endef
 
+define Package/btrfs-convert/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/btrfs-convert $(1)/usr/bin/
+endef
+
 $(eval $(call BuildPackage,btrfs-progs))
+$(eval $(call BuildPackage,btrfs-convert))
