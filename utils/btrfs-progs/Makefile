@@ -43,8 +43,8 @@ define Package/btrfs-progs/description
  GPL and open for contribution from anyone.
 endef
 
-progs = btrfs btrfs-debug-tree btrfs-find-root btrfs-image btrfs-map-logical \
-	btrfs-select-super btrfstune btrfs-zero-log fsck.btrfs mkfs.btrfs btrfs-convert
+progs = btrfs btrfs-find-root btrfs-image btrfs-map-logical \
+	btrfs-select-super btrfstune fsck.btrfs mkfs.btrfs btrfs-convert
 
 CONFIGURE_ARGS += \
 	--disable-backtrace \
