@@ -68,8 +68,8 @@ set -x
 if [ -z "$${IPKG_INSTROOT}" ]; then
 	/etc/init.d/foris-controller restart
 	/etc/init.d/srv enable
-	mkdir -p /srv
 fi
+mkdir -p "$${IPKG_INSTROOT}"/srv
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
