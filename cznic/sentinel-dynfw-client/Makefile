@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2018 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-dynfw-client
 PKG_VERSION:=1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=git@gitlab.labs.nic.cz:turris/sentinel/dynfw-client.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=e9a91e3148393ba44055af50ae4a7656aaf33194
+PKG_SOURCE_VERSION:=5737eaf4f59e6c9e1a1507926bed065c188b3f97
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -47,29 +47,11 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) files/sentinel-dynfw-client.init $(1)/etc/init.d/sentinel-dynfw-client
+	$(INSTALL_BIN) files/init $(1)/etc/init.d/sentinel-dynfw-client
+	$(INSTALL_DIR) $(1)/etc/firewall.d/with_reload
+	$(INSTALL_BIN) ./files/fw_reload $(1)/etc/firewall.d/with_reload/99_sentinel_dynfw.fw
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/client.py $(1)/usr/bin/sentinel-dynfw-client
-endef
-
-define Package/sentinel-dynfw-client/postinst
-#!/bin/sh
-[ -n "$$IPKG_INSTROOT" ] || {
-        # migrate configuration
-	grep "turris-sn-wan-input-block" /etc/firewall.user || {
-		echo "/usr/sbin/ipset create turris-sn-wan-input-block hash:ip -exist" >> /etc/firewall.user
-		echo "/usr/sbin/iptables -I input_wan_rule -m set --match-set turris-sn-wan-input-block src -j DROP" >> /etc/firewall.user
-	}
-        /etc/init.d/sentinel-dynfw-client enable
-        /etc/init.d/sentinel-dynfw-client restart 2>/dev/null
-}
-endef
-
-define Package/sentinel-dynfw-client/prerm
-#!/bin/sh
-	grep -v "turris-sn-wan-input-block" /etc/firewall.user > /etc/firewall.user.tmp && mv /etc/firewall.user.tmp /etc/firewall.user
-        /etc/init.d/sentinel-dynfw-client disable
-        /etc/init.d/sentinel-dynfw-client stop
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

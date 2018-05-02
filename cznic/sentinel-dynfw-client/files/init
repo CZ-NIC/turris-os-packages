@@ -1,0 +1,40 @@
+#!/bin/sh /etc/rc.common
+
+USE_PROCD=1
+START=90
+STOP=10
+EXTRA_COMMANDS="status"
+
+status() {
+  if ps | grep -v grep | grep '/usr/bin/sentinel-dynfw-client' &>/dev/null; then
+	  return 0
+  else
+	  return 1
+  fi
+}
+
+start_service() {
+  status && exit 1
+  get_cert || exit 1
+  /usr/sbin/ipset create turris-sn-wan-input-block hash:ip -exist
+  /usr/sbin/iptables -I input_wan_rule -m set --match-set turris-sn-wan-input-block src -j DROP
+  procd_open_instance
+  procd_set_param command /usr/bin/python3 /usr/bin/sentinel-dynfw-client
+  procd_set_param respawn ${respawn_threshold:-600} ${respawn_timeout:-5} ${respawn_retry:-5}
+  procd_close_instance
+}
+
+stop_service() {
+  /usr/sbin/iptables -D input_wan_rule -m set --match-set turris-sn-wan-input-block src -j DROP
+}
+
+
+get_cert() {
+  #TODO
+  cp /etc/sentinel_server.key /tmp/sentinel_server.key
+  #curl https://sentinel.turris.cz/server.key > /tmp/_sentinel_server.key || return 1
+  #curl https://sentinel.turris.cz/server.key.gpg > /tmp/_sentinel_server.key.gpg || return 1
+  #gpg --no-default-keyring --keyring /etc/turris.gpg --verify /tmp/_sentinel_server.key.gpg || return 1
+  #mv /tmp/_sentinel_server.key /tmp/sentinel_server.key
+  return 0
+}

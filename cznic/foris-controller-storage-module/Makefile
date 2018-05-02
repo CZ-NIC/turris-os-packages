@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-storage-module
 PKG_VERSION:=0.1
-PKG_RELEASE:=10
+PKG_RELEASE:=12
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-storage-module.git
-PKG_SOURCE_VERSION:=0d3dbd3fa973b7922d3e68606f4ade3e6a351bd1
+PKG_SOURCE_VERSION:=c811f6b6229e4408c6612a70ac4a3621f97fa74d
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -27,8 +27,8 @@ include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
-		+foris-controller +e2fsprogs +coreutils-stat +rsync +partx-utils +blkid
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+		+foris-controller +btrfs-progs +coreutils-stat +rsync +partx-utils +blkid
+	MAINTAINER:=Michal Hrusecky <michal.hrusecky@nic.cz>
 endef
 
 define Package/$(PKG_NAME)/description
@@ -51,6 +51,9 @@ define Package/$(PKG_NAME)/install
 	$(RM) $(1)/usr/lib/python2.7/site-packages/foris_controller_backends/__init__.py
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/srv.init $(1)/etc/init.d/srv
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/format_and_set_srv.sh $(1)/usr/libexec
+ifneq ($(CONFIG_RSYNC_xattr),y)
+	sed -i 's|\(.*rsync .*\)X\(.*\)|\1\2|' $(1)/etc/init.d/srv
+endif
 endef
 
 define Package/$(PKG_NAME)/postrm
@@ -65,8 +68,8 @@ set -x
 if [ -z "$${IPKG_INSTROOT}" ]; then
 	/etc/init.d/foris-controller restart
 	/etc/init.d/srv enable
-	mkdir -p /srv
 fi
+mkdir -p "$${IPKG_INSTROOT}"/srv
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

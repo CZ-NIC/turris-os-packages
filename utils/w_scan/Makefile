@@ -41,11 +41,11 @@ endef
 
 
 CONFIGURE_ARGS+= \
-	--with-libiconv="$(ICONV_PREFIX)"
+	--with-libiconv="$(STAGING_DIR)/usr/lib/libiconv-full"
 
-TARGET_CFLAGS+="-I$(STAGING_DIR)/usr/lib/libintl-full/include"
-TARGET_CPPFLAGS+="-I$(STAGING_DIR)/usr/lib/libintl-full/include"
-TARGET_LDFLAGS+="-L$(STAGING_DIR)/usr/lib/libintl-full/lib -liconv"
+TARGET_CFLAGS+=-I$(STAGING_DIR)/usr/lib/libintl-full/include
+TARGET_CPPFLAGS+=-I$(STAGING_DIR)/usr/lib/libintl-full/include
+TARGET_LDFLAGS+=-L$(STAGING_DIR)/usr/lib/libintl-full/lib
 
 define Build/Configure
 	$(call Build/Configure/Default)

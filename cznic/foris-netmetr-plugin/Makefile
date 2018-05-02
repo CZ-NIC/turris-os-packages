@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-netmetr-plugin
-PKG_VERSION:=2
+PKG_VERSION:=2.1
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -61,7 +61,7 @@ endef
 $(eval $(call ForisPlugin,$(PKG_NAME),netmetr))
 
 # Translation definitions
-FORIS_TRANSLATIONS:=
+FORIS_TRANSLATIONS:=cs it de sk ru pl it hu fr
 $(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),netmetr,$(trans))))
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-storage-plugin
 PKG_VERSION:=0.1
-PKG_RELEASE:=11
+PKG_RELEASE:=12
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-storage-plugin.git
-PKG_SOURCE_VERSION:=9caca205a959908262aa33be8fe4f51ebfea0732
+PKG_SOURCE_VERSION:=9c60a5c4b68ed32cce57e34c001d0d7372036e0c
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -29,7 +29,7 @@ define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
 		+foris +foris-controller-storage-module
-	MAINTAINER:=Stepan Henek <stepan.henek@nic.cz>
+	MAINTAINER:=Michal Hrusecky <michal.hrusecky@nic.cz>
 endef
 
 define Package/$(PKG_NAME)/description

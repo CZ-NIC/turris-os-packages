@@ -1,0 +1,6 @@
+#!/bin/sh
+# Copyright (C) 2018 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+
+/etc/init.d/sentinel-dynfw-client status || exit 0
+
+/usr/sbin/iptables -C input_wan_rule -m set --match-set turris-sn-wan-input-block src -j DROP || /usr/sbin/iptables -I input_wan_rule -m set --match-set turris-sn-wan-input-block src -j DROP
