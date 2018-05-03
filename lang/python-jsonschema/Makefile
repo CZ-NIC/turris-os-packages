@@ -50,6 +50,7 @@ define Build/Compile
 endef
 
 define Host/Compile
+	sed -i 's|"vcversioner>=2.16.0.0"||' $(HOST_BUILD_DIR)/setup.py
 	#$(call Build/Compile/HostPyMod,,build)
 endef
 
