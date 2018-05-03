@@ -43,6 +43,7 @@ endef
 define Build/Compile
 	$(RM) -r $(PKG_BUILD_DIR)/jsonschema/tests/*
 	touch $(PKG_BUILD_DIR)/jsonschema/tests/__init__.py
+	sed -i 's|"vcversioner>=2.16.0.0"||' $(PKG_BUILD_DIR)/setup.py
 	$(call Build/Compile/PyMod,., \
 		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)" \
 	)
