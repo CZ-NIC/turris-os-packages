@@ -36,6 +36,7 @@ define Package/$(PKG_NAME)/description
 endef
 
 define Build/Compile
+	sed -i '/.pytest-runner.,/ d' $(PKG_BUILD_DIR)/setup.py
 	$(call Build/Compile/PyMod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
 endef
 
