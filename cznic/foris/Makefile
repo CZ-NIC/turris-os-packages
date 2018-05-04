@@ -40,8 +40,9 @@ define Package/foris-common/description
 endef
 
 # Set "branding" variable to create different builds for different devices
-BRAND?=turris
-ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+ifeq ($(CONFIG_TARGET_mpc85xx),y)
+BRAND:=turris
+else
 BRAND:=omnia
 endif
 
