@@ -36,7 +36,7 @@ define Package/turris-btrfs
   CATEGORY:=Utilities
   SUBMENU:=Filesystem
 	PROVIDES:=turris-btrfs-migrate
-  DEPENDS:=+btrfs-progs +uboot-envtools +fdisk +dosfstools +schnapps @TARGET_mpc85xx_p2020_nand
+  DEPENDS:=+btrfs-progs +uboot-envtools +fdisk +dosfstools +schnapps @TARGET_mpc85xx
   TITLE:=Btrfs migration tool for old Turris routers
 endef
 
