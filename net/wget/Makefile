@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wget
-PKG_VERSION:=1.18
-PKG_RELEASE:=3
+PKG_VERSION:=1.19.5
+PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
-PKG_MD5SUM:=af9ca95a4bb8ac4a9bf10aeae66fa5ec
-PKG_MAINTAINER:=Maxim Storchak <m.storchak@gmail.com>
+PKG_MD5SUM:=b39212abe1a73f2b28f4c6cb223c738559caac91d6e416a6d91d4b9d55c9faee
+PKG_MAINTAINER:=Peter Wagner <tripolar@gmx.at>
 PKG_LICENSE:=GPL-3.0+
 PKG_LICENSE_FILES:=COPYING
 
@@ -25,7 +25,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/wget/Default
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+libpcre
+  DEPENDS:=+libpcre +zlib
   SUBMENU:=File Transfer
   TITLE:=Non-interactive network downloader
   URL:=http://www.gnu.org/software/wget/index.html
@@ -55,7 +55,6 @@ endef
 define Package/wget-nossl
 $(call Package/wget/Default)
   TITLE+= (without SSL support)
-  DEPENDS+= +zlib
   VARIANT:=nossl
 endef
 
@@ -67,6 +66,7 @@ endef
 CONFIGURE_ARGS+= \
 	--disable-rpath \
 	--disable-iri \
+	--with-included-libunistring \
 	--without-libuuid
 
 CONFIGURE_VARS += \
@@ -86,24 +86,14 @@ endif
 
 define Package/wget/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/wget $(1)/usr/bin/wget
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/wget $(1)/usr/bin/wget-ssl
+	ln -sf wget-ssl $(1)/usr/bin/wget
 endef
 
 define Package/wget-nossl/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/wget $(1)/usr/bin/wget-nossl
-endef
-
-define Package/wget-nossl/postinst
-#!/bin/sh
-[ -e $${IPKG_INSTROOT}/usr/bin/wget ] || ln -s ./wget-nossl $${IPKG_INSTROOT}/usr/bin/wget
-endef
-
-define Package/wget-nossl/postrm
-#!/bin/sh
-if [ "`readlink "$${IPKG_INSTROOT}/usr/bin/wget"`" = ./wget-nossl ]; then
-  rm -f "$${IPKG_INSTROOT}/usr/bin/wget"
-fi
+	ln -sf wget-nossl $(1)/usr/bin/wget
 endef
 
 $(eval $(call BuildPackage,wget))
