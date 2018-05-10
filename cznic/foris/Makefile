@@ -30,7 +30,7 @@ define Package/foris-common
 	DEPENDS:=\
 		+python-light +python-bottle +python-bottle-i18n \
 		+python-flup +python-ncclient +python-ubus +nuci +lighttpd +lighttpd-mod-fastcgi \
-		+lighttpd-mod-redirect +lighttpd-mod-setenv +foris-ws \
+		+lighttpd-mod-redirect +lighttpd-mod-setenv +lighttpd-mod-alias +foris-ws \
 		+foris-client
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
