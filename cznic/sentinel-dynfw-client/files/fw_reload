@@ -3,4 +3,4 @@
 
 /etc/init.d/sentinel-dynfw-client status || exit 0
 
-/usr/sbin/iptables -C input_wan_rule -m set --match-set turris-sn-wan-input-block src -j DROP || /usr/sbin/iptables -I input_wan_rule -m set --match-set turris-sn-wan-input-block src -j DROP
+/usr/sbin/iptables -I input_wan_rule -m state --state NEW -m set --match-set turris-sn-wan-input-block src -m mark ! --mark 0x10/0x10 -j DROP || /usr/sbin/iptables -I input_wan_rule -m state --state NEW -m set --match-set turris-sn-wan-input-block src -m mark ! --mark 0x10/0x10 -j DROP
