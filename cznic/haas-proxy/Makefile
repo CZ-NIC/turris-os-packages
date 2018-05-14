@@ -43,8 +43,8 @@ define Build/Compile
 	$(INSTALL_BIN) ./files/register.sh $(PKG_INSTALL_DIR)/usr/share/haas/register.sh
 	$(INSTALL_DIR) $(PKG_INSTALL_DIR)/etc/cron.d
 	$(INSTALL_DATA) ./files/haas.cron $(PKG_INSTALL_DIR)/etc/cron.d/haas
-        $(INSTALL_DIR) $(1)/etc/firewall.d/with_reload
-        $(INSTALL_BIN) ./files/haas.fw $(1)/etc/firewall.d/with_reload/99_haas.fw
+	$(INSTALL_DIR) $(1)/etc/firewall.d/with_reload
+	$(INSTALL_BIN) ./files/haas.fw $(1)/etc/firewall.d/with_reload/99_haas.fw
 endef
 
 define Package/haas-proxy/conffiles
