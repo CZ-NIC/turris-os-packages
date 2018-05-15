@@ -390,14 +390,10 @@ class Netmetr:
             print("Error downloading synchronization code.")
 
     def load_sync_code(self):
-        """Checks the uci config for sychronization code and loads it to the\
-        script. If no synchronization code is found a https request is send to\
-        download it.
+        """Sends a https request to obtain sync code. The code must be
+        downloaded each time because it coud be changed from time to time.
         """
-        self.sync_code = uci_get("sync_code")
-        if not self.sync_code:
-            print_info("Sync code not found, requesting new one.")
-            self.download_sync_code()
+        self.download_sync_code()
 
     def measure_gps(self):
         if not self.gps_console_path:
