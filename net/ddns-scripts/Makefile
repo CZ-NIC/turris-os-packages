@@ -155,7 +155,7 @@ endef
 define Package/ddns-scripts/preinst
 	#!/bin/sh
 	# if NOT run buildroot then stop service
-	[ -z "$${IPKG_INSTROOT}" ] && /etc/init.d/ddns stop >/dev/null 2>&1
+	[ -z "$${IPKG_INSTROOT}" ] && [ -f /etc/init.d/ddns ] && /etc/init.d/ddns stop >/dev/null 2>&1
 	exit 0	# suppress errors
 endef
 define Package/ddns-scripts/install
