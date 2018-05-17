@@ -11,10 +11,3 @@ Index: foris-pakon-plugin/src/static/sass/pakon.sass
    width: 120px
    height: 120px
    padding: 0
-@@ -165,4 +165,4 @@ dialog.loading
-   &[open]
-     visibility: visible
-     top: 50%
--    opacity: 1
-\ No newline at end of file
-+    opacity: 1
