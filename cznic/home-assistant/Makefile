@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=home-assistant
-PKG_VERSION:=0.7.1
-PKG_RELEASE:=4
+PKG_VERSION:=0.69.1
+PKG_RELEASE:=1
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
 PKG_MAINTAINER:=Pavel Spirek <pavel.spirek@nic.cz>
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/balloob/home-assistant.git
+PKG_SOURCE_URL:=https://github.com/home-assistant/home-assistant.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
