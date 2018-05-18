@@ -1,0 +1,12 @@
+Index: foris-pakon-plugin/src/__init__.py
+===================================================================
+--- foris-pakon-plugin.orig/src/__init__.py
++++ foris-pakon-plugin/src/__init__.py
+@@ -90,7 +90,6 @@ class PakonPlugin(ForisPlugin):
+     PLUGIN_STATIC_SCRIPTS = [
+     ]
+     PLUGIN_DYNAMIC_SCRIPTS = [
+-        "pakon.js"
+     ]
+ 
+     def __init__(self, app):
