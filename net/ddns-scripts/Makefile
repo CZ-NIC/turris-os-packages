@@ -256,10 +256,10 @@ exit 0	# suppress errors
 endef
 
 define Package/ddns-scripts_cloudflare.com-v4/install
-$(INSTALL_DIR) $(1)/etc/uci-defaults
-$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/ddns.defaults $(1)/etc/uci-defaults/ddns_cloudflare.com-v4
-$(INSTALL_DIR) $(1)/usr/lib/ddns
-$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/update_cloudflare_com_v4.sh $(1)/usr/lib/ddns
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/ddns.defaults $(1)/etc/uci-defaults/ddns_cloudflare.com-v4
+	$(INSTALL_DIR) $(1)/usr/lib/ddns
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/update_cloudflare_com_v4.sh $(1)/usr/lib/ddns
 endef
 
 define Package/ddns-scripts_cloudflare.com-v4/postinst
@@ -429,7 +429,9 @@ exit 0	# suppress errors
 endef
 
 define Package/ddns-scripts_route53-v1/install
-	$(INSTALL_DIR) $(1)/etc/uci-defaults $(INSTALL_BIN) $(PKG_BUILD_DIR)/files/ddns.defaults $(1)/etc/uci-defaults/ddns_route53-v1 $(INSTALL_DIR) $(1)/usr/lib/ddns
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/ddns.defaults $(1)/etc/uci-defaults/ddns_route53-v1
+	$(INSTALL_DIR) $(1)/usr/lib/ddns
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/update_route53_v1.sh $(1)/usr/lib/ddns
 endef
 
