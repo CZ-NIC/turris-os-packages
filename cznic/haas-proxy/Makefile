@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-proxy
 PKG_VERSION:=1.6
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_VERSION:=23f35089b0cccbdf2b4557f9bf6bab4b0bbdac57
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/haas/proxy/raw/$(PKG_SOURCE_VERSION)/release/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -44,6 +44,8 @@ define Build/Compile
 	$(INSTALL_BIN) ./files/register.sh $(PKG_INSTALL_DIR)/usr/share/haas/register.sh
 	$(INSTALL_DIR) $(PKG_INSTALL_DIR)/etc/cron.d
 	$(INSTALL_DATA) ./files/haas.cron $(PKG_INSTALL_DIR)/etc/cron.d/haas
+	$(INSTALL_DIR) $(1)/etc/firewall.d/with_reload
+	$(INSTALL_BIN) ./files/haas.fw $(1)/etc/firewall.d/with_reload/99_haas.fw
 endef
 
 define Package/haas-proxy/conffiles

@@ -27,34 +27,49 @@ define Package/$(PKG_NAME)
 	DEPENDS:=+libopenssl +libunbound 
 endef
 
+define Package/$(PKG_NAME)-emul
+	TITLE:=$(PKG_NAME)-emul
+	PROVIDES:=$(PKG_NAME)
+	DEPENDS:=+libopenssl +libunbound 
+endef
+
+
+define Build/Compile
+	mkdir -p $(PKG_BUILD_DIR)/real/bin $(PKG_BUILD_DIR)/real/lib
 ifdef CONFIG_TARGET_mvebu_Turris-Omnia
-define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C DEFAULT_NI2C_DEV_PATH=NI2C_DEV_PATH_OMNIA VERBOSE=1 bin/atsha204cmd
-	$(call Build/Compile/PyMod,./src/python/, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)", CFLAGS+=" -I$(PKG_BUILD_DIR)/src/libatsha204/" LDFLAGS+=" -L$(PKG_BUILD_DIR)/src/libatsha204/")
-endef
-else
-ifdef CONFIG_TARGET_mpc85xx_p2020_TURRIS
-define Build/Compile
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/atsha204cmd $(PKG_BUILD_DIR)/real/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libatsha204.so $(PKG_BUILD_DIR)/real/lib
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C DEFAULT_NI2C_DEV_PATH=NI2C_DEV_PATH_OMNIA VERBOSE=1 clean
+endif
+ifdef CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C DEFAULT_NI2C_DEV_PATH=NI2C_DEV_PATH_TURRIS VERBOSE=1 bin/atsha204cmd
-	$(call Build/Compile/PyMod,./src/python/, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)", CFLAGS+=" -I$(PKG_BUILD_DIR)/src/libatsha204/" LDFLAGS+=" -L$(PKG_BUILD_DIR)/src/libatsha204/")
-endef
-else
-define Build/Compile
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/atsha204cmd $(PKG_BUILD_DIR)/real/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libatsha204.so $(PKG_BUILD_DIR)/real/lib
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C DEFAULT_NI2C_DEV_PATH=NI2C_DEV_PATH_TURRIS VERBOSE=1 clean
+endif
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_EMULATION CONFIG_PATH=/etc/atsha.sw VERBOSE=1 bin/atsha204cmd
 	$(call Build/Compile/PyMod,./src/python/, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)", CFLAGS+=" -I$(PKG_BUILD_DIR)/src/libatsha204/" LDFLAGS+=" -L$(PKG_BUILD_DIR)/src/libatsha204/")
 endef
-endif
-endif
 
 define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/real/bin/atsha204cmd $(1)/usr/bin/
+
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/real//lib/libatsha204.so $(1)/usr/lib/
+
+	if [ "$$$$TARGET_BOARD" != turris ] ; then $(INSTALL_DIR) $(1)/etc/init.d ; $(INSTALL_BIN) ./files/libatsha204.init $(1)/etc/init.d/libatsha204 ; fi
+endef
+
+define Package/$(PKG_NAME)-emul/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/atsha204cmd $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libatsha204.so $(1)/usr/lib/
-
-	if [ "$$$$TARGET_BOARD" != turris ] ; then $(INSTALL_DIR) $(1)/etc/init.d ; $(INSTALL_BIN) ./files/libatsha204.init $(1)/etc/init.d/libatsha204 ; fi
 endef
+
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include
@@ -95,4 +110,5 @@ define Package/$(PKG_PYTHON_NAME)/install
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,$(PKG_NAME)-emul))
 $(eval $(call BuildPackage,$(PKG_PYTHON_NAME)))
