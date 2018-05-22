@@ -15,7 +15,7 @@ new file mode 100644
 index 00000000..704b3774
 --- /dev/null
 +++ b/src/output-json-flowstart.c
-@@ -0,0 +1,300 @@
+@@ -0,0 +1,278 @@
 +/* Copyright (C) 2007-2017 Open Information Security Foundation
 + *
 + * You can copy, redistribute or modify this Program under the terms of
@@ -104,20 +104,6 @@ index 00000000..704b3774
 +    json_t *js = CreateJSONHeaderFromFlow(p->flow, "flow_start");
 +    if (unlikely(js == NULL))
 +        return TM_ECODE_OK;
-+#ifdef NFQ
-+    if (p->flow->if_src){
-+            char ifi_name[IF_NAMESIZE];
-+            if (if_indextoname(p->flow->if_src, ifi_name)){
-+                    json_object_set_new(js, "src_iface", json_string(ifi_name));
-+            }
-+    }
-+    if (p->flow->if_dst){
-+            char ifo_name[IF_NAMESIZE];
-+            if (if_indextoname(p->flow->if_dst, ifo_name)){
-+                    json_object_set_new(js, "dst_iface", json_string(ifo_name));
-+            }
-+    }
-+#endif
 +    json_t * hjs = json_object();
 +    if (unlikely(hjs == NULL)) return TM_ECODE_OK;
 +    JsonAddFlow(((Packet *)p)->flow,js,hjs);
@@ -280,16 +266,8 @@ index 00000000..704b3774
 + */
 +static int JsonFlowstartLogCondition(ThreadVars *tv, const Packet *p)
 +{
-+    if (!EngineModeIsIPS()) {
-+        SCLogDebug("engine is not running in inline mode, so returning");
-+        return FALSE;
-+    }
-+    if (PKT_IS_PSEUDOPKT(p)) {
-+        SCLogDebug("drop log doesn't log pseudo packets");
-+        return FALSE;
-+    }
-+    
-+    if (p->flow == NULL) return FALSE;
++    if (PKT_IS_PSEUDOPKT(p)) return FALSE;
++    if (!p->flow) return FALSE;
 +    if (PKT_IS_TCP(p)) {
 +        if ((p->flowflags & (FLOW_PKT_TOCLIENT_FIRST | FLOW_PKT_TOSERVER_FIRST)) != 0 &&
 +           ((p->flow->flags & (FLOW_TO_DST_SEEN|FLOW_TO_SRC_SEEN)) == (FLOW_TO_DST_SEEN|FLOW_TO_SRC_SEEN))) return TRUE;
