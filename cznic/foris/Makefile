@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
 PKG_VERSION:=98
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
@@ -87,24 +87,11 @@ define Package/foris-common/install
 		$(1)$(PYTHON_PKG_DIR)/
 	$(RM) -r $(1)$(PYTHON_PKG_DIR)/foris/locale/
 	$(RM) -r $(1)$(PYTHON_PKG_DIR)/foris/langs/??.py
-	$(RM) -r $(1)$(PYTHON_PKG_DIR)/foris/wizard
-	$(RM) $(1)$(PYTHON_PKG_DIR)/foris/wizard_app.py
 	$(RM) -r $(1)$(PYTHON_PKG_DIR)/foris/config
 	$(RM) $(1)$(PYTHON_PKG_DIR)/foris/config_app.py
 
 	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/foris/locale
 	touch $(1)$(PYTHON_PKG_DIR)/foris/locale/.keep
-endef
-
-define Package/foris-wizard
-	TITLE:=foris-wizard
-	DEPENDS:=\
-		+foris-common
-	MAINTAINER:=CZ.NIC <packaging@turris.cz>
-endef
-
-define Package/foris-wizard/description
- Foris wizard webapp.
 endef
 
 define Package/foris-config
@@ -114,14 +101,10 @@ define Package/foris-config
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
-define Package/foris-wizard/description
- Foris config webapp.
-endef
-
 define Package/foris
 	TITLE:=foris
 	DEPENDS:=\
-		+foris-wizard +foris-config
+		+foris-config
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
@@ -132,21 +115,6 @@ endef
 define Package/foris/install
 	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/foris/
 	touch $(1)$(PYTHON_PKG_DIR)/foris/.keep
-endef
-
-define Package/foris-wizard/install
-	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
-	$(INSTALL_DATA) ./files/foris-wizard.lighttpd-conf $(1)/etc/lighttpd/conf.d/foris-wizard.conf
-	$(INSTALL_DIR) $(1)/usr/share/foris
-	$(INSTALL_BIN) ./files/foris-wizard-cgi $(1)/usr/share/foris/foris-wizard-cgi
-
-	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/foris/wizard
-	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/foris/wizard_app.py \
-		$(1)$(PYTHON_PKG_DIR)/foris/
-	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/foris/wizard/* \
-		$(1)$(PYTHON_PKG_DIR)/foris/wizard/
 endef
 
 define Package/foris-config/install
@@ -185,22 +153,6 @@ set -x
 /etc/init.d/lighttpd stop
 endef
 
-define Package/foris-wizard/postinst
-#!/bin/sh
-set -x
-[ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/lighttpd restart
-}
-endef
-
-define Package/foris-wizard/postrm
-#!/bin/sh
-set -x
-[ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/lighttpd restart
-}
-endef
-
 define Package/foris-config/postinst
 #!/bin/sh
 set -x
@@ -215,21 +167,6 @@ set -x
 [ -n "$$IPKG_INSTROOT" ] || {
 /etc/init.d/lighttpd restart
 }
-endef
-
-define Package/foris-oldconfig
-	TITLE:=foris old config
-endef
-
-define Package/foris-oldconfig/description
- A hack to go through installation from original Certuma image to something
- far newer without crashing the wizard step. Should not be needed during
- normal operation.
-endef
-
-define Package/foris-oldconfig/install
-	$(INSTALL_DIR) $(1)/etc/foris
-	$(INSTALL_DATA) ./files/foris.conf $(1)/etc/foris/foris-lighttpd-inc.conf
 endef
 
 define Build/InstallDev
@@ -292,6 +229,4 @@ $(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call BuildPackage,foris-l10n-$(tr
 $(eval $(call PyPackage,foris))
 $(eval $(call BuildPackage,foris-common))
 $(eval $(call BuildPackage,foris-config))
-$(eval $(call BuildPackage,foris-wizard))
-$(eval $(call BuildPackage,foris-oldconfig))
 $(eval $(call HostBuild))
