@@ -36,19 +36,23 @@ endef
 
 define Build/Compile
 	mkdir -p $(PKG_BUILD_DIR)/real/bin $(PKG_BUILD_DIR)/real/lib
-ifdef CONFIG_TARGET_mvebu_Turris-Omnia
+ifeq ($(CONFIG_TARGET_mvebu_cortexa9),y)
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C DEFAULT_NI2C_DEV_PATH=NI2C_DEV_PATH_OMNIA VERBOSE=1 bin/atsha204cmd
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/atsha204cmd $(PKG_BUILD_DIR)/real/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libatsha204.so $(PKG_BUILD_DIR)/real/lib
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C DEFAULT_NI2C_DEV_PATH=NI2C_DEV_PATH_OMNIA VERBOSE=1 clean
 endif
-ifdef CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND
+ifeq ($(CONFIG_TARGET_mpc85xx),y)
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C DEFAULT_NI2C_DEV_PATH=NI2C_DEV_PATH_TURRIS VERBOSE=1 bin/atsha204cmd
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/atsha204cmd $(PKG_BUILD_DIR)/real/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libatsha204.so $(PKG_BUILD_DIR)/real/lib
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_NI2C DEFAULT_NI2C_DEV_PATH=NI2C_DEV_PATH_TURRIS VERBOSE=1 clean
 endif
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 USE_LAYER=USE_LAYER_EMULATION CONFIG_PATH=/etc/atsha.sw VERBOSE=1 bin/atsha204cmd
+	if [ \! -f $(PKG_BUILD_DIR)/real/bin/atsha204cmd ] && [ \! -f $(PKG_BUILD_DIR)/real/lib/libatsha204.so ]; then\
+		$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/atsha204cmd $(PKG_BUILD_DIR)/real/bin; \
+		$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libatsha204.so $(PKG_BUILD_DIR)/real/lib; \
+	fi
 	$(call Build/Compile/PyMod,./src/python/, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)", CFLAGS+=" -I$(PKG_BUILD_DIR)/src/libatsha204/" LDFLAGS+=" -L$(PKG_BUILD_DIR)/src/libatsha204/")
 endef
 
