@@ -11,15 +11,9 @@ download_rules() {
         sleep 1
     done
     ping -c 1 rules.emergingthreats.net > /dev/null 2>&1 || exit 1
-    curl https://rules.emergingthreats.net/open/suricata/emerging.rules.tar.gz | gzip -cd - | tar -xvf -
+    curl https://rules.emergingthreats.net/open/suricata/emerging.rules.tar.gz | gzip -cd - | tar -xf -
     mv rules/* .
     rmdir rules
-    echo '%YAML 1.1' > suricata-include.yaml
-    echo '---' >> suricata-include.yaml
-    echo 'default-rule-path: /tmp/suricata/rules' >> suricata-include.yaml
-    sed -n '/rule-files:/,/classification-file:/ p' suricata-1.3-open.yaml | head -n -1 >> suricata-include.yaml
-    echo '' >> suricata-include.yaml
-    date +%s > timestamp
 }
 
 reload_suricata() {
