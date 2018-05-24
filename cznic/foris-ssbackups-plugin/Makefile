@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-ssbackups-plugin
-PKG_VERSION:=6.1
+PKG_VERSION:=6.2
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -61,7 +61,7 @@ endef
 $(eval $(call ForisPlugin,$(PKG_NAME),ssbackups))
 
 # Translation definitions
-FORIS_TRANSLATIONS:=
+FORIS_TRANSLATIONS:=cs de pl ru sk
 $(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),ssbackups,$(trans))))
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
