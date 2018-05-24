@@ -31,14 +31,14 @@ endef
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 if [ -z "$$IPKG_INSTROOT" ]; then
-	/etc/init.d/lighttpd restart
+  /etc/init.d/lighttpd restart
 fi
 endef
 
 define Package/$(PKG_NAME)/postrm
 #!/bin/sh
 if [ -z "$$IPKG_INSTROOT" ]; then
-	/etc/init.d/lighttpd restart
+  /etc/init.d/lighttpd restart
 fi
 endef
 
