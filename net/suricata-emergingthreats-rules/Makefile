@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata-emergingthreats-rules
-PKG_VERSION:=3
+PKG_VERSION:=4
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
@@ -33,6 +33,12 @@ define Package/suricata-emergingthreats-rules/install
 
 	$(INSTALL_DIR) $(1)/etc/suricata-pakon/conf.d
 	$(INSTALL_CONF) ./files/rules.yaml $(1)/etc/suricata-pakon/conf.d/rules.yaml
+
+	$(INSTALL_DIR) $(1)/etc/suricata-pakon/output_conf.d
+	$(INSTALL_CONF) ./files/alert.yaml $(1)/etc/suricata-pakon/output_conf.d/alert.yaml
+
+	$(INSTALL_DIR) $(1)/etc/logrotate.d/
+	$(INSTALL_CONF) ./files/logrotate.conf $(1)/etc/logrotate.d/suricata-alert
 endef
 
 
