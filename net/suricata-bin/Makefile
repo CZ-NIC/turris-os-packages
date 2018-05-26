@@ -31,7 +31,7 @@ CONFIGURE_ARGS+= \
 	--enable-non-bundled-htp \
 	--disable-gccmarch-native	
 
-ifneq($(ARCH),powerpc)
+ifeq($(ARCH),arm)
 CONFIGURE_ARGS+= \
 	--enable-luajit
 
