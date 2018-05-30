@@ -29,7 +29,7 @@ define Package/home-assistant
   CATEGORY:=Utilities
   SUBMENU:=Home Automation
   TITLE:=Open-source home automation platform running on Python 3
-  DEPENDS:=+python3 +python3-requests +python3-pytz +python3-pyyaml +python3-setuptools
+  DEPENDS:=+python3 +python3-requests +python3-pytz +python3-pyyaml +python3-setuptools +python3-attrs
   URL:=https://home-assistant.com/
 endef
 
