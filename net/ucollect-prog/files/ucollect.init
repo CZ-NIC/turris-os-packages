@@ -3,6 +3,7 @@
 
 START=50
 PID_FILE=/var/run/ucollect.pid
+USE_PROCD=1
 
 get_wan() {
 	IFACES="$1"
@@ -54,50 +55,14 @@ build_config() {
 	fi
 }
 
-status() {
-	if [ -s $PID_FILE ]; then
-		busybox ps | awk '{print $1;}' | grep `cat $PID_FILE` &> /dev/null
-		if [ $? -eq 0 ]; then
-			# echo "Running."
-			return 0
-		else
-			# echo "Not running."
-			return 1
-		fi
-	else
-		# echo "Stopped."
-		return 2
-	fi
-}
-
 start() {
-	if status ; then
-		echo "Running already. (`cat $PID_FILE`)"
-	else
-		CODE=1
-		# This may remove someone else's lock but it also allows for automatic recovery of stray lock
-		trap 'rm -rf /tmp/ucollect-init.lock; exit $CODE' EXIT ABRT HUP INT QUIT PIPE TERM
-		mkdir /tmp/ucollect-init.lock || exit 1
-		build_config
-		trap '' TERM
-		killall ucollect
-		trap 'rm -rf /tmp/ucollect-init.lock; exit 1' TERM
-		start-stop-daemon -S -p $PID_FILE -m -b -x ucollect /tmp/ucollect
-		echo "Started."
-		CODE=0
-	fi
-}
-
-stop() {
-	status
-	RETVAL=$?
-	if [ $RETVAL -eq 0 ]; then
-		kill `cat $PID_FILE`
-		rm $PID_FILE
-		echo "Stopped."
-	elif [ $RETVAL -eq 1 ]; then
-		rm $PID_FILE
-	fi
+	build_config
+	procd_open_instance
+	procd_set_param respawn ${respawn_threshold:-60} ${respawn_timeout:-5} ${respawn_retry:-100}
+	procd_set_param netdev wan
+	procd_set_param pidfile  $PID_FILE
+	procd_set_param command /usr/bin/ucollect /tmp/ucollect
+	procd_close_instance
 }
 
 restart() {
@@ -106,11 +71,5 @@ restart() {
 }
 
 reload() {
-	if status ; then
-		build_config
-		kill -HUP `cat $PID_FILE`
-		echo "Reloaded."
-	else
-		restart
-	fi
+	restart
 }
