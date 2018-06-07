@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cznic-cacert-bundle
-PKG_VERSION:=37
+PKG_VERSION:=36
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=59f558bda8c5ee10c252470df4bf035487644f5d
+PKG_SOURCE_VERSION:=a6d30c573c636b3466ee36b4207e25a88ee8e5f2
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -31,7 +31,7 @@ define Package/$(PKG_NAME)/postinst
 		/etc/ssl/www_turris_cz_ca.pem \
 		/etc/ssl/turris.pem \
 		/usr/bin/get-api-crl \
-		/etc/ssl/ucollect-server.pem \
+		-r /etc/ssl/ucollect-server.pem \
 		-r /etc/ssl/startcom.pem \
 		-r /etc/ssl/api.turris.pem
 	get-api-crl
@@ -54,7 +54,6 @@ define Package/$(PKG_NAME)/install
 	# TODO: If anything is modified here, it needs to be updated in the postinst too
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/emergency-ca/ca.crt $(1)/etc/ssl/turris.pem
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/letsencrypt.pem $(1)/etc/ssl/www_turris_cz_ca.pem
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/ucollect-server.pem $(1)/etc/ssl/
 	ln -s /tmp/crl.pem $(1)/etc/ssl/crl.pem
 
 	$(INSTALL_DIR) $(1)/usr/bin
