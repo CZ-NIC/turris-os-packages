@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nut
 PKG_VERSION:=2.7.4
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.networkupstools.org/source/2.7/
@@ -57,14 +57,18 @@ define Package/nut/config
 	source "$(SOURCE)/Config.in"
 endef
 
-#define Package/nut/conffiles
-#/etc/nut/nut.conf
-#$(if $(CONFIG_NUT_CLIENTS_UPSMON),/etc/nut/upsmon.conf)
-#$(if $(CONFIG_NUT_CLIENTS_UPSSCHED),/etc/nut/upssched.conf)
-#$(if $(CONFIG_NUT_SERVER),/etc/nut/ups.conf)
-#$(if $(CONFIG_NUT_SERVER),/etc/nut/upsd.conf)
-#$(if $(CONFIG_NUT_SERVER),/etc/nut/upsd.users)
-#endef
+define Package/nut/install
+	true
+endef
+
+define Package/nut/conffiles
+/etc/nut/nut.conf
+$(if $(CONFIG_NUT_CLIENTS_UPSMON),/etc/nut/upsmon.conf)
+$(if $(CONFIG_NUT_CLIENTS_UPSSCHED),/etc/nut/upssched.conf)
+$(if $(CONFIG_NUT_SERVER),/etc/nut/ups.conf)
+$(if $(CONFIG_NUT_SERVER),/etc/nut/upsd.conf)
+$(if $(CONFIG_NUT_SERVER),/etc/nut/upsd.users)
+endef
 
 define Package/nut-server/install
 	$(INSTALL_DIR) $(1)/etc/nut
@@ -356,7 +360,7 @@ define DriverPackage
 	# new version of nut we will need to provide descriptions for any new
 	# drivers.
         define Package/nut-driver-$(2)/description
-		
+
         endef
         define Package/nut-driver-$(2)/install
         	$(INSTALL_DIR) $$(1)/lib/nut
