@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nextcloud
-PKG_VERSION:=13.0.2
+PKG_VERSION:=13.0.3
 PKG_RELEASE:=0
 
 PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).zip
-PKG_MD5SUM:=8affe7818b705f322b4f25df07135c40
+PKG_MD5SUM:=d551539cc966b775ad57a38e3ce5782d
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
