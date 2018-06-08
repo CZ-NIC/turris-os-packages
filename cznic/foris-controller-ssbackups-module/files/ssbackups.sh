@@ -12,19 +12,19 @@ ERROR_MESSAGE_CONNECT="Failed to connect to the ssbackup server."
 
 create_special_notification() {
     local code="$1"
-    local message='_('"$ERROR_MESSAGE_GENERAL"')'
+    local message="_(${ERROR_MESSAGE_GENERAL})"
 
     case "$code" in
         gpg_error)
-            message="$message"$'\n''_('"$ERROR_MESSAGE_GPG"')'
+            message="$message"$'\n'"_(${ERROR_MESSAGE_GPG})"
             ;;
 
         max_file_size_error)
-            message="$message"$'\n''_('"$ERROR_MESSAGE_SIZE"')'
+            message="$message"$'\n'"_(${ERROR_MESSAGE_SIZE})"
             ;;
 
         connection_error)
-            message="$message"$'\n''_('"$ERROR_MESSAGE_CONNECT"')'
+            message="$message"$'\n'"_(${ERROR_MESSAGE_CONNECT})"
             ;;
 
         *)
@@ -42,7 +42,7 @@ get_code() {
         local cli_message="$1"
         local code
 
-        code=$(echo "$cli_message" | grep -o '"result": "[^"]*' | grep -o '[^"]*$')
+        code=$(echo "$cli_message" | grep -o '"result": *"[^"]*' | grep -o '[^"]*$')
 
         echo $code
 }
@@ -51,18 +51,18 @@ get_code() {
 error_detect() {
     local status="$1"
     local result="$2"
-    local error_detected=0
 
-    [ "$status" -ne 0 ] && error_detected=1 || echo "$result" | grep -q '"result": *"passed"' || error_detected=1
+    [ "$status" -ne 0 ] && return 1
+    echo "$result" | grep -q '"result": *"passed"' || return 1
 
-    echo "$error_detected"
+    return 0
 }
 
 
 # get result from server first
 result="$(/usr/bin/foris-client -m ssbackups -a create_and_upload ubus)"
 
-if [ "$(error_detect "$?" "$result")" -ne 0 ]; then
+if ! error_detect "$?" "$result"; then
         ### handle error
         # 1. get error code from result
         code="$(get_code "$result")"
