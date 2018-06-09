@@ -8,6 +8,7 @@ ERROR_MESSAGE_GENERAL="Creating an automatic Cloud Backup from your router faile
 ERROR_MESSAGE_GPG="Failed to encrypt the backup."
 ERROR_MESSAGE_SIZE="Failed to create backup because of max file size reached."
 ERROR_MESSAGE_CONNECT="Failed to connect to the ssbackup server."
+ERROR_MESSAGE_PASSWORD="In order to create remote backups, you first need to set the password."
 
 
 create_special_notification() {
@@ -25,6 +26,10 @@ create_special_notification() {
 
         connection_error)
             message="$message"$'\n'"_(${ERROR_MESSAGE_CONNECT})"
+            ;;
+
+        missing_password)
+            message="$message"$'\n'"_(${ERROR_MESSAGE_PASSWORD})"
             ;;
 
         *)
