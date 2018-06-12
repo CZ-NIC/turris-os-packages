@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # FORIS localization directory of ssbackups
-FORIS_SSBACKUPS_LOCALE_DIR="$(opkg files foris-ssbackups-plugin | grep -oE '(.*plugins/ssbackups)' | head -n 1)"
+FORIS_SSBACKUPS_LOCALE_DIR="$(dirname "$(opkg files foris-ssbackups-plugin | grep -m 1 'ssbackups/__init__.py')")/locale"
 
 
 # error messages
