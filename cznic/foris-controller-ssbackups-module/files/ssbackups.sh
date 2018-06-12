@@ -1,7 +1,8 @@
 #!/bin/sh
 
 # FORIS localization directory of ssbackups
-FORIS_SSBACKUPS_LOCALE_DIR=/usr/share/foris/plugins/ssbackups/locale
+FORIS_SSBACKUPS_LOCALE_DIR="$(opkg files foris-ssbackups-plugin | grep -oE '(.*plugins/ssbackups)' | head -n 1)"
+
 
 # error messages
 ERROR_MESSAGE_GENERAL="Creating an automatic Cloud Backup from your router failed."
@@ -47,7 +48,7 @@ get_code() {
         local cli_message="$1"
         local code
 
-        code=$(echo "$cli_message" | grep -o '"result": *"[^"]*' | grep -o '[^"]*$')
+        code="$(echo "$cli_message" | grep -o '"result": *"[^"]*' | grep -o '[^"]*$')"
 
         echo $code
 }
