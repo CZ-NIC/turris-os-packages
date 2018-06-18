@@ -28,11 +28,23 @@ for path in $tmp_out;  do
 	FORIS_PATHS="$FORIS_PATHS|${path:1}"  # remove first '/' character
 done
 
+# get bus config
+config_load foris-controller
+config_get BUS main bus "ubus"
+case "$BUS" in
+	ubus)
+		config_get BUS_PATH ubus path "/var/run/ubus.sock"
+		;;
+	unix)
+		config_get BUS_PATH unix path "/var/run/foris-controller.sock"
+		BUS="unix-socket"
+		;;
+esac
 
 echo "var.foris-$APP.bin = \"/usr/bin/foris\""
 echo "var.foris-$APP.cgi = \"/usr/share/foris/foris-$APP-cgi\""
 echo "var.foris-$APP.scriptname = \"$SCRIPTNAME/$APP\""
-echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP\""
+echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --backend-socket $BUS_PATH\""
 echo "var.foris-$APP.paths = \"$FORIS_PATHS\""
 echo
 echo "\$HTTP[\"url\"] =~ \"^\" + var.foris-$APP.scriptname + \"/(\" + var.foris-$APP.paths + \")$\" {"

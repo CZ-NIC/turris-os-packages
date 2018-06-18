@@ -17,7 +17,7 @@
 #You should have received a copy of the GNU General Public License
 #along with foris-ws.  If not, see <http://www.gnu.org/licenses/>.
 
-START=99
+START=69
 STOP=1
 
 USE_PROCD=1
@@ -27,6 +27,8 @@ start_service() {
 	config_load foris-ws
 	config_get port main port 9080
 	config_get_bool debug main debug 0
+
+	config_load foris-controller
 	config_get bus main bus ubus
 
 	if [ "$debug" == "1" ]; then
@@ -37,8 +39,8 @@ start_service() {
 	if [ "$bus" == "ubus" ]; then
 		config_get path ubus path "/var/run/ubus.sock"
 		procd_set_param command "$PROG" ${debug_arg:-} -a ubus --host "127.0.0.1" --port "$port" ubus --path "$path"
-	elif [ "$bus" == "unix-socket" ]; then
-		config_get path unix path "/var/run/ubus.sock"
+	elif [ "$bus" == "unix" ]; then
+		config_get path unix notification_path "/var/run/foris-controller-notifications.sock"
 		procd_set_param command "$PROG" ${debug_arg:-} -a ubus --host "127.0.0.1" --port "$port" unix-socket --path "$path"
 	fi
 	procd_set_param respawn

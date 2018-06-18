@@ -17,4 +17,16 @@ if [ -z "$SCRIPTNAME" ]; then
 	export PATH_INFO="/"
 fi
 
-exec /usr/bin/foris -s cgi $EXTRA_FLAGS -a config
+config_load foris-controller
+config_get BUS main bus "ubus"
+case "$BUS" in
+	ubus)
+		config_get BUS_PATH ubus path "/var/run/ubus.sock"
+		;;
+	unix)
+		config_get BUS_PATH unix path "/var/run/foris-controller.sock"
+		BUS="unix-socket"
+		;;
+esac
+
+exec /usr/bin/foris -s cgi $EXTRA_FLAGS -b "$BUS" --backend-socket "$BUS_PATH" -a config

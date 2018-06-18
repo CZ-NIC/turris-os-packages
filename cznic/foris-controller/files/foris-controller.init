@@ -42,9 +42,9 @@ start_service() {
 			single_arg="--single"
 		fi
 		procd_set_param command "$PROG" ${debug_arg:-} -b "$backend" -C "$client_socket" ubus --path "$path" ${single_arg:-}
-	elif [ "$bus" == "unix-socket" ]; then
-		config_get path unix path "/tmp/foris-controller.soc"
-		config_get notification_path unix notification_path "/tmp/foris-controller-notifications.soc"
+	elif [ "$bus" == "unix" ]; then
+		config_get path unix path "/var/run/foris-controller.sock"
+		config_get notification_path unix notification_path "/var/run/foris-controller-notifications.sock"
 		procd_set_param command "$PROG" ${debug_arg:-} -b "$backend" -C "$client_socket" unix-socket --path "$path" --notifications-path "${notification_path}"
 	fi
 	procd_set_param stdout 1 # forward stdout of the command to logd
