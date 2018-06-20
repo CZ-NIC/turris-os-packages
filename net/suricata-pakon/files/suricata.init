@@ -113,6 +113,6 @@ start_service() {
 	iptables_activate
 	sleep 1
 	procd_open_instance
-	procd_set_param command /usr/bin/suricata -c /etc/suricata-pakon/suricata.yaml -q $QUEUE_NUM --init-errors-fatal --pidfile $PID_FILE
+	procd_set_param command /usr/bin/suricata -c /etc/suricata-pakon/suricata.yaml -q $QUEUE_NUM --pidfile $PID_FILE
 	procd_close_instance
 }

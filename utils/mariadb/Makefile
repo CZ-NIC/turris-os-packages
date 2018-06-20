@@ -9,14 +9,14 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/uclibc++.mk
 
 PKG_NAME:=mariadb
-PKG_VERSION:=10.2.14
+PKG_VERSION:=10.2.15
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=\
   http://mirror.nodesdirect.com/mariadb//mariadb-$(PKG_VERSION)/source/
 
-PKG_MD5SUM:=d98cce6f3c0e2971afa061fc67183b91
+PKG_MD5SUM:=43365d193747905c285b33d0fe5b6d2f
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-2.0
 

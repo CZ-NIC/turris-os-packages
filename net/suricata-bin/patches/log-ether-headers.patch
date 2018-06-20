@@ -2,12 +2,11 @@ diff --git a/src/flow.c b/src/flow.c
 index c371b54e..20bb4029 100644
 --- a/src/flow.c
 +++ b/src/flow.c
-@@ -309,6 +309,14 @@ void FlowHandlePacketUpdate(Flow *f, Packet *p)
+@@ -309,6 +309,13 @@ void FlowHandlePacketUpdate(Flow *f, Packet *p)
              f->flags &= ~FLOW_PROTO_DETECT_TS_DONE;
              p->flags |= PKT_PROTO_DETECT_TS_DONE;
          }
 +#ifdef NFQ
-+    if (f->if_src==0) f->if_src=p->nfq_v.ifi;
 +    if (!f->hw_address_src_known && p->nfq_v.hw_address_known){
 +        SCLogDebug("setting src MAC address %02x:%02x:%02x:%02x:%02x:%02x", p->nfq_v.hw_address[0], p->nfq_v.hw_address[1], p->nfq_v.hw_address[2], p->nfq_v.hw_address[3], p->nfq_v.hw_address[4], p->nfq_v.hw_address[5]);
 +        f->hw_address_src_known = 1;
@@ -17,12 +16,11 @@ index c371b54e..20bb4029 100644
      } else {
          f->tosrcpktcnt++;
          f->tosrcbytecnt += GET_PKT_LEN(p);
-@@ -324,6 +331,14 @@ void FlowHandlePacketUpdate(Flow *f, Packet *p)
+@@ -324,6 +330,13 @@ void FlowHandlePacketUpdate(Flow *f, Packet *p)
              f->flags &= ~FLOW_PROTO_DETECT_TC_DONE;
              p->flags |= PKT_PROTO_DETECT_TC_DONE;
          }
 +#ifdef NFQ
-+    if (f->if_dst==0) f->if_dst=p->nfq_v.ifo;
 +    if (!f->hw_address_dst_known && p->nfq_v.hw_address_known){
 +        SCLogDebug("setting dst MAC address %02x:%02x:%02x:%02x:%02x:%02x", p->nfq_v.hw_address[0], p->nfq_v.hw_address[1], p->nfq_v.hw_address[2], p->nfq_v.hw_address[3], p->nfq_v.hw_address[4], p->nfq_v.hw_address[5]);
 +        f->hw_address_dst_known = 1;
@@ -36,7 +34,7 @@ diff --git a/src/flow.h b/src/flow.h
 index 93ca7afc..fe696676 100644
 --- a/src/flow.h
 +++ b/src/flow.h
-@@ -435,6 +435,14 @@ typedef struct Flow_
+@@ -435,6 +435,12 @@ typedef struct Flow_
      uint32_t tosrcpktcnt;
      uint64_t todstbytecnt;
      uint64_t tosrcbytecnt;
@@ -45,114 +43,10 @@ index 93ca7afc..fe696676 100644
 +    uint8_t hw_address_src_known;
 +    uint8_t hw_address_dst[6];
 +    uint8_t hw_address_dst_known;
-+    uint32_t if_src;
-+    uint32_t if_dst;
 +#endif
  } Flow;
  
  enum FlowState {
-diff --git a/src/output-json-flow.c b/src/output-json-flow.c
-index f715cc04..69b5c15e 100644
---- a/src/output-json-flow.c
-+++ b/src/output-json-flow.c
-@@ -174,6 +174,42 @@ static json_t *CreateJSONHeaderFromFlow(Flow *f, const char *event_type)
-                     json_integer(f->code));
-             break;
-     }
-+
-+#ifdef NFQ
-+      // flow doesn't know ether header - unless it's our hacked NFQ
-+      if  (f->hw_address_src_known || f->hw_address_dst_known) {
-+        json_t *ejs = json_object();
-+        if (ejs != NULL) {
-+            char eth_addr[19];
-+            const uint8_t *src=NULL, *dst=NULL;
-+
-+            if (f->hw_address_src_known) src=f->hw_address_src;
-+            if (f->hw_address_dst_known) dst=f->hw_address_dst;
-+            if (src) {
-+                snprintf(eth_addr, 19, "%02x:%02x:%02x:%02x:%02x:%02x",
-+                        src[0],
-+                        src[1],
-+                        src[2],
-+                        src[3],
-+                        src[4],
-+                        src[5]);
-+                json_object_set_new(ejs, "src", json_string(eth_addr));
-+            }
-+            if (dst) {
-+                snprintf(eth_addr, 19, "%02x:%02x:%02x:%02x:%02x:%02x",
-+                        dst[0],
-+                        dst[1],
-+                        dst[2],
-+                        dst[3],
-+                        dst[4],
-+                        dst[5]);
-+                json_object_set_new(ejs, "dst", json_string(eth_addr));
-+            }
-+            json_object_set_new(js, "ether", ejs);
-+        }
-+    }
-+#endif
-+
-     return js;
- }
- 
-diff --git a/src/output-json.c b/src/output-json.c
-index 32495d41..d6850140 100644
---- a/src/output-json.c
-+++ b/src/output-json.c
-@@ -470,6 +470,50 @@ json_t *CreateJSONHeader(const Packet *p, int direction_sensitive,
-             break;
-     }
- 
-+    if (p->ethh
-+#ifdef NFQ
-+        || (p->flow && (p->flow->hw_address_src_known || p->flow->hw_address_dst_known))
-+#endif
-+    ) {
-+        json_t *ejs = json_object();
-+        if (ejs != NULL) {
-+            char eth_addr[19];
-+            const uint8_t *src=NULL, *dst=NULL;
-+
-+            if (p->ethh) {
-+                src = p->ethh->eth_src;
-+                dst = p->ethh->eth_dst;
-+            }
-+#ifdef NFQ
-+            else {
-+                if (p->flow->hw_address_src_known) src=p->flow->hw_address_src;
-+                if (p->flow->hw_address_dst_known) dst=p->flow->hw_address_dst;
-+            }
-+#endif
-+            if (src) {
-+                snprintf(eth_addr, 19, "%02x:%02x:%02x:%02x:%02x:%02x",
-+                        src[0],
-+                        src[1],
-+                        src[2],
-+                        src[3],
-+                        src[4],
-+                        src[5]);
-+                json_object_set_new(ejs, "src", json_string(eth_addr));
-+            }
-+            if (dst) {
-+                snprintf(eth_addr, 19, "%02x:%02x:%02x:%02x:%02x:%02x",
-+                        dst[0],
-+                        dst[1],
-+                        dst[2],
-+                        dst[3],
-+                        dst[4],
-+                        dst[5]);
-+                json_object_set_new(ejs, "dst", json_string(eth_addr));
-+            }
-+            json_object_set_new(js, "ether", ejs);
-+        }
-+    }
-+
-     return js;
- }
- 
 diff --git a/src/source-nfq.c b/src/source-nfq.c
 index 4c13f5a7..0acb1099 100644
 --- a/src/source-nfq.c

@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
 PKG_VERSION:=60.2.4
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -240,9 +240,12 @@ define Package/$(PKG_NAME)-migration-helper/install
 	$(INSTALL_DIR) $(1)/usr/bin	
 	echo '#!/bin/sh' > $(1)/usr/bin/updater-unstuck.sh
 	chmod +x $(1)/usr/bin/updater-unstuck.sh
-	echo '#!/bin/sh' > $(1)/usr/bin/updater-wipe.sh
-	chmod +x $(1)/usr/bin/updater-wipe.sh
 endef
+# updater-wipe.sh is temporally in updater-ng package for Foris Wizard
+# compatibility. We should drop it from updater-ng when wizard is dropped and
+# return it to this package.
+#	echo '#!/bin/sh' > $(1)/usr/bin/updater-wipe.sh
+#	chmod +x $(1)/usr/bin/updater-wipe.sh
 
 
 PKG_INSTALL_DIR_ORIG:="$(PKG_INSTALL_DIR)"

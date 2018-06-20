@@ -7,7 +7,7 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=domoticz
+PKG_NAME:=domoticz-turris-gadgets
 PKG_REV:=2563-gadgets-11-g7b63085
 PKG_VERSION:=2.${PKG_REV}
 PKG_RELEASE:=1
@@ -27,16 +27,17 @@ CMAKE_INSTALL:=1
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
 
-define Package/domoticz
+define Package/domoticz-turris-gadgets
   SECTION:=utils
   CATEGORY:=Utilities
   SUBMENU:=Home Automation
-  TITLE:=Domoticz Home Automation
+  CONFLICTS:=domoticz
+  TITLE:=Domoticz Home Automation for Turris Gadgets
   DEPENDS:=+zlib +libusb-1.0 +libusb-compat +libcurl +libsqlite3 +libopenssl +boost-system +boost-thread +boost-date_time +lm-sensors
   URL:=https://domoticz.com/
 endef
 
-define Package/domoticz/description
+define Package/domoticz-turris-gadgets/description
   Domoticz is a Home Automation System that lets you monitor and configure various devices like:
   Lights, Switches, various sensors/meters like Temperature, Rain, Wind, UV, Electra, Gas, Water and much more.
   Notifications/Alerts can be sent to any mobile device.
@@ -51,11 +52,11 @@ define Build/Prepare
 	echo "#define SVNVERSION  $(PKG_REV)-$(PKG_RELEASE)" > $(PKG_BUILD_DIR)/svnversion.h
 endef
 
-define Package/domoticz/conffiles
+define Package/domoticz-turris-gadgets/conffiles
 /etc/config/domoticz
 endef
 
-define Package/domoticz/install
+define Package/domoticz-turris-gadgets/install
 	$(INSTALL_DIR) $(1)/usr/share/domoticz
 	$(CP) $(PKG_INSTALL_DIR)/opt/domoticz/svnversion.h $(1)/usr/share/domoticz/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/opt/domoticz/domoticz $(1)/usr/share/domoticz/
@@ -74,4 +75,4 @@ define Package/domoticz/install
 	$(INSTALL_CONF) ./files/domoticz.conf $(1)/etc/config/domoticz
 endef
 
-$(eval $(call BuildPackage,domoticz))
+$(eval $(call BuildPackage,domoticz-turris-gadgets))
