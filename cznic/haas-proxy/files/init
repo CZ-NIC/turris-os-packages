@@ -20,7 +20,7 @@ check_fw() {
 			echo "iptables -t nat -D zone_wan_prerouting -p tcp -m tcp --dport 22 -m comment --comment \"haas\" -j DNAT --to-destination $WAN_IP:$PORT" > /tmp/haas-remove-iptables
 			echo "iptables -t nat -D zone_wan_prerouting -p tcp -m tcp --dport 22 -j MARK --set-mark 0x10" >> /tmp/haas-remove-iptables
 		else
-			( sleep 60 && $0 check_fw ) &
+			( sleep 60 && /etc/init.d/haas-proxy check_fw ) &
 		fi
 	fi
 }
