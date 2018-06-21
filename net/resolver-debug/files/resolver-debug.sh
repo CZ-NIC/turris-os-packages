@@ -80,7 +80,7 @@ start_debug () {
 		run_kresd_command "verbose(true)"
 	elif [ "${resolver}" == "unbound" ]; then
 		echo "== enable verbose logging (reboot to disable it) ==" |test_log
-		run_unbound_command "verbose 5"
+		run_unbound_command "verbosity 5"
 	fi
 
 }
@@ -95,7 +95,7 @@ stop_debug () {
 		run_kresd_command "verbose(false)"
 	elif [ "${resolver}" == "unbound" ]; then
 		echo "== unbound disabled verbose logging ==" |test_log
-		run_unbound_command "verbose 0"
+		run_unbound_command "verbosity 0"
 	fi
 }
 
