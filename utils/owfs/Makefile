@@ -8,15 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=owfs
-PKG_VERSION:=3.1p5
-PKG_RELEASE:=2
+PKG_VERSION:=3.2p2
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=@SF/$(PKG_NAME)
-PKG_MD5SUM:=0d3718eb7774d4eb6019e3ff870dbe66
-PKG_MAINTAINER:=Jo-Philipp Wich <jan.horacek@nic.cz>
+PKG_SOURCE_URL:=https://codeload.github.com/owfs/owfs/tar.gz/v$(PKG_VERSION)?
+PKG_MD5SUM:=f85e81837fe9ec273499a17f2f7a9143
+
+PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 PKG_LICENSE:=GPL-2.0
 
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
@@ -36,7 +38,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/owfs/Default
   TITLE:=OWFS (1-Wire File System)
-  URL:=http://owfs.sourceforge.net/
+  URL:=https://github.com/owfs/owfs
   SECTION:=net
   CATEGORY:=Network
   SUBMENU:=Filesystem
@@ -86,7 +88,7 @@ define Package/libow
     +libpthread \
     +LIBOW_MASTER_USB:libusb-compat \
     +LIBOW_MASTER_W1:kmod-w1 \
-    +libavahi-client 
+    +libavahi-client
   TITLE:=OWFS - common shared library
 endef
 
