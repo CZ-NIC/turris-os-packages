@@ -1,25 +1,3 @@
-FORIS_PLUGIN_DIR:=/usr/share/foris/plugins
-
-define Build/Compile/ForisPlugin
-	( \
-		cd $(PKG_BUILD_DIR) ;\
-		foris_compilemessages.sh src \
-	)
-	( \
-		cd $(PKG_BUILD_DIR)/src/static/ ;\
-		compass compile \
-			-r breakpoint \
-			-s compressed \
-			-e production \
-			--no-line-comments \
-			--css-dir css \
-			--sass-dir sass \
-			--images-dir img \
-			--javascripts-dir js \
-			--http-path "/" \
-	)
-endef
-
 # $1 = package name
 # $2 = plugin name
 # $3 = plugin translation name
@@ -33,10 +11,11 @@ define ForisPluginTranslation
  endef
 
  define Package/$(1)-l10n-$(3)/install
-	$(INSTALL_DIR) $$(1)/$(FORIS_PLUGIN_DIR)/$(2)/locale/$(3)/LC_MESSAGES
+	$(INSTALL_DIR) $$(1)$(PYTHON_PKG_DIR)/foris_plugins/$(2)/locale/$(3)/LC_MESSAGES
+
 	$(CP) \
-		$$(PKG_BUILD_DIR)/src/locale/$(3)/LC_MESSAGES/*.mo \
-		$$(1)/$(FORIS_PLUGIN_DIR)/$(2)/locale/$(3)/LC_MESSAGES/
+		$$(PKG_BUILD_DIR)/foris_plugins/$(2)/locale/$(3)/LC_MESSAGES/*.mo \
+		$$(1)$(PYTHON_PKG_DIR)/foris_plugins/$(2)/locale/$(3)/LC_MESSAGES/
  endef
 
  define Package/$(1)-l10n-$(3)/postrm
@@ -55,16 +34,36 @@ endef
 # $1 = package name
 # $2 = plugin name
 define ForisPlugin
+
+ define Build/Compile
+	$(call Build/Compile/PyMod,,install --prefix=/usr --root="$(PKG_INSTALL_DIR)")
+ endef
+
  define Package/$(1)/install
-	$(INSTALL_DIR) $$(1)/$(FORIS_PLUGIN_DIR)/$(2)
+
+	$(INSTALL_DIR) $$(1)$(PYTHON_PKG_DIR)
 
 	$(CP) \
-		$(PKG_BUILD_DIR)/src/* \
-		$$(1)/$(FORIS_PLUGIN_DIR)/$(2)/
+		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
+		$$(1)$(PYTHON_PKG_DIR)/
 
-	$(RM) -r $$(1)/$(FORIS_PLUGIN_DIR)/$(2)/locale
-	$(RM) -r $$(1)/$(FORIS_PLUGIN_DIR)/$(2)/static/.sass-cache
-	$(RM) -r $$(1)/$(FORIS_PLUGIN_DIR)/$(2)/static/sass
+	$(RM) -r $$(1)$(PYTHON_PKG_DIR)/foris_plugins/*/locale/
+	$(RM) -r $$(1)$(PYTHON_PKG_DIR)/foris_plugins/__init__.py
+
  endef
+
+ define Package/$(1)/postrm
+#!/bin/sh
+set -x
+[ -n "$$$${IPKG_INSTROOT}" ] || /etc/init.d/lighttpd restart
+ endef
+
+ define Package/$(1)/postinst
+#!/bin/sh
+set -x
+[ -n "$$$${IPKG_INSTROOT}" ] || /etc/init.d/lighttpd restart
+ endef
+
+
 endef
 

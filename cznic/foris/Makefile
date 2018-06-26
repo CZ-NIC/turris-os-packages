@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=98.2
+PKG_VERSION:=98.4
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -16,8 +16,8 @@ PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
 PKG_SOURCE_VERSION:=package-v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)
-PKG_BUILD_DEPENDS:=ruby/host
+
+PKG_BUILD_DEPENDS:=ruby/host python-libsass/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
@@ -172,17 +172,6 @@ define Build/InstallDev
 	$(INSTALL_DIR) $(STAGING_DIR)/mk/
 	$(INSTALL_DATA) ./files/foris-translations.mk $(STAGING_DIR)/mk/
 	$(INSTALL_DATA) ./files/foris-plugin.mk $(STAGING_DIR)/mk/
-endef
-
-define Host/Install
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/tools/compilemessages.sh $(STAGING_DIR_HOST)/bin/foris_compilemessages.sh
-endef
-
-define Host/Compile
-endef
-
-define Host/Clean
-	$(RM) -rf $(STAGING_DIR_HOST)/bin/foris_compilemessages.sh
 endef
 
 # $1 = translation name
