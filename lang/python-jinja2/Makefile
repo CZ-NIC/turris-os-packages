@@ -14,6 +14,8 @@ PKG_RELEASE:=1
 PKG_SOURCE:=Jinja2-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/j/jinja2/
 
+PKG_MD5SUM:=61ef1117f945486472850819b8d1eb3d
+
 PKG_BUILD_DIR:=$(BUILD_DIR)/Jinja2-$(PKG_VERSION)
 
 PKG_BUILD_DEPENDS:=python

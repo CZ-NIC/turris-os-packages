@@ -20,12 +20,13 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_LICENSE:=GPL-3.0
 PKG_LICENSE_FILE:=LICENSE
 
-PKG_BUILD_DEPENDS:=foris/host
+PKG_BUILD_DEPENDS:=foris-plugins-distutils
 
 include $(INCLUDE_DIR)/package.mk
 include ../foris/files/foris-translations.mk
 include ../foris/files/foris-plugin.mk
 
+$(call include_mk, python-package.mk)
 
 define Package/foris-tls-plugin
 	TITLE:=foris-tls-plugin
@@ -36,26 +37,6 @@ endef
 
 define Package/foris-tls-plugin/description
  Foris plugin providing frontend for NUCI TLS plugin.
-endef
-
-define Build/Compile
-	$(call Build/Compile/ForisPlugin)
-endef
-
-define Package/foris-tls-plugin/postinst
-#!/bin/sh
-set -x
-[ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/lighttpd restart
-}
-endef
-
-define Package/$(PKG_NAME)/postrm
-#!/bin/sh
-set -x
-[ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/lighttpd restart
-}
 endef
 
 # Package install definition
