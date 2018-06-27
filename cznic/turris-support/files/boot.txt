@@ -1,0 +1,3 @@
+setenv bootargsubi 'root=ubi0:rootfs rootfstype=ubifs ubi.mtd=9,2048 rootflags=chk_data_crc rw console=ttyS0,115200'
+setenv ubiboot 'max6370_wdt_off; setenv bootargs $bootargsubi; ubi part rootfs; ubifsmount ubi0:rootfs; ubifsload $nandfdtaddr /boot/fdt; ubifsload $nandbootaddr /boot/zImage; bootm $nandbootaddr - $nandfdtaddr'
+run ubiboot

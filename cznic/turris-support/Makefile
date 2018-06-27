@@ -1,8 +1,8 @@
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
-PKG_NAME:=mox-support
-PKG_VERSION:=2
+PKG_NAME:=turris-support
+PKG_VERSION:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
 
@@ -14,7 +14,7 @@ define Package/$(PKG_NAME)
 endef
 
 define Package/$(PKG_NAME)/description
- Contains supporting files for Turris MOX.
+ Contains supporting files for Turris 1.X.
 endef
 
 define Build/Prepare
@@ -25,18 +25,14 @@ define Build/Configure
 endef
 
 define Build/Compile
-	$(KERNEL_MAKE) Image dtbs
+	$(KERNEL_MAKE) zImage dtbs
 endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/boot
-	for d in $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts/marvell/*-turris-mox-sd*.dtb; do \
-		$(CP) $$$$d "$(1)"/boot; \
+	for d in $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts/turris.dtb; do \
+		$(CP) $$$$d "$(1)"/boot/ftd; \
 	done
-	ln -s armada-3720-turris-mox-sd.dtb "$(1)"/boot/armada-3720-turris-mox-sd-.dtb
-	ln -s armada-3720-turris-mox-sd.dtb "$(1)"/boot/armada-3720-turris-mox-sd-pci.dtb
-	ln -s armada-3720-turris-mox-sd-sfp.dtb "$(1)"/boot/armada-3720-turris-mox-sd-sfp-pci.dtb
-	ln -s armada-3720-turris-mox-sd-sfp.dtb "$(1)"/boot/armada-3720-turris-mox-sd-pci-sfp.dtb
 	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot.scr
 endef
 
