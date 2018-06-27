@@ -25,7 +25,7 @@ define Build/Configure
 endef
 
 define Build/Compile
-	$(KERNEL_MAKE) zImage dtbs
+	$(KERNEL_MAKE) zImage turris.dtb
 endef
 
 define Package/$(PKG_NAME)/install
