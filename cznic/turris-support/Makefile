@@ -30,7 +30,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/boot
-	for d in $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts/turris.dtb; do \
+	for d in $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/turris.dtb; do \
 		$(CP) $$$$d "$(1)"/boot/ftd; \
 	done
 	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot.scr
