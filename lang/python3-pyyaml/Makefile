@@ -8,14 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-pyyaml
-PKG_VERSION:=3.12
+PKG_VERSION:=4.1
 PKG_RELEASE:=1
 
-PKG_SOURCE:=PyYAML-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://pyyaml.org/download/pyyaml/
-PKG_MD5SUM:=4c129761b661d181ebf7ff4eb2d79950
+PKG_SOURCE:=$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://github.com/yaml/pyyaml/archive/
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/PyYAML-$(PKG_VERSION)
+PKG_MD5SUM:=049d79ccea9a6a7fac5ef7011d069a01b8314de920bc4e8d8c425e62e21b26f0
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/pyyaml-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python3-package.mk)
