@@ -572,7 +572,7 @@ verify_host_port() {
 		write_log 7 "$(cat $ERRFILE)"
 		return 3
 	else		# nc compiled without extensions (no timeout support)
-		__RUNPROG="timeout 2 -- $__NC $__IP $__PORT </dev/null >$DATFILE 2>$ERRFILE"
+		__RUNPROG="timeout -t 2 -- $__NC $__IP $__PORT </dev/null >$DATFILE 2>$ERRFILE"
 		write_log 7 "#> $__RUNPROG"
 		eval $__RUNPROG
 		__ERR=$?
