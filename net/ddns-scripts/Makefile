@@ -12,7 +12,7 @@ PKG_NAME:=ddns-scripts
 PKG_VERSION:=2.7.7
 # Release == build
 # increase on changes of services files or tld_names.dat
-PKG_RELEASE:=6
+PKG_RELEASE:=8
 
 PKG_LICENSE:=GPL-2.0
 PKG_MAINTAINER:=Christian Schoenebeck <christian.schoenebeck@gmail.com>
@@ -66,11 +66,21 @@ endef
 ###### *************************************************************************
 define Package/ddns-scripts_cloudflare.com-v4
     $(call Package/ddns-scripts/Default)
-    TITLE:=CloudFlare.com API v4 (require cURL)
+    TITLE:=CloudFlare.com API v4 (requires cURL)
     DEPENDS:=ddns-scripts +curl
 endef
 define Package/ddns-scripts_cloudflare.com-v4/description
     Dynamic DNS Client scripts extension for CloudFlare.com API-v4 (require/install cURL)
+endef
+
+###### *************************************************************************
+define Package/ddns-scripts_freedns_42_pl
+    $(call Package/ddns-scripts/Default)
+    TITLE:=DDNS extension for FreeDNS.42.pl (requires cURL)
+    DEPENDS:=ddns-scripts +curl
+endef
+define Package/ddns-scripts_freedns_42_pl/description
+    Dynamic DNS Client scripts extension for freedns.42.pl
 endef
 
 ###### *************************************************************************
@@ -299,6 +309,14 @@ define Package/ddns-scripts_godaddy.com-v1/preinst
 exit 0	# suppress errors
 endef
 
+###### *************************************************************************
+define Package/ddns-scripts_godaddy.com-v1/preinst
+	#!/bin/sh
+	# if NOT run buildroot then stop service
+	[ -z "$${IPKG_INSTROOT}" ] && /etc/init.d/ddns stop >/dev/null 2>&1
+	exit 0	# suppress errors
+endef
+
 define Package/ddns-scripts_godaddy.com-v1/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/ddns.defaults $(1)/etc/uci-defaults/ddns_godaddy.com-v1
@@ -468,6 +486,7 @@ endef
 $(eval $(call BuildPackage,ddns-scripts))
 $(eval $(call BuildPackage,ddns-scripts_cloudflare))
 $(eval $(call BuildPackage,ddns-scripts_cloudflare.com-v4))
+$(eval $(call BuildPackage,ddns-scripts_freedns_42_pl))
 $(eval $(call BuildPackage,ddns-scripts_godaddy.com-v1))
 $(eval $(call BuildPackage,ddns-scripts_no-ip_com))
 $(eval $(call BuildPackage,ddns-scripts_nsupdate))

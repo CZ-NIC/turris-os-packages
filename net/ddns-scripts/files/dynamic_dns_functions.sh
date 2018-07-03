@@ -1108,6 +1108,7 @@ get_registered_ip() {
 		__RUNPROG="$__PROG $lookup_host >$DATFILE 2>$ERRFILE"
 		__PROG="hostip"
 	elif [ -n "$NSLOOKUP" ]; then	# last use BusyBox nslookup
+		NSLOOKUP_MUSL=$($(which nslookup) localhost 2>&1 | grep -F "(null)")	# not empty busybox compiled with musl
 		[ $force_dnstcp -ne 0 ] && \
 			write_log 14 "Busybox nslookup - no support for 'DNS over TCP'"
 		[ -n "$NSLOOKUP_MUSL" -a -n "$dns_server" ] && \
