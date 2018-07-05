@@ -19,12 +19,13 @@ PKG_MD5SUM:=86934693e4825b360594e88a734c3b72
 PKG_BUILD_DIR:=$(BUILD_DIR)/libsass-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/libsass-$(PKG_VERSION)
 
-PKG_BUILD_DEPENDS:=python libsass
-HOST_BUILD_DEPENDS:=python/host libsass/host
+PKG_BUILD_DEPENDS:=python
+HOST_BUILD_DEPENDS:=python/host python-setuptools/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
 $(call include_mk, python-package.mk)
+$(call include_mk, python-host.mk)
 
 define Package/$(PKG_NAME)
 	SUBMENU:=Python
@@ -32,7 +33,7 @@ define Package/$(PKG_NAME)
 	CATEGORY:=Languages
 	TITLE:=$(PKG_NAME)
 	URL:=https://github.com/sass/libsass-python
-	DEPENDS:=+python-light +libsass
+	DEPENDS:=+python-light +libstdcpp
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
@@ -61,6 +62,7 @@ define Package/$(PKG_NAME)/install
 		$(1)$(PYTHON_PKG_DIR)/
 endef
 
+$(eval $(call HostBuild))
+
 $(eval $(call PyPackage,$(PKG_NAME)))
 $(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call HostBuild))

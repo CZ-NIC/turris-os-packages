@@ -25,11 +25,12 @@ HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)
 PKG_LICENSE:=GPL-3.0
 
 PKG_BUILD_DEPENDS:=python python-libsass
-HOST_BUILD_DEPENDS:=python/host python-libsass/host
+HOST_BUILD_DEPENDS:=python/host python-setuptools/host python-libsass/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
 $(call include_mk, python-package.mk)
+$(call include_mk, python-host.mk)
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
@@ -63,6 +64,7 @@ define Package/$(PKG_NAME)/install
 		$(1)$(PYTHON_PKG_DIR)/
 endef
 
+$(eval $(call HostBuild))
+
 $(eval $(call PyPackage,$(PKG_NAME)))
 $(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call HostBuild))
