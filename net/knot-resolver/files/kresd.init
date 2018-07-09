@@ -127,6 +127,13 @@ load_uci_config_common() {
 		set_param_func "cache.clear" ""
 	fi
 
+	# rebinding protection
+	config_get_bool rebind_protection "$section" rebind_protection  1
+	if [ "$rebind_protection" = "1" ]; then
+		#echo "modules.load('rebinding < iterate')">>$CONFIGFILE
+		set_param_func "modules.load" "'rebinding < iterate'"
+	fi
+
 	config_get_bool do_forward "$section" forward_upstream 1
 	if [ "$do_forward" = "1" ] ; then
 		local SERVERS
