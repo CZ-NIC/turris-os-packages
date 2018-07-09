@@ -91,6 +91,18 @@ set_multiple_parameters() {
     config_list_foreach "$section" "$var" add_parameter "$opt"
 }
 
+set_rebind_protection()
+{
+    # RFC1918, RFC3927, RFC4291, RFC6598, RFC6890
+    echo "	private-address: 10.0.0.0/8" >> "$CONFIGFILE"
+    echo "	private-address: 100.64.0.0/10" >> "$CONFIGFILE"
+    echo "	private-address: 169.254.0.0/16" >> "$CONFIGFILE"
+    echo "	private-address: 172.16.0.0/12" >> "$CONFIGFILE"
+    echo "	private-address: 192.168.0.0/16" >> "$CONFIGFILE"
+    echo "	private-address: fc00::/7" >> "$CONFIGFILE"
+    echo "	private-address: fe80::/10" >> "$CONFIGFILE"
+}
+
 set_rootkey() {
     local var="$1"
     local val
@@ -190,6 +202,10 @@ init_unbound() {
     config_load resolver
 
     set_section unbound
+    config_get_bool rebind_protection common rebind_protection 1
+    if [ "$rebind_protection" = "1" ] ; then
+        set_rebind_protection
+    fi
     set_parameter outgoing_range outgoing-range 60
     set_parameter outgoing_num_tcp outgoing-num-tcp 128
     set_parameter incoming_num_tcp incoming-num-tcp 128
