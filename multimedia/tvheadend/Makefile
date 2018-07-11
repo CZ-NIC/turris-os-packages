@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tvheadend
-PKG_VERSION:=4.2.6
+PKG_VERSION:=4.3
 PKG_RELEASE:=0
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_SOURCE_VERSION:=v$(PKG_VERSION)
+PKG_SOURCE_VERSION:=66d6161c563181e5a572337ab3509a835c5a57e2
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/tvheadend/tvheadend.git
@@ -74,6 +74,7 @@ CONFIGURE_ARGS += \
 	--disable-dbus_1 \
 	--enable-libav \
 	--disable-bundle \
+	--disable-tvhcsa --disable-cardclient \
 	--disable-ffmpeg_static
 
 define Build/Prepare
