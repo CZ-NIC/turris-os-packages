@@ -10,7 +10,8 @@ start_service() {
   #sqlite3 integrity_check returns 0 even if the file has zero size...
   [ -s /var/lib/pakon.db ] || rm -f /var/lib/pakon.db
   # recreate database if it doesn't exist (was corrupted)
-  [ -f /var/lib/pakon.db ] || python3 /usr/libexec/pakon-light/create_db.py
+  ARCHIVE_PATH=$(uci -q get pakon.archive.path || echo "/srv/pakon/pakon-archive.db")
+  [[ -f /var/lib/pakon.db && -f "$ARCHIVE_PATH" ]] || python3 /usr/libexec/pakon-light/create_db.py
   procd_open_instance
   procd_set_param command /usr/libexec/pakon-light/pakon-monitor.py
   procd_set_param respawn ${respawn_threshold:-600} ${respawn_timeout:-5} ${respawn_retry:-5}
