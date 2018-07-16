@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/owfs/owfs/tar.gz/v$(PKG_VERSION)?
-PKG_MD5SUM:=f85e81837fe9ec273499a17f2f7a9143
+PKG_MD5SUM:=cd5261dca94e89c95cc77a2040931c1e
 
 PKG_MAINTAINER:=Jo-Philipp Wich <jo@mein.io>
 PKG_LICENSE:=GPL-2.0
