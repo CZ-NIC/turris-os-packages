@@ -35,8 +35,10 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_replace/dist.conf $(1)/usr/share/pakon-light/domains_replace/
 
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_ignore/ads.txt $(1)/usr/share/pakon-light/domains_ignore/ads_dist.txt
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_ignore/rubbish.txt $(1)/usr/share/pakon-light/domains_ignore/rubbish_dist.txt
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_ignore/ads.txt $(1)/usr/share/pakon-light/domains_ignore/dist_ads.txt
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_ignore/rubbish.txt $(1)/usr/share/pakon-light/domains_ignore/dist_rubbish.txt
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_ignore/ocsp.txt $(1)/usr/share/pakon-light/domains_ignore/dist_ocsp.txt
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/domains_ignore/cdn.txt $(1)/usr/share/pakon-light/domains_ignore/dist_cdn.txt
 endef
 
 define Package/$(PKG_NAME)/postinst
