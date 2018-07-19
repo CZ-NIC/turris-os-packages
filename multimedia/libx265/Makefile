@@ -35,7 +35,7 @@ define Package/libx265
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=H265/HEVC free codec library.
-  DEPENDS:=+libpthread @BUILD_PATENTED
+  DEPENDS:=+libpthread @BUILD_PATENTED +libstdcpp
   URL:=http://www.videolan.org/developers/x264.html
 endef
 
