@@ -36,7 +36,7 @@ start_service() {
 	elif [ -z "$LOG" ] || [ "$LOG" = none ]; then
 		LOG=""
 	else
-		LOG="--logfile=$LOG"
+		LOG="--log-file=$LOG"
 	fi
 	[ -n "$TOKEN" ] || exit 1
 	[ -n "$LOG_LEVEL" ] || LOG_LEVEL="warning"
