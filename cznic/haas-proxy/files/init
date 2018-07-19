@@ -46,8 +46,8 @@ start_service() {
 		echo 1 > /sys/fs/cgroup/cgroup.clone_children
 		mkdir -p /sys/fs/cgroup/haas
 		echo 128 > /sys/fs/cgroup/haas/cpu.shares
-		echo 2000000 > /sys/fs/cgroup/cpu/test/cpu.cfs_period_us
-		echo  300000 > /sys/fs/cgroup/cpu/test/cpu.cfs_quota_us
+		echo 2000000 > /sys/fs/cgroup/haas/cpu.cfs_period_us
+		echo  300000 > /sys/fs/cgroup/haas/cpu.cfs_quota_us
 	fi
 	procd_open_instance
 	procd_set_param command /usr/bin/python2.7 -m haas_proxy -n --pidfile=/tmp/haas.pid haas_proxy $LOG --log-level "$LOG_LEVEL" --device-token $TOKEN --port $PORT
