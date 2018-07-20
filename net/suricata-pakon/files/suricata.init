@@ -99,7 +99,7 @@ iptables_deactivate() {
 }
 
 stop_service() {
-	iptables_deactivate 2>/dev/null
+	iptables -L suricata-pakon >/dev/null 2>&1 && iptables_deactivate 2>/dev/null
 	rm -f $PID_FILE
 }
 
@@ -109,10 +109,28 @@ start_service() {
 	mkdir -p /var/run/suricata
 	mkdir -p /tmp/suricata
 	[ -f /usr/bin/suricata_update_rules.sh ] && /usr/bin/suricata_update_rules.sh -f #suricata-emergingthreats-rules integration
-	build_iptables
-	iptables_activate
-	sleep 1
-	procd_open_instance
-	procd_set_param command /usr/bin/suricata -c /etc/suricata-pakon/suricata.yaml -q $QUEUE_NUM --pidfile $PID_FILE
-	procd_close_instance
+	MODE=$(uci -q get pakon.monitor.mode || echo "tap")
+	case "$MODE" in
+		"filter")
+			build_iptables
+			iptables_activate
+			procd_open_instance
+			procd_set_param command /usr/bin/suricata -c /etc/suricata-pakon/suricata.yaml -q $QUEUE_NUM --pidfile $PID_FILE
+			procd_close_instance
+			;;
+		"tap")
+			procd_open_instance
+			procd_set_param command /usr/bin/suricata -c /etc/suricata-pakon/suricata.yaml --pidfile $PID_FILE
+			IFACES=$(uci -q get pakon.monitor.interface || echo "br-lan br-guest_turris")
+			for IFACE in $IFACES; do
+				ifconfig $IFACE >/dev/null 2>&1 || continue
+				procd_append_param command --af-packet=$IFACE
+			done
+			procd_close_instance
+			;;
+		*)
+			echo "Unknown mode '$MODE'. Possible values are 'tap' or 'filter'." >&2
+			exit 1
+			;;
+	esac
 }
