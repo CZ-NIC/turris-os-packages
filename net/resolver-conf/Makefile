@@ -26,6 +26,7 @@ define Package/resolver-conf
 	CATEGORY:=Network
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Resolver configuration
+	DEPENDS:=+python
 endef
 
 define Package/$(PKG_NAME)/description
