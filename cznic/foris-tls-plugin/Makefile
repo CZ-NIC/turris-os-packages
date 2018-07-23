@@ -26,7 +26,7 @@ include $(INCLUDE_DIR)/package.mk
 include ../foris/files/foris-translations.mk
 include ../foris/files/foris-plugin.mk
 
-$(call include_mk, python-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 
 define Package/foris-tls-plugin
 	TITLE:=foris-tls-plugin
