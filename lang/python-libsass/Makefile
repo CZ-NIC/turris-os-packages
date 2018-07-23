@@ -25,7 +25,7 @@ HOST_BUILD_DEPENDS:=python/host python-setuptools/host
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
 include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
-$(call include_mk, python-host.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python-host.mk
 
 define Package/$(PKG_NAME)
 	SUBMENU:=Python
