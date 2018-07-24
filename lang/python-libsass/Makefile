@@ -52,7 +52,7 @@ define Host/Compile
 endef
 
 define Host/Install
-	$(call Build/Compile/HostPyMod,,install --prefix="" --root="$(STAGING_DIR)/host")
+	$(call Build/Compile/HostPyMod,,install --prefix="" --root="$(STAGING_DIR_HOSTPKG)")
 endef
 
 define Package/$(PKG_NAME)/install
