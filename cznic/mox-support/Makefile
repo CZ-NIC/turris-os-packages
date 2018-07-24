@@ -34,10 +34,18 @@ define Package/$(PKG_NAME)/install
 		$(CP) $$$$d "$(1)"/boot; \
 	done
 	ln -s armada-3720-turris-mox-sd.dtb "$(1)"/boot/armada-3720-turris-mox-sd-.dtb
-	ln -s armada-3720-turris-mox-sd.dtb "$(1)"/boot/armada-3720-turris-mox-sd-pci.dtb
-	ln -s armada-3720-turris-mox-sd-sfp.dtb "$(1)"/boot/armada-3720-turris-mox-sd-sfp-pci.dtb
-	ln -s armada-3720-turris-mox-sd-sfp.dtb "$(1)"/boot/armada-3720-turris-mox-sd-pci-sfp.dtb
+	for i in "$(1)"/boot/*.dtb; do
+		ln -s `basename $$$$i` `echo $$$$i | sed 's|turris-mox|turris-mox-pci|'`
+	done
 	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot.scr
+	$(INSTALL_DIR) $(1)/sbin
+	$(INSTALL_BIN) ./files/nor-update $(1)/sbin
+	$(INSTALL_DIR) $(1)/usr/share/mox
+	$(INSTALL_BIN) ./files/mox_autosetup $(1)/usr/share/mox
+	$(INSTALL_DIR) $(1)/etc
+	ln -s ../usr/share/mox/mox_autosetup $(1)/etc/board_network_setup
+	$(INSTALL_DATA) ./files/flash-image-1G.bin $(1)/usr/share/mox/uboot-1G
+	$(INSTALL_DATA) ./files/flash-image-512M.bin $(1)/usr/share/mox/uboot-512M
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

@@ -1,0 +1,8 @@
+#!/bin/sh
+if [ "`sed -n 's|MemTotal:[[:blank:]]*\([0-9]*\)\ kB|\1|p' /proc/meminfo`" -gt 512000 ]; then
+	UBOOT=/usr/share/mox/uboot-1G
+else
+	UBOOT=/usr/share/mox/uboot-512M
+fi
+mtd erase /dev/mtd0
+mtd write $UBOOT /dev/mtd0

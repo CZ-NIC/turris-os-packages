@@ -1,0 +1,26 @@
+#!/bin/sh
+. /lib/functions/uci-defaults.sh
+
+modules="`cat /sys/devices/platform/soc/soc:internal-regs@*/*.spi/spi_master/spi*/spi*/module_topology`"
+
+# If we have SFP, it is definitely WAN
+if expr "$modules" : '.*sfp.*' > /dev/null; then
+	ucidef_set_interface_wan 'eth1'
+	ucidef_set_interface_lan "eth0 `ls -d /sys/class/net/lan* 2> /dev/null`"
+
+# If we have switch, then CPU port is obviously WAN
+elif expr "$modules" : '.*sfp.*' > /dev/null || expr "$modules" : '.*sfp.*' > /dev/null; then
+	ucidef_set_interface_wan 'eth0'
+	ucidef_set_interface_lan "`ls -d /sys/class/net/lan*`"
+
+# If we have just one port, it has to be LAN
+else
+	ucidef_set_interface_lan "eth0"
+fi
+
+# Try dhcpp on LAN
+if udhcpc -fn br-lan; then
+	uci set network.lan.proto=dhcp
+	uci delete network.lan.ipaddr
+	uci delete network.lan.netmask
+fi
