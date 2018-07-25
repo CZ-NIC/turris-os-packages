@@ -48,9 +48,4 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) ./files/flash-image-512M.bin $(1)/usr/share/mox/uboot-512M
 endef
 
-define Package/$(PKG_NAME)/postinst
-#!/bin/sh
-$${IPKG_INSTROOT}/etc/init.d/mox_autosetup enable
-endef
-
 $(eval $(call BuildPackage,$(PKG_NAME)))
