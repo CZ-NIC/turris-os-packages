@@ -64,7 +64,7 @@ endif
 	$(INSTALL_BIN) ./files/resolver-reload $(1)/etc/hotplug.d/iface/40-resolver-reload
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/resolver-defaults $(1)/etc/uci-defaults/resolver-defaults
-
+	$(INSTALL_BIN) ./files/ca-bundle.crt $(1)/etc/resolver/ca-bundle.crt
 endef
 
 define Package/$(PKG_NAME)/postinst
