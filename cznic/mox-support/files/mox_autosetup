@@ -1,5 +1,5 @@
 #!/bin/sh
-modules="`cat /sys/devices/platform/soc/soc:internal-regs@*/*.spi/spi_master/spi*/spi*/module_topology | sed 's|[[:bblank:]]|\n|g'`"
+modules="`cat /sys/devices/platform/soc/soc:internal-regs@*/*.spi/spi_master/spi*/spi*/module_topology | sed 's|[[:blank:]]|\n|g'`"
 
 # First setup
 if [ \! -f /etc/mox_modules ]; then
@@ -8,42 +8,51 @@ if [ \! -f /etc/mox_modules ]; then
 uci delete network.lan
 uci delete network.wan
 
-uci -m import << EOF
-package network
+lans="$(echo $(cd /sys/class/net/; ls -d lan* 2> /dev/null))"
+wan_if=""
+lan_if=""
+
+# If we have SFP, it is definitely WAN
+if expr "$modules" : '.*sfp.*' > /dev/null; then
+	wan_if=eth1
+	lan_if="eth0 $lans"
+
+# If we have switch, then CPU port is obviously WAN
+elif expr "$modules" : '.*topaz.*' > /dev/null || expr "$modules" : '.*peridot.*' > /dev/null; then
+	wan_if=eth0
+	lan_if="$lans"
+
+# If we have just one port, it has to be LAN
+else
+	lan_if="eth0"
+fi
+
+uci import << EOF
+`uci export network`
 
 config interface 'lan'
-        option ifname ''
+	option type 'bridge'
+        option ifname '$lan_if'
         option proto 'static'
         option ipaddr '192.168.1.1'
         option netmask '255.255.255.0'
 
 config interface 'wan'
-        option ifname ''
+        option ifname '$wan_if'
         option proto 'none'
 EOF
-
-# If we have SFP, it is definitely WAN
-if expr "$modules" : '.*sfp.*' > /dev/null; then
-	uci set network.wan.ifname=eth1
-	uci set network.lan.ifname="eth0 `cd /sys/class/net/; ls -d lan* 2> /dev/null`"
-
-# If we have switch, then CPU port is obviously WAN
-elif expr "$modules" : '.*topaz.*' > /dev/null || expr "$modules" : '.*peridot.*' > /dev/null; then
-	uci set network.wan.ifname=eth0
-	uci set network.lan.ifname="`cd /sys/class/net/; ls -d lan* 2> /dev/null`"
-
-# If we have just one port, it has to be LAN
-else
-	uci set network.lan.ifname="eth0"
-fi
+uci commit
+/etc/init.d/network restart
 
 # Try dhcpp on LAN
-if udhcpc -fn br-lan; then
+sleep 5
+if udhcpc -fqn -i br-lan; then
 	uci set network.lan.proto=dhcp
 	uci delete network.lan.ipaddr
 	uci delete network.lan.netmask
+	uci commit
 fi
-echo "$modules" > /etc/modules
+echo "$modules" > /etc/mox_modules
 
 # Modules changes
 elif [ "`cat /etc/mox_modules`" \!= "$modules" ]; then
