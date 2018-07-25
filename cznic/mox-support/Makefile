@@ -42,10 +42,15 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/nor-update $(1)/sbin
 	$(INSTALL_DIR) $(1)/usr/share/mox
 	$(INSTALL_BIN) ./files/mox_autosetup $(1)/usr/share/mox
-	$(INSTALL_DIR) $(1)/etc
-	ln -s ../usr/share/mox/mox_autosetup $(1)/etc/board_network_setup
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/init $(1)/etc/init.d/mox_autosetup
 	$(INSTALL_DATA) ./files/flash-image-1G.bin $(1)/usr/share/mox/uboot-1G
 	$(INSTALL_DATA) ./files/flash-image-512M.bin $(1)/usr/share/mox/uboot-512M
+endef
+
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh
+$${IPKG_INSTROOT}/etc/init.d/mox_autosetup enable
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

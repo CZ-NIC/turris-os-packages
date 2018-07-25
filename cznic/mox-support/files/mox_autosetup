@@ -1,21 +1,40 @@
 #!/bin/sh
-. /lib/functions/uci-defaults.sh
+modules="`cat /sys/devices/platform/soc/soc:internal-regs@*/*.spi/spi_master/spi*/spi*/module_topology | sed 's|[[:bblank:]]|\n|g'`"
 
-modules="`cat /sys/devices/platform/soc/soc:internal-regs@*/*.spi/spi_master/spi*/spi*/module_topology`"
+# First setup
+if [ \! -f /etc/mox_modules ]; then
+
+# Drop all network configuration
+uci delete network.lan
+uci delete network.wan
+
+uci -m import << EOF
+package network
+
+config interface 'lan'
+        option ifname ''
+        option proto 'static'
+        option ipaddr '192.168.1.1'
+        option netmask '255.255.255.0'
+
+config interface 'wan'
+        option ifname ''
+        option proto 'none'
+EOF
 
 # If we have SFP, it is definitely WAN
 if expr "$modules" : '.*sfp.*' > /dev/null; then
-	ucidef_set_interface_wan 'eth1'
-	ucidef_set_interface_lan "eth0 `ls -d /sys/class/net/lan* 2> /dev/null`"
+	uci set network.wan.ifname=eth1
+	uci set network.lan.ifname="eth0 `cd /sys/class/net/; ls -d lan* 2> /dev/null`"
 
 # If we have switch, then CPU port is obviously WAN
-elif expr "$modules" : '.*sfp.*' > /dev/null || expr "$modules" : '.*sfp.*' > /dev/null; then
-	ucidef_set_interface_wan 'eth0'
-	ucidef_set_interface_lan "`ls -d /sys/class/net/lan*`"
+elif expr "$modules" : '.*topaz.*' > /dev/null || expr "$modules" : '.*peridot.*' > /dev/null; then
+	uci set network.wan.ifname=eth0
+	uci set network.lan.ifname="`cd /sys/class/net/; ls -d lan* 2> /dev/null`"
 
 # If we have just one port, it has to be LAN
 else
-	ucidef_set_interface_lan "eth0"
+	uci set network.lan.ifname="eth0"
 fi
 
 # Try dhcpp on LAN
@@ -23,4 +42,21 @@ if udhcpc -fn br-lan; then
 	uci set network.lan.proto=dhcp
 	uci delete network.lan.ipaddr
 	uci delete network.lan.netmask
+fi
+echo "$modules" > /etc/modules
+
+# Modules changes
+elif [ "`cat /etc/mox_modules`" \!= "$modules" ]; then
+	added="`echo "$modules" | comm -1 - /etc/mox_modules`"
+	removed="`echo "$modules" | comm -1 - /etc/mox_modules`"
+	TEXT="Your MOX HW configuration changed!"
+	[ -z "$added" ] || TEXT="$TEXT You added `echo $added` module(s)."
+	[ -z "$added" ] || TEXT="$TEXT You removed `echo $removed` module(s)."
+	TEXT="$TEXT Make sure that your setup is correct or try factory reset for new setup."
+	create_notification "$TEXT"
+	if ( expr "$added" : '.*topaz.*' > /dev/null || expr "$added" : '.*peridot.*' > /dev/null ) && [ -n "`uci show network.lan`" ]; then
+		for iface in `cd /sys/class/net/; ls -d lan* 2> /dev/null`; do
+			grep $iface /etc/config/network > /dev/null || uci set network.lan.ifname="`uci get network.lan.ifname $iface`"
+		done
+	fi
 fi
