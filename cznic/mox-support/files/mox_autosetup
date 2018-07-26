@@ -27,31 +27,28 @@ else
 	lan_if="eth0"
 fi
 
-uci import << EOF
-`uci export network`
+uci set network.wan=interface
+uci set network.wan.ifname=$wan_if
+uci set network.wan.proto=none
 
-config interface 'lan'
-	option type 'bridge'
-        option ifname '$lan_if'
-        option proto 'static'
-        option ipaddr '192.168.1.1'
-        option netmask '255.255.255.0'
-
-config interface 'wan'
-        option ifname '$wan_if'
-        option proto 'none'
-EOF
+uci set network.lan=interface
+uci set network.lan.type=bridge
+uci set network.lan.ifname="$lan_if"
+uci set network.lan.proto=none
 uci commit
 /etc/init.d/network restart
 
-# Try dhcpp on LAN
+# Try dhcpp on LAN after interfaces settle a little bit
 sleep 5
-if udhcpc -fqn -i br-lan; then
+if udhcpc -fqnR -i br-lan; then
 	uci set network.lan.proto=dhcp
-	uci delete network.lan.ipaddr
-	uci delete network.lan.netmask
-	uci commit
+else
+	uci set network.lan.proto=static
+	uci set network.lan.ipaddr=192.168.1.1
+	uci set network.lan.netmask=255.255.255.0
 fi
+uci commit
+/etc/init.d/network restart
 echo "$modules" > /etc/mox_modules
 
 # Modules changes
@@ -62,10 +59,12 @@ elif [ "`cat /etc/mox_modules`" \!= "$modules" ]; then
 	[ -z "$added" ] || TEXT="$TEXT You added `echo $added` module(s)."
 	[ -z "$added" ] || TEXT="$TEXT You removed `echo $removed` module(s)."
 	TEXT="$TEXT Make sure that your setup is correct or try factory reset for new setup."
-	create_notification "$TEXT"
+	create_notification -s news "$TEXT"
 	if ( expr "$added" : '.*topaz.*' > /dev/null || expr "$added" : '.*peridot.*' > /dev/null ) && [ -n "`uci show network.lan`" ]; then
 		for iface in `cd /sys/class/net/; ls -d lan* 2> /dev/null`; do
 			grep $iface /etc/config/network > /dev/null || uci set network.lan.ifname="`uci get network.lan.ifname $iface`"
 		done
 	fi
+	uci commit
+	/etc/init.d/network restart
 fi
