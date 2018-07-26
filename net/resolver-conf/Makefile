@@ -51,13 +51,14 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/dynamic-domain-conv $(1)/etc/resolver/dynamic-domain-conv.sh
 	$(INSTALL_DIR) $(1)/usr/libexec/rpcd
 	$(INSTALL_BIN) ./files/resolver_rpcd.py $(1)/usr/libexec/rpcd/resolver_rpcd.py
+	$(INSTALL_DIR) $(1)/etc/resolver/dns_servers
 ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
 	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolver
+	$(INSTALL_CONF) ./files/dns_servers_omnia/* $(1)/etc/resolver/dns_servers/
 else
 	$(INSTALL_CONF) ./files/resolver-turris-config $(1)/etc/config/resolver
+	$(INSTALL_CONF) ./files/dns_servers_turris/* $(1)/etc/resolver/dns_servers/
 endif
-	$(INSTALL_DIR) $(1)/etc/resolver/dns_servers
-	$(INSTALL_CONF) ./files/dns_servers/* $(1)/etc/resolver/dns_servers/
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
