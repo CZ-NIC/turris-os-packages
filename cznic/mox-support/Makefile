@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=mox-support
-PKG_VERSION:=2
+PKG_VERSION:=3
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
 
@@ -46,6 +46,8 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/init $(1)/etc/init.d/mox_autosetup
 	$(INSTALL_DATA) ./files/flash-image-1G.bin $(1)/usr/share/mox/uboot-1G
 	$(INSTALL_DATA) ./files/flash-image-512M.bin $(1)/usr/share/mox/uboot-512M
+	$(INSTALL_DIR) $(1)/lib/firmware/mrvl/
+	$(INSTALL_DATA) ./files/sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
