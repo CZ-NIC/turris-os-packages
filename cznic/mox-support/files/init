@@ -1,6 +1,6 @@
 #!/bin/sh /etc/rc.common
 
-START=15
+START=20
 start() {
 	/usr/share/mox/mox_autosetup
 }
