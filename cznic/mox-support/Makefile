@@ -35,7 +35,7 @@ define Package/$(PKG_NAME)/install
 	done
 	ln -s armada-3720-turris-mox-sd.dtb "$(1)"/boot/armada-3720-turris-mox-sd-.dtb
 	for i in "$(1)"/boot/*.dtb; do \
-		ln -s `basename $$$$i` `echo $$$$i | sed 's|turris-mox|turris-mox-pci|'`;\
+		ln -s `basename $$$$i` `echo $$$$i | sed 's|turris-mox-sd|turris-mox-sd-pci|'`;\
 	done
 	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot.scr
 	$(INSTALL_DIR) $(1)/sbin
