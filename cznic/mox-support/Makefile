@@ -48,6 +48,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) ./files/flash-image-512M.bin $(1)/usr/share/mox/uboot-512M
 	$(INSTALL_DIR) $(1)/lib/firmware/mrvl/
 	$(INSTALL_DATA) ./files/sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl
+	ln -s sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl/sd8997_uapsta.bin
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
