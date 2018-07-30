@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+python-light +logrotate +syslog-ng3 +python-libatsha204 +firewall +cznic-cacert-bundle
+	DEPENDS:=+python-light +logrotate +syslog-ng +python-libatsha204 +firewall +cznic-cacert-bundle
 endef
 
 define Package/$(PKG_NAME)/description

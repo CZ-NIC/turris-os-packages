@@ -24,7 +24,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/logrotate
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libpopt +vixie-cron +syslog-ng3
+  DEPENDS:=+libpopt +vixie-cron +syslog-ng
   TITLE:=rotates, compresses, and mails system logs
   URL:=http://packages.debian.org/unstable/admin/logrotate
 endef
