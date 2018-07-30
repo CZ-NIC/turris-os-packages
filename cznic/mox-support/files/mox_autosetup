@@ -53,8 +53,8 @@ echo "$modules" > /etc/mox_modules
 
 # Modules changes
 elif [ "`cat /etc/mox_modules`" \!= "$modules" ]; then
-	added="`echo "$modules" | comm -1 - /etc/mox_modules`"
-	removed="`echo "$modules" | comm -1 - /etc/mox_modules`"
+	added="`echo "$modules" | comm -1 - /etc/mox_modules | grep -v '0x0F'`"
+	removed="`echo "$modules" | comm -1 - /etc/mox_modules | grep -v '0x0F'`"
 	TEXT="Your MOX HW configuration changed!"
 	[ -z "$added" ] || TEXT="$TEXT You added `echo $added` module(s)."
 	[ -z "$added" ] || TEXT="$TEXT You removed `echo $removed` module(s)."
@@ -62,7 +62,7 @@ elif [ "`cat /etc/mox_modules`" \!= "$modules" ]; then
 	create_notification -s news "$TEXT"
 	if ( expr "$added" : '.*topaz.*' > /dev/null || expr "$added" : '.*peridot.*' > /dev/null ) && [ -n "`uci show network.lan`" ]; then
 		for iface in `cd /sys/class/net/; ls -d lan* 2> /dev/null`; do
-			grep $iface /etc/config/network > /dev/null || uci set network.lan.ifname="`uci get network.lan.ifname $iface`"
+			[ -n "`uci show network | grep "\.ifname=.*$iface"`" ] || uci set network.lan.ifname="`uci get network.lan.ifname` $iface"
 		done
 	fi
 	uci commit
