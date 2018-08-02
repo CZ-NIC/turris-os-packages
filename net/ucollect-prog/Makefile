@@ -9,7 +9,7 @@
 
 include ../ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,ucollect-prog,123))
+$(eval $(call UCOLLECT_BASE,ucollect-prog,124))
 
 define Package/ucollect-lib
 	SECTION:=net
@@ -49,6 +49,8 @@ endef
 define Package/ucollect-prog/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/ucollect disable
+rm -f /etc/rc.d/S50ucollect
 /etc/init.d/ucollect enable
 /etc/init.d/ucollect restart
 }
