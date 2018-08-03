@@ -29,7 +29,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/Python-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/Python-$(PKG_VERSION)
 
 PKG_BUILD_DEPENDS:=python/host
-HOST_BUILD_DEPENDS:=bzip2/host expat/host libffi/host
+HOST_BUILD_DEPENDS:=bzip2/host expat/host libffi/host libopenssl/host
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
@@ -230,11 +230,13 @@ HOST_CONFIGURE_ARGS+= \
 	--with-system-ffi=$(STAGING_DIR)/host \
 	--with-ensurepip=upgrade \
 	CONFIG_SITE= \
-	CFLAGS="$(HOST_CFLAGS)"
+	CFLAGS="$(HOST_CFLAGS) -I$(STAGING_DIR_HOST)/openssl-host/include" \
+	CPPFLAGS="$(HOST_CPPFLAGS) -I$(STAGING_DIR_HOST)/openssl-host/include" \
+	LDFLAGS="$(HOST_LDFLAGS) -L$(STAGING_DIR_HOST)/openssl-host/lib"
 
 define Host/Install
 	$(INSTALL_DIR) $(STAGING_DIR)/host/bin/
-	$(MAKE) -C $(HOST_BUILD_DIR) install
+	LD_LIBRARY_PATH="$(LD_LIBRARY_PATH):$(STAGING_DIR_HOST)/openssl-host/lib" $(MAKE) -C $(HOST_BUILD_DIR) install
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/Parser/pgen $(STAGING_DIR)/host/bin/pgen2
 endef
 

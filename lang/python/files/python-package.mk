@@ -97,6 +97,7 @@ define Build/Compile/PyMod
 		CFLAGS="$(TARGET_CFLAGS)" \
 		CPPFLAGS="$(TARGET_CPPFLAGS) -I$(PYTHON_INC_DIR)" \
 		LDFLAGS="$(TARGET_LDFLAGS) -lpython$(PYTHON_VERSION)" \
+		LD_LIBRARY_PATH="$(LD_LIBRARY_PATH):$(STAGING_DIR_HOST)/openssl-host/lib" \
 		_PYTHON_HOST_PLATFORM=linux2 \
 		__PYVENV_LAUNCHER__="/usr/bin/$(PYTHON)" \
 		$(3) \

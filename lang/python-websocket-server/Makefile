@@ -18,6 +18,8 @@ PKG_MD5SUM:=0026f2a6696e2ebdb4c70a35568ff22c
 PKG_LICENSE:=MIT
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
+PKG_BUILD_DEPENDS:=python-setuptools
+
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python-package.mk)
 

@@ -45,6 +45,7 @@ define Build/Compile/HostPyMod
 		CFLAGS="$(HOST_CFLAGS)" \
 		CPPFLAGS="$(HOST_CPPFLAGS) -I$(HOST_PYTHON_INC_DIR)" \
 		LDFLAGS="$(HOST_LDFLAGS) -lpython$(PYTHON_VERSION) -Wl$(comma)-rpath=$(STAGING_DIR)/host/lib" \
+		LD_LIBRARY_PATH="$(LD_LIBRARY_PATH):$(STAGING_DIR_HOST)/openssl-host/lib" \
 		_PYTHON_HOST_PLATFORM=linux2 \
 		$(3) \
 		, \
