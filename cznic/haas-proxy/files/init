@@ -27,6 +27,7 @@ check_fw() {
 
 start_service() {
 	TOKEN="`uci -q get haas.settings.token`"
+	LOG_LEVEL="`uci -q get haas.settings.log_level`"
 	PORT="`uci -q get haas.settings.local_port`"
 	FW_SETUP="`uci -q get haas.settings.setup_fw | egrep -i '(1|yes|true|enabled|on)'`"
 	LOG="`uci -q get haas.settings.log`"
@@ -35,15 +36,25 @@ start_service() {
 	elif [ -z "$LOG" ] || [ "$LOG" = none ]; then
 		LOG=""
 	else
-		LOG="--logfile=$LOG"
+		LOG="--log-file=$LOG"
 	fi
-	[ "$TOKEN" ] || exit 1
+	[ -n "$TOKEN" ] || exit 1
+	[ -n "$LOG_LEVEL" ] || LOG_LEVEL="warning"
 	check_fw
+	CGROUPS="`test -f /sys/fs/cgroup/cpu.shares && echo YES`"
+	if [ -n "$CGROUPS" ]; then
+		echo 1 > /sys/fs/cgroup/cgroup.clone_children
+		mkdir -p /sys/fs/cgroup/haas
+		echo 128 > /sys/fs/cgroup/haas/cpu.shares
+		echo 1000000 > /sys/fs/cgroup/haas/cpu.cfs_period_us
+		echo  150000 > /sys/fs/cgroup/haas/cpu.cfs_quota_us
+	fi
 	procd_open_instance
-	procd_set_param command /usr/bin/python2.7 -m haas_proxy -n --pidfile=/tmp/haas.pid $LOG haas_proxy --device-token $TOKEN --port $PORT
+	procd_set_param command /usr/bin/python2.7 -m haas_proxy -n --pidfile=/tmp/haas.pid haas_proxy $LOG --log-level "$LOG_LEVEL" --device-token $TOKEN --port $PORT
 	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
 	procd_set_param file /etc/config/haas
 	procd_close_instance
+	sleep 3 && cat /tmp/haas.pid 2> /dev/null > /sys/fs/cgroup/haas/tasks &
 }
 
 stop_service() {
@@ -51,5 +62,11 @@ stop_service() {
 	if [ "$FW_SETUP" ] && [ -f /tmp/haas-remove-iptables ]; then
 		sh /tmp/haas-remove-iptables
 		rm -f /tmp/haas-remove-iptables
+	fi
+	if [ -f /tmp/haas.pid ]; then
+		kill `cat /tmp/haas.pid 2>/dev/null` > /dev/null 2>&1
+		sleep 1
+		kill -9 `cat /tmp/haas.pid 2>/dev/null` > /dev/null 2>&1
+		rm -f /tmp/haas.pid
 	fi
 }

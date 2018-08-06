@@ -5,3 +5,6 @@ config haas 'settings'
 	# This options specifies where to log if anywhere, valid values are
     # absolute path to the file, 'syslog' or 'none'
 	option log 'none'
+	# Verbosity of the log, valid options are
+	# 'error', 'warning' (default), 'info' and 'debug'
+	option log_level 'warning'

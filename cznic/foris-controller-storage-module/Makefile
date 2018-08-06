@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-storage-module
-PKG_VERSION:=0.1
-PKG_RELEASE:=15
+PKG_VERSION:=0.2
+PKG_RELEASE:=0
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-storage-module.git
-PKG_SOURCE_VERSION:=e072c544d704ffa55bf71f4941b203558e64d298
+PKG_SOURCE_VERSION:=878214999e2b73a9b1c45dec0b39914cf791ffa9
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 

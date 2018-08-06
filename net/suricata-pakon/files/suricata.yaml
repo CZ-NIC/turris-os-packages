@@ -129,7 +129,7 @@ logging:
 
 # Linux high speed capture support
 af-packet:
-  - interface: eth0
+  - interface: default
     # Number of receive threads. "auto" uses the number of cores
     #threads: auto
     # Default clusterid. AF_PACKET will load balance packets based on flow.
@@ -157,13 +157,13 @@ af-packet:
     # can minimize packet drop and increase the treated bandwidth on single intensive flow.
     #rollover: yes
     # To use the ring feature of AF_PACKET, set 'use-mmap' to yes
-    #use-mmap: yes
+    use-mmap: yes
     # Lock memory map to avoid it goes to swap. Be careful that over suscribing could lock
     # your system
     #mmap-locked: yes
     # Use tpacket_v3 capture mode, only active if use-mmap is true
     # Don't use it in IPS or TAP mode as it causes severe latency
-    #tpacket-v3: yes
+    tpacket-v3: yes
     # Ring size will be computed with respect to max_pending_packets and number
     # of threads. You can set manually the ring size in number of packets by setting
     # the following value. If you are using flow cluster-type and have really network
@@ -194,7 +194,7 @@ af-packet:
     #  - auto: suricata uses a statistical approach to detect when
     #  checksum off-loading is used.
     # Warning: 'checksum-validation' must be set to yes to have any validation
-    #checksum-checks: kernel
+    checksum-checks: no
     # BPF filter to apply to this interface. The pcap filter syntax apply here.
     #bpf-filter: port 80 or udp
     # You can use the following variables to activate AF_PACKET tap or IPS mode.
@@ -204,14 +204,6 @@ af-packet:
     # will not be copied.
     #copy-mode: ips
     #copy-iface: eth1
-
-  # Put default values here. These will be used for an interface that is not
-  # in the list above.
-  - interface: default
-    #threads: auto
-    #use-mmap: no
-    #rollover: yes
-    #tpacket-v3: yes
 
 # Cross platform libpcap capture support
 pcap:
