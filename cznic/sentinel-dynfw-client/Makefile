@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-dynfw-client
 PKG_VERSION:=1.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/dynfw-client.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -54,6 +54,20 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/fw_reload $(1)/etc/firewall.d/with_reload/99_sentinel_dynfw.fw
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/client.py $(1)/usr/bin/sentinel-dynfw-client
+endef
+
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+        /etc/init.d/sentinel-dynfw-client enable
+        /etc/init.d/sentinel-dynfw-client restart 2>/dev/null
+}
+endef
+
+define Package/$(PKG_NAME)/prerm
+#!/bin/sh
+        /etc/init.d/sentinel-dynfw-client disable
+        /etc/init.d/sentinel-dynfw-client stop
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
