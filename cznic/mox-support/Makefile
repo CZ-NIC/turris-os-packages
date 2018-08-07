@@ -11,6 +11,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	VERSION:=$(LINUX_VERSION)-$(LINUX_RELEASE)-$(LINUX_VERMAGIC)
+	DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox
 endef
 
 define Package/$(PKG_NAME)/description
