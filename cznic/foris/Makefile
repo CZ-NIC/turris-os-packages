@@ -31,7 +31,7 @@ define Package/foris-common
 		+python-light +python-bottle +python-bottle-i18n \
 		+python-flup +python-ubus +lighttpd +lighttpd-mod-fastcgi \
 		+lighttpd-mod-redirect +lighttpd-mod-setenv +lighttpd-mod-alias +foris-ws \
-		+foris-client
+		+foris-client +python3-jinja2
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
