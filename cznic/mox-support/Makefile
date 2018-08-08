@@ -33,7 +33,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/boot
 	$(CP) $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts/marvell/armada-3720-turris-mox.dtb "$(1)"/boot
 	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot/boot-ext4.scr
-	sed -e 's|rootwait|rootwait rootflags=sobvol=@,commit=5|' \
+	sed -e 's|rootwait|rootwait rootflags=subvol=@,commit=5|' \
 	    -e 's|/boot|/@/boot|g' files/boot.txt > "$(PKG_BUILD_DIR)"/boot-btrfs.txt
 	ln -s boot/boot-ext4.scr "$(1)"/boot.scr
 	mkimage -T script -C none -n boot -d "$(PKG_BUILD_DIR)"/boot-btrfs.txt "$(1)"/boot/boot-btrfs.scr
