@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=mox-support
-PKG_VERSION:=3
+PKG_VERSION:=4
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
 
@@ -31,12 +31,9 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/boot
-	for d in $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts/marvell/*-turris-mox-sd*.dtb; do \
-		$(CP) $$$$d "$(1)"/boot; \
-	done
-	ln -s armada-3720-turris-mox-sd.dtb "$(1)"/boot/armada-3720-turris-mox-sd-.dtb
-	for i in "$(1)"/boot/*.dtb; do \
-		ln -s `basename $$$$i` `echo $$$$i | sed 's|turris-mox-sd|turris-mox-sd-pci|'`;\
+	$(CP) $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts/marvell/armada-3720-turris-mox.dtb "$(1)"/boot
+	for i in armada-3720-turris-mox-sd-.dtb armada-3720-turris-mox-sd-pci-.dtb armada-3720-turris-mox-sd-pci-sfp.dtb armada-3720-turris-mox-sd-pci.dtb armada-3720-turris-mox-sd-pci-topaz.dtb armada-3720-turris-mox-sd-peridot.dtb armada-3720-turris-mox-sd-sfp.dtb armada-3720-turris-mox-sd-topaz.dtb armada-3720-turris-mox-sd.dtb; do \
+		ln -s armada-3720-turris-mox.dtb "$(1)"/boot/$$$$i;\
 	done
 	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot.scr
 	$(INSTALL_DIR) $(1)/sbin
