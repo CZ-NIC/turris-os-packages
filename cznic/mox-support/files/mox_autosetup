@@ -1,5 +1,5 @@
 #!/bin/sh
-modules="`cat /sys/devices/platform/soc/soc:internal-regs@*/*.spi/spi_master/spi*/spi*/module_topology | sed 's|[[:blank:]]|\n|g'`"
+modules="`ls -1 /sys/bus/moxtet/devices`"
 
 # First setup
 if [ \! -f /etc/mox_modules ]; then
@@ -53,8 +53,8 @@ echo "$modules" > /etc/mox_modules
 
 # Modules changes
 elif [ "`cat /etc/mox_modules`" \!= "$modules" ]; then
-	added="`echo "$modules" | comm -1 - /etc/mox_modules | grep -v '0x0F'`"
-	removed="`echo "$modules" | comm -1 - /etc/mox_modules | grep -v '0x0F'`"
+	added="`echo "$modules" | comm -1 - /etc/mox_modules`"
+	removed="`echo "$modules" | comm -1 - /etc/mox_modules`"
 	TEXT="Your MOX HW configuration changed!"
 	[ -z "$added" ] || TEXT="$TEXT You added `echo $added` module(s)."
 	[ -z "$added" ] || TEXT="$TEXT You removed `echo $removed` module(s)."

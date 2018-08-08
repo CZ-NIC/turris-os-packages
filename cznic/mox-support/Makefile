@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=mox-support
-PKG_VERSION:=4
+PKG_VERSION:=5
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
 
@@ -32,10 +32,11 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/boot
 	$(CP) $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts/marvell/armada-3720-turris-mox.dtb "$(1)"/boot
-	for i in armada-3720-turris-mox-sd-.dtb armada-3720-turris-mox-sd-pci-.dtb armada-3720-turris-mox-sd-pci-sfp.dtb armada-3720-turris-mox-sd-pci.dtb armada-3720-turris-mox-sd-pci-topaz.dtb armada-3720-turris-mox-sd-peridot.dtb armada-3720-turris-mox-sd-sfp.dtb armada-3720-turris-mox-sd-topaz.dtb armada-3720-turris-mox-sd.dtb; do \
-		ln -s armada-3720-turris-mox.dtb "$(1)"/boot/$$$$i;\
-	done
-	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot.scr
+	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot/boot-ext4.scr
+	sed -e 's|rootwait|rootwait rootflags=sobvol=@,commit=5|' \
+	    -e 's|/boot|/@/boot|g' files/boot.txt > "$(PKG_BUILD_DIR)"/boot-btrfs.txt
+	ln -s boot/boot-ext4.scr "$(1)"/boot.scr
+	mkimage -T script -C none -n boot -d "$(PKG_BUILD_DIR)"/boot-btrfs.txt "$(1)"/boot/boot-btrfs.scr
 	$(INSTALL_DIR) $(1)/sbin
 	$(INSTALL_BIN) ./files/nor-update $(1)/sbin
 	$(INSTALL_DIR) $(1)/usr/share/mox
