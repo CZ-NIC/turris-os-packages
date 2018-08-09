@@ -53,11 +53,11 @@ echo "$modules" > /etc/mox_modules
 
 # Modules changes
 elif [ "`cat /etc/mox_modules`" \!= "$modules" ]; then
-	added="`echo "$modules" | comm -1 - /etc/mox_modules`"
-	removed="`echo "$modules" | comm -1 - /etc/mox_modules`"
+	added="`echo "$modules" | comm -23 - /etc/mox_modules | grep '[^[:blank:]]'`"
+	removed="`echo "$modules" | comm -13 - /etc/mox_modules | grep '[^[:blank:]]'`"
 	TEXT="Your MOX HW configuration changed!"
 	[ -z "$added" ] || TEXT="$TEXT You added `echo $added` module(s)."
-	[ -z "$added" ] || TEXT="$TEXT You removed `echo $removed` module(s)."
+	[ -z "$removed" ] || TEXT="$TEXT You removed `echo $removed` module(s)."
 	TEXT="$TEXT Make sure that your setup is correct or try factory reset for new setup."
 	create_notification -s news "$TEXT"
 	if ( expr "$added" : '.*topaz.*' > /dev/null || expr "$added" : '.*peridot.*' > /dev/null ) && [ -n "`uci show network.lan`" ]; then
