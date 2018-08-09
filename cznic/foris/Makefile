@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=98.4
+PKG_VERSION:=98.5
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -77,7 +77,7 @@ define Package/foris-common/install
 	$(INSTALL_DATA) ./files/foris.conf $(1)/etc/config/foris
 
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) ./files/foris.wrapper $(1)/usr/bin/foris
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/foris $(1)/usr/bin/foris
 
 	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)
 
