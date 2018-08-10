@@ -29,7 +29,7 @@ define Package/Common
 	CATEGORY:=Languages
 	URL:=https://python-jsonschema.readthedocs.io/en/latest/
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
-endef 
+endef
 
 define Package/python-jsonschema
 	$(call Package/Common)
