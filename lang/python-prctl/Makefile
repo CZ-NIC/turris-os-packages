@@ -16,19 +16,30 @@ PKG_SOURCE_URL:=https://pypi.python.org/packages/2c/a6/a866caf122908583f5f5e2721
 PKG_MD5SUM:=5f36d6a1e832ca29f9fc458b5ace1627
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python libcap
+PKG_BUILD_DEPENDS:=python3 python libcap
 
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python-package.mk)
+$(call include_mk, python3-package.mk)
 
-define Package/$(PKG_NAME)
+define Package/Common
 	SUBMENU:=Python
 	SECTION:=lang
 	CATEGORY:=Languages
-	TITLE:=$(PKG_NAME)
 	URL:=https://pythonhosted.org/python-prctl/
-	DEPENDS:=+python-light +libcap
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+endef
+
+define Package/python-prctl
+	$(call Package/Common)
+	TITLE:=python-prctl
+	DEPENDS:=+python-light +libcap
+endef
+
+define Package/python3-prctl
+	$(call Package/Common)
+	TITLE:=python3-prctl
+	DEPENDS:=+python3-light +libcap
 endef
 
 define Package/$(PKG_NAME)/description
@@ -37,16 +48,19 @@ endef
 
 define Build/Compile
 	$(call Build/Compile/PyMod,., \
-		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)" \
+		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)/py2" \
+	)
+	$(call Build/Compile/Py3Mod,., \
+		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)/py3" \
 	)
 endef
 
-define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/
-	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
-		$(1)$(PYTHON_PKG_DIR)/
-endef
+PKG_INSTALL_DIR_ORIG:="$(PKG_INSTALL_DIR)"
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py2"
+$(eval $(call PyPackage,python-prctl))
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py3"
+$(eval $(call Py3Package,python3-prctl))
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)"
 
-$(eval $(call PyPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,python-prctl))
+$(eval $(call BuildPackage,python3-prctl))
