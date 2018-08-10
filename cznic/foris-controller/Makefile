@@ -27,7 +27,7 @@ define Package/foris-controller
 	URL:=https://gitlab.labs.nic.cz/turris/foris-controller
 	DEPENDS:=\
 		+python3-light +python3-ubus +python3-prctl +python3-multiprocessing +python3-pbkdf2 \
-		+foris-schema-python3 +server-uplink +turris-maintain +updater-ng-py3-supervisor +user_notify \
+		+foris-schema-python3 +server-uplink +turris-maintain +updater-ng-supervisor +user_notify \
 		+l10n_supported +sqm-scripts
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
