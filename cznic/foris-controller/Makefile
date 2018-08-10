@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller
 PKG_VERSION:=0.10.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller
@@ -19,15 +19,15 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_LICENSE:=GPL-3.0
 
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python-package.mk)
+$(call include_mk, python3-package.mk)
 
 
 define Package/foris-controller
 	TITLE:=foris-controller
 	URL:=https://gitlab.labs.nic.cz/turris/foris-controller
 	DEPENDS:=\
-		+python-light +python-ubus +python-prctl +python-multiprocessing +python-pbkdf2 \
-		+foris-schema +server-uplink +turris-maintain +updater-ng-supervisor +user_notify \
+		+python3-light +python3-ubus +python3-prctl +python3-multiprocessing +python3-pbkdf2 \
+		+foris-schema-python3 +server-uplink +turris-maintain +updater-ng-py3-supervisor +user_notify \
 		+l10n_supported +sqm-scripts
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
@@ -37,7 +37,7 @@ define Package/foris-controller/description
 endef
 
 define Build/Compile
-	$(call Build/Compile/PyMod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
+	$(call Build/Compile/Py3Mod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
 endef
 
 define Package/foris-controller/conffiles
