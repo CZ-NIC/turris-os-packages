@@ -16,19 +16,30 @@ PKG_SOURCE_URL:=https://pypi.python.org/packages/source/p/pbkdf2/
 PKG_MD5SUM:=40cda566f61420490206597243dd869f
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python
+PKG_BUILD_DEPENDS:=python python3
 
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python-package.mk)
+$(call include_mk, python3-package.mk)
 
-define Package/python-pbkdf2
+define Package/Common
 	SUBMENU:=Python
 	SECTION:=lang
 	CATEGORY:=Languages
-	TITLE:=python-pbkdf2
 	URL:=https://www.dlitz.net/software/python-pbkdf2/
-	DEPENDS:=+python-light +python-openssl
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+endef
+
+define Package/python-pbkdf2
+	$(call Package/Common)
+	TITLE:=python-pbkdf2
+	DEPENDS:=+python-light +python-openssl
+endef
+
+define Package/python3-pbkdf2
+	$(call Package/Common)
+	TITLE:=python3-pbkdf2
+	DEPENDS:=+python3-light +python3-openssl
 endef
 
 define Package/python-pbkdf2/description
@@ -37,15 +48,19 @@ endef
 
 define Build/Compile
 	$(call Build/Compile/PyMod,., \
-		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)" \
+		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)/py2" \
+	)
+	$(call Build/Compile/Py3Mod,., \
+		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)/py3" \
 	)
 endef
 
-define Package/python-pbkdf2/install
-	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/
-	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
-		$(1)$(PYTHON_PKG_DIR)/
-endef
+PKG_INSTALL_DIR_ORIG:="$(PKG_INSTALL_DIR)"
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py2"
+$(eval $(call PyPackage,python-pbkdf2))
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py3"
+$(eval $(call Py3Package,python3-pbkdf2))
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)"
 
 $(eval $(call BuildPackage,python-pbkdf2))
+$(eval $(call BuildPackage,python3-pbkdf2))
