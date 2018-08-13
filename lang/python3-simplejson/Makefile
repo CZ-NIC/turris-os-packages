@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-simplejson
 PKG_VERSION:=3.10.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_LICENSE:=MIT
 
 PKG_SOURCE:=simplejson-$(PKG_VERSION).tar.gz
