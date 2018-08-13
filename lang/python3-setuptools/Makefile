@@ -57,5 +57,17 @@ define Py3Package/python3-setuptools/install
 	$(LN) easy_install-$(PYTHON3_VERSION) $(1)/usr/bin/easy_install3
 endef
 
+define Host/Compile
+	$(call Build/Compile/HostPy3Mod,,\
+		install --root="$(STAGING_DIR_HOSTPKG)" --prefix="" \
+		--single-version-externally-managed \
+	)
+endef
+
+define Host/Install
+endef
+
+$(eval $(call HostBuild))
+
 $(eval $(call Py3Package,python3-setuptools))
 $(eval $(call BuildPackage,python3-setuptools))
