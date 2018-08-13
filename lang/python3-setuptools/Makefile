@@ -66,7 +66,7 @@ endef
 
 define Host/Compile
 	$(call Build/Compile/HostPy3Mod,,\
-		install --root="$(STAGING_DIR)/host" --prefix="" \
+		install --root="$(STAGING_DIR_HOSTPKG)" --prefix="" \
 		--single-version-externally-managed \
 	)
 endef
