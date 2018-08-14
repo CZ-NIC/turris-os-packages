@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-ws
-PKG_VERSION:=0.1.3
+PKG_VERSION:=0.2
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -19,13 +19,13 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_LICENSE:=GPL-3.0
 
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python-package.mk)
+$(call include_mk, python3-package.mk)
 
 
 define Package/foris-ws
 	TITLE:=foris-ws
 	URL:=https://gitlab.labs.nic.cz/turris/foris-ws
-	DEPENDS:=+python-light +python-websocket-server +python-prctl +rpcd +foris-client +python-ubus +lighttpd-mod-proxy
+	DEPENDS:=+python3-light +python3-websocket-server +python3-prctl +rpcd +foris-client-python3 +python3-ubus +lighttpd-mod-proxy
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
@@ -34,7 +34,7 @@ define Package/foris-ws/description
 endef
 
 define Build/Compile
-	$(call Build/Compile/PyMod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
+	$(call Build/Compile/Py3Mod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
 endef
 
 define Package/foris-ws/conffiles
