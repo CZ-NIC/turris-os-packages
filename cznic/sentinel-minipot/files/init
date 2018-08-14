@@ -1,0 +1,40 @@
+#!/bin/sh /etc/rc.common
+
+USE_PROCD=1
+START=99
+STOP=10
+EXTRA_COMMANDS="check_fw"
+
+iptables_ensure(){
+	iptables -C $@ 2>/dev/null || iptables -I $@
+}
+
+check_fw() {
+	FW_SETUP="`uci -q get sentinel.minipot.setup_fw | egrep -i '(1|yes|true|enabled|on)'`"
+	PORT="`uci -q get sentinel.minipot.telnet_port`"
+	WAN_IP="`ubus call network.interface.wan status | sed -n 's|.*address":[[:blank:]]*"\([0-9.]*\)".*|\1|p'`"
+	if [ "$FW_SETUP" -a "$PORT" -a "$WAN_IP" ]; then
+		iptables_ensure zone_wan_prerouting -t nat -p tcp -m tcp --dport 23 -m comment --comment "sentinel" -j DNAT --to-destination $WAN_IP:$PORT 
+		iptables_ensure zone_wan_prerouting -t nat -p tcp -m tcp --dport 23 -j MARK --set-mark 0x10
+		echo "iptables -t nat -D zone_wan_prerouting -p tcp -m tcp --dport 23 -m comment --comment \"sentinel\" -j DNAT --to-destination $WAN_IP:$PORT" > /tmp/sentinel-remove-iptables
+		echo "iptables -t nat -D zone_wan_prerouting -p tcp -m tcp --dport 23 -j MARK --set-mark 0x10" >> /tmp/sentinel-remove-iptables
+	fi
+}
+
+start_service() {
+	TELNET_PORT="`uci -q get sentinel.minipot.telnet_port`"
+	check_fw
+	procd_open_instance
+	procd_set_param command /usr/bin/sentinel-minipot -T $TELNET_PORT
+	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
+	procd_set_param file /etc/config/sentinel
+	procd_close_instance
+}
+
+stop_service() {
+	FW_SETUP="`uci -q get sentinel.minipot.setup_fw | egrep -i '(1|yes|true|enabled|on)'`"
+	if [ "$FW_SETUP" ] && [ -f /tmp/sentinel-remove-iptables ]; then
+		sh /tmp/sentinel-remove-iptables
+		rm -f /tmp/sentinel-remove-iptables
+	fi
+}

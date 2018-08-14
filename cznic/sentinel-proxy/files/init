@@ -1,0 +1,18 @@
+#!/bin/sh /etc/rc.common
+
+USE_PROCD=1
+START=95
+STOP=10
+
+get_cert() {
+  /usr/bin/python3 /usr/libexec/sentinel_certgen.py --certdir /etc/sentinel/ -H sentinel.turris.cz -p 443
+}
+
+start_service() {
+  [ ! -f /etc/sentinel/router.crt ] && get_cert
+  procd_open_instance
+  procd_set_param command /usr/bin/sentinel-proxy --cert /etc/sentinel/router.pem --key /etc/sentinel/router.key --ca /etc/sentinel/ca.pem
+  procd_set_param respawn ${respawn_threshold:-600} ${respawn_timeout:-5} ${respawn_retry:-5}
+  procd_close_instance
+}
+

@@ -1,0 +1,5 @@
+
+config sn 'minipot'
+	option telnet_port '2333'
+	option setup_fw '1'
+
