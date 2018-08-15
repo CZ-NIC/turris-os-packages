@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=60.4.1
+PKG_VERSION:=60.4.2
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
@@ -42,7 +42,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) .//files/updater-wipe.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/updater
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/entry.lua $(1)/etc/updater
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/conf.lua $(1)/etc/updater
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/base.lua $(1)/etc/updater/conf.d/base.lua
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/example.lua $(1)/etc/updater/conf.d/example.lua
@@ -51,7 +51,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
 	$(INSTALL_DIR) $(1)/etc/updater/hook_reboot_required
 	touch $(1)/etc/updater/hook_preupdate/.keep
-	touch $(1)/etc/updater/hook_postupdate/.keep
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/hook_postupdate/update_alternatives.sh $(1)/etc/updater/hook_postupdate/update_alternatives.sh
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/hook_reboot_required/50-create-notification.sh $(1)/etc/updater/hook_reboot_required/50-create-notification.sh
 
 	$(INSTALL_DIR) $(1)/etc/config
