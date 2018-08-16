@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nextcloud
 PKG_VERSION:=13.0.5
-PKG_RELEASE:=0
+PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).zip
@@ -62,6 +62,10 @@ define Package/$(PKG_NAME)/install
 	done
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_DATA) ./files/nextcloud.conf $(1)/etc/lighttpd/conf.d/
+	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
+	$(INSTALL_DATA) ./files/30_nextcloud.conf $(1)/usr/share/turris-webapps/
+	$(INSTALL_DIR) $(1)/www/webapps-icons
+	$(INSTALL_DATA) ./files/nextcloud.png $(1)/www/webapps-icons
 endef
 
 define Package/$(PKG_NAME)-install/install
