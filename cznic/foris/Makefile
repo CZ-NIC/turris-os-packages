@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=98.5
+PKG_VERSION:=98.6
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -17,21 +17,27 @@ PKG_SOURCE_VERSION:=package-v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
-PKG_BUILD_DEPENDS:=ruby/host python-libsass/host
+PKG_BUILD_DEPENDS:=\
+	ruby/host \
+	python3-libsass/host \
+	python3-pytz/host \
+	python3-babel/host \
+	python3-markupsafe/host \
+	python3-jinja2/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
 include ./files/foris-translations.mk
 
-$(call include_mk, python-package.mk)
+$(call include_mk, python3-package.mk)
 
 define Package/foris-common
 	TITLE:=foris-common
 	DEPENDS:=\
-		+python-light +python-bottle +python-bottle-i18n \
-		+python-flup +python-ubus +lighttpd +lighttpd-mod-fastcgi \
+		+python3-light +python3-bottle +python3-bottle-i18n \
+		+python3-flup +python3-ubus +python3-jinja2 +lighttpd +lighttpd-mod-fastcgi \
 		+lighttpd-mod-redirect +lighttpd-mod-setenv +lighttpd-mod-alias +foris-ws \
-		+foris-client-python2
+		+foris-client-python3
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
@@ -56,7 +62,7 @@ MAKE_FLAGS+=\
 
 define Build/Compile
 	$(call Build/Compile/Default)
-	$(call Build/Compile/PyMod,,install --prefix=/usr --root="$(PKG_INSTALL_DIR)")
+	$(call Build/Compile/Py3Mod,,install --prefix=/usr --root="$(PKG_INSTALL_DIR)")
 endef
 
 define Package/foris-common/conffiles
@@ -79,18 +85,18 @@ define Package/foris-common/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/foris $(1)/usr/bin/foris
 
-	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)
+	$(INSTALL_DIR) $(1)$(PYTHON3_PKG_DIR)
 
 	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
-		$(1)$(PYTHON_PKG_DIR)/
-	$(RM) -r $(1)$(PYTHON_PKG_DIR)/foris/locale/
-	$(RM) -r $(1)$(PYTHON_PKG_DIR)/foris/langs/??.py
-	$(RM) -r $(1)$(PYTHON_PKG_DIR)/foris/config
-	$(RM) $(1)$(PYTHON_PKG_DIR)/foris/config_app.py
+		$(PKG_INSTALL_DIR)$(PYTHON3_PKG_DIR)/* \
+		$(1)$(PYTHON3_PKG_DIR)/
+	$(RM) -r $(1)$(PYTHON3_PKG_DIR)/foris/locale/
+	$(RM) -r $(1)$(PYTHON3_PKG_DIR)/foris/langs/??.py
+	$(RM) -r $(1)$(PYTHON3_PKG_DIR)/foris/config
+	$(RM) $(1)$(PYTHON3_PKG_DIR)/foris/config_app.py
 
-	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/foris/locale
-	touch $(1)$(PYTHON_PKG_DIR)/foris/locale/.keep
+	$(INSTALL_DIR) $(1)$(PYTHON3_PKG_DIR)/foris/locale
+	touch $(1)$(PYTHON3_PKG_DIR)/foris/locale/.keep
 endef
 
 define Package/foris-config
@@ -112,8 +118,8 @@ define Package/foris/description
 endef
 
 define Package/foris/install
-	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/foris/
-	touch $(1)$(PYTHON_PKG_DIR)/foris/.keep
+	$(INSTALL_DIR) $(1)$(PYTHON3_PKG_DIR)/foris/
+	touch $(1)$(PYTHON3_PKG_DIR)/foris/.keep
 endef
 
 define Package/foris-config/install
@@ -122,24 +128,19 @@ define Package/foris-config/install
 	$(INSTALL_DIR) $(1)/usr/share/foris
 	$(INSTALL_BIN) ./files/foris-config-cgi $(1)/usr/share/foris/foris-config-cgi
 
-	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/foris/config
+	$(INSTALL_DIR) $(1)$(PYTHON3_PKG_DIR)/foris/config
 	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/foris/config_app.py \
-		$(1)$(PYTHON_PKG_DIR)/foris/
+		$(PKG_INSTALL_DIR)$(PYTHON3_PKG_DIR)/foris/config_app.py \
+		$(1)$(PYTHON3_PKG_DIR)/foris/
 	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/foris/config/* \
-		$(1)$(PYTHON_PKG_DIR)/foris/config/
+		$(PKG_INSTALL_DIR)$(PYTHON3_PKG_DIR)/foris/config/* \
+		$(1)$(PYTHON3_PKG_DIR)/foris/config/
 endef
 
 define Package/foris-common/postinst
 #!/bin/sh
 set -x
 [ -n "$$IPKG_INSTROOT" ] || {
-# Cleanup of 1.0
-if [ -f /www2/forris.pyc ]; then
-	find /www2 -name '*.pyc' -exec rm -f \{\} \;
-	rmdir /www2/nuci/modules /www2/nuci /www2/config_handlers /www2/utils /www2 || true
-fi
 /etc/init.d/lighttpd enable
 /etc/init.d/lighttpd restart
 }
@@ -184,14 +185,14 @@ define ForisTranslation
  endef
 
  define Package/foris-l10n-$(1)/install
-	$(INSTALL_DIR) $$(1)$(PYTHON_PKG_DIR)/foris/locale/$(1)/LC_MESSAGES
+	$(INSTALL_DIR) $$(1)$(PYTHON3_PKG_DIR)/foris/locale/$(1)/LC_MESSAGES
 	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/foris/locale/$(1)/LC_MESSAGES/*.mo \
-		$$(1)$(PYTHON_PKG_DIR)/foris/locale/$(1)/LC_MESSAGES/
-	$(INSTALL_DIR) $$(1)$(PYTHON_PKG_DIR)/foris/langs/
+		$(PKG_INSTALL_DIR)$(PYTHON3_PKG_DIR)/foris/locale/$(1)/LC_MESSAGES/*.mo \
+		$$(1)$(PYTHON3_PKG_DIR)/foris/locale/$(1)/LC_MESSAGES/
+	$(INSTALL_DIR) $$(1)$(PYTHON3_PKG_DIR)/foris/langs/
 	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/foris/langs/$(1).py \
-		$$(1)$(PYTHON_PKG_DIR)/foris/langs/
+		$(PKG_INSTALL_DIR)$(PYTHON3_PKG_DIR)/foris/langs/$(1).py \
+		$$(1)$(PYTHON3_PKG_DIR)/foris/langs/
  endef
 
  define Package/foris-l10n-$(1)/postrm
@@ -214,7 +215,6 @@ $(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisTranslation,$(trans))))
 $(eval $(call BuildPackage,foris))
 $(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call BuildPackage,foris-l10n-$(trans))))
 
-$(eval $(call PyPackage,foris))
+$(eval $(call Py3Package,foris))
 $(eval $(call BuildPackage,foris-common))
 $(eval $(call BuildPackage,foris-config))
-$(eval $(call HostBuild))

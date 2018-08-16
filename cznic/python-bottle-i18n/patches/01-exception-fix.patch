@@ -1,0 +1,13 @@
+diff --git a/bottle_i18n.py b/bottle_i18n.py
+index 7b23ff4..68eb6ee 100644
+--- a/bottle_i18n.py
++++ b/bottle_i18n.py
+@@ -179,7 +179,7 @@ class I18NPlugin(object):
+             for app in self._apps:
+                 app._ = trans.gettext
+             self._cache[self._lang_code] = trans
+-        except Exception, e:
++        except Exception as e:
+             for app in self._apps:
+                 app._ = lambda s: s
+             self._cache[self._lang_code] = None

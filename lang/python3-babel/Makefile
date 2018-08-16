@@ -7,17 +7,17 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=python3-pytz
-PKG_VERSION:=2015.4
-PKG_RELEASE:=2
+PKG_NAME:=python3-babel
+PKG_VERSION:=2.6.0
+PKG_RELEASE:=1
 
-PKG_SOURCE:=pytz-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://pypi.python.org/packages/source/p/pytz/
-PKG_MD5SUM:=417a47b1c432d90333e42084a605d3d8
+PKG_SOURCE:=Babel-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://pypi.python.org/packages/source/b/babel/
+PKG_MD5SUM:=c384ac03026e8fe6f9b90f55201f1bff
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/pytz-$(PKG_VERSION)
-HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/pytz-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python3-setuptools
+PKG_BUILD_DIR:=$(BUILD_DIR)/Babel-$(PKG_VERSION)
+HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/Babel-$(PKG_VERSION)
+PKG_BUILD_DEPENDS:=python3-setuptools python3-pytz
 HOST_BUILD_DEPENDS:=python3/host
 
 include $(INCLUDE_DIR)/package.mk
@@ -25,17 +25,17 @@ include $(INCLUDE_DIR)/host-build.mk
 $(call include_mk, python3-package.mk)
 $(call include_mk, python3-host.mk)
 
-define Package/python3-pytz
+define Package/python3-babel
   SUBMENU:=Python
   SECTION:=lang
   CATEGORY:=Languages
   TITLE:=World timezone definitions, modern and historical
-  URL:=http://pythonhosted.org/pytz
+  URL:=http://babel.pocoo.org/en/latest/
   DEPENDS:=+python3
 endef
 
-define Package/python3-pytz/description
-  World timezone definitions, modern and historical
+define Package/python3-babel/description
+Babel is an integrated collection of utilities that assist in internationalizing and localizing Python applications, with an emphasis on web-based applications.
 endef
 
 define Host/Compile
@@ -55,5 +55,5 @@ endef
 
 $(eval $(call HostBuild))
 
-$(eval $(call Py3Package,python3-pytz))
-$(eval $(call BuildPackage,python3-pytz))
+$(eval $(call Py3Package,python3-babel))
+$(eval $(call BuildPackage,python3-babel))

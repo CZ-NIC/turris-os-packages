@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-storage-module
 PKG_VERSION:=0.2
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-storage-module.git
-PKG_SOURCE_VERSION:=59dd80ace40fab688fd571b002d37ccb87bae9b9
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -21,6 +21,7 @@ PKG_LICENSE:=GPL-3.0
 PKG_LICENSE_FILE:=LICENSE
 
 include $(INCLUDE_DIR)/package.mk
+include ../foris-controller/files/foris-controller-module.mk
 
 $(call include_mk, python3-package.mk)
 
@@ -28,7 +29,7 @@ define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
 		+foris-controller +btrfs-progs +coreutils-stat +rsync +partx-utils +blkid
-	MAINTAINER:=Michal Hrusecky <michal.hrusecky@nic.cz>
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/$(PKG_NAME)/description
@@ -72,4 +73,5 @@ fi
 mkdir -p "$${IPKG_INSTROOT}"/srv
 endef
 
+$(eval $(call ForisControllerModule,$(PKG_NAME)))
 $(eval $(call BuildPackage,$(PKG_NAME)))
