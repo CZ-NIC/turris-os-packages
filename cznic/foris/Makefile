@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
 PKG_VERSION:=98.7
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
@@ -70,13 +70,16 @@ define Package/foris-common/conffiles
 endef
 
 define Package/foris-common/install
+	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
+	$(INSTALL_DATA) ./files/00_foris.conf $(1)/usr/share/turris-webapps/
+	$(INSTALL_DIR) $(1)/www/webapps-icons
+	$(INSTALL_DATA) ./files/foris.jpg $(1)/www/webapps-icons
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_DATA) ./files/foris-root.lighttpd-conf $(1)/etc/lighttpd/conf.d/foris-root.conf
 
 	$(INSTALL_DIR) $(1)/usr/share/foris
 	$(INSTALL_BIN) ./files/lighttpd-dynamic-conf $(1)/usr/share/foris/lighttpd-dynamic-conf
 	sed -i 's|python2.7|$(PYTHON3)|' $(1)/usr/share/foris/lighttpd-dynamic-conf
-	$(INSTALL_BIN) ./files/foris-root-cgi $(1)/usr/share/foris/foris-root-cgi
 
 	$(INSTALL_DIR) $(1)/usr/share/foris/plugins
 

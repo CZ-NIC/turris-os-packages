@@ -1,0 +1,112 @@
+#!/bin/sh
+
+. /lib/functions.sh
+
+config_load foris
+config_get_bool WIZARD_FINISHED wizard finished "0"
+config_get SCRIPTNAME server scriptname "/foris"
+
+SCRIPTNAME=$(echo "$SCRIPTNAME" | sed -e 's;\\;\\\\;g' | sed -e 's;/*$;;g' | sed -e 's;^/*;;g' | sed -e 's;/+;/;g')
+
+if [ "$WIZARD_FINISHED" = "1" ]; then
+  DELAY="25"
+  [ "$(ls -1 /usr/share/turris-webapps/[0-9]*.conf | wc -l)" -gt 2 ] || DELAY=5
+  URL=""
+  [ -e /usr/share/turris-webapps/default.conf ] && . /usr/share/turris-webapps/default.conf
+  [ -n "$URL" ] || . "$(ls -1 /usr/share/turris-webapps/[0-9]*.conf | head -n1)"
+  DEFAULT_URL="$URL"
+  cat << HTML
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Cache-Control" content="no-cache" />
+		<meta http-equiv="refresh" content="$DELAY; URL=$URL" />
+	<style>
+	body {
+		background-color: white;
+		text-align: center;
+	}
+	.content {
+		width: 960px;
+		margin: auto;
+	}
+	.choice {
+		margin-top: 20px;
+		margin-bottom: 20px;
+		width: 310px;
+		float: left;
+	}
+	.selected {
+		border-color: grey;
+		border-width: medium;
+		border-style: dotted;
+	}
+	.icon {
+		display: table-cell;
+		width: 300px;
+		height: 300px;
+		vertical-align: middle;
+	}
+	.icon img {
+		display: block;
+		max-width: 300px;
+		max-height: 300px;
+		margin: auto;
+	}
+	h1 {
+		color: black;
+		text-align: center;
+	}
+	a, a:visited {
+		color: blue;
+	}
+	a:active {
+		color: red;
+	}
+	</style>
+	</head>
+	<body>
+	<script>
+	window.onload = function () {
+		var timer = $DELAY;
+    		setInterval(function () {
+        			document.querySelector('#timeout').textContent = timer;
+				timer = Math.max(0, timer - 1);
+			}, 1000);
+	};
+	</script>
+	<h1>Available webapps</h1>
+	<p>Booting the selected one in <span id="timeout">$DELAY</span> second.</p>
+	<div class='content'>
+HTML
+  for web in /usr/share/turris-webapps/[0-9]*.conf; do
+    URL=""
+    NAME=""
+    ICON=""
+    extra=""
+    . $web
+    [ "$URL" \!= "$DEFAULT_URL" ] || extra=" selected"
+    [ -n "$ICON" ] || ICON=generic-web.svg
+    echo "<div class='choice$extra'><a href='$URL'><div class='icon'><img src='/static/webapps-icons/$ICON' alt='$NAME'/></div><p>$NAME</p></a></div>"
+  done
+  cat << HTML
+  	</div>
+	</body>
+</html>
+HTML
+else
+  cat << HTML
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Cache-Control" content="no-cache" />
+		<meta http-equiv="refresh" content="$DELAY; URL=$SCRIPTNAME/config" />
+	</head>
+	<body>
+		<p>Continue to <a href="$SCRIPTNAME/config">first run wizard</a>...</p>
+	</body>
+</html>
+HTML
+fi
