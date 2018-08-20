@@ -8,27 +8,27 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-schema
-PKG_VERSION:=0.6
+PKG_VERSION:=0.7.1
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-schema
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
 PKG_LICENSE:=GPL-3.0
 
-PKG_BUILD_DEPENDS:=python-jsonschema/host
-
 include $(INCLUDE_DIR)/package.mk
-include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/foris-schema
-	TITLE:=foris-schema
-	URL:=https://gitlab.labs.nic.cz/turris/foris-schema
-	DEPENDS:=+python-jsonschema
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+	URL:=https://gitlab.labs.nic.cz/turris/foris-schema
+	TITLE:=foris-schema
+	DEPENDS:=+python3-jsonschema
+	VARIANT=python3
 endef
 
 define Package/foris-schema/description
@@ -36,19 +36,6 @@ define Package/foris-schema/description
 	the protocol use between Foris web and a configuration backend.
 endef
 
-define Build/Compile
-	$(call Build/Compile/PyMod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
-endef
-
-define Package/foris-schema/conffiles
-endef
-
-define Package/foris-schema/install
-	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/
-	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
-		$(1)$(PYTHON_PKG_DIR)/
-endef
-
-
+$(eval $(call Py3Package,foris-schema))
 $(eval $(call BuildPackage,foris-schema))
+$(eval $(call BuildPackage,foris-schema-src))
