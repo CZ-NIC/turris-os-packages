@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ssbackups
-PKG_VERSION:=1.1
+PKG_VERSION:=1.3
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
@@ -16,17 +16,20 @@ PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/server-side-backups-client.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
 PKG_LICENSE:=GPL-3.0
 
 include $(INCLUDE_DIR)/package.mk
-include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
+
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/$(PKG_NAME)
 	TITLE:=Server side backups
 	URL:=https://gitlab.labs.nic.cz/turris/server-side-backups-client
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
-	DEPENDS:=+curl +gnupg +python-base
+	DEPENDS:=+curl +gnupg +python3-base
+	VARIANT:=python3
 endef
 
 define Package/$(PKG_NAME)/description
@@ -34,17 +37,20 @@ define Package/$(PKG_NAME)/description
   management. This tool is a client for such service.
 endef
 
-define Build/Compile
-	$(call Build/Compile/PyMod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
+define Py3Build/Compile
+	$(call Build/Compile/Py3Mod,,install --prefix="/usr" --root="$(PKG_INSTALL_DIR)")
 endef
+
+$(eval $(call Py3Package,$(PKG_NAME)))
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) 	$(1)/usr/bin
 	$(INSTALL_BIN) 	./files/ssbackups $(1)/usr/bin/ssbackups
-	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/
+	$(INSTALL_DIR) $(1)$(PYTHON3_PKG_DIR)/
 	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
-		$(1)$(PYTHON_PKG_DIR)/
+		$(PKG_INSTALL_DIR)$(PYTHON3_PKG_DIR)/* \
+		$(1)$(PYTHON3_PKG_DIR)/
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,$(PKG_NAME)-src))
