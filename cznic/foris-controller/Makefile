@@ -8,36 +8,37 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller
-PKG_VERSION:=0.10.1
+PKG_VERSION:=0.10.3
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
 PKG_LICENSE:=GPL-3.0
 
-include $(INCLUDE_DIR)/package.mk
-include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
+PKG_BUILD_DEPENDS:=python3 python3-setuptools
 
+include $(INCLUDE_DIR)/package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
+
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/foris-controller
 	TITLE:=foris-controller
 	URL:=https://gitlab.labs.nic.cz/turris/foris-controller
 	DEPENDS:=\
-		+python-light +python-ubus +python-prctl +python-multiprocessing +python-pbkdf2 \
-		+foris-schema +server-uplink +turris-maintain +updater-ng-supervisor +user_notify \
+		+python3-light +python3-ubus +python3-prctl +python3-multiprocessing +python3-pbkdf2 \
+		+foris-schema +python3-setuptools \
+		+server-uplink +turris-maintain +updater-ng-supervisor +user_notify \
 		+l10n_supported +sqm-scripts
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+	VARIANT:=python3
 endef
 
 define Package/foris-controller/description
 	An program which is placed in top of a message bus and translates requests to commands for backends.
-endef
-
-define Build/Compile
-	$(call Build/Compile/PyMod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
 endef
 
 define Package/foris-controller/conffiles
@@ -69,4 +70,6 @@ set -x
 /etc/init.d/foris-controller disable
 endef
 
+$(eval $(call Py3Package,foris-controller))
 $(eval $(call BuildPackage,foris-controller))
+$(eval $(call BuildPackage,foris-controller-src))
