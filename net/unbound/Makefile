@@ -109,12 +109,17 @@ endef
 CONFIGURE_ARGS += \
 	--disable-gost \
 	--enable-allsymbols \
-	--enable-tfo-client \
-	--enable-tfo-server \
 	--with-ldns="$(STAGING_DIR)/usr" \
 	--with-libexpat="$(STAGING_DIR)/usr" \
 	--with-ssl="$(STAGING_DIR)/usr" \
 	--without-pthreads
+
+# uClibc doesn't support TCP fast open -> --enable-tfo-{client,server} would fail
+ifneq ($(CONFIG_USE_UCLIBC),y)
+CONFIGURE_ARGS += \
+	--enable-tfo-server \
+	--enable-tfo-client
+endif
 
 define Package/unbound/conffiles
 /etc/unbound/unbound.conf
