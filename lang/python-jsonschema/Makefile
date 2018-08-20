@@ -15,48 +15,50 @@ PKG_SOURCE:=jsonschema-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/j/jsonschema/
 PKG_MD5SUM:=50c6b69a373a8b55ff1e0ec6e78f13f4
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/jsonschema-$(PKG_VERSION)
-HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/jsonschema-$(PKG_VERSION)
-
-HOST_BUILD_DEPENDS:=python/host python-functools32/host
-PKG_BUILD_DEPENDS:=python
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-jsonschema-$(PKG_VERSION)
+PKG_BUILD_DEPENDS:=python python3 python-setuptools python3-setuptools
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/host-build.mk
 include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
-include $(TOPDIR)/feeds/packages/lang/python/python-host.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
-define Package/$(PKG_NAME)
+define Package/python-jsonschema/Default
 	SUBMENU:=Python
 	SECTION:=lang
 	CATEGORY:=Languages
-	TITLE:=python-jsonschema
 	URL:=https://python-jsonschema.readthedocs.io/en/latest/
-	DEPENDS:=+python-light +python-functools32
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+	DEPENDS:=
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/python-jsonschema
+	$(call Package/python-jsonschema/Default)
+	TITLE:=python-jsonschema
+	DEPENDS+=+PACKAGE_python-jsonschema:python-light +PACKAGE_python-jsonschema:python-functools32
+	VARIANT:=python
+endef
+
+define Package/python3-jsonschema
+	$(call Package/python-jsonschema/Default)
+	TITLE:=python3-jsonschema
+	DEPENDS+=+PACKAGE_python3-jsonschema:python3-light
+	VARIANT:=python3
+endef
+
+define Package/python-jsonschema/description
 	jsonschema is an implementation of JSON Schema for Python (supporting 2.7+ including Python 3).
 endef
 
-define Build/Compile
-	$(RM) -r $(PKG_BUILD_DIR)/jsonschema/tests/*
-	touch $(PKG_BUILD_DIR)/jsonschema/tests/__init__.py
-	$(call Build/Compile/PyMod,., \
-		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)" \
-	)
+define Package/python3-jsonschema/description
+	$(call Package/python-jsonschema/description)
+	.
+	(Variant for Python3)
 endef
 
-define Host/Compile
-	$(call Build/Compile/HostPyMod,,build)
-endef
+$(eval $(call PyPackage,python-jsonschema))
+$(eval $(call BuildPackage,python-jsonschema))
+$(eval $(call BuildPackage,python-jsonschema-src))
 
-define Host/Install
-	$(call Build/Compile/HostPyMod,,install --prefix="" --root="$(STAGING_DIR_HOSTPKG)")
-endef
-
-$(eval $(call HostBuild))
-
-$(eval $(call PyPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call Py3Package,python3-jsonschema))
+$(eval $(call BuildPackage,python3-jsonschema))
+$(eval $(call BuildPackage,python3-jsonschema-src))
