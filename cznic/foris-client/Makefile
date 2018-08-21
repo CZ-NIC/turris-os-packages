@@ -8,36 +8,37 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-client
-PKG_VERSION:=0.7
+PKG_VERSION:=0.8
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-client
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
 PKG_LICENSE:=GPL-3.0
 
-include $(INCLUDE_DIR)/package.mk
-include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
+PKG_BUILD_DEPENDS:=python3 python3-setuptools
 
+include $(INCLUDE_DIR)/package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
+
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/foris-client
-	TITLE:=foris-client
 	URL:=https://gitlab.labs.nic.cz/turris/foris-client
-	DEPENDS:=+foris-controller
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+	TITLE:=foris-client
+	DEPENDS:= \
+		+foris-controller \
+		+python3-light \
+		+python3-ubus \
+		+python3-setuptools
+	VARIANT:=python3
 endef
 
 define Package/foris-client/description
 	An program/library which is act as a client of foris-controller.
-endef
-
-define Build/Compile
-	$(call Build/Compile/PyMod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
-endef
-
-define Package/foris-client/conffiles
 endef
 
 define Package/foris-client/install
@@ -47,5 +48,6 @@ define Package/foris-client/install
 	$(INSTALL_BIN) ./files/foris-notify-wrapper $(1)/usr/bin/foris-notify-wrapper
 endef
 
-
+$(eval $(call Py3Package,foris-client))
 $(eval $(call BuildPackage,foris-client))
+$(eval $(call BuildPackage,foris-client-src))
