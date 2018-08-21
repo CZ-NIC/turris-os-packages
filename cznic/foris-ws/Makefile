@@ -8,33 +8,40 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-ws
-PKG_VERSION:=0.1.1
-PKG_RELEASE:=3
+PKG_VERSION:=0.2
+PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-ws
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
 PKG_LICENSE:=GPL-3.0
 
-include $(INCLUDE_DIR)/package.mk
-include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
+PKG_BUILD_DEPENDS:=python3 python3-setuptools
 
+include $(INCLUDE_DIR)/package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
+
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/foris-ws
 	TITLE:=foris-ws
 	URL:=https://gitlab.labs.nic.cz/turris/foris-ws
-	DEPENDS:=+python-light +python-websocket-server +python-prctl +rpcd +foris-client +python-ubus +lighttpd-mod-proxy
+	DEPENDS:= \
+		+python3-light \
+		+python3-websocket-server \
+		+python3-prctl \
+		+rpcd \
+		+foris-client \
+		+python3-ubus \
+		+lighttpd-mod-proxy
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+	VARIANT:=python3
 endef
 
 define Package/foris-ws/description
 	Websocket server implementation for foris notifications.
-endef
-
-define Build/Compile
-	$(call Build/Compile/PyMod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
 endef
 
 define Package/foris-ws/conffiles
@@ -72,4 +79,6 @@ set -x
 /etc/init.d/foris-ws disable
 endef
 
+$(eval $(call Py3Package,foris-ws))
 $(eval $(call BuildPackage,foris-ws))
+$(eval $(call BuildPackage,foris-ws-src))
