@@ -75,6 +75,7 @@ define Package/foris-common/install
 
 	$(INSTALL_DIR) $(1)/usr/share/foris
 	$(INSTALL_BIN) ./files/lighttpd-dynamic-conf $(1)/usr/share/foris/lighttpd-dynamic-conf
+	sed -i 's|python2.7|$(PYTHON3)|' $(1)/usr/share/foris/lighttpd-dynamic-conf
 	$(INSTALL_BIN) ./files/foris-root-cgi $(1)/usr/share/foris/foris-root-cgi
 
 	$(INSTALL_DIR) $(1)/usr/share/foris/plugins
