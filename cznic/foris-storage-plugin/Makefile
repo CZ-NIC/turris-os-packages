@@ -9,30 +9,32 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-storage-plugin
 PKG_VERSION:=1
-PKG_RELEASE:=1
+PKG_RELEASE:=16
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-storage-plugin.git
 PKG_SOURCE_VERSION:=package-v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-
 PKG_LICENSE:=GPL-3.0
 PKG_LICENSE_FILE:=LICENSE
 
-PKG_BUILD_DEPENDS:=python/host python-libsass/host python-setuptools/host foris-plugins-distutils/host
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
+
+PKG_BUILD_DEPENDS:=python3/host python3-libsass/host python3-setuptools/host foris-plugins-distutils/host
 
 include $(INCLUDE_DIR)/package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 include ../foris/files/foris-translations.mk
 include ../foris/files/foris-plugin.mk
 
-include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
 		+foris +foris-controller-storage-module
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+	VARIANT:=python3
 endef
 
 define Package/$(PKG_NAME)/description
