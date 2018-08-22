@@ -11,11 +11,11 @@ define ForisPluginTranslation
  endef
 
  define Package/$(1)-l10n-$(3)/install
-	$(INSTALL_DIR) $$(1)$(PYTHON_PKG_DIR)/foris_plugins/$(2)/locale/$(3)/LC_MESSAGES
+	$(INSTALL_DIR) $$(1)$(PYTHON3_PKG_DIR)/foris_plugins/$(2)/locale/$(3)/LC_MESSAGES
 
 	$(CP) \
 		$$(PKG_BUILD_DIR)/foris_plugins/$(2)/locale/$(3)/LC_MESSAGES/*.mo \
-		$$(1)$(PYTHON_PKG_DIR)/foris_plugins/$(2)/locale/$(3)/LC_MESSAGES/
+		$$(1)$(PYTHON3_PKG_DIR)/foris_plugins/$(2)/locale/$(3)/LC_MESSAGES/
  endef
 
  define Package/$(1)-l10n-$(3)/postrm
@@ -36,19 +36,19 @@ endef
 define ForisPlugin
 
  define Build/Compile
-	$(call Build/Compile/PyMod,,install --prefix=/usr --root="$(PKG_INSTALL_DIR)")
+	$(call Build/Compile/Py3Mod,,install --prefix=/usr --root="$(PKG_INSTALL_DIR)")
  endef
 
  define Package/$(1)/install
 
-	$(INSTALL_DIR) $$(1)$(PYTHON_PKG_DIR)
+	$(INSTALL_DIR) $$(1)$(PYTHON3_PKG_DIR)
 
 	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
-		$$(1)$(PYTHON_PKG_DIR)/
+		$(PKG_INSTALL_DIR)$(PYTHON3_PKG_DIR)/* \
+		$$(1)$(PYTHON3_PKG_DIR)/
 
-	$(RM) -r $$(1)$(PYTHON_PKG_DIR)/foris_plugins/*/locale/
-	$(RM) -r $$(1)$(PYTHON_PKG_DIR)/foris_plugins/__init__.py
+	$(RM) -r $$(1)$(PYTHON3_PKG_DIR)/foris_plugins/*/locale/
+	$(RM) -r $$(1)$(PYTHON3_PKG_DIR)/foris_plugins/__init__.py
 
  endef
 

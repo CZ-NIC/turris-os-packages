@@ -70,7 +70,7 @@ esac
 echo "}"
 
 
-PLUGINS_DIR=/usr/lib/python2.7/site-packages/foris_plugins/
+PLUGINS_DIR=/usr/lib/pythonX.X/site-packages/foris_plugins/
 
 for PLUGIN_PATH in $PLUGINS_DIR/*; do
 	PLUGIN_NAME=$(basename $PLUGIN_PATH)
@@ -80,4 +80,4 @@ for PLUGIN_PATH in $PLUGINS_DIR/*; do
 done
 
 echo "alias.url += ( var.foris-$APP.scriptname + \"/static/generated/\" => \"/tmp/.foris_workdir/dynamic_assets/$APP/\" )"
-echo "alias.url += ( var.foris-$APP.scriptname + \"/static/\" => \"/usr/lib/python2.7/site-packages/foris/static/\" )"
+echo "alias.url += ( var.foris-$APP.scriptname + \"/static/\" => \"/usr/lib/pythonX.X/site-packages/foris/static/\" )"
