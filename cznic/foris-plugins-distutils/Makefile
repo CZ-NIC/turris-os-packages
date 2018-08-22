@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-plugins-distutils
 PKG_VERSION:=0.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -19,52 +19,43 @@ PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-plugins-distutils
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)
 
 PKG_LICENSE:=GPL-3.0
 
-PKG_BUILD_DEPENDS:=python python-libsass
-HOST_BUILD_DEPENDS:=python/host python-setuptools/host python-libsass/host
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
+HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
+
+PKG_BUILD_DEPENDS:=python3 python3-setuptools python3-libsass
+HOST_BUILD_DEPENDS:=python3/host python3-setuptools/host python3-libsass/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
-include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
-include $(TOPDIR)/feeds/packages/lang/python/python-host.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-host.mk
+
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
+HOST_UNPACK:=$(HOST_TAR) -C $(HOST_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	URL:=https://gitlab.labs.nic.cz/turris/foris-plugins-distutils
-	DEPENDS:=+python-light
+	DEPENDS:=+python3-light
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+	VARIANT:=python3
 endef
 
 define Package/$(PKG_NAME)/description
 	Distutils to build foris plugins
 endef
 
-define Build/Compile
-	$(call Build/Compile/PyMod,., \
-		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)" \
-	)
-endef
-
 define Host/Compile
-	$(call Build/Compile/HostPyMod,,build)
+	$(call Build/Compile/HostPy3Mod,,install --prefix="" --root="$(STAGING_DIR_HOSTPKG)")
 endef
 
-define Host/Install
-	$(call Build/Compile/HostPyMod,,install --prefix="" --root="$(STAGING_DIR_HOSTPKG)")
-endef
-
-define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/
-	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
-		$(1)$(PYTHON_PKG_DIR)/
-endef
+Host/Install:=
 
 $(eval $(call HostBuild))
 
-$(eval $(call PyPackage,$(PKG_NAME)))
+$(eval $(call Py3Package,$(PKG_NAME)))
 $(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,$(PKG_NAME)-src))
