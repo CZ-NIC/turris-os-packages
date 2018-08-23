@@ -39,14 +39,14 @@ endef
 define Package/python-websocket-server
 	$(call Package/python-websocket-server/Default)
 	TITLE:=python-websocket-server
-	DEPENDS+=+PACKAGE_python-websocket-server:python-light
+	DEPENDS+=+python-light
 	VARIANT:=python
 endef
 
 define Package/python3-websocket-server
 	$(call Package/python-websocket-server/Default)
 	TITLE:=python3-websocket-server
-	DEPENDS+=+PACKAGE_python3-websocket-server:python3-light
+	DEPENDS+=+python3-light
 	VARIANT:=python3
 endef
 
@@ -59,9 +59,6 @@ define Package/python3-websocket-server/description
   .
   (Variant for Python3)
 endef
-
-$(eval $(call BuildPackage,python-websocket-server))
-$(eval $(call BuildPackage,python3-websocket-server))
 
 $(eval $(call PyPackage,python-websocket-server))
 $(eval $(call BuildPackage,python-websocket-server))
