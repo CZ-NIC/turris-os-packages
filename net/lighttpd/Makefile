@@ -155,7 +155,10 @@ define BuildPlugin
     TITLE:=$(2) module
   endef
 
-  Package/lighttpd-mod-$(1)/postinst = $(Package/lighttpd/postinst)
+  define Package/lighttpd-mod-$(1)/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || /etc/init.d/lighttpd restart
+  endef
 
   define Package/lighttpd-mod-$(1)/install
 	$(INSTALL_DIR) $$(1)/usr/lib/lighttpd
