@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-storage-module
 PKG_VERSION:=0.2
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-storage-module.git
@@ -73,5 +73,4 @@ fi
 mkdir -p "$${IPKG_INSTROOT}"/srv
 endef
 
-$(eval $(call ForisControllerModule,$(PKG_NAME)))
 $(eval $(call BuildPackage,$(PKG_NAME)))
