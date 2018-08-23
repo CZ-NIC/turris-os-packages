@@ -172,6 +172,11 @@ Package/transmission-remote-mbedtls/install = $(Package/transmission-remote-open
 define Package/transmission-web/install
 	$(INSTALL_DIR) $(1)/usr/share/transmission
 	$(CP) $(PKG_INSTALL_DIR)/usr/share/transmission/web $(1)/usr/share/transmission/
+
+	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
+	$(INSTALL_DATA) ./files/30_transmission.conf $(1)/usr/share/turris-webapps/
+	$(INSTALL_DIR) $(1)/www/webapps-icons
+	$(INSTALL_DATA) ./files/transmission.png $(1)/www/webapps-icons
 endef
 
 $(eval $(call BuildPackage,transmission-daemon-openssl))
