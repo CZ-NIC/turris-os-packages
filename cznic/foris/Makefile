@@ -19,11 +19,11 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_BUILD_DEPENDS:=\
 	ruby/host \
-	python3-libsass/host \
+	python-libsass/host \
 	python3-pytz/host \
 	python3-babel/host \
-	python3-markupsafe/host \
-	python3-jinja2/host
+	MarkupSafe/host \
+	Jinja2/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
