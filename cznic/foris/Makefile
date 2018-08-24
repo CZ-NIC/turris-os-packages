@@ -149,8 +149,6 @@ set -x
 
 endef
 
-$(eval $(call BuildPackage,foris))
-
 $(eval $(call Py3Package,foris))
 $(eval $(call BuildPackage,foris))
 $(eval $(call BuildPackage,foris-src))
