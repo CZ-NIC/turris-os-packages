@@ -44,4 +44,4 @@ endef
 
 $(eval $(call Py3Package,python3-bottle-i18n))
 $(eval $(call BuildPackage,python3-bottle-i18n))
-$(eval $(call BuildPackage,python3-bottle-i18n))
+$(eval $(call BuildPackage,python3-bottle-i18n-src))
