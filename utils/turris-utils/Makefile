@@ -24,7 +24,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/sbin
-	$(INSTALL_CONF) ./files/check_connection $(1)/sbin/check_connection
+	$(INSTALL_BIN) ./files/check_connection $(1)/sbin/check_connection
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
