@@ -19,7 +19,7 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)
 HOST_BUILD_DEPENDS:=curl/host libevent2/host lua/host
-PKG_BUILD_DEPENDS+=busybox-static
+PKG_BUILD_DEPENDS:=busybox
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
