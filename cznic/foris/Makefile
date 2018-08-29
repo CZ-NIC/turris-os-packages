@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=98.8
+PKG_VERSION:=98.9
 PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -50,6 +50,9 @@ endef
 BRAND?=turris
 ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
 BRAND:=omnia
+endif
+ifeq ($(CONFIG_TARGET_PROFILE),"DEVICE_cznic-mox")
+BRAND:=mox
 endif
 
 MAKE_FLAGS+=\
