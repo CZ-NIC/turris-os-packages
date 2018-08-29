@@ -28,7 +28,7 @@ $(call include_mk, python3-package.mk)
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
-		+foris-controller +ssbackups +python3-pbkdf2
+		+foris-controller +ssbackups +python3-pbkdf2 +foris-client-bin
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
