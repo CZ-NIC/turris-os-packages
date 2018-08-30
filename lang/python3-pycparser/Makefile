@@ -15,6 +15,9 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/p/pycparser
 PKG_MD5SUM:=a2bc8d28c923b4fe2b2c3b4b51a4f935
 
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
+HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
+
 PKG_BUILD_DEPENDS:=python3 python3-setuptools
 HOST_BUILD_DEPENDS:=python3/host python3-setuptools/host python3-ply/host
 
@@ -27,6 +30,9 @@ include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python3-package.mk)
 $(call include_mk, python3-host.mk)
 
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
+HOST_UNPACK:=$(HOST_TAR) -C $(HOST_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
+
 define Package/python3-pycparser
 	SECTION:=lang
 	CATEGORY:=Languages
@@ -34,6 +40,7 @@ define Package/python3-pycparser
 	TITLE:=python3-pycparser
 	URL:=https://github.com/eliben/pycparser
 	DEPENDS:=+python3-light +python3-ply
+	VARIANT:=python3
 endef
 
 define Package/python3-pycparser/description

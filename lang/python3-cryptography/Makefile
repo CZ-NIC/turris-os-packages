@@ -15,6 +15,8 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/c/cryptography
 PKG_MD5SUM:=bc8148d2ff2d80fef8ef2d2e856b3a7f
 
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
+
 PKG_BUILD_DEPENDS:=python3-cffi/host
 
 PKG_LICENSE:=Apache-2.0 BSD-3-Clause
@@ -24,6 +26,8 @@ PKG_MAINTAINER:=Jeffery To <jeffery.to@gmail.com>
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python3-package.mk)
 
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
+
 define Package/python3-cryptography
 	SECTION:=lang
 	CATEGORY:=Languages
@@ -31,6 +35,7 @@ define Package/python3-cryptography
 	TITLE:=python3-cryptography
 	URL:=https://github.com/pyca/cryptography
 	DEPENDS:=+libopenssl +python3 +python3-cffi +python3-idna +python3-pyasn1 +python3-six +python3-setuptools
+	VARIANT:=python3
 endef
 
 define Package/python3-cryptography/description

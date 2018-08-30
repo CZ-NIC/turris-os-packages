@@ -15,6 +15,8 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/i/idna
 PKG_MD5SUM:=f6473caa9c5e0cc1ad3fd5d04c3c114b
 
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
+
 PKG_BUILD_DEPENDS:=python3 python3-setuptools
 
 PKG_LICENSE:=BSD-3-Clause
@@ -24,6 +26,8 @@ PKG_MAINTAINER:=Jeffery To <jeffery.to@gmail.com>
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python3-package.mk)
 
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
+
 define Package/python3-idna
 	SECTION:=lang
 	CATEGORY:=Languages
@@ -31,6 +35,7 @@ define Package/python3-idna
 	TITLE:=python-idna
 	URL:=https://github.com/kjd/idna
 	DEPENDS:=+python3-light
+	VARIANT:=python3
 endef
 
 define Package/python3-idna/description

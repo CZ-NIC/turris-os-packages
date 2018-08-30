@@ -15,6 +15,8 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/p/pyasn1
 PKG_MD5SUM:=f00a02a631d4016818659d1cc38d229a
 
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
+
 PKG_BUILD_DEPENDS:=python3 python3-setuptools
 
 PKG_LICENSE:=BSD-2-Clause
@@ -24,6 +26,8 @@ PKG_MAINTAINER:=Jeffery To <jeffery.to@gmail.com>
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python3-package.mk)
 
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
+
 define Package/python3-pyasn1
 	SECTION:=lang
 	CATEGORY:=Languages
@@ -31,6 +35,7 @@ define Package/python3-pyasn1
 	TITLE:=python3-pyasn1
 	URL:=http://pyasn1.sourceforge.net/
 	DEPENDS:=+python3-light
+	VARIANT:=python3
 endef
 
 define Package/python3-pyasn1/description
