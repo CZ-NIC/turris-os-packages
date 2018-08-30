@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=60.4.3
+PKG_VERSION:=60.4.4
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
@@ -23,7 +23,6 @@ PKG_BUILD_DEPENDS:=busybox
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
-$(call include_mk, python-package.mk)
 $(call include_mk, python3-package.mk)
 
 define Package/$(PKG_NAME)
@@ -104,8 +103,7 @@ endef
 
 define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION) BUSYBOX_EXEC=$(STAGING_DIR)/bin/busybox-static
-	$(call Build/Compile/PyMod,src/supervisor,install --prefix="/usr" --root=$(PKG_INSTALL_DIR)/py2)
-	$(call Build/Compile/Py3Mod,src/supervisor,install --prefix="/usr" --root=$(PKG_INSTALL_DIR)/py3)
+	$(call Build/Compile/Py3Mod,src/supervisor,install --prefix="/usr" --root=$(PKG_INSTALL_DIR))
 endef
 
 define Host/Compile
@@ -123,11 +121,12 @@ endef
 
 
 define Package/$(PKG_NAME)-supervisor
-	TITLE:=Next generation updater supervisor
-	DEPENDS:=+updater-ng-py3-supervisor +updater-ng +vixie-cron
+	TITLE:=Next generation updater supervisor and it's library
+	DEPENDS:=+updater-ng +vixie-cron +python3-light +python3-uci +userlists +l10n_supported
+	EXTRA_DEPENDS:=userlists (>=11)
 endef
 
-define Package/$(PKG_NAME)-supervisor/install
+define Py3Package/$(PKG_NAME)-supervisor/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/supervisor/updater-supervisor $(1)/usr/bin/
 
@@ -139,23 +138,9 @@ define Package/$(PKG_NAME)-supervisor/install
 endef
 
 
-define Package/$(PKG_NAME)-py2-supervisor
-	TITLE:=Next generation updater supervisor Python 2 library
-	DEPENDS:=+updater-ng +python-light +python-uci +userlists +l10n_supported
-	EXTRA_DEPENDS:=userlists (>=11)
-endef
-
-
-define Package/$(PKG_NAME)-py3-supervisor
-	TITLE:=Next generation updater supervisor Python 3 library
-	DEPENDS:=+updater-ng +python3-light +python3-uci +userlists +l10n_supported
-	EXTRA_DEPENDS:=userlists (>=11)
-endef
-
-
 define Package/$(PKG_NAME)-localrepo
 	TITLE:=Next generation updater local repository manager
-	DEPENDS:=+python-light
+	DEPENDS:=+python3-light
 endef
 
 define Package/$(PKG_NAME)-localrepo/install
@@ -248,17 +233,9 @@ endef
 #	chmod +x $(1)/usr/bin/updater-wipe.sh
 
 
-PKG_INSTALL_DIR_ORIG:="$(PKG_INSTALL_DIR)"
-PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py2"
-$(eval $(call PyPackage,updater-ng-py2-supervisor))
-PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py3"
-$(eval $(call Py3Package,updater-ng-py3-supervisor))
-PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)"
-
+$(eval $(call Py3Package,updater-ng-supervisor))
 $(eval $(call BuildPackage,updater-ng))
 $(eval $(call BuildPackage,updater-ng-supervisor))
-$(eval $(call BuildPackage,updater-ng-py2-supervisor))
-$(eval $(call BuildPackage,updater-ng-py3-supervisor))
 $(eval $(call BuildPackage,updater-ng-localrepo))
 $(eval $(call BuildPackage,updater-ng-opkg))
 $(eval $(call BuildPackage,opkg-trans))
