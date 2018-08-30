@@ -15,6 +15,9 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/c/cffi
 PKG_MD5SUM:=fa766133f7299464c8bf857e0c966a82
 
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
+HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
+
 PKG_BUILD_DEPENDS:=python3 python3-setuptools
 HOST_BUILD_DEPENDS:=libffi/host python3/host python3-setuptools/host python3-pycparser/host
 
@@ -27,6 +30,9 @@ include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python3-package.mk)
 $(call include_mk, python3-host.mk)
 
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
+HOST_UNPACK:=$(HOST_TAR) -C $(HOST_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
+
 define Package/python3-cffi
 	SECTION:=lang
 	CATEGORY:=Languages
@@ -34,6 +40,7 @@ define Package/python3-cffi
 	TITLE:=python3-cffi
 	URL:=http://cffi.readthedocs.org/
 	DEPENDS:=+libffi +python3-light +python3-pycparser
+	VARIANT:=python3
 endef
 
 define Package/python3-cffi/description
