@@ -27,7 +27,7 @@ define Package/python3-msgpack
   CATEGORY:=Languages
   TITLE:=Python msgpack library
   URL:=https://pypi.python.org/pypi/msgpack
-  DEPENDS:=+python3
+  DEPENDS:=+python3 +libstdcpp
 endef
 
 define Build/Compile
