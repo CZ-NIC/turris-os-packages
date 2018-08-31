@@ -41,9 +41,8 @@ define Build/InstallDev
 endef
 
 define Package/msgpack-c/install
-	true
-	#$(INSTALL_DIR) $(1)/usr/lib
-	#$(CP) $(PKG_INSTALL_DIR)/usr/lib/libpaho-*.so* $(1)/usr/lib/
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libmsgpackc.so* $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,msgpack-c))
