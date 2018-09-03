@@ -13,7 +13,8 @@ TMP_FILE=$(mktemp)
 if [[ $DST_EXT == "xz" ]]; then
 	/usr/bin/xz -c "$TMP_FILE" > "$DST.tmp"|| { rm -f "$TMP_FILE"; exit 1; }
 else
-	cp "$TMP_FILE" "$DST.tmp"
+	cp "$TMP_FILE" "$DST.tmp" || { rm -f "$TMP_FILE"; exit 1; }
 fi
 rm -f "$TMP_FILE"
+sync
 mv "$DST.tmp" "$DST"
