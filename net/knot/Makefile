@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot
-PKG_VERSION:=2.6.7
+PKG_VERSION:=2.7.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-dns/
-PKG_MD5SUM:=1c2a004b05c161f7b36d5eeccebd9d4cdf60aa09930a7cc766514e468ca92243
+PKG_MD5SUM:=cb70b2ee1c7ecbaad8774a1e0c449a68c6a6f7c9d60595524f003201d6e38431
 
 PKG_MAINTAINER:=Knot DNS <knot-dns@labs.nic.cz>
 PKG_LICENSE:=GPL-3.0 LGPL-2.0 0BSD MIT OLDAP-2.8
@@ -141,10 +141,10 @@ endef
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR)
-	$(MAKE) -C $(PKG_BUILD_DIR)/libtap check
-	$(MAKE) -C $(PKG_BUILD_DIR)/src/dnssec/tests check-compile
-	$(MAKE) -C $(PKG_BUILD_DIR)/tests check-compile
-	$(MAKE) -C $(PKG_BUILD_DIR)/src/zscanner check-compile
+	#$(MAKE) -C $(PKG_BUILD_DIR)/libtap check
+	#$(MAKE) -C $(PKG_BUILD_DIR)/src/knot/dnssec/tests check-compile
+	#$(MAKE) -C $(PKG_BUILD_DIR)/tests check-compile
+	#$(MAKE) -C $(PKG_BUILD_DIR)/src/zscanner check-compile
 endef
 
 define Build/InstallDev
@@ -154,11 +154,11 @@ define Build/InstallDev
 	$(INSTALL_DIR)						$(1)/usr/include/libknot
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/libknot/*		$(1)/usr/include/libknot/
 
-	$(INSTALL_DIR)						$(1)/usr/include/dnssec
-	$(CP) $(PKG_INSTALL_DIR)/usr/include/dnssec/*		$(1)/usr/include/dnssec/
+	$(INSTALL_DIR)						$(1)/usr/include/libdnssec
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/libdnssec/*	$(1)/usr/include/libdnssec/
 
-	$(INSTALL_DIR)						$(1)/usr/include/zscanner
-	$(CP) $(PKG_INSTALL_DIR)/usr/include/zscanner/*		$(1)/usr/include/zscanner/
+	$(INSTALL_DIR)						$(1)/usr/include/libzscanner
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/libzscanner/*		$(1)/usr/include/libzscanner/
 
 	$(INSTALL_DIR)							$(1)/usr/lib/pkgconfig
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/*.pc	$(1)/usr/lib/pkgconfig/
@@ -236,8 +236,8 @@ endef
 
 $(eval $(call BuildPackage,knot-libs))
 $(eval $(call BuildPackage,knot-libzscanner))
-$(eval $(call BuildPackage,knot))
-$(eval $(call BuildPackage,knot-dig))
-$(eval $(call BuildPackage,knot-host))
-$(eval $(call BuildPackage,knot-nsupdate))
-$(eval $(call BuildPackage,knot-tests))
+#$(eval $(call BuildPackage,knot))
+#$(eval $(call BuildPackage,knot-dig))
+#$(eval $(call BuildPackage,knot-host))
+#$(eval $(call BuildPackage,knot-nsupdate))
+#$(eval $(call BuildPackage,knot-tests))
