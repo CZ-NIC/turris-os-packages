@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-msgpack
 PKG_VERSION:=0.5.6
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/msgpack/msgpack-python/archive/
@@ -27,7 +27,7 @@ define Package/python3-msgpack
   CATEGORY:=Languages
   TITLE:=Python msgpack library
   URL:=https://pypi.python.org/pypi/msgpack
-  DEPENDS:=+python3
+  DEPENDS:=+python3 +libstdcpp
 endef
 
 define Build/Compile

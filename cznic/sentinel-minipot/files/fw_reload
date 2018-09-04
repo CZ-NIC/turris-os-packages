@@ -1,0 +1,4 @@
+#!/bin/sh
+
+/etc/init.d/sentinel-minipot enabled && /etc/init.d/sentinel-minipot check_fw
+

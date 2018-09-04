@@ -23,6 +23,7 @@ check_fw() {
 			( sleep 60 && /etc/init.d/haas-proxy check_fw ) &
 		fi
 	fi
+	[ \! -e /sys/fs/cgroup/haas/tasks ] || cat /tmp/haas.pid 2> /dev/null > /sys/fs/cgroup/haas/tasks
 }
 
 start_service() {
@@ -31,9 +32,7 @@ start_service() {
 	PORT="`uci -q get haas.settings.local_port`"
 	FW_SETUP="`uci -q get haas.settings.setup_fw | egrep -i '(1|yes|true|enabled|on)'`"
 	LOG="`uci -q get haas.settings.log`"
-	if [ "$LOG" = syslog ]; then
-		LOG="--syslog"
-	elif [ -z "$LOG" ] || [ "$LOG" = none ]; then
+	if [ -z "$LOG" ] || [ "$LOG" = none ]; then
 		LOG=""
 	else
 		LOG="--log-file=$LOG"
@@ -54,7 +53,8 @@ start_service() {
 	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
 	procd_set_param file /etc/config/haas
 	procd_close_instance
-	sleep 3 && cat /tmp/haas.pid 2> /dev/null > /sys/fs/cgroup/haas/tasks &
+	sleep 5 && cat /tmp/haas.pid 2> /dev/null > /sys/fs/cgroup/haas/tasks &
+	sleep 120 && cat /tmp/haas.pid 2> /dev/null > /sys/fs/cgroup/haas/tasks &
 }
 
 stop_service() {

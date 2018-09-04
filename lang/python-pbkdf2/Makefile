@@ -15,16 +15,14 @@ PKG_SOURCE:=pbkdf2-1.3.tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/p/pbkdf2/
 PKG_MD5SUM:=40cda566f61420490206597243dd869f
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python python3 python-setuptools python3-setuptools
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_BUILD_DEPENDS:=python python3
 
 include $(INCLUDE_DIR)/package.mk
-include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
-include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
+$(call include_mk, python-package.mk)
+$(call include_mk, python3-package.mk)
 
-PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
-
-define Package/python-pbkdf2/Default
+define Package/Common
 	SUBMENU:=Python
 	SECTION:=lang
 	CATEGORY:=Languages
@@ -33,33 +31,36 @@ define Package/python-pbkdf2/Default
 endef
 
 define Package/python-pbkdf2
-	$(call Package/python-pbkdf2/Default)
+	$(call Package/Common)
 	TITLE:=python-pbkdf2
-	DEPENDS:=+PACKAGE_python-pbkdf2:python-light +PACKAGE_python-pbkdf2:python-openssl
-	VARIANT:=python
+	DEPENDS:=+python-light +python-openssl
 endef
 
 define Package/python3-pbkdf2
-	$(call Package/python-pbkdf2/Default)
+	$(call Package/Common)
 	TITLE:=python3-pbkdf2
-	DEPENDS:=+PACKAGE_python3-pbkdf2:python3-light +PACKAGE_python3-pbkdf2:python3-openssl
-	VARIANT:=python3
+	DEPENDS:=+python3-light +python3-openssl
 endef
 
 define Package/python-pbkdf2/description
 	PKCS#5 v2.0 PBKDF2 Module for Python
 endef
 
-define Package/python3-pbkdf2/description
-	$(call Package/python-pbkdf2/description)
-	.
-	(Variant for Python3)
+define Build/Compile
+	$(call Build/Compile/PyMod,., \
+		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)/py2" \
+	)
+	$(call Build/Compile/Py3Mod,., \
+		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)/py3" \
+	)
 endef
 
+PKG_INSTALL_DIR_ORIG:="$(PKG_INSTALL_DIR)"
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py2"
 $(eval $(call PyPackage,python-pbkdf2))
-$(eval $(call BuildPackage,python-pbkdf2))
-$(eval $(call BuildPackage,python-pbkdf2-src))
-
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py3"
 $(eval $(call Py3Package,python3-pbkdf2))
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)"
+
+$(eval $(call BuildPackage,python-pbkdf2))
 $(eval $(call BuildPackage,python3-pbkdf2))
-$(eval $(call BuildPackage,python3-pbkdf2-src))

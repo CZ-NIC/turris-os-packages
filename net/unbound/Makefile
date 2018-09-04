@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
 PKG_VERSION:=1.7.3
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.unbound.net/downloads
@@ -113,6 +113,13 @@ CONFIGURE_ARGS += \
 	--with-libexpat="$(STAGING_DIR)/usr" \
 	--with-ssl="$(STAGING_DIR)/usr" \
 	--without-pthreads
+
+# uClibc doesn't support TCP fast open -> --enable-tfo-{client,server} would fail
+ifneq ($(CONFIG_USE_UCLIBC),y)
+CONFIGURE_ARGS += \
+	--enable-tfo-server \
+	--enable-tfo-client
+endif
 
 define Package/unbound/conffiles
 /etc/unbound/unbound.conf

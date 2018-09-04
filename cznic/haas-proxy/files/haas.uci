@@ -3,7 +3,7 @@ config haas 'settings'
 	option local_port '2525'
 	option setup_fw '1'
 	# This options specifies where to log if anywhere, valid values are
-    # absolute path to the file, 'syslog' or 'none'
+    # absolute path to the file or 'none'
 	option log 'none'
 	# Verbosity of the log, valid options are
 	# 'error', 'warning' (default), 'info' and 'debug'
