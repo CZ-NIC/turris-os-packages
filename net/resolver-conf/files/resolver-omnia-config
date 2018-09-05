@@ -62,19 +62,3 @@ config resolver 'unbound_remote_control'
 
 # config resolver 'unbound_includes'
 # 	list include_path "/etc/unbound/unbound-part.conf"
-
-#nastaveni bez souboru v /etc/resolver/dns_server
-config dns_server
-	option name 'unicast.censurfridns.dk'
-	option enable_tls 1
-	option port 853
-	option ipv4 "89.233.43.71"
-	option pin_sha256 "wikE3jYAA6jQmXYTr/rbHeEPmC78dQwZbQp6WdrseEs="
-	option hostname "unicast.censurfridns.dk"
-
-#prepsani nekterych parametru z /etc/resolver/dns_server
-#poznamka name slouzi k urceni konfiguracniho souboru <name>.conf
-config dns_server
-	option name 'cloudflare-dns'
-	option description 'nejaky suer defined popis cloudflare-dns'
-

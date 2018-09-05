@@ -4,13 +4,20 @@
 Created on Tue Apr 24 14:52:08 2018
 
 @author: cz_nic
+
+This script is used for rpcd ubus service.
+It servers DNS resolver settings for DNS over TLS in json.
+It should be located in /usr/libexec/rpcd
+
+Example:
+    ubus call resolver_rpcd.py list_dns '{}'
+
 """
 import subprocess
 import os
 from os import listdir
 from os.path import isfile, join
 import json
-import copy
 import sys
 import syslog
 
@@ -25,28 +32,6 @@ def call_cmd(cmd):
                             stderr=subprocess.PIPE)
     data = task.stdout.read()
     return data
-
-
-def uci_show(path):
-    return call_cmd(["uci", "show", "%s" % path]).rstrip()
-
-
-def get_uci_dns_servers():
-    ret_arr = []
-    for i in range(100):
-        config = uci_show("resolver.@dns_server[%i]" % i)
-        ret = {}
-        if config.find("Entry not found") >= 0:
-            return {}
-        for item in config.splitlines():
-            tmp_arr = item.split("=", 1)
-            if len(tmp_arr) == 2:
-                tmp_var = tmp_arr[0].split(".")
-                if len(tmp_var) == 3:
-                    ret.update({tmp_var[-1]: tmp_arr[1].strip("'\"")})
-        if "name" in ret:
-            ret_arr.append(ret)
-    return ret_arr
 
 
 def get_config(filename):
@@ -82,24 +67,7 @@ def get_file_list(mypath, extension="sh"):
 
 def get_dns_list(arg1):
     file_configs = get_file_configs(DNS_SERVERS_DIR)
-    uci_configs = get_uci_dns_servers()
-
-    tmp = []
-    for config_file in file_configs:
-        for config_uci in uci_configs:
-            if config_uci.get("name") == config_file.get("name"):
-                tmp_config = copy.deepcopy(config_file)
-                tmp_config.update(config_uci)  # update uci
-                tmp.append(tmp_config)
-                uci_configs.remove(config_uci)
-                file_configs.remove(config_file)
-
-    if file_configs != []:
-        tmp += file_configs
-
-    if uci_configs != []:
-        tmp += uci_configs
-    return json.dumps({"list_dns": tmp})
+    return json.dumps({"list_dns": file_configs})
 
 
 if __name__ == "__main__":
