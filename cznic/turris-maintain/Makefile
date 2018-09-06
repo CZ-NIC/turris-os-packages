@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-maintain
-PKG_VERSION:=2
+PKG_VERSION:=3
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -16,7 +16,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+uci
+	DEPENDS:=+uci +python3 +python3-uci
 endef
 
 define Package/$(PKG_NAME)/description
@@ -34,6 +34,8 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) files/config-backup.sh $(1)/usr/bin/maintain-config-backup
 	$(INSTALL_BIN) files/config-restore.sh $(1)/usr/bin/maintain-config-restore
 	$(INSTALL_BIN) files/reboot-needed.sh $(1)/usr/bin/maintain-reboot-needed
+	$(INSTALL_BIN) files/reboot.sh $(1)/usr/bin/maintain-reboot
+	$(INSTALL_BIN) files/network-restart.sh $(1)/usr/bin/maintain-network-restart
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
