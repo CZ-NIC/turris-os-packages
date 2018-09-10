@@ -63,6 +63,7 @@ start_service() {
 	procd_set_param pidfile  $PID_FILE
 	procd_set_param command /usr/bin/ucollect /tmp/ucollect
 	procd_close_instance
+	( sleep 60 && /etc/init.d/ucollect restart ) &
 }
 
 restart() {
