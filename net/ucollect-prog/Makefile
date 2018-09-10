@@ -9,7 +9,7 @@
 
 include ../ucollect-prog/Makefile.common
 
-$(eval $(call UCOLLECT_BASE,ucollect-prog,124))
+$(eval $(call UCOLLECT_BASE,ucollect-prog,125))
 
 define Package/ucollect-lib
 	SECTION:=net
