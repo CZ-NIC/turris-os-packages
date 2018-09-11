@@ -10,6 +10,8 @@ ROOTKEYFILE=/etc/root.keys
 DEFAULT_RUNDIR=/tmp/kresd
 STATIC_DOMAINS=1
 DYNAMIC_DOMAINS=0
+USERNAME=kresd
+GROUP=kresd
 
 # Check the /etc/unbound/root.keys is reasonable and try to fix it with given command
 check_root_key() {
@@ -213,7 +215,8 @@ modify_rundir() {
 	if [ ! -d "$rundir" ]; then
 		mkdir -p "$rundir"
 	fi
-	chown -R $USERNAME:$GROUP "$rundir" #maybe we should be more restrictive ...
+	#todo disable just for now
+	#chown -R $USERNAME:$GROUP "$rundir" #maybe we should be more restrictive ...
 	DEFAULT_RUNDIR="$rundir"
 	HINTS_CONFIG=$DEFAULT_RUNDIR/hints.tmp
 }
