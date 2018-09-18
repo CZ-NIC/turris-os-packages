@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-minipot
 PKG_VERSION:=1
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/minipot.git
 PKG_SOURCE_VERSION:=ea5cf5315eafa57979209592c09d11e7bec8b93d
@@ -41,6 +41,20 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/firewall.d
 	$(INSTALL_DIR) $(1)/etc/firewall.d/with_reload
 	$(INSTALL_BIN) ./files/fw_reload $(1)/etc/firewall.d/with_reload/99_sentinel_minipot.fw
+endef
+
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/sentinel-minipot enable
+/etc/init.d/sentinel-minipot restart
+}
+endef
+
+define Package/$(PKG_NAME)/prerm
+#!/bin/sh
+/etc/init.d/sentinel-minipot disable
+/etc/init.d/sentinel-minipot stop
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
