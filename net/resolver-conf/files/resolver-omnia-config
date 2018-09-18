@@ -52,6 +52,7 @@ config resolver 'unbound'
 	option neg_cache_size '10k'
 	option prefetch_key 'yes'
 	#option hostname_config '/etc/hosts'
+	option ipv6_local 'no'
 
 # config resolver 'unbound_python'
 # 	list python_script "/etc/unbound/ubmodule-tst.py"
