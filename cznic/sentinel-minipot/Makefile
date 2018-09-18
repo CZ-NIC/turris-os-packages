@@ -9,10 +9,10 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-minipot
 PKG_VERSION:=1
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/minipot.git
-PKG_SOURCE_VERSION:=3f321083af9fed2d6e0eaf8d1df23213821a9186
+PKG_SOURCE_VERSION:=ea5cf5315eafa57979209592c09d11e7bec8b93d
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Petracek <martin.petracek@nic.cz>
