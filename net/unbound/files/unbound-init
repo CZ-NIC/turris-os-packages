@@ -233,6 +233,11 @@ init_unbound() {
     set_parameter prefetch prefetch yes
     set_parameter prefetch_key prefetch-key yes
 
+    config_get_bool ipv6_local unbound ipv6_local 1
+    if [ "$ipv6_local" = "1" ] ; then
+       add_parameter "0.0.0.0" outgoing-interface
+    fi
+
     #Includes
     config_list_foreach unbound_includes include_path add_include
 
