@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tvheadend
 PKG_VERSION:=4.2.6.20180913
-PKG_RELEASE:=0
+PKG_RELEASE:=1
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_VERSION:=81717d98d56bbe538da31c4ab4f89c0487a6955b
@@ -78,7 +78,7 @@ CONFIGURE_ARGS += \
 
 define Build/Prepare
 	$(call Build/Prepare/Default)
-	echo 'Tvheadend $(shell echo $(PKG_SOURCE_VERSION) | sed "s/^v//")~openwrt$(PKG_RELEASE)' \
+	echo 'Tvheadend $(PKG_VERSION)-$(PKG_RELEASE)~turrisos' \
 		> $(PKG_BUILD_DIR)/debian/changelog
 endef
 
