@@ -46,8 +46,8 @@ for network in ["wan", "lan"]:
     try:
         output = subprocess.check_output(["ifstatus", network])
         data = json.loads(output)
-        ips += [e["address"] for e in data["ipv4-address"]]
-        ips += [e["address"] for e in data["ipv6-address"]]
+        ips += [e["address"] for e in data.get("ipv4-address", [])]
+        ips += [e["address"] for e in data.get("ipv6-address", [])]
     except (subprocess.CalledProcessError, ):
         pass
 
