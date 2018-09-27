@@ -31,6 +31,10 @@ define Build/Compile
 	true
 endef
 
+define Package/$(PKG_NAME)/conffiles
+	/etc/config/backups
+endef
+
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) files/config-backup.sh $(1)/usr/bin/maintain-config-backup
@@ -38,6 +42,9 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) files/reboot-needed.sh $(1)/usr/bin/maintain-reboot-needed
 	$(INSTALL_BIN) files/reboot.py $(1)/usr/bin/maintain-reboot
 	$(INSTALL_BIN) files/network-restart.py $(1)/usr/bin/maintain-network-restart
+
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/backups.conf $(1)/etc/config/backups
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

@@ -30,10 +30,6 @@ define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) PLUGIN_PATH=/usr/share/nuci/ NO_DOC=1  MAX_LOG_LEVEL:=LOG_DEBUG LUA_COMPILE:=no
 endef
 
-define Package/$(PKG_NAME)/conffiles
-/etc/config/backups
-endef
-
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libnuci_core.so $(1)/usr/lib/
@@ -51,9 +47,6 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/usr/share/nuci/lua_lib
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/src/lua_lib/* $(1)/usr/share/nuci/lua_lib/
-
-	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_CONF) ./files/backups.conf $(1)/etc/config/backups
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/autocollect.cron $(1)/etc/cron.d/autocollect
