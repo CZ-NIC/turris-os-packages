@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nuci
-PKG_VERSION:=159
+PKG_VERSION:=160
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nuci.git
@@ -23,7 +23,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=nuci
-	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua +ip +socat +libatsha204 +coreutils +coreutils-base64 +bzip2 +thermometer +user_notify +ntpdate +vixie-cron
+	DEPENDS:=+libnetconf +liblua +libuci +libuci-lua +ip +socat +libatsha204 +coreutils +coreutils-base64 +bzip2 +thermometer +user_notify +ntpdate +vixie-cron +turris-maintain
 endef
 
 define Build/Compile
@@ -40,8 +40,6 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/nuci $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/nuci-helper-config-restore $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/nuci-helper-config-backup $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/nuci-helper-checkconn $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/nuci-helper-autocollect $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/tools/nucipty $(1)/usr/bin/nucipty
