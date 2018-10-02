@@ -1,13 +1,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cython3
-PKG_VERSION:=0.25.2
+PKG_VERSION:=0.28.5
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/cython/cython/archive
 PKG_BUILD_DIR:=$(BUILD_DIR)/cython-$(PKG_VERSION)
-PKG_MD5SUM:=212d50002f72bcdd928f036a46b3ae09
+PKG_HASH:=bcd6a24ca0cba54ad8b1755852bb5cd567bb06abea6f776c82fbb10bb46bae37
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
