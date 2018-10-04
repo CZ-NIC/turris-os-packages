@@ -46,6 +46,8 @@ init_header() {
 	fi
 	echo "}" >> $CONFIGFILE
 
+	echo "hints.use_nodata(true)" >> $CONFIGFILE
+
 	# clear hints file
 	echo "" > $HINTS_CONFIG
 }
