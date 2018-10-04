@@ -9,17 +9,14 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-zmq
 PKG_VERSION:=17.1.2
-PKG_RELEASE:=2
+PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/zeromq/pyzmq/archive
-PKG_SOURCE_VERSION:=v$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE:=$(PKG_SOURCE_VERSION).tar.gz
-PKG_HASH:=77a32350440e321466b1748e6063b34a8a73768b62cb674e7d799fbc654b7c45
+PKG_SOURCE:=pyzmq-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://pypi.python.org/packages/source/p/pyzmq/
+PKG_HASH:=a72b82ac1910f2cf61a49139f4974f994984475f771b0faa730839607eeedddf
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=cython
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-pyzmq-$(PKG_VERSION)
+PKG_BUILD_DEPENDS:=python3 cython3
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -36,6 +33,12 @@ define Package/$(PKG_NAME)
   MAINTAINER:=CZ.NIC <packaging@turris.cz>
   VARIANT:=python3
 endef
+
+define prepare_pyzmq_setup
+	$(CP) ./files/setup.cfg $(PKG_BUILD_DIR)/setup.cfg
+endef
+
+Hooks/Compile/Pre += prepare_pyzmq_setup
 
 define Package/$(PKG_NAME)/description
   Python binding to ZeroMQ
