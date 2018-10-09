@@ -44,6 +44,9 @@ CMAKE_OPTIONS:= -DSTACK_DIRECTION=-1 \
                 -DIMPORT_EXECUTABLES=$(STAGING_DIR_HOST)/mariadb-import_executables \
                 -DPLUGIN_HANDLERSOCKET=NO \
 		-DPLUGIN_AUTH_PAM=NO \
+		-DPLUGIN_AUTH_GSSAPI=NO \
+		-DGSSAPI_FOUND=FALSE \
+		-DKRB5_CONFIG="" \
                 -DPLUGIN_XTRADB=DYNAMIC \
                 -DPLUGIN_MROONGA=NO \
                 -DPLUGIN_TOKUDB=DYNAMIC \
