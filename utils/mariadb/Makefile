@@ -144,6 +144,7 @@ endef
 
 define Package/mariadb-server/install
 	$(INSTALL_DIR) $(1)/usr/bin
+	rm -f $(PKG_INSTALL_DIR)/usr/bin/wsrep_sst_rsync_wan
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/mysqld $(1)/usr/sbin/
