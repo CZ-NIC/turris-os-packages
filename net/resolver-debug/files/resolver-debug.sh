@@ -177,7 +177,7 @@ case $cmd in
 		echo "Start debug"
 		start_debug
 		run_test
-		echo "Debug stated" | test_log
+		echo "Debug started" | test_log
 	;;
 	stop)
 		echo "Stop debug"
