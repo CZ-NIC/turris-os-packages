@@ -164,7 +164,7 @@ cat << EOF
 Help
 ================
 
-star		- star resolver debug
+start		- start resolver debug
 stop		- stop resolver debug
 add-btn		- add buttons to luci custom command
 remove-btn	- remove buttons from luci custom command
