@@ -39,7 +39,6 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) files/init $(1)/etc/init.d/sentinel-proxy
 endef
 
-
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
@@ -53,7 +52,5 @@ define Package/$(PKG_NAME)/prerm
 /etc/init.d/sentinel-proxy disable
 /etc/init.d/sentinel-proxy stop
 endef
-
-
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
