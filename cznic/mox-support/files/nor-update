@@ -6,3 +6,5 @@ else
 fi
 mtd erase /dev/mtd0
 mtd write $UBOOT /dev/mtd0
+mtd erase /dev/mtd2
+mtd write /usr/share/rescue-image/image.fit.lzma /dev/mtd2
