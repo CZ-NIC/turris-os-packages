@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
 PKG_VERSION:=98.13
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
@@ -48,10 +48,10 @@ endef
 
 # Set "branding" variable to create different builds for different devices
 BRAND?=turris
-ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+ifeq ($(CONFIG_VERSION_PRODUCT),"Turris Omnia")
 BRAND:=omnia
 endif
-ifeq ($(CONFIG_TARGET_PROFILE),"DEVICE_cznic-mox")
+ifeq ($(CONFIG_VERSION_PRODUCT),"Turris Mox")
 BRAND:=mox
 endif
 
