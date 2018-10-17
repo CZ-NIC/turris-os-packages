@@ -8,30 +8,44 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netmetr
-PKG_VERSION:=1.3.1
+PKG_VERSION:=1.4
 PKG_RELEASE:=1
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+
+PKG_SOURCE:=netmetr-client-v$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/netmetr-client/-/archive/v$(PKG_VERSION)/
+PKG_HASH:=766f8e6d5b343739acdcbda12fc77c1d094480ada27e2a6456173f8ea2f501fd
+
+PKG_LICENSE:=GPLv3
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-netmetr-client-v$(PKG_VERSION)
+
+PKG_BUILD_DEPENDS:=python3 python3-setuptools
 
 include $(INCLUDE_DIR)/package.mk
+$(call include_mk, python3-package.mk)
+
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/$(PKG_NAME)
 	TITLE:=Speed measurement application
-	DEPENDS:=+rmbt-client +vixie-cron +python-light +python-pyserial
+	URL:=https://gitlab.labs.nic.cz/turris/netmetr-client
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+	DEPENDS:=+rmbt-client +vixie-cron +python3-light +python3-pyserial +xz
+	VARIANT:=python3
 endef
+
 define Package/$(PKG_NAME)/description
   Python wrapper for RMBT C application that
   provides download and upload
   speed measurements.
 endef
 
-define Build/Compile
-  true
-endef
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) 	$(1)/usr/bin
-	$(INSTALL_BIN) 	./files/netmetr $(1)/usr/bin/netmetr
+	$(INSTALL_DIR) $(1)
+	$(CP) $(PKG_INSTALL_DIR)/* $(1)/
 
 	$(INSTALL_DIR)  $(1)/etc/config
 	$(INSTALL_CONF)	./files/netmetr.config		$(1)/etc/config/netmetr
@@ -44,4 +58,5 @@ define Package/$(PKG_NAME)/conffiles
 /etc/config/netmetr
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call Py3Package,netmetr))
+$(eval $(call BuildPackage,netmetr))
