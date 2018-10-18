@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netmetr
 PKG_VERSION:=1.4
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -42,6 +42,9 @@ define Package/$(PKG_NAME)/description
   speed measurements.
 endef
 
+define Build/Compile
+	$(call Build/Compile/Py3Mod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
+endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)
@@ -58,5 +61,4 @@ define Package/$(PKG_NAME)/conffiles
 /etc/config/netmetr
 endef
 
-$(eval $(call Py3Package,netmetr))
 $(eval $(call BuildPackage,netmetr))
