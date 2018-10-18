@@ -114,7 +114,7 @@ define Package/samba4-utils/description
 endef
 
 TARGET_CFLAGS += -ffunction-sections -fdata-sections
-TARGET_LDFLAGS += -Wl,--gc-sections
+TARGET_LDFLAGS += -Wl,--gc-sections -Wl,--no-as-needed
 
 CONFIGURE_VARS += \
 	CPP="$(TARGET_CROSS)cpp"
