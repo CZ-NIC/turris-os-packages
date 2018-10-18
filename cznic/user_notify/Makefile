@@ -24,11 +24,6 @@ define Package/user_notify
 	DEPENDS:=+at +msmtp +create_notification
 endef
 
-define Package/user_notify_locales
-	TITLE:=user_notify_locales
-	DEPENDS:=+gettext
-endef
-
 define Build/Compile
 	true
 endef
@@ -36,10 +31,6 @@ endef
 define Package/user_notify/install
 	cd $(PKG_BUILD_DIR); $(MAKE) DESTDIR="$(1)" install_scripts install_aux
 	rm $(1)/usr/bin/create_notification
-endef
-
-define Package/user_notify_locales/install
-	cd $(PKG_BUILD_DIR); $(MAKE) DESTDIR="$(1)" install_langs
 endef
 
 define Package/user_notify/conffiles
@@ -57,4 +48,3 @@ endef
 
 $(eval $(call BuildPackage,user_notify))
 $(eval $(call BuildPackage,create_notification))
-$(eval $(call BuildPackage,user_notify_locales))
