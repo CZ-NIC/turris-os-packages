@@ -12,6 +12,8 @@ start_service() {
 	procd_set_param command /usr/sbin/lighttpd -D -f /etc/lighttpd/lighttpd.conf
 	procd_set_param file /etc/lighttpd/lighttpd.conf
 	procd_set_param respawn 120 2 5
+	procd_add_mdns "http" "tcp" "80" "daemon=lighttpd"
+	procd_add_mdns "https" "tcp" "443" "daemon=lighttpd"
 	procd_close_instance
 }
 
