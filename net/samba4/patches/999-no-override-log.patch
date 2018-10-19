@@ -1,0 +1,158 @@
+Index: samba-4.9.1/lib/util/debug.c
+===================================================================
+--- samba-4.9.1.orig/lib/util/debug.c
++++ samba-4.9.1/lib/util/debug.c
+@@ -506,12 +506,6 @@ static void debug_backends_log(const cha
+  * External variables.
+  */
+ 
+-/*
+-   used to check if the user specified a
+-   logfile on the command line
+-*/
+-bool    override_logfile;
+-
+ static const char *default_classname_table[] = {
+ 	[DBGC_ALL] =		"all",
+ 	[DBGC_TDB] =		"tdb",
+Index: samba-4.9.1/source3/client/client.c
+===================================================================
+--- samba-4.9.1.orig/source3/client/client.c
++++ samba-4.9.1/source3/client/client.c
+@@ -46,8 +46,6 @@
+ 
+ extern int do_smb_browse(void); /* mDNS browsing */
+ 
+-extern bool override_logfile;
+-
+ static int port = 0;
+ static char *service;
+ static char *desthost;
+Index: samba-4.9.1/source3/lib/popt_common.c
+===================================================================
+--- samba-4.9.1.orig/source3/lib/popt_common.c
++++ samba-4.9.1/source3/lib/popt_common.c
+@@ -37,8 +37,6 @@
+ 
+ enum {OPT_OPTION=1};
+ 
+-extern bool override_logfile;
+-
+ static void set_logfile(poptContext con, const char * arg)
+ {
+ 
+@@ -146,7 +144,6 @@ static void popt_common_callback(poptCon
+ 	case 'l':
+ 		if (arg) {
+ 			set_logfile(con, arg);
+-			override_logfile = True;
+ 			set_dyn_LOGFILEBASE(arg);
+ 		}
+ 		break;
+@@ -288,10 +285,6 @@ static void popt_common_credentials_call
+ 	if (reason == POPT_CALLBACK_REASON_POST) {
+ 		bool ok;
+ 
+-		if (override_logfile) {
+-			setup_logging(lp_logfile(talloc_tos()), DEBUG_FILE );
+-		}
+-
+ 		ok = lp_load_client(get_dyn_CONFIGFILE());
+ 		if (!ok) {
+ 			const char *pname = poptGetInvocationName(con);
+Index: samba-4.9.1/source3/nmbd/nmbd.c
+===================================================================
+--- samba-4.9.1.orig/source3/nmbd/nmbd.c
++++ samba-4.9.1/source3/nmbd/nmbd.c
+@@ -35,8 +35,6 @@ int global_nmb_port = -1;
+ extern bool rescan_listen_set;
+ extern bool global_in_nmbd;
+ 
+-extern bool override_logfile;
+-
+ /* have we found LanMan clients yet? */
+ bool found_lm_clients = False;
+ 
+@@ -855,7 +853,7 @@ static bool open_sockets(bool isdaemon,
+ 
+ 	sys_srandom(time(NULL) ^ getpid());
+ 
+-	if (!override_logfile) {
++	if (1) {
+ 		char *lfile = NULL;
+ 		if (asprintf(&lfile, "%s/log.nmbd", get_dyn_LOGFILEBASE()) < 0) {
+ 			exit(1);
+Index: samba-4.9.1/source3/winbindd/winbindd.c
+===================================================================
+--- samba-4.9.1.orig/source3/winbindd/winbindd.c
++++ samba-4.9.1/source3/winbindd/winbindd.c
+@@ -59,8 +59,6 @@ static void winbindd_setup_max_fds(void)
+ static bool opt_nocache = False;
+ static bool interactive = False;
+ 
+-extern bool override_logfile;
+-
+ struct imessaging_context *winbind_imessaging_context(void)
+ {
+ 	static struct imessaging_context *msg = NULL;
+@@ -1703,7 +1701,7 @@ int main(int argc, const char **argv)
+ 
+ 	poptFreeContext(pc);
+ 
+-	if (!override_logfile) {
++	if (1) {
+ 		char *lfile = NULL;
+ 		if (asprintf(&lfile,"%s/log.winbindd",
+ 				get_dyn_LOGFILEBASE()) > 0) {
+Index: samba-4.9.1/source3/winbindd/winbindd_cm.c
+===================================================================
+--- samba-4.9.1.orig/source3/winbindd/winbindd_cm.c
++++ samba-4.9.1/source3/winbindd/winbindd_cm.c
+@@ -94,7 +94,6 @@ struct dc_name_ip {
+ };
+ 
+ extern struct winbindd_methods reconnect_methods;
+-extern bool override_logfile;
+ 
+ static NTSTATUS init_dc_connection_network(struct winbindd_domain *domain, bool need_rw_dc);
+ static void set_dc_type_and_flags( struct winbindd_domain *domain );
+@@ -238,7 +237,7 @@ static bool fork_child_dc_connect(struct
+ 
+ 	/* Leave messages blocked - we will never process one. */
+ 
+-	if (!override_logfile) {
++	if (1) {
+ 		if (asprintf(&lfile, "%s/log.winbindd-dc-connect", get_dyn_LOGFILEBASE()) == -1) {
+ 			DEBUG(0, ("fork_child_dc_connect: out of memory.\n"));
+ 			_exit(1);
+Index: samba-4.9.1/source3/winbindd/winbindd_dual.c
+===================================================================
+--- samba-4.9.1.orig/source3/winbindd/winbindd_dual.c
++++ samba-4.9.1/source3/winbindd/winbindd_dual.c
+@@ -45,8 +45,6 @@
+ #undef DBGC_CLASS
+ #define DBGC_CLASS DBGC_WINBIND
+ 
+-extern bool override_logfile;
+-
+ static void forall_domain_children(bool (*fn)(struct winbindd_child *c,
+ 					      void *private_data),
+ 				   void *private_data)
+@@ -1508,15 +1506,14 @@ NTSTATUS winbindd_reinit_after_fork(cons
+ 
+ 	close_conns_after_fork();
+ 
+-	if (!override_logfile && logfilename) {
++	if (logfilename) {
+ 		lp_set_logfile(logfilename);
+ 		reopen_logs();
+ 	}
+ 
+ 	if (!winbindd_setup_sig_term_handler(false))
+ 		return NT_STATUS_NO_MEMORY;
+-	if (!winbindd_setup_sig_hup_handler(override_logfile ? NULL :
+-					    logfilename))
++	if (!winbindd_setup_sig_hup_handler(logfilename))
+ 		return NT_STATUS_NO_MEMORY;
+ 
+ 	/* Stop zombies in children */
