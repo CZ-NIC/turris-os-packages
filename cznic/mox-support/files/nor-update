@@ -4,7 +4,7 @@ if [ "`sed -n 's|MemTotal:[[:blank:]]*\([0-9]*\)\ kB|\1|p' /proc/meminfo`" -gt 5
 else
 	UBOOT=/usr/share/mox/uboot-512M
 fi
-mtd erase /dev/mtd0
-mtd write $UBOOT /dev/mtd0
-mtd erase /dev/mtd2
-mtd write /usr/share/rescue-image/image.fit.lzma /dev/mtd2
+mtd erase /dev/mtd1
+mtd write $UBOOT /dev/mtd1
+mtd erase /dev/mtd3
+mtd write /usr/share/rescue-image/image.fit.lzma /dev/mtd3
