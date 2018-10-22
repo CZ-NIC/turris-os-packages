@@ -138,7 +138,7 @@ load_uci_config_common() {
 	config_get forward_dns "$section" forward_custom
 
 	#check custom forwarding
-	if [ -n "$forward_dns" ]; then
+	if [ -n "$forward_dns" ] && [ "$do_forward" = "1" ]; then
 		dns_config_load "$forward_dns"
 	else
 		if [ "$do_forward" = "1" ] ; then
