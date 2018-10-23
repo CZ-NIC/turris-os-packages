@@ -7,12 +7,12 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=foris-netmetr-plugin
-PKG_VERSION:=4.3
+PKG_NAME:=foris-data_collect-plugin
+PKG_VERSION:=1
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-netmetr-plugin.git
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-data_collect-plugin.git
 PKG_SOURCE_VERSION:=package-v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_LICENSE:=GPL-3.0
@@ -32,21 +32,21 @@ PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
-		+foris +foris-controller-netmetr-module
+		+foris +foris-controller-data_collect-module
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 	VARIANT:=python3
 endef
 
 define Package/$(PKG_NAME)/description
- Foris plugin for netmetr program
+ Foris plugin for data collect program
 endef
 
 # Package install definition
-$(eval $(call ForisPlugin,$(PKG_NAME),netmetr))
+$(eval $(call ForisPlugin,$(PKG_NAME),data_collect))
 
 # Translation definitions
-FORIS_TRANSLATIONS:=cs it de sk ru pl it hu fr nb
-$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),netmetr,$(trans))))
+FORIS_TRANSLATIONS:=cs da fr de hu it lt nb pl ru sk
+$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),data_collect,$(trans))))
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
 $(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call BuildPackage,$(PKG_NAME)-l10n-$(trans))))

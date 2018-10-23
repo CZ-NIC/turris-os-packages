@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-openvpn-plugin
-PKG_VERSION:=16.2
+PKG_VERSION:=16.3
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -45,7 +45,7 @@ endef
 $(eval $(call ForisPlugin,$(PKG_NAME),openvpn))
 
 # Translation definitions
-FORIS_TRANSLATIONS:=cs de sk pl fr ru hu it
+FORIS_TRANSLATIONS:=cs de sk pl fr ru hu it nb
 $(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),openvpn,$(trans))))
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
