@@ -83,6 +83,7 @@ if [ "$BOARD" = mox ]; then
             cat /tmp/debug.txt
         fi
         echo "$1"
+        setsid cttyhack sh &
         while sleep 0.5; do
             sleep 0.3
             for i in $(seq 1 "$ret_code"); do
@@ -124,6 +125,26 @@ wait_for_mode_change() {
         sleep 0.1
         waited="$(expr $waited + 1)"
     done
+}
+
+DHCP_OPTS="-qfn"
+download_medkit() {
+    if udhcpc -i "$RESCUE_IF" $DHCP_OPTS; then
+        echo "Got IPv4!"
+        ip a s
+        ip r s
+    else
+        echo "Trying naive static fallback..."
+        ip a d 192.168.1.1 dev "$RESCUE_IF"
+        ip a a 192.168.1.199/24 dev "$RESCUE_IF"
+        ip l s up dev "$RESCUE_IF"
+        ip r a default via 192.168.1.1
+    fi
+    mkdir -p /mnt/src
+    wget --no-check-certificate -O /mnt/src/medkit.tar.gz https://repo.turris.cz/$BOARD/medkit/$BOARD-medkit-latest.tar.gz || die 2 "Can't download medkit"
+    wget --no-check-certificate -O /mnt/src/medkit.tar.gz.sig https://repo.turris.cz/$BOARD/medkit/$BOARD-medkit-latest.tar.gz.sig || die 2 "Can't download signature"
+    usign -V -m /mnt/src/medkit.tar.gz -P /etc/opkg/keys || die 2 "Can't validate signature"
+    echo "medkit.tar.gz" > /tmp/medkit-file
 }
 
 find_medkit() {
@@ -324,9 +345,18 @@ mode_5() {
     reboot
 }
 
-MODE6="Serial console"
-MODE6_NEXT=1
+# Flash directly from the internet
+MODE6="Flash from the Internet"
 mode_6() {
+    echo "Flashing from the Internet"
+    download_medkit
+    reset_uenv
+    reflash
+}
+
+MODE7="Serial console"
+MODE7_NEXT=1
+mode_7() {
     echo "Running shell"
     setsid cttyhack sh
     reboot

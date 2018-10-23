@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rescue-image
-PKG_VERSION:=1
+PKG_VERSION:=2
 BB_VERSION:=1.29.3
 PKG_SOURCE:=busybox-$(BB_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://www.busybox.net/downloads \
@@ -33,7 +33,7 @@ DEVICE := $(subst DEVICE_cznic-,,$(CONFIG_TARGET_PROFILE))
 
 define Package/rescue-image
 	TITLE:=rescue-image
-	DEPENDS:=+libgcc +libc +libubox +mtd +btrfs-progs +schnapps +dropbear +libattr +libuuid +zlib +libblkid +liblzo +libpthread +uboot-envtools +librt
+	DEPENDS:=+libgcc +libc +libubox +mtd +libpthread +librt +libattr +libuuid +zlib +libblkid +liblzo +btrfs-progs +schnapps +dropbear +uboot-envtools +usign +cznic-repo-keys +cznic-repo-keys-test +libopenssl +libpcre +wget
 endef
 
 define Build/Prepare
@@ -42,6 +42,7 @@ define Build/Prepare
 	$(call Kernel/Patch/Default)
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/sbin"
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/etc"
+	echo -e 'nameserver 217.31.204.130\nnameserver 2001:678:1::206\nnameserver 193.29.206.206' > "$(PKG_BUILD_DIR)/rootfs/etc/resolv.conf"
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/tmp"
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/var/lock"
 	mkdir -p "$(PKG_BUILD_DIR)/busybox"
@@ -49,6 +50,9 @@ define Build/Prepare
 	echo "/bin/sh" > "$(PKG_BUILD_DIR)/rootfs/etc/shells"
 	$(INSTALL_BIN) ./files/rescue.sh "$(PKG_BUILD_DIR)/rootfs/init"
 	$(HOST_TAR) -C $(PKG_BUILD_DIR)/busybox --strip-components=1 -xjf $(DL_DIR)/$(PKG_SOURCE)
+	mkdir -p "$(PKG_BUILD_DIR)"/rootfs//usr/share/udhcpc
+	cp "$(PKG_BUILD_DIR)"/busybox/examples/udhcp/simple.script "$(PKG_BUILD_DIR)"/rootfs//usr/share/udhcpc/default.script
+	chmod a+rx "$(PKG_BUILD_DIR)"/rootfs//usr/share/udhcpc/default.script
 	cp ./files/rootfs.extra "$(PKG_BUILD_DIR)/rootfs.extra"
 	cp ./files/$(DEVICE).its "$(PKG_BUILD_DIR)/rescue.its"
 endef
