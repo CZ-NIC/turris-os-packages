@@ -1,10 +1,7 @@
 #!/bin/sh
-if [ "`sed -n 's|MemTotal:[[:blank:]]*\([0-9]*\)\ kB|\1|p' /proc/meminfo`" -gt 512000 ]; then
-	UBOOT=/usr/share/mox/uboot-1G
-else
-	UBOOT=/usr/share/mox/uboot-512M
-fi
-mtd erase /dev/mtd1
-mtd write $UBOOT /dev/mtd1
-mtd erase /dev/mtd3
-mtd write /usr/share/rescue-image/image.fit.lzma /dev/mtd3
+mtd verify /usr/share/mox/secure-firmware /dev/mtd0 || \
+mtd -e /dev/mtd0 write /usr/share/mox/secure-firmware /dev/mtd0
+mtd verify /usr/share/mox/uboot /dev/mtd1 || \
+mtd -e /dev/mtd1 write /usr/share/mox/uboot /dev/mtd1
+mtd verify /usr/share/rescue-image/image.fit.lzma /dev/mtd3 || \
+mtd -e /dev/mtd3 write /usr/share/rescue-image/image.fit.lzma /dev/mtd3
