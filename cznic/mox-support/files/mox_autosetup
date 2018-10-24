@@ -42,10 +42,12 @@ uci commit
 sleep 5
 if udhcpc -fqnR -i br-lan; then
 	uci set network.lan.proto=dhcp
+	uci set network.lan._turris_mode=unmanaged
 else
 	uci set network.lan.proto=static
 	uci set network.lan.ipaddr=192.168.1.1
 	uci set network.lan.netmask=255.255.255.0
+	uci set network.lan._turris_mode=managed
 fi
 uci commit
 /etc/init.d/network restart
