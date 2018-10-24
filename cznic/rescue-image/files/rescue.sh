@@ -346,9 +346,9 @@ mode_5() {
 }
 
 # Flash directly from the internet
-MODE6="Flash from the Internet"
+MODE6="Flash from the Cloud :-)"
 mode_6() {
-    echo "Flashing from the Internet"
+    echo "Flashing from the Cloud :-)"
     download_medkit
     reset_uenv
     reflash
