@@ -46,7 +46,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) ./files/u-boot.bin $(1)/usr/share/mox/uboot
 	$(INSTALL_DATA) ./files/secure-firmware.bin $(1)/usr/share/mox/secure-firmware
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/button
-	$(INSTALL_DATA) ./files/reset-btn $(1)/etc/hotplug.d/button/mox_reset
+	$(INSTALL_DATA) ./files/reset_btn $(1)/etc/hotplug.d/button/mox_reset
 	$(INSTALL_DIR) $(1)/lib/firmware/mrvl/
 	$(INSTALL_DATA) ./files/sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl
 	ln -s sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl/sd8997_uapsta.bin
