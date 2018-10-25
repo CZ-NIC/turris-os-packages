@@ -4,6 +4,7 @@ START=61
 STOP=00
 
 USE_PROCD=1
+EXTRA_COMMANDS="test_ipv6"
 PROG=/usr/bin/kresd
 CONFIGFILE=/tmp/kresd.config
 ROOTKEYFILE=/etc/root.keys
@@ -240,6 +241,16 @@ load_uci_config_kresd() {
 	set_param_func "hints.config" "'$HINTS_CONFIG'"
 }
 
+test_ipv6() {
+	if [ -s "$(ls -1 "$DEFAULT_RUNDIR"/tty/*)" ] && \
+	   ip -6 r s | grep -q '^default' && \
+	   ping -c 1 api.turris.cz > /dev/null 2>&1 && \
+	   ! ping -6 -c 1 api.turris.cz > /dev/null 2>&1; then
+		echo "IPv6 seems broken, disabling it in knot-resolver..."
+		echo "net.ipv6 = false" | socat - UNIX-CONNECT:"$(ls -1 "$DEFAULT_RUNDIR"/tty/*)" > /dev/null 2>&1
+	fi
+}
+
 run_instance() {
 	procd_open_instance
 	procd_set_param file /etc/config/resolver
@@ -250,12 +261,7 @@ run_instance() {
 	load_uci_config_kresd
 	load_uci_config_common
 	procd_close_instance
-	( sleep 60 # Wait for resolver to start working and system to boot up
-	  if ! ip -6 r s | grep -q '^default' &&\
-	     ping -c 1 api.turris.cz > /dev/null 2>&1 && \
-	     ! ping -6 -c 1 api.turris.cz > /dev/null 2>&1; then
-		echo "net.ipv6 = false" | socat - UNIX-CONNECT:$(sleep 5; ls -1 $DEFAULT_RUNDIR/tty/*) > /dev/null 2>&1
-	  fi) &
+	[ \! -x "$(which at)" ] || echo "/etc/init.d/kresd test_ipv6" | at +2
 }
 
 start_service() {
