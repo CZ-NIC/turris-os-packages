@@ -9,13 +9,13 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=ddns-scripts
 # Version == major.minor.patch
 # increase on new functionality (minor) or patches (patch)
-PKG_VERSION:=2.7.7
+PKG_VERSION:=2.7.8
 # Release == build
 # increase on changes of services files or tld_names.dat
-PKG_RELEASE:=8
+PKG_RELEASE:=5
 
 PKG_LICENSE:=GPL-2.0
-PKG_MAINTAINER:=Christian Schoenebeck <christian.schoenebeck@gmail.com>
+PKG_MAINTAINER:=
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -51,16 +51,6 @@ define Package/ddns-scripts/config
 		  - support to run once
 		Version: $(PKG_VERSION)-$(PKG_RELEASE)
 		Info   : http://wiki.openwrt.org/doc/howto/ddns.client
-endef
-
-###### *************************************************************************
-define Package/ddns-scripts_cloudflare
-    $(call Package/ddns-scripts/Default)
-    TITLE:=CloudFlare.com API v1 (deprecated)
-    DEPENDS:=ddns-scripts
-endef
-define Package/ddns-scripts_cloudflare/description
-    Dynamic DNS Client scripts extension for CloudFlare.com API-v1 (deprecated)
 endef
 
 ###### *************************************************************************
@@ -153,8 +143,6 @@ define Build/Compile
 		-e '/^\/\/[[:space:]]/d'	\
 		-e '/^[[:space:]]*$$$$/d'	$$$$FILE; \
 	done
-	# compress public_suffix_list.dat
-	gzip -nf9 $(PKG_BUILD_DIR)/files/public_suffix_list.dat
 endef
 
 define Package/ddns-scripts/conffiles
@@ -168,7 +156,6 @@ define Package/ddns-scripts/preinst
 [ -z "$${IPKG_INSTROOT}" ] && /etc/init.d/ddns stop >/dev/null 2>&1
 exit 0	# suppress errors
 endef
-
 define Package/ddns-scripts/install
 	$(INSTALL_DIR)  $(1)/etc/uci-defaults
 	$(INSTALL_BIN)  $(PKG_BUILD_DIR)/files/ddns.defaults $(1)/etc/uci-defaults/ddns
@@ -185,7 +172,6 @@ define Package/ddns-scripts/install
 	$(INSTALL_DIR)  $(1)/usr/lib/ddns
 	$(INSTALL_BIN)  $(PKG_BUILD_DIR)/files/dynamic_dns_*.sh $(1)/usr/lib/ddns
 endef
-
 define Package/ddns-scripts/postinst
 #!/bin/sh
 # if NOT run buildroot and PKG_UPGRADE then (re)start service if enabled
@@ -198,7 +184,6 @@ define Package/ddns-scripts/postinst
 }
 exit 0	# suppress errors
 endef
-
 define Package/ddns-scripts/prerm
 #!/bin/sh
 # if run within buildroot exit
@@ -264,14 +249,12 @@ define Package/ddns-scripts_cloudflare.com-v4/preinst
 [ -z "$${IPKG_INSTROOT}" ] && /etc/init.d/ddns stop >/dev/null 2>&1
 exit 0	# suppress errors
 endef
-
 define Package/ddns-scripts_cloudflare.com-v4/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/ddns.defaults $(1)/etc/uci-defaults/ddns_cloudflare.com-v4
 	$(INSTALL_DIR) $(1)/usr/lib/ddns
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/update_cloudflare_com_v4.sh $(1)/usr/lib/ddns
 endef
-
 define Package/ddns-scripts_cloudflare.com-v4/postinst
 #!/bin/sh
 # remove old services file entries
@@ -290,7 +273,6 @@ printf "%s\\t%s\\n" '"cloudflare.com-v4"' '"update_cloudflare_com_v4.sh"' >> $${
 }
 exit 0	# suppress errors
 endef
-
 define Package/ddns-scripts_cloudflare.com-v4/prerm
 #!/bin/sh
 # if NOT run buildroot then stop service
@@ -311,19 +293,17 @@ endef
 
 ###### *************************************************************************
 define Package/ddns-scripts_godaddy.com-v1/preinst
-	#!/bin/sh
-	# if NOT run buildroot then stop service
-	[ -z "$${IPKG_INSTROOT}" ] && /etc/init.d/ddns stop >/dev/null 2>&1
-	exit 0	# suppress errors
+#!/bin/sh
+# if NOT run buildroot then stop service
+[ -z "$${IPKG_INSTROOT}" ] && /etc/init.d/ddns stop >/dev/null 2>&1
+exit 0	# suppress errors
 endef
-
 define Package/ddns-scripts_godaddy.com-v1/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/ddns.defaults $(1)/etc/uci-defaults/ddns_godaddy.com-v1
 	$(INSTALL_DIR) $(1)/usr/lib/ddns
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/update_godaddy_com_v1.sh $(1)/usr/lib/ddns
 endef
-
 define Package/ddns-scripts_godaddy.com-v1/postinst
 #!/bin/sh
 # remove old services file entries
@@ -342,7 +322,6 @@ printf "%s\\t%s\\n" '"godaddy.com-v1"' '"update_godaddy_com_v1.sh"' >> $${IPKG_I
 }
 exit 0	# suppress errors
 endef
-
 define Package/ddns-scripts_godaddy.com-v1/prerm
 #!/bin/sh
 # if NOT run buildroot then stop service
@@ -360,14 +339,12 @@ define Package/ddns-scripts_no-ip_com/preinst
 [ -z "$${IPKG_INSTROOT}" ] && /etc/init.d/ddns stop >/dev/null 2>&1
 exit 0	# suppress errors
 endef
-
 define Package/ddns-scripts_no-ip_com/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/ddns.defaults $(1)/etc/uci-defaults/ddns_no-ip_com
 	$(INSTALL_DIR) $(1)/usr/lib/ddns
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/update_no-ip_com.sh $(1)/usr/lib/ddns
 endef
-
 define Package/ddns-scripts_no-ip_com/postinst
 #!/bin/sh
 # remove old services file entries
@@ -384,7 +361,6 @@ printf "%s\\t%s\\n" '"no-ip.com"' '"update_no-ip_com.sh"' >> $${IPKG_INSTROOT}/e
 }
 exit 0	# suppress errors
 endef
-
 define Package/ddns-scripts_no-ip_com/prerm
 #!/bin/sh
 # if NOT run buildroot then stop service
@@ -401,14 +377,12 @@ define Package/ddns-scripts_nsupdate/preinst
 [ -z "$${IPKG_INSTROOT}" ] && /etc/init.d/ddns stop >/dev/null 2>&1
 exit 0	# suppress errors
 endef
-
 define Package/ddns-scripts_nsupdate/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/ddns.defaults $(1)/etc/uci-defaults/ddns_nsupdate
 	$(INSTALL_DIR) $(1)/usr/lib/ddns
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/update_nsupdate.sh $(1)/usr/lib/ddns
 endef
-
 define Package/ddns-scripts_nsupdate/postinst
 #!/bin/sh
 # remove old services file entries
@@ -427,7 +401,6 @@ printf "%s\\t%s\\n" '"bind-nsupdate"' '"update_nsupdate.sh"' >> $${IPKG_INSTROOT
 }
 exit 0	# suppress errors
 endef
-
 define Package/ddns-scripts_nsupdate/prerm
 #!/bin/sh
 # if NOT run buildroot then stop service
@@ -445,14 +418,12 @@ define Package/ddns-scripts_route53-v1/preinst
 [ -z "$${IPKG_INSTROOT}" ] && /etc/init.d/ddns stop >/dev/null 2>&1
 exit 0	# suppress errors
 endef
-
 define Package/ddns-scripts_route53-v1/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/ddns.defaults $(1)/etc/uci-defaults/ddns_route53-v1
 	$(INSTALL_DIR) $(1)/usr/lib/ddns
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/update_route53_v1.sh $(1)/usr/lib/ddns
 endef
-
 define Package/ddns-scripts_route53-v1/postinst
 #!/bin/sh
 # remove old services file entries
@@ -471,7 +442,6 @@ printf "%s\\t%s\\n" '"route53-v1"' '"update_route53_v1.sh"' >> $${IPKG_INSTROOT}
 }
 exit 0	# suppress errors
 endef
-
 define Package/ddns-scripts_route53-v1/prerm
 #!/bin/sh
 # if NOT run buildroot then stop service
@@ -484,7 +454,6 @@ endef
 
 ###### *************************************************************************
 $(eval $(call BuildPackage,ddns-scripts))
-$(eval $(call BuildPackage,ddns-scripts_cloudflare))
 $(eval $(call BuildPackage,ddns-scripts_cloudflare.com-v4))
 $(eval $(call BuildPackage,ddns-scripts_freedns_42_pl))
 $(eval $(call BuildPackage,ddns-scripts_godaddy.com-v1))
