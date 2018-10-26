@@ -432,6 +432,7 @@ start_service() {
     #[ -f /etc/unbound/named.cache ] && chmod o+r /etc/unbound/named.cache
 
     init_unbound
+    config_get pidfile common pidfile /var/run/unbound.pid
     if [ -e /usr/sbin/unbound-checkconf ] ; then
         echo "Check generated config $CONFIGFILE:"
         unbound-checkconf "$CONFIGFILE"
@@ -440,7 +441,7 @@ start_service() {
     procd_set_param file /etc/config/resolver
     procd_set_param command unbound -d
     procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
-    procd_set_param pidfile /var/run/unbound.pid
+    procd_set_param pidfile $pidfile
     procd_close_instance
 }
 
