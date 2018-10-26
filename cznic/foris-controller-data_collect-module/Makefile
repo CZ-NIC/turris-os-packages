@@ -43,4 +43,3 @@ endef
 $(eval $(call ForisControllerModule,$(PKG_NAME)))
 $(eval $(call Py3Package,$(PKG_NAME)))
 $(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)-src))
