@@ -9,6 +9,11 @@
 		"description": "Control software for home automation, including Turris Gadgets.",
 		"visible": true
 	},
+	"datacollect": {
+		"title": "Data Collection",
+		"description": "Software for participation in data collection and dynamic distributed firewall.",
+		"visible": true
+	},
 	"dev-detect": {
 		"title": "Device detection",
 		"description": "Software for detecting new devices on local network (EXPERIMENTAL).",
