@@ -9,18 +9,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bind
-PKG_VERSION:=9.12.1-P2
+PKG_VERSION:=9.12.3
 PKG_RELEASE:=1
 USERID:=bind=57:bind=57
 
 PKG_MAINTAINER:=Noah Meyerhans <frodo@morgul.net>
-PKG_LICENSE := BSD-3-Clause
+PKG_LICENSE := MPL-2.0
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:= \
 	http://www.mirrorservice.org/sites/ftp.isc.org/isc/bind9/$(PKG_VERSION) \
 	http://ftp.isc.org/isc/bind9/$(PKG_VERSION)
-PKG_MD5SUM:=0de7c3453461e2f0505ac634b984f8e7afa1952cf7fc972cbefbcc169edf2d29
+PKG_MD5SUM:=0e80762631258e1c193552efa7c56c05ec5e8c2f98e4b2a3b91a61fd8d96b938
 
 PKG_FIXUP:=autoreconf
 PKG_REMOVE_FILES:=aclocal.m4 libtool.m4
@@ -68,7 +68,6 @@ endef
 define Package/bind-server
   $(call Package/bind/Default)
   TITLE+= DNS server
-  DEPENDS+= +@OPENSSL_WITH_DEPRECATED
 endef
 
 define Package/bind-server/config
@@ -119,14 +118,15 @@ CONFIGURE_ARGS += \
 	--disable-threads \
 	--disable-linux-caps \
 	--with-openssl="$(STAGING_DIR)/usr" \
-	--with-eddsa=no \
 	--with-libtool \
 	--without-lmdb \
 	--enable-epoll=yes \
 	--with-gost=no \
 	--with-gssapi=no \
 	--with-ecdsa=$(if $(CONFIG_OPENSSL_WITH_EC),yes,no) \
+	--with-eddsa=$(if $(CONFIG_BIND_ENABLE_EDDSA),yes,no) \
 	--with-readline=no \
+	--enable-atomic=no \
 	--sysconfdir=/etc/bind
 
 ifdef CONFIG_BIND_ENABLE_FILTER_AAAA
