@@ -28,7 +28,7 @@ define Package/foris-controller
 	DEPENDS:=\
 		+python3-light +python3-ubus +python3-prctl +python3-multiprocessing +python3-pbkdf2 \
 		+foris-schema-python3 +python3-setuptools +python3-turrishw \
-		+server-uplink +turris-maintain +updater-ng-supervisor +user_notify \
+		+server-uplink +turris-maintain +updater-ng-supervisor +user-notify \
 		+l10n_supported +sqm-scripts
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef

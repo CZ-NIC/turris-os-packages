@@ -7,7 +7,7 @@
 #
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=user_notify
+PKG_NAME:=user-notify
 PKG_VERSION:=57
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_SOURCE_PROTO:=git
@@ -19,8 +19,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/user_notify
-	TITLE:=user_notify
+define Package/user-notify
+	TITLE:=user-notify
 	DEPENDS:=+at +msmtp +create_notification
 endef
 
@@ -28,13 +28,13 @@ define Build/Compile
 	true
 endef
 
-define Package/user_notify/install
+define Package/user-notify/install
 	cd $(PKG_BUILD_DIR); $(MAKE) DESTDIR="$(1)" install_scripts install_aux
 	rm $(1)/usr/bin/create_notification
 endef
 
-define Package/user_notify/conffiles
-/etc/config/user_notify
+define Package/user-notify/conffiles
+/etc/config/user-notify
 endef
 
 define Package/create_notification
@@ -46,5 +46,5 @@ define Package/create_notification/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/scripts/create_notification $(1)/usr/bin/
 endef
 
-$(eval $(call BuildPackage,user_notify))
+$(eval $(call BuildPackage,user-notify))
 $(eval $(call BuildPackage,create_notification))

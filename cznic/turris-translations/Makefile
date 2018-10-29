@@ -49,4 +49,4 @@ $$(foreach LANG,$(2),$$(eval $$(call TRANSLATION_LANG,$(1),$$(LANG))))
 endef
 
 $(eval $(call TRANSLATION,userlists,cs de fr hu nb pl ru sk))
-$(eval $(call TRANSLATION,user_notify,cs de fr hu nb pl ru sk))
+$(eval $(call TRANSLATION,user-notify,cs de fr hu nb pl ru sk))
