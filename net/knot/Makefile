@@ -56,30 +56,24 @@ define Package/knot
 	$(call Package/knot/Default)
 	TITLE+= server and control utilities
 	DEPENDS=+liburcu +libedit +knot-libs +knot-libzscanner
-	EXTRA_DEPENDS:=knot-libs (=$(PKG_VERSION)-$(PKG_RELEASE)), \
-	               knot-libzscanner (=$(PKG_VERSION)-$(PKG_RELEASE))
 endef
 
 define Package/knot-dig
 	$(call Package/knot/Default)
 	TITLE+= advanced DNS lookup utility
 	DEPENDS=+libedit +knot-libs
-	EXTRA_DEPENDS:=knot-libs (=$(PKG_VERSION)-$(PKG_RELEASE))
 endef
 
 define Package/knot-host
 	$(call Package/knot/Default)
 	TITLE+= simple DNS lookup utility
 	DEPENDS=+libedit +knot-libs
-	EXTRA_DEPENDS:=knot-libs (=$(PKG_VERSION)-$(PKG_RELEASE))
 endef
 
 define Package/knot-nsupdate
 	$(call Package/knot/Default)
 	TITLE+= dynamic DNS update utility
 	DEPENDS=+libedit +knot-libs +knot-libzscanner
-	EXTRA_DEPENDS:=knot-libs (=$(PKG_VERSION)-$(PKG_RELEASE)), \
-	               knot-libzscanner (=$(PKG_VERSION)-$(PKG_RELEASE))
 endef
 
 define Package/knot-tests
