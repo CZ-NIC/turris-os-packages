@@ -26,7 +26,7 @@ define Package/resolver-conf
 	CATEGORY:=Network
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Resolver configuration
-	DEPENDS:=+python +ca-bundle
+	DEPENDS:=+python-light +python-multiprocessing +python-logging +ca-bundle
 endef
 
 define Package/$(PKG_NAME)/description
