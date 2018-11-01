@@ -34,7 +34,7 @@ define Package/user-notify/install
 endef
 
 define Package/user-notify/conffiles
-/etc/config/user-notify
+/etc/config/user_notify
 endef
 
 define Package/create_notification

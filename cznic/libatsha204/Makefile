@@ -8,19 +8,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
-PKG_PYTHON_NAME:=python-$(PKG_NAME)
-PKG_VERSION:=27
+PKG_PYTHON_NAME:=python3-$(PKG_NAME)
+PKG_VERSION:=28
+PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/libatsha204.git
-PKG_SOURCE_VERSION:=60222da1508d0fade850c523f0f4b132766613df
+PKG_SOURCE_VERSION:=2014a0ed846000ea8dd7e20f852252c35f540af6
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-PKG_BUILD_DEPENDS:=python
+PKG_BUILD_DEPENDS:=python3
 
 include $(INCLUDE_DIR)/package.mk
-include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
@@ -53,7 +54,7 @@ endif
 		$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/atsha204cmd $(PKG_BUILD_DIR)/real/bin; \
 		$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libatsha204.so $(PKG_BUILD_DIR)/real/lib; \
 	fi
-	$(call Build/Compile/PyMod,./src/python/, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)", CFLAGS+=" -I$(PKG_BUILD_DIR)/src/libatsha204/" LDFLAGS+=" -L$(PKG_BUILD_DIR)/src/libatsha204/")
+	$(call Build/Compile/Py3Mod,./src/python/, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)", CFLAGS+=" -I$(PKG_BUILD_DIR)/src/libatsha204/" LDFLAGS+=" -L$(PKG_BUILD_DIR)/src/libatsha204/")
 endef
 
 define Package/$(PKG_NAME)/install
@@ -105,12 +106,12 @@ endef
 
 define Package/$(PKG_PYTHON_NAME)
 	TITLE:=$(PKG_PYTHON_NAME)
-	DEPENDS:=+python-light +libatsha204
+	DEPENDS:=+python3-light +libatsha204
 endef
 
 define Package/$(PKG_PYTHON_NAME)/install
 	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* $(1)$(PYTHON_PKG_DIR)
+	$(CP) $(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* $(1)$(PYTHON_PKG_DIR)
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

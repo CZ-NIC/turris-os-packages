@@ -164,7 +164,7 @@ init_unbound() {
 
     if [ "$ignore_root_key" = "0" ] ; then
         set_rootkey keyfile
-        set_quoted_parameter keyfile auto-trust-anchor-file "$ROOTKEYFILE"
+        add_parameter "$ROOTKEYFILE" "auto-trust-anchor-file"
     fi
 
     set_parameter msg_buffer_size msg-buffer-size 8192
@@ -202,6 +202,7 @@ init_unbound() {
     set_parameter infra_cache_numhosts infra-cache-numhosts 200
     set_multiple_parameters access_control access-control
     set_quoted_parameter username username ""
+    set_quoted_parameter pidfile pidfile "/var/run/unbound.pid"
     set_quoted_parameter root_hints root-hints "/etc/unbound/named.cache"
     set_quoted_parameter target_fetch_policy target-fetch-policy "2 1 0 0 0 0"
     set_parameter harden_short_bufsize harden-short-bufsize yes
@@ -236,7 +237,12 @@ init_unbound() {
 
     local do_forward
     config_get_bool do_forward common forward_upstream 1
+    config_get forward_dns common forward_custom
 
+    #check custom forwarding
+    if [ -n "$forward_dns" ] && [ "$do_forward" = "1" ]; then
+        dns_config_load "$forward_dns"
+    else
     if [ "$do_forward" = "1" ] ; then
         local SERVERS
         SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' /tmp/resolv.conf.auto | sort)
@@ -252,13 +258,181 @@ init_unbound() {
         fi
         md5sum /tmp/resolv.conf.auto | cut -f1 -d\ >/tmp/resolv.conf.auto.last.md5
     fi
+    fi
+}
+
+dns_option_get() {
+    local ret_val var_name val
+    var_name=$1
+    config=$2
+
+    val=$(eval echo \$$1)
+    config_get ret_val "$config" "$var_name"
+
+    #rewrite variable if it's defined in uci
+    if [ ! -z "$ret_val" ]; then
+        eval export $var_name=\"$ret_val\"
+    fi
+}
+
+handle_dns_config_load() {
+    local name description enable_tls port ipv4 ipv6 pin_sha256 hostname ca_file
+    local net_ipv6 net_ipv4
+    local config="$1"
+    local config_name="$2"
+
+    config_get name "$config" "name"
+
+    # check config name (because of foreach function)
+    if [ "$name" != "$config_name" ]; then
+        echo -ne "ERR "
+        return 1
+    fi
+
+    # first load options from config and then eventualy
+    # rewrite set options from uci config
+
+    config_file=/etc/resolver/dns_servers/${config_name}.conf
+    if [ -f "$config_file" ]; then
+        source $config_file
+    fi
+
+    dns_option_get description $config
+    dns_option_get enable_tls $config
+    dns_option_get port $config
+    dns_option_get ipv4 $config
+    dns_option_get ipv6 $config
+    dns_option_get pin_sha256 $config
+    dns_option_get hostname $config
+    dns_option_get ca_file $config
+
+    config_get net_ipv6 "common" "net_ipv6" 1
+    config_get net_ipv4 "common" "net_ipv4" 1
+
+    print_dns_config  "$name" "$description" "$enable_tls" "$port" "$ipv4" "$ipv6" "$pin_sha256" "$hostname" "$ca_file" "$net_ipv4" "$net_ipv6"
+
+    echo -ne "OK " #
+    return 0
+}
+
+
+print_dns_config() {
+    local name description enable_tls port ipv4 ipv6 pin_sha256 hostname ca_file
+    local net_ipv6 net_ipv4
+
+    name="$1"
+    description="$2"
+    enable_tls="$3"
+    port="$4"
+    ipv4="$5"
+    ipv6="$6"
+    pin_sha256="$7"
+    hostname="$8"
+    ca_file="$9"
+    net_ipv4="$10"
+    net_ipv6="$11"
+
+    if [ "$net_ipv4" = "1" ] && [ "$net_ipv6" = "1" ]; then
+        if [ ! -z "$ipv4" ] && [ ! -z "$ipv6" ]; then
+            ip_list="$ipv4 $ipv6"
+        elif [ ! -z "$ipv4" ] && [ -z "$ipv6" ]; then
+            ip_list="$ipv4"
+        elif [ -z "$ipv4" ] && [ ! -z "$ipv6" ]; then
+            ip_list="$ipv6"
+        else
+            echo "Error ipv4 and ipv6 not set !"
+            exit -1
+        fi
+    elif [ "$net_ipv4" == "0" ] && [ "$net_ipv6" == "1" ]; then
+        if [ ! -z "$ipv6" ]; then
+            ip_list="$ipv6"
+        else
+            echo "Error ipv6 not set !"
+            exit 1
+        fi
+    elif [ "$net_ipv4" == "1" ] && [ "$net_ipv6" = "0" ]; then
+        if [ ! -z "$ipv4" ]; then
+            ip_list="$ipv4"
+        else
+            echo "Error ipv4 not set !"
+            exit 1
+        fi
+    else
+        echo "net_ipv4=$net_ipv4 net_ipv6=$net_ipv6"
+        echo "Error cannot choose IP address because of net_ipv4 and net_ipv6 settings!"
+        exit 1
+        fi
+
+    # check ca_file
+    if [ ! -z "$ca_file" ] && [ -f "$ca_file" ] && [ ! -z "$hostname" ]; then
+        echo "server:">>$CONFIGFILE
+        echo "	tls-cert-bundle: \"$ca_file\" ">>$CONFIGFILE
+    fi
+
+    # set forwarding
+    echo "forward-zone:">>$CONFIGFILE
+    echo '	name: "."'>>$CONFIGFILE
+
+    # FIX disable forward-tls until we upgrade to openssl 1.1.0
+    echo "	forward-tls-upstream: no">>$CONFIGFILE
+    #if [ "$enable_tls" == "1" ]; then
+    #    echo "	forward-tls-upstream: yes">>$CONFIGFILE
+    #else
+    #    echo "	forward-tls-upstream: no">>$CONFIGFILE
+    #fi
+
+    for ip in $ip_list
+    do
+
+        if [ ! -z "$ip" ]; then
+            #check nonstandard port
+            val_ipport="" #check nonstandard port
+            if [ "$port" == "853" ] || [ -z "$port" ]; then
+                val_ipport="$ip@853"
+            else
+                val_ipport="$ip@$port"
+            fi
+            if [ ! -z "$hostname" ]; then
+                echo "	forward-addr: $val_ipport#$hostname" >> $CONFIGFILE
+            else
+                echo "	forward-addr: $val_ipport" >> $CONFIGFILE
+            fi
+        fi
+    done
+}
+
+dns_config_load() {
+    local config_name config_file ret
+    local name description enable_tls port ipv4 ipv6 pin_sha256 hostname
+    local net_ipv4 net_ipv6
+
+    config_name="$1"
+    config_file="/etc/resolver/dns_servers/${config_name}.conf"
+    config_load resolver
+    ret=$(config_foreach handle_dns_config_load dns_server "$config_name")
+
+    #uci part nof found, check file
+    if [ "$?" == "1" ] && [ -f "$config_file" ]; then
+        enable_tls="0" #set default value
+        config_get net_ipv6 "common" "net_ipv6" 1
+        config_get net_ipv4 "common" "net_ipv4" 1
+
+        echo "loading file from ... $config_file"
+        source $config_file
+        echo print_dns_config  "$name" "$description" "$enable_tls" "$port" "$ipv4" "$ipv6" "$pin_sha256" "$hostname" "$net_ipv4" "$net_ipv6"
+        print_dns_config  "$name" "$description" "$enable_tls" "$port" "$ipv4" "$ipv6" "$pin_sha256" "$hostname" "$net_ipv4" "$net_ipv6"
+    fi
+    #echo "ret_value_dns_load=$ret"
 }
 
 start_service() {
 
     mkdir -p $(dirname "$CONFIGFILE")
+    #chown $USERNAME:$GROUP $(dirname "$CONFIGFILE")
+    #[ -f /etc/unbound/named.cache ] && chmod o+r /etc/unbound/named.cache
 
     init_unbound
+    config_get pidfile common pidfile /var/run/unbound.pid
     if [ -e /usr/sbin/unbound-checkconf ] ; then
         echo "Check generated config $CONFIGFILE:"
         unbound-checkconf "$CONFIGFILE"
@@ -267,7 +441,7 @@ start_service() {
     procd_set_param file /etc/config/resolver
     procd_set_param command unbound -d
     procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
-    procd_set_param pidfile /var/run/unbound.pid
+    procd_set_param pidfile $pidfile
     procd_close_instance
 }
 

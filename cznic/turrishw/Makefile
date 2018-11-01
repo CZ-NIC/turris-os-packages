@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turrishw
 PKG_VERSION:=0.2
-PKG_RELEASE:=1
+PKG_RELEASE:=5
 PKG_LICENSE:=GPLv3
 
 PKG_SOURCE_PROTO:=git

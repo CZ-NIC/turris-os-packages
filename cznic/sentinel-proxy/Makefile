@@ -9,10 +9,10 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-proxy
 PKG_VERSION:=1
-PKG_RELEASE:=1
+PKG_RELEASE:=6
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/proxy.git
-PKG_SOURCE_VERSION:=ca90e84a11defbe266beed3ad32adbf50719a06f
+PKG_SOURCE_VERSION:=f4e8f2f9d458061a632656168a97053f0904e60b
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=Martin Petracek <martin.petracek@nic.cz>
@@ -37,6 +37,20 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/sentinel_proxy $(1)/usr/bin/sentinel-proxy
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) files/init $(1)/etc/init.d/sentinel-proxy
+endef
+
+define Package/$(PKG_NAME)/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/sentinel-proxy enable
+/etc/init.d/sentinel-proxy restart
+}
+endef
+
+define Package/$(PKG_NAME)/prerm
+#!/bin/sh
+/etc/init.d/sentinel-proxy disable
+/etc/init.d/sentinel-proxy stop
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

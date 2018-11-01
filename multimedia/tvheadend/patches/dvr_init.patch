@@ -1,0 +1,13 @@
+--- a/src/dvr/dvr_config.c	2018-09-24 20:09:08.628369820 +0200
++++ b/src/dvr/dvr_config.c	2018-09-24 20:06:40.556362760 +0200
+@@ -181,8 +181,8 @@
+   cfg->dvr_removal_days = DVR_RET_REM_FOREVER;
+   cfg->dvr_clone = 1;
+   cfg->dvr_tag_files = 1;
++  cfg->dvr_skip_commercials = 0;
++  dvr_charset_update(cfg, "UTF-8");
+-  cfg->dvr_skip_commercials = 1;
+-  dvr_charset_update(cfg, intlconv_filesystem_charset());
+   cfg->dvr_warm_time = 30;
+   cfg->dvr_update_window = 24 * 3600;
+   cfg->dvr_pathname = strdup("$t$n.$x");

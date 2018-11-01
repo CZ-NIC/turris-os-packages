@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netmetr
 PKG_VERSION:=1.4
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -41,7 +41,6 @@ define Package/$(PKG_NAME)/description
   provides download and upload
   speed measurements.
 endef
-
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)
