@@ -21,20 +21,8 @@ end
 
 -- TODO Turris 1.x contract? Or should we drop it.
 
--- Guess what board this is.
-local base_model = ""
-if model then
-	if model:match("Turris Mox") then
-		base_model = "mox"
-	elseif model:match("[Oo]mnia") then
-		base_model = "omnia"
-	elseif model:match("[Tt]urris") then
-		base_model = "turris"
-	end
-end
-
 -- Definitions common url base
-local base_url = "https://repo.turris.cz/" .. base_model .. '-' .. branch .. "/lists/"
+local base_url = "https://repo.turris.cz/" .. branch .. "/lists/"
 -- Reused options for remotely fetched scripts
 local script_options = {
 	security = "Remote",
