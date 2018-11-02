@@ -1,0 +1,60 @@
+diff --git a/u-boot/cmd/pxe.c b/u-boot/cmd/pxe.c
+index 5609545de5..3c355400d7 100644
+--- a/u-boot/cmd/pxe.c
++++ b/u-boot/cmd/pxe.c
+@@ -21,6 +21,9 @@
+ #define MAX_TFTP_PATH_LEN 127
+ 
+ const char *pxe_default_paths[] = {
++#ifdef CONFIG_SYS_BOARD
++	"default-" CONFIG_SYS_ARCH "-" CONFIG_SYS_SOC "-" CONFIG_SYS_BOARD,
++#endif
+ #ifdef CONFIG_SYS_SOC
+ 	"default-" CONFIG_SYS_ARCH "-" CONFIG_SYS_SOC,
+ #endif
+diff --git a/u-boot/configs/turris_mox_defconfig b/u-boot/configs/turris_mox_defconfig
+index c15425564f..307dfcffbf 100644
+--- a/u-boot/configs/turris_mox_defconfig
++++ b/u-boot/configs/turris_mox_defconfig
+@@ -84,3 +84,9 @@ CONFIG_WDT=y
+ CONFIG_WDT_ARMADA_37XX=y
+ CONFIG_SHA1=y
+ CONFIG_SHA256=y
++CONFIG_BOOTCOMMAND="run mox_boot"
++CONFIG_FIT=y
++CONFIG_FIT_ENABLE_SHA256_SUPPORT=y
++CONFIG_FIT_SIGNATURE=n
++CONFIG_FIT_VERBOSE=y
++CONFIG_FIT_BEST_MATCH=n
+diff --git a/u-boot/include/configs/turris_mox.h b/u-boot/include/configs/turris_mox.h
+index 0aebe2100b..40c6d67b64 100644
+--- a/u-boot/include/configs/turris_mox.h
++++ b/u-boot/include/configs/turris_mox.h
+@@ -8,6 +8,8 @@
+ #ifndef _CONFIG_TURRIS_MOX_H
+ #define _CONFIG_TURRIS_MOX_H
+ 
++#define CONFIG_SYS_BOOTM_LEN (16<<20)
++
+ #define CONFIG_LAST_STAGE_INIT
+ 
+ /*
+@@ -38,7 +40,7 @@
+ /*
+  * Size of malloc() pool
+  */
+-#define CONFIG_SYS_MALLOC_LEN	(4 << 20) /* 4MiB for malloc() */
++#define CONFIG_SYS_MALLOC_LEN	(32<<20) /* 32MiB for malloc() */
+ 
+ /*
+  * Other required minimal configurations
+@@ -101,6 +103,9 @@
+ 	"fdt_addr_r=0x4f00000\0"	\
+ 	"kernel_addr_r=0x5000000\0"	\
+ 	"ramdisk_addr_r=0x8000000\0"	\
++	"rescue_args=console=ttyMV0,115200 earlycon=ar3700_uart,0xd0012000\0"	\
++	"rescue_bootcmd=gpio set GPIO221; setenv bootargs $rescue_args; sf probe; sf read $kernel_addr_r 0x190000; lzmadec $kernel_addr_r $ramdisk_addr_r; bootm $ramdisk_addr_r\0"	\
++	"mox_boot=gpio clear GPIO221; if gpio input GPIO220 && sleep 1 && gpio input GPIO220; then run rescue_bootcmd; else run distro_bootcmd; fi\0"	\
+ 	BOOTENV
+ 
+ #endif /* _CONFIG_TURRIS_MOX_H */
