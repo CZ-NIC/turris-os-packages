@@ -23,7 +23,7 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+python3-light +logrotate +syslog-ng3 +python3-libatsha204 +firewall +cznic-cacert-bundle
+	DEPENDS:=+python3-light +python3-setuptools +logrotate +syslog-ng3 +python3-libatsha204 +firewall +cznic-cacert-bundle
 endef
 
 define Package/$(PKG_NAME)/description
@@ -36,6 +36,10 @@ endef
 
 define Build/Configure
 	$(SED) 's/^__version__ =.*/__version__ = "$(PKG_VERSION)"/' $(PKG_BUILD_DIR)/nikola/__init__.py
+endef
+
+define Build/Compile
+	$(call Build/Compile/Py3Mod,, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)")
 endef
 
 define Package/$(PKG_NAME)/install
