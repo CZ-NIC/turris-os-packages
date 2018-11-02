@@ -1,10 +1,14 @@
 #!/bin/sh /etc/rc.common
 
 START=11
+STOP=99
 
 start() {
 	ubus call system watchdog '{"magicclose": true}'
 	ubus call system watchdog '{"stop": true}'
-	watchdog -t 5 /dev/watchdog
+	watchdog -T 30 -t 5 /dev/watchdog
 }
 
+stop() {
+	killall watchdog
+}
