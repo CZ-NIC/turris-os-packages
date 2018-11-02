@@ -10,6 +10,8 @@ ROOTKEYFILE=/etc/root.keys
 DEFAULT_RUNDIR=/tmp/kresd
 STATIC_DOMAINS=1
 DYNAMIC_DOMAINS=0
+USERNAME=kresd
+GROUP=kresd
 
 # Check the /etc/unbound/root.keys is reasonable and try to fix it with given command
 check_root_key() {
