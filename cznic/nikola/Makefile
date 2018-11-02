@@ -9,6 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nikola
 PKG_VERSION:=43
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nikola.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -23,7 +24,7 @@ $(call include_mk, python3-package.mk)
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+python3-light +logrotate +syslog-ng3 +python3-libatsha204 +firewall +cznic-cacert-bundle
+	DEPENDS:=+python3-light +python3-setuptools +logrotate +syslog-ng3 +python3-libatsha204 +firewall +cznic-cacert-bundle
 endef
 
 define Package/$(PKG_NAME)/description
