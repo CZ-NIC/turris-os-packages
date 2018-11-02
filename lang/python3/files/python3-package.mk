@@ -18,6 +18,8 @@ PYTHON3:=python$(PYTHON3_VERSION)
 
 PYTHON3PATH:=$(PYTHON3_LIB_DIR):$(STAGING_DIR)/$(PYTHON3_PKG_DIR):$(PKG_INSTALL_DIR)/$(PYTHON3_PKG_DIR)
 
+PKG_RELEASE:=$(PYTHON3_VERSION)-$(PKG_RELEASE)
+
 # These configure args are needed in detection of path to Python header files
 # using autotools.
 CONFIGURE_ARGS += \
