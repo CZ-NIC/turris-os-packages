@@ -27,7 +27,7 @@ define Build/Compile
 endef
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/usr/share/mox-support
+	$(INSTALL_DIR) $(1)/usr/share/mox
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/u-boot.bin $(1)/usr/share/mox/uboot
 endef
 
