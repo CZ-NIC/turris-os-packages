@@ -46,7 +46,7 @@ endef
 define Package/python3-jinja2
 	$(call Package/Common)
 	TITLE:=python3-jinja2
-	DEPENDS:=+python-light +python3-markupsafe
+	DEPENDS:=+python3-light +python3-markupsafe
 endef
 
 define Package/$(PKG_NAME)/description
