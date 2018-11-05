@@ -16,7 +16,7 @@ diff --git a/u-boot/configs/turris_mox_defconfig b/u-boot/configs/turris_mox_def
 index c15425564f..307dfcffbf 100644
 --- a/u-boot/configs/turris_mox_defconfig
 +++ b/u-boot/configs/turris_mox_defconfig
-@@ -84,3 +84,9 @@ CONFIG_WDT=y
+@@ -84,3 +84,11 @@ CONFIG_WDT=y
  CONFIG_WDT_ARMADA_37XX=y
  CONFIG_SHA1=y
  CONFIG_SHA256=y
@@ -26,6 +26,8 @@ index c15425564f..307dfcffbf 100644
 +CONFIG_FIT_SIGNATURE=n
 +CONFIG_FIT_VERBOSE=y
 +CONFIG_FIT_BEST_MATCH=n
++CONFIG_CMD_LZMADEC=y
++CONFIG_CMD_AES=y
 diff --git a/u-boot/include/configs/turris_mox.h b/u-boot/include/configs/turris_mox.h
 index 0aebe2100b..40c6d67b64 100644
 --- a/u-boot/include/configs/turris_mox.h
