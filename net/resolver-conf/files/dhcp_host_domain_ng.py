@@ -81,9 +81,7 @@ def uci_set(path, val):
 class Kresd:
     def __init__(self,
                  dhcp_dynamic_leases="/tmp/dhcp.leases.dynamic",
-                 dhcp_static_leases="/tmp/kresd/hints.tmp",
-                 empty_file="/tmp/dhcp.empty"):
-        self.__empty_file = empty_file
+                 dhcp_static_leases="/tmp/kresd/hints.tmp"):
         self.__static_leases = dhcp_static_leases
         self.__dynamic_leases = dhcp_dynamic_leases
         self.__static_leases_enabled = uci_get_bool("resolver.common.static_domains", True)
@@ -113,9 +111,8 @@ class Kresd:
             sys.exit(1)
 
     def _clean_hints(self):
-        open(self.__empty_file, "a").close()
-        # load empty file to clear kresd hints
-        self._call_kresd("hints.config('%s')" % self.__empty_file)
+        # clear kresd hints
+        self._call_kresd("hints.config()")
 
     def refresh_leases(self):
         self._clean_hints()
