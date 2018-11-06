@@ -141,8 +141,8 @@ download_medkit() {
         ip r a default via 192.168.1.1
     fi
     mkdir -p /mnt/src
-    wget --no-check-certificate -O /mnt/src/medkit.tar.gz https://repo.turris.cz/$BOARD/medkit/$BOARD-medkit-latest.tar.gz || die 2 "Can't download medkit"
-    wget --no-check-certificate -O /mnt/src/medkit.tar.gz.sig https://repo.turris.cz/$BOARD/medkit/$BOARD-medkit-latest.tar.gz.sig || die 2 "Can't download signature"
+    wget --no-check-certificate -O /mnt/src/medkit.tar.gz https://repo.turris.cz/hbs/medkit/$BOARD-medkit-latest.tar.gz || die 2 "Can't download medkit"
+    wget --no-check-certificate -O /mnt/src/medkit.tar.gz.sig https://repo.turris.cz/hbs/medkit/$BOARD-medkit-latest.tar.gz.sig || die 2 "Can't download signature"
     usign -V -m /mnt/src/medkit.tar.gz -P /etc/opkg/keys || die 2 "Can't validate signature"
     echo "medkit.tar.gz" > /tmp/medkit-file
 }
@@ -166,6 +166,9 @@ find_medkit() {
                 fi
                 if [ -f "/mnt/src/$f".sha256 ]; then
                     [ "$(cat "/mnt/src/$f".sha256)" = "$(cd /mnt/src; sha256sum "$f")" ] || continue
+                fi
+                if [ -f "/mnt/src/$f".sig ]; then
+                    usign -V -m "/mnt/src/$f" -P /etc/opkg/keys || continue
                 fi
                 echo "Nothing wrong with it"
                 if expr "$f" \> "$(cat /tmp/medkit-file 2> /dev/null) > /dev/null"; then
