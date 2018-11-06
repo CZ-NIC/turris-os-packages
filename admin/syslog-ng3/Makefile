@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=syslog-ng
-PKG_VERSION:=3.10.1
-PKG_RELEASE:=5
+PKG_VERSION:=3.17.2
+PKG_RELEASE:=1
 
-PKG_SOURCE_URL:=https://github.com/balabit/syslog-ng/releases/download/syslog-ng-$(PKG_VERSION)/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_MD5SUM:=1b50516783d6d1814cad1fe940c698ef
+PKG_SOURCE_URL:=https://github.com/balabit/syslog-ng/releases/download/$(PKG_NAME)-$(PKG_VERSION)/
+PKG_MD5SUM:=73601f7ca13c6b534318d5b0648ec1833aa9ca0516d6c3f90085b090d548c50b
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_IPV6 \
