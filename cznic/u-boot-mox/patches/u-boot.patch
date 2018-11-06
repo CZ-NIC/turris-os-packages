@@ -32,21 +32,12 @@ diff --git a/u-boot/include/configs/turris_mox.h b/u-boot/include/configs/turris
 index 0aebe2100b..40c6d67b64 100644
 --- a/u-boot/include/configs/turris_mox.h
 +++ b/u-boot/include/configs/turris_mox.h
-@@ -8,6 +8,8 @@
- #ifndef _CONFIG_TURRIS_MOX_H
- #define _CONFIG_TURRIS_MOX_H
- 
-+#define CONFIG_SYS_BOOTM_LEN (16<<20)
-+
- #define CONFIG_LAST_STAGE_INIT
- 
- /*
 @@ -38,7 +40,7 @@
  /*
   * Size of malloc() pool
   */
 -#define CONFIG_SYS_MALLOC_LEN	(4 << 20) /* 4MiB for malloc() */
-+#define CONFIG_SYS_MALLOC_LEN	(32<<20) /* 32MiB for malloc() */
++#define CONFIG_SYS_MALLOC_LEN	(64<<20) /* 64MiB for malloc() */
  
  /*
   * Other required minimal configurations
