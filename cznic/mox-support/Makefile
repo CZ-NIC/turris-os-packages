@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=mox-support
-PKG_VERSION:=13
+PKG_VERSION:=14
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
 
@@ -11,7 +11,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	VERSION:=$(LINUX_VERSION)-$(LINUX_RELEASE)-$(LINUX_VERMAGIC)
-	DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +rescue-image +u-boot-mox
+	DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +rescue-image +u-boot-mox +kmod-gpio-button-hotplug +kmod-mwifiex-sdio
 endef
 
 define Package/$(PKG_NAME)/description
@@ -48,6 +48,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) ./files/reset_btn $(1)/etc/hotplug.d/button/mox_reset
 	$(INSTALL_DIR) $(1)/lib/firmware/mrvl/
 	$(INSTALL_DATA) ./files/sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl
+	echo '/dev/mtd2 0 0x00010000' > $(1)/etc/fw_env.config
 	ln -s sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl/sd8997_uapsta.bin
 endef
 

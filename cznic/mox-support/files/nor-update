@@ -5,3 +5,5 @@ mtd verify /usr/share/mox/uboot /dev/mtd1 || \
 mtd -e /dev/mtd1 write /usr/share/mox/uboot /dev/mtd1
 mtd verify /usr/share/rescue-image/image.fit.lzma /dev/mtd3 || \
 mtd -e /dev/mtd3 write /usr/share/rescue-image/image.fit.lzma /dev/mtd3
+mtd verify /boot/armada-3720-turris-mox.dtb /dev/mtd4 || \
+mtd -e /dev/mtd4 write /boot/armada-3720-turris-mox.dtb /dev/mtd4
