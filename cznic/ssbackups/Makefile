@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ssbackups
-PKG_VERSION:=1.3
+PKG_VERSION:=2.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
@@ -39,12 +39,8 @@ define Build/Compile
 endef
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) 	$(1)/usr/bin
-	$(INSTALL_BIN) 	./files/ssbackups $(1)/usr/bin/ssbackups
-	$(INSTALL_DIR) $(1)$(PYTHON3_PKG_DIR)/
-	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON3_PKG_DIR)/* \
-		$(1)$(PYTHON3_PKG_DIR)/
+	$(INSTALL_DIR) $(1)
+	$(CP) $(PKG_INSTALL_DIR)/* $(1)/
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
