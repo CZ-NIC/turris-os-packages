@@ -33,16 +33,17 @@ Index: u-boot-mox-2018-11-rc1/u-boot/include/configs/turris_mox.h
 ===================================================================
 --- u-boot-mox-2018-11-rc1.orig/u-boot/include/configs/turris_mox.h
 +++ u-boot-mox-2018-11-rc1/u-boot/include/configs/turris_mox.h
-@@ -38,7 +38,7 @@
+@@ -38,7 +38,8 @@
  /*
   * Size of malloc() pool
   */
 -#define CONFIG_SYS_MALLOC_LEN	(4 << 20) /* 4MiB for malloc() */
++#define CONFIG_SYS_BOOTM_LEN (32<<20)
 +#define CONFIG_SYS_MALLOC_LEN	(64<<20) /* 64MiB for malloc() */
  
  /*
   * Other required minimal configurations
-@@ -101,6 +101,10 @@
+@@ -101,6 +102,10 @@
  	"fdt_addr_r=0x4f00000\0"	\
  	"kernel_addr_r=0x5000000\0"	\
  	"ramdisk_addr_r=0x8000000\0"	\

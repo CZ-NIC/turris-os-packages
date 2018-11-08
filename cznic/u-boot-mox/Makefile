@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=u-boot-mox
 PKG_VERSION:=2018-11-rc1
-PKG_RELEASE:=1.1
+PKG_RELEASE:=1.2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=git@gitlab.labs.nic.cz:turris/mox-boot-builder.git
 PKG_SOURCE_VERSION:=34087f603d33a2758606dcf7b64788837f8cf684
