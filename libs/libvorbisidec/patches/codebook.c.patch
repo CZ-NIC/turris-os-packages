@@ -1,0 +1,38 @@
+--- a/codebook.c
++++ b/codebook.c
+@@ -258,7 +258,7 @@ long vorbis_book_decodevs_add(codebook *
+ 	t[i] = book->valuelist+entry[i]*book->dim;
+       }
+       for(i=0,o=0;i<book->dim;i++,o+=step)
+-	for (j=0;j<step;j++)
++	for (j=0;o+j<n && j<step;j++)
+ 	  a[o+j]+=t[j][i]>>shift;
+     }else{
+       for (i = 0; i < step; i++) {
+@@ -267,7 +267,7 @@ long vorbis_book_decodevs_add(codebook *
+ 	t[i] = book->valuelist+entry[i]*book->dim;
+       }
+       for(i=0,o=0;i<book->dim;i++,o+=step)
+-	for (j=0;j<step;j++)
++	for (j=0;o+j<n && j<step;j++)
+ 	  a[o+j]+=t[j][i]<<-shift;
+     }
+   }
+@@ -287,7 +287,7 @@ long vorbis_book_decodev_add(codebook *b
+ 	entry = decode_packed_entry_number(book,b);
+ 	if(entry==-1)return(-1);
+ 	t     = book->valuelist+entry*book->dim;
+-	for (j=0;j<book->dim;)
++	for (j=0;i<n && j<book->dim;)
+ 	  a[i++]+=t[j++]>>shift;
+       }
+     }else{
+@@ -295,7 +295,7 @@ long vorbis_book_decodev_add(codebook *b
+ 	entry = decode_packed_entry_number(book,b);
+ 	if(entry==-1)return(-1);
+ 	t     = book->valuelist+entry*book->dim;
+-	for (j=0;j<book->dim;)
++	for (j=0;i<n && j<book->dim;)
+ 	  a[i++]+=t[j++]<<-shift;
+       }
+     }
