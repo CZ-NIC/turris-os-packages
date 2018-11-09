@@ -33,6 +33,8 @@ if [ "$BOARD" = mox ]; then
         echo 466 > /sys/class/gpio/export
         echo in > /sys/class/gpio/gpio466/direction
         echo default-on > /sys/class/leds/red/trigger
+        mkdir -p /etc
+        echo '/dev/mtd2 0 0x00010000' > /etc/fw_env.config
         BUTTON_STATE="$(cat /sys/class/gpio/gpio466/value)"
         TARGET_DRIVE="/dev/mmcblk1"
         TARGET_PART="1"
