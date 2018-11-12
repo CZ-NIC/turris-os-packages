@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-ws
-PKG_VERSION:=0.2
+PKG_VERSION:=1.0
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -30,7 +30,7 @@ define Package/foris-ws
 	URL:=https://gitlab.labs.nic.cz/turris/foris-ws
 	DEPENDS:= \
 		+python3-light \
-		+python3-websocket-server \
+		+python3-websockets \
 		+python3-prctl \
 		+rpcd \
 		+foris-client \

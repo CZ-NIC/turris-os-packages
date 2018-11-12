@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-websockets
-PKG_VERSION:=6.0
+PKG_VERSION:=7.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/w/websockets/
 PKG_SOURCE_SUBDIR:=websockets-$(PKG_VERSION)
 PKG_SOURCE:=websockets-$(PKG_VERSION).tar.gz
-PKG_HASH=8f3b956d11c5b301206382726210dc1d3bee1a9ccf7aadf895aaf31f71c3716c
+PKG_HASH=08e3c3e0535befa4f0c4443824496c03ecc25062debbcf895874f8a0b4c97c9f
 
 PKG_LICENSE:=BSD
 
