@@ -143,8 +143,8 @@ download_medkit() {
         ip r a default via 192.168.1.1
     fi
     mkdir -p /mnt/src
-    wget --no-check-certificate -O /mnt/src/medkit.tar.gz https://repo.turris.cz/hbs/medkit/$BOARD-medkit-latest.tar.gz || die 2 "Can't download medkit"
-    wget --no-check-certificate -O /mnt/src/medkit.tar.gz.sig https://repo.turris.cz/hbs/medkit/$BOARD-medkit-latest.tar.gz.sig || die 2 "Can't download signature"
+    wget --no-check-certificate -O /mnt/src/medkit.tar.gz https://repo.turris.cz/hbs/medkit/medkit-$BOARD-latest.tar.gz || die 2 "Can't download medkit"
+    wget --no-check-certificate -O /mnt/src/medkit.tar.gz.sig https://repo.turris.cz/hbs/medkit/medkit-$BOARD-latest.tar.gz.sig || die 2 "Can't download signature"
     usign -V -m /mnt/src/medkit.tar.gz -P /etc/opkg/keys || die 2 "Can't validate signature"
     echo "medkit.tar.gz" > /tmp/medkit-file
 }
