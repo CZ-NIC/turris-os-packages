@@ -100,6 +100,9 @@ fi
 sudo -u nobody php-cli ./occ config:system:set --value false updatechecker
 sudo -u nobody php-cli ./occ config:system:set --value $IP trusted_domains 1
 
+# Create cron script
+echo "*/15  *  *  *  *   /usr/bin/su --shell /bin/ash --command '/usr/bin/php-cli -f /srv/www/nextcloud/cron.php' nobody" >/etc/cron.d/nextcloud
+
 /etc/init.d/php7-fpm restart
 /etc/init.d/lighttpd restart
 
