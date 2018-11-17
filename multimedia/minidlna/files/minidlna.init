@@ -3,8 +3,7 @@
 
 START=95
 
-SERVICE_USE_PID=1
-SERVICE_PID_FILE=/var/run/minidlna/minidlna.pid
+USE_PROCD=1
 
 MINIDLNA_CONFIG_FILE="/tmp/minidlna.conf"
 
@@ -57,8 +56,10 @@ minidlna_create_config() {
 	minidlna_cfg_addstr $cfg friendly_name
 	minidlna_cfg_addstr $cfg db_dir
 	minidlna_cfg_addstr $cfg log_dir
+	minidlna_cfg_addstr $cfg log_level 'error'
 	minidlna_cfg_addbool $cfg inotify '1'
 	minidlna_cfg_addbool $cfg enable_tivo '0'
+	minidlna_cfg_addbool $cfg wide_links '0'
 	minidlna_cfg_addbool $cfg strict_dlna '0'
 	minidlna_cfg_addstr $cfg album_art_names
 	minidlna_cfg_addstr $cfg presentation_url
@@ -72,7 +73,7 @@ minidlna_create_config() {
 	return 0
 }
 
-start() {
+start_service() {
 	local enabled
 	local db_dir
 	local log_dir
@@ -89,9 +90,10 @@ start() {
 
 	mkdir -m 0755 -p $db_dir
 	mkdir -m 0755 -p $log_dir
-	service_start /usr/bin/minidlna -f "$MINIDLNA_CONFIG_FILE"
+	procd_open_instance
+	procd_set_param file /etc/config/minidlna
+	procd_set_param command /usr/bin/minidlna -S -f "$MINIDLNA_CONFIG_FILE"
+	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
+	procd_close_instance
 }
 
-stop() {
-	service_stop /usr/bin/minidlna
-}
