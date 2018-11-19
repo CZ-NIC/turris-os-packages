@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=libatsha204
 PKG_PYTHON_NAME:=python3-$(PKG_NAME)
 PKG_VERSION:=28
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/libatsha204.git
 PKG_SOURCE_VERSION:=2014a0ed846000ea8dd7e20f852252c35f540af6
@@ -64,7 +64,11 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/real//lib/libatsha204.so $(1)/usr/lib/
 
-	if [ "$$$$TARGET_BOARD" != turris ] ; then $(INSTALL_DIR) $(1)/etc/init.d ; $(INSTALL_BIN) ./files/libatsha204.init $(1)/etc/init.d/libatsha204 ; fi
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/atsha204-feed-entropy.init $(1)/etc/init.d/atsha204-feed-entropy
+	# Note: This script is here for libatsha204-emul. When this package is
+	# replaced with emul version then this configu is used.
+	$(INSTALL_BIN) ./files/libatsha204.init $(1)/etc/init.d/libatsha204
 endef
 
 define Package/$(PKG_NAME)-emul/install
