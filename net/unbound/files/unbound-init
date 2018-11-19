@@ -7,6 +7,8 @@ CONFIGFILE="/var/etc/unbound/unbound.conf"
 ROOTKEYFILE="/etc/root.keys"
 DHCPLEASES="/tmp/dhcp.leases.dynamic"
 STATICLEASES="/var/etc/unbound/static.leases"
+USERNAME=unbound
+GROUP=unbound
 
 header() {
     cat > "$CONFIGFILE" <<-EOF
@@ -98,6 +100,8 @@ set_rootkey() {
 
     config_get val "$section" "$var"
     ROOTKEYFILE="$val"
+    [ ! -f /var/etc/unbound/root.keys ] && cp $ROOTKEYFILE /var/etc/unbound/root.keys
+    ROOTKEYFILE="/var/etc/unbound/root.keys"
 }
 
 # Check the /etc/unbound/root.key is reasonable and try to fix it with given command
@@ -201,7 +205,7 @@ init_unbound() {
     set_parameter infra_cache_slabs infra-cache-slabs 1
     set_parameter infra_cache_numhosts infra-cache-numhosts 200
     set_multiple_parameters access_control access-control
-    set_quoted_parameter username username ""
+    set_quoted_parameter username username "$USERNAME"
     set_quoted_parameter pidfile pidfile "/var/run/unbound.pid"
     set_quoted_parameter root_hints root-hints "/etc/unbound/named.cache"
     set_quoted_parameter target_fetch_policy target-fetch-policy "2 1 0 0 0 0"
@@ -428,8 +432,8 @@ dns_config_load() {
 start_service() {
 
     mkdir -p $(dirname "$CONFIGFILE")
-    #chown $USERNAME:$GROUP $(dirname "$CONFIGFILE")
-    #[ -f /etc/unbound/named.cache ] && chmod o+r /etc/unbound/named.cache
+    chown $USERNAME:$GROUP $(dirname "$CONFIGFILE")
+    [ -f /etc/unbound/named.cache ] && chmod o+r /etc/unbound/named.cache
 
     init_unbound
     config_get pidfile common pidfile /var/run/unbound.pid
@@ -440,6 +444,7 @@ start_service() {
     procd_open_instance
     procd_set_param file /etc/config/resolver
     procd_set_param command unbound -d
+    procd_append_param command -c /var/etc/unbound/unbound.config
     procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
     procd_set_param pidfile $pidfile
     procd_close_instance
