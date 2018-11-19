@@ -27,6 +27,10 @@ define Package/mozilla-iot-gateway-webapp
   MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
+define Build/Compile
+	true
+endef
+
 define Package/mozilla-iot-gateway-webapp/description
   Things Gateway by Mozilla integration into Turris OS
 endef
