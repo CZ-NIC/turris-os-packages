@@ -31,11 +31,11 @@ define Package/mozilla-iot-gateway-webapp/description
   Things Gateway by Mozilla integration into Turris OS
 endef
 
-define Package/mozilla-iot-gateway/install
+define Package/mozilla-iot-gateway-webapp/install
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
 	$(INSTALL_DATA) ./files/30_mozilla-iot.conf $(1)/usr/share/turris-webapps/
 	$(INSTALL_DIR) $(1)/www/webapps-icons
 	$(INSTALL_DATA) ./files/mozilla-iot.png $(1)/www/webapps-icons
 endef
 
-$(eval $(call BuildPackage,mozilla-iot-gateway))
+$(eval $(call BuildPackage,mozilla-iot-gateway-webapp))
