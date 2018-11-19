@@ -53,7 +53,8 @@ init_header() {
 	echo "}" >> $CONFIGFILE
 
 	echo "hints.use_nodata(true)" >> $CONFIGFILE
-
+	# run as kresd user
+	echo "user('$USERNAME', '$GROUP')" >> $CONFIGFILE
 	# clear hints file
 	echo "" > $HINTS_CONFIG
 }
@@ -103,7 +104,7 @@ load_uci_config_common() {
 		if [ -n "$keyfile" ]; then
 			ROOTKEYFILE=$keyfile
 			check_root_key cert-backup -x $ROOTKEYFILE
-			procd_append_param command -k "$keyfile"
+			procd_append_param command -K "$keyfile"
 		fi
 	fi
 
