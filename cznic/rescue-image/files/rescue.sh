@@ -42,7 +42,8 @@ if [ "$BOARD" = mox ]; then
     }
 
     reset_uenv() {
-        mtd erase /dev/mtd2
+        # Check for empty partition
+        [ "$(head -c 32 /dev/mtd2 | md5sum)" = "0d7dc4266497100e4831f5b31b6b274f  -" ] || mtd erase /dev/mtd2
     }
 
     check_for_mode_change() {
