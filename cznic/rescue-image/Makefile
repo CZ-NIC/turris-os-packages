@@ -69,6 +69,10 @@ define Build/Configure
 	sed -i 's|^.*\(CONFIG_NET_VENDOR_MARVELL\).*|CONFIG_NET_VENDOR_MARVELL=y|' "$(LINUX_DIR)/.config"
 	sed -i 's|^\(CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE\)=y|# \1 is not set|' "$(LINUX_DIR)/.config"
 	for cfg in \
+	NET_DSA \
+	NET_DSA_MV88E6XXX \
+	NET_DSA_MV88E606 \
+	NET_DSA_MV88E6XXX_GLOBAL2 \
 	CGROUPS \
 	CHECKPOINT_RESTORE \
 	NAMESPACES \

@@ -41,6 +41,10 @@ if [ "$BOARD" = mox ]; then
         handle_reset &
     }
 
+    reset_uenv() {
+        mtd erase /dev/mtd2
+    }
+
     check_for_mode_change() {
         new_btn_state="$(cat /sys/class/gpio/gpio466/value)"
         chk_ret=1
@@ -264,12 +268,6 @@ reflash() {
     umount -fl /mnt/trg
     sync
     create_factory
-}
-
-reset_uenv() {
-    fw_setenv -s - <<EOF
-bootcmd=env default -a -f; reset
-EOF
 }
 
 reboot() {
