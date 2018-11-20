@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bind
 PKG_VERSION:=9.11.5
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 USERID:=bind=57:bind=57
 
 PKG_MAINTAINER:=Noah Meyerhans <frodo@morgul.net>
@@ -18,8 +18,8 @@ PKG_LICENSE := MPL-2.0
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:= \
-	http://www.mirrorservice.org/sites/ftp.isc.org/isc/bind9/$(PKG_VERSION) \
-	http://ftp.isc.org/isc/bind9/$(PKG_VERSION)
+	https://www.mirrorservice.org/sites/ftp.isc.org/isc/bind9/$(PKG_VERSION) \
+	https://ftp.isc.org/isc/bind9/$(PKG_VERSION)
 PKG_MD5SUM:=a4cae11dad954bdd4eb592178f875bfec09fcc7e29fe0f6b7a4e5b5c6bc61322
 
 PKG_FIXUP:=autoreconf
@@ -82,6 +82,12 @@ endef
 define Package/bind-tools
   $(call Package/bind/Default)
   TITLE+= administration tools (all)
+	DEPENDS:= \
+	+bind-rndc \
+	+bind-check \
+	+bind-dnssec \
+	+bind-host \
+	+bind-dig
 endef
 
 define Package/bind-rndc
@@ -203,17 +209,7 @@ endef
 
 define Package/bind-tools/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/dig $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/host $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/delv $(1)/usr/bin/
-	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/dnssec-keygen $(1)/usr/sbin/
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/dnssec-settime $(1)/usr/sbin/
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/dnssec-signzone $(1)/usr/sbin/
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/named-checkconf $(1)/usr/sbin/
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/named-checkzone $(1)/usr/sbin/
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/rndc $(1)/usr/sbin/
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/rndc-confgen $(1)/usr/sbin/
 endef
 
 define Package/bind-rndc/install
