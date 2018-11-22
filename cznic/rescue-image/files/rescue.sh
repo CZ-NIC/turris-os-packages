@@ -165,7 +165,7 @@ find_medkit() {
             [ -e "$d" ] || continue
             mount "$d" /mnt/src || continue
             echo "Trying device $d"
-            for f in $(cd /mnt/src; ls -1 $BOARD-medkit*.tar.gz); do
+            for f in $(cd /mnt/src; ls -1 $BOARD-medkit*.tar.gz medkit-$BOARD.tar.gz medkit-$BOARD-*.tar.gz); do
                 [ -f "/mnt/src/$f" ] || continue
                 echo "Found $f on device $d"
                 if [ -f "/mnt/src/$f".md5 ]; then
