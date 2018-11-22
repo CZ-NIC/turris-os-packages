@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-ssbackups-plugin
 PKG_VERSION:=8.3.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-ssbackups-plugin.git
@@ -32,7 +32,7 @@ PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
-		+foris +foris-controller-ssbackups-module
+		+foris +foris-controller-ssbackups-module +foris-data_collect-plugin
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 	VARIANT:=python3
 endef
