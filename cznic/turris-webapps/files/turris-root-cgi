@@ -99,9 +99,12 @@ if [ "$WIZARD_FINISHED" = "1" ]; then
 	window.onload = function () {
 		var timer = $DELAY;
 		document.querySelector('#timeout').textContent = timer;
-    	setInterval(function () {
-        		document.querySelector('#timeout').textContent = timer;
+		setInterval(function () {
+			document.querySelector('#timeout').textContent = timer;
 			timer = Math.max(0, timer - 1);
+			if(timer == 0) {
+				location.replace("$URL");
+			}
 		}, 1000);
 	};
 	</script>
@@ -110,17 +113,17 @@ if [ "$WIZARD_FINISHED" = "1" ]; then
 	<div class='content'>
 HTML
   for web in /usr/share/turris-webapps/[0-9]*.conf; do
-    URL=""
-    NAME=""
-    ICON=""
-    extra=""
-    . $web
+	URL=""
+	NAME=""
+	ICON=""
+	extra=""
+	. $web
 	# Get NAME_$LANG
 	LC_NAME="$(sh -c ". $web;"' echo "$NAME_'"$LANG"'"')"
 	[ -z "$LC_NAME" ] || NAME="$LC_NAME"
-    [ "$URL" \!= "$DEFAULT_URL" ] || extra=" selected"
-    [ -n "$ICON" ] || ICON=generic-web.svg
-    echo "<div class='choice$extra'><a href='$URL'><div class='icon'><img src='/static/webapps-icons/$ICON' alt='$NAME'/></div><div class="name"><p>$NAME</p></a></div></div>"
+	[ "$URL" \!= "$DEFAULT_URL" ] || extra=" selected"
+	[ -n "$ICON" ] || ICON=generic-web.svg
+	echo "<div class='choice$extra'><a href='$URL'><div class='icon'><img src='/static/webapps-icons/$ICON' alt='$NAME'/></div><div class="name"><p>$NAME</p></a></div></div>"
   done
   cat << HTML
   	</div>
@@ -137,6 +140,11 @@ else
 		<meta http-equiv="refresh" content="$DELAY; URL=$SCRIPTNAME/config/" />
 	</head>
 	<body>
+		<script>
+		window.onload = function () {
+			location.replace("$SCRIPTNAME/config/");
+		};
+		</script>
 		<p>Continue to <a href="$SCRIPTNAME/config/">first run wizard</a>...</p>
 	</body>
 </html>
