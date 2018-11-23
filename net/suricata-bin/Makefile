@@ -29,9 +29,9 @@ CONFIGURE_ARGS+= \
         --disable-libmagic \
 	--disable-gccprotect \
 	--enable-non-bundled-htp \
-	--disable-gccmarch-native	
+	--disable-gccmarch-native
 
-ifeq($(ARCH),arm)
+ifeq ($(ARCH),arm)
 CONFIGURE_ARGS+= \
 	--enable-luajit
 
