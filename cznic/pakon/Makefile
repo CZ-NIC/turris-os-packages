@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon
 PKG_VERSION:=1.2
-PKG_RELEASE:=14
+PKG_RELEASE:=15
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=33a1bd7fe1c9ce04b4e11056ff1b0e8d6f6194e0
+PKG_SOURCE_VERSION:=b8088e0195a594908742ae850ad527682243394f
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -76,6 +76,7 @@ endef
 define Package/pakon/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
+	/usr/libexec/pakon-light/create_db.py
 	# one time fix - convert all names to lowercase. Mixed case names shouldn't be saved anymore (fixed in monitor)
 	[ -f /var/lib/pakon.db ] && sqlite3 /var/lib/pakon.db "UPDATE traffic SET app_hostname = LOWER(app_hostname);" || true
 	[ -f /srv/pakon/pakon-archive.db ] && /usr/bin/sqlite3 /srv/pakon/pakon-archive.db "UPDATE traffic SET app_hostname = LOWER(app_hostname);" || true
