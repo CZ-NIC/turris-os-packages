@@ -56,7 +56,7 @@ define Package/haas-proxy/install
 	$(CP) \
 		$(PKG_INSTALL_DIR)/* \
 		$(1)
-	$(RM) -rf $(1)/usr/lib/python2.7/site-packages/haas_proxy-1.2*
+	$(RM) -rf $(1)/usr/lib/python2.7/site-packages/haas_proxy-1.*
 endef
 
 define Package/haas-proxy/postinst
