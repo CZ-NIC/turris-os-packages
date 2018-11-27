@@ -5,14 +5,7 @@ STOP=00
 VERSION=@VERSION@
 
 start() {
-	if [ "0$(cat /etc/nor-version 2>/dev/null)" -ne $VERSION ] && [ "$(uname -m)" = ppc ]; then
-		( for i in 0 1 2 3; do
-			[ "$(cat /dev/mtd$i | md5sum -)" = "$(cat /usr/share/nor-update/turris/mtd$i | md5sum -)" ] || ( mtd erase /dev/mtd$i; mtd write /usr/share/nor-update/turris/mtd$i /dev/mtd$i )
-		done
-		echo $VERSION > /etc/nor-version
-		sync
-		) &
-	fi
+	/usr/sbin/nor-update &
 }
 
 stop() {

@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.1
-PKG_RELEASE:=21
+PKG_RELEASE:=27
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -55,6 +55,7 @@ define Package/$(PKG_NAME)/install
 ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
 	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolver
 	[ -z "`ls -1 ./files/dns_servers_omnia/`" ] || $(INSTALL_CONF) ./files/dns_servers_omnia/* $(1)/etc/resolver/dns_servers/
+	$(INSTALL_DATA) ./files/CZ.NIC2-cacert.pem $(1)/etc/resolver
 else
 	$(INSTALL_CONF) ./files/resolver-turris-config $(1)/etc/config/resolver
 	[ -z "`ls -1 ./files/dns_servers_turris/`" ] || $(INSTALL_CONF) ./files/dns_servers_turris/* $(1)/etc/resolver/dns_servers/

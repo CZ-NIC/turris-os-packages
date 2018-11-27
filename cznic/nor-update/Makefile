@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nor-update
-PKG_VERSION:=2
+PKG_VERSION:=6
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -30,7 +30,9 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) ./files/mtd* $(1)/usr/share/nor-update/turris
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/init $(1)/etc/init.d/nor-update
-	sed -i "s|@VERSION@|${PKG_VERSION}|" $(1)/etc/init.d/nor-update
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) ./files/nor-update $(1)/usr/sbin/nor-update
+	sed -i "s|@VERSION@|${PKG_VERSION}|" $(1)/usr/sbin/nor-update
 endef
 
 define Package/$(PKG_NAME)/postinst

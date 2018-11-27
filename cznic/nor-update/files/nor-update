@@ -1,0 +1,17 @@
+#!/bin/sh -e
+VERSION=@VERSION@
+
+if [ "0$(cat /etc/nor-version 2>/dev/null)" -lt $VERSION ] && [ "$(uname -m)" = ppc ]; then
+	for i in 0 1 2 3; do
+		if [ "$(cat /dev/mtd$i | md5sum -)" \!= "$(cat /usr/share/nor-update/turris/mtd$i | md5sum -)" ]; then
+			echo "Updating mtd$i"
+			mtd erase /dev/mtd$i;
+			mtd write /usr/share/nor-update/turris/mtd$i /dev/mtd$i
+		fi
+	done
+	echo $VERSION > /etc/nor-version
+	echo "NOR is up to date!"
+	sync
+else
+	echo "Already up to date"
+fi

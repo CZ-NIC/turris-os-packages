@@ -41,6 +41,11 @@ define Py3Build/Compile
 	$(call Build/Compile/Py3Mod,,install --prefix="/usr" --root="$(PKG_INSTALL_DIR)")
 endef
 
+define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)
+	$(CP) $(PKG_INSTALL_DIR)/* $(1)/
+endef
+
 $(eval $(call Py3Package,$(PKG_NAME)))
 $(eval $(call BuildPackage,$(PKG_NAME)))
 $(eval $(call BuildPackage,$(PKG_NAME)-src))
