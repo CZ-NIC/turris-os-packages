@@ -11,24 +11,18 @@ PKG_NAME:=python3-setuptools
 PKG_VERSION:=22.0.5
 PKG_RELEASE:=2
 
-PKG_SOURCE:=setuptools-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://pypi.python.org/packages/90/7a/b64d5804b6d1aebed1892e4df1c21bcb4f8480095ba8004e48999601119d/
-PKG_MD5SUM:=869f3029dcc66a64ba39875e2a2f044a
-
-HOST_BUILD_DEPENDS:=python3 python3/host
+PKG_SOURCE:=setuptools-$(PKG_VERSION).zip
+PKG_SOURCE_URL:=https://pypi.python.org/packages/source/s/setuptools/
+PKG_HASH=f918145c5142671490653f661009e6c1cea7409cd81786af83c959e94967f988
 
 PKG_LICENSE:=PSF
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/python3-setuptools-$(PKG_VERSION)
-PKG_UNPACK=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
+PKG_BUILD_DIR:=$(BUILD_DIR)/setuptools-$(PKG_VERSION)
 
-HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)-$(PKG_VERSION)
-HOST_UNPACK=$(HOST_TAR) -C $(HOST_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
+PKG_UNPACK=unzip -d $(PKG_BUILD_DIR)/.. $(DL_DIR)/$(PKG_SOURCE)
 
-include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python3-package.mk)
-$(call include_mk, python3-host.mk)
 
 define Package/python3-setuptools
 	SUBMENU:=Python
@@ -64,17 +58,6 @@ define Py3Package/python3-setuptools/install
 	$(LN) easy_install-$(PYTHON3_VERSION) $(1)/usr/bin/easy_install3
 endef
 
-define Host/Compile
-	$(call Build/Compile/HostPy3Mod,,\
-		install --root="$(STAGING_DIR_HOSTPKG)" --prefix="" \
-		--single-version-externally-managed \
-	)
-endef
-
-define Host/Install
-endef
-
-$(eval $(call HostBuild))
 
 $(eval $(call Py3Package,python3-setuptools))
 $(eval $(call BuildPackage,python3-setuptools))

@@ -19,7 +19,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_BUILD_DEPENDS:=python3 python3-setuptools
-HOST_BUILD_DEPENDS:=libffi/host python3/host python3-setuptools/host python3-pycparser/host
+HOST_BUILD_DEPENDS:=libffi/host python3/host python3-pycparser/host
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE

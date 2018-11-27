@@ -239,7 +239,7 @@ HOST_CONFIGURE_ARGS+= \
 	--exec-prefix=$(HOST_PYTHON3_DIR) \
 	--with-system-expat=$(STAGING_DIR_HOSTPKG) \
 	--with-system-ffi \
-	--with-ensurepip=no \
+	--with-ensurepip=upgrade \
 	CONFIG_SITE= \
 	CFLAGS="$(HOST_CFLAGS) -I$(STAGING_DIR_HOST)/openssl-host/include" \
 	CPPFLAGS="$(HOST_CPPFLAGS) -I$(STAGING_DIR_HOST)/openssl-host/include" \
@@ -256,6 +256,8 @@ define Host/Install
 	$(INSTALL_DIR) $(HOST_PYTHON3_DIR)/bin/
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/Parser/pgen $(HOST_PYTHON3_DIR)/bin/pgen3
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/Programs/_freeze_importlib $(HOST_PYTHON3_DIR)/bin/_freeze_importlib
+	$(call Build/Compile/HostPy3RunHost,, -m pip install -U pip)
+	$(call Build/Compile/HostPy3RunHost,, -m pip install -U setuptools)
 endef
 
 $(eval $(call HostBuild))

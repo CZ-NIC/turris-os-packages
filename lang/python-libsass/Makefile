@@ -20,7 +20,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/libsass-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/libsass-$(PKG_VERSION)
 
 PKG_BUILD_DEPENDS:=python python3
-HOST_BUILD_DEPENDS:=python/host python-setuptools/host python3/host python3-setuptools/host
+HOST_BUILD_DEPENDS:=python/host python-setuptools/host python3/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
