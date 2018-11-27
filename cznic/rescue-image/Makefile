@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rescue-image
 PKG_VERSION:=2.1
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 BB_VERSION:=1.29.3
 PKG_SOURCE:=busybox-$(BB_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://www.busybox.net/downloads \
@@ -34,7 +34,7 @@ DEVICE := $(subst DEVICE_cznic-,,$(CONFIG_TARGET_PROFILE))
 
 define Package/rescue-image
 	TITLE:=rescue-image
-	DEPENDS:=+libgcc +libc +libubox +mtd +libpthread +librt +libattr +libuuid +zlib +libblkid +liblzo +btrfs-progs +schnapps +dropbear +uboot-envtools +usign +cznic-repo-keys +cznic-repo-keys-test +libopenssl +libpcre +wget
+	DEPENDS:=+libgcc +libc +libubox +mtd +libpthread +librt +libattr +libuuid +zlib +libblkid +liblzo +btrfs-progs +schnapps +dropbear +uboot-envtools +usign +cznic-repo-keys +libopenssl +libpcre +wget
 endef
 
 define Build/Prepare
