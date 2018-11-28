@@ -33,18 +33,20 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/opkg/keys
 	$(INSTALL_DIR) $(1)/etc/updater/keys/
-	for i in release.pub standby.pub; do \
-		$(CP) files/$$$$i $(1)/etc/opkg/keys/`$(STAGING_DIR_HOST)/bin/usign -F -p files/$$$$i`; \
-		$(CP) files/$$$$i $(1)/etc/updater/keys; \
+	for i in release standby; do \
+		$(CP) files/$$$$i.pub $(1)/etc/opkg/keys/`$(STAGING_DIR_HOST)/bin/usign -F -p files/$$$$i.pub`; \
+		$(CP) files/$$$$i.pub $(1)/etc/updater/keys; \
+		$(CP) files/$$$$i.pub.sig $(1)/etc/updater/keys; \
 	done
 endef
 
 define Package/$(PKG_NAME)-test/install
 	$(INSTALL_DIR) $(1)/etc/opkg/keys
 	$(INSTALL_DIR) $(1)/etc/updater/keys/
-	for i in test.pub; do \
-		$(CP) files/$$$$i $(1)/etc/opkg/keys/`$(STAGING_DIR_HOST)/bin/usign -F -p files/$$$$i`; \
-		$(CP) files/$$$$i $(1)/etc/updater/keys; \
+	for i in test; do \
+		$(CP) files/$$$$i.pub $(1)/etc/opkg/keys/`$(STAGING_DIR_HOST)/bin/usign -F -p files/$$$$i.pub`; \
+		$(CP) files/$$$$i.pub $(1)/etc/updater/keys; \
+		$(CP) files/$$$$i.pub.sig $(1)/etc/updater/keys; \
 	done
 endef
 
