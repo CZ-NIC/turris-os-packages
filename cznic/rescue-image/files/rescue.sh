@@ -103,9 +103,7 @@ fi
 # Generic helper functions
 
 reset_uenv() {
-    fw_setenv << EOF
-bootcmd=env default -f -a; saveenv; reset
-EOF
+    fw_setenv bootcmd 'env default -f -a; saveenv; reset'
 }
 
 wait_for_mode_change() {
