@@ -17,13 +17,3 @@ start_service() {
 	procd_close_instance
 }
 
-stop_service() {
-	# This ensures that when we are migrating to procd that we kill previous lighttpd version
-	for i in `grep /usr/sbin/lighttpd /proc/[0-9]*/cmdline`; do
-		PID_TO_KILL="`echo $i | sed 's|/proc/\([0-9]\+\)/.*|\1|'`"
-		# Double check not to kill one in LXC
-		if [ \! -f /sys/fs/cgroup/tasks ] || [ -n "`grep "^$PID_TO_KILL\$" /sys/fs/cgroup/tasks`" ]; then
-			kill "$PID_TO_KILL"
-		fi
-	done
-}
