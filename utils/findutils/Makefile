@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=findutils
 PKG_VERSION:=4.6.0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_LICENSE:=GPL-3.0+
 
@@ -40,8 +40,7 @@ define Package/findutils
 	DEPENDS:= \
 	+findutils-find \
 	+findutils-xargs \
-	+findutils-locate \
-	+findutils-updatedb
+	+findutils-locate
 endef
 
 define Package/findutils-find
@@ -51,12 +50,7 @@ endef
 
 define Package/findutils-locate
 	$(call Package/findutils/Default)
-	TITLE := locate utility
-endef
-
-define Package/findutils-updatedb
-	$(call Package/findutils/Default)
-	TITLE := updatedb utility
+	TITLE := locate and related updatedb utility
 endef
 
 define Package/findutils-xargs
@@ -79,11 +73,6 @@ endef
 define Package/findutils-locate/install
 	$(INSTALL_DIR) $(1)/usr/bin $(1)/srv/var
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/locate $(1)/usr/bin/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib $(1)/usr/
-endef
-
-define Package/findutils-updatedb/install
-	$(INSTALL_DIR) $(1)/usr/bin $(1)/srv/var
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/updatedb $(1)/usr/bin/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib $(1)/usr/
 endef
@@ -96,5 +85,4 @@ endef
 $(eval $(call BuildPackage,findutils))
 $(eval $(call BuildPackage,findutils-find))
 $(eval $(call BuildPackage,findutils-locate))
-$(eval $(call BuildPackage,findutils-updatedb))
 $(eval $(call BuildPackage,findutils-xargs))
