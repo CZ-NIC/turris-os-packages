@@ -41,11 +41,6 @@ if [ "$BOARD" = mox ]; then
         handle_reset &
     }
 
-    reset_uenv() {
-        # Check for empty partition
-        [ "$(head -c 32 /dev/mtd2 | md5sum)" = "0d7dc4266497100e4831f5b31b6b274f  -" ] || mtd erase /dev/mtd2
-    }
-
     check_for_mode_change() {
         new_btn_state="$(cat /sys/class/gpio/gpio466/value)"
         chk_ret=1
@@ -106,6 +101,12 @@ if [ "$BOARD" = mox ]; then
 fi
 
 # Generic helper functions
+
+reset_uenv() {
+    fw_setenv << EOF
+bootcmd=env default -f -a; saveenv; reset
+EOF
+}
 
 wait_for_mode_change() {
     echo "Now is your chance to change a mode from $MODE to something else, press the button to do so"
