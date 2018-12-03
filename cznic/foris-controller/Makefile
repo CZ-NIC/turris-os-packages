@@ -50,6 +50,9 @@ define Package/foris-controller/install
 	$(CP) $(PKG_INSTALL_DIR)/* $(1)/
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) ./files/foris-controller.conf $(1)/etc/config/foris-controller
+ifeq ($(CONFIG_TARGET_mvebu_cortexa53_DEVICE_cznic-mox),y)
+	sed -i 's|#\(option single true\)|\1|' $(1)/etc/config/foris-controller
+endif
 	$(INSTALL_DIR) $(1)/etc/init.d/
 	$(INSTALL_BIN) ./files/foris-controller.init $(1)/etc/init.d/foris-controller
 endef
