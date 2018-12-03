@@ -52,7 +52,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/resolver_rpcd.py $(1)/usr/libexec/rpcd/resolver_rpcd.py
 	$(INSTALL_DIR) $(1)/etc/resolver/dns_servers
 	$(INSTALL_CONF) ./files/dns_servers/* $(1)/etc/resolver/dns_servers/
-ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+ifeq ($(CONFIG_TARGET_mvebu),y)
 	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolver
 	[ -z "`ls -1 ./files/dns_servers_omnia/`" ] || $(INSTALL_CONF) ./files/dns_servers_omnia/* $(1)/etc/resolver/dns_servers/
 	$(INSTALL_DATA) ./files/CZ.NIC2-cacert.pem $(1)/etc/resolver
