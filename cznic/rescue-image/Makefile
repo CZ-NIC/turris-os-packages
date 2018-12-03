@@ -17,7 +17,8 @@ PKG_SOURCE_URL:=https://www.busybox.net/downloads \
 PKG_HASH:=0a367e19cdfd157e8258d87f893ee516
 PKG_MAINTAINER:=Michal Hrusecky <michal.hrusecky@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-PKG_BUILD_DEPENDS:=opkg/host
+ROOTFS_INSTALL:=+libgcc +libc +libubox +mtd +libpthread +librt +libattr +libuuid +zlib +libblkid +liblzo +btrfs-progs +schnapps +dropbear +uboot-envtools +usign +cznic-repo-keys +libopenssl +libpcre +wget
+PKG_BUILD_DEPENDS:=opkg/host mtd btrfs-progs schnapps wget cznic-repo-keys usign ubooot-envtools dropbear
 
 KERNEL_BUILD_DIR:=$(PKG_BUILD_DIR)/kernel
 PLATFORM_DIR:=$(TOPDIR)/target/linux/$(BOARD)
@@ -34,7 +35,6 @@ DEVICE := $(subst DEVICE_cznic-,,$(CONFIG_TARGET_PROFILE))
 
 define Package/rescue-image
 	TITLE:=rescue-image
-	DEPENDS:=+libgcc +libc +libubox +mtd +libpthread +librt +libattr +libuuid +zlib +libblkid +liblzo +btrfs-progs +schnapps +dropbear +uboot-envtools +usign +cznic-repo-keys +libopenssl +libpcre +wget
 endef
 
 define Build/Prepare
@@ -150,7 +150,7 @@ define Build/Compile
 	export IPKG_NO_SCRIPT=1;\
 	export IPKG_INSTROOT="$(PKG_BUILD_DIR)/rootfs"; \
 	export TMPDIR="$(PKG_BUILD_DIR)/rootfs/tmp"; \
-	for pkg in $(DEPENDS); do\
+	for pkg in $(ROOTFS_INSTALL); do\
 		find $(OUTPUT_DIR) -name `echo $$$$pkg | sed 's|^+||'`_*_$(PKGARCH).ipk -print -exec \
 		$(STAGING_DIR_HOST)/bin/opkg --offline-root "$(PKG_BUILD_DIR)/rootfs" --force-depends install \{\} \; ;\
 	done
