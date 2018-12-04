@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rescue-image
-PKG_VERSION:=2.1
-PKG_RELEASE:=5
+PKG_VERSION:=2.2
+PKG_RELEASE:=0
 BB_VERSION:=1.29.3
 PKG_SOURCE:=busybox-$(BB_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://www.busybox.net/downloads \
