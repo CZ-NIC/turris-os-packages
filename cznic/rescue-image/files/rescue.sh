@@ -135,20 +135,38 @@ wait_for_mode_change() {
 
 DHCP_OPTS="-qfn"
 download_medkit() {
-    if udhcpc -i "$RESCUE_IF" $DHCP_OPTS; then
-        echo "Got IPv4!"
-        ip a s
-        ip r s
-    else
-        echo "Trying naive static fallback..."
-        ip a d 192.168.1.1 dev "$RESCUE_IF"
-        ip a a 192.168.1.199/24 dev "$RESCUE_IF"
-        ip l s up dev "$RESCUE_IF"
-        ip r a default via 192.168.1.1
-    fi
+    tries=3
+    i=0
+    while ! udhcpc -i "$RESCUE_IF" $DHCP_OPTS; do
+        echo "No DHCP :-("
+        sleep 2
+        i="$(expr "$i" + 1)"
+        [ "$i" -lt "$tries" ] || die 2 "Can't get IP"
+    done
+    echo "Got IPv4!"
+    ip a s
+    ip r s
     mkdir -p /mnt/src
-    wget --no-check-certificate -O /mnt/src/medkit.tar.gz https://repo.turris.cz/hbs/medkit/medkit-$BOARD-latest.tar.gz || die 2 "Can't download medkit"
-    wget --no-check-certificate -O /mnt/src/medkit.tar.gz.sig https://repo.turris.cz/hbs/medkit/medkit-$BOARD-latest.tar.gz.sig || die 2 "Can't download signature"
+    i=0
+    while ! { \
+        wget --no-check-certificate -O /mnt/src/medkit.tar.gz https://repo.turris.cz/hbs/medkit/medkit-$BOARD-latest.tar.gz || \
+        wget --no-check-certificate -O /mnt/src/medkit.tar.gz https://repo.turris.cz/hbs/medkit/$BOARD-medkit-latest.tar.gz;   \
+        }; do
+            echo "Can't download image :-("
+            sleep 2
+            i="$(expr "$i" + 1)"
+            [ "$i" -lt "$tries" ] || die 2 "Can't get image"
+    done
+    i=0
+    while ! { \
+        wget --no-check-certificate -O /mnt/src/medkit.tar.gz.sig https://repo.turris.cz/hbs/medkit/medkit-$BOARD-latest.tar.gz.sig || \
+        wget --no-check-certificate -O /mnt/src/medkit.tar.gz.sig https://repo.turris.cz/hbs/medkit/$BOARD-medkit-latest.tar.gz.sig;   \
+        }; do
+            echo "Can't download signature :-("
+            sleep 2
+            i="$(expr "$i" + 1)"
+            [ "$i" -lt "$tries" ] || die 2 "Can't get signature"
+    done
     usign -V -m /mnt/src/medkit.tar.gz -P /etc/opkg/keys || die 2 "Can't validate signature"
     echo "medkit.tar.gz" > /tmp/medkit-file
 }
