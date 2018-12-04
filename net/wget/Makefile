@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wget
-PKG_VERSION:=1.19.5
+PKG_VERSION:=1.20
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
-PKG_MD5SUM:=b39212abe1a73f2b28f4c6cb223c738559caac91d6e416a6d91d4b9d55c9faee
+PKG_MD5SUM:=8a057925c74c059d9e37de63a63b450da66c5c1c8cef869a6df420b3bb45a0cf
 PKG_MAINTAINER:=Peter Wagner <tripolar@gmx.at>
 PKG_LICENSE:=GPL-3.0+
 PKG_LICENSE_FILES:=COPYING
@@ -28,7 +28,7 @@ define Package/wget/Default
   DEPENDS:=+libpcre +zlib
   SUBMENU:=File Transfer
   TITLE:=Non-interactive network downloader
-  URL:=http://www.gnu.org/software/wget/index.html
+  URL:=https://www.gnu.org/software/wget/index.html
 endef
 
 define Package/wget/Default/description
@@ -67,7 +67,8 @@ CONFIGURE_ARGS+= \
 	--disable-rpath \
 	--disable-iri \
 	--with-included-libunistring \
-	--without-libuuid
+	--without-libuuid \
+	--without-libpsl
 
 CONFIGURE_VARS += \
 	ac_cv_header_uuid_uuid_h=no
