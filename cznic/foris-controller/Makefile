@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller
-PKG_VERSION:=0.10.13
+PKG_VERSION:=0.10.14
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -52,6 +52,19 @@ define Package/foris-controller/install
 	$(INSTALL_CONF) ./files/foris-controller.conf $(1)/etc/config/foris-controller
 	$(INSTALL_DIR) $(1)/etc/init.d/
 	$(INSTALL_BIN) ./files/foris-controller.init $(1)/etc/init.d/foris-controller
+endef
+
+define Package/foris-controller-hotplug
+	TITLE:=foris-controller-hotplug
+	URL:=https://gitlab.labs.nic.cz/turris/foris-controller
+	DEPENDS:=\
+		+foris-controller +foris-client +netifd
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+endef
+
+define Package/foris-controller-hotplug/install
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/
+	$(INSTALL_BIN) ./files/foris-controller.hotplug $(1)/etc/hotplug.d/iface/99-foris-controller
 endef
 
 define Package/foris-controller/postinst

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/usr/bin/foris-notify-wrapper -n -m networks -a network_change '{"network":"'$INTERFACE'","device":"'$DEVICE'","action":"'$ACTION'"}'
