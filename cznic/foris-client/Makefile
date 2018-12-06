@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-client
 PKG_VERSION:=0.8
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-client
@@ -32,7 +32,7 @@ endef
 define Package/foris-client
 	$(call Package/Common)
 	TITLE:=foris-client
-	DEPENDS:=+foris-controller +foris-client-python2 +foris-client-python3 +foris-client-bin
+	DEPENDS:=+foris-controller-app +foris-client-python2 +foris-client-python3 +foris-client-bin
 endef
 
 define Package/foris-client/description

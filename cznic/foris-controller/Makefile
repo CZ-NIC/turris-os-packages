@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller
 PKG_VERSION:=0.10.14
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller
@@ -21,9 +21,15 @@ PKG_LICENSE:=GPL-3.0
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python3-package.mk)
 
-
 define Package/foris-controller
 	TITLE:=foris-controller
+	URL:=https://gitlab.labs.nic.cz/turris/foris-controller
+	DEPENDS:=+foris-controller-app +foris-controller-hotplug
+	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+endef
+
+define Package/foris-controller-app
+	TITLE:=foris-controller-app
 	URL:=https://gitlab.labs.nic.cz/turris/foris-controller
 	DEPENDS:=\
 		+python3-light +python3-ubus +python3-prctl +python3-multiprocessing +python3-pbkdf2 \
@@ -41,11 +47,11 @@ define Build/Compile
 	$(call Build/Compile/Py3Mod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
 endef
 
-define Package/foris-controller/conffiles
+define Package/foris-controller-app/conffiles
 /etc/config/foris-controller
 endef
 
-define Package/foris-controller/install
+define Package/foris-controller-app/install
 	$(INSTALL_DIR) $(1)
 	$(CP) $(PKG_INSTALL_DIR)/* $(1)/
 	$(INSTALL_DIR) $(1)/etc/config/
@@ -58,7 +64,7 @@ define Package/foris-controller-hotplug
 	TITLE:=foris-controller-hotplug
 	URL:=https://gitlab.labs.nic.cz/turris/foris-controller
 	DEPENDS:=\
-		+foris-controller +foris-client +netifd
+		+foris-controller-app +foris-client +netifd
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
@@ -67,7 +73,7 @@ define Package/foris-controller-hotplug/install
 	$(INSTALL_BIN) ./files/foris-controller.hotplug $(1)/etc/hotplug.d/iface/99-foris-controller
 endef
 
-define Package/foris-controller/postinst
+define Package/foris-controller-app/postinst
 #!/bin/sh
 set -x
 [ -n "$$IPKG_INSTROOT" ] || {
@@ -76,11 +82,13 @@ set -x
 }
 endef
 
-define Package/foris-controller/prerm
+define Package/foris-controller-app/prerm
 #!/bin/sh
 set -x
 /etc/init.d/foris-controller stop
 /etc/init.d/foris-controller disable
 endef
 
+$(eval $(call BuildPackage,foris-controller-hotplug))
+$(eval $(call BuildPackage,foris-controller-app))
 $(eval $(call BuildPackage,foris-controller))
