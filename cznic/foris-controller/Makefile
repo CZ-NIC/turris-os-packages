@@ -69,7 +69,7 @@ define Package/foris-controller-hotplug
 endef
 
 define Package/foris-controller-hotplug/install
-	$(INSTALL_DIR) $(1)/etc/hotplug.d/
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
 	$(INSTALL_BIN) ./files/foris-controller.hotplug $(1)/etc/hotplug.d/iface/99-foris-controller
 endef
 
