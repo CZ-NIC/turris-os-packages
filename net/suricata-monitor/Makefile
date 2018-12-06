@@ -11,7 +11,6 @@ PKG_NAME:=suricata-monitor
 PKG_VERSION:=1.0
 PKG_RELEASE:=6
 
-PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 PKG_MAINTAINER:=Michal Hrusecky <michal.hrusecky@nic.cz>
