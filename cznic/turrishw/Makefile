@@ -30,12 +30,12 @@ define Package/Common
   CATEGORY:=Languages
   URL:=https://gitlab.labs.nic.cz/turris/pyuci/
   MAINTAINER:=CZ.NIC <packaging@turris.cz>
-  DEPENDS:=+libatsha204 +swconfig
+  DEPENDS:=
 endef
 
 define Package/python2-$(PKG_NAME)
   $(call Package/Common)
-  TITLE:=pythow2-$(PKG_NAME)
+  TITLE:=python2-$(PKG_NAME)
   DEPENDS+=+python-light
 endef
 
