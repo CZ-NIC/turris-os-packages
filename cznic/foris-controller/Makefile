@@ -60,6 +60,10 @@ define Package/foris-controller-app/install
 	$(INSTALL_BIN) ./files/foris-controller.init $(1)/etc/init.d/foris-controller
 endef
 
+define Package/foris-controller/install
+	true  # This is required otherwise the package won't be created
+endef
+
 define Package/foris-controller-hotplug
 	TITLE:=foris-controller-hotplug
 	URL:=https://gitlab.labs.nic.cz/turris/foris-controller
