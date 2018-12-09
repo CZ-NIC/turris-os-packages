@@ -68,7 +68,7 @@ define Package/foris-controller-hotplug
 	TITLE:=foris-controller-hotplug
 	URL:=https://gitlab.labs.nic.cz/turris/foris-controller
 	DEPENDS:=\
-		+foris-controller-app +foris-client +netifd
+		+foris-controller-app +foris-client-bin +netifd
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
