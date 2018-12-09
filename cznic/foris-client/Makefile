@@ -69,6 +69,10 @@ endef
 define Package/foris-client/conffiles
 endef
 
+define Package/foris-client/install
+	true
+endef
+
 define Package/foris-client-python2/install
 	$(INSTALL_DIR) $(1)
 	$(CP) $(PKG_INSTALL_DIR)/py2/* $(1)/
