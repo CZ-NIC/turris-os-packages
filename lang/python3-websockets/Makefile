@@ -19,7 +19,7 @@ PKG_HASH=08e3c3e0535befa4f0c4443824496c03ecc25062debbcf895874f8a0b4c97c9f
 PKG_LICENSE:=BSD
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/python3-websockets-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python3
+PKG_BUILD_DEPENDS:=python3 python3-setuptools/host
 
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python3-package.mk)
