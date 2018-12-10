@@ -2,28 +2,43 @@
 This file is part of updater-ng. Don't edit it.
 ]]
 
-local branch = "hbs"
-local lists
-local datacollection_enabled = false
+local uci_cursor = nil
 if uci then
-	local cursor = uci.cursor()
-	uci_branch = cursor:get("updater", "override", "branch")
-	if uci_branch then
-		WARN("Branch overriden to " .. uci_branch)
-		branch = uci_branch
-	end
-	lists = cursor:get("updater", "pkglists", "lists")
-	-- TODO this can also be for example yes but this should work in default
-	datacollection_enabled = cursor:get("foris", "eula", "agreed_collect") == '1'
+	uci_cursor = uci.cursor()
 else
 	ERROR("UCI library is not available. Configuration not used.")
 end
+local function uci_cnf(name, default)
+	if uci_cursor then
+		return uci_cursor:get("updater", "turris", name) or default
+	else
+		return default
+	end
+end
 
--- TODO Turris 1.x contract? Or should we drop it.
+-- Configuration variables
+local mode = uci_cnf("mode", "branch") -- should we follow branch or version?
+local branch = uci_cnf("branch", "hbs") -- which branch to follow
+local version = uci_cnf("version", nil) -- which version to follow
+local lists = uci_cnf("lists", {}) -- what additional lists should we use
 
--- Definitions common url base
-local base_url = "https://repo.turris.cz/" .. branch .. "/lists/"
--- Reused options for remotely fetched scripts
+-- Verify that we have sensible configuration
+if type(lists) == "string" then -- if there is single list then uci returns just a string
+	lists = {lists}
+end
+if mode == "version" and not version then
+	WARN("Mode configured to be 'version' but no version provided. Changing mode to 'branch' instead.")
+	mode = "branch"
+end
+
+-- Common URL base to Turris OS updater-ng scripts
+local base_url
+if mode == "branch" then
+	base_url = "https://repo.turris.cz/" .. branch .. "/lists/"
+elseif mode == "version" then
+	base_url = "https://repo.turris.cz/archive/" .. version .. "/lists/"
+end
+-- Common connection settings for Turris OS scripts
 local script_options = {
 	security = "Remote",
 	ca = system_cas,
@@ -38,27 +53,13 @@ local script_options = {
 -- The distribution base script. It contains the repository and bunch of basic packages
 Script("base",  base_url .. "base.lua", script_options)
 
--- Data collection list
-if datacollection_enabled then
-	Script("base",  base_url .. "i_agree_datacollect.lua", script_options)
-end
-
 -- Additional enabled distribution lists
-if lists then
-	if type(lists) == "string" then -- if there is single list then uci returns just a string
-		lists = {lists}
-	end
-	-- Go through user lists and pull them in.
-	local exec_list = {} -- We want to run userlist only once even if it's defined multiple times
-	if type(lists) == "table" then
-		for _, l in ipairs(lists) do
-			if exec_list[l] then
-				WARN("User list " .. l .. " specified multiple times")
-			else
-				Script("userlist-" .. l, base_url .. l .. ".lua", script_options)
-				exec_list[l] = true
-			end
-		end
+local exec_list = {} -- We want to run userlist only once even if it's defined multiple times
+for _, l in ipairs(lists) do
+	if exec_list[l] then
+		WARN("Turris package list '" .. l .. "' specified multiple times")
+	else
+		Script("pkglist-" .. l, base_url .. l .. ".lua", script_options)
+		exec_list[l] = true
 	end
 end
-

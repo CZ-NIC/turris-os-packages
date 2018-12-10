@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2016-2017 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2016-2018 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
 PKG_VERSION:=60.4.6
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -53,6 +53,8 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/hook_postupdate/update_alternatives.sh $(1)/etc/updater/hook_postupdate/update_alternatives.sh
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/hook_reboot_required/50-create-notification.sh $(1)/etc/updater/hook_reboot_required/50-create-notification.sh
 
+	# Note: this file is not ever used as appropriate one is generated to medkit
+	# it is here only for reference and to make sure that it exists.
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/updater.config $(1)/etc/config/updater
 
@@ -66,52 +68,9 @@ define Package/$(PKG_NAME)/conffiles
 endef
 
 define Package/$(PKG_NAME)/postinst
-#!/bin/sh
 if [ -z "$$IPKG_INSTROOT" ]; then
 	/etc/init.d/updater enable || true
 fi
-
-# Remove morphered syntax from auto.lua
-# This matches all Install and Package commands not followed by brackets. Whole
-# line is enclosed with brackets and between strings and tables are added commas.
-# Note: we don't have to check opkg-auto.lua as we do this migration before we
-# move auto.lua to that name.
-if [ -f "$$IPKG_INSTROOT/etc/updater/auto.lua" ]; then
-	AUTOTMP="$$(mktemp)"
-	sed -E '/^(Install|Package) +[^(]/{
-			s/(Install|Package) +(.*)/\1(\2)/;
-			s/("|\}) ("|\{)/\1, \2/g
-		}' "$$IPKG_INSTROOT/etc/updater/auto.lua" > "$$AUTOTMP"
-	# Note: Edit in place in busybox limits regexp syntax so we are using our temporally file
-	mv "$$AUTOTMP" "$$IPKG_INSTROOT/etc/updater/auto.lua"
-fi
-
-# With updater version 60.0 all configurations were moved to /etc/updater/conf.d/
-conf_move() {
-	if [ -f "$$IPKG_INSTROOT/etc/updater/$$1" -a ! -f "$$IPKG_INSTROOT/etc/updater/conf.d/$$2" ]; then
-		mv "$$IPKG_INSTROOT/etc/updater/$$1" "$$IPKG_INSTROOT/etc/updater/conf.d/$$2"
-	fi
-}
-conf_move user.lua user.lua
-conf_move auto.lua opkg-auto.lua
-endef
-
-define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION) BUSYBOX_EXEC=$(STAGING_DIR)/bin/busybox-static
-	$(call Build/Compile/Py3Mod,src/supervisor,install --prefix="/usr" --root=$(PKG_INSTALL_DIR))
-endef
-
-define Host/Compile
-	$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) $(HOST_MAKE_FLAGS) NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION)
-endef
-
-define Host/Install
-	$(INSTALL_DIR) $(STAGING_DIR_HOST)/usr/lib/
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/lib/libupdater.so $(STAGING_DIR_HOST)/usr/lib/
-
-	$(INSTALL_DIR) $(STAGING_DIR_HOST)/usr/bin
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/opkg-trans $(STAGING_DIR_HOST)/usr/bin/
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/pkgupdate $(STAGING_DIR_HOST)/usr/bin/
 endef
 
 
@@ -169,63 +128,24 @@ define Package/$(PKG_NAME)-opkg/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/opkg-wrapper/opkg.lua $(1)/etc/updater/conf.d/opkg.lua
 endef
 
-# We are calling migration to localrepo from updater-ng-opkg package posinst as
-# this one is called after updater-ng-localrepo one and script expect both of
-# these packages.
-define Package/$(PKG_NAME)-opkg/postinst
-[ -n "$$IPKG_INSTROOT" ] || {
-	/usr/share/updater/opkg-content2localrepo.sh
-}
+
+define Build/Compile
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION) BUSYBOX_EXEC=$(STAGING_DIR)/bin/busybox-static
+	$(call Build/Compile/Py3Mod,src/supervisor,install --prefix="/usr" --root=$(PKG_INSTALL_DIR))
 endef
 
-# Current implementation of updater can't remove package before replan and so we
-# can't let updater-ng steal opkg-trans files. With dependency:
-#   if not version_match then
-# 		Package 'updater-ng' { deps = 'opkg-trans' }
-# 	end
-# this empty package should ensure that we correctly move packages from opkg-trans
-# to updater-ng even with old version of updater. Unfortunately this won't work
-# with downgrade.
-# Note that because version_match was defined after package rename we can't use it
-# to check version. But if it isn't defined than we know that we are using some
-# old version of updater.
-define Package/opkg-trans
-	TITLE:=Dummy opkg-trans package
+define Host/Compile
+	$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) $(HOST_MAKE_FLAGS) NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION)
 endef
 
-define Package/opkg-trans/install
-	true
-endef
+define Host/Install
+	$(INSTALL_DIR) $(STAGING_DIR_HOST)/usr/lib/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/lib/libupdater.so $(STAGING_DIR_HOST)/usr/lib/
 
-# This is same case as opkg-trans. Updater is package with originally obsolete
-# updater version.
-define Package/updater
-	TITLE:=Dummy updater package
+	$(INSTALL_DIR) $(STAGING_DIR_HOST)/usr/bin
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/opkg-trans $(STAGING_DIR_HOST)/usr/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/pkgupdate $(STAGING_DIR_HOST)/usr/bin/
 endef
-
-define Package/updater/install
-	true
-endef
-
-# We are migrating away from Nuci for Foris. But during this migration there is
-# a problem where updater update it self and then requests approval. But because
-# we dropped some files nuci expects and Foris is not yet updated there is no way
-# user can easily approve update. Solution is to have package providing those
-# missing file and install it temporally just to fix that problem.
-define Package/$(PKG_NAME)-migration-helper
-	TITLE:=Package for smoot migration of updater-ng
-endef
-
-define Package/$(PKG_NAME)-migration-helper/install
-	$(INSTALL_DIR) $(1)/usr/bin	
-	echo '#!/bin/sh' > $(1)/usr/bin/updater-unstuck.sh
-	chmod +x $(1)/usr/bin/updater-unstuck.sh
-endef
-# updater-wipe.sh is temporally in updater-ng package for Foris Wizard
-# compatibility. We should drop it from updater-ng when wizard is dropped and
-# return it to this package.
-#	echo '#!/bin/sh' > $(1)/usr/bin/updater-wipe.sh
-#	chmod +x $(1)/usr/bin/updater-wipe.sh
 
 
 $(eval $(call Py3Package,updater-ng-supervisor))
@@ -233,7 +153,4 @@ $(eval $(call BuildPackage,updater-ng))
 $(eval $(call BuildPackage,updater-ng-supervisor))
 $(eval $(call BuildPackage,updater-ng-localrepo))
 $(eval $(call BuildPackage,updater-ng-opkg))
-$(eval $(call BuildPackage,opkg-trans))
-$(eval $(call BuildPackage,updater))
-$(eval $(call BuildPackage,updater-ng-migration-helper))
 $(eval $(call HostBuild))
