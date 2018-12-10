@@ -127,6 +127,18 @@ define Build/Compile/Py3Mod
 	find $(PKG_INSTALL_DIR) -name "*\.pyc" -o -name "*\.pyo" -o -name "*\.exe" | xargs rm -f
 endef
 
+define python3_fix_interpreter_paths
+	# iterate files and if the first line contains path to host python interpreter
+	# replace it with a proper path
+	for file in "$(PKG_INSTALL_DIR)"/usr/bin/* ; do \
+		if head -1 $$$${file} | grep -q "$(HOST_PYTHON3_BIN)" ; then \
+			$(SED) '1s%.*%#!/usr/bin/$(PYTHON3)%' $$$${file} ; \
+		fi \
+	done
+endef
+
+Hooks/Compile/Post += python3_fix_interpreter_paths
+
 define Py3Build/Compile/Default
 	$(call Build/Compile/Py3Mod,, \
 		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)" \
