@@ -218,7 +218,11 @@ modify_rundir() {
 	if [ ! -d "$rundir" ]; then
 		mkdir -p "$rundir"
 	fi
-	chown -R $USERNAME:$GROUP "$rundir" #maybe we should be more restrictive ...
+
+	if id "$1" >/dev/null 2>&1; then
+		chown -R $USERNAME:$GROUP "$rundir" #maybe we should be more restrictive ...
+	fi
+
 	DEFAULT_RUNDIR="$rundir"
 	HINTS_CONFIG=$DEFAULT_RUNDIR/hints.tmp
 }
