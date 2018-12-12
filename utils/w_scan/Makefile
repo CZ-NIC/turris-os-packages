@@ -9,13 +9,15 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=w_scan
 PKG_VERSION:=20170107
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://wirbel.htpc-forum.de/w_scan/
 PKG_MD5SUM:=c7f9adf92d46b8da5391be80be6fbd72
 
 PKG_INSTALL:=1
+
+PKG_BUILD_DEPENDS:=libiconv-full
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/autotools.mk
@@ -36,16 +38,17 @@ define Package/w_scan/description
 	dvb-apps, dvbscan and scan.
 
 	w_scan is capable of directly creating channels.conf files as well as initial
-	tuning data for scan. 
+	tuning data for scan.
 endef
 
 
 CONFIGURE_ARGS+= \
 	--with-libiconv="$(STAGING_DIR)/usr/lib/libiconv-full"
 
-TARGET_CFLAGS+=-I$(STAGING_DIR)/usr/lib/libintl-full/include
+TARGET_CFLAGS+=-I$(STAGING_DIR)/usr/lib/libintl-full/include -I$(STAGING_DIR)/usr/lib/libiconv-full/include
 TARGET_CPPFLAGS+=-I$(STAGING_DIR)/usr/lib/libintl-full/include
-TARGET_LDFLAGS+=-L$(STAGING_DIR)/usr/lib/libintl-full/lib
+TARGET_LDFLAGS+=-L$(STAGING_DIR)/usr/lib/libintl-full/lib -L$(STAGING_DIR)/usr/lib/libiconv-full/lib
+
 
 define Build/Configure
 	$(call Build/Configure/Default)
