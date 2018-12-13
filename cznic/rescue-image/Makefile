@@ -18,7 +18,7 @@ PKG_HASH:=0a367e19cdfd157e8258d87f893ee516
 PKG_MAINTAINER:=Michal Hrusecky <michal.hrusecky@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 ROOTFS_INSTALL:=+libgcc +libc +libubox +mtd +libpthread +librt +libattr +libuuid +zlib +libblkid +liblzo +btrfs-progs +schnapps +dropbear +uboot-envtools +usign +cznic-repo-keys +libopenssl +libpcre2 +wget
-PKG_BUILD_DEPENDS:=opkg/host mtd btrfs-progs schnapps wget cznic-repo-keys usign ubooot-envtools dropbear
+PKG_BUILD_DEPENDS:=opkg/host mtd btrfs-progs schnapps wget cznic-repo-keys usign uboot-envtools dropbear
 
 KERNEL_BUILD_DIR:=$(PKG_BUILD_DIR)/kernel
 PLATFORM_DIR:=$(TOPDIR)/target/linux/$(BOARD)
