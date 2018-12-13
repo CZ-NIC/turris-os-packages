@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-import json
+import json, os, sys
 
 
 def main():
-    with open('definitions.json', 'r') as file:
+    with open(os.path.abspath(os.path.dirname(sys.argv[0])) + '/definitions.json', 'r') as file:
         content = json.load(file)
 
     for name, list in content.items():

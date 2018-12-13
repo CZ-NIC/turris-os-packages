@@ -29,11 +29,6 @@
 		"description": "Several addional tabs and controls for the advanced LuCI interface.",
 		"visible": true
 	},
-	"majordomo": {
-		"title": "Majordomo",
-		"description": "Software for monitoring connections of devices in local network (obsolete).",
-		"visible": true
-	},
 	"pakon": {
 		"title": "Pakon",
 		"description": "Software for in depth monitoring of your traffic (EXPERIMENTAL).",
