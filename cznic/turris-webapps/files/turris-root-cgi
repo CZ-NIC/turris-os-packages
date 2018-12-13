@@ -18,10 +18,10 @@ if [ "$WIZARD_FINISHED" = "1" ]; then
   [ -n "$URL" ] || . "$(ls -1 /usr/share/turris-webapps/[0-9]*.conf | head -n1)"
   DEFAULT_URL="$URL"
   cat << HTML
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 	<head>
+		<meta charset="UTF-8">		
 		<meta http-equiv="Cache-Control" content="no-cache" />
 		<meta http-equiv="refresh" content="$DELAY; URL=$URL" />
 	<style>
@@ -96,8 +96,9 @@ if [ "$WIZARD_FINISHED" = "1" ]; then
 	</head>
 	<body>
 	<script>
+	var timer = $DELAY;
+
 	window.onload = function () {
-		var timer = $DELAY;
 		document.querySelector('#timeout').textContent = timer;
 		setInterval(function () {
 			document.querySelector('#timeout').textContent = timer;
@@ -107,6 +108,11 @@ if [ "$WIZARD_FINISHED" = "1" ]; then
 			}
 		}, 1000);
 	};
+
+	function redirect_to(url) {
+		timer=999;
+		location.replace(url);
+	}
 	</script>
 	<h1>$(gettext -s "Available applications")</h1>
 	<p>$(gettext -s 'Switching to the selected one in <span id="timeout"></span> second.')</p>
@@ -123,7 +129,7 @@ HTML
 	[ -z "$LC_NAME" ] || NAME="$LC_NAME"
 	[ "$URL" \!= "$DEFAULT_URL" ] || extra=" selected"
 	[ -n "$ICON" ] || ICON=generic-web.svg
-	echo "<div class='choice$extra'><a href='$URL'><div class='icon'><img src='/static/webapps-icons/$ICON' alt='$NAME'/></div><div class="name"><p>$NAME</p></a></div></div>"
+	echo "<div class='choice$extra' onClick='redirect_to(\"$URL\");'><a href='$URL'><div class='icon'><img src='/static/webapps-icons/$ICON' alt='$NAME'/></div><div class="name"><p>$NAME</p></a></div></div>"
   done
   cat << HTML
   	</div>
