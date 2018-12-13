@@ -19,11 +19,9 @@ ensure_config_exists() {
 	config_load tvheadend
 	config_get config_path service config_path
 
-	if [ -z "$config_path" ]; then
-		[ -d "$PERSISTENT_CONFIG" ] || execute_first_run "$PERSISTENT_CONFIG"
-	else
-		# if the configuration directory is empty, empty config with grant-all ACL is created
-		[ -d "$config_path" ] && [ "$(ls -A $config_path)" ] || execute_first_run "$config_path"
+	[ -n "$config_path" ] || config_path="$PERSISTENT_CONFIG"
+	if [ \! -d "$config_path" ] || [ -z "$(ls -A $config_path)" ]; then
+		"$PROG" -c "$config_path" -B -C -A >/dev/null 2>&1
 	fi
 
 	# if use_temp_epgdb is enabled (default), most of the config is put to config_path
@@ -44,6 +42,15 @@ load_uci_config() {
 	config_get config_path service config_path "$PERSISTENT_CONFIG"
 	[ -n "$config_path" ] && procd_append_param command -c "$config_path"
 	config_get_bool nosyslog service nosyslog 0
+	[ -d "$config_path"/passwd ] || {
+		procd_append_param command --noacl
+		while sleep 1; do
+			if [ -d "$config_path"/passwd ]; then
+				/etc/init.d/tvheadend restart
+				exit 0
+			fi
+		done > /dev/null 2>&1 &
+	}
 	[ "$nosyslog" -eq 1 ] && procd_append_param command --nosyslog
 	config_get_bool ipv6 server ipv6 0
 	[ "$ipv6" -eq 1 ] && procd_append_param command --ipv6
