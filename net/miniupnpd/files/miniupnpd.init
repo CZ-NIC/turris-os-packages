@@ -56,6 +56,10 @@ upnpd_write_bool() {
 	fi
 }
 
+boot() {
+	return
+}
+
 start() {
 	config_load "upnpd"
 	local extiface intiface upload download logging secure enabled natpmp
