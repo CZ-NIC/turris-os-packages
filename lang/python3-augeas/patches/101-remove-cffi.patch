@@ -1,0 +1,11 @@
+--- a/setup.py
++++ b/setup.py
+@@ -17,7 +17,7 @@ setup (name = 'python-augeas',
+        author_email = "augeas-devel@redhat.com",
+        description = """Python bindings for Augeas""",
+        packages=find_packages(exclude=('test')),
+-       setup_requires=["cffi>=1.0.0"],
++       #setup_requires=["cffi>=1.0.0"],
+        cffi_modules=["augeas/ffi.py:ffi"],
+        install_requires=["cffi>=1.0.0"],
+        url = "http://augeas.net/",
