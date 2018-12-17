@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-client
 PKG_VERSION:=0.8
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-client
@@ -64,6 +64,11 @@ define Build/Compile
 	$(call Build/Compile/Py3Mod,., \
 		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)/py3" \
 	)
+	for file in `find "$(PKG_INSTALL_DIR)/py3/ -type f` ; do \
+		if head -1 $$$${file} | grep -q "$(HOST_PYTHON3_BIN)" ; then \
+			$(SED) '1s%.*%#!/usr/bin/$(PYTHON3)%' $$$${file} ; \
+		fi \
+	done
 endef
 
 define Package/foris-client/conffiles
