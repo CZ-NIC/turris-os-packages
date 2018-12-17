@@ -64,7 +64,7 @@ define Build/Compile
 	$(call Build/Compile/Py3Mod,., \
 		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)/py3" \
 	)
-	for file in `find "$(PKG_INSTALL_DIR)/py3/ -type f` ; do \
+	for file in `find "$(PKG_INSTALL_DIR)"/py3/ -type f` ; do \
 		if head -1 $$$${file} | grep -q "$(HOST_PYTHON3_BIN)" ; then \
 			$(SED) '1s%.*%#!/usr/bin/$(PYTHON3)%' $$$${file} ; \
 		fi \
