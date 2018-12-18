@@ -1,0 +1,11 @@
+--- a/setup.py
++++ b/setup.py
+@@ -26,6 +26,8 @@ if "_PYTEST_SETUP_SKIP_PLUGGY_DEP" not i
+
+ def main():
+     setup(
++        name="pytest",
++        packages=["_pytest","_pytest._code","_pytest.config","_pytest.assertion","_pytest.mark"],
+         use_scm_version={"write_to": "src/_pytest/_version.py"},
+         setup_requires=["setuptools-scm", "setuptools>=40.0"],
+         package_dir={"": "src"},
