@@ -273,6 +273,9 @@ define Package/mariadb-server
 	  $(MARIADB_COMMON_DEPENDS) \
 	  +!arc:libaio \
 	  +liblzma \
+	  +libbz2 \
+	  +liblzo \
+	  +liblz4 \
 	  +libpcre \
 	  +resolveip
   TITLE:=MariaDB database core server binaries
