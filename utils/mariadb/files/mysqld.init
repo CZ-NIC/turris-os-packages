@@ -1,0 +1,77 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2010-2018 OpenWrt.org
+
+START=95
+STOP=10
+
+USE_PROCD=1
+
+#PROCD_DEBUG=1
+
+MYSQLD=mysqld
+
+LOGGER="/usr/bin/logger -p user.err -s -t $MYSQLD"
+[ -x /usr/bin/logger ] || LOGGER=echo
+PROG=/usr/bin/$MYSQLD
+
+my_user="mysql"
+my_group="mysql"
+
+mysql_get_var() {
+	/usr/bin/mysqld --help --verbose | sed -n 's|^'"$1"'[[:blank:]]\+||p'
+}
+
+start_service() {
+	local datadir="$(mysql_get_var datadir)"
+	local tmpdir="$(mysql_get_var tmpdir)"
+	local pidfile="$(mysql_get_var pid-file)"
+	local socketfile="$(mysql_get_var socket)"
+	local version="$(mysqld --version | sed -n 's|.*Ver[[:blank:]]*\([0-9.]*\)-.*|\1|p')"
+
+	# Auto installation
+	if [ \! -d "$datadir" ]; then
+		mysql_install_db --skip-auth-anonymous-user --user=mysql --skip-name-resolve
+		echo "$version" > "$datadir"/.version
+	fi	
+
+	for i in /var/lib/mysql "$tmpdir" "$(dirname "$pidfile")" "$(dirname "$socketfile")"; do
+		if [ \! -d "$i" ]; then
+			mkdir -p "$i"
+			chown "$my_user":"$my_group" "$i"
+		fi
+	done
+
+	# Migration from old versions
+	if [ "`cat "$datadir"/.version 2> /dev/null`" \!= "$version" ]; then
+		sudo -u mysql mysqld --skip-networking --skip-grant-tables --socket=/tmp/mysql_upgrade.sock &
+		PID="$!"
+		i=0
+		while [ "$i" -lt 15 ] && [ \! -S /tmp/mysql_upgrade.sock ]; do
+			sleep 1
+			i="`expr $i + 1`"
+		done
+		[ -S /tmp/mysql_upgrade.sock ] || exit 1
+		mysql_upgrade --upgrade-system-tables --socket=/tmp/mysql_upgrade.sock
+		echo "$version" > "$datadir"/.version
+		kill "$PID"
+		i=0
+		while [ "$i" -lt 60 ] && [ -n "`grep mysql /proc/$PID/cmdline 2> /dev/null`" ]; do
+			sleep 1
+			[ "$i" -lt 30 ] || kill "$PID"
+			i="`expr $i + 1`"
+		done
+		if [ -n "`grep mysql /proc/$PID/cmdline 2> /dev/null`" ]; then
+			kill -9 "$PID"
+		fi
+	fi
+
+	procd_open_instance
+
+	procd_set_param command $PROG $MY_ARGS
+	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
+	# forward stderr to logd
+	procd_set_param stderr 1
+	procd_set_param user "$my_user"
+
+	procd_close_instance
+}
