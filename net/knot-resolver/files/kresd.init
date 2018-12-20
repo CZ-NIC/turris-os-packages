@@ -335,10 +335,13 @@ print_dns_config() {
 	fi
 
 	#([ "$enable_tls" == "0" ] || [ -z "$enable_tls" ]) && echo -ne "{" >> $CONFIGFILE
+
+	# Slight hack around https://gitlab.labs.nic.cz/knot/knot-resolver/issues/205#note_94566
+	echo "table.insert(policy.special_names, { count = 0, cb = policy.all(" >> $CONFIGFILE
 	if [ "$enable_tls" == "1" ]; then
-		echo "policy.add(policy.all(policy.TLS_FORWARD(">>$CONFIGFILE
+		echo "policy.TLS_FORWARD(" >> $CONFIGFILE
 	else
-		echo "policy.add(policy.all(policy.FORWARD(">>$CONFIGFILE
+		echo "policy.FORWARD(" >> $CONFIGFILE
 	fi
 	#TODO add stub !!
 
@@ -384,8 +387,7 @@ print_dns_config() {
 			echo -ne "," >> $CONFIGFILE
 		fi
 	done
-	echo -ne "}" >> $CONFIGFILE
-	echo ")))" >>$CONFIGFILE
+	echo "}))})" >> $CONFIGFILE
 }
 
 dns_config_load() {
