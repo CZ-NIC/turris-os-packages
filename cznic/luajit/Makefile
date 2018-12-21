@@ -8,52 +8,88 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=LuaJIT
-PKG_VERSION:=2.0.5
+PKG_NAME:=luajit
+PKG_VERSION:=2.1.0-beta3
 PKG_RELEASE:=1
-PKG_SOURCE_URL:=http://luajit.org/download
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_MD5SUM:=874b1f8297c697821f561f9b73b57ffd419ed8f4278c82e05b48806d30c1e979
+
+PKG_SOURCE:=LuaJIT-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://luajit.org/download
+PKG_MD5SUM:=1ad2e34b111c802f9d0cdf019e986909123237a28c746b21295b63c9e785d9c3
+PKG_BUILD_DIR:=$(BUILD_DIR)/LuaJIT-$(PKG_VERSION)
+
+PKG_MAINTAINER:=Morteza Milani <milani@pichak.co>
+PKG_LICENSE:=MIT
+PKG_LICENSE_FILES:=COPYRIGHT
+
+PKG_USE_MIPS16:=0
+
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/host-build.mk
 
 define Package/luajit
-  SUBMENU:=Lua
-  SECTION:=lang
-  CATEGORY:=Languages
-  TITLE:=LuaJIT
-  URL:=http://luajit.org
+ SUBMENU:=Lua
+ SECTION:=lang
+ CATEGORY:=Languages
+ TITLE:=LuaJIT
+ URL:=https://www.luajit.org
+ DEPENDS:=@(i386||x86_64||arm||armeb||powerpc||mips||mipsel)
 endef
 
 define Package/luajit/description
- LuaJIT is a Just-In-Time Compiler for the Lua* programming language.
- LuaJIT implements the full set of language features defined by Lua 5.1.
- The virtual machine (VM) is API- and ABI-compatible to the standard Lua interpreter and can be deployed as a drop-in replacement.
- LuaJIT offers more performance, at the expense of portability.
- It currently runs on all popular operating systems based on x86 or x64 CPUs (Linux, Windows, OSX etc.) or embedded systems based on ARM (Android, iOS), PPC or MIPS CPUs.
- Other platforms will be supported in the future, based on user demand and sponsoring.
+ LuaJIT is a Just-In-Time (JIT) compiler for the Lua programming language. *** Requires GCC Multilib on host system to build! ***
 endef
 
+ifeq ($(HOST_ARCH),x86_64)
+  ifeq ($(CONFIG_x86_64),)
+    HOST_BITS := -m32
+  endif
+endif
+
 define Build/Compile
-#	$(call Build/Compile/Default)
-	$(MAKE) -C $(PKG_BUILD_DIR) HOST_CC="gcc -m32" CROSS=$(TARGET_CROSS) TARGET_CFLAGS="$(TARGET_CFLAGS)" HOST_CFLAGS="$(HOST_CFLAGS)" TARGET_LDFLAGS="$(TARGET_LDFLAGS)" HOST_LDFLAGS="$(HOST_LDFLAGS)" DESTDIR="$(PKG_INSTALL_DIR)" PREFIX=/usr INSTALL_LMOD="$(PKG_INSTALL_DIR)/usr/share/lua" INSTALL_CMOD="$(PKG_INSTALL_DIR)/usr/share/lua" amalg
-	$(MAKE) -C $(PKG_BUILD_DIR) CROSS=$(TARGET_CROSS) TARGET_CFLAGS="$(TARGET_CFLAGS)" HOST_CFLAGS="$(HOST_CFLAGS)" TARGET_LDFLAGS="$(TARGET_LDFLAGS)" HOST_LDFLAGS="$(HOST_LDFLAGS)" DESTDIR="$(PKG_INSTALL_DIR)" PREFIX=/usr INSTALL_LMOD="$(PKG_INSTALL_DIR)/usr/share/lua" INSTALL_CMOD="$(PKG_INSTALL_DIR)/usr/share/lua" install
+	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
+		HOST_CC="$(HOSTCC) $(HOST_CFLAGS) $(HOST_BITS)" \
+		CROSS="$(TARGET_CROSS)" \
+		DPREFIX=$(PKG_INSTALL_DIR)/usr \
+		PREFIX=/usr \
+		TARGET_CFLAGS="$(TARGET_CFLAGS)"
+	rm -rf $(PKG_INSTALL_DIR)
+	mkdir -p $(PKG_INSTALL_DIR)
+	$(MAKE) -C $(PKG_BUILD_DIR) \
+		DPREFIX=$(PKG_INSTALL_DIR)/usr \
+		PREFIX=/usr \
+		install
 endef
 
 define Build/InstallDev
-	$(INSTALL_DIR) $(1)/usr/{lib,include}
+	$(INSTALL_DIR) $(1)/usr/include/luajit-2.1
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/luajit-2.1/*.{h,hpp} $(1)/usr/include/luajit-2.1
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.{a,so*} $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libluajit* $(1)/usr/lib/
-	(cd $(1)/usr/lib ;ln -s libluajit-5.1.so libluajit.so)
-	$(CP) $(PKG_INSTALL_DIR)/usr/include/* $(1)/usr/include/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/luajit.pc $(1)/usr/lib/pkgconfig/luajit.pc
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/luajit.pc $(1)/usr/lib/pkgconfig/
+	$(CP) $(PKG_INSTALL_DIR)/usr/bin/luajit-$(PKG_VERSION) $(PKG_INSTALL_DIR)/usr/bin/$(PKG_NAME)
 endef
 
 define Package/luajit/install
-	$(INSTALL_DIR) $(1)/usr/{lib,bin,share}
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libluajit*so* $(1)/usr/lib/
-	$(LN) libluajit-5.1.so.$(PKG_VERSION) $(1)/usr/lib/libluajit-5.1.so.2
-	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
-	$(CP) $(PKG_INSTALL_DIR)/usr/share/luajit* $(1)/usr/share/
+	$(INSTALL_DIR) $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib/
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(CP) $(PKG_INSTALL_DIR)/usr/bin/luajit-$(PKG_VERSION) $(1)/usr/bin/$(PKG_NAME)
 endef
 
+define Host/Compile
+	$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) \
+		DPREFIX=$(STAGING_DIR_HOSTPKG) \
+		TARGET_CFLAGS="$(HOST_CFLAGS)" \
+		TARGET_LDFLAGS="$(HOST_LDFLAGS)"
+endef
+
+define Host/Install
+	$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) \
+		DPREFIX=$(STAGING_DIR_HOSTPKG) \
+		install
+	$(CP) $(STAGING_DIR_HOSTPKG)/bin/luajit-$(PKG_VERSION) $(STAGING_DIR_HOSTPKG)/bin/$(PKG_NAME)
+endef
+
+$(eval $(call HostBuild,luajit))
 $(eval $(call BuildPackage,luajit))
