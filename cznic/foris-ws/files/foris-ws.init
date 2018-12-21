@@ -42,6 +42,10 @@ start_service() {
 	elif [ "$bus" == "unix" ]; then
 		config_get path unix notification_path "/var/run/foris-controller-notifications.sock"
 		procd_set_param command "$PROG" ${debug_arg:-} -a ubus --host "127.0.0.1" --port "$port" unix-socket --path "$path"
+	elif [ "$bus" == "mqtt" ]; then
+		config_get mqtt_host mqtt host "localhost"
+		config_get mqtt_port mqtt port "11883"
+		procd_set_param command "$PROG" ${debug_arg:-} -a ubus --host "127.0.0.1" --port "$port" mqtt --mqtt-host "${mqtt_host}" --mqtt-port "${mqtt_port}"
 	fi
 	procd_set_param respawn
 	procd_close_instance

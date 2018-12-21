@@ -20,7 +20,7 @@ def uci_get(config, section, option, default):
     return val
 
 
-bus = uci_get("foris_controller", "main", "bus", "ubus")
+bus = uci_get("foris-controller", "main", "bus", "ubus")
 
 if bus == "ubus":
     path = uci_get("foris-controller", "ubus", "notification_path", "/var/run/ubus.sock")
@@ -33,6 +33,11 @@ elif bus == "unix":
     )
     from foris_controller.buses.unix_socket import UnixSocketNotificationSender
     sender = UnixSocketNotificationSender(path)
+elif bus == "mqtt":
+    host = uci_get("foris-controller", "mqtt", "host", "localhost")
+    port = int(uci_get("foris-controller", "mqtt", "port", 11883))
+    from foris_controller.buses.mqtt import MqttNotificationSender
+    sender = MqttNotificationSender(host, port)
 
 ips = []
 # try to detect ips from uci

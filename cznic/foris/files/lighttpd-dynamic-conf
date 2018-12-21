@@ -39,12 +39,24 @@ case "$BUS" in
 		config_get BUS_PATH unix path "/var/run/foris-controller.sock"
 		BUS="unix-socket"
 		;;
+	mqtt)
+		config_get BUS_HOST mqtt host "localhost"
+		config_get BUS_PORT mqtt port "11883"
+		BUS="mqtt"
+		;;
 esac
 
 echo "var.foris-$APP.bin = \"/usr/bin/foris\""
 echo "var.foris-$APP.cgi = \"/usr/share/foris/foris-$APP-cgi\""
 echo "var.foris-$APP.scriptname = \"$SCRIPTNAME/$APP\""
-echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --backend-socket $BUS_PATH\""
+case "$BUS" in
+	ubus|unix)
+		echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --bus-socket $BUS_PATH\""
+		;;
+	mqtt)
+		echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --mqtt-host $BUS_HOST --mqtt-port $BUS_PORT\""
+		;;
+esac
 echo "var.foris-$APP.paths = \"$FORIS_PATHS\""
 echo
 echo "\$HTTP[\"url\"] =~ \"^\" + var.foris-$APP.scriptname + \"/(\" + var.foris-$APP.paths + \")$\" {"

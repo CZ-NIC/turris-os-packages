@@ -62,4 +62,8 @@ if [ "$bus" = "ubus" ]; then
 elif [ "$bus" = "unix-socket" ]; then
 	config_get path unix_socket notification_path
 	/usr/bin/foris-notify $args unix-socket --path "$path" "$1"  # only first notification
+elif [ "$bus" = "mqtt" ]; then
+	config_get host mqtt host
+	config_get port mqtt port
+	/usr/bin/foris-notify $args mqtt --host "$host" --port "$port" "$1"  # only first notification
 fi

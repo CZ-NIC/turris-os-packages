@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-ws
-PKG_VERSION:=1.0
+PKG_VERSION:=1.1
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -35,7 +35,9 @@ define Package/foris-ws
 		+rpcd \
 		+foris-client \
 		+python3-ubus \
-		+lighttpd-mod-proxy
+		+lighttpd-mod-proxy \
+		+fosquitto \
+		+python3-paho-mqtt
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 	VARIANT:=python3
 endef
