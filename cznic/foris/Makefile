@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=98.19.1
+PKG_VERSION:=99.1
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -37,7 +37,7 @@ define Package/foris-common
 		+python3-light +python3-bottle +python3-bottle-i18n \
 		+python3-flup +python3-ubus +python3-jinja2 +lighttpd +lighttpd-mod-fastcgi \
 		+lighttpd-mod-redirect +lighttpd-mod-setenv +lighttpd-mod-alias +foris-ws \
-		+foris-client-python3
+		+foris-client-python3 +fosquitto +python3-paho-mqtt
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 

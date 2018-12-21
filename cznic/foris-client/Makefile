@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-client
-PKG_VERSION:=0.8
-PKG_RELEASE:=3
+PKG_VERSION:=0.9.2
+PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-client
@@ -24,7 +24,7 @@ $(call include_mk, python3-package.mk)
 
 
 define Package/Common
-	URL:=https://pythonhosted.org/python-prctl/
+	URL:=https://gitlab.labs.nic.cz/turris/foris-client
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 

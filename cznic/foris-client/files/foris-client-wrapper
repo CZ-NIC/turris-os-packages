@@ -35,4 +35,8 @@ if [ "$bus" = "ubus" ]; then
 elif [ "$bus" = "unix-socket" ]; then
 	config_get path unix_socket path
 	/usr/bin/foris-client $@ unix-socket --path "$path"
+elif [ "$bus" = "mqtt" ]; then
+	config_get host mqtt host
+	config_get port mqtt port
+	/usr/bin/foris-client $@ mqtt --host "$host" --port "$port"
 fi
