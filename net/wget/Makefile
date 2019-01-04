@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=wget
-PKG_VERSION:=1.19.5
+PKG_VERSION:=1.20.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@GNU/$(PKG_NAME)
-PKG_MD5SUM:=b39212abe1a73f2b28f4c6cb223c738559caac91d6e416a6d91d4b9d55c9faee
+PKG_MD5SUM:=b783b390cb571c837b392857945f5a1f00ec6b043177cc42abb8ee1b542ee1b3
 PKG_MAINTAINER:=Peter Wagner <tripolar@gmx.at>
 PKG_LICENSE:=GPL-3.0+
 PKG_LICENSE_FILES:=COPYING
@@ -67,7 +67,8 @@ CONFIGURE_ARGS+= \
 	--disable-rpath \
 	--disable-iri \
 	--with-included-libunistring \
-	--without-libuuid
+	--without-libuuid \
+	--without-libpsl
 
 CONFIGURE_VARS += \
 	ac_cv_header_uuid_uuid_h=no
