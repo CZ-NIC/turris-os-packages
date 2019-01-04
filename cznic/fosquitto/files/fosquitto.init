@@ -15,7 +15,7 @@ generate_remote() {
 	local cfg="$1"
 
 	config_get_bool enabled "$cfg" enabled "0"
-	config_get_bool port "$cfg" enabled "11884"
+	config_get port "$cfg" port "11884"
 	if [ "$enabled" -eq 1 ]; then
 		# TODO add listener to mosquitto config
 		:

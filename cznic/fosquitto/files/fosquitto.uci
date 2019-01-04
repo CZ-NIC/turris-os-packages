@@ -1,8 +1,8 @@
 config local local
-	port 11883
+	option port 11883
 
-config remote
-	enabled '0'
+config remote remote
+	option enabled '0'
 
 config subordinate
 
