@@ -388,13 +388,11 @@ print_dns_config() {
     echo "forward-zone:">>$CONFIGFILE
     echo '	name: "."'>>$CONFIGFILE
 
-    # FIX disable forward-tls until we upgrade to openssl 1.1.0
-    echo "	forward-tls-upstream: no">>$CONFIGFILE
-    #if [ "$enable_tls" == "1" ]; then
-    #    echo "	forward-tls-upstream: yes">>$CONFIGFILE
-    #else
-    #    echo "	forward-tls-upstream: no">>$CONFIGFILE
-    #fi
+    if [ "$enable_tls" == "1" ]; then
+        echo "	forward-tls-upstream: yes">>$CONFIGFILE
+    else
+        echo "	forward-tls-upstream: no">>$CONFIGFILE
+    fi
 
     for ip in $ip_list
     do
