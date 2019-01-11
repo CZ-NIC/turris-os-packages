@@ -16,7 +16,7 @@ Index: u-boot-mox-2018-11-rc1/u-boot/configs/turris_mox_defconfig
 ===================================================================
 --- u-boot-mox-2018-11-rc1.orig/u-boot/configs/turris_mox_defconfig
 +++ u-boot-mox-2018-11-rc1/u-boot/configs/turris_mox_defconfig
-@@ -84,3 +84,12 @@ CONFIG_WDT=y
+@@ -84,3 +84,14 @@ CONFIG_WDT=y
  CONFIG_WDT_ARMADA_37XX=y
  CONFIG_SHA1=y
  CONFIG_SHA256=y
@@ -28,6 +28,8 @@ Index: u-boot-mox-2018-11-rc1/u-boot/configs/turris_mox_defconfig
 +CONFIG_FIT_BEST_MATCH=n
 +CONFIG_CMD_LZMADEC=y
 +CONFIG_CMD_AES=y
++CONFIG_CMD_HASH=y
++CONFIG_CMD_SHA1SUM=y
 +CONFIG_NET_RANDOM_ETHADDR=y
 Index: u-boot-mox-2018-11-rc1/u-boot/include/configs/turris_mox.h
 ===================================================================
