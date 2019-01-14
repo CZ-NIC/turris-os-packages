@@ -12,23 +12,25 @@ generate_local() {
 }
 
 generate_remote() {
-	local cfg="$1"
+	echo >> "$GENERATED_CONF"
 
-	config_get_bool enabled "$cfg" enabled "0"
-	config_get port "$cfg" port "11884"
-	if [ "$enabled" -eq 1 ]; then
-		# TODO add listener to mosquitto config
-		:
+	config_get_bool enabled remote enabled "0"
+	config_get port remote port "11884"
+	if [ "$enabled" -eq 1 -a -f /etc/ssl/ca/remote/ca.crt -a -f /etc/ssl/ca/remote/01.crt -a -f /etc/ssl/ca/remote/ca.crl ]; then
+		echo "listener ${port} 0.0.0.0" >> "$GENERATED_CONF"
+		echo "protocol mqtt" >> "$GENERATED_CONF"
+		echo "tls_version tlsv1.2" >> "$GENERATED_CONF"
+		echo "use_identity_as_username true" >> "$GENERATED_CONF"
+		echo "cafile /etc/ssl/ca/remote/ca.crt" >> "$GENERATED_CONF"
+		echo "certfile /etc/ssl/ca/remote/01.crt" >> "$GENERATED_CONF"
+		echo "keyfile /etc/ssl/ca/remote/01.key" >> "$GENERATED_CONF"
+		echo "crlfile /etc/ssl/ca/remote/ca.crl" >> "$GENERATED_CONF"
+		echo "require_certificate true" >> "$GENERATED_CONF"
 	fi
 }
 
 generate_subordinate() {
 	# TODO put our subordinate here
-	:
-}
-
-generate_superior() {
-	# TODO process your superior configuration here
 	:
 }
 
@@ -39,9 +41,8 @@ generate_config() {
 	config_load fosquitto
 
 	generate_local
-	config_foreach generate_remote remote
+	generate_remote
 	config_foreach generate_subordinate subordinate
-	config_foreach generate_superior superior
 }
 
 start_service() {
