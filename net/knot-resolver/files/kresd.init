@@ -54,10 +54,6 @@ init_header() {
 
 	echo "hints.use_nodata(true)" >> $CONFIGFILE
 
-	#Temporary hack this should reduce failing to 5s for in-bailiwick nameservers
-	#Issue https://gitlab.labs.nic.cz/knot/knot-resolver/issues/374
-	#https://knot-resolver.readthedocs.io/en/stable/daemon.html#c.cache.ns_tout
-	echo "cache.ns_tout(5000)" >> $CONFIGFILE
 	# run as kresd user
 	echo "user('$USERNAME', '$GROUP')" >> $CONFIGFILE
 	# clear hints file

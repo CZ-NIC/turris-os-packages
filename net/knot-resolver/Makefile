@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2015-2018 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2015-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
 PKG_VERSION:=3.2.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-resolver
@@ -44,13 +44,6 @@ endef
 MAKE_FLAGS += \
 	PREFIX=/usr \
 	ETCDIR=/etc/kresd
-
-define Build/Patch
-	$(Build/Patch/Default)
-	cd $(PKG_BUILD_DIR) && \
-	sed -i -e 's/\(.*find_lib,hiredis.*\)/HAS_hiredis := no/' \
-	       -e 's/\(.*find_lib,libmemcached.*\)/HAS_libmemcached := no/' Makefile
-endef
 
 define Package/knot-resolver/install
 	$(INSTALL_DIR) $(1)/usr/bin
