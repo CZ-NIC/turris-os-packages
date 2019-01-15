@@ -61,3 +61,10 @@ service_triggers() {
 	# Makes "reload_config" work
 	procd_add_reload_trigger "fosquitto"
 }
+
+restart() {
+	trap '' TERM
+	stop
+	sleep 0.2
+	start
+}
