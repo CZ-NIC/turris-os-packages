@@ -1,14 +1,29 @@
 #!/bin/sh /etc/rc.common
 
 START=50
+STOP=50
+
 USE_PROCD=1
 
 GENERATED_CONF=/tmp/fosquitto.generated.conf
+
+generate_global() {
+	config_get_bool debug global debug "0"
+	if [ "$debug" = "1" ] ; then
+		echo "log_type all" >> "$GENERATED_CONF"
+	else
+		echo "log_type error" >> "$GENERATED_CONF"
+		echo "log_type warning" >> "$GENERATED_CONF"
+	fi
+	echo "log_dest stderr" >> "$GENERATED_CONF"
+	echo  >> "$GENERATED_CONF"
+}
 
 generate_local() {
 	config_get port local port 11883
 	echo "port $port" >> "$GENERATED_CONF"
 	echo "bind_address localhost" >> "$GENERATED_CONF"
+	echo  >> "$GENERATED_CONF"
 }
 
 generate_remote() {
@@ -26,6 +41,8 @@ generate_remote() {
 		echo "keyfile /etc/ssl/ca/remote/01.key" >> "$GENERATED_CONF"
 		echo "crlfile /etc/ssl/ca/remote/ca.crl" >> "$GENERATED_CONF"
 		echo "require_certificate true" >> "$GENERATED_CONF"
+
+		echo  >> "$GENERATED_CONF"
 	fi
 }
 
@@ -40,6 +57,7 @@ generate_config() {
 
 	config_load fosquitto
 
+	generate_global
 	generate_local
 	generate_remote
 	config_foreach generate_subordinate subordinate
@@ -53,6 +71,9 @@ start_service() {
 	procd_append_param command -c $GENERATED_CONF
 	procd_set_param file $CONF_WATCH
 	procd_set_param pidfile /var/run/fosquitto.pid
+	procd_set_param stdout 1 # forward stdout of the command to logd
+	procd_set_param stderr 1 # same for stderr
+	procd_set_param respawn
 	procd_close_instance
 }
 
