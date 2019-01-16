@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-netboot
 PKG_VERSION:=1.0
-PKG_RELEASE:=0
+PKG_RELEASE:=1
 BB_VERSION:=1.29.3
 PKG_BB_SOURCE:=busybox-$(BB_VERSION).tar.bz2
 PKG_BB_SOURCE_URL:=https://www.busybox.net/downloads \
@@ -21,7 +21,7 @@ PKG_BUILD_DEPENDS:=opkg/host
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=git@gitlab.labs.nic.cz:turris/turris-netboot.git
-PKG_SOURCE_VERSION:=e5b257c23b6389f6ddefcc90fa175371626ce0ab
+PKG_SOURCE_VERSION:=bfea1953018601828291389171c1f6dcae1fbd55
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.bz2
 ROOTFS_INSTALL:=+libgcc +libc +libubox +libpthread +librt +libattr +libuuid +zlib +libblkid +liblzo +uboot-envtools +usign +cznic-repo-keys +libopenssl +libpcre +wget +openssh-client +openssh-keygen +openssh-client-utils
 PKG_BUILD_DEPENDS:=opkg/host busybox openssh-utils openssh-client uboot-envtools
@@ -35,7 +35,7 @@ endef
 
 define Package/turris-netboot-tools
   TITLE:=Turris Netboot tools
-  DEPENDS:=+dnsmasq +dtc +uboot-mkimage +openssh-server +python-crypto
+  DEPENDS:=+dnsmasq +dtc +uboot-mkimage +openssh-server +python3-cryptography
 endef
 
 define Build/Prepare

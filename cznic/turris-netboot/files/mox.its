@@ -23,7 +23,7 @@
         };
         ramdisk@0 {
             description = "initramfs";
-            data = /incbin/("./usr/share/turris-netboot/initrd");
+            data = /incbin/("./usr/share/turris-netboot/initrd-aarch64");
             type = "ramdisk";
             arch = "arm64";
             os = "linux";
