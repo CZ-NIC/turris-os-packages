@@ -1,3 +1,6 @@
+config global global
+	option debug '0'
+
 config local local
 	option port 11883
 
