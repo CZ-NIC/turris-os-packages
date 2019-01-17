@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 OpenWrt.org
+# Copyright (C) 2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -11,17 +11,16 @@ PKG_NAME:=ssdeep
 PKG_VERSION:=2.14.1
 PKG_RELEASE=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/ssdeep-project/ssdeep.git
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=release-$(PKG_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_MD5SUM:=6cef4cfcd9084e47a1315f5f4a39358c40707ed6d2e83c1a001db63f3a06b5c0
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://github.com/ssdeep-project/ssdeep/releases/download/release-$(PKG_VERSION)/
+PKG_HASH:=ff2eabc78106f009b4fb2def2d76fb0ca9e12acf624cbbfad9b3eb390d931313
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
+
 PKG_LICENSE:=GPL-2.0
+PKG_LICENSE_FILES:=COPYING
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
