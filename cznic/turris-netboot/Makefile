@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-netboot
-PKG_VERSION:=1.0
-PKG_RELEASE:=3
+PKG_VERSION:=0.1
+PKG_RELEASE:=0
 BB_VERSION:=1.29.3
 PKG_BB_SOURCE:=busybox-$(BB_VERSION).tar.bz2
 PKG_BB_SOURCE_URL:=https://www.busybox.net/downloads \
@@ -21,9 +21,9 @@ PKG_BUILD_DEPENDS:=opkg/host
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=git@gitlab.labs.nic.cz:turris/turris-netboot.git
-PKG_SOURCE_VERSION:=67746bc23613e04b7c2fe6d61d31158eaea3e78a
+PKG_SOURCE_VERSION:=c8a9f9efdcbd099a4ff566c080ab85492e420cd7
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.bz2
-ROOTFS_INSTALL:=+libgcc +libc +libubox +libpthread +librt +libattr +libuuid +zlib +libblkid +liblzo +uboot-envtools +usign +cznic-repo-keys +libopenssl +libpcre +wget +openssh-client +openssh-keygen +openssh-client-utils
+ROOTFS_INSTALL:=+libgcc +libc +libubox +libpthread +librt +libattr +libuuid +zlib +libblkid +liblzo +uboot-envtools +libopenssl +libpcre +openssh-client +openssh-keygen +openssh-client-utils
 PKG_BUILD_DEPENDS:=opkg/host busybox openssh-utils openssh-client uboot-envtools
 
 include $(INCLUDE_DIR)/kernel.mk
