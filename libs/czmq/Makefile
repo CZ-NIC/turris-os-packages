@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=czmq
 PKG_VERSION:=4.1.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/zeromq/czmq/tar.gz/v$(PKG_VERSION)?
@@ -29,7 +29,7 @@ define Package/czmq
 	SECTION:=libs
 	CATEGORY:=Libraries
 	TITLE:=CZMQ
-	DEPENDS:=+libzmq +libuuid +libpcre
+	DEPENDS:=+libzmq +libuuid +libpcre +liblz4
 endef
 
 define Package/czmq/description
