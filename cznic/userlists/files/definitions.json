@@ -4,11 +4,6 @@
 		"description": "A Foris plugin allowing to manage remote API access tokens (for example for use in Spectator or Android application).",
 		"visible": true
 	},
-	"automation": {
-		"title": "Home automation",
-		"description": "Control software for home automation, including Turris Gadgets.",
-		"visible": true
-	},
 	"datacollect": {
 		"title": "Data Collection",
 		"description": "Software for participation in data collection and dynamic distributed firewall.",
@@ -49,8 +44,8 @@
 		"description": "Set of utilities to manage Linux Containers (lightweight virtualization technology).",
 		"visible": true
 	},
-	"netutils": {
-		"title": "Extensions of network protocols",
+	"3g": {
+		"title": "Extensions of network protocols for 3G/LTE",
 		"description": "Support for additional protocols and connection types.",
 		"visible": true
 	},
@@ -74,24 +69,9 @@
 		"description": "Service for storing configuration backups on remote servers (EXPERIMENTAL).",
 		"visible": true
 	},
-	"snd": {
-		"title": "Sound card",
-		"description": "Support for USB sound card.",
-		"visible": true
-	},
-	"squid": {
-		"title": "Squid",
-		"description": "HTTP caching proxy Squid.",
-		"visible": true
-	},
 	"tor": {
 		"title": "Tor",
 		"description": "Service to increase anonymity on the Internet.",
-		"visible": true
-	},
-	"webcam": {
-		"title": "Web camera",
-		"description": "Support to capture image with web camera.",
 		"visible": true
 	}
 }
