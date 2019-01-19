@@ -9,11 +9,17 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=syslog-ng
 PKG_VERSION:=3.19.1
-PKG_RELEASE:=3
+PKG_RELEASE:=5
 
-PKG_SOURCE_URL:=https://github.com/balabit/syslog-ng/releases/download/syslog-ng-$(PKG_VERSION)/
+PKG_LICENSE:=LGPL-2.1+
+PKG_LICENSE_FILES:=COPYING
+PKG_CPE_ID:=cpe:/a:balabit:syslog-ng
+
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://github.com/balabit/syslog-ng/releases/download/$(PKG_NAME)-$(PKG_VERSION)/
 PKG_MD5SUM:=5cf931a9d7bead0e6d9a2c65eee8f6005a005878f59aa280f3c4294257ed5178
+
+PKG_BUILD_PARALLEL:=1
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_IPV6 \
@@ -24,10 +30,10 @@ include $(INCLUDE_DIR)/nls.mk
 define Package/syslog-ng3
   SECTION:=admin
   CATEGORY:=Administration
-  DEPENDS:=+libpcre +glib2 +libopenssl +libwrap +libpthread +librt +zlib +libdbi +psmisc +libwrap +libjson-c +libcurl +libuuid
+  DEPENDS:=+libpcre +glib2 +libopenssl +libwrap +libpthread +librt +zlib +libdbi +psmisc +libjson-c +libcurl +libuuid
   PROVIDES:=syslog
   TITLE:=A powerful syslog daemon
-  URL:=http://www.balabit.com/network-security/syslog-ng/opensource-logging-system/
+  URL:=https://www.syslog-ng.com/products/open-source-log-management/
 endef
 
 define Package/syslog-ng3/description
@@ -38,6 +44,8 @@ endef
 
 define Package/syslog-ng3/conffiles
 /etc/syslog-ng.conf
+/etc/syslog-ng.d/
+/etc/scl.conf
 endef
 
 define Build/Configure
@@ -56,24 +64,20 @@ endef
 
 CONFIGURE_ARGS +=  \
 	$(call autoconf_bool,CONFIG_IPV6,ipv6) \
-	--disable-dependency-tracking \
-	--enable-tcp-wrapper \
-	--disable-glibtest \
 	--disable-spoof-source \
 	--disable-sql \
-	--disable-java \
-	--disable-java-modules \
-	--disable-redis \
-	--disable-sql \
-	--disable-python \
-	--disable-smtp \
-	--enable-prce \
 	--disable-linux-caps \
-	--with-librabbitmq-client=no \
-	--with-mongoc=no \
 	--with-jsonc=system \
 	--enable-json=yes \
-	--enable-http=yes
+	--enable-http=yes \
+	--disable-smtp \
+	--disable-redis \
+	--disable-dependency-tracking \
+	--disable-python \
+	--disable-java \
+	--disable-java-modules \
+	--with-librabbitmq-client=no \
+	--with-mongoc=no
 
 TARGET_CFLAGS += -std=gnu99
 
@@ -82,20 +86,21 @@ CONFIGURE_VARS += \
 
 define Package/syslog-ng3/install
 	cd $(PKG_BUILD_DIR); make DESTDIR=$(1) install
-	rm -rf $(1)/usr/lib/pkgconfig $(1)/usr/lib/*.a $(1)/usr/lib/*.la $(1)/usr/lib/syslog-ng/*.la
-	rm -rf $(1)/etc $(1)/usr/include
-	rmdir $(1)/var
-	rm -rf $(1)/usr/lib/libevtlog.so
+	$(call libtool_remove_files,$(1)) # This removes .la files in folder (including subdirectors) /usr/lib
+	rm -rf $(1)/usr/lib/pkgconfig \
+	$(1)/usr/lib/*.a \
+	$(1)/usr/include \
+	$(1)/var
+
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/syslog-ng.init $(1)/etc/init.d/syslog-ng
-	$(INSTALL_DIR) $(1)/etc
-ifdef CONFIG_USE_MUSL
-	$(INSTALL_DATA) ./files/syslog-ng.conf.musl $(1)/etc/syslog-ng.conf
-else
-	$(INSTALL_DATA) ./files/syslog-ng.conf $(1)/etc
-endif
 	$(INSTALL_DIR) $(1)/etc/syslog-ng.d
-	touch $(1)/etc/syslog-ng.d/.keep
+ifdef CONFIG_USE_MUSL
+		$(INSTALL_DATA) ./files/syslog-ng.conf.musl $(1)/etc/syslog-ng.conf
+else
+		$(INSTALL_DATA) ./files/syslog-ng.conf $(1)/etc
+endif
+	$(INSTALL_BIN) ./files/logread $(1)/usr/sbin
 endef
 
 define Package/syslog-ng3/postinst

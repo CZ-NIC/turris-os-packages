@@ -1,12 +1,24 @@
-@version:3.10
+#############################################################################
+# OpenWrt syslog-ng.conf specific file
+# which collects all local logs into a single file called /var/log/messages.
+# More details about these settings can be found here:
+# https://www.syslog-ng.com/technical-documents/doc/syslog-ng-open-source-edition/3.16/release-notes/global-options
+
+@version: 3.19
+@include "scl.conf"
+@include "/etc/syslog-ng.d/" # Put any customization files in this directory
 
 options {
-	chain_hostnames(no);
-	flush_lines(0);
-	stats_freq(0);
-	flush_lines(0);
-	log_msg_size(65536);
+	chain_hostnames(no); # Enable or disable the chained hostname format.
+	create_dirs(yes);
+	keep_hostname(yes); # Enable or disable hostname rewriting.
+	log_fifo_size(256); # The number of messages that the output queue can store.
+	log_msg_size(1024); # Maximum length of a message in bytes.
+	stats_freq(0); # The period between two STATS messages (sent by syslog-ng, containing statistics about dropped logs) in seconds.
+	flush_lines(0); # How many lines are flushed to a destination at a time.
+	use_fqdn(no); # Add Fully Qualified Domain Name instead of short hostname.
 };
+
 
 source src {
 	internal();
@@ -17,6 +29,19 @@ source kernel {
         file("/proc/kmsg" program_override("kernel"));
 };
 
+source s_network {
+	default-network-drivers(
+		# NOTE: TLS support
+		#
+		# the default-network-drivers() source driver opens the TLS
+		# enabled ports as well, however without an actual key/cert
+		# pair they will not operate and syslog-ng would display a
+		# warning at startup.
+		#
+		#tls(key-file("/path/to/ssl-private-key") cert-file("/path/to/ssl-cert"))
+	);
+};
+
 filter f_turris_iptables {
 	not match(".*turris[^:]*: .*" value(MESSAGE) type("posix")) or not level(debug);
 };
@@ -25,13 +50,9 @@ destination messages {
 	file("/var/log/messages" suppress(5) template("${R_YEAR}-${R_MONTH}-${R_DAY} ${R_HOUR}:${R_MIN}:${R_SEC} ${PRIORITY} ${PROGRAM}[${PID}]: ${MSGONLY}\n") log_fifo_size(256));
 };
 
-
-
 log {
 	source(src);
 	source(kernel);
 	filter(f_turris_iptables);
 	destination(messages);
 };
-
-include "/etc/syslog-ng.d/";
