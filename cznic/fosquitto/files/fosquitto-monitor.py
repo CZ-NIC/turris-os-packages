@@ -68,13 +68,15 @@ def listener(host: str, port: int, show_advertize: bool, filter_ids: typing.Set[
         print(f"Subscribed to mid='{mid}'.")
 
     def on_message(client, userdata, msg):
-        if msg.topic == "foris-controller/advertize" and not show_advertize:
+        if re.match(
+            f"foris-controller/[^]+/notification/remote/action/advertize", msg.topic
+        ) and not show_advertize:
             return
         try:
             parsed = json.loads(msg.payload)
 
             # filter id
-            if msg.topic != "foris-controller/advertize" and filter_ids:
+            if filter_ids:
                 match = re.match(r"^foris-controller/([^/]+).*", msg.topic)
                 if match.group(1) not in filter_ids:
                     return
@@ -108,7 +110,7 @@ def detect_ids(host: str, port: int, timeout: int):
             print(f"{parsed['id']}")
 
     def on_connect(client, userdata, flags, rc):
-        client.subscribe("foris-controller/advertize")
+        client.subscribe(f"foris-controller/+/notification/remote/action/advertize")
 
     client = mqtt.Client()
     client.on_connect = on_connect
