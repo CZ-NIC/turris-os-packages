@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mozilla-iot-gateway-webapp
 PKG_VERSION:=1.0
-PKG_RELEASE:=1
+PKG_RELEASE:=0
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -38,18 +38,8 @@ endef
 define Package/mozilla-iot-gateway-webapp/install
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
 	$(INSTALL_DATA) ./files/30_mozilla-iot.conf $(1)/usr/share/turris-webapps/
-	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
-	$(INSTALL_DATA) ./files/lighttpd_mozilla.conf $(1)/etc/lighttpd/conf.d
 	$(INSTALL_DIR) $(1)/www/webapps-icons
 	$(INSTALL_DATA) ./files/mozilla-iot.png $(1)/www/webapps-icons
-endef
-
-define Package/mozilla-iot-gateway-webapp/postinst
-#!/bin/sh
-set -x
-[ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/lighttpd restart
-}
 endef
 
 $(eval $(call BuildPackage,mozilla-iot-gateway-webapp))
