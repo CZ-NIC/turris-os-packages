@@ -69,7 +69,7 @@ def listener(host: str, port: int, show_advertize: bool, filter_ids: typing.Set[
 
     def on_message(client, userdata, msg):
         if re.match(
-            f"foris-controller/[^]+/notification/remote/action/advertize", msg.topic
+            f"foris-controller/[^/]+/notification/remote/action/advertize", msg.topic
         ) and not show_advertize:
             return
         try:
