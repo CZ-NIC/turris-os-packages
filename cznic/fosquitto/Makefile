@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fosquitto
-PKG_VERSION:=6
+PKG_VERSION:=7
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -27,6 +27,10 @@ endef
 # override the default that runs "make".
 define Build/Compile
 	true
+endef
+
+define Package/$(PKG_NAME)/conffiles
+/etc/config/fosquitto
 endef
 
 define Package/$(PKG_NAME)/install
