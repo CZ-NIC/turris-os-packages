@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-maintain
-PKG_VERSION:=4
+PKG_VERSION:=5
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -16,7 +16,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+uci +python3 +python3-uci
+	DEPENDS:=+uci +python3 +python3-uci +coreutils-base64
 endef
 
 define Package/$(PKG_NAME)/description
