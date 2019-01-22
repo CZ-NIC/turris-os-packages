@@ -105,9 +105,9 @@ def detect_ids(host: str, port: int, timeout: int):
 
     def on_message(client, userdata, msg):
         parsed = json.loads(msg.payload)
-        if parsed["state"] and parsed["id"] not in ids:
-            ids.add(parsed["id"])
-            print(f"{parsed['id']}")
+        if parsed["data"]["state"] and parsed["data"]["id"] not in ids:
+            ids.add(parsed["data"]["id"])
+            print(f"{parsed['data']['id']}")
 
     def on_connect(client, userdata, flags, rc):
         client.subscribe(f"foris-controller/+/notification/remote/action/advertize")
@@ -135,7 +135,7 @@ def query_bus(host: str, port: int, topic: str, device_id: str):
             client.subscribe(reply_topic)
 
         def on_subscribe(client, userdata, mid, granted_qos):
-            client.publish(topic, json.dumps({"reply_topic": reply_topic}))
+            client.publish(topic, json.dumps({"reply_msg_id": str(msg_id)}))
 
         def on_message(client, userdata, msg):
             try:
@@ -153,6 +153,9 @@ def query_bus(host: str, port: int, topic: str, device_id: str):
         client.connect(host, port, 30)
         client.loop_start()
         client._thread.join(5)
+
+        if result["data"] is None:
+            raise Exception("No answer recieved.")
 
         return result["data"]
 
