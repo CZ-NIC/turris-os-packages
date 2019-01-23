@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-netboot
-PKG_VERSION:=0.2.1
+PKG_VERSION:=0.3
 PKG_RELEASE:=0
 BB_VERSION:=1.29.3
 PKG_BB_SOURCE:=busybox-$(BB_VERSION).tar.bz2
