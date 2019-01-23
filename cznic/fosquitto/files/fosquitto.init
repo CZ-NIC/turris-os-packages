@@ -50,9 +50,36 @@ generate_remote() {
 	fi
 }
 
+append_topic() {
+	echo "topic foris-controller/$1/notification/+/action/+ in" >> "$GENERATED_CONF"
+	echo "topic foris-controller/$1/request/+/action/+ in" >> "$GENERATED_CONF"
+	echo "topic foris-controller/$1/reply/+/action/+ out" >> "$GENERATED_CONF"
+}
+
 generate_subordinate() {
-	# TODO put our subordinate here
-	:
+	local config="$1"
+	config_get id "$config" id
+	config_get address "$config" address
+	config_get port "$config" port
+	config_get subsubordinate "$config" subsubordinate
+	config_get_bool enabled "$config" enabled "0"
+	if [ "$enabled" == 0 ]; then
+		return
+	fi
+
+	echo >> "$GENERATED_CONF"
+	echo "connection $id" >> "$GENERATED_CONF"
+	echo "address $address" >> "$GENERATED_CONF"
+	echo "bridge_cafile /etc/fosquitto/bridges/$id/ca.crt" >> "$GENERATED_CONF"
+	echo "bridge_certfile /etc/fosquitto/bridges/$id/token.crt" >> "$GENERATED_CONF"
+	echo "bridge_keyfile /etc/fosquitto/bridges/$id/token.key" >> "$GENERATED_CONF"
+	echo "bridge_insecure true" >> "$GENERATED_CONF"
+	echo "bridge_tls_version tlsv1.2" >> "$GENERATED_CONF"
+
+	append_topic "$id"
+	config_list_foreach "$config" subsubordinate append_topic
+
+	echo >> "$GENERATED_CONF"
 }
 
 generate_config() {
