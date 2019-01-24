@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-netboot
-PKG_VERSION:=0.3
+PKG_VERSION:=0.4
 PKG_RELEASE:=0
 BB_VERSION:=1.29.3
 PKG_BB_SOURCE:=busybox-$(BB_VERSION).tar.bz2
@@ -91,10 +91,20 @@ define Package/turris-netboot-data/install
 	$(INSTALL_DATA) ./files/mox.its $(1)/usr/share/turris-netboot
 endef
 
+define Package/turris-netboot-tools/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/cron restart
+/usr/bin/netboot-setup
+}
+endef
+
 define Package/turris-netboot-tools/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/netboot $(1)/etc/config/netboot
+	$(INSTALL_DATA) ./files/netboot-update.cron $(1)/etc/cron.d/netboot-update
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/server.sh $(1)/usr/bin/netboot-server
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/manage.sh $(1)/usr/bin/netboot-manager
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/setup.sh $(1)/usr/bin/netboot-setup
