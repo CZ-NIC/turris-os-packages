@@ -51,28 +51,32 @@ generate_remote() {
 }
 
 append_topic() {
-	echo "topic foris-controller/$1/notification/+/action/+ in" >> "$GENERATED_CONF"
-	echo "topic foris-controller/$1/request/+/action/+ in" >> "$GENERATED_CONF"
-	echo "topic foris-controller/$1/reply/+/action/+ out" >> "$GENERATED_CONF"
+	echo "topic foris-controller/$1/notification/+/action/+ in 0" >> "$GENERATED_CONF"
+	echo "topic foris-controller/$1/request/+/action/+ out 0" >> "$GENERATED_CONF"
+	echo "topic foris-controller/$1/list out 0" >> "$GENERATED_CONF"
+	echo "topic foris-controller/$1/request/+/list out 0" >> "$GENERATED_CONF"
+	echo "topic foris-controller/$1/list out 0" >> "$GENERATED_CONF"
+	echo "topic foris-controller/$1/schema out 0" >> "$GENERATED_CONF"
+	echo "topic foris-controller/$1/reply/+ in 0" >> "$GENERATED_CONF"
 }
 
 generate_subordinate() {
 	local config="$1"
 	config_get id "$config" id
 	config_get address "$config" address
-	config_get port "$config" port
+	config_get port "$config" port 11884
 	config_get subsubordinate "$config" subsubordinate
-	config_get_bool enabled "$config" enabled "0"
+	config_get_bool enabled "$config" enabled 0
 	if [ "$enabled" == 0 ]; then
 		return
 	fi
 
 	echo >> "$GENERATED_CONF"
-	echo "connection $id" >> "$GENERATED_CONF"
-	echo "address $address" >> "$GENERATED_CONF"
-	echo "bridge_cafile /etc/fosquitto/bridges/$id/ca.crt" >> "$GENERATED_CONF"
-	echo "bridge_certfile /etc/fosquitto/bridges/$id/token.crt" >> "$GENERATED_CONF"
-	echo "bridge_keyfile /etc/fosquitto/bridges/$id/token.key" >> "$GENERATED_CONF"
+	echo "connection ${id}" >> "$GENERATED_CONF"
+	echo "address ${address}:${port}" >> "$GENERATED_CONF"
+	echo "bridge_cafile /etc/fosquitto/bridges/${id}/ca.crt" >> "$GENERATED_CONF"
+	echo "bridge_certfile /etc/fosquitto/bridges/${id}/token.crt" >> "$GENERATED_CONF"
+	echo "bridge_keyfile /etc/fosquitto/bridges/${id}/token.key" >> "$GENERATED_CONF"
 	echo "bridge_insecure true" >> "$GENERATED_CONF"
 	echo "bridge_tls_version tlsv1.2" >> "$GENERATED_CONF"
 
