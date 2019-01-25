@@ -49,6 +49,11 @@
 		"description": "Set of utilities to manage Linux Containers (lightweight virtualization technology).",
 		"visible": true
 	},
+	"netboot": {
+		"title": "Turris MOX network boot",
+		"description": "Server side for Turris MOX without SD card used as Wi-Fi access point.",
+		"visible": true
+	},
 	"netutils": {
 		"title": "Extensions of network protocols",
 		"description": "Support for additional protocols and connection types.",
