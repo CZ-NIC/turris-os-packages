@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=60.4.7
+PKG_VERSION:=62.0
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
@@ -35,10 +35,8 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libupdater.so $(1)/usr/lib/
 
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/opkg-trans $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgupdate $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/supervisor/updater.sh $(1)/usr/bin/
-	$(INSTALL_BIN) ./files/updater-wipe.sh $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgtransaction $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/updater
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/conf.lua $(1)/etc/updater
@@ -47,10 +45,10 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/example.lua $(1)/etc/updater/conf.d/example.lua
 
 	$(INSTALL_DIR) $(1)/etc/updater/hook_preupdate
-	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
-	$(INSTALL_DIR) $(1)/etc/updater/hook_reboot_required
 	touch $(1)/etc/updater/hook_preupdate/.keep
+	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/hook_postupdate/update_alternatives.sh $(1)/etc/updater/hook_postupdate/update_alternatives.sh
+	$(INSTALL_DIR) $(1)/etc/updater/hook_reboot_required
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/hook_reboot_required/50-create-notification.sh $(1)/etc/updater/hook_reboot_required/50-create-notification.sh
 
 	# Note: this file is not ever used as appropriate one is generated to medkit
@@ -122,10 +120,10 @@ endef
 define Package/$(PKG_NAME)-opkg/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/opkg-wrapper/opkg $(1)/usr/bin/opkg-pkgupdate-wrapper.sh
-	$(INSTALL_DIR) $(1)/usr/share/updater
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/localrepo/content2localrepo $(1)/usr/share/updater/opkg-content2localrepo.sh
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/opkg-wrapper/opkg.lua $(1)/etc/updater/conf.d/opkg.lua
+	$(INSTALL_DIR) $(1)/etc/updater/opkg-ignore
+	touch $(1)/etc/updater/opkg-ignore/.keep
 endef
 
 
@@ -143,8 +141,8 @@ define Host/Install
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/lib/libupdater.so $(STAGING_DIR_HOST)/usr/lib/
 
 	$(INSTALL_DIR) $(STAGING_DIR_HOST)/usr/bin
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/opkg-trans $(STAGING_DIR_HOST)/usr/bin/
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/pkgupdate $(STAGING_DIR_HOST)/usr/bin/
+	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/pkgtransaction $(STAGING_DIR_HOST)/usr/bin/
 endef
 
 
