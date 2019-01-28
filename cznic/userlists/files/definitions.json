@@ -4,11 +4,6 @@
 		"description": "Support for additional protocols and connection types.",
 		"visible": true
 	},
-	"api-token": {
-		"title": "Access tokens",
-		"description": "A Foris plugin allowing to manage remote API access tokens (for example for use in Spectator or Android application).",
-		"visible": true
-	},
 	"datacollect": {
 		"title": "Data Collection",
 		"description": "Software for participation in data collection and dynamic distributed firewall.",
