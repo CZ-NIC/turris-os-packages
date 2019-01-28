@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2016-2017 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2016-2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=60.4.7
+PKG_VERSION:=61.1
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
@@ -172,6 +172,8 @@ define Package/$(PKG_NAME)-opkg/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/localrepo/content2localrepo $(1)/usr/share/updater/opkg-content2localrepo.sh
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/opkg-wrapper/opkg.lua $(1)/etc/updater/conf.d/opkg.lua
+	$(INSTALL_DIR) $(1)/etc/updater/opkg-ignore
+	touch $(1)/etc/updater/opkg-ignore/.keep
 endef
 
 # We are calling migration to localrepo from updater-ng-opkg package posinst as
