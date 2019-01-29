@@ -57,7 +57,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_CONF) ./files/updater.config $(1)/etc/config/updater
 
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/init $(1)/etc/init.d/updater
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/supervisor/init $(1)/etc/init.d/updater-journal-recover
 endef
 
 define Package/$(PKG_NAME)/conffiles
