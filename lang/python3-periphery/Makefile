@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-periphery
-PKG_VERSION:=v1.1.0
-PKG_RELEASE:=2
+PKG_VERSION:=v1.1.1
+PKG_RELEASE:=1
 PKG_LICENSE:=MIT
 
 PKG_SOURCE_PROTO:=git
