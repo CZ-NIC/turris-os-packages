@@ -4,7 +4,7 @@ This file is part of updater-ng. Don't edit it.
 
 local uci_cursor = nil
 if uci then
-	uci_cursor = uci.cursor()
+	uci_cursor = uci.cursor(root_dir .. "/etc/config")
 else
 	ERROR("UCI library is not available. Configuration not used.")
 end

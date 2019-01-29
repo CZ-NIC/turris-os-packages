@@ -14,7 +14,7 @@ local stable = {
 }
 
 if uci then -- We need UCI for this
-	local uci_cursor = uci.cursor()
+	local uci_cursor = uci.cursor(root_dir .. "/etc/config")
 	local mode = uci_cursor:get("updater", "turris", "mode")
 	if not mode or mode == "branch" then
 		local branch = uci_cursor:get("updater", "turris", "branch")
