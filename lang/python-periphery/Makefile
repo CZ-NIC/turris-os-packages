@@ -8,38 +8,53 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-periphery
-PKG_VERSION:=v1.1.0
+PKG_VERSION:=1.1.1
 PKG_RELEASE:=1
 PKG_LICENSE:=MIT
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/vsergeev/python-periphery.git
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE:=v$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://github.com/vsergeev/python-periphery/archive/
+PKG_HASH:=a9a0a0ac02b8c3a954281777e92a15ec41abd311eb8732b50a2faaa9df62f1df
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-periphery-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
-define Package/$(PKG_NAME)
-	SUBMENU:=Python
-	SECTION:=lang
+define Package/$(PKG_NAME)/Default
+	SECTION:=lang-python
 	CATEGORY:=Languages
-	TITLE:=python-periphery
+	SUBMENU:=Python
 	URL:=https://github.com/vsergeev/python-periphery
-	DEPENDS:=+python
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/python-periphery
+	TITLE:=python-periphery
+	DEPENDS:=+python-light
+	VARIANT:=python
+endef
+
+define Package/python3-periphery
+	TITLE:=python3-periphery
+	DEPENDS:=+python3-light
+	VARIANT:=python3
+endef
+
+define Package/python-periphery/description
  python-periphery is a pure Python library for GPIO, LED, PWM, SPI, I2C, MMIO, and
  Serial peripheral I/O interface access in userspace Linux.
 endef
 
-define Build/Compile
-	$(call Build/Compile/PyMod,,install --prefix="/usr" --root=$(PKG_INSTALL_DIR))
+define Package/python3-periphery/description
+$(call Package/python-periphery/description)
+.
+(Variant for Python3)
 endef
 
 $(eval $(call PyPackage,python-periphery))
 $(eval $(call BuildPackage,python-periphery))
+$(eval $(call Py3Package,python3-periphery))
+$(eval $(call BuildPackage,python3-periphery))
