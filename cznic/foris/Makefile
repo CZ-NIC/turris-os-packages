@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=99.2
+PKG_VERSION:=99.3.1
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -45,23 +45,6 @@ endef
 define Package/foris/description
  Web administration interface using nuci for communication.
 endef
-
-# Set "branding" variable to create different builds for different devices
-BRAND?=turris
-ifeq ($(CONFIG_VERSION_PRODUCT),"Turris Omnia")
-BRAND:=omnia
-endif
-ifeq ($(CONFIG_VERSION_PRODUCT),"Turris Mox")
-BRAND:=mox
-endif
-
-MAKE_FLAGS+=\
-	BRAND=$(BRAND)
-
-define make_customization
-	$(SED) 's/^DEVICE_CUSTOMIZATION = ".*"/DEVICE_CUSTOMIZATION = "$(BRAND)"/g' $(PKG_BUILD_DIR)/foris/__init__.py
-endef
-Hooks/Prepare/Post += make_customization
 
 define run_foris_makefile
 	$(call Build/Compile/Default)
