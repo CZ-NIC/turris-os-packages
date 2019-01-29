@@ -1,4 +1,0 @@
-#!/bin/sh
-
-# Make sure we don't have any directories listed in package file list to avoid conflicts
-sed -i '/.*\/$/ d' /usr/lib/opkg/info/*.list

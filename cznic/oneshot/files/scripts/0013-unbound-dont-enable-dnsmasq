@@ -1,5 +1,0 @@
-#!/bin/sh
-
-# Unbound shouldn't enable dnsmasq on it's removal
-
-[ \! -f /usr/lib/opkg/info/unbound.prerm-pkg ] || sed -i 's|^uci|# uci|' /usr/lib/opkg/info/unbound.prerm-pkg

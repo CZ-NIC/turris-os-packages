@@ -1,5 +1,0 @@
-#!/bin/sh
-
-set -ex
-
-sed -ie 's#http://api.turris.cz/openwrt-repo/tplink-test/packages/#http://api.turris.cz/openwrt-repo/mpc85xx/packages/#' /etc/opkg.conf

@@ -1,6 +1,0 @@
-#!/bin/sh
-if [ -s /etc/rc.d/S86lighttpd ]; then
-	sed -i 's|START=86|START=80|' /etc/rc.d/S86lighttpd
-	sed -i 's|after the updater|before the updater|' /etc/rc.d/S86lighttpd
-	mv /etc/rc.d/S86lighttpd /etc/rc.d/S80lighttpd
-fi

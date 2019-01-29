@@ -1,3 +1,0 @@
-#!/bin/sh
-sed -i 's|include_shell "cat /etc/lighttpd/modules.d/\*.load"|include "/etc/lighttpd/modules.d/*.load"|' /etc/lighttpd/lighttpd.conf
-sed -i 's|include_shell "cat /etc/lighttpd/conf.d/\*.conf"|include "/etc/lighttpd/conf.d/*.conf"|'       /etc/lighttpd/lighttpd.conf

@@ -1,5 +1,0 @@
-#!/bin/sh
-
-set -ex
-
-sed -ie 's#http://securt-test.labs.nic.cz/openwrt/\(.*\)/packages/#http://api.turris.cz/openwrt-repo/\1/packages/#' /etc/opkg.conf

@@ -1,9 +1,0 @@
-#!/bin/sh
-
-# We accidentally published for some time feeds with stable-new branch
-
-sed -i 's|^\([^#]*https://api.turris.cz/openwrt-repo/.*\)\(-stable-new\)\(/.*\)|\1\3|' /etc/opkg/distfeeds.conf
-if [ "`uci -q get updater.override.branch`" = stable-new ]; then
-    uci delete updater.override
-    uci commit
-fi

@@ -1,1 +1,0 @@
-sed -i 's|i_agree_datacollect|datacollect|' /etc/config/updater

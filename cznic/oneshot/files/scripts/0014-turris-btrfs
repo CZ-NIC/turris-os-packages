@@ -1,4 +1,0 @@
-#!/bin/sh
-for i in /etc/schnapps/rollback.d/kernel-rollback /etc/updater/hook_postupdate/10_kernel-install; do
-	[ \! -f "$i" ] || chmod a+rx "$i"
-done
