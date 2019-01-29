@@ -177,7 +177,7 @@ EOF
 done
 
 # For test branches install test keys
-if \! $version; then
+if ! $version; then
 	case "$branch" in
 		hbs|hbk)
 			# We don't have to remove cznic-repo-keys-test as it's removed automaticaly by updater
@@ -225,7 +225,7 @@ updater_args=
 pkgupdate $updater_args || echo "Updater execution exited with error. Please see previous output to know what went wrong." >&2
 
 ## Update opkg
-opkg update
+opkg update || echo "OPKG update failed. Please see previous output to know what went wrong." >&2
 
 set +x
 
