@@ -65,12 +65,6 @@ define Package/$(PKG_NAME)/conffiles
 /etc/config/updater
 endef
 
-define Package/$(PKG_NAME)/postinst
-if [ -z "$$IPKG_INSTROOT" ]; then
-	/etc/init.d/updater enable || true
-fi
-endef
-
 
 define Package/$(PKG_NAME)-supervisor
 	TITLE:=Next generation updater supervisor and its library
