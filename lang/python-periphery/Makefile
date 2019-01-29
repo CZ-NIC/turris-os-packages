@@ -12,7 +12,6 @@ PKG_VERSION:=1.1.1
 PKG_RELEASE:=1
 PKG_LICENSE:=MIT
 
-PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/vsergeev/python-periphery/archive/
 PKG_HASH:=a9a0a0ac02b8c3a954281777e92a15ec41abd311eb8732b50a2faaa9df62f1df
