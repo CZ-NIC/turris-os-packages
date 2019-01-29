@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=switch-branch
-PKG_VERSION:=2.0.1
+PKG_VERSION:=2.1
 PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -26,6 +26,9 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/switch-branch $(1)/usr/bin/
+
+	$(INSTALL_DIR) $(1)/etc/updater/conf.d
+	$(INSTALL_CONF) ./files/updater.lua $(1)/etc/updater/conf.d/switch-branch.lua
 endef
 
 define Package/$(PKG_NAME)/postinst
