@@ -1,0 +1,28 @@
+--- a/src/cqueues.c
++++ b/src/cqueues.c
+@@ -23,6 +23,11 @@
+  * USE OR OTHER DEALINGS IN THE SOFTWARE.
+  * ==========================================================================
+  */
++
++#ifndef HAVE_EVENTFD
++#define HAVE_EVENTFD 1
++#endif
++
+ #include "config.h"
+
+ #include <limits.h>	/* INT_MAX LONG_MAX */
+--- a/src/signal.c
++++ b/src/signal.c
+@@ -23,6 +23,11 @@
+  * USE OR OTHER DEALINGS IN THE SOFTWARE.
+  * ==========================================================================
+  */
++
++#ifndef ENABLE_SIGNALFD
++#define ENABLE_SIGNALFD 1
++#endif
++
+ #include "config.h"
+
+ #include <errno.h>
