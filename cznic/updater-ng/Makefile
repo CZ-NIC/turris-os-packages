@@ -55,9 +55,6 @@ define Package/$(PKG_NAME)/install
 	# it is here only for reference and to make sure that it exists.
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/updater.config $(1)/etc/config/updater
-
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/supervisor/init $(1)/etc/init.d/updater-journal-recover
 endef
 
 define Package/$(PKG_NAME)/conffiles
@@ -76,6 +73,8 @@ define Py3Package/$(PKG_NAME)-supervisor/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/supervisor/updater-supervisor $(1)/usr/bin/
 
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/supervisor/init $(1)/etc/init.d/updater-journal-recover
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/supervisor/cron $(1)/etc/cron.d/updater
 
