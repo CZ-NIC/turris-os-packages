@@ -1,0 +1,13 @@
+--- a/src/Directory.cpp
++++ b/src/Directory.cpp
+@@ -34,6 +34,10 @@
+ #include <stdlib.h>
+ #include <Directory.h>
+
++#ifndef PATH_MAX
++#define PATH_MAX 4096
++#endif
++
+ #if defined SOLARIS || defined NETBSD || defined FREEBSD
+ #include <limits.h>
+ #endif
