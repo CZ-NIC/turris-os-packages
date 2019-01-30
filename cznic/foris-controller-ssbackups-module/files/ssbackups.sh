@@ -66,7 +66,7 @@ error_detect() {
 
 
 # get result from server first
-result="$(/usr/bin/foris-client -m ssbackups -a create_and_upload ubus)"
+result="$(/usr/bin/foris-client-wrapper -m ssbackups -a create_and_upload)"
 
 if ! error_detect "$?" "$result"; then
         ### handle error
