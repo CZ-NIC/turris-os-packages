@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2014 OpenWrt.org
+# Copyright (C) 2006-2018 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,18 +8,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dovecot
-PKG_VERSION:=2.2.35
-PKG_RELEASE:=1
+PKG_VERSION:=2.3.4
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://www.dovecot.org/releases/2.2
-PKG_MD5SUM:=cce15db2fc5233386b63a3cf21c465c09e6e55014ed66c4f184b7d221a47180c
+PKG_SOURCE_URL:=https://www.dovecot.org/releases/2.3
+PKG_HASH:=d91b76eff8df6185c1799f1b279f780105bdeeea27e3286b42f4cab18efbef05
 PKG_LICENSE:=LGPL-2.1 MIT BSD-3-Clause Unique
 PKG_LICENSE_FILES:=COPYING COPYING.LGPL COPYING.MIT
 PKG_MAINTAINER:=Lucian Cristian <lucian.cristian@gmail.com>
 
 PKG_BUILD_DEPENDS:=libiconv
 PKG_CONFIG_DEPENDS:= \
+	CONFIG_DOVECOT_GSSAPI \
 	CONFIG_DOVECOT_LDAP \
 	CONFIG_DOVECOT_MYSQL \
 	CONFIG_DOVECOT_PGSQL \
@@ -30,14 +31,16 @@ PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
+# iconv is needed when compiling with MySQL support. iconv will also be used by
+# dovecot itself.
+include $(INCLUDE_DIR)/nls.mk
 
 define Package/dovecot
   SECTION:=mail
   CATEGORY:=Mail
-  DEPENDS:=+DOVECOT_LDAP:libopenldap +DOVECOT_MYSQL:libmysqlclient +DOVECOT_PGSQL:libpq +DOVECOT_SQLITE:libsqlite3 +libopenssl +librt +zlib +libbz2 +libcap +DOVECOT_ICU:icu
+  DEPENDS:=+DOVECOT_GSSAPI:krb5-libs +DOVECOT_LDAP:libopenldap +DOVECOT_MYSQL:libmysqlclient +DOVECOT_PGSQL:libpq +DOVECOT_SQLITE:libsqlite3 +libopenssl +librt +zlib +libbz2 +libcap +DOVECOT_ICU:icu $(ICONV_DEPENDS)
   TITLE:=An IMAP and POP3 daemon
-  MAINTAINER:=Peter Wagner <tripolar@gmx.at>
-  URL:=http://www.dovecot.org/
+  URL:=https://www.dovecot.org/
   USERID:=dovecot=59:dovecot=59
   ABI_VERSION:=$(PKG_VERSION)
 endef
@@ -49,6 +52,11 @@ endef
 define Package/dovecot/config
         menu "Select dovecot build options"
                 depends on PACKAGE_dovecot
+                config DOVECOT_GSSAPI
+                        bool "GSSAPI support"
+                        default n
+                        help
+                          Implements GSSAPI support in dovecot.
                 config DOVECOT_LDAP
                         bool "LDAP support"
                         default n
@@ -90,12 +98,13 @@ define Package/dovecot-utils
 endef
 
 CONFIGURE_ARGS += \
-	--without-gssapi \
+	--libexecdir=/usr/libexec \
 	--without-pam \
-	--with-moduledir=/usr/lib/dovecot/modules \
 	--with-notify=dnotify \
 	--without-lzma \
 	--without-lz4 \
+	--without-sodium \
+	$(if $(CONFIG_DOVECOT_GSSAPI),--with-gssapi=yes,--with-gssapi=no) \
 	$(if $(CONFIG_DOVECOT_LDAP),--with-ldap=yes,--with-ldap=no) \
 	$(if $(CONFIG_DOVECOT_MYSQL),--with-mysql=yes,--with-mysql=no) \
 	$(if $(CONFIG_DOVECOT_PGSQL),--with-pgsql=yes,--with-pgsql=no) \
@@ -128,10 +137,12 @@ define Package/dovecot/install
 			$(1)/etc/dovecot \
 			$(1)/usr/share/doc/dovecot \
 			$(1)/usr/lib/dovecot \
+			$(1)/usr/libexec/dovecot \
 			$(1)/usr/bin \
 			$(1)/usr/sbin
 	$(CP) $(PKG_INSTALL_DIR)/etc/dovecot/* $(1)/etc/dovecot/
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/dovecot/* $(1)/usr/lib/dovecot/
+	$(CP) $(PKG_INSTALL_DIR)/usr/libexec/dovecot/* $(1)/usr/libexec/dovecot/
 	$(CP) $(PKG_INSTALL_DIR)/usr/share/doc/dovecot/example-config $(1)/usr/share/doc/dovecot/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/doveconf $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/* $(1)/usr/sbin/
