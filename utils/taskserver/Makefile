@@ -7,7 +7,7 @@ PKG_RELEASE:=1
 PKG_LICENSE:=MIT
 
 PKG_SOURCE:=taskd-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://www.taskwarrior.org/download/
+PKG_SOURCE_URL:=https://www.taskwarrior.org/download/
 PKG_HASH:=7b8488e687971ae56729ff4e2e5209ff8806cf8cd57718bfd7e521be130621b4
 PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec@nic.cz>
 
@@ -24,7 +24,7 @@ define Package/taskserver
   SECTION:=utils
   CATEGORY:=Utilities
   DEPENDS:=+libstdcpp +libuuid +libgnutls
-  URL:=http://taskwarrior.org/
+  URL:=https://taskwarrior.org/
 endef
 
 #TARGET_LDFLAGS += -ldl
