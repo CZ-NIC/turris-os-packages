@@ -47,11 +47,11 @@ if [ ! -f /etc/turris-version ]; then
 	exit 1
 fi
 if ! which opkg-cl >/dev/null 2>&1; then
-	echo "opkg-cl missing. Are we running on Turris?" >&2
+	echo "opkg-cl is missing. Are we running on Turris?" >&2
 	exit 1
 fi
-if ! which updater.sh >/dev/null 2>&1; then
-	echo "updater.sh missing. Are we running on Turris?" >&2
+if ! which pkgupdate >/dev/null 2>&1; then
+	echo "pkgupdate is missing. Are we running on Turris?" >&2
 	exit 1
 fi
 
