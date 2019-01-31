@@ -21,6 +21,8 @@ local mode = uci_cnf("mode", "branch") -- should we follow branch or version?
 local branch = uci_cnf("branch", "hbs") -- which branch to follow
 local version = uci_cnf("version", nil) -- which version to follow
 local lists = uci_cnf("lists", {}) -- what additional lists should we use
+minimal_builds = uci_cnf("use_minimal", false) -- if packages-minimal should be used
+Export('minimal_builds')
 
 -- Verify that we have sensible configuration
 if type(lists) == "string" then -- if there is single list then uci returns just a string
@@ -32,7 +34,6 @@ if mode == "version" and not version then
 end
 
 -- Common URL base to Turris OS repository
-local repo_base_uri
 if mode == "branch" then
 	repo_base_uri = "https://repo.turris.cz/" .. branch
 elseif mode == "version" then
