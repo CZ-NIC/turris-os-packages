@@ -179,7 +179,7 @@ done
 # For test branches install test keys
 if ! $version; then
 	case "$branch" in
-		hbs|hbk)
+		hbs|hbt)
 			# We don't have to remove cznic-repo-keys-test as it's removed automaticaly by updater
 			;;
 		*)
