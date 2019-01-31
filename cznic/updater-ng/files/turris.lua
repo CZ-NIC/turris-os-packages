@@ -54,7 +54,7 @@ local script_options = {
 	}
 }
 
-local base_uri = repo_base_uri .. "/lists/"
+local base_url = repo_base_uri .. "/lists/"
 -- The distribution base script. It contains the repository and bunch of basic packages
 Script(base_url .. "base.lua", script_options)
 
