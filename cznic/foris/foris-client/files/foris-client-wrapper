@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-# foris-controller-wrapper - wrapper around foris-client command
-# Copyright (C) 2018 CZ.NIC, z.s.p.o. (http://www.nic.cz/)
+# foris-client-wrapper - wrapper around foris-client command
+# Copyright (C) 2019 CZ.NIC, z.s.p.o. (http://www.nic.cz/)
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,5 +38,7 @@ elif [ "$bus" = "unix-socket" ]; then
 elif [ "$bus" = "mqtt" ]; then
 	config_get host mqtt host localhost
 	config_get port mqtt port 11883
-	/usr/bin/foris-client $@ mqtt --host "$host" --port "$port"
+	config_get credentials_file mqtt credentials_file /etc/fosquitto/credentials.plain
+
+	/usr/bin/foris-client $@ mqtt --host "$host" --port "$port" --passwd-file "$credentials_file"
 fi

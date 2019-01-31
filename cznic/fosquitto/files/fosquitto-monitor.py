@@ -22,10 +22,22 @@ def uci_get(config: str, section: str, option: str, default):
     return val
 
 
+def read_passwd_file(path: str) -> typing.Tuple[str]:
+    """ Returns username and password from passwd file
+    """
+    with open(path, "r") as f:
+        return re.match(r"^([^:]+):(.*)$", f.readlines()[0][:-1]).groups()
+
+
 def parse_cmdline():
     parser = argparse.ArgumentParser(prog="fosquitto-monitor")
     parser.add_argument("-H", "--host", default=None, required=False)
     parser.add_argument("-P", "--port", type=int, default=0, required=False)
+    parser.add_argument(
+        "-F", "--passwd-file", type=lambda x: read_passwd_file(x),
+        help="path to passwd file (first record will be used to authenticate)",
+        default="/etc/fosquitto/credentials.plain",
+    )
 
     commands = parser.add_subparsers(help="command which will be performend", dest="command")
     commands.required = True
@@ -59,7 +71,10 @@ def parse_cmdline():
     return parser.parse_args()
 
 
-def listener(host: str, port: int, show_advertize: bool, filter_ids: typing.Set[str]):
+def listener(
+    host: str, port: int, show_advertize: bool, filter_ids: typing.Set[str],
+    credentials: typing.Tuple[str],
+):
     def on_connect(client, userdata, flags, rc):
         print(f"Connected.")
         client.subscribe("foris-controller/#")
@@ -95,12 +110,13 @@ def listener(host: str, port: int, show_advertize: bool, filter_ids: typing.Set[
     client.on_message = on_message
     client.on_subscribe = on_subscribe
 
+    client.username_pw_set(*credentials)
     client.connect(host, port, 30)
     print(f"Connecting to host {host}:{port}.")
     client.loop_forever()
 
 
-def detect_ids(host: str, port: int, timeout: int):
+def detect_ids(host: str, port: int, timeout: int, credentials: typing.Tuple[str]):
     ids: typing.Set[str] = set()
 
     def on_message(client, userdata, msg):
@@ -116,6 +132,7 @@ def detect_ids(host: str, port: int, timeout: int):
     client.on_connect = on_connect
     client.on_message = on_message
 
+    client.username_pw_set(*credentials)
     client.connect(host, port, 30)
     if timeout:
         start = time.time()
@@ -125,7 +142,7 @@ def detect_ids(host: str, port: int, timeout: int):
         client.loop_forever()
 
 
-def query_bus(host: str, port: int, topic: str, device_id: str):
+def query_bus(host: str, port: int, topic: str, device_id: str, credentials: typing.Tuple[str]):
         result = {"data": None}
 
         msg_id = uuid.uuid1()
@@ -150,6 +167,7 @@ def query_bus(host: str, port: int, topic: str, device_id: str):
         client.on_subscribe = on_subscribe
         client.on_message = on_message
         client.on_connect = on_connect
+        client.username_pw_set(*credentials)
         client.connect(host, port, 30)
         client.loop_start()
         client._thread.join(5)
@@ -160,24 +178,26 @@ def query_bus(host: str, port: int, topic: str, device_id: str):
         return result["data"]
 
 
-def list_objects(host: str, port: int, device_id: str, modules: typing.List[str]):
+def list_objects(
+    host: str, port: int, device_id: str, modules: typing.List[str], credentials: typing.Tuple[str]
+):
     if not modules:
         topic = f"foris-controller/{device_id}/list"
-        for module in query_bus(host, port, topic, device_id):
+        for module in query_bus(host, port, topic, device_id, credentials):
             for action in module["actions"]:
                 print(f"{module['name']}.{action}")
             print()
     else:
         for module in modules:
             topic = f"foris-controller/{device_id}/request/{module}/list"
-            for action in query_bus(host, port, topic, device_id):
+            for action in query_bus(host, port, topic, device_id, credentials):
                 print(f"{module}.{action}")
             print()
 
 
-def display_schemas(host: str, port: int, device_id: str):
+def display_schemas(host: str, port: int, device_id: str, credentials: typing.Tuple[str]):
     topic = f"foris-controller/{device_id}/jsonschemas"
-    print(json.dumps(query_bus(host, port, topic, device_id), indent=2))
+    print(json.dumps(query_bus(host, port, topic, device_id, credentials), indent=2))
 
 
 def main():
@@ -186,13 +206,13 @@ def main():
     port = options.port or int(uci_get("foris-controller", "mqtt", "port", 11883))
 
     if options.command == "listen":
-        listener(host, port, options.show_advertize, options.filter_ids)
+        listener(host, port, options.show_advertize, options.filter_ids, options.passwd_file)
     elif options.command == "detect":
-        detect_ids(host, port, options.timeout)
+        detect_ids(host, port, options.timeout, options.passwd_file)
     elif options.command == "list":
-        list_objects(host, port, options.device_id, options.filter_modules)
+        list_objects(host, port, options.device_id, options.filter_modules, options.passwd_file)
     elif options.command == "schemas":
-        display_schemas(host, port, options.device_id)
+        display_schemas(host, port, options.device_id, options.passwd_file)
 
 
 if __name__ == "__main__":
