@@ -42,6 +42,7 @@ case "$BUS" in
 	mqtt)
 		config_get BUS_HOST mqtt host "localhost"
 		config_get BUS_PORT mqtt port "11883"
+		config_get CREDENTIALS_FILE mqtt credentials_file "/etc/fosquitto/credentials.plain"
 		BUS="mqtt"
 		;;
 esac
@@ -54,7 +55,7 @@ case "$BUS" in
 		echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --bus-socket $BUS_PATH\""
 		;;
 	mqtt)
-		echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --mqtt-host $BUS_HOST --mqtt-port $BUS_PORT\""
+		echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --mqtt-host $BUS_HOST --mqtt-port $BUS_PORT --mqtt-passwd-file $CREDENTIALS_FILE\""
 		;;
 esac
 echo "var.foris-$APP.paths = \"$FORIS_PATHS\""
