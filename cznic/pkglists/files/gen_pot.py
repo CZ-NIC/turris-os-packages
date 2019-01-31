@@ -20,7 +20,7 @@ if not os.path.isfile(DEFS):
 # Initialize PO file
 po = polib.POFile()
 po.metadata = {
-    'Project-Id-Version': 'userlists',
+    'Project-Id-Version': 'pkglists',
     'Report-Msgid-Bugs-To': 'packaging@turris.cz',
     'POT-Creation-Date':
         datetime.datetime.now().strftime('%Y-%m-%d %H:%M%z'),

@@ -7,15 +7,15 @@
 #
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=userlists
-PKG_VERSION:=11.8.1
+PKG_NAME:=pkglists
+PKG_VERSION:=1.0.0
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/userlists
-	TITLE:=Userlists for the updater
+define Package/$(PKG_NAME)
+	TITLE:=Packages lists for the updater
 endef
 
 define Build/Compile
@@ -24,14 +24,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/updater/
-	$(INSTALL_DATA) ./files/definitions.json $(1)/usr/share/updater/definitions.json
-endef
-
-define Package/$(PKG_NAME)/postinst
-[ -n "$$IPKG_INSTROOT" ] || {
-	# Rename i_agree_honeypot to honeypot
-	sed -i "s/list lists 'i_agree_honeypot'/list lists 'honeypot'/" /etc/config/updater
-}
+	$(INSTALL_DATA) ./files/definitions.json $(1)/usr/share/updater/pkglists.json
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

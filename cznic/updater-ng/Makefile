@@ -65,8 +65,7 @@ endef
 
 define Package/$(PKG_NAME)-supervisor
 	TITLE:=Next generation updater supervisor and its library
-	DEPENDS:=+updater-ng +vixie-cron +python3-light +python3-uci +userlists +l10n_supported
-	EXTRA_DEPENDS:=userlists (>=11)
+	DEPENDS:=+updater-ng +vixie-cron +python3-light +python3-uci +pkglists +l10n_supported
 endef
 
 define Py3Package/$(PKG_NAME)-supervisor/install
