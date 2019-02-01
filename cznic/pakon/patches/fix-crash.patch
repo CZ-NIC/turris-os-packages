@@ -1,0 +1,28 @@
+From f1d64e7c3c037aa6c7aca72b1c0670669268de46 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Martin=20Mat=C4=9Bjek?= <martin.matejek@nic.cz>
+Date: Thu, 31 Jan 2019 17:21:50 +0100
+Subject: [PATCH] show: Fix crash when no aggregated data exists
+
+---
+ handler.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/handler.py b/handler.py
+index 6ee75ae..4ae8eeb 100644
+--- a/handler.py
++++ b/handler.py
+@@ -222,8 +222,9 @@ def query(query):
+     if aggregate:
+         flows = get_aggregate_data_from_archive(con, where_clause, where_parameters, filter)
+         flows += get_data_from_archive(con, where_clause, where_parameters, filter)
+-        flows = aggregate_flows(flows)
+-        flows.sort(key=lambda x: x[6]+x[7])
++        if flows:
++            flows = aggregate_flows(flows)
++            flows.sort(key=lambda x: x[6] + x[7])
+     else:
+         # sorted by time - archive data is always older than data from live database
+         flows = get_data_from_archive(con, where_clause, where_parameters, filter)
+-- 
+2.18.1
+
