@@ -11,7 +11,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	VERSION:=$(LINUX_VERSION)-$(LINUX_RELEASE)-$(LINUX_VERMAGIC)
-	DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +rescue-image +u-boot-mox +mtd
+	DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mtd +kmod-gpio-button-hotplug
 endef
 
 define Package/$(PKG_NAME)/description
@@ -44,6 +44,9 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/init $(1)/etc/init.d/mox_autosetup
 	$(INSTALL_DATA) ./files/secure-firmware.bin $(1)/usr/share/mox/secure-firmware
+	$(INSTALL_DATA) ./files/dtb $(1)/usr/share/mox/dtb
+	$(INSTALL_DATA) ./files/rescue $(1)/usr/share/mox/rescue
+	$(INSTALL_DATA) ./files/uboot $(1)/usr/share/mox/uboot
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/button
 	$(INSTALL_DATA) ./files/reset_btn $(1)/etc/hotplug.d/button/mox_reset
 	$(INSTALL_DIR) $(1)/lib/firmware/mrvl/
