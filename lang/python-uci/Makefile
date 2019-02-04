@@ -60,8 +60,5 @@ endef
 
 $(eval $(call PyPackage,python-uci))
 $(eval $(call BuildPackage,python-uci))
-$(eval $(call BuildPackage,python-uci-src))
-
 $(eval $(call Py3Package,python3-uci))
 $(eval $(call BuildPackage,python3-uci))
-$(eval $(call BuildPackage,python3-uci-src))
