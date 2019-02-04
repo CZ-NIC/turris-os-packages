@@ -19,12 +19,11 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-uci-$(PKG_VERSION)
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
-
-PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/$(PKG_NAME)/Default
   SECTION:=lang-python
@@ -35,16 +34,16 @@ define Package/$(PKG_NAME)/Default
 endef
 
 define Package/python-uci
-  $(call Package/$(PKG_NAME)/Default)
+$(call Package/$(PKG_NAME)/Default)
   TITLE:=python-uci
-  DEPENDS:=+PACKAGE_python-uci:python-light +libuci
+  DEPENDS:=python-light +libuci
   VARIANT:=python
 endef
 
 define Package/python3-uci
-  $(call Package/$(PKG_NAME)/Default)
+$(call Package/$(PKG_NAME)/Default)
   TITLE:=python3-uci
-  DEPENDS:=+PACKAGE_python3-uci:python3-light +libuci
+  DEPENDS:=python3-light +libuci
   VARIANT:=python3
 endef
 
