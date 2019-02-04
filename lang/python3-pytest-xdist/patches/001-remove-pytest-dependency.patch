@@ -1,0 +1,10 @@
+--- a/setup.py
++++ b/setup.py
+@@ -1,6 +1,6 @@
+ from setuptools import setup, find_packages
+
+-install_requires = ["execnet>=1.1", "pytest>=3.6.0", "pytest-forked", "six"]
++install_requires = ["execnet>=1.1", "six"]
+
+
+ with open("README.rst") as f:
