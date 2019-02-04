@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2017-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -21,6 +21,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-periphery-$(PKG_VERSION)
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
+
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/$(PKG_NAME)/Default
 	SECTION:=lang-python
@@ -55,5 +57,8 @@ endef
 
 $(eval $(call PyPackage,python-periphery))
 $(eval $(call BuildPackage,python-periphery))
+$(eval $(call BuildPackage,python-periphery-src))
+
 $(eval $(call Py3Package,python3-periphery))
 $(eval $(call BuildPackage,python3-periphery))
+$(eval $(call BuildPackage,python3-periphery-src))
