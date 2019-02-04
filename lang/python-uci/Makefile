@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-uci
 PKG_VERSION:=0.4
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_LICENSE:=GPLv3
 
 PKG_SOURCE_PROTO:=git
@@ -24,41 +24,38 @@ include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
-define Package/Common
-  SUBMENU:=Python
-  SECTION:=lang
+define Package/$(PKG_NAME)/Default
+  SECTION:=lang-python
   CATEGORY:=Languages
+  SUBMENU:=Python
   URL:=https://gitlab.labs.nic.cz/turris/pyuci/
   MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/python-uci
-  $(call Package/Common)
   TITLE:=python-uci
   DEPENDS:=+python-light +libuci
+  VARIANT:=python
 endef
 
 define Package/python3-uci
   $(call Package/Common)
   TITLE:=python3-uci
   DEPENDS:=+python3-light +libuci
+  VARIANT:=python3
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/python-uci/description
   Python bindings for Unified Configuration Interface.
 endef
 
-define Build/Compile
-	$(call Build/Compile/PyMod,,install --prefix="/usr" --root=$(PKG_INSTALL_DIR)/py2)
-	$(call Build/Compile/Py3Mod,,install --prefix="/usr" --root=$(PKG_INSTALL_DIR)/py3)
+define Package/python3-uci/description
+$(call Package/python-uci/description)
+.
+(Variant for Python3)
 endef
 
-PKG_INSTALL_DIR_ORIG:="$(PKG_INSTALL_DIR)"
-PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py2"
 $(eval $(call PyPackage,python-uci))
-PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py3"
-$(eval $(call Py3Package,python3-uci))
-PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)"
-
 $(eval $(call BuildPackage,python-uci))
+$(eval $(call Py3Package,python3-uci))
 $(eval $(call BuildPackage,python3-uci))
