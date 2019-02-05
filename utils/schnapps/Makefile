@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=schnapps
 PKG_VERSION:=1.7
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/schnapps.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -57,7 +57,7 @@ define Package/schnapps/install
 	$(INSTALL_BIN) ./files/cert-backup_hook.sh $(1)/etc/schnapps/rollback.d/10_cert-backup.sh
 	chmod a+rx $(1)/etc/schnapps/rollback.d/10_cert-backup.sh
 	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
-	cat ./files/updater_hook.sh | sed 's|pre|post|g' > $(1)/etc/updater/hook_postupdate/05_schnapps.sh
+	cat ./files/updater_hook.sh | sed 's|pre|post|g' > $(1)/etc/updater/hook_postupdate/95_schnapps.sh
 	chmod +x $(1)/etc/updater/hook_postupdate/05_schnapps.sh
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps.cron $(1)/etc/cron.d/schnapps
