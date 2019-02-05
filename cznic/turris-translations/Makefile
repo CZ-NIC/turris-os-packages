@@ -48,5 +48,6 @@ define TRANSLATION
 $$(foreach LANG,$(2),$$(eval $$(call TRANSLATION_LANG,$(1),$$(LANG))))
 endef
 
-$(eval $(call TRANSLATION,pkglists,))
+# TODO add translations and enable pkglists-l10n-* packages
+#$(eval $(call TRANSLATION,pkglists,))
 $(eval $(call TRANSLATION,user-notify,cs de fr hu nb pl ru sk nb))
