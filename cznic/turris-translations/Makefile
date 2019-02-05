@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-translations
 PKG_VERSION:=1.1.0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/turris-translations.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -48,5 +48,5 @@ define TRANSLATION
 $$(foreach LANG,$(2),$$(eval $$(call TRANSLATION_LANG,$(1),$$(LANG))))
 endef
 
-$(eval $(call TRANSLATION,pkglists,cs de fr hu nb pl ru sk nb))
+$(eval $(call TRANSLATION,pkglists,))
 $(eval $(call TRANSLATION,user-notify,cs de fr hu nb pl ru sk nb))
