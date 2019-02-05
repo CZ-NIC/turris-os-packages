@@ -34,7 +34,7 @@ define Package/knot-resolver
 	URL:=https://gitlab.labs.nic.cz/knot/resolver
 	DEPENDS=+knot-libs +knot-libzscanner +libuv +luajit +dnssec-rootkey +resolver-conf +luasec +luasocket +libstdcpp
 	PROVIDES:=dns-resolver
-	USERID:=knot=3535:knot=3535
+	USERID:=kresd=3535:kresd=3535
 endef
 
 define Package/knot-resolver/description
