@@ -1,34 +1,25 @@
-From 1eb55e4b113d45bca3b29ebce6606e290c3f0309 Mon Sep 17 00:00:00 2001
+From 31cd99d4339127ef56554ca1b111993e9c03c0a2 Mon Sep 17 00:00:00 2001
 From: Stepan Henek <stepan.henek@nic.cz>
 Date: Mon, 12 Nov 2018 10:31:55 +0100
 Subject: [PATCH] compatibility with python older than 3.6.5
 
 ---
- foris_ws/__main__.py | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ foris_ws/__main__.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/foris_ws/__main__.py b/foris_ws/__main__.py
-index 055d6e7..2b8daa5 100755
+index 37bafcb..8e49353 100755
 --- a/foris_ws/__main__.py
 +++ b/foris_ws/__main__.py
-@@ -24,8 +24,6 @@ import os
- import websockets
- import signal
- 
--from typing import NoReturn
--
- from . import __version__
- from .bus_listener import make_bus_listener
- from .ws_handling import connection_handler as ws_connection_handler
-@@ -33,7 +31,7 @@ from .ws_handling import connection_handler as ws_connection_handler
- logger = logging.getLogger(__name__)
+@@ -51,7 +51,7 @@ except ModuleNotFoundError:
+     pass
  
  
--def main() -> NoReturn:
+-def main() -> typing.NoReturn:
 +def main():
      # Parse the command line options
      parser = argparse.ArgumentParser(prog="foris-ws")
      parser.add_argument("-d", "--debug", dest="debug", action="store_true", default=False)
 -- 
-2.19.1
+2.19.2
 
