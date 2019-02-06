@@ -34,7 +34,7 @@ define Package/knot-resolver
 	URL:=https://www.knot-resolver.cz/
 	DEPENDS=+knot-libs +knot-libzscanner +libuv +luajit +dnssec-rootkey +resolver-conf +luasec +luasocket +libstdcpp
 	PROVIDES:=dns-resolver
-	USERID:=kresd=3535:kresd=3535
+	USERID:=kresd=3536:kresd=3536
 endef
 
 define Package/knot-resolver/description
