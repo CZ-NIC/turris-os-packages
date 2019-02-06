@@ -31,7 +31,7 @@ define Package/knot-resolver
 	CATEGORY:=Network
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Knot DNS Resolver
-	URL:=https://gitlab.labs.nic.cz/knot/resolver
+	URL:=https://www.knot-resolver.cz/
 	DEPENDS=+knot-libs +knot-libzscanner +libuv +luajit +dnssec-rootkey +resolver-conf +luasec +luasocket +libstdcpp
 	PROVIDES:=dns-resolver
 	USERID:=kresd=3535:kresd=3535
