@@ -3,6 +3,7 @@
 import uci
 import time
 import json
+import re
 import subprocess
 
 TIME = 3000
@@ -36,8 +37,13 @@ elif bus == "unix":
 elif bus == "mqtt":
     host = uci_get("foris-controller", "mqtt", "host", "localhost")
     port = int(uci_get("foris-controller", "mqtt", "port", 11883))
+    passwd_path = uci_get(
+        "foris-controller", "mqtt", "credentials_file", "/etc/fosquitto/credentials.plain"
+    )
+    with open(passwd_path, "r") as f:
+        credentials = re.match(r"^([^:]+):(.*)$", f.readlines()[0][:-1]).groups()
     from foris_controller.buses.mqtt import MqttNotificationSender
-    sender = MqttNotificationSender(host, port)
+    sender = MqttNotificationSender(host, port, credentials)
 
 ips = []
 # try to detect ips from uci
