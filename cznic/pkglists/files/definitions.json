@@ -67,7 +67,7 @@
 	"ssbackup": {
 		"title": "Cloud Backups",
 		"description": "Service for storing configuration backups on remote servers (EXPERIMENTAL).",
-		"visible": true
+		"visible": false
 	},
 	"tor": {
 		"title": "Tor",
