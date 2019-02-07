@@ -42,7 +42,7 @@
 	"netboot": {
 		"title": "Turris MOX network boot",
 		"description": "Server side for Turris MOX without SD card used as Wi-Fi access point.",
-		"visible": true
+		"visible": false
 	},
 	"netmetr": {
 		"title": "Internet connection speed measurement",
