@@ -3,16 +3,13 @@ User lists definitions
 Definitions are in JSON file format. It's expected to contain name of user list
 and for that there should be following fields:
 
-* __title__: This is suppose to be a title for given user list.
-* __description__: This is long text describing content of given user list.
+* __title__: This is suppose to be a title for given user list. Type is string.
+* __description__: This is long text describing content of given user list. Type
+  is string.
 * __visible__: This should be set to `yes` or `no` to say if given user list
-  should be visible or not. If set to `no` then __title__ and __description__ are
-  not required.
+  should be visible or not. Type is boolean.
 
-### Verification
-Part of this is also verification script. It just reads `definitions.json` and
-checks if it has correct format. Just run `verify.py` in same directory as
-`definitions.json` is.
+All fields has to be defined as appropriate values of specified type.
 
 ### Translations
 To generate translations you can use `gen_pot.py` script. It expect you to run it
