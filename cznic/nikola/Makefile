@@ -24,7 +24,7 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+python3-light +python3-setuptools +logrotate +syslog-ng3 +python3-libatsha204 +firewall +cznic-cacert-bundle
+	DEPENDS:=+python3-light +python3-setuptools +logrotate +syslog-ng +python3-libatsha204 +firewall +cznic-cacert-bundle
 endef
 
 define Package/$(PKG_NAME)/description
@@ -62,7 +62,7 @@ define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 # check if we are on real system
 if [ -z "$${IPKG_INSTROOT}" ]; then
-	echo "Reloading syslog-ng3"
+	echo "Reloading syslog-ng"
 	/etc/init.d/syslog-ng reload
 fi
 exit 0
