@@ -25,12 +25,13 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
+	PROVIDES:=turris-otp
 	DEPENDS:=+libopenssl +libunbound 
 endef
 
 define Package/$(PKG_NAME)-emul
 	TITLE:=$(PKG_NAME)-emul
-	PROVIDES:=$(PKG_NAME)
+	PROVIDES:=$(PKG_NAME) turris-otp
 	DEPENDS:=+libopenssl +libunbound 
 endef
 
