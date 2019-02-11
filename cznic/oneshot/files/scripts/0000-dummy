@@ -1,0 +1,3 @@
+#!/bin/sh
+# Empty script to preserve script directory and to make sure that oneshot.sh won't
+# fail execution.

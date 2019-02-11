@@ -1,0 +1,145 @@
+#!/bin/sh /etc/rc.common
+
+START=50
+STOP=50
+
+USE_PROCD=1
+
+GENERATED_CONF=/tmp/fosquitto.generated.conf
+PLAIN_PASSWORD=/etc/fosquitto/credentials.plain  # local:<random_password>
+HASHED_PASSWORD=/etc/fosquitto/credentials.hashed  # local:<hashed_random_password>
+
+generate_password() {
+	local new_password=$(hexdump -n 16 -e '4/4 "%08X" 1 "\n"' /dev/urandom)
+	local stored_umask=$(umask)
+	umask 0077
+	mkdir -p /etc/fosquitto
+	echo "local:${new_password}" > "${PLAIN_PASSWORD}"
+	cp "${PLAIN_PASSWORD}" "${HASHED_PASSWORD}"
+	mosquitto_passwd -U "${HASHED_PASSWORD}"
+	umask ${stored_umask}
+}
+
+generate_global() {
+	config_get_bool debug global debug "0"
+	if [ "$debug" = "1" ] ; then
+		echo "log_type all" >> "$GENERATED_CONF"
+	else
+		echo "log_type error" >> "$GENERATED_CONF"
+		echo "log_type warning" >> "$GENERATED_CONF"
+	fi
+	echo "log_dest stderr" >> "$GENERATED_CONF"
+	echo "per_listener_settings true" >> "$GENERATED_CONF"
+	echo "autosave_interval 0" >> "$GENERATED_CONF"
+	echo "persistence true" >> "$GENERATED_CONF"
+	echo "persistence_file /tmp/fosquitto.db" >> "$GENERATED_CONF"
+	echo "password_file ${HASHED_PASSWORD}" >> "$GENERATED_CONF"
+	echo "allow_anonymous false" >> "$GENERATED_CONF"
+	echo  >> "$GENERATED_CONF"
+}
+
+generate_local() {
+	config_get port local port 11883
+	echo "port $port" >> "$GENERATED_CONF"
+	echo "bind_address localhost" >> "$GENERATED_CONF"
+	echo  >> "$GENERATED_CONF"
+}
+
+generate_remote() {
+	echo >> "$GENERATED_CONF"
+
+	config_get_bool enabled remote enabled "0"
+	config_get port remote port "11884"
+	if [ "$enabled" -eq 1 -a -f /etc/ssl/ca/remote/ca.crt -a -f /etc/ssl/ca/remote/01.crt -a -f /etc/ssl/ca/remote/ca.crl ]; then
+		echo "listener ${port} 0.0.0.0" >> "$GENERATED_CONF"
+		echo "protocol mqtt" >> "$GENERATED_CONF"
+		echo "tls_version tlsv1.2" >> "$GENERATED_CONF"
+		echo "use_identity_as_username true" >> "$GENERATED_CONF"
+		echo "cafile /etc/ssl/ca/remote/ca.crt" >> "$GENERATED_CONF"
+		echo "certfile /etc/ssl/ca/remote/01.crt" >> "$GENERATED_CONF"
+		echo "keyfile /etc/ssl/ca/remote/01.key" >> "$GENERATED_CONF"
+		echo "crlfile /etc/ssl/ca/remote/ca.crl" >> "$GENERATED_CONF"
+		echo "require_certificate true" >> "$GENERATED_CONF"
+
+		echo  >> "$GENERATED_CONF"
+	fi
+}
+
+append_topic() {
+	echo "topic foris-controller/$1/notification/+/action/+ in 0" >> "$GENERATED_CONF"
+	echo "topic foris-controller/$1/request/+/action/+ out 0" >> "$GENERATED_CONF"
+	echo "topic foris-controller/$1/list out 0" >> "$GENERATED_CONF"
+	echo "topic foris-controller/$1/request/+/list out 0" >> "$GENERATED_CONF"
+	echo "topic foris-controller/$1/list out 0" >> "$GENERATED_CONF"
+	echo "topic foris-controller/$1/schema out 0" >> "$GENERATED_CONF"
+	echo "topic foris-controller/$1/reply/+ in 0" >> "$GENERATED_CONF"
+}
+
+generate_subordinate() {
+	local config="$1"
+	config_get id "$config" id
+	config_get address "$config" address
+	config_get port "$config" port 11884
+	config_get subsubordinate "$config" subsubordinate
+	config_get_bool enabled "$config" enabled 0
+	if [ "$enabled" == 0 ]; then
+		return
+	fi
+
+	echo >> "$GENERATED_CONF"
+	echo "connection ${id}" >> "$GENERATED_CONF"
+	echo "address ${address}:${port}" >> "$GENERATED_CONF"
+	echo "bridge_cafile /etc/fosquitto/bridges/${id}/ca.crt" >> "$GENERATED_CONF"
+	echo "bridge_certfile /etc/fosquitto/bridges/${id}/token.crt" >> "$GENERATED_CONF"
+	echo "bridge_keyfile /etc/fosquitto/bridges/${id}/token.key" >> "$GENERATED_CONF"
+	echo "bridge_insecure true" >> "$GENERATED_CONF"
+	echo "bridge_tls_version tlsv1.2" >> "$GENERATED_CONF"
+
+	append_topic "$id"
+	config_list_foreach "$config" subsubordinate append_topic
+
+	echo >> "$GENERATED_CONF"
+}
+
+generate_config() {
+	echo "Generating fosquitto config file in $GENERATED_CONF"
+	echo "# fosquitto.conf file generated from UCI config." > $GENERATED_CONF
+
+	config_load fosquitto
+
+	generate_global
+	generate_local
+	generate_remote
+	config_foreach generate_subordinate subordinate
+}
+
+start_service() {
+	generate_config
+
+	if [ ! \( -e "$PLAIN_PASSWORD" \) -o ! \( -e "$HASHED_PASSWORD" \) ]; then
+		generate_password
+	fi
+
+	procd_open_instance
+	procd_set_param command mosquitto
+	procd_append_param command -c $GENERATED_CONF
+	procd_set_param file $CONF_WATCH
+	procd_set_param pidfile /var/run/fosquitto.pid
+	procd_set_param stdout 1 # forward stdout of the command to logd
+	procd_set_param stderr 1 # same for stderr
+	procd_set_param respawn
+	procd_close_instance
+}
+
+
+service_triggers() {
+	# Makes "reload_config" work
+	procd_add_reload_trigger "fosquitto"
+}
+
+restart() {
+	trap '' TERM
+	stop
+	sleep 0.2
+	start
+}

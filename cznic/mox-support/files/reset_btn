@@ -1,0 +1,10 @@
+#!/bin/sh
+[ -z "$(uci -q get 'system.@system[0].handle_mox_button_manually' | egrep '(1|y|yes|true)' )" ] || exit 0
+[ "$BUTTON" = BTN_0 ] || exit 0
+[ "$ACTION" = released ] || exit 0
+if [ "$SEEN" -lt 4 ] || [ "$SEEN" -gt 60 ]; then
+	reboot
+else
+	echo s > /proc/sysrq-trigger
+	echo b > /proc/sysrq-trigger
+fi

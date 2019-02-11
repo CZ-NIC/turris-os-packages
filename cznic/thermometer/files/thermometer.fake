@@ -1,0 +1,3 @@
+#!/bin/sh
+printf "Board:\t%s\n" 0
+printf "CPU:\t%s\n" 0

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2016 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2018 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,20 +8,23 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-websockets
-PKG_VERSION:=3.2
+PKG_VERSION:=7.0
 PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/aaugustin/websockets.git
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=3.2
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://pypi.python.org/packages/source/w/websockets/
+PKG_SOURCE_SUBDIR:=websockets-$(PKG_VERSION)
+PKG_SOURCE:=websockets-$(PKG_VERSION).tar.gz
+PKG_HASH=08e3c3e0535befa4f0c4443824496c03ecc25062debbcf895874f8a0b4c97c9f
 
+PKG_LICENSE:=BSD
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/python3-websockets-$(PKG_VERSION)
+PKG_BUILD_DEPENDS:=python3
 
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python3-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
+
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/python3-websockets
   SUBMENU:=Python
@@ -29,18 +32,14 @@ define Package/python3-websockets
   CATEGORY:=Languages
   TITLE:=library for developing WebSocket servers and clients
   URL:=https://websockets.readthedocs.io/
-  DEPENDS:=+python3
+  DEPENDS:=+python3-light
+  VARIANT:=python3
 endef
 
-define Package/python3-pyserial/description
-  websockets is a library for developing WebSocket servers and clients in Python. It implements RFC 6455 with a focus on correctness and simplicity. It passes the Autobahn Testsuite.
-  Built on top of Python's asynchronous I/O support introduced in PEP 3156, it provides an API based on coroutines, making it easy to write highly concurrent applications.
-endef
+define Package/python3-websockets/description
+  websockets is a library for building WebSocket servers and clients in Python with a focus on correctness and simplicity.
 
-define Build/Compile
-	$(call Build/Compile/Py3Mod,, \
-		install --root="$(PKG_INSTALL_DIR)" --prefix="/usr"  \
-	)
+  Built on top of asyncio, Python’s standard asynchronous I/O framework, it provides an elegant coroutine-based API.
 endef
 
 $(eval $(call Py3Package,python3-websockets))

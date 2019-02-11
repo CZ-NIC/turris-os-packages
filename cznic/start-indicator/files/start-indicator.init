@@ -7,11 +7,15 @@ start() {
 	msg="Router Turris successfully started."
 	logger -p 0 -t turris "$msg"
 	echo "$msg" > /dev/console
+	[ \! -e /sys/class/leds/red/trigger ] || echo heartbeat > /sys/class/leds/red/trigger
+	[ \! -x /etc/init.d/rainbow ] || /etc/init.d/rainbow restart
+	[ \! -x /etc/init.d/led ] || /etc/init.d/led restart
 }
 
 stop() {
 	msg="Stopping router Turris."
 	logger -p 0 -t turris "$msg"
 	echo "$msg" > /dev/console
+	[ \! -e /sys/class/leds/red/trigger ] || echo default-on > /sys/class/leds/red/trigger
 }
 

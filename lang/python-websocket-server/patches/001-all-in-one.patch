@@ -1,8 +1,8 @@
 diff --git a/websocket_server/websocket_server.py b/websocket_server/websocket_server.py
-index 550099b..f8d8097 100644
+index 550099b..2d2b130 100644
 --- a/websocket_server/websocket_server.py
 +++ b/websocket_server/websocket_server.py
-@@ -1,18 +1,20 @@
+@@ -1,18 +1,19 @@
  # Author: Johan Hanssen Seferidis
  # License: MIT
  
@@ -25,11 +25,10 @@ index 550099b..f8d8097 100644
 +    from socketserver import ThreadingMixIn, TCPServer, StreamRequestHandler
  
 +logger = logging.getLogger(__name__)
-+logging.basicConfig()
  
  '''
  +-+-+-+-+-------+-+-------------+-------------------------------+
-@@ -37,268 +39,325 @@ PAYLOAD_LEN = 0x7f
+@@ -37,268 +38,324 @@ PAYLOAD_LEN = 0x7f
  PAYLOAD_LEN_EXT16 = 0x7e
  PAYLOAD_LEN_EXT64 = 0x7f
  
@@ -74,7 +73,7 @@ index 550099b..f8d8097 100644
 -	def send_message_to_all(self, msg):
 -		self._multicast_(msg)
 +class API(object):
-+
+ 
 +    def run_forever(self):
 +        try:
 +            logger.info("Listening on port %d for clients.." % self.port)
@@ -85,80 +84,16 @@ index 550099b..f8d8097 100644
 +        except Exception as e:
 +            logger.error(str(e), exc_info=True)
 +            exit(1)
-+
+ 
 +    def new_client(self, client, server):
 +        pass
-+
+ 
+-# ------------------------- Implementation -----------------------------
 +    def client_left(self, client, server):
 +        pass
-+
+ 
+-class WebsocketServer(ThreadingMixIn, TCPServer, API):
 +    def message_received(self, client, server, message):
-+        pass
-+
-+    def authenticate(self, msg):
-+        return True
-+
-+    def set_fn_new_client(self, fn):
-+        self.new_client = fn
-+
-+    def set_fn_client_left(self, fn):
-+        self.client_left = fn
-+
-+    def set_fn_message_received(self, fn):
-+        self.message_received = fn
-+
-+    def set_fn_authenticate(self, fn):
-+        self.authenticate = fn
- 
-+    def send_message(self, client, msg):
-+        self._unicast_(client, msg)
-+
-+    def send_message_to_all(self, msg):
-+        self._multicast_(msg)
- 
- 
- # ------------------------- Implementation -----------------------------
- 
- class WebsocketServer(ThreadingMixIn, TCPServer, API):
-+    """
-+	A websocket server waiting for clients to connect.
-+
-+    Args:
-+        port(int): Port to bind to
-+        host(str): Hostname or IP to listen for connections. By default 127.0.0.1
-+            is being used. To accept connections from any client, you should use
-+            0.0.0.0.
-+        loglevel: Logging level from logging module to use for logging. By default
-+            warnings and errors are being logged.
-+
-+    Properties:
-+        clients(list): A list of connected clients. A client is a dictionary
-+            like below.
-+                {
-+                 'id'      : id,
-+                 'handler' : handler,
-+                 'address' : (addr, port)
-+                }
-+    """
-+
-+    allow_reuse_address = True
-+    daemon_threads = True  # comment to keep threads alive until finished
-+
-+    clients = []
-+    id_counter = 0
-+
-+    def __init__(self, port, host='127.0.0.1', loglevel=logging.WARNING):
-+        logger.setLevel(loglevel)
-+        self.port = port
-+        TCPServer.__init__(self, (host, port), WebSocketHandler)
-+
-+    def _message_received_(self, handler, msg):
-+        self.message_received(self.handler_to_client(handler), self, msg)
-+
-+    def _ping_received_(self, handler, msg):
-+        handler.send_pong(msg)
-+
-+    def _pong_received_(self, handler, msg):
 +        pass
  
 -	allow_reuse_address = True
@@ -356,7 +291,80 @@ index 550099b..f8d8097 100644
 -
 -	def finish(self):
 -		self.server._client_left_(self)
--
++    def authenticate(self, msg):
++        return True
+ 
++    def set_fn_new_client(self, fn):
++        self.new_client = fn
+ 
++    def set_fn_client_left(self, fn):
++        self.client_left = fn
+ 
+-def encode_to_UTF8(data):
+-	try:
+-		return data.encode('UTF-8')
+-	except UnicodeEncodeError as e:
+-		print("Could not encode data to UTF-8 -- %s" % e)
+-		return False
+-	except Exception as e:
+-		raise(e)
+-		return False
++    def set_fn_message_received(self, fn):
++        self.message_received = fn
++
++    def set_fn_authenticate(self, fn):
++        self.authenticate = fn
+ 
++    def send_message(self, client, msg):
++        self._unicast_(client, msg)
++
++    def send_message_to_all(self, msg):
++        self._multicast_(msg)
++
++
++# ------------------------- Implementation -----------------------------
++
++class WebsocketServer(ThreadingMixIn, TCPServer, API):
++    """
++	A websocket server waiting for clients to connect.
++
++    Args:
++        port(int): Port to bind to
++        host(str): Hostname or IP to listen for connections. By default 127.0.0.1
++            is being used. To accept connections from any client, you should use
++            0.0.0.0.
++
++    Properties:
++        clients(list): A list of connected clients. A client is a dictionary
++            like below.
++                {
++                 'id'      : id,
++                 'handler' : handler,
++                 'address' : (addr, port)
++                }
++    """
++
++    allow_reuse_address = True
++    daemon_threads = True  # comment to keep threads alive until finished
++
++    clients = []
++    id_counter = 0
++
++    def __init__(self, port, host='127.0.0.1'):
++        self.port = port
++        TCPServer.__init__(self, (host, port), WebSocketHandler)
++
++    def _message_received_(self, handler, msg):
++        self.message_received(self.handler_to_client(handler), self, msg)
++
++    def _ping_received_(self, handler, msg):
++        logger.debug("Ping was recieved from client %d." % self.handler_to_client(handler)["id"])
++        handler.send_pong(msg)
++        logger.debug("Pong was sent to client %d." % self.handler_to_client(handler)["id"])
++
++    def _pong_received_(self, handler, msg):
++        logger.debug("Pong was recieved from client %d." % self.handler_to_client(handler)["id"])
++
 +    def _new_client_(self, handler):
 +        self.id_counter += 1
 +        client = {
@@ -561,18 +569,9 @@ index 550099b..f8d8097 100644
 +
 +    def finish(self):
 +        self.server._client_left_(self)
- 
- 
- def encode_to_UTF8(data):
--	try:
--		return data.encode('UTF-8')
--	except UnicodeEncodeError as e:
--		print("Could not encode data to UTF-8 -- %s" % e)
--		return False
--	except Exception as e:
--		raise(e)
--		return False
--
++
++
++def encode_to_UTF8(data):
 +    try:
 +        return data.encode('UTF-8')
 +    except UnicodeEncodeError as e:

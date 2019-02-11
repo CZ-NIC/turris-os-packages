@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=socat
-PKG_VERSION:=1.7.3.1
+PKG_VERSION:=1.7.3.2
 PKG_RELEASE:=4
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://www.dest-unreach.org/socat/download
-PKG_MD5SUM:=334e46924f2b386299c9db2ac22bcd36
+PKG_MD5SUM:=e3561f808739383eb10fada1e5d4f26883f0311b34fd0af7837d0c95ef379251
 
-PKG_MAINTAINER:= Ted Hess <thess@kitschensync.net>
+PKG_MAINTAINER:=Ted Hess <thess@kitschensync.net>
 
 PKG_LICENSE:=GPL-2.0 OpenSSL
 PKG_LICENSE_FILES:=COPYING COPYING.OpenSSL
@@ -57,11 +57,22 @@ endef
 CONFIGURE_ARGS += \
 	--disable-libwrap \
 	--disable-readline \
-	--enable-termios
+	--disable-termios
 
 ifneq ($(CONFIG_SOCAT_SSL),y)
   CONFIGURE_ARGS+= --disable-openssl
+else
+  CONFIGURE_ARGS+= --enable-openssl
 endif
+
+CONFIGURE_VARS += \
+	sc_cv_termios_ispeed="no" \
+	sc_cv_sys_crdly_shift=9 \
+	sc_cv_sys_tabdly_shift=11 \
+	sc_cv_sys_csize_shift=4 \
+	ac_cv_header_bsd_libutil_h=no \
+	ac_cv_lib_bsd_openpty=no \
+	BUILD_DATE=$(SOURCE_DATE_EPOCH)
 
 define Package/socat/install
 	$(INSTALL_DIR) $(1)/usr/bin

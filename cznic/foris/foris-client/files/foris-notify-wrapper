@@ -1,0 +1,71 @@
+#!/bin/sh
+#
+# foris-notify-wrapper - wrapper around foris-notify command
+# Copyright (C) 2019 CZ.NIC, z.s.p.o. (http://www.nic.cz/)
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+#
+
+# This is a wrapper around foris-notify binary
+# It takes almost the same arguments as foris-controller except
+# for the message bus settings which is read from uci
+
+
+. $IPKG_INSTROOT/lib/functions.sh
+
+config_load foris-controller
+
+config_get bus main bus
+
+
+args=""
+while true; do
+	if [ "$1" == "-h" ]; then
+		args="$args $1"
+		shift
+	elif [ "$1" == "-n" ]; then
+		args="$args $1"
+		shift
+	elif [ "$1" == "-d" ]; then
+		args="$args $1"
+		shift
+	elif [ "$1" == "-a" ]; then
+		args="$args $1 $2"
+		shift 2
+	elif [ "$1" == "-m" ]; then
+		args="$args $1 $2"
+		shift 2
+	elif [ "$1" == "--extra-module-path" ]; then
+		args="$args $1 $2"
+		shift 2
+	else
+		break
+	fi
+done
+
+
+if [ "$bus" = "ubus" ]; then
+	config_get path ubus path
+	/usr/bin/foris-notify $args ubus --path "$path" "$1"  # only first notification
+elif [ "$bus" = "unix-socket" ]; then
+	config_get path unix_socket notification_path
+	/usr/bin/foris-notify $args unix-socket --path "$path" "$1"  # only first notification
+elif [ "$bus" = "mqtt" ]; then
+	config_get host mqtt host localhost
+	config_get port mqtt port 11883
+	config_get credentials_file mqtt credentials_file /etc/fosquitto/credentials.plain
+
+	/usr/bin/foris-notify $args mqtt --host "$host" --port "$port" --passwd-file "$credentials_file" "$1"  # only first notification
+fi

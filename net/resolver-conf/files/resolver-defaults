@@ -1,7 +1,9 @@
 #!/bin/sh
 
-if [ "$(uci -q get dhcp.@dnsmasq[0].port || echo 53)" = 53 ] ; then
+dhcp_port=$(uci -q get dhcp.@dnsmasq[0].port)
+if [ $? -eq 1 ]; then
 	uci set dhcp.@dnsmasq[0].port=0
+	touch /etc/resolver/dnsmasq_disabled
 fi
 # Make sure we can set time for resolution to work, before the resolution works.
 uci show system.ntp.server | grep -q '217\.31\.202\.100' || uci add_list system.ntp.server=217.31.202.100

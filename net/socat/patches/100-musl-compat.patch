@@ -21,14 +21,3 @@
  #if HAVE_LINUX_IF_TUN_H
  #include <linux/if_tun.h>
  #endif
---- a/nestlex.c
-+++ b/nestlex.c
-@@ -9,6 +9,8 @@
- 
- #include "sysincludes.h"
- 
-+#include <stddef.h>
-+
- static int _nestlex(const char **addr,
- 		    char **token,
- 		    ptrdiff_t *len,

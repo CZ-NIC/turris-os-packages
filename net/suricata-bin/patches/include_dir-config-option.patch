@@ -1,0 +1,137 @@
+From 521c0e8ab9eec1232b96c5341f8e557bb3c1ba96 Mon Sep 17 00:00:00 2001
+From: Martin Petracek <martin@petracek.net>
+Date: Thu, 20 Jul 2017 13:43:42 +0200
+Subject: [PATCH] include_dir config option
+
+---
+ src/conf-yaml-loader.c | 68 ++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 66 insertions(+), 2 deletions(-)
+
+diff --git a/src/conf-yaml-loader.c b/src/conf-yaml-loader.c
+index c04ce1b1..88b0f4be 100644
+--- a/src/conf-yaml-loader.c
++++ b/src/conf-yaml-loader.c
+@@ -31,6 +31,8 @@
+ #include "util-debug.h"
+ #include "util-unittest.h"
+ 
++#include "dirent.h"
++
+ #define YAML_VERSION_MAJOR 1
+ #define YAML_VERSION_MINOR 1
+ 
+@@ -51,6 +53,7 @@ enum conf_state {
+     CONF_KEY = 0,
+     CONF_VAL,
+     CONF_INCLUDE,
++    CONF_INCLUDE_DIR,
+ };
+ 
+ /**
+@@ -103,7 +106,6 @@ ConfYamlSetConfDirname(const char *filename)
+         conf_dirname[ep - filename] = '\0';
+     }
+ }
+-
+ /**
+  * \brief Include a file in the configuration.
+  *
+@@ -155,6 +157,55 @@ ConfYamlHandleInclude(ConfNode *parent, const char *filename)
+     return 0;
+ }
+
++/*
++include_dir: basically only concatenate all files *.yaml in directory
++ into single file and pass that file to normal include
++*/
++static int
++ConfYamlHandleIncludeDir(ConfNode *parent, const char *filename)
++{
++    DIR           *d;
++    struct dirent *dir;
++    d = opendir(filename);
++    char * filename_buf=(char*)malloc(strlen(filename)+256);
++    strcpy(filename_buf, filename);
++    filename_buf[strlen(filename)]='/';
++    if (d){
++        int tmpfile;
++        char tmpname[] = "/tmp/confXXXXXX";
++        tmpfile = mkstemp(tmpname);
++        if (tmpfile==-1) {
++            closedir(d);
++            free(filename_buf);
++            return -1;
++        }
++        write(tmpfile, "%YAML 1.1\n---\n", strlen("%YAML 1.1\n---\n"));
++        while ((dir = readdir(d)) != NULL){
++             if (dir->d_type == DT_REG && strcmp(dir->d_name+strlen(dir->d_name)-5,".yaml")==0){
++                 strcpy(filename_buf+strlen(filename)+1,dir->d_name);
++                 FILE * conf_file = fopen(filename_buf, "r");
++                 if (conf_file) {
++                    int n;
++                    char buffer[4096];
++                    while ((n = fread(buffer, sizeof(char), 4096, conf_file))) write(tmpfile, buffer, n);
++                    fclose(conf_file);
++                    write(tmpfile,"\n",1);
++                 }
++            }
++        }
++        free(filename_buf);
++        closedir(d);
++        if (ConfYamlHandleInclude(parent, tmpname)==-1) {
++            close(tmpfile);
++            //unlink(tmpname);
++            return -1;
++        }
++        close(tmpfile);
++        unlink(tmpname);
++  }
++  return 0;
++}
++
+ /**
+  * \brief Parse a YAML layer.
+  *
+@@ -237,7 +283,14 @@ ConfYamlParse(yaml_parser_t *parser, ConfNode *parent, int inseq)
+                 TAILQ_INSERT_TAIL(&parent->head, seq_node, next);
+             }
+             else {
+-                if (state == CONF_INCLUDE) {
++                if (state == CONF_INCLUDE_DIR) {
++                    SCLogInfo("Including configuration dir %s.", value);
++                    if (ConfYamlHandleIncludeDir(parent, value) != 0) {
++                        goto fail;
++                    }
++                    state = CONF_KEY;
++                }
++                else if (state == CONF_INCLUDE) {
+                     SCLogInfo("Including configuration file %s.", value);
+                     if (ConfYamlHandleInclude(parent, value) != 0) {
+                         goto fail;
+@@ -246,6 +299,10 @@ ConfYamlParse(yaml_parser_t *parser, ConfNode *parent, int inseq)
+                 }
+                 else if (state == CONF_KEY) {
+ 
++                    if (strcmp(value, "include_dir") == 0) {
++                        state = CONF_INCLUDE_DIR;
++                        goto next;
++                    }
+                     if (strcmp(value, "include") == 0) {
+                         state = CONF_INCLUDE;
+                         goto next;
+@@ -291,6 +349,12 @@ ConfYamlParse(yaml_parser_t *parser, ConfNode *parent, int inseq)
+                     state = CONF_VAL;
+                 }
+                 else {
++                    if ((tag != NULL) && (strcmp(tag, "!include_dir") == 0)) {
++                        SCLogInfo("Including configuration dir %s at "
++                            "parent node %s.", value, node->name);
++                        if (ConfYamlHandleIncludeDir(node, value) != 0)
++                            goto fail;
++                    }
+                     if ((tag != NULL) && (strcmp(tag, "!include") == 0)) {
+                         SCLogInfo("Including configuration file %s at "
+                             "parent node %s.", value, node->name);
+-- 
+2.11.0
+

@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
-PKG_VERSION:=1.6.0
-PKG_RELEASE:=3
+PKG_VERSION:=1.9.0
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.unbound.net/downloads
-PKG_MD5SUM:=78409eccf7260d260b6463f85e59c66b
+PKG_MD5SUM:=415af94b8392bc6b2c52e44ac8f17935cc6ddf2cc81edfb47c5be4ad205ab917
 
 PKG_BUILD_DEPENDS:=libexpat
 PKG_BUILD_PARALLEL:=1
@@ -26,6 +26,7 @@ define Package/unbound/Default
   TITLE:=A validating, recursive & caching DNS resolver
   URL:=http://www.unbound.net/
   DEPENDS:=+libldns +libopenssl +dnssec-rootkey +resolver-conf
+  PROVIDES:=dns-resolver
 endef
 
 ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
@@ -62,15 +63,6 @@ endef
 
 define Package/unbound-anchor/description
   This package contains the Unbound anchor utility.
-endef
-
-define Package/unbound-control
-  $(call Package/unbound/Default)
-  SECTION:=net
-  CATEGORY:=Network
-  SUBMENU:=IP Addresses and Names
-  TITLE+= (control utility)
-  DEPENDS+= +unbound
 endef
 
 define Package/unbound-control/description
@@ -117,10 +109,18 @@ endef
 CONFIGURE_ARGS += \
 	--disable-gost \
 	--enable-allsymbols \
+	--enable-subnet \
 	--with-ldns="$(STAGING_DIR)/usr" \
 	--with-libexpat="$(STAGING_DIR)/usr" \
 	--with-ssl="$(STAGING_DIR)/usr" \
 	--without-pthreads
+
+# uClibc doesn't support TCP fast open -> --enable-tfo-{client,server} would fail
+ifneq ($(CONFIG_USE_UCLIBC),y)
+CONFIGURE_ARGS += \
+	--enable-tfo-server \
+	--enable-tfo-client
+endif
 
 define Package/unbound/conffiles
 /etc/unbound/unbound.conf
@@ -139,6 +139,8 @@ define Package/unbound/install
 		$(PKG_INSTALL_DIR)/usr/sbin/unbound \
 		$(PKG_INSTALL_DIR)/usr/sbin/unbound-checkconf \
 		$(1)/usr/sbin/
+
+	$(CP) $(PKG_INSTALL_DIR)/usr/sbin/unbound-control $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/unbound
 	$(INSTALL_CONF) ./files/named.cache $(1)/etc/unbound/
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -201,7 +203,6 @@ endef
 
 $(eval $(call BuildPackage,unbound))
 $(eval $(call BuildPackage,unbound-anchor))
-$(eval $(call BuildPackage,unbound-control))
 $(eval $(call BuildPackage,unbound-control-setup))
 $(eval $(call BuildPackage,unbound-host))
 $(eval $(call BuildPackage,libunbound))

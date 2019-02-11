@@ -1,0 +1,5 @@
+Subject: Suricata alert ({{ alert['category'] }})
+
+At {{ timestamp }} Suricata detected suspicious activity.
+It was communication between {{ src_ip }}:{{ src_port }} ({{ get('src_host', 'unknown host') }}) and {{ dest_ip }}:{{ dest_port }} ({{ get('dest_host', 'unknown host') }}) using {{ proto }}
+Activity was classified as {{ alert['signature'] }}

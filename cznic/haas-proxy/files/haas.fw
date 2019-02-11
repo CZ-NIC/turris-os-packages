@@ -1,0 +1,4 @@
+#!/bin/sh
+
+/etc/init.d/haas-proxy enabled && /etc/init.d/haas-proxy check_fw
+

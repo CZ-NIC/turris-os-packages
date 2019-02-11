@@ -1,0 +1,15 @@
+config global global
+	option debug '0'
+
+config local local
+	option port 11883
+
+config remote remote
+	option enabled '0'
+
+#config subordinate
+#	enabled '0'
+#	option id '<id>'
+#	list subsubordinate '<id_of_subordinates>'
+#	option address '192.168.1.8'
+#	option port '11884'

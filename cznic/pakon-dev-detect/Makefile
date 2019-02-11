@@ -8,59 +8,39 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon-dev-detect
-PKG_VERSION:=1.1
-PKG_RELEASE:=2
-PKG_LICENSE:=GPLv2+
-PKG_LICENSE_FILES:=COPYING
-
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-dev-detect.git
-PKG_SOURCE_VERSION:=7f28890dfdf86c67d04f0d102c5920d3a001f2bc
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-MAINTAINER:=Martin Petracek <martin.petracek@nic.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_VERSION:=2
 
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python3-package.mk)
 
 define Package/pakon-dev-detect
   TITLE:=pakon-dev-detect
-  DEPENDS:=+python3 +python3-setuptools +pakon-guts +ouidb
-endef
-
-define Package/pakon-dev-detect/description
- This package provides a utility to detect new devices on LAN (using pakon-guts).
+  DEPENDS:=+pakon
 endef
 
 define Build/Compile
-	$(call Build/Compile/Py3Mod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR) --single-version-externally-managed)
+	true
 endef
 
-define Py3Package/pakon-dev-detect/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin
-
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/pakon-dev-detect.init $(1)/etc/init.d/pakon-dev-detect
-
-	$(INSTALL_DIR) $(1)/usr/share/pakon-dev-detect
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/init_known_macs.sh $(1)/usr/share/pakon-dev-detect/
+define Package/pakon-dev-detect/install
+	true
 endef
 
-define Package/pakon-dev-detect/postinst
+define Package/$(PKG_NAME)/postinst
 #!/bin/sh
-	[ -f /usr/share/pakon-dev-detect/known_macs ] || /usr/share/pakon-dev-detect/init_known_macs.sh > /usr/share/pakon-dev-detect/known_macs
-	/etc/init.d/pakon-dev-detect enable
-	/etc/init.d/pakon-dev-detect start
+[ -n "$$IPKG_INSTROOT" ] || {
+	/sbin/uci -q set pakon.monitor.notify_new_devices=1
+	/sbin/uci commit pakon
+	/etc/init.d/pakon-monitor restart 2>/dev/null
+}
 endef
 
-define Package/pakon-dev-detect/prerm
+define Package/$(PKG_NAME)/prerm
 #!/bin/sh
-	/etc/init.d/pakon-dev-detect disable
-	/etc/init.d/pakon-dev-detect stop
+[ -n "$$IPKG_INSTROOT" ] || {
+	/sbin/uci -q set pakon.monitor.notify_new_devices=0
+	/sbin/uci commit pakon
+	/etc/init.d/pakon-monitor restart 2>/dev/null
+}
 endef
 
-
-$(eval $(call Py3Package,pakon-dev-detect))
 $(eval $(call BuildPackage,pakon-dev-detect))

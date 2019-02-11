@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-netifaces
 PKG_VERSION:=0.10.4
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=netifaces-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/n/netifaces/
@@ -19,7 +19,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/netifaces-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=python3-setuptools
 
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python3-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/python3-netifaces
   SUBMENU:=Python

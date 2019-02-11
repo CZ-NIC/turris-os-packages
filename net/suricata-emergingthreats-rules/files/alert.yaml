@@ -1,0 +1,7 @@
+- eve-log:
+      enabled: yes
+      filetype: regular
+      filename: /var/log/suricata/alert.log
+      types:
+        - alert
+

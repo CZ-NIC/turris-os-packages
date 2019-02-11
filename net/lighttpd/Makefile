@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd
-PKG_VERSION:=1.4.45
+PKG_VERSION:=1.4.50
 PKG_RELEASE:=5
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://download.lighttpd.net/lighttpd/releases-1.4.x
-PKG_MD5SUM:=a128e1eda76899ce3fd115efae5fe631
+PKG_MD5SUM:=29378312d8887cbc14ffe8a7fadef2d5a08c7e7e1be942795142346ad95629eb
 
 PKG_LICENSE:=BSD-3c
 PKG_LICENSE_FILES:=COPYING
@@ -61,11 +61,15 @@ config LIGHTTPD_SSL
 	  lighttpd confguration file.
 endef
 
+TARGET_CFLAGS += --std=c99
+
+BASE_MODULES:=dirlisting indexfile staticfile
+
 CONFIGURE_ARGS+= \
 	--libdir=/usr/lib/lighttpd \
 	--sysconfdir=/etc/lighttpd \
 	--enable-shared \
-	--enable-static \
+	--disable-static \
 	--disable-rpath \
 	--without-attr \
 	--without-bzip2 \
@@ -134,7 +138,7 @@ define Package/lighttpd/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/lighttpd.init $(1)/etc/init.d/lighttpd
 	$(INSTALL_DIR) $(1)/usr/lib/lighttpd
-	for m in dirlisting indexfile staticfile; do \
+	for m in $(BASE_MODULES); do \
 		$(CP) $(PKG_INSTALL_DIR)/usr/lib/lighttpd/mod_$$$${m}.so $(1)/usr/lib/lighttpd/ ; \
 	done
 	$(INSTALL_DIR) $(1)/usr/sbin
@@ -151,13 +155,20 @@ define BuildPlugin
     TITLE:=$(2) module
   endef
 
-  Package/lighttpd-mod-$(1)/postinst = Package/lighttpd/postinst
+  define Package/lighttpd-mod-$(1)/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || /etc/init.d/lighttpd restart
+  endef
 
   define Package/lighttpd-mod-$(1)/install
 	$(INSTALL_DIR) $$(1)/usr/lib/lighttpd
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/lighttpd/mod_$(1).so $$(1)/usr/lib/lighttpd
 	$(INSTALL_DIR) $$(1)/etc/lighttpd/modules.d/
-	echo 'server.modules += ( "mod_$(1)" )' > $$(1)/etc/lighttpd/modules.d/$(4)-$(1).load
+	if [ -f $(PKG_BUILD_DIR)/doc/config/conf.d/$(1).conf ]; then \
+		$(CP) $(PKG_BUILD_DIR)/doc/config/conf.d/$(1).conf $$(1)/etc/lighttpd/modules.d/$(4)-$(1).load ; \
+	else \
+		echo 'server.modules += ( "mod_$(1)" )' > $$(1)/etc/lighttpd/modules.d/$(4)-$(1).load ; \
+	fi
   endef
 
   $$(eval $$(call BuildPackage,lighttpd-mod-$(1)))
@@ -170,21 +181,24 @@ $(eval $(call BuildPlugin,redirect,URL redirection,+PACKAGE_lighttpd-mod-redirec
 
 # Next, permit authentication.
 $(eval $(call BuildPlugin,auth,Authentication,,20))
+$(eval $(call BuildPlugin,authn_file,File-based authentication,,20))
+$(eval $(call BuildPlugin,auth_ticket,Cookie-based authentication,,20))
 
 # Finally, everything else.
 $(eval $(call BuildPlugin,access,Access restrictions,,30))
 $(eval $(call BuildPlugin,accesslog,Access logging,,30))
 $(eval $(call BuildPlugin,alias,Directory alias,,30))
 $(eval $(call BuildPlugin,cgi,CGI,,30))
-$(eval $(call BuildPlugin,cml,Cache Meta Language,+liblua,30))
+$(eval $(call BuildPlugin,cml,Cache Meta Language,+PACKAGE_lighttpd-mod-cml:liblua,30))
 $(eval $(call BuildPlugin,compress,Compress output,+PACKAGE_lighttpd-mod-compress:zlib,30))
 $(eval $(call BuildPlugin,evasive,Evasive,,30))
-$(eval $(call BuildPlugin,evhost,Exnhanced Virtual-Hosting,,30))
+$(eval $(call BuildPlugin,evhost,Enhanced Virtual-Hosting,,30))
 $(eval $(call BuildPlugin,expire,Expire,,30))
+$(eval $(call BuildPlugin,openssl,Openssl,,30))
 $(eval $(call BuildPlugin,extforward,Extract client,,30))
 $(eval $(call BuildPlugin,fastcgi,FastCGI,,30))
 $(eval $(call BuildPlugin,flv_streaming,FLV streaming,,30))
-$(eval $(call BuildPlugin,magnet,Magnet,+liblua,30))
+$(eval $(call BuildPlugin,magnet,Magnet,+PACKAGE_lighttpd-mod-magnet:liblua,30))
 # $(eval $(call BuildPlugin,mysql_vhost,Mysql virtual hosting,+PACKAGE_lighttpd-mod-mysql_vhost:libmysqlclient,30))
 $(eval $(call BuildPlugin,proxy,Proxy,,30))
 $(eval $(call BuildPlugin,rewrite,URL rewriting,+PACKAGE_lighttpd-mod-rewrite:libpcre,30))
@@ -193,10 +207,10 @@ $(eval $(call BuildPlugin,scgi,SCGI,,30))
 $(eval $(call BuildPlugin,secdownload,Secure and fast download,,30))
 $(eval $(call BuildPlugin,setenv,Environment variable setting,,30))
 $(eval $(call BuildPlugin,simple_vhost,Simple virtual hosting,,30))
-$(eval $(call BuildPlugin,ssi,SSI,+libpcre,30))
+$(eval $(call BuildPlugin,ssi,SSI,+PACKAGE_lighttpd-mod-ssi:libpcre,30))
 $(eval $(call BuildPlugin,status,Server status display,,30))
 $(eval $(call BuildPlugin,trigger_b4_dl,Trigger before download,+PACKAGE_lighttpd-mod-trigger_b4_dl:libpcre +PACKAGE_lighttpd-mod-trigger_b4_dl:libgdbm,30))
 $(eval $(call BuildPlugin,userdir,User directory,,30))
 $(eval $(call BuildPlugin,usertrack,User tracking,,30))
 $(eval $(call BuildPlugin,webdav,WebDAV,+PACKAGE_lighttpd-mod-webdav:libsqlite3 +PACKAGE_lighttpd-mod-webdav:libuuid +PACKAGE_lighttpd-mod-webdav:libxml2,30))
-
+$(eval $(call BuildPlugin,wstunnel,Websocket tunneling,,30))

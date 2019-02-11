@@ -1,0 +1,136 @@
+#!/bin/sh /etc/rc.common
+
+USE_PROCD=1
+START=95
+STOP=05
+EXTRA_COMMANDS="status"
+EXTRA_HELP="        status Get suricata status (as exit code)"
+IPTABLES_RULES="/tmp/suricata/suricata.fw"
+IP6TABLES_RULES="/tmp/suricata/suricata.fw6"
+PID_FILE="/var/run/suricata/suricata.pid"
+QUEUE_NUM=10
+
+
+build_iptables() {
+	# prepare iptables chain. The chain is not referenced yet.
+	echo "*raw" > $IPTABLES_RULES
+	echo "*raw" > $IP6TABLES_RULES
+	echo ":suricata-pakon - [0:0]" >> $IPTABLES_RULES
+	echo ":suricata-pakon - [0:0]" >> $IP6TABLES_RULES
+	echo "-I suricata-pakon -p icmpv6 -j RETURN" >> $IP6TABLES_RULES #workaround: ignore ICMPv6
+	echo "-A suricata-pakon -m mark --mark 2/2 -j RETURN" >> $IPTABLES_RULES
+	echo "-A suricata-pakon -m mark --mark 2/2 -j RETURN" >> $IP6TABLES_RULES
+	echo "-A suricata-pakon -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IPTABLES_RULES
+	echo "-A suricata-pakon -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IP6TABLES_RULES
+	echo "COMMIT" >> $IPTABLES_RULES
+	echo "COMMIT" >> $IP6TABLES_RULES
+	echo "*filter" >> $IPTABLES_RULES
+	echo "*filter" >> $IP6TABLES_RULES
+	echo ":suricata-pakon - [0:0]" >> $IPTABLES_RULES
+	echo ":suricata-pakon - [0:0]" >> $IP6TABLES_RULES
+	IFACES=$(uci -q get pakon.monitor.interface || echo "br-lan br-guest_turris")
+	echo "-I suricata-pakon -m connmark --mark 1/1 -j RETURN" >> $IPTABLES_RULES
+	echo "-I suricata-pakon -m connmark --mark 1/1 -j RETURN" >> $IP6TABLES_RULES
+	echo "-I suricata-pakon -p icmpv6 -j RETURN" >> $IP6TABLES_RULES #workaround: ignore ICMPv6
+	echo "-A suricata-pakon -m mark --mark 1/1 -j CONNMARK --set-mark 1/1" >> $IPTABLES_RULES
+	echo "-A suricata-pakon -m mark --mark 1/1 -j CONNMARK --set-mark 1/1" >> $IP6TABLES_RULES
+	echo "-A suricata-pakon -m mark --mark 2/2 -j RETURN" >> $IPTABLES_RULES
+	echo "-A suricata-pakon -m mark --mark 2/2 -j RETURN" >> $IP6TABLES_RULES
+	for IFACE in $IFACES; do
+		echo "-A suricata-pakon -i $IFACE -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IPTABLES_RULES
+		echo "-A suricata-pakon -i $IFACE -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IP6TABLES_RULES
+		echo "-A suricata-pakon -o $IFACE -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IPTABLES_RULES
+		echo "-A suricata-pakon -o $IFACE -j NFQUEUE --queue-num $QUEUE_NUM --queue-bypass" >> $IP6TABLES_RULES
+	done
+	echo "COMMIT" >> $IPTABLES_RULES
+	echo "COMMIT" >> $IP6TABLES_RULES
+	iptables-restore --noflush < $IPTABLES_RULES
+	ip6tables-restore --noflush < $IP6TABLES_RULES
+}
+
+status() {
+	if [ -s $PID_FILE ]; then
+		busybox ps | awk '{print $1;}' | grep `cat $PID_FILE` &> /dev/null
+		if [ $? -eq 0 ]; then
+			# echo "Running."
+			return 0
+		else
+			# echo "Not running."
+			return 1
+		fi
+	else
+		# echo "Not running."
+		return 1
+	fi
+}
+
+iptables_activate() {
+	iptables -t raw -I PREROUTING ! -p tcp -j suricata-pakon
+	ip6tables -t raw -I PREROUTING ! -p tcp -j suricata-pakon
+	iptables -t raw -I OUTPUT ! -p tcp -j suricata-pakon
+	ip6tables -t raw -I OUTPUT ! -p tcp -j suricata-pakon
+	iptables -I forwarding_rule -j suricata-pakon
+	ip6tables -I forwarding_rule -j suricata-pakon
+	iptables -I input_rule -j suricata-pakon
+	ip6tables -I input_rule -j suricata-pakon
+	iptables -I output_rule -j suricata-pakon
+	ip6tables -I output_rule -j suricata-pakon
+}
+
+iptables_deactivate() {
+	iptables -t raw -F suricata-pakon
+	ip6tables -t raw -F suricata-pakon
+	iptables -t raw -D PREROUTING ! -p tcp -j suricata-pakon
+	ip6tables -t raw -D PREROUTING ! -p tcp -j suricata-pakon
+	iptables -t raw -D OUTPUT ! -p tcp -j suricata-pakon
+	ip6tables -t raw -D OUTPUT ! -p tcp -j suricata-pakon
+	iptables -t raw -X suricata-pakon
+	ip6tables -t raw -X suricata-pakon
+	iptables -F suricata-pakon
+	ip6tables -F suricata-pakon
+	iptables -D forwarding_rule -j suricata-pakon
+	ip6tables -D forwarding_rule -j suricata-pakon
+	iptables -D input_rule -j suricata-pakon
+	ip6tables -D input_rule -j suricata-pakon
+	iptables -D output_rule -j suricata-pakon
+	ip6tables -D output_rule -j suricata-pakon
+	iptables -X suricata-pakon
+	ip6tables -X suricata-pakon
+}
+
+stop_service() {
+	iptables -L suricata-pakon >/dev/null 2>&1 && iptables_deactivate 2>/dev/null
+	rm -f $PID_FILE
+}
+
+start_service() {
+	status && echo "already running" && exit 0
+	mkdir -p /var/log/suricata
+	mkdir -p /var/run/suricata
+	mkdir -p /tmp/suricata
+	[ -f /usr/bin/suricata_update_rules.sh ] && /usr/bin/suricata_update_rules.sh -f #suricata-emergingthreats-rules integration
+	MODE=$(uci -q get pakon.monitor.mode || echo "tap")
+	case "$MODE" in
+		"filter")
+			build_iptables
+			iptables_activate
+			procd_open_instance
+			procd_set_param command /usr/bin/suricata -c /etc/suricata-pakon/suricata.yaml -q $QUEUE_NUM --pidfile $PID_FILE
+			procd_close_instance
+			;;
+		"tap")
+			procd_open_instance
+			procd_set_param command /usr/bin/suricata -c /etc/suricata-pakon/suricata.yaml --pidfile $PID_FILE
+			IFACES=$(uci -q get pakon.monitor.interface || echo "br-lan br-guest_turris")
+			for IFACE in $IFACES; do
+				ifconfig $IFACE >/dev/null 2>&1 || continue
+				procd_append_param command --af-packet=$IFACE
+			done
+			procd_close_instance
+			;;
+		*)
+			echo "Unknown mode '$MODE'. Possible values are 'tap' or 'filter'." >&2
+			exit 1
+			;;
+	esac
+}

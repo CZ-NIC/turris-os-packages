@@ -1,0 +1,3 @@
+MAILTO=""
+
+45	2	*	*	*	root	sleep $(tr -cd 0-9 </dev/urandom | head -c 2) && /usr/libexec/ssbackups.sh

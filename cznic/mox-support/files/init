@@ -1,0 +1,10 @@
+#!/bin/sh /etc/rc.common
+
+START=20
+start() {
+	/usr/share/mox/mox_autosetup
+}
+
+stop() {
+	:
+}

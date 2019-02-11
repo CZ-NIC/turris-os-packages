@@ -1,0 +1,65 @@
+classification-file: /etc/suricata/classification.config
+reference-config-file: /etc/suricata/reference.config
+
+default-rule-path: /tmp/suricata/rules
+rule-files:
+
+#Malware/trojan oriented rules
+ - emerging-trojan.rules
+ - emerging-malware.rules
+ - emerging-mobile_malware.rules
+ - emerging-worm.rules
+ - emerging-user_agents.rules
+ - emerging-current_events.rules
+
+#important but relatively low load rules you'll likely want to keep on
+ - emerging-ftp.rules
+ - emerging-pop3.rules
+ - emerging-rpc.rules
+ - emerging-attack_response.rules
+# - emerging-icmp.rules
+ - emerging-scan.rules
+ - emerging-voip.rules
+ - emerging-imap.rules
+ - emerging-web_server.rules
+ - emerging-smtp.rules
+ - emerging-dns.rules
+ - emerging-misc.rules
+ - emerging-snmp.rules
+ - emerging-sql.rules
+ - emerging-dos.rules
+ - emerging-telnet.rules
+ - emerging-exploit.rules
+ - emerging-tftp.rules
+
+#useful but often high load rules. Look here for performance tuning
+ - emerging-web_client.rules
+ - emerging-netbios.rules
+
+#things you'll want to look through and consider policy needs
+# - emerging-policy.rules
+# - emerging-games.rules
+# - emerging-p2p.rules
+# - emerging-chat.rules
+
+#informational, not recommended for high speed nets
+# - emerging-icmp_info.rules
+# - emerging-info.rules
+# - emerging-shellcode.rules
+# - emerging-inappropriate.rules
+# - emerging-web_specific_apps.rules
+# - emerging-activex.rules
+
+#ip based rules
+# - botcc.rules
+# - botcc.portgrouped.rules
+# - ciarmy.rules
+# - compromised.rules
+# - drop.rules
+# - dshield.rules
+# - tor.rules
+
+#only use the scada_special if you have the scada extensions compiled int
+# - emerging-scada_special.rules
+# - emerging-scada.rules
+

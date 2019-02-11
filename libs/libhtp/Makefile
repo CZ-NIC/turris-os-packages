@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libhtp
-PKG_VERSION:=0.5.23
+PKG_VERSION:=0.5.25
 PKG_RELEASE=1
 
 PKG_SOURCE_PROTO:=git

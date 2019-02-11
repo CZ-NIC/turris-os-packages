@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=schnapps
-PKG_VERSION:=0.9
-PKG_RELEASE:=1
+PKG_VERSION:=1.7
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/schnapps.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=34e9183878dcaacdcd9e9d4b4513390e2baf70f3
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -27,7 +27,7 @@ define Package/schnapps
   SECTION:=utils
   CATEGORY:=Utilities
   SUBMENU:=Filesystem
-  DEPENDS:=+btrfs-progs @TARGET_mvebu_Turris-Omnia
+  DEPENDS:=+btrfs-progs
   TITLE:=Btrfs snapshots management tool
 endef
 
@@ -48,15 +48,19 @@ endef
 
 define Package/schnapps/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/schnapps/schnapps.sh $(1)/usr/bin/schnapps
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/schnapps.sh $(1)/usr/bin/schnapps
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps/schnapps $(1)/etc/config
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/updater/hook_preupdate
 	$(INSTALL_BIN) ./files/updater_hook.sh $(1)/etc/updater/hook_preupdate/05_schnapps.sh
+	$(INSTALL_DIR) $(1)/etc/schnapps/rollback.d/
+	$(INSTALL_BIN) ./files/cert-backup_hook.sh $(1)/etc/schnapps/rollback.d/10_cert-backup.sh
+	chmod a+rx $(1)/etc/schnapps/rollback.d/10_cert-backup.sh
 	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
-	cat ./files/updater_hook.sh | sed 's|pre|post|g' > $(1)/etc/updater/hook_postupdate/05_schnapps.sh
+	cat ./files/updater_hook.sh | sed 's|pre|post|g' > $(1)/etc/updater/hook_postupdate/95_schnapps.sh
+	chmod +x $(1)/etc/updater/hook_postupdate/95_schnapps.sh
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps/schnapps.cron $(1)/etc/cron.d/schnapps
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps.cron $(1)/etc/cron.d/schnapps
 endef
 
 $(eval $(call BuildPackage,schnapps))

@@ -13,12 +13,14 @@ config resolver 'common'
 	option prefered_resolver 'unbound'
 	option ignore_root_key '0'
 	option static_domains '1'
+	option dynamic_domains '0'
 
 config resolver 'kresd'
 	option rundir '/tmp/kresd'
 	option log_stderr '0'
 	option log_stdout '0'
 	option forks '1'
+	option keep_cache '1'
 
 config resolver 'unbound'
 	option outgoing_range '60'
@@ -37,6 +39,8 @@ config resolver 'unbound'
 	option target_fetch_policy '2 1 0 0 0'
 	option harden_short_bufsize 'yes'
 	option harden_large_queries 'yes'
+	option qname_minimisation 'yes'
+	option harden_below_nxdomain 'yes'
 	option key_cache_size '100k'
 	option key_cache_slabs '1'
 	option neg_cache_size '10k'
@@ -44,13 +48,13 @@ config resolver 'unbound'
 	option prefetch_key 'yes'
 	#option hostname_config '/etc/hosts'
 
-config resolver 'unbound_python'
-	list python_script "/etc/unbound/ubmodule-tst.py"
+#config resolver 'unbound_python'
+#	list python_script "/etc/unbound/ubmodule-tst.py"
 
 config resolver 'unbound_remote_control'
-	option control_enable 'no'
-	list control_interface '0.0.0.0'
-	list control_interface '::0'
+	option control_enable 'yes'
+	option control_use_cert 'no'
+	list control_interface '127.0.0.1'
 
 # config resolver 'unbound_includes'
 # 	list include_path "/etc/unbound/unbound-part.conf"

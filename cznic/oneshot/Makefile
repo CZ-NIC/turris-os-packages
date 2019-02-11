@@ -8,14 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=oneshot
-PKG_VERSION:=21
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
-PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=6c3b76503bef03edee4a5e6e205c98d4dcf6d655
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
+PKG_VERSION:=0
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
@@ -32,23 +26,18 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/oneshot/oneshot.sh $(1)/usr/bin/
+	$(INSTALL_BIN) ./files/oneshot.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/share/oneshot/scripts
+	for s in ./files/scripts/* ; do $(INSTALL_BIN) "$$$$s" $(1)/usr/share/oneshot/scripts ; done
 	$(INSTALL_DIR) $(1)/usr/share/oneshot/completed
-	for s in $(PKG_BUILD_DIR)/oneshot/scripts/* ; do $(INSTALL_BIN) "$$$$s" $(1)/usr/share/oneshot/scripts ; done
+	touch $(1)/usr/share/oneshot/completed/.keep
 endef
 
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 
 if [ -z "$${IPKG_INSTROOT}" ] ; then
-	if [ -f /usr/share/oneshot/completed/scripts ]; then
-		# Workaround. We didn't create the right scripts when it was being distributed.
-		# So add them now
-		cd /usr/share/oneshot/completed
-		touch 0000-opkg-uri 0002-opkg-https 0001-opkg-no-testing 0003-reset-updater-pkgs
-	fi
 	# If we are directly on the device, the variable is empty. Run right away.
 	/usr/bin/oneshot.sh
 else

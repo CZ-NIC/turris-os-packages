@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-pyserial
 PKG_VERSION:=2.7
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=pyserial-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/p/pyserial/
@@ -18,7 +18,7 @@ PKG_MD5SUM:=794506184df83ef2290de0d18803dd11
 PKG_BUILD_DIR:=$(BUILD_DIR)/pyserial-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
-$(call include_mk, python3-package.mk)
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/python3-pyserial
   SUBMENU:=Python

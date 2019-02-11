@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2013 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2018 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,29 +8,27 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nikola
-PKG_VERSION:=41
+PKG_VERSION:=43
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nikola.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=5f7fea558a5fd677f9a5e5f5e2cc68160d6e6b37
+PKG_SOURCE_VERSION:=47cba3412ae3aaca6d92f60bf7d1c4dacb9bae9e
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_MAINTAINER:=Martin Strbacka <martin.strbacka@nic.cz>
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+python +logrotate +syslog-ng3 +python-libatsha204 +firewall +cznic-cacert-bundle
+	DEPENDS:=+python3-light +python3-setuptools +logrotate +syslog-ng +python3-libatsha204 +firewall +cznic-cacert-bundle
 endef
 
 define Package/$(PKG_NAME)/description
 	Collects firewall logs and sends it to the api server.
-endef
-
-define Build/Compile
-	cd $(PKG_BUILD_DIR)/Nikola ; $(CONFIGURE_VARS) python ./setup.py install --prefix="$(PKG_INSTALL_DIR)/usr"
 endef
 
 define Package/$(PKG_NAME)/conffiles
@@ -38,7 +36,11 @@ define Package/$(PKG_NAME)/conffiles
 endef
 
 define Build/Configure
-	$(SED) 's/^__version__ =.*/__version__ = "$(PKG_VERSION)"/' $(PKG_BUILD_DIR)/Nikola/nikola/version.py
+	$(SED) 's/^__version__ =.*/__version__ = "$(PKG_VERSION)"/' $(PKG_BUILD_DIR)/nikola/__init__.py
+endef
+
+define Build/Compile
+	$(call Build/Compile/Py3Mod,, install --prefix="/usr" --root="$(PKG_INSTALL_DIR)")
 endef
 
 define Package/$(PKG_NAME)/install
@@ -60,7 +62,7 @@ define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 # check if we are on real system
 if [ -z "$${IPKG_INSTROOT}" ]; then
-	echo "Reloading syslog-ng3"
+	echo "Reloading syslog-ng"
 	/etc/init.d/syslog-ng reload
 fi
 exit 0

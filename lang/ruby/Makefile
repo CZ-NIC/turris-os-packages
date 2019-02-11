@@ -10,14 +10,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ruby
-PKG_VERSION:=2.3.1
+PKG_VERSION:=2.3.6
 PKG_RELEASE:=1
 
 PKG_LIBVER:=2.3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=http://cache.ruby-lang.org/pub/ruby/$(PKG_LIBVER)/
-PKG_MD5SUM:=c194281f63d7fcd816747fe78474be5e
+PKG_MD5SUM:=07aa3ed3bffbfb97b6fc5296a86621e6bb5349c6f8e549bd0db7f61e3e210fd0
 PKG_MAINTAINER:=Luiz Angelo Daros de Luca <luizluca@gmail.com>
 PKG_LICENSE:=BSD-2-Clause
 PKG_LICENSE_FILES:=COPYING
@@ -633,7 +633,7 @@ GEM_breakpoint_VERSION:=2.5.0
 define Host/Install
 	$(call Host/Install/Default)
 
-	$(foreach gem,$(GEM_LIST),$(STAGING_DIR_HOST)/bin/gem install $(gem) -v $(GEM_$(gem)_VERSION);)
+	$(foreach gem,$(GEM_LIST),$(STAGING_DIR_HOSTPKG)/bin/gem install $(gem) -v $(GEM_$(gem)_VERSION);)
 endef
 
 define Host/Clean

@@ -1,0 +1,48 @@
+--- a/str/stream-tcp.c
++++ b/src/stream-tcp.c
+@@ -333,6 +333,20 @@
+             "TCP stream engine memcaps.");
+     }
+ 
++    const char *temp_stream_max_depth_str;
++    if (ConfGet("stream.max-depth", &temp_stream_max_depth_str) == 1) {
++        if (ParseSizeStringU32(temp_stream_max_depth_str,
++                               &stream_config.max_depth) < 0) {
++            SCLogError(SC_ERR_SIZE_PARSE, "Error parsing "
++                       "stream.max_depth "
++                       "from conf file - %s.  Killing engine",
++                       temp_stream_max_depth_str);
++            exit(EXIT_FAILURE);
++        }
++    } else {
++        stream_config.max_depth = 0;
++    }
++
+     if ((ConfGetInt("stream.prealloc-sessions", &value)) == 1) {
+         stream_config.prealloc_sessions = (uint32_t)value;
+     } else {
+@@ -4634,6 +4648,14 @@
+         {
+             /* we can call bypass callback, if enabled */
+             if (StreamTcpBypassEnabled()) {
++                PacketBypassCallback(p);
++            }
++        }
++        if (stream_config.max_depth>0 && p->flow && !(p->flow->flags & FLOW_ACTION_DROP) &&
++           (p->flow->todstbytecnt>stream_config.max_depth || p->flow->tosrcbytecnt>stream_config.max_depth))
++        {
++            /* we can call bypass callback, if enabled */
++            if (StreamTcpBypassEnabled()) {
+                 PacketBypassCallback(p);
+             }
+         }
+--- a/src/stream-tcp.h
++++ b/src/stream-tcp.h
+@@ -63,6 +63,7 @@
+     uint16_t reassembly_toclient_chunk_size;
+ 
+     bool streaming_log_api;
++    uint32_t max_depth;
+ 
+     StreamingBufferConfig sbcnf;
+ } TcpStreamCnf;

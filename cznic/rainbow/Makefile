@@ -15,17 +15,17 @@ PKG_SOURCE:=$(PKG_NAME).tar.gz
 PKG_SOURCE_VERSION:=5d7d5c8c3bdec184bdb418e857a6d5a11726fac4
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_MAINTAINER:=Michal Vaner <michal.vaner@nic.cz>
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=@(TARGET_mpc85xx_p2020_nand||TARGET_mpc85xx_p2020_nor)
+	DEPENDS:=@(TARGET_mpc85xx_p2020_nand||TARGET_mpc85xx_p2020_nor||TARGET_mpc85xx_p2020_TURRIS)
 endef
 
-ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+ifneq ($(CONFIG_TARGET_mpc85xx_p2020_TURRIS),y)
 # FIXME: Temporary, until rainbow is ported.
 
 define Build/Compile
