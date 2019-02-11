@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-openvpn-module
-PKG_VERSION:=0.5.1
+PKG_VERSION:=0.6
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -38,6 +38,20 @@ endef
 
 define Build/Compile
 	$(call Build/Compile/Py3Mod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
+endef
+
+
+define Package/${PKG_NAME}/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+	if uci -q get openvpn.server_turris.comp_lzo > /dev/null ; then
+		uci del openvpn.server_turris.comp_lzo
+		if ! uci -q get openvpn.server_turris.compress > /dev/null ; then
+			uci set openvpn.server_turris.compress=lzo
+		fi
+		uci commit openvpn
+	fi
+}
 endef
 
 #
