@@ -9,10 +9,10 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
 PKG_VERSION:=1.9.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://www.unbound.net/downloads
+PKG_SOURCE_URL:=https://nlnetlabs.nl/downloads/unbound/
 PKG_MD5SUM:=415af94b8392bc6b2c52e44ac8f17935cc6ddf2cc81edfb47c5be4ad205ab917
 
 PKG_BUILD_DEPENDS:=libexpat
@@ -24,7 +24,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/unbound/Default
   TITLE:=A validating, recursive & caching DNS resolver
-  URL:=http://www.unbound.net/
+  URL:=https://nlnetlabs.nl/projects/unbound/about/
   DEPENDS:=+libldns +libopenssl +dnssec-rootkey +resolver-conf
   PROVIDES:=dns-resolver
 endef
