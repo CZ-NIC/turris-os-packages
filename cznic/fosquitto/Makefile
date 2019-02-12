@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fosquitto
-PKG_VERSION:=10
+PKG_VERSION:=11
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -46,7 +46,7 @@ define Package/$(PKG_NAME)/postinst
 [ -n "$${IPKG_INSTROOT}" ] || {
 	# run scripts to update files
 	/etc/init.d/fosquitto enable
-	/etc/init.d/fosquitto start
+	/etc/init.d/fosquitto restart
 }
 endef
 
