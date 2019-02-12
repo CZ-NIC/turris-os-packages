@@ -33,12 +33,14 @@ define Package/$(PKG_NAME)/Default
 endef
 
 define Package/python-periphery
+$(call Package/python-periphery/Default)
 	TITLE:=python-periphery
 	DEPENDS:=+python-light
 	VARIANT:=python
 endef
 
 define Package/python3-periphery
+$(call Package/python-periphery/Default)
 	TITLE:=python3-periphery
 	DEPENDS:=+python3-light
 	VARIANT:=python3
