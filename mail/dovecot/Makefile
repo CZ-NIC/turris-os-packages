@@ -96,6 +96,7 @@ CONFIGURE_ARGS += \
 	--with-notify=dnotify \
 	--without-lzma \
 	--without-lz4 \
+	--without-sodium \
 	$(if $(CONFIG_DOVECOT_LDAP),--with-ldap=yes,--with-ldap=no) \
 	$(if $(CONFIG_DOVECOT_MYSQL),--with-mysql=yes,--with-mysql=no) \
 	$(if $(CONFIG_DOVECOT_PGSQL),--with-pgsql=yes,--with-pgsql=no) \
