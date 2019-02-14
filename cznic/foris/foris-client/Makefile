@@ -33,7 +33,8 @@ define Package/foris-client
 		+foris-controller-app \
 		+python3-light \
 		+python3-ubus \
-		+python3-setuptools
+		+python3-setuptools \
+		+crypto-wrapper
 	VARIANT:=python3
 endef
 
