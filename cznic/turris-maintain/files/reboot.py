@@ -23,6 +23,8 @@ def uci_get(config, section, option, default):
 
 bus = uci_get("foris-controller", "main", "bus", "ubus")
 
+controller_id = None
+
 if bus == "ubus":
     path = uci_get("foris-controller", "ubus", "notification_path", "/var/run/ubus.sock")
     from foris_controller.buses.ubus import UbusNotificationSender
@@ -42,6 +44,11 @@ elif bus == "mqtt":
     )
     with open(passwd_path, "r") as f:
         credentials = re.match(r"^([^:]+):(.*)$", f.readlines()[0][:-1]).groups()
+    try:
+        controller_id = subprocess.check_output(
+            ["crypto-wrapper", "serial-number"]).decode().strip()
+    except subprocess.CalledProcessError:
+        controller_id = None
     from foris_controller.buses.mqtt import MqttNotificationSender
     sender = MqttNotificationSender(host, port, credentials)
 
@@ -65,10 +72,15 @@ for network in ["wan", "lan"]:
 
 remains = TIME
 while remains > 0:
-    sender.notify("maintain", "reboot", {"ips": list(set(ips)), "remains": remains})
+    sender.notify(
+        "maintain", "reboot", {"ips": list(set(ips)), "remains": remains},
+        controller_id=controller_id,
+    )
     time.sleep(float(STEP) / 1000)
     remains -= STEP
 
-sender.notify("maintain", "reboot", {"ips": ips, "remains": 0})
+sender.notify(
+    "maintain", "reboot", {"ips": ips, "remains": 0}, controller_id=controller_id,
+)
 
 subprocess.call("reboot")
