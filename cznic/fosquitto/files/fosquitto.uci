@@ -7,9 +7,13 @@ config local local
 config remote remote
 	option enabled '0'
 
-#config subordinate
+#config subordinate '<id>'
 #	enabled '0'
-#	option id '<id>'
-#	list subsubordinate '<id_of_subordinates>'
 #	option address '192.168.1.8'
 #	option port '11884'
+#	option custom_name '<name>'
+
+#config subsubordinate '<id>'
+#	enabled '0'
+#	option via '<id>'
+#	option custom_name '<name>'
