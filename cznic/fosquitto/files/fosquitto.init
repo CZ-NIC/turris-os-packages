@@ -66,22 +66,34 @@ generate_remote() {
 }
 
 append_topic() {
-	echo "topic foris-controller/$1/notification/+/action/+ in 0" >> "$GENERATED_CONF"
-	echo "topic foris-controller/$1/request/+/action/+ out 0" >> "$GENERATED_CONF"
-	echo "topic foris-controller/$1/list out 0" >> "$GENERATED_CONF"
-	echo "topic foris-controller/$1/request/+/list out 0" >> "$GENERATED_CONF"
-	echo "topic foris-controller/$1/list out 0" >> "$GENERATED_CONF"
-	echo "topic foris-controller/$1/schema out 0" >> "$GENERATED_CONF"
-	echo "topic foris-controller/$1/reply/+ in 0" >> "$GENERATED_CONF"
+	local id=$(echo $1 | xargs)  # removes trailing whitespaces
+	if [ -n $id ] ; then
+		echo "topic foris-controller/$id/notification/+/action/+ in 0" >> "$GENERATED_CONF"
+		echo "topic foris-controller/$id/request/+/action/+ out 0" >> "$GENERATED_CONF"
+		echo "topic foris-controller/$id/list out 0" >> "$GENERATED_CONF"
+		echo "topic foris-controller/$id/request/+/list out 0" >> "$GENERATED_CONF"
+		echo "topic foris-controller/$id/list out 0" >> "$GENERATED_CONF"
+		echo "topic foris-controller/$id/schema out 0" >> "$GENERATED_CONF"
+		echo "topic foris-controller/$id/reply/+ in 0" >> "$GENERATED_CONF"
+	fi
+}
+
+load_subsubordinate() {
+	local id="$1"
+	config_get via "$id" via
+	config_get_bool enabled "$id" enabled 0
+	if [ -n "$via" -a "$enabled" == 1 ] ; then
+		local subsub_varname=subsubordinate_$id
+		local tmp="$(eval echo "\$$subsub_varname") $id"
+		eval "subsubordinate_$via=\"$tmp\""
+	fi
 }
 
 generate_subordinate() {
-	local config="$1"
-	config_get id "$config" id
-	config_get address "$config" address
-	config_get port "$config" port 11884
-	config_get subsubordinate "$config" subsubordinate
-	config_get_bool enabled "$config" enabled 0
+	local id="$1"
+	config_get address "$id" address
+	config_get port "$id" port 11884
+	config_get_bool enabled "$id" enabled 0
 	if [ "$enabled" == 0 ]; then
 		return
 	fi
@@ -96,7 +108,10 @@ generate_subordinate() {
 	echo "bridge_tls_version tlsv1.2" >> "$GENERATED_CONF"
 
 	append_topic "$id"
-	config_list_foreach "$config" subsubordinate append_topic
+	local subsub_varname=subsubordinate_$id
+	for subsub_id in $(eval echo "\$$subsub_varname") ; do
+		append_topic "$subsub_id"
+	done
 
 	echo >> "$GENERATED_CONF"
 }
@@ -110,6 +125,7 @@ generate_config() {
 	generate_global
 	generate_local
 	generate_remote
+	config_foreach load_subsubordinate subsubordinate
 	config_foreach generate_subordinate subordinate
 }
 
