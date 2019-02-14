@@ -16,7 +16,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+uci +python3 +python3-uci +coreutils-base64 +bzip2
+	DEPENDS:=+uci +python3 +python3-uci +coreutils-base64 +bzip2 +crypto-wrapper
 endef
 
 define Package/$(PKG_NAME)/description

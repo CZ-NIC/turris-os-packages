@@ -54,7 +54,7 @@ endef
 define Package/foris-client-bin
 	$(call Package/Common)
 	TITLE:=foris-client-bin
-	DEPENDS:=+foris-client-python3
+	DEPENDS:=+foris-client-python3 +crypto-wrapper
 endef
 
 define Build/Compile
