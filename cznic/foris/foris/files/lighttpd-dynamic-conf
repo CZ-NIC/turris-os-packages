@@ -30,7 +30,7 @@ done
 
 # get bus config
 config_load foris-controller
-config_get BUS main bus "ubus"
+config_get BUS main bus "mqtt"
 case "$BUS" in
 	ubus)
 		config_get BUS_PATH ubus path "/var/run/ubus.sock"

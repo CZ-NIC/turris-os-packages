@@ -29,7 +29,7 @@ start_service() {
 	config_get_bool debug main debug 0
 
 	config_load foris-controller
-	config_get bus main bus ubus
+	config_get bus main bus mqtt
 
 	if [ "$debug" == "1" ]; then
 		debug_arg="-d"

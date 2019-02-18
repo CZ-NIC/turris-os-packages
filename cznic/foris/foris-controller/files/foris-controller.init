@@ -26,7 +26,7 @@ PROG=/usr/bin/foris-controller
 
 start_service() {
 	config_load foris-controller
-	config_get bus main bus ubus
+	config_get bus main bus mqtt
 	config_get backend main backend openwrt
 	config_get client_socket main client_socket /var/run/foris-controller-client.sock
 	config_get_bool debug main debug 0
