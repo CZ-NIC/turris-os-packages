@@ -21,7 +21,7 @@ local mode = uci_cnf("mode", "branch") -- should we follow branch or version?
 local branch = uci_cnf("branch", "hbs") -- which branch to follow
 local version = uci_cnf("version", nil) -- which version to follow
 local lists = uci_cnf("pkglists", {}) -- what additional lists should we use
-minimal_builds = uci_cnf("use_minimal", false) -- if packages-minimal should be used
+minimal_builds = uci_cnf("use_minimal", "0") == "1" -- if packages-minimal should be used
 Export('minimal_builds')
 
 -- Verify that we have sensible configuration
