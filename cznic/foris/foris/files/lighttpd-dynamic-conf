@@ -45,7 +45,7 @@ case "$BUS" in
 		config_get CREDENTIALS_FILE mqtt credentials_file "/etc/fosquitto/credentials.plain"
 		serial_number=$(crypto-wrapper serial-number)
 		if [ $? == 0 ] ; then
-			CONTROLLER_ID="--mqtt-controller-id $serial_number"
+			CONTROLLER_ID=" --mqtt-controller-id $serial_number"
 		fi
 		BUS="mqtt"
 		;;
@@ -59,7 +59,7 @@ case "$BUS" in
 		echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --bus-socket $BUS_PATH\""
 		;;
 	mqtt)
-		echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --mqtt-host $BUS_HOST --mqtt-port $BUS_PORT --mqtt-passwd-file $CREDENTIALS_FILE $CONTROLLER_ID\""
+		echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --mqtt-host $BUS_HOST --mqtt-port $BUS_PORT --mqtt-passwd-file ${CREDENTIALS_FILE}${CONTROLLER_ID}\""
 		;;
 esac
 echo "var.foris-$APP.paths = \"$FORIS_PATHS\""
