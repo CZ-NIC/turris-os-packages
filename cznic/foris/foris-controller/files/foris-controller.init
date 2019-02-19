@@ -52,7 +52,7 @@ start_service() {
 		config_get host mqtt host "localhost"
 		config_get port mqtt port "11883"
 		config_get credentials_file mqtt credentials_file "/etc/fosquitto/credentials.plain"
-		serial_number=$(crypto-wrapper serial-number | xargs)
+		serial_number=$(crypto-wrapper serial-number)
 		if [ "$?" == 0 ] ; then
 			controller_id="--controller-id $serial_number"
 		fi
