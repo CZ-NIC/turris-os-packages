@@ -59,5 +59,7 @@ endef
 
 $(eval $(call PyPackage,python-periphery))
 $(eval $(call BuildPackage,python-periphery))
+$(eval $(call BuildPackage,python-periphery-src))
 $(eval $(call Py3Package,python3-periphery))
 $(eval $(call BuildPackage,python3-periphery))
+$(eval $(call BuildPackage,python3-periphery-src))
