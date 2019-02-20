@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2017 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2017-2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=czmq
-PKG_VERSION:=20171102
+PKG_VERSION:=4.2.0
 PKG_RELEASE:=1
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/zeromq/czmq.git
-PKG_SOURCE_VERSION:=ed902413453c0e50c65f887c40a5e9052619a224
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+
+PKG_SOURCE:=czmq-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://github.com/zeromq/czmq/releases/download/v$(PKG_VERSION)
+PKG_BUILD_DIR:=$(BUILD_DIR)/czmq-$(PKG_VERSION)
+PKG_HASH:=cfab29c2b3cc8a845749758a51e1dd5f5160c1ef57e2a41ea96e4c2dcc8feceb
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 PKG_INSTALL:=1
