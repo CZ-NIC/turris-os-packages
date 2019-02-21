@@ -94,7 +94,7 @@ generate_subordinate() {
 	config_get address "$id" address
 	config_get port "$id" port 11884
 	config_get_bool enabled "$id" enabled 0
-	if [ "$enabled" == 0 ]; then
+	if [ "$enabled" == 0 -o -z "$address" ]; then
 		return
 	fi
 
