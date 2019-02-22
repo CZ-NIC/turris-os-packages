@@ -23,6 +23,7 @@ define Package/lmdb/Default
 	URL:=https://symas.com/lmdb/
 endef
 
+TARGET_CFLAGS+=-fPIC
 
 define Package/liblmdb0
 	$(call Package/lmdb/Default)
