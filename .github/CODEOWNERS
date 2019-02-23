@@ -1,0 +1,57 @@
+# CZ.NIC folder
+cznic/foris/ @shenek
+cznic/fosquitto/ @shenek
+cznic/mozilla-iot-gateway-webapp/ @miska
+cznic/nikola/ @shenek
+cznic/oneshot/ @miska
+cznic/netmetr/ @shenek @mprudek
+cznic/ssbackups/ @shenek @mmladek
+cznic/turris-diagnostics/ @Cynerd
+cznic/turris-translations/ @shenek
+cznic/server-uplink/ @shenek
+cznic/turrishw/ @shenek
+cznic/switch-branch/ @Cynerd
+cznic/turris-webapps/ @miska
+cznic/turris-netboot/ @miska
+cznic/haas-proxy/ @miska
+
+#  Hardware
+hardware/ @miska
+hardware/crypto-wrapper/ @VojtechMyslivec
+hardware/mox/mox-otp/ @VojtechMyslivec
+
+# Lang
+lang/ @Cynerd
+
+# Libs
+libs/ @ja-pa @Cynerd
+
+# Multimedia
+multimedia/ @BKPepe
+
+# Net
+net/knot/ @salzmdan
+net/knot-resolver/ @ja-pa
+net/unbound/ @ja-pa
+net/tor/ @ja-pa
+net/torsocks/ @ja-pa
+net/resolver-conf/ @ja-pa
+net/resolver-debug/ @ja-pa
+net/lighttpd/ @miska
+net/lighttpd-https-cert/ @miska
+net/nextcloud/ @miska
+net/dnssec-rootkey/ @ja-pa @vcunat
+net/lighttpd/ @miska
+net/nextcloud/ @miska
+net/rmbt/ @mprudek
+
+# Pakon related stuff
+cznic/pakon/ @mmatejek
+cznic/pakon-dev-detect/ @mmatejek
+cznic/pakon-lists/ @mmatejek
+
+# Updater
+updater/ @Cynerd
+
+# Utils
+utils/ @miska @ja-pa @Cynerd

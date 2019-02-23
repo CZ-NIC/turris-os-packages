@@ -1,0 +1,57 @@
+# CZ.NIC folder
+cznic/foris/ @shenek
+cznic/fosquitto/ @shenek
+cznic/mozilla-iot-gateway-webapp/ @mhrusecky
+cznic/nikola/ @shenek
+cznic/oneshot/ @mhrusecky
+cznic/netmetr/ @shenek @mprudek
+cznic/ssbackups/ @shenek @mmladek
+cznic/turris-diagnostics/ @kkoci
+cznic/turris-translations/ @shenek
+cznic/server-uplink/ @shenek
+cznic/turrishw/ @shenek
+cznic/switch-branch/ @kkoci
+cznic/turris-webapps/ @mhrusecky
+cznic/turris-netboot/ @mhrusecky
+cznic/haas-proxy/ @mhrusecky
+
+#  Hardware
+hardware/ @mhrusecky
+hardware/crypto-wrapper/ @vmyslivec
+hardware/mox/mox-otp/ @vmyslivec
+
+# Lang
+lang/ @kkoci
+
+# Libs
+libs/ @jpavlinec @kkoci
+
+# Multimedia
+multimedia/ @jschlehofer
+
+# Net
+net/knot/ @dsalzman
+net/knot-resolver/ @jpavlinec
+net/unbound/ @jpavlinec
+net/tor/ @jpavlinec
+net/torsocks/ @jpavlinec
+net/resolver-conf/ @jpavlinec
+net/resolver-debug/ @jpavlinec
+net/lighttpd/ @mhrusecky
+net/lighttpd-https-cert/ @mhrusecky
+net/nextcloud/ @mhrusecky
+net/dnssec-rootkey/ @jpavlinec @vcunat
+net/lighttpd/ @mhrusecky
+net/nextcloud/ @mhrusecky
+net/rmbt/ @mprudek
+
+# Pakon related stuff
+cznic/pakon/ @mmatejek
+cznic/pakon-dev-detect/ @mmatejek
+cznic/pakon-lists/ @mmatejek
+
+# Updater
+updater/ @kkoci
+
+# Utils
+utils/ @mhrusecky @jpavlinec @kkoci
