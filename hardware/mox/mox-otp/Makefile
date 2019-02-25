@@ -26,7 +26,7 @@ define Package/$(PKG_NAME)
 	TITLE:=MOX OTP CLI
 	URL:=https://gitlab.labs.nic.cz/turris/mox-otp
 	PROVIDES:=turris-otp
-	DEPENDS:=+python3-light
+	DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +python3-light
 	VARIANT=python3
 endef
 
