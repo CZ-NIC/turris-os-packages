@@ -38,6 +38,10 @@ define Package/python3-requests/description
 (Variant for Python3)
 endef
 
+define Build/Compile
+	$(call Py3Build/Compile)
+endef
+
 $(eval $(call Py3Package,python3-requests))
 $(eval $(call BuildPackage,python3-requests))
 $(eval $(call BuildPackage,python3-requests-src))
