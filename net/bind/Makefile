@@ -9,24 +9,26 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bind
-PKG_VERSION:=9.11.5-P1
+PKG_VERSION:=9.12.3-P4
 PKG_RELEASE:=1
 USERID:=bind=57:bind=57
 
 PKG_MAINTAINER:=Noah Meyerhans <frodo@morgul.net>
 PKG_LICENSE := MPL-2.0
+PKG_CPE_ID:=cpe:/a:isc:bind
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:= \
 	https://www.mirrorservice.org/sites/ftp.isc.org/isc/bind9/$(PKG_VERSION) \
 	https://ftp.isc.org/isc/bind9/$(PKG_VERSION)
-PKG_MD5SUM:=6cd6dbf016569f12d4a0ed629e44e895d9ed41c6908274ed2e617666c5491928
+PKG_MD5SUM:=d1014453c62623e42323fd83fc89444c12ae6b707fd586466959a052fe21f206
 
 PKG_FIXUP:=autoreconf
 PKG_REMOVE_FILES:=aclocal.m4 libtool.m4
 
 PKG_INSTALL:=1
 PKG_USE_MIPS16:=0
+PKG_BUILD_PARALLEL:=1
 
 PKG_CONFIG_DEPENDS := \
 	CONFIG_BIND_ENABLE_FILTER_AAAA \
@@ -83,11 +85,11 @@ define Package/bind-tools
   $(call Package/bind/Default)
   TITLE+= administration tools (all)
 	DEPENDS:= \
-	+bind-rndc \
 	+bind-check \
+	+bind-dig \
 	+bind-dnssec \
 	+bind-host \
-	+bind-dig
+	+bind-rndc
 endef
 
 define Package/bind-rndc
@@ -117,9 +119,10 @@ endef
 
 export BUILD_CC="$(TARGET_CC)"
 
+TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+
 CONFIGURE_ARGS += \
-	--enable-shared \
-	--enable-static \
+	--enable-ipv6=$(if $(CONFIG_IPV6),yes,no) \
 	--with-randomdev="/dev/urandom" \
 	--disable-threads \
 	--disable-linux-caps \
@@ -130,11 +133,10 @@ CONFIGURE_ARGS += \
 	--with-gost=no \
 	--with-gssapi=no \
 	--with-ecdsa=$(if $(CONFIG_OPENSSL_WITH_EC),yes,no) \
-	--with-eddsa=no \
+	--with-eddsa=$(if $(CONFIG_BIND_ENABLE_EDDSA),yes,no) \
 	--with-readline=no \
 	--enable-atomic=no \
 	--sysconfdir=/etc/bind
-
 
 ifdef CONFIG_BIND_ENABLE_FILTER_AAAA
 	CONFIGURE_ARGS += \
