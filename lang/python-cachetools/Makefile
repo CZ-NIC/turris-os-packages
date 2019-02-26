@@ -37,12 +37,14 @@ define Package/python-cachetools
 $(call Package/$(PKG_NAME)/Default)
   TITLE+= Python2
   DEPENDS:=+python-light
+  VARIANT:=python
 endef
 
 define Package/python3-cachetools
 $(call Package/$(PKG_NAME)/Default)
   TITLE+= Python3
   DEPENDS:=+python3-light
+  VARIANT:=python3
 endef
 
 define Package/python-cachetools/description
