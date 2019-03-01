@@ -42,11 +42,7 @@ define Package/$(PKG_NAME)/conffiles
 /etc/config/storage
 endef
 
-define Package/$(PKG_NAME)/postrm
-#!/bin/sh
-set -x
-[ -n "$${IPKG_INSTROOT}" ] || /etc/init.d/foris-controller restart
-endef
+$(eval $(call ForisControllerModule,$(PKG_NAME)))
 
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
@@ -57,8 +53,6 @@ if [ -z "$${IPKG_INSTROOT}" ]; then
 fi
 mkdir -p "$${IPKG_INSTROOT}"/srv
 endef
-
-$(eval $(call ForisControllerModule,$(PKG_NAME)))
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)$(PYTHON3_PKG_DIR) $(1)/usr/libexec $(1)/etc/init.d $(1)/etc/config
