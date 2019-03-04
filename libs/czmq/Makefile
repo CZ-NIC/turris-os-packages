@@ -26,7 +26,7 @@ include $(INCLUDE_DIR)/autotools.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=CZMQ
-	DEPENDS:=+libzmq +libuuid +libpcre
+	DEPENDS:=+libzmq +libuuid +libpcre +libmicrohttpd +liblz4
 endef
 
 define Package/$(PKG_NAME)/description
