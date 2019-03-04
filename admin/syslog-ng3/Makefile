@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=syslog-ng
-PKG_VERSION:=3.19.1
-PKG_RELEASE:=6
+PKG_VERSION:=3.20.1
+PKG_RELEASE:=1
 
 PKG_LICENSE:=LGPL-2.1+
 PKG_LICENSE_FILES:=COPYING
@@ -17,7 +17,7 @@ PKG_CPE_ID:=cpe:/a:balabit:syslog-ng
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/balabit/syslog-ng/releases/download/$(PKG_NAME)-$(PKG_VERSION)/
-PKG_MD5SUM:=5cf931a9d7bead0e6d9a2c65eee8f6005a005878f59aa280f3c4294257ed5178
+PKG_MD5SUM:=a65858afe9c649119a23ff61669945cab8692a045ee8259e8ee666445c8fbda0
 
 PKG_BUILD_PARALLEL:=1
 
