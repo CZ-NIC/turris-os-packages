@@ -12,7 +12,7 @@ PKG_VERSION:=3.0.4
 PKG_RELEASE:=1
 PKG_LICENSE:=LGPL-2.1
 
-PKG_SOURCE:=python-$(PKG_VERSION).tar.gz
+PKG_SOURCE:=python-chardet-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/fc/bb/a5768c230f9ddb03acc9ef3f0d4a3cf93462473795d18e9535498c8f929d/
 PKG_HASH:=84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae
 PKG_BUILD_DIR:=$(BUILD_DIR)/python3-chardet-$(PKG_VERSION)
