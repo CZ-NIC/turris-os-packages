@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=schnapps
 PKG_VERSION:=1.7
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/schnapps.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -27,7 +27,7 @@ define Package/schnapps
   SECTION:=utils
   CATEGORY:=Utilities
   SUBMENU:=Filesystem
-  DEPENDS:=+btrfs-progs
+  DEPENDS:=+btrfs-progs +tar
   TITLE:=Btrfs snapshots management tool
 endef
 
