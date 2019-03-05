@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=oneshot
-PKG_VERSION:=28
+PKG_VERSION:=29
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 

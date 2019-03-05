@@ -35,6 +35,14 @@ do
                 uci set $i.family="ipv4"
                 echo "mwan3 setting family"
         fi
+
+	track_method=$(uci get $i.track_method)
+	if [ -z "$track_method" ]; then
+		#set ping track method
+		echo "mwan3 setting $i track method ping"
+		uci set $i.track_method="ping"
+	fi
+
 done
 
 uci commit mwan3
