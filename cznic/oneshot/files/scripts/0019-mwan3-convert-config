@@ -7,10 +7,21 @@ if [ "$get_global" == "globals" ]; then
 else
         #set globals
         uci set mwan3.globals=globals
-        uci set mwan3.globals.mmx_mask='0x3F00'
+fi
+
+if [ -z "$(uci get mwan3.globals.mmx_mask)" ]; then
+	uci set mwan3.globals.mmx_mask='0x3F00'
+fi
+if [ -z "$(uci get mwan3.globals.rtmon_interval)" ]; then
         uci set mwan3.globals.rtmon_interval='5'
-        uci set mwan3.globals.enabled='1'
-        uci set mwan3.globals.loglevel='0'
+fi
+
+if [ -z "$(uci get mwan3.globals.enabled)" ]; then
+	uci set mwan3.globals.enabled='1'
+fi
+
+if [ -z "$(uci get mwan3.globals.loglevel)" ]; then
+	uci set mwan3.globals.loglevel='0'
 fi
 
 #Check family setting
