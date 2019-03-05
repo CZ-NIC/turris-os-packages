@@ -8,7 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=oneshot
+<<<<<<< HEAD
 PKG_VERSION:=26
+=======
+PKG_VERSION:=28
+>>>>>>> oneshot: fix mwan3 script
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
