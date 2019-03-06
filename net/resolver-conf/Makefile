@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.1
-PKG_RELEASE:=27
+PKG_RELEASE:=28
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -60,6 +60,11 @@ else
 	$(INSTALL_CONF) ./files/resolver-turris-config $(1)/etc/config/resolver
 	[ -z "`ls -1 ./files/dns_servers_turris/`" ] || $(INSTALL_CONF) ./files/dns_servers_turris/* $(1)/etc/resolver/dns_servers/
 endif
+
+	# Run only for TurrisOS 4.0 version
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/dhcp
+	$(LN) /etc/resolver/dhcp_host_domain_ng.py $(1)/etc/hotplug.d/dhcp/99-dhcp_host_domain_ng.py
+
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
