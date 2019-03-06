@@ -129,11 +129,16 @@ run_cmd() {
 		LAST_SERVICE=dnsmasq
 	else
 		#run script to refresh dynamic domains
+		to_version=$(cat /etc/turris-version |awk -F'.' '{print $1}')
 		config_load resolver
 		config_get_bool dynamic_domains "common" dynamic_domains 0
 		if [ "$dynamic_domains" == "1" ]; then
 			echo "set dhcp script"
-			set_dhcp_script
+			if [ $to_version -le 3 ]; then
+				#call only in case of old TO system 3.x
+				set_dhcp_script
+			fi
+
 			run_dhcp_script $param $LAST_SERVICE
 		else
 			echo "remove dhcp script"

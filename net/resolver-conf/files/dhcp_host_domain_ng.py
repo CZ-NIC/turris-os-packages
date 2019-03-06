@@ -340,6 +340,14 @@ if __name__ == "__main__":
         dd.save_leases()
         dd.refresh_resolver()
     else:
+        # get env variables in case of
+        # call from dnsmasq dhcp-script.sh
+        sys_op = os.environ.get('ACTION')
+        mac = os.environ.get('MACADDR')
+        ipv4 = os.environ.get('IPADDR')
+        hostname = os.environ.get('HOSTNAME')
+        if sys_op and hostname and ipv4:
+                dd.update_dhcp(sys_op, hostname, ipv4)
         dd = DHCPv4()
         dd.save_leases()
         dd.refresh_resolver()
