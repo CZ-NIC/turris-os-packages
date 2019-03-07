@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-nikola
-PKG_VERSION:=1
+PKG_VERSION:=1.0
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/nikola.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=be7a13ecdc53073c9c9cf4da2fffdc22ac1e0ca9
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -32,10 +32,6 @@ endef
 
 define Package/$(PKG_NAME)/conffiles
 /etc/config/nikola
-endef
-
-define Build/Configure
-	$(SED) 's/^__version__ =.*/__version__ = "$(PKG_VERSION)"/' $(PKG_BUILD_DIR)/nikola/__init__.py
 endef
 
 define Py3Package/$(PKG_NAME)/install
