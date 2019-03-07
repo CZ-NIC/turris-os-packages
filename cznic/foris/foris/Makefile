@@ -38,7 +38,7 @@ define Package/foris-common
 		+python3-flup +python3-ubus +python3-jinja2 +lighttpd +lighttpd-mod-fastcgi \
 		+lighttpd-mod-redirect +lighttpd-mod-setenv +lighttpd-mod-alias +foris-ws \
 		+foris-client-python3 +fosquitto +python3-paho-mqtt \
-		+crypto-wrapper
+		+crypto-wrapper +python3-netfilterqueue
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 

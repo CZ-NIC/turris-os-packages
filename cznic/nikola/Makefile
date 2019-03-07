@@ -25,6 +25,7 @@ $(call include_mk, python3-package.mk)
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=+python3-light +python3-setuptools +logrotate +syslog-ng3 +python3-libatsha204 +firewall +cznic-cacert-bundle
+
 endef
 
 define Package/$(PKG_NAME)/description
