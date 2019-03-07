@@ -41,4 +41,3 @@ endef
 
 $(eval $(call Py3Package,python3-urllib3))
 $(eval $(call BuildPackage,python3-urllib3))
-$(eval $(call BuildPackage,python3-urllib3-src))
