@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller
-PKG_VERSION:=0.11.7
-PKG_RELEASE:=2
+PKG_VERSION:=0.11.8
+PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller
@@ -57,6 +57,7 @@ define Package/foris-controller-app/install
 	$(CP) $(PKG_INSTALL_DIR)/* $(1)/
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) ./files/foris-controller.conf $(1)/etc/config/foris-controller
+	$(INSTALL_CONF) ./files/foris-controller-subordinates.conf $(1)/etc/config/foris-controller-subordinates
 	$(INSTALL_DIR) $(1)/etc/init.d/
 	$(INSTALL_BIN) ./files/foris-controller.init $(1)/etc/init.d/foris-controller
 endef
