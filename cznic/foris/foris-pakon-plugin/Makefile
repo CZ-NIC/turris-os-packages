@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-pakon-plugin
-PKG_VERSION:=2.5.3
+PKG_VERSION:=2.6
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-pakon-plugin.git
