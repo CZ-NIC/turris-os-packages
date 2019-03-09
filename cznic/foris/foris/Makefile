@@ -20,7 +20,7 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=\
 	ruby/host \
 	python-libsass/host \
-	python3-pytz/host \
+	python-pytz/host \
 	python3-babel/host \
 	MarkupSafe/host \
 	Jinja2/host
