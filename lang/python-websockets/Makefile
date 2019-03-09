@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2018-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -7,7 +7,7 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=python3-websockets
+PKG_NAME:=python-websockets
 PKG_VERSION:=7.0
 PKG_RELEASE:=1
 
@@ -19,7 +19,6 @@ PKG_HASH=08e3c3e0535befa4f0c4443824496c03ecc25062debbcf895874f8a0b4c97c9f
 PKG_LICENSE:=BSD
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/python3-websockets-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python3
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk

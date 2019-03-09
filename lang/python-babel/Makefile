@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2015 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2015-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -7,13 +7,13 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=python3-babel
+PKG_NAME:=python-babel
 PKG_VERSION:=2.6.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=Babel-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/b/babel/
-PKG_MD5SUM:=c384ac03026e8fe6f9b90f55201f1bff
+PKG_HASH:=8cba50f48c529ca3fa18cf81fa9403be176d374ac4d60738b839122dfaaa3d23
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-Babel-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(BUILD_VARIANT)-Babel-$(PKG_VERSION)

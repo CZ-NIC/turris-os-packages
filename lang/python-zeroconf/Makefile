@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2015 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2015-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -7,13 +7,13 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=python3-zeroconf
-PKG_VERSION:=0.17.3
-PKG_RELEASE:=2
+PKG_NAME:=python-zeroconf
+PKG_VERSION:=0.21.3
+PKG_RELEASE:=1
 
 PKG_SOURCE:=zeroconf-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/z/zeroconf/
-PKG_MD5SUM:=8b08e391276b4aa9f6d06de4f92ead5b
+PKG_HASH:=5b52dfdf4e665d98a17bf9aa50dea7a8c98e25f972d9c1d7660e2b978a1f5713
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/zeroconf-$(PKG_VERSION)
 

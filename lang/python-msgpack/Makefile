@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2017-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -7,13 +7,13 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=python3-msgpack
-PKG_VERSION:=0.5.6
-PKG_RELEASE:=2
+PKG_NAME:=python-msgpack
+PKG_VERSION:=0.6.1
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/msgpack/msgpack-python/archive/
-PKG_MD5SUM:=e05e0edfebdd32d11b02bea88381595e
+PKG_HASH:=4008c72f5ef2b7936447dcb83db41d97e9791c83221be13d5e19db0796df1972
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/msgpack-python-$(PKG_VERSION)
 

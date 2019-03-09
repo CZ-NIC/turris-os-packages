@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2017-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,15 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-zmq
-PKG_VERSION:=17.1.2
+PKG_VERSION:=18.0.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=pyzmq-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/p/pyzmq/
-PKG_HASH:=a72b82ac1910f2cf61a49139f4974f994984475f771b0faa730839607eeedddf
+PKG_HASH:=8b319805f6f7c907b101c864c3ca6cefc9db8ce0791356f180b1b644c7347e4c
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-pyzmq-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python3 cython3
+PKG_BUILD_DEPENDS:=cython3
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
