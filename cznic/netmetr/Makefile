@@ -21,8 +21,6 @@ PKG_LICENSE:=GPLv3
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-netmetr-client-v$(PKG_VERSION)
 
-PKG_BUILD_DEPENDS:=python3 python3-setuptools
-
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
