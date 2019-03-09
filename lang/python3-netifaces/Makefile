@@ -16,7 +16,6 @@ PKG_SOURCE_URL:=https://pypi.python.org/packages/source/n/netifaces/
 PKG_MD5SUM:=36da76e2cfadd24cc7510c2c0012eb1e
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/netifaces-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python3-setuptools
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -27,19 +26,14 @@ define Package/python3-netifaces
   CATEGORY:=Languages
   TITLE:=Portable network interface information.
   URL:=https://bitbucket.org/al45tair/netifaces
-  DEPENDS:=+python3
+  DEPENDS:=+python3-light
+  VARIANT:=python3
 endef
 
 define Package/python3-netifaces/description
   Portable network interface information.
 endef
 
-define Build/Compile
-	$(call Build/Compile/Py3Mod,, \
-		install --root="$(PKG_INSTALL_DIR)" --prefix="/usr"  \
-		--single-version-externally-managed \
-	)
-endef
-
 $(eval $(call Py3Package,python3-netifaces))
 $(eval $(call BuildPackage,python3-netifaces))
+$(eval $(call BuildPackage,python3-netifaces-src))

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2018-2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -16,7 +16,6 @@ PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/j/jsonschema/
 PKG_MD5SUM:=50c6b69a373a8b55ff1e0ec6e78f13f4
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-jsonschema-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python python3 python-setuptools python3-setuptools
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
@@ -30,20 +29,19 @@ define Package/python-jsonschema/Default
 	CATEGORY:=Languages
 	URL:=https://python-jsonschema.readthedocs.io/en/latest/
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
-	DEPENDS:=
 endef
 
 define Package/python-jsonschema
 	$(call Package/python-jsonschema/Default)
 	TITLE:=python-jsonschema
-	DEPENDS+=+PACKAGE_python-jsonschema:python-light +PACKAGE_python-jsonschema:python-functools32
+	DEPENDS:=+PACKAGE_python-jsonschema:python-light +PACKAGE_python-jsonschema:python-functools32
 	VARIANT:=python
 endef
 
 define Package/python3-jsonschema
 	$(call Package/python-jsonschema/Default)
 	TITLE:=python3-jsonschema
-	DEPENDS+=+PACKAGE_python3-jsonschema:python3-light
+	DEPENDS:=+PACKAGE_python3-jsonschema:python3-light
 	VARIANT:=python3
 endef
 

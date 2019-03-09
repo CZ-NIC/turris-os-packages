@@ -16,7 +16,6 @@ PKG_SOURCE_URL:=https://pypi.python.org/packages/source/b/bottle-i18n/
 PKG_MD5SUM:=f0942f05fec0f4a3c45765623863cb68
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python python-setuptools python3 python3-setuptools
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -36,10 +35,6 @@ endef
 
 define Package/python3-bottle-i18n/description
 	i18n support for bottle.py
-endef
-
-define Py3Build/Compile
-	$(call Build/Compile/Py3Mod,,install --prefix="/usr" --root="$(PKG_INSTALL_DIR)")
 endef
 
 $(eval $(call Py3Package,python3-bottle-i18n))

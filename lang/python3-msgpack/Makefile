@@ -16,7 +16,6 @@ PKG_SOURCE_URL:=https://github.com/msgpack/msgpack-python/archive/
 PKG_MD5SUM:=e05e0edfebdd32d11b02bea88381595e
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/msgpack-python-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python3-setuptools
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -27,15 +26,10 @@ define Package/python3-msgpack
   CATEGORY:=Languages
   TITLE:=Python msgpack library
   URL:=https://pypi.python.org/pypi/msgpack
-  DEPENDS:=+python3 +libstdcpp
-endef
-
-define Build/Compile
-	$(call Build/Compile/Py3Mod,, \
-		install --root="$(PKG_INSTALL_DIR)" --prefix="/usr"  \
-		--single-version-externally-managed \
-	)
+  DEPENDS:=+python3-light +libstdcpp
+  VARIANT:=python3
 endef
 
 $(eval $(call Py3Package,python3-msgpack))
 $(eval $(call BuildPackage,python3-msgpack))
+$(eval $(call BuildPackage,python3-msgpack-src))

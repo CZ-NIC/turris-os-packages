@@ -16,7 +16,6 @@ PKG_SOURCE_URL:=https://pypi.python.org/packages/source/z/zeroconf/
 PKG_MD5SUM:=8b08e391276b4aa9f6d06de4f92ead5b
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/zeroconf-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python3-setuptools
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -27,19 +26,14 @@ define Package/python3-zeroconf
   CATEGORY:=Languages
   TITLE:=Pure Python Multicast DNS Service Discovery Library (Bonjour/Avahi compatible)
   URL:=https://github.com/jstasiak/python-zeroconf
-  DEPENDS:=+python3 +python3-netifaces +python3-six
+  DEPENDS:=+python3-light +python3-netifaces +python3-six
+  VARIANT:=python3
 endef
 
 define Package/python3-zeroconf/description
   Pure Python Multicast DNS Service Discovery Library (Bonjour/Avahi compatible)
 endef
 
-define Build/Compile
-	$(call Build/Compile/Py3Mod,, \
-		install --root="$(PKG_INSTALL_DIR)" --prefix="/usr"  \
-		--single-version-externally-managed \
-	)
-endef
-
 $(eval $(call Py3Package,python3-zeroconf))
 $(eval $(call BuildPackage,python3-zeroconf))
+$(eval $(call BuildPackage,python3-zeroconf-src))

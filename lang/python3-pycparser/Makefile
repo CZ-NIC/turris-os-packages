@@ -18,8 +18,7 @@ PKG_MD5SUM:=a2bc8d28c923b4fe2b2c3b4b51a4f935
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
 
-PKG_BUILD_DEPENDS:=python3 python3-setuptools
-HOST_BUILD_DEPENDS:=python3/host python3-setuptools/host python3-ply/host
+HOST_BUILD_DEPENDS:=python3/host python3-ply/host
 
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=LICENSE
@@ -28,19 +27,18 @@ PKG_MAINTAINER:=Jeffery To <jeffery.to@gmail.com>
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
-include $(TOPDIR)/feeds/packages/lang/python/python3-host.mk
 
 PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 HOST_UNPACK:=$(HOST_TAR) -C $(HOST_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/python3-pycparser
-	SECTION:=lang
-	CATEGORY:=Languages
-	SUBMENU:=Python
-	TITLE:=python3-pycparser
-	URL:=https://github.com/eliben/pycparser
-	DEPENDS:=+python3-light +python3-ply
-	VARIANT:=python3
+  SECTION:=lang
+  CATEGORY:=Languages
+  SUBMENU:=Python
+  TITLE:=python3-pycparser
+  URL:=https://github.com/eliben/pycparser
+  DEPENDS:=+python3-light +python3-ply
+  VARIANT:=python3
 endef
 
 define Package/python3-pycparser/description
@@ -49,18 +47,13 @@ module designed to be easily integrated into applications that need to parse
 C source code.
 endef
 
-define Build/Compile
-	$(call Build/Compile/Py3Mod,,install --prefix="/usr" --root="$(PKG_INSTALL_DIR)")
-endef
-
 define Host/Compile
 	$(call Build/Compile/HostPy3Mod,,install --prefix="" --root="$(STAGING_DIR_HOSTPKG)")
 endef
 
-define Host/Install
-endef
+Host/Install:=
 
 $(eval $(call HostBuild))
-
 $(eval $(call Py3Package,python3-pycparser))
 $(eval $(call BuildPackage,python3-pycparser))
+$(eval $(call BuildPackage,python3-pycparser-src))

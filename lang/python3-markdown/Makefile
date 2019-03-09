@@ -16,7 +16,6 @@ PKG_SOURCE_URL:=https://pypi.python.org/packages/source/m/markdown/
 PKG_MD5SUM:=a67c1b2914f7d74eeede2ebe0fdae470
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/Markdown-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python3-setuptools
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -27,15 +26,13 @@ define Package/$(PKG_NAME)
   SECTION:=lang
   CATEGORY:=Languages
   DEPENDS:=+python3-light
+  VARIANT:=python3
 endef
 
 define Package/$(PKG_NAME)/description
   A fast and complete Python implementation of Markdown.
 endef
 
-define Build/Compile
-	$(call Build/Compile/Py3Mod,,install --root="$(PKG_INSTALL_DIR)" --prefix="/usr")
-endef
-
-$(eval $(call Py3Package,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call Py3Package,python3-markdown))
+$(eval $(call BuildPackage,python3-markdown))
+$(eval $(call BuildPackage,python3-markdown-src))
