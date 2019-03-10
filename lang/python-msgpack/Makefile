@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/msgpack/msgpack-python/archive/
-PKG_HASH:=4008c72f5ef2b7936447dcb83db41d97e9791c83221be13d5e19db0796df1972
+PKG_HASH:=734e1abc6f14671f28acd5266de336ae6d8de522fe1c8d0b7146365ad1fe6b0f
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/msgpack-python-$(PKG_VERSION)
 
