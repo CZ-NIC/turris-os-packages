@@ -1,0 +1,116 @@
+From b4b93a2844e79c0394d130b02541a5cfd363fa81 Mon Sep 17 00:00:00 2001
+From: Josef Schlehofer <josef.schlehofer@nic.cz>
+Date: Sun, 10 Mar 2019 10:33:14 +0100
+Subject: [PATCH] main: Fix OpenSSL 1.1 compilation without deprecated APIs
+
+---
+ src/httpc.c | 12 ++++++++----
+ src/main.c  | 16 ++++++++++++----
+ 2 files changed, 20 insertions(+), 8 deletions(-)
+
+diff --git a/src/httpc.c b/src/httpc.c
+index 782ff7faf..b4f75deef 100644
+--- a/src/httpc.c
++++ b/src/httpc.c
+@@ -56,7 +56,7 @@ struct http_client_ssl {
+   char    *rbio_buf;
+   size_t   rbio_size;
+   size_t   rbio_pos;
+-  
++
+   BIO     *wbio;
+   char    *wbio_buf;
+   size_t   wbio_size;
+@@ -890,7 +890,7 @@ http_client_data_received( http_client_t *hc, char *buf, ssize_t len, int hdr )
+     if (!hdr && hc->hc_rpos >= hc->hc_csize)
+       return 1;
+     return 0;
+-  }  
++  }
+ 
+   csize = hc->hc_csize == (size_t)-1 ? 0 : hc->hc_csize;
+   l = len;
+@@ -1505,7 +1505,11 @@ http_client_reconnect
+   if (strcasecmp(scheme, "https") == 0 || strcasecmp(scheme, "rtsps") == 0) {
+     ssl = calloc(1, sizeof(*ssl));
+     hc->hc_ssl = ssl;
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+     ssl->ctx   = SSL_CTX_new(SSLv23_client_method());
++#else
++    ssl->ctx   = SSL_CTX_new(TLS_client_method());
++#endif
+     if (ssl->ctx == NULL) {
+       tvherror(LS_HTTPC, "%04X: Unable to get SSL_CTX", shortid(hc));
+       goto err1;
+@@ -1552,7 +1556,7 @@ errnval:
+ }
+ 
+ http_client_t *
+-http_client_connect 
++http_client_connect
+   ( void *aux, http_ver_t ver, const char *scheme,
+     const char *host, int port, const char *bindaddr )
+ {
+@@ -1593,7 +1597,7 @@ http_client_register( http_client_t *hc )
+ {
+   assert(hc->hc_data_received || hc->hc_conn_closed || hc->hc_data_complete);
+   assert(hc->hc_efd == NULL);
+-  
++
+   pthread_mutex_lock(&http_lock);
+ 
+   TAILQ_INSERT_TAIL(&http_clients, hc, hc_link);
+diff --git a/src/main.c b/src/main.c
+index 6d3c84046..e7f7f70a7 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -83,7 +83,9 @@
+ #include <openssl/conf.h>
+ #include <openssl/err.h>
+ #include <openssl/rand.h>
++#ifndef OPENSSL_NO_ENGINE
+ #include <openssl/engine.h>
++#endif
+ 
+ pthread_t main_tid;
+ 
+@@ -1155,10 +1157,12 @@ main(int argc, char **argv)
+   sigprocmask(SIG_BLOCK, &set, NULL);
+   trap_init(argv[0]);
+ 
+-  /* SSL library init */
+-  OPENSSL_config(NULL);
+-  SSL_load_error_strings();
+-  SSL_library_init();
++  #if OPENSSL_VERSION_NUMBER < 0x10100000L
++    /* SSL library init */
++    OPENSSL_config(NULL);
++    SSL_load_error_strings();
++    SSL_library_init();
++  #endif
+ 
+   #ifndef OPENSSL_NO_ENGINE
+     /* ENGINE init */
+@@ -1352,8 +1356,11 @@ main(int argc, char **argv)
+   if(opt_fork)
+     unlink(opt_pidpath);
+ 
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+   /* OpenSSL - welcome to the "cleanup" hell */
++  #ifndef OPENSSL_NO_ENGINE
+   ENGINE_cleanup();
++  #endif
+   RAND_cleanup();
+   CRYPTO_cleanup_all_ex_data();
+   EVP_cleanup();
+@@ -1367,6 +1374,7 @@ main(int argc, char **argv)
+   sk_SSL_COMP_free(SSL_COMP_get_compression_methods());
+ #endif
+   /* end of OpenSSL cleanup code */
++#endif
+ 
+ #if ENABLE_DBUS_1
+   extern void dbus_shutdown(void);
+-- 
+2.19.1
+
