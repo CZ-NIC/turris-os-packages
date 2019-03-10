@@ -37,6 +37,8 @@ define Package/python3-bottle-i18n/description
   i18n support for bottle.py
 endef
 
+PYTHON_PKG_SETUP_ARGS:=
+
 $(eval $(call Py3Package,python3-bottle-i18n))
 $(eval $(call BuildPackage,python3-bottle-i18n))
 $(eval $(call BuildPackage,python3-bottle-i18n-src))

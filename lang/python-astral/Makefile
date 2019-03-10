@@ -11,7 +11,7 @@ PKG_NAME:=python-astral
 PKG_VERSION:=1.10.1
 PKG_RELEASE:=1
 
-PKG_SOURCE:=astral-$(PKG_VERSION).zip
+PKG_SOURCE:=astral-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/a/astral/
 PKG_HASH:=d2a67243c4503131c856cafb1b1276de52a86e5b8a1d507b7e08bee51cb67bf1
 
