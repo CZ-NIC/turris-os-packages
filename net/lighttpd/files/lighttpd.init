@@ -6,22 +6,18 @@ USE_PROCD=1
 # Start after the updater resume
 START=80
 
+restart() {
+	stop
+	start
+}
+
 start_service() {
 	mkdir -m 0755 -p /var/log/lighttpd
 	procd_open_instance
 	procd_set_param command /usr/sbin/lighttpd -D -f /etc/lighttpd/lighttpd.conf
-	procd_set_param file /etc/lighttpd/lighttpd.conf
 	procd_set_param respawn 120 2 5
+	procd_add_mdns "http" "tcp" "80" "daemon=lighttpd"
+	procd_add_mdns "https" "tcp" "443" "daemon=lighttpd"
 	procd_close_instance
 }
 
-stop_service() {
-	# This ensures that when we are migrating to procd that we kill previous lighttpd version
-	for i in `grep /usr/sbin/lighttpd /proc/[0-9]*/cmdline`; do
-		PID_TO_KILL="`echo $i | sed 's|/proc/\([0-9]\+\)/.*|\1|'`"
-		# Double check not to kill one in LXC
-		if [ \! -f /sys/fs/cgroup/tasks ] || [ -n "`grep "^$PID_TO_KILL\$" /sys/fs/cgroup/tasks`" ]; then
-			kill "$PID_TO_KILL"
-		fi
-	done
-}
