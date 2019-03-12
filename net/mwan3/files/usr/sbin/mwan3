@@ -140,16 +140,16 @@ start()
 	[ "${local_source}" = "none" ] || {
 		src_ip=$(uci_get_state mwan3 globals src_ip)
 		[ "${src_ip}" != "" ] && {
-			/usr/sbin/ip route del default via "${src_ip}" dev lo 1>/dev/null 2>&1
-			/usr/sbin/ip addr del "${src_ip}/32" dev lo 1>/dev/null 2>&1
+			ip route del default via "${src_ip}" dev lo 1>/dev/null 2>&1
+			ip addr del "${src_ip}/32" dev lo 1>/dev/null 2>&1
 		}
 
 		network_get_ipaddr src_ip "${local_source}"
 		if [ "${src_ip}" = "" ]; then
 			$LOG warn "Unable to set source ip for own initiated traffic (${local_source})"
 		else
-			/usr/sbin/ip addr add "${src_ip}/32" dev lo
-			/usr/sbin/ip route add default via "${src_ip}" dev lo
+			ip addr add "${src_ip}/32" dev lo
+			ip route add default via "${src_ip}" dev lo
 			uci_toggle_state mwan3 globals src_ip "${src_ip}"
 		fi
 	}
@@ -214,8 +214,8 @@ stop()
 
 	src_ip=$(uci_get_state mwan3 globals src_ip)
 	[ "${src_ip}" = "" ] || {
-		/usr/sbin/ip route del default via "${src_ip}" dev lo 1>/dev/null 2>&1
-		/usr/sbin/ip addr del "${src_ip}/32" dev lo 1>/dev/null 2>&1
+		ip route del default via "${src_ip}" dev lo 1>/dev/null 2>&1
+		ip addr del "${src_ip}/32" dev lo 1>/dev/null 2>&1
 	}
 
 	uci_toggle_state mwan3 globals enabled "0"
