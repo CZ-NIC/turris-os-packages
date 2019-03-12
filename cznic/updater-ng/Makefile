@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2016-2017 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2016-2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=60.3.1
+PKG_VERSION:=61.1.5.2
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater.git
@@ -19,11 +19,10 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)
 HOST_BUILD_DEPENDS:=curl/host libevent2/host lua/host
-PKG_BUILD_DEPENDS+=busybox-static
+PKG_BUILD_DEPENDS:=busybox
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
-$(call include_mk, python-package.mk)
 $(call include_mk, python3-package.mk)
 
 define Package/$(PKG_NAME)
@@ -42,16 +41,16 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) .//files/updater-wipe.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/updater
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/entry.lua $(1)/etc/updater
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/conf.lua $(1)/etc/updater
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/base.lua $(1)/etc/updater/conf.d/base.lua
+	$(INSTALL_CONF) ./files/base.lua $(1)/etc/updater/conf.d/base.lua
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/example.lua $(1)/etc/updater/conf.d/example.lua
 
 	$(INSTALL_DIR) $(1)/etc/updater/hook_preupdate
 	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
 	$(INSTALL_DIR) $(1)/etc/updater/hook_reboot_required
 	touch $(1)/etc/updater/hook_preupdate/.keep
-	touch $(1)/etc/updater/hook_postupdate/.keep
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/hook_postupdate/update_alternatives.sh $(1)/etc/updater/hook_postupdate/update_alternatives.sh
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/hook_reboot_required/50-create-notification.sh $(1)/etc/updater/hook_reboot_required/50-create-notification.sh
 
 	$(INSTALL_DIR) $(1)/etc/config
@@ -104,8 +103,7 @@ endef
 
 define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION) BUSYBOX_EXEC=$(STAGING_DIR)/bin/busybox-static
-	$(call Build/Compile/PyMod,src/supervisor,install --prefix="/usr" --root=$(PKG_INSTALL_DIR)/py2)
-	$(call Build/Compile/Py3Mod,src/supervisor,install --prefix="/usr" --root=$(PKG_INSTALL_DIR)/py3)
+	$(call Build/Compile/Py3Mod,src/supervisor,install --prefix="/usr" --root=$(PKG_INSTALL_DIR))
 endef
 
 define Host/Compile
@@ -123,11 +121,12 @@ endef
 
 
 define Package/$(PKG_NAME)-supervisor
-	TITLE:=Next generation updater supervisor
-	DEPENDS:=+updater-ng-py2-supervisor +updater-ng +vixie-cron
+	TITLE:=Next generation updater supervisor and it's library
+	DEPENDS:=+updater-ng +vixie-cron +python3-light +python3-uci +userlists +l10n_supported
+	EXTRA_DEPENDS:=userlists (>=11)
 endef
 
-define Package/$(PKG_NAME)-supervisor/install
+define Py3Package/$(PKG_NAME)-supervisor/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/supervisor/updater-supervisor $(1)/usr/bin/
 
@@ -139,23 +138,9 @@ define Package/$(PKG_NAME)-supervisor/install
 endef
 
 
-define Package/$(PKG_NAME)-py2-supervisor
-	TITLE:=Next generation updater supervisor Python 2 library
-	DEPENDS:=+updater-ng +python-light +python-uci +userlists +l10n_supported
-	EXTRA_DEPENDS:=userlists (>=11)
-endef
-
-
-define Package/$(PKG_NAME)-py3-supervisor
-	TITLE:=Next generation updater supervisor Python3 library
-	DEPENDS:=+updater-ng +python3-light python3-uci +userlists +l10n_supported
-	EXTRA_DEPENDS:=userlists (>=11)
-endef
-
-
 define Package/$(PKG_NAME)-localrepo
 	TITLE:=Next generation updater local repository manager
-	DEPENDS:=+python-light
+	DEPENDS:=+python3-light
 endef
 
 define Package/$(PKG_NAME)-localrepo/install
@@ -187,6 +172,8 @@ define Package/$(PKG_NAME)-opkg/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/localrepo/content2localrepo $(1)/usr/share/updater/opkg-content2localrepo.sh
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/opkg-wrapper/opkg.lua $(1)/etc/updater/conf.d/opkg.lua
+	$(INSTALL_DIR) $(1)/etc/updater/opkg-ignore
+	touch $(1)/etc/updater/opkg-ignore/.keep
 endef
 
 # We are calling migration to localrepo from updater-ng-opkg package posinst as
@@ -248,17 +235,9 @@ endef
 #	chmod +x $(1)/usr/bin/updater-wipe.sh
 
 
-PKG_INSTALL_DIR_ORIG:="$(PKG_INSTALL_DIR)"
-PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py2"
-$(eval $(call PyPackage,updater-ng-py2-supervisor))
-PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py3"
-$(eval $(call Py3Package,updater-ng-py3-supervisor))
-PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)"
-
+$(eval $(call Py3Package,updater-ng-supervisor))
 $(eval $(call BuildPackage,updater-ng))
 $(eval $(call BuildPackage,updater-ng-supervisor))
-$(eval $(call BuildPackage,updater-ng-py2-supervisor))
-$(eval $(call BuildPackage,updater-ng-py3-supervisor))
 $(eval $(call BuildPackage,updater-ng-localrepo))
 $(eval $(call BuildPackage,updater-ng-opkg))
 $(eval $(call BuildPackage,opkg-trans))

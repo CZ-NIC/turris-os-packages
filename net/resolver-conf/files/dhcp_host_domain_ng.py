@@ -50,7 +50,7 @@ def log(text, priority=LOG_INFO, output="syslog"):
     if output is "syslog":
         syslog.syslog(priority, text)
     else:
-        print text
+        print(text)
 
 
 def call_cmd(cmd):
@@ -99,6 +99,26 @@ class Kresd:
             log("Kresd is probably not running no socket found.", LOG_ERR)
             sys.exit(1)
 
+    def _remove_hints_hosts(self, filename):
+        with open(filename, "r") as handle:
+            for line in handle:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                try:
+                    host = line.strip().split()[1]
+                    self._call_kresd("hints.del('%s')" % host)
+                except:
+                    log("Wrong host format '%s' in host file %s " %
+                        (filename, line), LOG_ERR)
+
+    def _clean_hints(self):
+        # clear kresd hints
+        if self.__static_leases_enabled:
+            self._remove_hints_hosts(self.__static_leases)
+        if self.__dynamic_leases_enabled:
+            self._remove_hints_hosts(self.__dynamic_leases)
+
     def _call_kresd(self, cmd):
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         sock.settimeout(2)
@@ -108,14 +128,9 @@ class Kresd:
             ret = sock.recv(4096)
             sock.close()
             return ret
-        except socket.error, msg:
+        except socket.error as msg:
             log("Kresd socket failed:%s,%s" % (socket.error, msg), LOG_ERR)
             sys.exit(1)
-
-    def _clean_hints(self):
-        open(self.__empty_file, "a").close()
-        # load empty file to clear kresd hints
-        self._call_kresd("hints.config('%s')" % self.__empty_file)
 
     def refresh_leases(self):
         self._clean_hints()

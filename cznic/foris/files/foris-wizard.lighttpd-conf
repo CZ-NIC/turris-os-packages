@@ -1,3 +1,0 @@
-# lighttpd include file for Foris - it just calls the script
-# that generates lighttpd config from UCI settings
-include_shell "sh /usr/share/foris/lighttpd-dynamic-conf wizard"

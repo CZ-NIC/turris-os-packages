@@ -31,7 +31,7 @@ define Package/libpaho-mqtt-c
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE:=Eclipse Paho MQTT C library
-  DEPENDS:=+libopenssl
+  DEPENDS:=+libopenssl +libpthread
 endef
 
 define Build/Compile

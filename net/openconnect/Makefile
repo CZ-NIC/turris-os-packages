@@ -52,7 +52,8 @@ CONFIGURE_ARGS += \
 	--with-vpnc-script=/lib/netifd/vpnc-script \
 	--without-libpcsclite \
 	--without-stoken \
-	--without-lz4
+	--without-lz4 \
+	--without-gssapi
 
 ifeq ($(CONFIG_OPENCONNECT_OPENSSL),y)
 CONFIGURE_ARGS += \

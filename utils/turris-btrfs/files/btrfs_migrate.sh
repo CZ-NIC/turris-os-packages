@@ -21,11 +21,16 @@ die() {
 	exit 1
 }
 
+RESTORE=""
+[ "$1" \!= restore ] || RESTORE=yes
+
 [ -b /dev/mmcblk0 ]         || die "No MicroSD card present!"
 [ -n "`mount | grep ubi`" ] || die "1.1 firmware required!"
 
 mkdir -p /etc/schnapps
 echo 'ROOT_DEV="/dev/mmcblk0p2"' > /etc/schnapps/config
+
+if [ -z "$RESTORE" ]; then
 
 ANS=""
 echo "Are you sure you want to lose everything on mmcblk0? (yes/no)"
@@ -64,6 +69,8 @@ cp /boot/zImage /boot/fdt /tmp/btrfs-convert/target/@/boot/tefi || die "Can't co
 umount /tmp/btrfs-convert/target/@/boot/tefi
 umount /tmp/btrfs-convert/target
 umount /tmp/btrfs-convert/src
+
+fi
 
 # Setup u-Boot
 fw_setenv -s - <<EOF

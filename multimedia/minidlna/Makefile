@@ -9,15 +9,18 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=minidlna
 PKG_VERSION:=1.2.1
-PKG_RELEASE:=0
+PKG_RELEASE:=3
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=@SF/minidlna
-PKG_MD5SUM:=a968d3d84971322471cabda3669cc0f8
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_HASH:=67388ba23ab0c7033557a32084804f796aa2a796db7bb2b770fb76ac2a742eec
+
 PKG_LICENSE:=GPL-2.0 BSD-3-Clause
 PKG_LICENSE_FILES:=COPYING LICENCE.miniupnpd
 
 PKG_MAINTAINER:=Knyazkov Dmitry <medavedik@gmail.com>
+
+PKG_FIXUP:=autoreconf
 
 PKG_BUILD_PARALLEL:=0
 PKG_BUILD_DEPENDS:=util-linux
@@ -45,11 +48,6 @@ define Package/minidlna/conffiles
 endef
 
 TARGET_CPPFLAGS += \
-	-I$(STAGING_DIR)/usr/include \
-	-I$(STAGING_DIR)/usr/include/FLAC \
-	-I$(STAGING_DIR)/usr/include/libexif \
-	-I$(STAGING_DIR)/usr/include/uuid \
-	-I$(STAGING_DIR)/usr/include/vorbis \
 	-I$(ICONV_PREFIX)/include \
 	-I$(INTL_PREFIX)/include \
 	-D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 \
@@ -80,19 +78,6 @@ define Package/minidlna/install
 	$(INSTALL_BIN) ./files/minidlna.init $(1)/etc/init.d/minidlna
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/minidlna.config $(1)/etc/config/minidlna
-endef
-
-define Package/minidlna/postinst
-#!/bin/sh
-# check if we are on real system
-if [ -z "$${IPKG_INSTROOT}" ]; then
-        if [ -s /etc/rc.d/S[0-9][0-9]minidlna ] && \
-           [ "`ls -1 /etc/rc.d/S[0-9][0-9]minidlna | head -n 1`" \!= /etc/rc.d/`sed -n 's|START=\([0-9][0-9]\)|\1|p' /etc/init.d/minidlna` ]; then
-                rm /etc/rc.d/S[0-9][0-9]minidlna
-                rm /etc/rc.d/K[0-9][0-9]minidlna
-                /etc/init.d/minidlna enable
-        fi
-fi
 endef
 
 $(eval $(call BuildPackage,minidlna))

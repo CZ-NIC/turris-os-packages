@@ -16,24 +16,31 @@ PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/j/jsonschema/
 PKG_MD5SUM:=50c6b69a373a8b55ff1e0ec6e78f13f4
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/jsonschema-$(PKG_VERSION)
-HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/jsonschema-$(PKG_VERSION)
 
-HOST_BUILD_DEPENDS:=python/host python-functools32/host
-PKG_BUILD_DEPENDS:=python
+PKG_BUILD_DEPENDS:=python python3 python-setuptools python3-setuptools
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/host-build.mk
 $(call include_mk, python-package.mk)
-$(call include_mk, python-host.mk)
+$(call include_mk, python3-package.mk)
 
-define Package/$(PKG_NAME)
+define Package/Common
 	SUBMENU:=Python
 	SECTION:=lang
 	CATEGORY:=Languages
-	TITLE:=python-jsonschema
 	URL:=https://python-jsonschema.readthedocs.io/en/latest/
-	DEPENDS:=+python-light +python-functools32
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+endef
+
+define Package/python-jsonschema
+	$(call Package/Common)
+	TITLE:=python-jsonschema
+	DEPENDS:=+python-light +python-functools32
+endef
+
+define Package/python3-jsonschema
+	$(call Package/Common)
+	TITLE:=python3-jsonschema
+	DEPENDS:=+python3-light
 endef
 
 define Package/$(PKG_NAME)/description
@@ -44,27 +51,19 @@ define Build/Compile
 	$(RM) -r $(PKG_BUILD_DIR)/jsonschema/tests/*
 	touch $(PKG_BUILD_DIR)/jsonschema/tests/__init__.py
 	$(call Build/Compile/PyMod,., \
-		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)" \
+		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)/py2" \
+	)
+	$(call Build/Compile/Py3Mod,., \
+		install --prefix="/usr" --root="$(PKG_INSTALL_DIR)/py3" \
 	)
 endef
 
-define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)$(PYTHON_PKG_DIR)/
-	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON_PKG_DIR)/* \
-		$(1)$(PYTHON_PKG_DIR)/usr/lib/python2.7/site-packages/
-endef
+PKG_INSTALL_DIR_ORIG:="$(PKG_INSTALL_DIR)"
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py2"
+$(eval $(call PyPackage,python-jsonschema))
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py3"
+$(eval $(call Py3Package,python3-jsonschema))
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)"
 
-
-define Host/Compile
-	#$(call Build/Compile/HostPyMod,,build)
-endef
-
-define Host/Install
-	$(call Build/Compile/HostPyMod,,install --prefix="" --root="$(STAGING_DIR)/host")
-endef
-
-$(eval $(call HostBuild))
-
-$(eval $(call PyPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,python-jsonschema))
+$(eval $(call BuildPackage,python3-jsonschema))

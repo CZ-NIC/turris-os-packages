@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-paho-mqtt
 PKG_VERSION:=1.2.3
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_LICENSE:=Eclipse Public License v1.0 / Eclipse Distribution License v1.0
 
 PKG_SOURCE:=paho-mqtt-$(PKG_VERSION).tar.gz

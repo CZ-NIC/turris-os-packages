@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon
 PKG_VERSION:=1.2
-PKG_RELEASE:=13
+PKG_RELEASE:=18
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=252df926888d27a6ccd468ed6c03dd47e84599c1
+PKG_SOURCE_VERSION:=b930f3c96300a45c6107bfb662aafd1e2d7926a9
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -76,13 +76,10 @@ endef
 define Package/pakon/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-        # migrate configuration
-        ARCHIVE_KEEP=$(/sbin/uci -q get pakon.archive.keep)
-        /sbin/uci -q get pakon.monitor.interface || mv /etc/config/pakon-opkg /etc/config/pakon
-	[ "${ARCHIVE_KEEP}" ] && /sbin/uci set pakon.archive.keep="${ARCHIVE_KEEP}"
-        /sbin/uci commit pakon
-	#archivation changes - records with dest_ip "" shouldn't appear anymore
-	[ -f /srv/pakon/pakon-archive.db ] && /usr/bin/sqlite3 /srv/pakon/pakon-archive.db 'UPDATE traffic SET dest_ip="unknown address" WHERE dest_ip LIKE "" AND app_hostname IS NULL'
+	/usr/libexec/pakon-light/create_db.py
+	# one time fix - convert all names to lowercase. Mixed case names shouldn't be saved anymore (fixed in monitor)
+	[ -f /var/lib/pakon.db ] && sqlite3 /var/lib/pakon.db "UPDATE traffic SET app_hostname = LOWER(app_hostname);" || true
+	[ -f /srv/pakon/pakon-archive.db ] && /usr/bin/sqlite3 /srv/pakon/pakon-archive.db "UPDATE traffic SET app_hostname = LOWER(app_hostname);" || true
         /etc/init.d/pakon-monitor enable
         /etc/init.d/pakon-monitor restart 2>/dev/null
         /etc/init.d/pakon-handler enable

@@ -9,14 +9,14 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/uclibc++.mk
 
 PKG_NAME:=mariadb
-PKG_VERSION:=10.2.15
+PKG_VERSION:=10.2.18
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=\
   http://mirror.nodesdirect.com/mariadb//mariadb-$(PKG_VERSION)/source/
 
-PKG_MD5SUM:=43365d193747905c285b33d0fe5b6d2f
+PKG_MD5SUM:=1bd90d9ddcdf04cfe4f0e23c8e8d370e
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-2.0
 
@@ -44,6 +44,9 @@ CMAKE_OPTIONS:= -DSTACK_DIRECTION=-1 \
                 -DIMPORT_EXECUTABLES=$(STAGING_DIR_HOST)/mariadb-import_executables \
                 -DPLUGIN_HANDLERSOCKET=NO \
 		-DPLUGIN_AUTH_PAM=NO \
+		-DPLUGIN_AUTH_GSSAPI=NO \
+		-DGSSAPI_FOUND=FALSE \
+		-DKRB5_CONFIG="" \
                 -DPLUGIN_XTRADB=DYNAMIC \
                 -DPLUGIN_MROONGA=NO \
                 -DPLUGIN_TOKUDB=DYNAMIC \
@@ -144,6 +147,7 @@ endef
 
 define Package/mariadb-server/install
 	$(INSTALL_DIR) $(1)/usr/bin
+	rm -f $(PKG_INSTALL_DIR)/usr/bin/wsrep_sst_rsync_wan
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/mysqld $(1)/usr/sbin/

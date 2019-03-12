@@ -8,15 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tvheadend
-PKG_VERSION:=4.2.6
-PKG_RELEASE:=0
+PKG_VERSION:=4.2.8
+PKG_RELEASE:=1
 
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_SOURCE_VERSION:=v$(PKG_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/tvheadend/tvheadend.git
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_SOURCE_URL:=https://codeload.github.com/tvheadend/tvheadend/tar.gz/v$(PKG_VERSION)?
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_HASH=1aef889373d5fad2a7bd2f139156d4d5e34a64b6d38b87b868a2df415f01f7ad
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_LICENSE:=GPL-3.0
 PKG_LICENSE_FILES:=LICENSE.md
@@ -32,7 +31,7 @@ define Package/tvheadend
   SECTION:=multimedia
   CATEGORY:=Multimedia
   TITLE:=Tvheadend is a TV streaming server for Linux
-  DEPENDS:=+libopenssl +librt +zlib +TVHEADEND_AVAHI_SUPPORT:libavahi-client $(ICONV_DEPENDS) +libffmpeg
+  DEPENDS:=+libopenssl +librt +zlib +TVHEADEND_AVAHI_SUPPORT:libavahi-client $(ICONV_DEPENDS) +libffmpeg +tar
   URL:=https://tvheadend.org
   MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
@@ -78,7 +77,7 @@ CONFIGURE_ARGS += \
 
 define Build/Prepare
 	$(call Build/Prepare/Default)
-	echo 'Tvheadend $(shell echo $(PKG_SOURCE_VERSION) | sed "s/^v//")~openwrt$(PKG_RELEASE)' \
+	echo 'Tvheadend $(PKG_VERSION)-$(PKG_RELEASE)~turrisos' \
 		> $(PKG_BUILD_DIR)/debian/changelog
 endef
 
@@ -91,6 +90,11 @@ define Package/tvheadend/install
 	$(INSTALL_BIN) ./files/tvheadend.init $(1)/etc/init.d/tvheadend
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/tvheadend.config $(1)/etc/config/tvheadend
+
+	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
+	$(INSTALL_DATA) ./files/30_tvheadend.conf $(1)/usr/share/turris-webapps/
+	$(INSTALL_DIR) $(1)/www/webapps-icons
+	$(INSTALL_DATA) ./files/tvheadend.png $(1)/www/webapps-icons
 
 	$(MAKE) -C $(PKG_BUILD_DIR) install DESTDIR=$(1)
 endef

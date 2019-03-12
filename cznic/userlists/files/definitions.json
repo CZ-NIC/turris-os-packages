@@ -6,7 +6,12 @@
 	},
 	"automation": {
 		"title": "Home automation",
-		"description": "Control software for home automation, including Turris Gadgets.",
+		"description": "Control software for home automation, including Turris Gadgets. (OBSOLETE)",
+		"visible": true
+	},
+	"datacollect": {
+		"title": "Data Collection",
+		"description": "Software for participation in data collection and dynamic distributed firewall.",
 		"visible": true
 	},
 	"dev-detect": {
@@ -24,14 +29,9 @@
 		"description": "Several addional tabs and controls for the advanced LuCI interface.",
 		"visible": true
 	},
-	"majordomo": {
-		"title": "Majordomo",
-		"description": "Software for monitoring connections of devices in local network (obsolete).",
-		"visible": true
-	},
 	"pakon": {
 		"title": "Pakon",
-		"description": "Software for in depth monitoring of your traffic (EXPERIMENTAL).",
+		"description": "Software for in depth monitoring of your traffic.",
 		"visible": true
 	},
 	"nas": {
@@ -47,6 +47,11 @@
 	"lxc": {
 		"title": "LXC utilities",
 		"description": "Set of utilities to manage Linux Containers (lightweight virtualization technology).",
+		"visible": true
+	},
+	"netboot": {
+		"title": "Turris MOX network boot",
+		"description": "Server side for Turris MOX without SD card used as Wi-Fi access point.",
 		"visible": true
 	},
 	"netutils": {
@@ -66,22 +71,22 @@
 	},
 	"printserver": {
 		"title": "Print server",
-		"description": "Services allowing to connect a printer to the router and use it for remote printing.",
+		"description": "Services allowing to connect a printer to the router and use it for remote printing. (OBSOLETE)",
 		"visible": true
 	},
 	"ssbackup": {
 		"title": "Cloud Backups",
-		"description": "Service for storing configuration backups on remote servers (EXPERIMENTAL).",
+		"description": "Service for storing configuration backups on remote servers.",
 		"visible": true
 	},
 	"snd": {
 		"title": "Sound card",
-		"description": "Support for USB sound card.",
+		"description": "Support for USB sound card. (OBSOLETE)",
 		"visible": true
 	},
 	"squid": {
 		"title": "Squid",
-		"description": "HTTP caching proxy Squid.",
+		"description": "HTTP caching proxy Squid. (OBSOLETE)",
 		"visible": true
 	},
 	"tor": {
@@ -91,7 +96,7 @@
 	},
 	"webcam": {
 		"title": "Web camera",
-		"description": "Support to capture image with web camera.",
+		"description": "Support to capture image with web camera. (OBSOLETE)",
 		"visible": true
 	}
 }

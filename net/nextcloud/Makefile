@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nextcloud
-PKG_VERSION:=13.0.7
+PKG_VERSION:=14.0.7
 PKG_RELEASE:=0
 
 PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).zip
-PKG_MD5SUM:=0262b66fea77672c642dae27d0eb33ca
+PKG_MD5SUM:=493b4eb921dc41efcb4193b1bfe306aaecdc8114f85b32d02ce17d49c431162d
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -27,7 +27,7 @@ define Package/nextcloud
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Nextcloud server
-	DEPENDS=+php7-mod-opcache +php7-fpm +php7-cli +sudo +php7-mod-ctype +php7-mod-fileinfo +php7-mod-xmlreader +php7-mod-openssl +php7-mod-hash +php7-mod-gd +php7-mod-xml +php7-mod-xmlwriter +php7-mod-json +php7-mod-mbstring +php7-mod-pcntl +php7-mod-opcache +php7-mod-session +php7-mod-simplexml +php7-mod-iconv +php7-mod-curl +php7-mod-zip +php7-mod-dom +coreutils-stat +php7 lighttpd-mod-access
+	DEPENDS=+php7-mod-opcache +php7-fpm +php7-cli +sudo +php7-mod-ctype +php7-mod-fileinfo +php7-mod-xmlreader +php7-mod-openssl +php7-mod-hash +php7-mod-gd +php7-mod-xml +php7-mod-xmlwriter +php7-mod-json +php7-mod-mbstring +php7-mod-pcntl +php7-mod-opcache +php7-mod-session +php7-mod-simplexml +php7-mod-iconv +php7-mod-curl +php7-mod-zip +php7-mod-dom +coreutils-stat +php7 +lighttpd-mod-access +php7-mod-intl
 endef
 
 define Package/nextcloud-install
@@ -62,6 +62,10 @@ define Package/$(PKG_NAME)/install
 	done
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_DATA) ./files/nextcloud.conf $(1)/etc/lighttpd/conf.d/
+	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
+	$(INSTALL_DATA) ./files/30_nextcloud.conf $(1)/usr/share/turris-webapps/
+	$(INSTALL_DIR) $(1)/www/webapps-icons
+	$(INSTALL_DATA) ./files/nextcloud.png $(1)/www/webapps-icons
 endef
 
 define Package/$(PKG_NAME)-install/install

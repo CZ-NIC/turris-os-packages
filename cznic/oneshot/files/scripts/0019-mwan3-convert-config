@@ -1,0 +1,30 @@
+#!/bin/sh
+
+#Check global section
+get_global=$(uci get mwan3.globals )
+if [ "$get_global" == "globals" ]; then
+        echo "mwan3: Globals section is ok"
+else
+        #set globals
+        uci set mwan3.globals=globals
+        uci set mwan3.globals.mmx_mask='0x3F00'
+        uci set mwan3.globals.rtmon_interval='5'
+        uci set mwan3.globals.enabled='1'
+        uci set mwan3.globals.loglevel='0'
+fi
+
+#Check family setting
+for i in $( uci show mwan3|grep "=interface"|awk -F"=" '{ print $1 }')
+do
+        family=$(uci get $i.family)
+
+        if [ "$family" == "ipv4" ] || [ "$family" == "ipv6" ]; then
+                echo "mwan3: $i family ok"
+        else
+                uci set $i.family="ipv4"
+                echo "mwan3 setting family"
+        fi
+done
+
+uci commit mwan3
+

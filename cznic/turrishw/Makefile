@@ -8,15 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turrishw
-PKG_VERSION:=0.1
+PKG_VERSION:=0.4.2
 PKG_RELEASE:=1
 PKG_LICENSE:=GPLv3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/turrishw.git
-PKG_SOURCE_VERSION:=v$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_VERSION:=a3fa745a238ce1c9933987857f9212c5812d5a3e
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=python-setuptools python3-setuptools
 
@@ -30,17 +30,17 @@ define Package/Common
   CATEGORY:=Languages
   URL:=https://gitlab.labs.nic.cz/turris/pyuci/
   MAINTAINER:=CZ.NIC <packaging@turris.cz>
-  DEPENDS:=+libatsha204 +swconfig
+  DEPENDS:=
 endef
 
 define Package/python2-$(PKG_NAME)
   $(call Package/Common)
-  TITLE:=pythow2-$(PKG_NAME)
+  TITLE:=python2-$(PKG_NAME)
   DEPENDS+=+python-light
 endef
 
 define Package/python2-$(PKG_NAME)/description
-  Python bindings for Unified Configuration Interface.
+  Python library to detect available hardware on Omnia/MOX.
 endef
 
 define Package/python3-$(PKG_NAME)
@@ -50,7 +50,7 @@ define Package/python3-$(PKG_NAME)
 endef
 
 define Package/python3-$(PKG_NAME)/description
-  Python bindings for Unified Configuration Interface.
+  Python library to detect available hardware on Omnia/MOX.
 endef
 
 define Build/Compile

@@ -1,0 +1,100 @@
+#!/bin/sh
+
+. /lib/functions.sh
+
+config_load foris
+config_get SCRIPTNAME server scriptname "/foris"
+config_get_bool DEBUG server debug "0"
+config_get_bool NOAUTH auth noauth "0"
+config_get SESSION_TIMEOUT auth session_timeout ""
+config_get SERVER server server "flup"
+
+APP="$1"
+
+# scriptname must not contain escape codes (avoid CRLF injection in sed later)
+# and for the sake of UX, trailing and leading slashes are trimmed
+SCRIPTNAME=$(echo "$SCRIPTNAME" | sed -e 's;\\;\\\\;g' | sed -e 's;/*$;;g' | sed -e 's;^/*;;g' | sed -e 's;/+;/;g')
+[ "$SCRIPTNAME" != "" ] && SCRIPTNAME="/$SCRIPTNAME"
+
+EXTRA_FLAGS=""
+[ "$DEBUG" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS -d"
+[ "$NOAUTH" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS --noauth"
+[ "$SESSION_TIMEOUT" != "" ] && EXTRA_FLAGS="$EXTRA_FLAGS --session-timeout $SESSION_TIMEOUT"
+EXTRA_FLAGS="$EXTRA_FLAGS -s $SERVER"
+
+FORIS_PATHS=""
+tmp_out=$(eval /usr/bin/foris -R $EXTRA_FLAGS -a $APP)
+for path in $tmp_out;  do
+	FORIS_PATHS="$FORIS_PATHS|${path:1}"  # remove first '/' character
+done
+
+# get bus config
+config_load foris-controller
+config_get BUS main bus "ubus"
+case "$BUS" in
+	ubus)
+		config_get BUS_PATH ubus path "/var/run/ubus.sock"
+		;;
+	unix)
+		config_get BUS_PATH unix path "/var/run/foris-controller.sock"
+		BUS="unix-socket"
+		;;
+	mqtt)
+		config_get BUS_HOST mqtt host "localhost"
+		config_get BUS_PORT mqtt port "11883"
+		config_get CREDENTIALS_FILE mqtt credentials_file "/etc/fosquitto/credentials.plain"
+		serial_number=$(crypto-wrapper serial-number)
+		if [ $? == 0 ] ; then
+			CONTROLLER_ID=" --mqtt-controller-id $serial_number"
+		fi
+		BUS="mqtt"
+		;;
+esac
+
+echo "var.foris-$APP.bin = \"/usr/bin/foris\""
+echo "var.foris-$APP.cgi = \"/usr/share/foris/foris-$APP-cgi\""
+echo "var.foris-$APP.scriptname = \"$SCRIPTNAME/$APP\""
+case "$BUS" in
+	ubus|unix)
+		echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --bus-socket $BUS_PATH\""
+		;;
+	mqtt)
+		echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --mqtt-host $BUS_HOST --mqtt-port $BUS_PORT --mqtt-passwd-file ${CREDENTIALS_FILE}${CONTROLLER_ID}\""
+		;;
+esac
+echo "var.foris-$APP.paths = \"$FORIS_PATHS\""
+echo
+echo "\$HTTP[\"url\"] =~ \"^\" + var.foris-$APP.scriptname + \"/(\" + var.foris-$APP.paths + \")$\" {"
+case $SERVER in
+	flup)
+		echo '	fastcgi.debug = 0'
+		echo '	fastcgi.server = ('
+		echo "		var.foris-$APP.scriptname => ("
+		echo '			"python-fcgi" => ('
+		echo "				\"socket\" => \"/tmp/fastcgi.foris-$APP.socket\","
+		echo "				\"bin-path\" => var.foris-$APP.bin + var.foris-$APP.flags,"
+		echo '				"check-local" => "disable",'
+		echo '				"max-procs" => 1,'
+		echo '			)'
+		echo '		)'
+		echo '	)'
+	;;
+	cgi)
+		echo "	alias.url = ( var.foris-$APP.scriptname => var.foris-$APP.cgi )"
+		echo '	cgi.assign = ( "" => "" )'
+	;;
+esac
+echo "}"
+
+
+PLUGINS_DIR=/usr/lib/python2.7/site-packages/foris_plugins/
+
+for PLUGIN_PATH in $PLUGINS_DIR/*; do
+	PLUGIN_NAME=$(basename $PLUGIN_PATH)
+	[ -d "$PLUGIN_PATH/static" ] && {
+		echo "alias.url += ( var.foris-$APP.scriptname + \"/static/plugins/$PLUGIN_NAME/\" => \"$PLUGIN_PATH/static/\" )"
+	}
+done
+
+echo "alias.url += ( var.foris-$APP.scriptname + \"/static/generated/\" => \"/tmp/.foris_workdir/dynamic_assets/$APP/\" )"
+echo "alias.url += ( var.foris-$APP.scriptname + \"/static/\" => \"/usr/lib/python2.7/site-packages/foris/static/\" )"

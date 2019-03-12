@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2008-2016 OpenWrt.org
+# Copyright (C) 2008-2019 OpenWrt.org
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,18 +8,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=0.2.9.15
+PKG_VERSION:=0.3.5.8
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://dist.torproject.org/ \
 	https://archive.torproject.org/tor-package-archive
-PKG_MD5SUM:=f8c9969a3751e8ba09ddfba1496c69454eac8adeaa29aea9371d4425a830a905
-
-PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de>
+PKG_MD5SUM:=d5c56603942a8927670f50a4a469fb909e29d3571fdd013389d567e57abc0b47
+PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de> \
+		Peter Wagner <tripolar@gmx.at>
 PKG_LICENSE_FILES:=LICENSE
 
 PKG_INSTALL:=1
+PKG_FIXUP:=autoreconf
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -90,14 +92,13 @@ endef
 
 CONFIGURE_ARGS += \
 	--with-libevent-dir="$(STAGING_DIR)/usr" \
-	--with-ssl-dir="$(STAGING_DIR)/usr" \
 	--with-openssl-dir="$(STAGING_DIR)/usr" \
 	--with-zlib-dir="$(STAGING_DIR)/usr" \
 	--disable-asciidoc \
 	--disable-seccomp \
 	--disable-libscrypt \
 	--disable-unittests \
-	--disable-largefile \
+	--disable-lzma \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
@@ -107,7 +108,7 @@ ifneq ($(CONFIG_SSP_SUPPORT),y)
 	CONFIGURE_ARGS += \
 		--disable-gcc-hardening
 else
-	EXTRA_CFLAGS += -fPIC
+	EXTRA_CFLAGS += $(FPIC)
 endif
 
 CONFIGURE_VARS += \
@@ -116,7 +117,6 @@ CONFIGURE_VARS += \
 define Package/tor/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/tor $(1)/usr/sbin/
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/torify $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/tor.init $(1)/etc/init.d/tor
 	$(INSTALL_DIR) $(1)/etc/tor
@@ -135,8 +135,10 @@ endef
 
 define Package/tor-geoip/install
 	$(INSTALL_DIR) $(1)/usr/share/tor
-	$(CP) $(PKG_INSTALL_DIR)/usr/share/tor/geoip $(1)/usr/share/tor/
-	$(CP) $(PKG_INSTALL_DIR)/usr/share/tor/geoip6 $(1)/usr/share/tor/
+	$(INSTALL_DATA) \
+	  $(PKG_INSTALL_DIR)/usr/share/tor/geoip \
+	  $(PKG_INSTALL_DIR)/usr/share/tor/geoip6 \
+	$(1)/usr/share/tor/
 endef
 
 $(eval $(call BuildPackage,tor))

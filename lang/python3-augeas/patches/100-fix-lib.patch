@@ -1,0 +1,26 @@
+--- a/augeas/ffi.py
++++ b/augeas/ffi.py
+@@ -3,7 +3,8 @@ from cffi import FFI
+ ffi = FFI()
+ ffi.set_source("augeas",
+                None,
+-               libraries=['augeas'])
++               libraries=['augeas'],
++	       library_dirs=["/usr/lib"])
+
+ ffi.cdef("""
+ typedef struct augeas augeas;
+@@ -39,7 +40,12 @@ void aug_close(augeas *aug);
+ void free(void *);
+ """)
+
++import os
++if os.uname()[-1]=='x86_64':
++	#lib = ffi.dlopen("augeas")
++	print(os.uname())
++else:
++	lib = ffi.dlopen("libaugeas.so")
+-lib = ffi.dlopen("augeas")
+
+ if __name__ == "__main__":
+     ffi.compile(verbose=True)

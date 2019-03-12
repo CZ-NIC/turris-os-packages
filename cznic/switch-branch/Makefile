@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=switch-branch
-PKG_VERSION:=1.5
-PKG_RELEASE:=2
+PKG_VERSION:=1.6
+PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -26,6 +26,12 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/switch-branch $(1)/usr/bin/
+endef
+
+define Package/$(PKG_NAME)/postinst
+if [ -z "$$IPKG_INSTROOT" ]; then
+	switch-branch --verify --force
+fi
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

@@ -1,0 +1,146 @@
+--- a/lib/util/debug.c
++++ b/lib/util/debug.c
+@@ -506,11 +506,8 @@
+  * External variables.
+  */
+ 
+-/*
+-   used to check if the user specified a
+-   logfile on the command line
+-*/
+-bool    override_logfile;
++
++
+ 
+ static const char *default_classname_table[] = {
+ 	[DBGC_ALL] =		"all",
+
+--- a/source3/client/client.c
++++ b/source3/client/client.c
+@@ -46,7 +46,6 @@
+ 
+ extern int do_smb_browse(void); /* mDNS browsing */
+ 
+-extern bool override_logfile;
+ 
+ static int port = 0;
+ static char *service;
+
+--- a/source3/lib/popt_common.c
++++ b/source3/lib/popt_common.c
+@@ -37,7 +37,6 @@
+ 
+ enum {OPT_OPTION=1};
+ 
+-extern bool override_logfile;
+ 
+ static void set_logfile(poptContext con, const char * arg)
+ {
+@@ -93,9 +92,6 @@
+ 			}
+ 		}
+ 
+-		if (override_logfile) {
+-			setup_logging(lp_logfile(talloc_tos()), DEBUG_FILE );
+-		}
+ 
+ 		/* Further 'every Samba program must do this' hooks here. */
+ 		return;
+@@ -150,7 +146,6 @@
+ 	case 'l':
+ 		if (arg) {
+ 			set_logfile(con, arg);
+-			override_logfile = True;
+ 			set_dyn_LOGFILEBASE(arg);
+ 		}
+ 		break;
+
+--- a/source3/nmbd/nmbd.c
++++ b/source3/nmbd/nmbd.c
+@@ -35,7 +35,6 @@
+ extern bool rescan_listen_set;
+ extern bool global_in_nmbd;
+ 
+-extern bool override_logfile;
+ 
+ /* have we found LanMan clients yet? */
+ bool found_lm_clients = False;
+@@ -855,7 +854,7 @@
+ 
+ 	sys_srandom(time(NULL) ^ getpid());
+ 
+-	if (!override_logfile) {
++	if (1) {
+ 		char *lfile = NULL;
+ 		if (asprintf(&lfile, "%s/log.nmbd", get_dyn_LOGFILEBASE()) < 0) {
+ 			exit(1);
+
+--- a/source3/winbindd/winbindd.c
++++ b/source3/winbindd/winbindd.c
+@@ -59,7 +59,6 @@
+ static bool opt_nocache = False;
+ static bool interactive = False;
+ 
+-extern bool override_logfile;
+ 
+ struct imessaging_context *winbind_imessaging_context(void)
+ {
+@@ -1703,7 +1702,7 @@
+ 
+ 	poptFreeContext(pc);
+ 
+-	if (!override_logfile) {
++	if (1) {
+ 		char *lfile = NULL;
+ 		if (asprintf(&lfile,"%s/log.winbindd",
+ 				get_dyn_LOGFILEBASE()) > 0) {
+
+--- a/source3/winbindd/winbindd_cm.c
++++ b/source3/winbindd/winbindd_cm.c
+@@ -94,7 +94,6 @@
+ };
+ 
+ extern struct winbindd_methods reconnect_methods;
+-extern bool override_logfile;
+ 
+ static NTSTATUS init_dc_connection_network(struct winbindd_domain *domain, bool need_rw_dc);
+ static void set_dc_type_and_flags( struct winbindd_domain *domain );
+@@ -238,7 +237,7 @@
+ 
+ 	/* Leave messages blocked - we will never process one. */
+ 
+-	if (!override_logfile) {
++	if (1) {
+ 		if (asprintf(&lfile, "%s/log.winbindd-dc-connect", get_dyn_LOGFILEBASE()) == -1) {
+ 			DEBUG(0, ("fork_child_dc_connect: out of memory.\n"));
+ 			_exit(1);
+
+--- a/source3/winbindd/winbindd_dual.c
++++ b/source3/winbindd/winbindd_dual.c
+@@ -45,7 +45,6 @@
+ #undef DBGC_CLASS
+ #define DBGC_CLASS DBGC_WINBIND
+ 
+-extern bool override_logfile;
+ 
+ static void forall_domain_children(bool (*fn)(struct winbindd_child *c,
+ 					      void *private_data),
+@@ -1508,15 +1507,14 @@
+ 
+ 	close_conns_after_fork();
+ 
+-	if (!override_logfile && logfilename) {
++	if (logfilename) {
+ 		lp_set_logfile(logfilename);
+ 		reopen_logs();
+ 	}
+ 
+ 	if (!winbindd_setup_sig_term_handler(false))
+ 		return NT_STATUS_NO_MEMORY;
+-	if (!winbindd_setup_sig_hup_handler(override_logfile ? NULL :
+-					    logfilename))
++	if (!winbindd_setup_sig_hup_handler(logfilename))
+ 		return NT_STATUS_NO_MEMORY;
+ 
+ 	/* Stop zombies in children */
+

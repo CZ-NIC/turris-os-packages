@@ -2,6 +2,8 @@
 # Copyright (C) 2013-2015 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 
 START=90
+STOP=10
+
 PID_FILE=/var/run/ucollect.pid
 USE_PROCD=1
 

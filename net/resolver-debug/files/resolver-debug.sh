@@ -164,7 +164,7 @@ cat << EOF
 Help
 ================
 
-star		- star resolver debug
+start		- start resolver debug
 stop		- stop resolver debug
 add-btn		- add buttons to luci custom command
 remove-btn	- remove buttons from luci custom command
@@ -177,7 +177,7 @@ case $cmd in
 		echo "Start debug"
 		start_debug
 		run_test
-		echo "Debug stated" | test_log
+		echo "Debug started" | test_log
 	;;
 	stop)
 		echo "Stop debug"

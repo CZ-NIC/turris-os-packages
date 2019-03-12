@@ -144,9 +144,11 @@ run_cmd() {
 
 save_resolver_info() {
 	local pid_num
+	config_load resolver
 	rm -f /var/run/resolver.pid
 	if [ "$LAST_SERVICE" == "unbound" ]; then
-		cp /var/run/unbound.pid /var/run/resolver.pid
+		config_get pidfile common pidfile /var/run/unbound.pid
+		[ -f "$pidfile" ] && cp $pidfile /var/run/resolver.pid
 	elif [ "$LAST_SERVICE" == "dnsmasq" ]; then
 		ln -s /var/run/dnsmasq/dnsmasq.pid /var/run/resolver.pid
 	else #kresd

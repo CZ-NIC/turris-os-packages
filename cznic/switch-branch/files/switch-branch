@@ -57,7 +57,7 @@ check_branch() {
 	$FORCE || echo "$BRANCH" | grep -qE '^(deploy|rc|prerc|daily|nightly|test)$'
 }
 
-# Get branch from uci in case of no branch is specified and veryfication
+# Get branch from uci in case of no branch is specified and verification
 if $VERIFY && [ -z "$BRANCH" ]; then
 	BRANCH="$(get_branch)"
 fi
@@ -104,7 +104,8 @@ case "$BRANCH" in
 		# We don't have to remove cznic-repo-keys-test as it's removed automaticaly by updater
 		;;
 	*)
-		if [ -z "$(opkg list-installed cznic-repo-keys-test 2>/dev/null)" ]; then # if not installed
+		# We should not use opkg to check for installed packages because it requires its lock which makes this tool impossible to use from install scripts
+		if [ ! -f /usr/lib/opkg/info/cznic-repo-keys-test.control ]; then # If not installed
 			# We use opkg-cl instead of opkg to bypass updater wrapper and not to add it to /etc/updater/auto.lua
 			opkg-cl update
 			opkg-cl install cznic-repo-keys-test

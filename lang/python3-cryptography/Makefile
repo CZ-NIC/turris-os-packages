@@ -34,7 +34,7 @@ define Package/python3-cryptography
 	SUBMENU:=Python
 	TITLE:=python3-cryptography
 	URL:=https://github.com/pyca/cryptography
-	DEPENDS:=+libopenssl +python3 +python3-cffi +python3-idna +python3-pyasn1 +python3-six +python3-setuptools
+	DEPENDS:=+python-pyopenssl +python3 +python3-cffi +python3-idna +python3-pyasn1 +python3-six +python3-setuptools
 	VARIANT:=python3
 endef
 

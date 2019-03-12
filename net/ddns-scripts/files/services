@@ -33,7 +33,6 @@
 #
 # 44444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
 #
-#.cloudflare.com-v1	!!! Please install additional package "ddns-scripts_cloudflare"
 #.cloudflare.com-v4	!!! Please install additional package "ddns-scripts_cloudflare.com-v4"
 #.godaddy.com-v1	!!! Please install additional package "ddns-scripts_godaddy.com-v1"
 #.no-ip.com / noip.com	!!! Please install additional package "ddns-scripts_no-ip_com"
@@ -112,7 +111,7 @@
 
 "editdns.net"		"http://dyndns-free.editdns.net/api/dynLinux.php?p=[PASSWORD]&r=[DOMAIN]"
 
-"goip.de"		"http://www.goip.de/setip?username=[USERNAME]&password=[PASSWORD]&subdomain=[DOMAIN]&ip4=[IP]"
+"goip.de"		"http://www.goip.de/setip?username=[USERNAME]&password=[PASSWORD]&subdomain=[DOMAIN]&ip=[IP]"
 
 "google.com"		"http://[USERNAME]:[PASSWORD]@domains.google.com/nic/update?hostname=[DOMAIN]&myip=[IP]"	"good|nochg"
 

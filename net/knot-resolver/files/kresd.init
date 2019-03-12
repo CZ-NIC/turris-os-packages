@@ -10,6 +10,8 @@ ROOTKEYFILE=/etc/root.keys
 DEFAULT_RUNDIR=/tmp/kresd
 STATIC_DOMAINS=1
 DYNAMIC_DOMAINS=0
+USERNAME=kresd
+GROUP=kresd
 
 # Check the /etc/unbound/root.keys is reasonable and try to fix it with given command
 check_root_key() {
@@ -20,8 +22,12 @@ check_root_key() {
 	eval "$@"
 }
 
+print() {
+	echo "...---..."
+}
+
 service_triggers() {
-        procd_add_reload_trigger "dhcp"
+	procd_add_reload_trigger "dhcp"
 }
 
 add_listen_addr() {
@@ -45,6 +51,8 @@ init_header() {
 		echo "  }" >> $CONFIGFILE
 	fi
 	echo "}" >> $CONFIGFILE
+
+	echo "hints.use_nodata(true)" >> $CONFIGFILE
 
 	# clear hints file
 	echo "" > $HINTS_CONFIG
@@ -77,6 +85,7 @@ include_custom_config() {
 
 load_uci_config_common() {
 	local interface keyfile verbose port msg_buffer_size net_ipv4 net_ipv6 msg_cache_size do_forward ignore_root_key keep_cache_bool
+	local forward_dns
 	local section="common"
 
 	# port
@@ -128,19 +137,26 @@ load_uci_config_common() {
 	fi
 
 	config_get_bool do_forward "$section" forward_upstream 1
-	if [ "$do_forward" = "1" ] ; then
-		local SERVERS
-		SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' /tmp/resolv.conf.auto | sort -u |head -n 4)
-		if [ "$SERVERS" ] ; then
-			if [ "$ignore_root_key" = "1"  ] ; then
-				echo "policy.add(policy.all(policy.STUB({">>$CONFIGFILE
-			else
-				echo "policy.add(policy.all(policy.FORWARD({">>$CONFIGFILE
+	config_get forward_dns "$section" forward_custom
+
+	#check custom forwarding
+	if [ -n "$forward_dns" ] && [ "$do_forward" = "1" ]; then
+		dns_config_load "$forward_dns"
+	else
+		if [ "$do_forward" = "1" ] ; then
+			local SERVERS
+			SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' /tmp/resolv.conf.auto | sort -u |head -n 4)
+			if [ "$SERVERS" ] ; then
+				if [ "$ignore_root_key" = "1"  ] ; then
+					echo "policy.add(policy.all(policy.STUB({">>$CONFIGFILE
+				else
+					echo "policy.add(policy.all(policy.FORWARD({">>$CONFIGFILE
+				fi
+				for SERVER in $SERVERS ; do
+					echo "	'$SERVER',">>$CONFIGFILE
+				done
+				echo "})))">>$CONFIGFILE
 			fi
-			for SERVER in $SERVERS ; do
-				echo "	'$SERVER',">>$CONFIGFILE
-			done
-			echo "})))">>$CONFIGFILE
 		fi
 		md5sum /tmp/resolv.conf.auto | cut -f1 -d\ >/tmp/resolv.conf.auto.last.md5
 	fi
@@ -190,13 +206,20 @@ add_hostname_config() {
 }
 
 modify_rundir() {
-        local rundir
-        local section="kresd"
+	local rundir
+	local section="kresd"
 
-        # rundir
-        config_get rundir "$section" rundir "$DEFAULT_RUNDIR"
-	[ ! -d "$rundir" ] && mkdir -p "$rundir"
-        DEFAULT_RUNDIR="$rundir"
+	#rundir
+	config_get rundir "$section" rundir "$DEFAULT_RUNDIR"
+	if [ ! -d "$rundir" ]; then
+		mkdir -p "$rundir"
+	fi
+
+	if id "$1" >/dev/null 2>&1; then
+		chown -R $USERNAME:$GROUP "$rundir" #maybe we should be more restrictive ...
+	fi
+
+	DEFAULT_RUNDIR="$rundir"
 	HINTS_CONFIG=$DEFAULT_RUNDIR/hints.tmp
 }
 
@@ -245,7 +268,7 @@ run_instance() {
 	procd_set_param file /etc/config/resolver
 	procd_set_param command "$PROG"
 	procd_set_param respawn
-        modify_rundir
+	modify_rundir
 	init_header
 	load_uci_config_kresd
 	load_uci_config_common
@@ -257,6 +280,137 @@ run_instance() {
 		echo "net.ipv6 = false" | socat - UNIX-CONNECT:$(sleep 5; ls -1 $DEFAULT_RUNDIR/tty/*) > /dev/null 2>&1
 	  fi) &
 }
+
+
+print_dns_config() {
+	local name description enable_tls port ipv4 ipv6 pin_sha256 hostname ca_file
+	local net_ipv6 net_ipv4
+
+	name="$1"
+	description="$2"
+	enable_tls="$3"
+	port="$4"
+	ipv4="$5"
+	ipv6="$6"
+	pin_sha256="$7"
+	hostname="$8"
+	ca_file="$9"
+	net_ipv4="$10"
+	net_ipv6="$11"
+
+
+	if   [ "$net_ipv4" == "1" ] && [ "$net_ipv6" == "1" ]; then
+		if [ ! -z "$ipv4" ] && [ ! -z "$ipv6" ]; then
+			ip_list="$ipv4 $ipv6"
+		elif [ ! -z "$ipv4" ] && [ -z "$ipv6" ]; then
+			ip_list="$ipv4"
+		elif [ -z "$ipv4" ] && [ ! -z "$ipv6" ]; then
+			ip_list="$ipv6"
+		else
+			echo "Error ipv4 and ipv6 not set !"
+			exit -1
+		fi
+	elif [ "$net_ipv4" != "1" ] && [ "$net_ipv6" == "1" ]; then
+		if [ ! -z "$ipv6" ]; then
+			ip_list="$ipv6"
+		else
+			echo "Error ipv6 not set !"
+			exit -1
+		fi
+	elif [ "$net_ipv4" == "1" ] && [ "$net_ipv6" != "1" ]; then
+		if [ ! -z "$ipv4" ]; then
+			ip_list="$ipv4"
+		else
+			echo "Error ipv4 not set !"
+			exit -1
+		fi
+	else
+		echo "net_ipv4=$net_ipv4 net_ipv6=$net_ipv6"
+		echo "Error cannot choose IP address because of net_ipv4 and net_ipv6 settings!"
+		exit -1
+	fi
+
+	#([ "$enable_tls" == "0" ] || [ -z "$enable_tls" ]) && echo -ne "{" >> $CONFIGFILE
+
+	# Slight hack around https://gitlab.labs.nic.cz/knot/knot-resolver/issues/205#note_94566
+	echo "table.insert(policy.special_names, { count = 0, cb = policy.all(" >> $CONFIGFILE
+	if [ "$enable_tls" == "1" ]; then
+		echo "policy.TLS_FORWARD(" >> $CONFIGFILE
+	else
+		echo "policy.FORWARD(" >> $CONFIGFILE
+	fi
+	#TODO add stub !!
+
+	echo -ne "{" >> $CONFIGFILE
+	for ip in $ip_list
+	do
+
+		[ "$enable_tls" == "1" ] && echo -ne "{" >> $CONFIGFILE
+		if [ ! -z "$ip" ]; then
+			#check nonstandard port
+			if [ "$port" == "853" ] || [ -z "$port" ]; then
+				echo "'$ip'" >> $CONFIGFILE
+			else
+				echo "'$ip@$port'" >> $CONFIGFILE
+			fi
+
+			#check of DNS-over-TLS
+			if [ "$enable_tls" == "1" ]; then
+
+				#prefer pin
+				if [ ! -z "$pin_sha256" ];then
+					echo -ne "," >> $CONFIGFILE
+					echo "pin_sha256='$pin_sha256'" >> $CONFIGFILE
+				#else use hostname and certificate from system ca storage
+				elif [ ! -z "$hostname" ]; then
+					echo -ne "," >> $CONFIGFILE
+					echo "hostname='$hostname'" >> $CONFIGFILE
+					#or use ca file if defined
+					if [ ! -z "$ca_file" ] && [ -f "$ca_file" ];then
+						echo -ne "," >> $CONFIGFILE
+						echo "ca_file='$ca_file'" >> $CONFIGFILE
+					fi
+				fi
+			fi
+		fi
+
+		last_item=$(echo $ip_list | awk '{print $NF}')
+		if [ "$enable_tls" == "1" ] && [ "$last_item" != "$ip" ] ; then
+			echo -ne "}," >> $CONFIGFILE
+		elif [ "$enable_tls" == "1" ] && [ "$last_item" == "$ip" ] ; then
+			echo -ne "}" >> $CONFIGFILE
+		elif ([ "$enable_tls" == "0" ] || [ -z "$enable_tls" ]) && [ "$last_item" != "$ip" ]; then
+			echo -ne "," >> $CONFIGFILE
+		fi
+	done
+	echo "}))})" >> $CONFIGFILE
+}
+
+dns_config_load() {
+	local config_name config_file ret
+	local name description enable_tls port ipv4 ipv6 pin_sha256 hostname ca_file
+	local net_ipv4 net_ipv6
+
+	config_name="$1"
+	config_file="/etc/resolver/dns_servers/${config_name}.conf"
+	config_load resolver
+
+	#check file config file
+	if [ -f "$config_file" ]; then
+		enable_tls="0" #set default value
+		config_get net_ipv6 "common" "net_ipv6" 1
+		config_get net_ipv4 "common" "net_ipv4" 1
+
+		echo "loading file from ... $config_file"
+		source $config_file
+		echo print_dns_config  "$name" "$description" "$enable_tls" "$port" "$ipv4" "$ipv6" "$pin_sha256" "$hostname" "$ca_file" "$net_ipv4" "$net_ipv6"
+		print_dns_config  "$name" "$description" "$enable_tls" "$port" "$ipv4" "$ipv6" "$pin_sha256" "$hostname" "$ca_file" "$net_ipv4" "$net_ipv6"
+	else
+		echo "Error DNS Resolver config not found!"
+	fi
+	echo "ret_value_dns_load=$ret"
+}
+
 
 start_service() {
 	config_load resolver

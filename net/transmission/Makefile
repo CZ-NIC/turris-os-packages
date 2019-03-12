@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=transmission
 PKG_VERSION:=2.94
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@GITHUB/transmission/transmission-releases/master
@@ -172,6 +172,11 @@ Package/transmission-remote-mbedtls/install = $(Package/transmission-remote-open
 define Package/transmission-web/install
 	$(INSTALL_DIR) $(1)/usr/share/transmission
 	$(CP) $(PKG_INSTALL_DIR)/usr/share/transmission/web $(1)/usr/share/transmission/
+
+	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
+	$(INSTALL_DATA) ./files/30_transmission.conf $(1)/usr/share/turris-webapps/
+	$(INSTALL_DIR) $(1)/www/webapps-icons
+	$(INSTALL_DATA) ./files/transmission.png $(1)/www/webapps-icons
 endef
 
 $(eval $(call BuildPackage,transmission-daemon-openssl))

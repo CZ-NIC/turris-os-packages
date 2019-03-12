@@ -1,16 +1,16 @@
-diff --git a/setuptools/dist.py b/setuptools/dist.py
-index 7785541..23108c7 100644
---- a/setuptools/dist.py
-+++ b/setuptools/dist.py
-@@ -18,7 +18,6 @@ from setuptools.extern.six.moves import map
- from pkg_resources.extern import packaging
+Index: python3-setuptools-40.6.2/setuptools/dist.py
+===================================================================
+--- python3-setuptools-40.6.2.orig/setuptools/dist.py
++++ python3-setuptools-40.6.2/setuptools/dist.py
+@@ -28,7 +28,6 @@ from setuptools.extern.six.moves import
+ from . import SetuptoolsDeprecationWarning
  
  from setuptools.depends import Require
 -from setuptools import windows_support
+ from setuptools.monkey import get_unpatched
+ from setuptools.config import parse_configuration
  import pkg_resources
- 
- 
-@@ -335,7 +334,6 @@ class Distribution(_Distribution):
+@@ -612,7 +611,6 @@ class Distribution(Distribution_parse_co
          egg_cache_dir = os.path.join(os.curdir, '.eggs')
          if not os.path.exists(egg_cache_dir):
              os.mkdir(egg_cache_dir)

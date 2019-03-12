@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.1
-PKG_RELEASE:=18
+PKG_RELEASE:=27
 
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -26,6 +26,7 @@ define Package/resolver-conf
 	CATEGORY:=Network
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Resolver configuration
+	DEPENDS:=+python-light +python-multiprocessing +python-logging +ca-bundle
 endef
 
 define Package/$(PKG_NAME)/description
@@ -48,10 +49,17 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/resolver-conv $(1)/etc/resolver/resolver-conv.sh
 	$(INSTALL_BIN) ./files/dhcp_host_domain_ng.py $(1)/etc/resolver/dhcp_host_domain_ng.py
 	$(INSTALL_BIN) ./files/dynamic-domain-conv $(1)/etc/resolver/dynamic-domain-conv.sh
+	$(INSTALL_DIR) $(1)/usr/libexec/rpcd
+	$(INSTALL_BIN) ./files/resolver_rpcd.py $(1)/usr/libexec/rpcd/resolver_rpcd.py
+	$(INSTALL_DIR) $(1)/etc/resolver/dns_servers
+	$(INSTALL_CONF) ./files/dns_servers/* $(1)/etc/resolver/dns_servers/
 ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
 	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolver
+	[ -z "`ls -1 ./files/dns_servers_omnia/`" ] || $(INSTALL_CONF) ./files/dns_servers_omnia/* $(1)/etc/resolver/dns_servers/
+	$(INSTALL_DATA) ./files/CZ.NIC2-cacert.pem $(1)/etc/resolver
 else
 	$(INSTALL_CONF) ./files/resolver-turris-config $(1)/etc/config/resolver
+	[ -z "`ls -1 ./files/dns_servers_turris/`" ] || $(INSTALL_CONF) ./files/dns_servers_turris/* $(1)/etc/resolver/dns_servers/
 endif
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
@@ -59,7 +67,6 @@ endif
 	$(INSTALL_BIN) ./files/resolver-reload $(1)/etc/hotplug.d/iface/40-resolver-reload
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/resolver-defaults $(1)/etc/uci-defaults/resolver-defaults
-
 endef
 
 define Package/$(PKG_NAME)/postinst
