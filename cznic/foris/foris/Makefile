@@ -21,7 +21,7 @@ PKG_BUILD_DEPENDS:=\
 	ruby/host \
 	python-libsass/host \
 	python-pytz/host \
-	python3-babel/host \
+	python-babel/host \
 	MarkupSafe/host \
 	Jinja2/host
 
