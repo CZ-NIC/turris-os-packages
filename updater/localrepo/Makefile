@@ -25,7 +25,7 @@ define Package/$(PKG_NAME)
 	DEPENDS:=+python3-light
 endef
 
-define Package/$(PKG_NAME)-localrepo/install
+define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/localrepo/localrepo $(1)/usr/bin/localrepo
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
@@ -35,7 +35,7 @@ endef
 # Repository should be consistent when updater is executed successfully but this
 # ensures that we will fix any problems that can be caused by older version of
 # localrepo
-define Package/$(PKG_NAME)-localrepo/postinst
+define Package/$(PKG_NAME)/postinst
 [ -n "$$IPKG_INSTROOT" ] || {
 	localrepo check --fix
 }
