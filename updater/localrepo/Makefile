@@ -27,9 +27,9 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/localrepo/localrepo $(1)/usr/bin/localrepo
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/localrepo $(1)/usr/bin/localrepo
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/localrepo/localrepo.lua $(1)/etc/updater/conf.d/localrepo.lua
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/localrepo.lua $(1)/etc/updater/conf.d/localrepo.lua
 endef
 
 # Repository should be consistent when updater is executed successfully but this
