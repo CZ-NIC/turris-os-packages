@@ -41,4 +41,6 @@ define Package/$(PKG_NAME)-localrepo/postinst
 }
 endef
 
+Build/Compile:=
+
 $(eval $(call BuildPackage,$(PKG_NAME)))
