@@ -86,10 +86,10 @@ latest_version() {
 # We allows some branch alternatives. This function replaces them with canon versions
 branch_alts() {
 	case "$branch" in
-		snails)
+		stable|snails)
 			branch='hbs'
 			;;
-		turtles)
+		testing|turtles)
 			branch='hbt'
 			;;
 		kittens)
@@ -154,11 +154,11 @@ while [ -z "$branch" ]; do
 You are currently in: $(get_branch)
 
 You can choose from one of these rolling releases:
-  hbs (snails)
+  hbs (stable, snails)
     The default and most stable rolling release. Suggested for unexperienced
     users and for critical infrastructure.
-  hbt (turtles)
-    This rolling release contains next sloths version. Please join this branch to
+  hbt (testing, turtles)
+    This rolling release contains next stable version. Please join this branch to
     help us test it and to get new stuff few weeks up-front.
   hbk (kittens)
     This rolling release tracks stable OpenWRT upstream and contains latest Turris
@@ -169,8 +169,7 @@ You can choose from one of these rolling releases:
     development. It can frequently break and is suggested to be used only by
     experienced users on non-critical infrastructure.
 EOF
-		echo -n "Please enter name of a branch branch: "
-		read -r branch
+		read -r -p "Please enter name of a branch: " branch
 		branch_alts
 		check_branch || {
 			echo "There is no known branch: $branch"
