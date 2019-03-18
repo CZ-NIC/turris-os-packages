@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cronie
-PKG_VERSION:=1.5.2
+PKG_VERSION:=1.5.3
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -32,6 +32,7 @@ define Package/$(PKG_NAME)
   DEPENDS:=@(!BUSYBOX_CONFIG_CROND&&!BUSYBOX_CONFIG_CRONTAB)
   PROVIDES:=vixie-cron
   CONFLICTS:=vixie-cron
+  USERID:=cron=16:cron=16
 endef
 
 define Package/$(PKG_NAME)/description
@@ -39,6 +40,14 @@ define Package/$(PKG_NAME)/description
   scheduled times and related tools. It is based on the original cron and has
   security and configuration enhancements like the ability to use pam and SELinux.
 endef
+
+CONFIGURE_ARGS += \
+	--enable-syscrontab \
+	--without-selinux \
+	--without-pam \
+	--with-inotify \
+	--with-daemon_username=cron \
+	--with-daemon_groupname=cron
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
