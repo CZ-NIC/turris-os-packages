@@ -1,0 +1,32 @@
+#!/bin/sh /etc/rc.common
+
+START=12
+
+set_mac() {
+	local mac link dev
+
+	mac="$1"
+	shift
+
+	echo "Setting MAC address of devices" "$@" "to $mac"
+
+	for dev in "$@"; do
+		ip link show "$dev" | grep -e "[,<]UP[,>]" >/dev/null
+		link=$?
+
+		[[ $link -eq 0 ]] && ip link set "$dev" down
+		ip link set "$dev" address "$mac"
+		[[ $link -eq 0 ]] && ip link set "$dev" up
+	done
+}
+
+start() {
+	MAC_ADDRS=`atsha204cmd mac 3 2>/dev/null`
+	MAC_ETH0=`echo $MAC_ADDRS | cut -d ' ' -f 1`
+	MAC_ETH1=`echo $MAC_ADDRS | cut -d ' ' -f 2`
+	MAC_ETH2=`echo $MAC_ADDRS | cut -d ' ' -f 3`
+
+	set_mac $MAC_ETH0 eth0
+	set_mac $MAC_ETH1 eth1 lan1 lan2 lan3 lan4 lan5
+	set_mac $MAC_ETH2 eth2
+}
