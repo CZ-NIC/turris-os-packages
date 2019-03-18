@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/cronie-crond/cronie/archive
-PKG_HASH:=28cfdc6cc7df304dced6d0d0543767d8d22926f669a28d650c0513c168183eb4
+PKG_HASH:=af8970559cad4262f8ffd7ec72abf682d2dcce04fdfb8f206a71d96566aba882
 PKG_LICENSE:=MIT
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
