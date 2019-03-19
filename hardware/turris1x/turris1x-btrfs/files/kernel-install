@@ -1,0 +1,17 @@
+#!/bin/sh
+set -e
+TARGET_ROOT="${1:-}"
+
+MNT="$(mktemp -d)"
+trap 'rmdir "$MNT"' EXIT
+
+mount -t vfat /dev/mmcblk0p1 "$MNT"
+trap 'umount "$MNT" && rmdir "$MNT"' EXIT
+
+deploy() {
+	cmp "$TARGET_ROOT/boot/$1" "$MNT/$1" || \
+		cp "$TARGET_ROOT/boot/$1" "$MNT/$1"
+}
+
+deploy zImage
+deploy fdt

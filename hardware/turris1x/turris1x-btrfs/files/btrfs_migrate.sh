@@ -14,6 +14,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+set -e
+
+SDCARD="/dev/mmcblk0"
 
 
 die() {
@@ -21,59 +24,39 @@ die() {
 	exit 1
 }
 
-RESTORE=""
-[ "$1" \!= restore ] || RESTORE=yes
+# Verify that it makes sense to migrate to SD card
+verify() {
+	[ -b "$SDCARD" ] || die "No MicroSD card present!"
+	grep -q " / ubi " < /proc/mounts || die "1.1 firmware required!"
+}
 
-[ -b /dev/mmcblk0 ]         || die "No MicroSD card present!"
-[ -n "`mount | grep ubi`" ] || die "1.1 firmware required!"
+are_you_sure() {
+	local answer
+	local question="Are you sure you want to lose everything on $SDCARD? (yes/No): "
+	read -r -p "$question" answer
+	case "$(echo "$answer" | awk '{ print tolower($0) }')" in
+		y|yes)
+			return 0
+			;;
+		""|n|no)
+			echo "No change was performed. Exiting." >&2
+			exit 0
+			;;
+		*)
+			die "Unknown answer: $answer"
+			;;
+	esac
+}
 
-mkdir -p /etc/schnapps
-echo 'ROOT_DEV="/dev/mmcblk0p2"' > /etc/schnapps/config
+# Set chnapps to manage specified device
+configure_schnapps() {
+	mkdir -p /etc/schnapps
+	echo "ROOT_DEV='${SDCARD}p2'" > /etc/schnapps/config
+}
 
-if [ -z "$RESTORE" ]; then
-
-ANS=""
-echo "Are you sure you want to lose everything on mmcblk0? (yes/no)"
-read ANS
-if [ "$ANS" \!= "yes" ]; then
-	exit 0
-fi
-
-dd if=/dev/zero of=/dev/mmcblk0 bs=10M count=11
-fdisk /dev/mmcblk0 <<EOF
-o
-n
-p
-1
-
-+100M
-n
-p
-2
-
-
-w
-EOF
-mkdir -p /tmp/btrfs-convert/target
-mkdir -p /tmp/btrfs-convert/src
-mkfs.vfat /dev/mmcblk0p1 || die "Can't create fat!"
-mkfs.btrfs -f /dev/mmcblk0p2 || die "Can't format btrfs partition!"
-mount /dev/mmcblk0p2 /tmp/btrfs-convert/target || die "Can't mount mmclbk0p2"
-btrfs subvolume create /tmp/btrfs-convert/target/@ || die "Can't create subvolume!"
-mount -o bind / /tmp/btrfs-convert/src || die "Can't bind btrfs mount."
-tar -C /tmp/btrfs-convert/src -cf - . | tar -C /tmp/btrfs-convert/target/@ -xf - || die "Filesystem copy failed!"
-
-mkdir -p /tmp/btrfs-convert/target/@/boot/tefi
-mount /dev/mmcblk0p1 /tmp/btrfs-convert/target/@/boot/tefi || die "Can't mount fat"
-cp /boot/zImage /boot/fdt /tmp/btrfs-convert/target/@/boot/tefi || die "Can't copy kernel"
-umount /tmp/btrfs-convert/target/@/boot/tefi
-umount /tmp/btrfs-convert/target
-umount /tmp/btrfs-convert/src
-
-fi
-
-# Setup u-Boot
-fw_setenv -s - <<EOF
+# This sets u-boot environment to boot from SD card
+setup_uboot() {
+	fw_setenv -s - <<EOF
 baudrate 115200
 bootargsnor root=/dev/mtdblock2 rw rootfstype=jffs2 console=ttyS0,115200
 bootargsubi root=ubi0:rootfs rootfstype=ubifs ubi.mtd=9,2048 rootflags=chk_data_crc rw console=ttyS0,115200
@@ -114,4 +97,105 @@ norboot max6370_wdt_off; env default -a; saveenv; setenv bootargs \$bootargsnor;
 bootargsmmc root=/dev/mmcblk0p2 rootwait rw rootfstype=btrfs rootflags=subvol=@,commit=5 console=ttyS0,115200
 mmcboot max6370_wdt_off; fatload mmc 0:1 \$nandfdtaddr fdt; setenv bootargs \$bootargsmmc; bootm \$nandbootaddr - \$nandfdtaddr
 EOF
-echo "Migration successful, please reboot!"
+}
+
+# Setup partitions on SD card
+format_sdcard() {
+	dd if=/dev/zero of="$SDCARD" bs=10M count=11
+	fdisk "$SDCARD" <<EOF
+o
+n
+p
+1
+
++100M
+n
+p
+2
+
+
+w
+EOF
+	mkfs.vfat "${SDCARD}p1" || die "Can't create fat!"
+	mkfs.btrfs -f "${SDCARD}p2" || die "Can't format btrfs partition!"
+}
+
+clean() (
+	# Note: we use here rmdir to not recursivelly remove mounted FS if umount fails.
+	set +e # just to continue if unmount fails with another umount
+	local tmp="$1"
+	umount -R "$tmp/target"
+	rmdir "$tmp/target"
+	umount "$tmp/src"
+	rmdir "$tmp/src"
+	rmdir "$tmp"
+)
+
+# Copy current root to SD card
+migrate_to_sdcard() {
+	local tmp="$(mktemp -d)"
+	trap 'clean "$tmp"' EXIT 
+
+	mkdir -p "$tmp/target"
+	mkdir -p "$tmp/src"
+	# Mount and migrate root filesystem
+	mount "${SDCARD}p2" "$tmp/target" || die "Can't mount mmclbk0p2"
+	btrfs subvolume create "$tmp/target/@" || die "Can't create subvolume!"
+	mount -o bind / "$tmp/src" || die "Can't bind btrfs mount."
+	tar -C "$tmp/src" -cf - . | tar -C "$tmp/target/@" -xf - || die "Filesystem copy failed!"
+
+	# Copy kernel image and DTB to FAT partition
+	mkdir -p "$tmp/@/boot/tefi"
+	mount "${SDCARD}p1" "$tmp/target/@/boot/tefi" || die "Can't mount fat"
+	cp /boot/zImage /boot/fdt "$tmp/target/@/boot/tefi" || die "Can't copy kernel"
+
+	trap "" EXIT
+	clean
+}
+
+##################################################################################
+
+print_usage() {
+	echo "Usage: $0 [restore]" >&2
+}
+
+print_help() {
+	print_usage
+	{
+		echo
+		echo "restore: do not format SD card but only set appropriate u-boot environment"
+	} >&2
+}
+
+RESTORE="no"
+for ARG in "$@"; do
+	case "$ARG" in
+		-h|-\?|--help)
+			print_help
+			exit 0
+			;;
+		restore)
+			RESTORE="yes"
+			;;
+		*)
+			echo "Unknown argument: $ARG" >&2
+			print_usage
+			exit 1
+			;;
+	esac
+done
+
+verify
+are_you_sure
+
+configure_schnapps
+
+if [ "$RESTORE" = "no" ]; then
+	format_sdcard
+	migrate_to_sdcard
+fi
+
+setup_uboot
+
+
+echo "Migration successful, please reboot!" >&2
