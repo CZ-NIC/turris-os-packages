@@ -1,5 +1,5 @@
 #!/bin/sh
-if [ "`cat /proc/mounts | grep '^/dev/mmcblk0p2 / btrfs'`" ]; then
+if grep -q '^/dev/mmcblk0p2 / btrfs' /proc/mounts; then
 	mkdir -p /boot/tefi
 	mount -t vfat /dev/mmcblk0p1 /boot/tefi
 	cmp "$1"/boot/zImage /boot/tefi/zImage || cp "$1"/boot/zImage /boot/tefi/zImage
