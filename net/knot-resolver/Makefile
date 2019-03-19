@@ -10,14 +10,17 @@ PKG_RELRO_FULL:=0
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
-PKG_VERSION:=3.2.1
-PKG_RELEASE:=2
+PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-resolver
-PKG_MD5SUM:=d1396888ec3a63f19dccdf2b7dbcb0d16a5d8642766824b47f4c21be90ce362b
+PKG_VERSION:=0b9524b7d6680f892671fc4e7a2e5c603848cf60
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/knot/knot-resolver.git
+PKG_SOURCE_VERSION:=$(PKG_VERSION)
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 PKG_MAINTAINER:=Knot DNS <knot-dns@labs.nic.cz>
 PKG_LICENSE:=GPL-3.0
@@ -25,6 +28,7 @@ PKG_LICENSE:=GPL-3.0
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
+include $(TOPDIR)/feeds/turrispackages/meson/meson.mk
 
 define Package/knot-resolver
 	SECTION:=net
@@ -45,20 +49,33 @@ MAKE_FLAGS += \
 	PREFIX=/usr \
 	ETCDIR=/etc/kresd
 
+
+#define Build/Configure
+#	$(call Build/Meson/Configure)
+#endef
+
+#define Build/Compile
+#	$(call Build/Meson/Compile)
+#endef
+
+#define Build/Install
+#	$(call Build/Meson/Install)
+#endef
+
 define Package/knot-resolver/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/*bin/kresd $(1)/usr/bin/
+	#$(INSTALL_BIN) $(PKG_BUILD_DIR)/builddir/daemon/kresd $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/local/sbin/kresd $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libkres.so* $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/kdns_modules $(1)/usr/lib
+	#$(CP) $(PKG_BUILD_DIR)/builddir/lib/libkres.so* $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/local/lib/x86_64-linux-gnu/libkres.so* $(1)/usr/lib
 
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/kresd.init $(1)/etc/init.d/kresd
 
 	$(INSTALL_DIR) $(1)/etc/kresd
-	$(CP) $(PKG_BUILD_DIR)/etc/icann-ca.pem $(1)/etc/kresd
-	$(CP) $(PKG_BUILD_DIR)/etc/root.hints $(1)/etc/kresd
+	$(CP) $(PKG_INSTALL_DIR)/usr/local/etc/knot-resolver/root.hints $(1)/etc/kresd
 	$(INSTALL_BIN) ./files/kresd.postinst $(1)/etc/kresd/kresd.postinst.sh
 	$(INSTALL_BIN) ./files/convert_config.sh $(1)/etc/kresd/convert_config.sh
 endef
