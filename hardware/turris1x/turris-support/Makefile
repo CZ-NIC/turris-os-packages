@@ -1,8 +1,8 @@
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
-PKG_NAME:=turris-support
-PKG_VERSION:=1.1
+PKG_NAME:=turris1x-support
+PKG_VERSION:=1.2
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
 
@@ -26,12 +26,12 @@ define Build/Configure
 endef
 
 define Build/Compile
-	$(KERNEL_MAKE) zImage turris.dtb
+	$(KERNEL_MAKE) zImage turris-nand-bch.dtb
 endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/boot
-	for d in $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/turris.dtb; do \
+	for d in $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/turris-nand-bch.dtb; do \
 		$(CP) $$$$d "$(1)"/boot/fdt; \
 	done
 	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot.scr
