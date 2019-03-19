@@ -43,9 +43,12 @@ define Build/Configure
 endef
 
 define Build/Compile
+	$(call Host/Compile)
 endef
 
+
 define Build/Install
+	$(call Host/Install)
 endef
 
 define Build/Clean
