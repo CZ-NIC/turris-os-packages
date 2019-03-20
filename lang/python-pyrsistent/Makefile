@@ -23,14 +23,14 @@ define Package/python3-pyrsistent
   SUBMENU:=Python
   SECTION:=lang
   CATEGORY:=Languages
-  TITLE:=python3-jsonschema
+  TITLE:=python3-pyrsistent
   URL:=https://github.com/tobgu/pyrsistent
   MAINTAINER:=CZ.NIC <packaging@turris.cz>
   DEPENDS:=+python3-light +python3-six
   VARIANT:=python3
 endef
 
-define Package/python3-jsonschema/description
+define Package/python3-pyrsistent/description
   Persistent/Immutable/Functional data structures for Python
 endef
 
