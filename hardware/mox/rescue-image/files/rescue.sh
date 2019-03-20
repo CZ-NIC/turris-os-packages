@@ -1,16 +1,12 @@
 #!/bin/sh
 
 # Global defaults
-
 BOARD=mox
 DELAY=60
 RESCUE_IF="eth0"
 HAVE_BTRFS=1
 REPARTITION=1
-
 MODE=1
-cmd_mode="$(sed -n 's|.*\ rescue_mode=\([0-9]\+\).*|\1|p' /proc/cmdline)"
-[ -z "$cmd_mode" ] || MODE="$cmd_mode"
 
 # Board specific functions
 
@@ -388,6 +384,8 @@ mode_7() {
 
 init
 board_init
+cmd_mode="$(sed -n 's|.*rescue_mode=\([0-9]\+\).*|\1|p' /proc/cmdline)"
+[ -z "$cmd_mode" ] || MODE="$cmd_mode"
 if [ -n "$HAVE_BTRFS" ]; then
     mkdir -p /etc/schnapps
     echo "ROOT_DEV='${TARGET_DRIVE}p${TARGET_PART}'" > /etc/schnapps/config
