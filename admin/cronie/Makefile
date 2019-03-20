@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cronie
-PKG_VERSION:=1.5.3
+PKG_VERSION:=1.5.4
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/cronie-crond/cronie/archive
-PKG_HASH:=af8970559cad4262f8ffd7ec72abf682d2dcce04fdfb8f206a71d96566aba882
+PKG_HASH:=87661b49269c82d437156921fd3385dae14cb316071aa7903faa00a5ea05c13f
 PKG_LICENSE:=MIT
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
