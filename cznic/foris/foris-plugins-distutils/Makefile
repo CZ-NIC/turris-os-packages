@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2018-2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-plugins-distutils
 PKG_VERSION:=0.2
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -26,7 +26,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_BUILD_DEPENDS:=python-libsass
-HOST_BUILD_DEPENDS:=python3/host python-libsass/host
+HOST_PYTHON3_PACKAGE_BUILD_DEPENDS:=libsass==0.14.5
+HOST_BUILD_DEPENDS:=python3/host
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk

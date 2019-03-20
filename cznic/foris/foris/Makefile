@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
 PKG_VERSION:=99.7.2
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
@@ -17,13 +17,13 @@ PKG_SOURCE_VERSION:=package-v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
 
-PKG_BUILD_DEPENDS:=\
-	ruby/host \
-	python-libsass/host \
-	python-pytz/host \
-	python-babel/host \
-	MarkupSafe/host \
-	Jinja2/host
+HOST_PYTHON3_PACKAGE_BUILD_DEPENDS:= \
+	pytz==2018.9 \
+	Babel==2.6.0 \
+	libsass==0.14.5 \
+	MarkupSafe==1.1.1 \
+	Jinja2==2.10
+PKG_BUILD_DEPENDS:=ruby/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
