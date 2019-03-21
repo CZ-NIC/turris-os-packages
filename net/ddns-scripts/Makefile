@@ -56,11 +56,21 @@ endef
 ###### *************************************************************************
 define Package/ddns-scripts_cloudflare.com-v4
     $(call Package/ddns-scripts/Default)
-    TITLE:=CloudFlare.com API v4 (require cURL)
+    TITLE:=CloudFlare.com API v4 (requires cURL)
     DEPENDS:=ddns-scripts +curl
 endef
 define Package/ddns-scripts_cloudflare.com-v4/description
     Dynamic DNS Client scripts extension for CloudFlare.com API-v4 (require/install cURL)
+endef
+
+###### *************************************************************************
+define Package/ddns-scripts_freedns_42_pl
+    $(call Package/ddns-scripts/Default)
+    TITLE:=DDNS extension for FreeDNS.42.pl (requires cURL)
+    DEPENDS:=ddns-scripts +curl
+endef
+define Package/ddns-scripts_freedns_42_pl/description
+    Dynamic DNS Client scripts extension for freedns.42.pl
 endef
 
 ###### *************************************************************************
@@ -141,10 +151,10 @@ endef
 
 ###### *************************************************************************
 define Package/ddns-scripts/preinst
-#!/bin/sh
-# if NOT run buildroot then stop service
-[ -z "$${IPKG_INSTROOT}" ] && /etc/init.d/ddns stop >/dev/null 2>&1
-exit 0	# suppress errors
+	#!/bin/sh
+	# if NOT run buildroot then stop service
+	[ -z "$${IPKG_INSTROOT}" ] && /etc/init.d/ddns stop >/dev/null 2>&1
+	exit 0	# suppress errors
 endef
 define Package/ddns-scripts/install
 	$(INSTALL_DIR)  $(1)/etc/uci-defaults
@@ -187,52 +197,6 @@ exit 0	# suppress errors
 endef
 
 ###### *************************************************************************
-define Package/ddns-scripts_cloudflare/preinst
-#!/bin/sh
-# if NOT run buildroot then stop service
-[ -z "$${IPKG_INSTROOT}" ] && /etc/init.d/ddns stop >/dev/null 2>&1
-exit 0	# suppress errors
-endef
-
-define Package/ddns-scripts_cloudflare/install
-	$(INSTALL_DIR)  $(1)/etc/uci-defaults
-	$(INSTALL_BIN)  $(PKG_BUILD_DIR)/files/ddns.defaults $(1)/etc/uci-defaults/ddns_cloudflare
-	$(INSTALL_DIR)  $(1)/usr/share
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/files/public_suffix_list.dat.gz $(1)/usr/share
-	$(INSTALL_DIR)  $(1)/usr/lib/ddns
-	$(INSTALL_BIN)  $(PKG_BUILD_DIR)/files/update_cloudflare_com_v1.sh $(1)/usr/lib/ddns
-endef
-
-define Package/ddns-scripts_cloudflare/postinst
-#!/bin/sh
-# remove old services file entries
-/bin/sed -i '/cloudflare\.com-v1/d' $${IPKG_INSTROOT}/etc/ddns/services		>/dev/null 2>&1
-/bin/sed -i '/cloudflare\.com-v1/d' $${IPKG_INSTROOT}/etc/ddns/services_ipv6	>/dev/null 2>&1
-# and create new
-printf "%s\\t%s\\n" '"cloudflare.com-v1"' '"update_cloudflare_com_v1.sh"' >> $${IPKG_INSTROOT}/etc/ddns/services
-printf "%s\\t%s\\n" '"cloudflare.com-v1"' '"update_cloudflare_com_v1.sh"' >> $${IPKG_INSTROOT}/etc/ddns/services_ipv6
-# on real system restart service if enabled
-[ -z "$${IPKG_INSTROOT}" ] && {
-	[ -x /etc/uci-defaults/ddns_cloudflare ] && \
-		/etc/uci-defaults/ddns_cloudflare && \
-			rm -f /etc/uci-defaults/ddns_cloudflare >/dev/null 2>&1
-	/etc/init.d/ddns enabled && \
-		/etc/init.d/ddns start >/dev/null 2>&1
-}
-exit 0	# suppress errors
-endef
-
-define Package/ddns-scripts_cloudflare/prerm
-#!/bin/sh
-# if NOT run buildroot then stop service
-[ -z "$${IPKG_INSTROOT}" ] && /etc/init.d/ddns stop				>/dev/null 2>&1
-# remove services file entries
-/bin/sed -i '/cloudflare\.com-v1/d' $${IPKG_INSTROOT}/etc/ddns/services		>/dev/null 2>&1
-/bin/sed -i '/cloudflare\.com-v1/d' $${IPKG_INSTROOT}/etc/ddns/services_ipv6	>/dev/null 2>&1
-exit 0	# suppress errors
-endef
-
-###### *************************************************************************
 define Package/ddns-scripts_cloudflare.com-v4/preinst
 #!/bin/sh
 # if NOT run buildroot then stop service
@@ -255,11 +219,11 @@ printf "%s\\t%s\\n" '"cloudflare.com-v4"' '"update_cloudflare_com_v4.sh"' >> $${
 printf "%s\\t%s\\n" '"cloudflare.com-v4"' '"update_cloudflare_com_v4.sh"' >> $${IPKG_INSTROOT}/etc/ddns/services_ipv6
 # on real system restart service if enabled
 [ -z "$${IPKG_INSTROOT}" ] && {
-[ -x /etc/uci-defaults/ddns_cloudflare.com-v4 ] && \
-	/etc/uci-defaults/ddns_cloudflare.com-v4 && \
-		rm -f /etc/uci-defaults/ddns_cloudflare.com-v4 >/dev/null 2>&1
-/etc/init.d/ddns enabled && \
-	/etc/init.d/ddns start >/dev/null 2>&1
+	[ -x /etc/uci-defaults/ddns_cloudflare.com-v4 ] && \
+		/etc/uci-defaults/ddns_cloudflare.com-v4 && \
+			rm -f /etc/uci-defaults/ddns_cloudflare.com-v4 >/dev/null 2>&1
+	/etc/init.d/ddns enabled && \
+		/etc/init.d/ddns start >/dev/null 2>&1
 }
 exit 0	# suppress errors
 endef
@@ -274,10 +238,40 @@ exit 0	# suppress errors
 endef
 
 ###### *************************************************************************
-define Package/ddns-scripts_godaddy.com-v1/preinst
+define Package/ddns-scripts_freedns_42_pl/preinst
 #!/bin/sh
 # if NOT run buildroot then stop service
 [ -z "$${IPKG_INSTROOT}" ] && /etc/init.d/ddns stop >/dev/null 2>&1
+exit 0	# suppress errors
+endef
+define Package/ddns-scripts_freedns_42_pl/install
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/ddns.defaults $(1)/etc/uci-defaults/ddns_freedns_42_pl
+	$(INSTALL_DIR) $(1)/usr/lib/ddns
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/update_freedns_42_pl.sh $(1)/usr/lib/ddns
+endef
+define Package/ddns-scripts_freedns_42_pl/postinst
+#!/bin/sh
+# remove old services file entries
+/bin/sed -i '/freedns\.42\.pl/d' $${IPKG_INSTROOT}/etc/ddns/services	>/dev/null 2>&1
+# and create new
+printf "%s\\t%s\\n" '"freedns.42.pl"' '"update_freedns_42_pl.sh"' >> $${IPKG_INSTROOT}/etc/ddns/services
+# on real system restart service if enabled
+[ -z "$${IPKG_INSTROOT}" ] && {
+	[ -x /etc/uci-defaults/ddns_freedns_42_pl ] && \
+		/etc/uci-defaults/ddns_freedns_42_pl && \
+			rm -f /etc/uci-defaults/ddns_freedns_42_pl >/dev/null 2>&1
+	/etc/init.d/ddns enabled && \
+		/etc/init.d/ddns start >/dev/null 2>&1
+}
+exit 0	# suppress errors
+endef
+define Package/ddns-scripts_freedns_42_pl/prerm
+#!/bin/sh
+# if NOT run buildroot then stop service
+[ -z "$${IPKG_INSTROOT}" ] && /etc/init.d/ddns stop		>/dev/null 2>&1
+# remove services file entries
+/bin/sed -i '/freedns\.42\.pl/d' $${IPKG_INSTROOT}/etc/ddns/services	>/dev/null 2>&1
 exit 0	# suppress errors
 endef
 
@@ -445,6 +439,7 @@ endef
 ###### *************************************************************************
 $(eval $(call BuildPackage,ddns-scripts))
 $(eval $(call BuildPackage,ddns-scripts_cloudflare.com-v4))
+$(eval $(call BuildPackage,ddns-scripts_freedns_42_pl))
 $(eval $(call BuildPackage,ddns-scripts_godaddy.com-v1))
 $(eval $(call BuildPackage,ddns-scripts_no-ip_com))
 $(eval $(call BuildPackage,ddns-scripts_nsupdate))

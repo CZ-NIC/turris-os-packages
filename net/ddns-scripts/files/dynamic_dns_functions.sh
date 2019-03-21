@@ -21,7 +21,7 @@
 . /lib/functions/network.sh
 
 # GLOBAL VARIABLES #
-VERSION="2.7.8-5"
+VERSION="2.7.8-6"
 SECTION_ID=""		# hold config's section name
 VERBOSE=0		# default mode is log to console, but easily changed with parameter
 MYPROG=$(basename $0)	# my program call name
@@ -583,7 +583,7 @@ verify_host_port() {
 		write_log 7 "$(cat $ERRFILE)"
 		return 3
 	else		# nc compiled without extensions (no timeout support)
-		__RUNPROG="timeout -t 2 -- $__NC $__IP $__PORT </dev/null >$DATFILE 2>$ERRFILE"
+		__RUNPROG="timeout 2 -- $__NC $__IP $__PORT </dev/null >$DATFILE 2>$ERRFILE"
 		write_log 7 "#> $__RUNPROG"
 		eval $__RUNPROG
 		__ERR=$?
@@ -1121,6 +1121,7 @@ get_registered_ip() {
 		__RUNPROG="$__PROG $lookup_host >$DATFILE 2>$ERRFILE"
 		__PROG="hostip"
 	elif [ -n "$NSLOOKUP" ]; then	# last use BusyBox nslookup
+		NSLOOKUP_MUSL=$($(which nslookup) localhost 2>&1 | grep -F "(null)")	# not empty busybox compiled with musl
 		[ $force_dnstcp -ne 0 ] && \
 			write_log 14 "Busybox nslookup - no support for 'DNS over TCP'"
 		[ -n "$NSLOOKUP_MUSL" -a -n "$dns_server" ] && \
