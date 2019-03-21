@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netmetr
-PKG_VERSION:=1.4.1
+PKG_VERSION:=1.4.2
 PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 PKG_SOURCE:=netmetr-client-v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/netmetr-client/-/archive/v$(PKG_VERSION)/
-PKG_HASH:=abd6fb144b5886f6b2196c4feb88423c57c34ad042048a90f7a0a8419d0dcd58
+PKG_HASH:=49fadbb78a6e68d1cae69fbfa65a7de511f798da903ec338cfa1a1b7ce66b80a
 
 PKG_LICENSE:=GPLv3
 
