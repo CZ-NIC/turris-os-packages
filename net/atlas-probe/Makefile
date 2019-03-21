@@ -1,0 +1,62 @@
+#
+# Copyright (C) 2018 CZ.NIC <packaging@turris.cz>
+#
+# This is free software, licensed under the GNU General Public License v2.
+# See /LICENSE for more information.
+#
+
+include $(TOPDIR)/rules.mk
+
+PKG_NAME:=atlas-probe
+PKG_VERSION:=4960
+PKG_RELEASE=0
+
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/RIPE-NCC/ripe-atlas-probe-busybox.git
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=ISC
+
+include $(INCLUDE_DIR)/package.mk
+
+define Package/atlas-probe
+  SECTION:=net
+  CATEGORY:=Network
+  TITLE:=RIPE Atlas probe measurement
+  DEPENDS:=+librt +libopenssl +openssh-client
+endef
+
+define Package/atlas-probe/description
+ RIPE Atlas is a global, open, distributed Internet measurement platform,
+ consisting of thousands of measurement devices that measure Internet
+ connectivity in real time.
+endef
+
+TARGET_CFLAGS += $(FPIC)
+
+CONFIGURE_ARGS += \
+	--disable-shared \
+	--enable-static
+
+CONFIGURE_PATH = libevent-2.0.20-stable
+
+TARGET_LDFLAGS = -L$(PKG_BUILD_DIR)/$(CONFIGURE_PATH)/.libs
+
+define Build/Compile
+	+$(MAKE_VARS) \
+	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR)/$(CONFIGURE_PATH) \
+		$(MAKE_FLAGS)
+	+$(MAKE_VARS) \
+	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
+		$(MAKE_FLAGS)
+endef
+
+define Package/atlas-probe/install
+	+$(MAKE_VARS) \
+	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
+		$(MAKE_FLAGS) CONFIG_PREFIX=$(1)/usr/libexec/atlas-probe install
+endef
+
+$(eval $(call BuildPackage,atlas-probe))
