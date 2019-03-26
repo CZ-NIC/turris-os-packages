@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
 PKG_PYTHON_NAME:=python3-$(PKG_NAME)
-PKG_VERSION:=29.1
+PKG_VERSION:=29.2
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/libatsha204.git
