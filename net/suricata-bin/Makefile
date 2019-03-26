@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata-bin
 PKG_VERSION:=4.0.3
-PKG_RELEASE=3
+PKG_RELEASE=4
 
 PKG_SOURCE:=suricata-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.openinfosecfoundation.org/download/
@@ -26,16 +26,17 @@ include $(INCLUDE_DIR)/package.mk
 CONFIGURE_ARGS+= \
 	--enable-nflog \
 	--enable-nfqueue \
-        --disable-libmagic \
+	--disable-libmagic \
 	--disable-gccprotect \
 	--enable-non-bundled-htp \
 	--disable-gccmarch-native
 
-ifeq ($(ARCH),arm)
-CONFIGURE_ARGS+= \
-	--enable-luajit
-
-LUAJIT_DEP=+luajit
+ifeq (,$(filter $(CONFIG_PACKAGE_luajit),y m))
+CONFIGURE_ARGS+= --disable-luajit
+LUAJIT_DEP:=
+else
+CONFIGURE_ARGS+= --enable-luajit
+LUAJIT_DEP:=+luajit
 endif
 
 define Package/suricata-bin
