@@ -7,7 +7,7 @@ CROSS_CONF_FILE=$(STAGING_DIR)/cross_conf.txt
 HOST_PYTHON3_BIN ?= $(TOPDIR)/staging_dir/hostpkg/bin/python3
 HOST_MESON_BIN=$(STAGING_DIR_HOST)/meson/meson.py
 MESON_BUILD_DIR ?= builddir
-PKG_BUILD_DEPENDS += meson/host python3/host
+PKG_BUILD_DEPENDS += meson/host +meson python3/host
 
 define Build/Meson/Configure
 	cd $(PKG_BUILD_DIR) && [ ! -d $(MESON_BUILD_DIR) ] && mkdir $(MESON_BUILD_DIR)
