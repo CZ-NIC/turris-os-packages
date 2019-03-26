@@ -36,11 +36,6 @@ endef
 HOST_CONFIGURE_ARGS := \
 	--bootstrap
 
-define Build/Prepare
-endef
-
-define Build/Configure
-endef
 
 define Build/Compile
 	$(call Host/Compile)
@@ -51,8 +46,6 @@ define Build/Install
 	$(call Host/Install)
 endef
 
-define Build/Clean
-endef
 
 CONFIGURE_ARGS := \
 	--bootstrap
