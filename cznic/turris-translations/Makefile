@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-translations
 PKG_VERSION:=1.1.0
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/turris-translations.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -21,9 +21,7 @@ PKG_BUILD_DEPENDS:=gettext-tools
 
 include $(INCLUDE_DIR)/package.mk
 
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
 # This is meta package for translations for multiple other smaller packages.
 # So this generates multiple other packages. Call and evaluate following define
@@ -34,7 +32,7 @@ define TRANSLATION_LANG
 
 define Package/$(1)-l10n-$(2)
 	TITLE:=Translation for package $(1): $(2)
-	DEPENDS:=+$(1) +gettext-tools
+	DEPENDS:=+$(1)
 endef
 
 define Package/$(1)-l10n-$(2)/install

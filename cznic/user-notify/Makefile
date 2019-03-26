@@ -9,6 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=user-notify
 PKG_VERSION:=59
+PKG_RELEASE:=2
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/user-notify.git
@@ -21,12 +22,10 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/user-notify
 	TITLE:=user-notify
-	DEPENDS:=+at +msmtp +create_notification
+	DEPENDS:=+at +msmtp +create_notification +gettext-tools
 endef
 
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
 define Package/user-notify/install
 	cd $(PKG_BUILD_DIR); $(MAKE) DESTDIR="$(1)" install_scripts install_aux
