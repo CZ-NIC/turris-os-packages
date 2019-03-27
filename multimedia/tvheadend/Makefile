@@ -73,6 +73,7 @@ CONFIGURE_ARGS += \
 	--disable-dbus_1 \
 	--enable-libav \
 	--disable-bundle \
+	--disable-uriparser \
 	--disable-ffmpeg_static
 
 define Build/Prepare
