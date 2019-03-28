@@ -21,7 +21,7 @@ set -e
 
 SCRIPT="$0"
 OPENSSL_CONF=/etc/cagen/openssl.cnf
-CA_DIR=/etc/ssl/ca/
+CA_DIR=${CA_DIR:-/etc/ssl/ca/}
 
 LOCKFILE=
 CA=
