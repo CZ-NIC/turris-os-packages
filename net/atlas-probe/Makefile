@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=atlas-probe
 PKG_VERSION:=4960
-PKG_RELEASE=0
+PKG_RELEASE=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/RIPE-NCC/ripe-atlas-probe-busybox.git
@@ -25,7 +25,8 @@ define Package/atlas-probe
   SECTION:=net
   CATEGORY:=Network
   TITLE:=RIPE Atlas probe measurement
-  DEPENDS:=+librt +libopenssl +openssh-client
+  DEPENDS:=+librt +libopenssl +openssh-client +sudo
+  USERID:=atlas=444:atlas=444
 endef
 
 define Package/atlas-probe/description
