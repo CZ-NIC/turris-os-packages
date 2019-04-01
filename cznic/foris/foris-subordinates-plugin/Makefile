@@ -7,12 +7,12 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=foris-netboot-plugin
-PKG_VERSION:=0.3
+PKG_NAME:=foris-subordinates-plugin
+PKG_VERSION:=0.1
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-netboot-plugin.git
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-subordinates-plugin.git
 PKG_SOURCE_VERSION:=package-v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -31,20 +31,20 @@ $(call include_mk, python3-package.mk)
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
-		+foris +foris-controller-netboot-module
+		+foris +foris-controller-netboot-module +foris-controller-subordinates-module
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/$(PKG_NAME)/description
- Foris plugin for managing netboot devices
+ Foris plugin for managing subordinates devices
 endef
 
 # Package install definition
-$(eval $(call ForisPlugin,$(PKG_NAME),netboot))
+$(eval $(call ForisPlugin,$(PKG_NAME),subordinates))
 
 # Translation definitions
-FORIS_TRANSLATIONS:=
-$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),netboot,$(trans))))
+FORIS_TRANSLATIONS:=cs de
+$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),subordinates,$(trans))))
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
 $(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call BuildPackage,$(PKG_NAME)-l10n-$(trans))))
