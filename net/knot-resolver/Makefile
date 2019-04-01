@@ -28,7 +28,7 @@ PKG_LICENSE:=GPL-3.0
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
-include $(TOPDIR)/feeds/turrispackages/meson/meson.mk
+include $(TOPDIR)/feeds/turrispackages/devel/meson/meson.mk
 
 define Package/knot-resolver
 	SECTION:=net
