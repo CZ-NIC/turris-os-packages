@@ -16,17 +16,25 @@ PKG_HASH:=5d7ec75828f8d3fd1a0c2f31b5b0cea780cdfe1031359228c428c1a48bfcd5b9
 PKG_INSTALL:=1
 HOST_BUILD_PARALLEL:=1
 
+
+HOST_BUILD_DEPENDS:=python3 python3/host
+PKG_BUILD_DEPENDS:=python3/host python3
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/ninja-$(PKG_VERSION)
+HOST_BUILD_DIR:=$(BUILD_DIR)/ninja-$(PKG_VERSION)
+
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
-include $(TOPDIR)/feeds/packages/lang/python/python3-host.mk
+#include $(TOPDIR)/feeds/packages/lang/python/python3-host.mk
 
-HOST_BUILD_DEPENDS:=python3/host
 
 define Package/ninja
   SECTION:=devel
   CATEGORY:=Development
   TITLE:=ninja
   URL:=https://ninja-build.org/
+  DEPENDS:=+python3
+  MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/ninja/description
@@ -34,6 +42,9 @@ define Package/ninja/description
 endef
 
 HOST_CONFIGURE_ARGS := \
+	--bootstrap
+
+CONFIGURE_ARGS := \
 	--bootstrap
 
 
@@ -46,9 +57,6 @@ define Build/Install
 	$(call Host/Install)
 endef
 
-
-CONFIGURE_ARGS := \
-	--bootstrap
 
 define Host/Compile
 	cd  $(HOST_BUILD_DIR) && $(HOST_PYTHON3_BIN) configure.py $(HOST_CONFIGURE_ARGS)

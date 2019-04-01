@@ -8,7 +8,7 @@ CMAKE_INSTALL_PREFIX=$(PKG_BUILD_DIR)/ipkg-install/usr
 CMAKE_GENERATOR="Ninja"
 
 # add ninja to host dependecies for package
-PKG_BUILD_DEPENDS += ninja/host ninja #ninja/host/install
+#PKG_BUILD_DEPENDS += ninja/host ninja #ninja/host/install
 
 define Build/Ninja/Compile
 	cd $(PKG_BUILD_DIR)/$(1) && $(HOST_NINJA_BIN)
@@ -27,5 +27,6 @@ endef
 define Build/Install
 	$(call Build/Ninja/Install)
 endef
+endif
 
 endif
