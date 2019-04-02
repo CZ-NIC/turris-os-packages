@@ -15,8 +15,8 @@ PKG_SOURCE:=meson-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/mesonbuild/meson/releases/download/$(PKG_VERSION)/
 PKG_HASH:=ef9f14326ec1e30d3ba1a26df0f92826ede5a79255ad723af78a2691c37109fd
 
-HOST_BUILD_DEPENDS:=python3 python3/host
-PKG_BUILD_DEPENDS:=python3/host python3/host ninja/host
+HOST_BUILD_DEPENDS:=+python3 +python3/host
+PKG_BUILD_DEPENDS:=+python3 +python3/host +ninja/host ninja
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/meson-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR)/meson-$(PKG_VERSION)
