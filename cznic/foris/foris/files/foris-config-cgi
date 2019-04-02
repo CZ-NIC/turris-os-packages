@@ -7,6 +7,11 @@ config_get_bool DEBUG server debug "0"
 config_get_bool NOAUTH auth noauth "0"
 config_get SESSION_TIMEOUT auth session_timeout ""
 config_get SCRIPTNAME server scriptname "/foris"
+config_get SENTRY_DSN sentry dsn ""
+
+if [ -n "$SENTRY_DSN" ]; then
+	export SENTRY_DSN="$SENTRY_DSN"
+fi
 
 EXTRA_FLAGS=""
 [ "$DEBUG" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS -d"

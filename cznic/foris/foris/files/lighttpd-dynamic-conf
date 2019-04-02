@@ -8,6 +8,7 @@ config_get_bool DEBUG server debug "0"
 config_get_bool NOAUTH auth noauth "0"
 config_get SESSION_TIMEOUT auth session_timeout ""
 config_get SERVER server server "flup"
+config_get SENTRY_DSN sentry dsn ""
 
 APP="$1"
 
@@ -75,6 +76,12 @@ case $SERVER in
 		echo "				\"bin-path\" => var.foris-$APP.bin + var.foris-$APP.flags,"
 		echo '				"check-local" => "disable",'
 		echo '				"max-procs" => 1,'
+if [ -n "$SENTRY_DSN" ]; then
+		echo '				"bin-environment" => ('
+		echo "					\"SENTRY_DSN\" => \"$SENTRY_DSN\","
+
+		echo '				),'
+fi
 		echo '			)'
 		echo '		)'
 		echo '	)'
