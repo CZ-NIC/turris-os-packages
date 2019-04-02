@@ -12,7 +12,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=knot-resolver
 PKG_RELEASE:=1
 
-PKG_VERSION:=0b9524b7d6680f892671fc4e7a2e5c603848cf60
+PKG_VERSION:=b2ebd4442d6b897c132ca07af59afac61e3679c3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/knot/knot-resolver.git
