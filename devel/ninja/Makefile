@@ -59,7 +59,7 @@ endef
 
 
 define Host/Compile
-	cd  $(HOST_BUILD_DIR) && $(HOST_PYTHON3_BIN) configure.py $(HOST_CONFIGURE_ARGS)
+	cd  $(HOST_BUILD_DIR) && python3 configure.py $(HOST_CONFIGURE_ARGS)
 endef
 
 define Host/Install
