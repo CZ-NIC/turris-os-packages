@@ -21,6 +21,7 @@ PKG_URL:=https://uriparser.github.io
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
 
+include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/autotools.mk
 
@@ -50,6 +51,7 @@ CONFIGURE_ARGS += \
 		--disable-test \
 		--disable-doc \
 		--disable-wchar_t
+HOST_CONFIGURE_ARGS:=$(CONFIGURE_ARGS)
 
 define Package/uriparser/install
 	$(INSTALL_DIR) $(1)/usr/bin
@@ -70,5 +72,15 @@ define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/* $(1)/usr/lib/pkgconfig/
 endef
 
+define Host/Install
+	$(INSTALL_DIR) $(STAGING_DIR_HOST)/usr/lib
+	$(CP) $(HOST_INSTALL_DIR)/usr/lib/* $(STAGING_DIR_HOST)/usr/lib/
+	$(INSTALL_DIR) $(STAGING_DIR_HOST)/usr/include
+	$(CP) $(HOST_INSTALL_DIR)/usr/include/* $(STAGING_DIR_HOST)/usr/include/
+	$(INSTALL_DIR) $(STAGING_DIR_HOST)/usr/lib/pkgconfig
+	$(CP) $(HOST_INSTALL_DIR)/usr/lib/pkgconfig/* $(STAGING_DIR_HOST)/usr/lib/pkgconfig/
+endef
+
+$(eval $(call HostBuild))
 $(eval $(call BuildPackage,uriparser))
 $(eval $(call BuildPackage,liburiparser))
