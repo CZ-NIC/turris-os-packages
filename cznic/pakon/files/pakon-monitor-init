@@ -5,10 +5,13 @@ START=90
 STOP=10
 
 start_service() {
-  ps | grep pakon-monitor.py | grep -v grep >/dev/null && { echo >&2 "Already running" && exit 1; }
+  pgrep -f pakon-monitor.py > /dev/null && {
+      echo "Already running" >&2
+      exit 1
+  }
 
   mkdir -p /var/lib
-  [ -f /srv/pakon/pakon.db.xz ] && cp /srv/pakon/pakon.db.xz /var/lib/ && /bin/xz -d -f /var/lib/pakon.db.xz
+  [ -f /srv/pakon/pakon.db.xz ] && cp /srv/pakon/pakon.db.xz /var/lib/ && xz -d -f /var/lib/pakon.db.xz
   /usr/bin/sqlite3 /var/lib/pakon.db "pragma integrity_check" >/dev/null || rm -f /var/lib/pakon.db
   [ -s /var/lib/pakon.db ] || rm -f /var/lib/pakon.db # sqlite3 integrity_check returns 0 even if the file has zero size...
 
@@ -28,5 +31,5 @@ stop_service() {
 }
 
 reload_service() {
-  ps | grep pakon-monitor.py | grep -v grep | awk '{print $1}' | xargs kill -s USR1
+  pgrep -f pakon-monitor.py | xargs kill -s USR1
 }
