@@ -35,13 +35,6 @@ define Package/python-sentry-sdk/Default
   URL:=https://sentry.io/for/python/
 endef
 
-define Package/python-sentry-sdk
-$(call Package/python-sentry-sdk/Default)
-  DEPENDS+= \
-      +PACKAGE_python-sentry-sdk:python-light python-urllib3 python-certifi
-  VARIANT:=python
-endef
-
 define Package/python3-sentry-sdk
 $(call Package/python-sentry-sdk/Default)
   DEPENDS+= \
@@ -58,10 +51,6 @@ $(call Package/python-sentry-sdk/description)
 .
 (Variant for Python3)
 endef
-
-$(eval $(call PyPackage,python-sentry-sdk))
-$(eval $(call BuildPackage,python-sentry-sdk))
-$(eval $(call BuildPackage,python-sentry-sdk-src))
 
 $(eval $(call Py3Package,python3-sentry-sdk))
 $(eval $(call BuildPackage,python3-sentry-sdk))
