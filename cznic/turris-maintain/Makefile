@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-maintain
-PKG_VERSION:=8
+PKG_VERSION:=9
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -40,6 +40,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) files/reboot-needed.sh $(1)/usr/bin/maintain-reboot-needed
 	$(INSTALL_BIN) files/reboot.py $(1)/usr/bin/maintain-reboot
 	$(INSTALL_BIN) files/network-restart.py $(1)/usr/bin/maintain-network-restart
+	$(INSTALL_BIN) files/lighttpd-restart.py $(1)/usr/bin/maintain-lighttpd-restart
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/backups.conf $(1)/etc/config/backups
