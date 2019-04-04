@@ -12,7 +12,7 @@ MYSQLD=mysqld
 
 LOGGER="/usr/bin/logger -p user.err -s -t $MYSQLD"
 [ -x /usr/bin/logger ] || LOGGER=echo
-PROG=/usr/bin/$MYSQLD
+PROG=/usr/sbin/$MYSQLD
 
 my_user="mysql"
 my_group="mysql"
