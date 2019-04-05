@@ -1,0 +1,35 @@
+From ea24b1a898ec5dc79fb94bedaf89c625f389ef52 Mon Sep 17 00:00:00 2001
+From: Michal Hrusecky <michal.hrusecky@nic.cz>
+Date: Fri, 5 Apr 2019 18:06:55 +0200
+Subject: [PATCH] Don't require WiFi to save time settings
+
+Region settings affects WiFi region but as not all devices have WiFi, silently
+ignore when it can't be set.
+---
+ foris_controller_backends/time/__init__.py | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/foris_controller_backends/time/__init__.py b/foris_controller_backends/time/__init__.py
+index 6832d64..5df95cf 100644
+--- a/foris_controller_backends/time/__init__.py
++++ b/foris_controller_backends/time/__init__.py
+@@ -100,9 +100,13 @@ class TimeUciCommands(object):
+             backend.set_option("system", "@system[0]", "_country", country)
+             backend.set_option("system", "@system[0]", "zonename", "%s/%s" % (region, city))
+             backend.set_option("system", "ntp", "enabled", store_bool(how_to_set_time == "ntp"))
+-            data = backend.read("wireless")
+-            # set regulatory domain for all wifi devices
+-            WifiUci.update_regulator_domain(data, backend, country)
++            # Just in case we have no WiFi and no /etc/config/wireless
++            try:
++                data = backend.read("wireless")
++                # set regulatory domain for all wifi devices
++                WifiUci.update_regulator_domain(data, backend, country)
++            except UciException:
++                pass
+ 
+         # update wizard passed in foris web (best effort)
+         try:
+-- 
+2.21.0
+
