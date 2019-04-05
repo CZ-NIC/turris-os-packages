@@ -18,7 +18,7 @@ my_user="mysql"
 my_group="mysql"
 
 mysql_get_var() {
-	/usr/bin/mysqld --help --verbose | sed -n 's|^'"$1"'[[:blank:]]\+||p'
+	$PROG --help --verbose | sed -n 's|^'"$1"'[[:blank:]]\+||p'
 }
 
 start_service() {
