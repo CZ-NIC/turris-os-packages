@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018 CZ.NIC z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2019 CZ.NIC z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-diagnostics-module
-PKG_VERSION:=0.4.1
+PKG_VERSION:=0.5
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
