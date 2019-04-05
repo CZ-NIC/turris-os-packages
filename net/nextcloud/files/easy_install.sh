@@ -1,5 +1,10 @@
 #!/bin/sh
 
+die() {
+    echo "$@" >&2
+    exit 1
+}
+
 if [ -f /srv/www/nextcloud/config/config.php ]; then
     echo "You seem to have Nextcloud already installed."
     echo "If you want to continue, please delete file"
@@ -70,7 +75,7 @@ CREATE DATABASE nextcloud; \
 FLUSH PRIVILEGES;
 CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY '$DBPASS'; \
 GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost';
-" | mysql -u root -B --socket=/tmp/mysql_nextcloud.sock
+" | mysql -u root -B --socket=/tmp/mysql_nextcloud.sock || dies "Creating nextcloud database failed"
 sleep 1
 kill "$PID"
 i=0
@@ -91,7 +96,7 @@ done
 
 # Setup the server
 cd /srv/www/nextcloud
-sudo -u nobody php-cli ./occ maintenance:install --database=mysql --database-name=nextcloud --database-user=nextcloud --admin-user="$ALOGIN" --admin-pass="$APASS" --database-pass="$DBPASS" --database-host=127.0.0.1 --database-port=3306 --no-interaction
+sudo -u nobody php-cli ./occ maintenance:install --database=mysql --database-name=nextcloud --database-user=nextcloud --admin-user="$ALOGIN" --admin-pass="$APASS" --database-pass="$DBPASS" --database-host=127.0.0.1 --database-port=3306 --no-interaction || die "Installation failed"
 IP="`uci -q get network.lan.ipaddr`"
 if [ -z "$IP" ]; then
     echo "Autodetection of your router IP failed, what is your routers IP address?"
