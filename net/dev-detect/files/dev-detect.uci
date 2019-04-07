@@ -1,0 +1,9 @@
+package 'dev-detect'
+
+config watchlist 'watchlist'
+	list ifaces 'br-lan'
+
+config storage 'storage'
+    option persistent 0
+    option persistent_db_path '/srv/dev-detect.db'
+    option volatile_db_path   '/tmp/dev-detect.db'
