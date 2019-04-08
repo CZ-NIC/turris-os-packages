@@ -33,21 +33,19 @@ if mode == "version" and not version then
 	mode = "branch"
 end
 
--- Common URL base to Turris OS repository
+-- Common URI to Turris OS lists
+local base_url
 if mode == "branch" then
-	repo_base_uri = "https://repo.turris.cz/" .. branch
+	base_url = "https://repo.turris.cz/" .. branch .. "/lists/"
 elseif mode == "version" then
-	repo_base_uri = "https://repo.turris.cz/archive/" .. version
+	base_url = "https://repo.turris.cz/archive/" .. version .. "/lists/"
 else
 	DIE("Invalid updater.turris.mode specified: " .. mode)
 end
-Export('repo_base_uri')
 
 -- Common connection settings for Turris OS scripts
 local script_options = {
 	security = "Remote",
-	ca = system_cas,
-	crl = no_crl,
 	pubkey = {
 		"file:///etc/updater/keys/release.pub",
 		"file:///etc/updater/keys/standby.pub",
@@ -55,7 +53,6 @@ local script_options = {
 	}
 }
 
-local base_url = repo_base_uri .. "/lists/"
 -- The distribution base script. It contains the repository and bunch of basic packages
 Script(base_url .. "base.lua", script_options)
 

@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=62.1
-PKG_RELEASE:=3
+PKG_VERSION:=63.0
+PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater/updater.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -18,15 +18,29 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)
-HOST_BUILD_DEPENDS:=curl/host libevent2/host lua/host
-PKG_BUILD_DEPENDS:=busybox
+
+HOST_BUILD_DEPENDS:= \
+	curl/host \
+	libevent2/host \
+	lua/host \
+	uriparser/host \
+	libb64/host \
+	uthash/host
+PKG_BUILD_DEPENDS:=busybox libb64 uthash argp-standalone
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
-	TITLE:=The next generation updater
-	DEPENDS:=+liblua +libuci-lua +libevent2 +usign +libcurl +ca-certificates
+  TITLE:=The next generation updater
+  DEPENDS:=\
+    +liblua \
+    +libuci-lua \
+    +libevent2 \
+    +libcurl \
+    +liburiparser \
+    +usign \
+    +ca-certificates
 endef
 
 define Package/$(PKG_NAME)/install
@@ -63,11 +77,17 @@ endef
 
 
 define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION) BUSYBOX_EXEC=$(STAGING_DIR)/bin/busybox-static
+	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) \
+		NO_DOC=1 LUA_COMPILE:=no \
+		BUSYBOX_EXEC=$(STAGING_DIR)/bin/busybox-static \
+		ARGP_STANDALONE=y \
+		UPDATER_VERSION:=$(PKG_VERSION)
 endef
 
 define Host/Compile
-	$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) $(HOST_MAKE_FLAGS) NO_DOC=1 LUA_COMPILE:=no UPDATER_VERSION:=$(PKG_VERSION)
+	$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) $(HOST_MAKE_FLAGS) \
+		NO_DOC=1 LUA_COMPILE:=no \
+		UPDATER_VERSION:=$(PKG_VERSION)
 endef
 
 define Host/Install
