@@ -226,7 +226,7 @@ fi
 updater_args=
 config_get_bool updater_approvals autorun approvals 0
 [ "$updater_approvals" = "1" ] || updater_args="--batch"
-pkgupdate $updater_args || echo "Updater execution exited with error. Please see previous output to know what went wrong." >&2
+pkgupdate --reinstall-all $updater_args || echo "Updater execution exited with error. Please see previous output to know what went wrong." >&2
 
 ## Update opkg
 opkg update || echo "OPKG update failed. Please see previous output to know what went wrong." >&2
