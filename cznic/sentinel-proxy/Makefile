@@ -8,15 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-proxy
-PKG_VERSION:=1
-PKG_RELEASE:=6
+PKG_VERSION:=1.1
+PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/proxy.git
-PKG_SOURCE_VERSION:=f4e8f2f9d458061a632656168a97053f0904e60b
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_MAINTAINER:=Martin Petracek <martin.petracek@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=GPL-3.0
 
 PKG_FIXUP:=autoreconf
 
@@ -28,7 +30,6 @@ define Package/$(PKG_NAME)
 endef
 
 define Build/Compile
-
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS)
 endef
 
