@@ -8,13 +8,13 @@ CROSS_CONF_FILE=$(STAGING_DIR)/cross_conf.txt
 HOST_PYTHON3_BIN ?= $(TOPDIR)/staging_dir/host/bin/python3
 HOST_MESON_BIN=$(STAGING_DIR_HOST)/meson/meson.py
 MESON_BUILD_DIR ?= builddir
-#PKG_BUILD_DEPENDS += meson/host +meson python3/host
 
 BINPATH=$(TOPDIR)/staging_dir/host/usr/bin:$(PATH)
 
 define Build/Meson/Configure
 	cd $(PKG_BUILD_DIR) && [ ! -d $(MESON_BUILD_DIR) ] && mkdir $(MESON_BUILD_DIR)
-	cd $(PKG_BUILD_DIR) && PATH=$(BINPATH) PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) $(HOST_PYTHON3_BIN) $(HOST_MESON_BIN) $(MESON_BUILD_DIR) --cross-file $(CROSS_CONF_FILE) $(MESON_ARGS)
+	cd $(PKG_BUILD_DIR) && \
+	 PATH=$(BINPATH) PKG_CONFIG_PATH=$(PKG_CONFIG_PATH) $(HOST_PYTHON3_BIN) $(HOST_MESON_BIN) $(MESON_BUILD_DIR) --cross-file $(CROSS_CONF_FILE) $(MESON_ARGS)
 endef
 
 define Build/Meson/Compile

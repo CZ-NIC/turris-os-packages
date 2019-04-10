@@ -15,6 +15,10 @@ PKG_SOURCE:=meson-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/mesonbuild/meson/releases/download/$(PKG_VERSION)/
 PKG_HASH:=ef9f14326ec1e30d3ba1a26df0f92826ede5a79255ad723af78a2691c37109fd
 
+PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec@nic.cz>
+PKG_LICENSE:=Apache-2.0
+PKG_LICENSE_FILES:=COPYING
+
 HOST_BUILD_DEPENDS:=+python3 +python3/host
 PKG_BUILD_DEPENDS:=+python3 +python3/host +ninja/host ninja
 
@@ -30,12 +34,11 @@ define Package/meson
   CATEGORY:=Development
   TITLE:=Meta build system
   URL:=https://mesonbuild.com/
-  DEPENDS:=+python3
-  MAINTAINER:=CZ.NIC <packaging@turris.cz>
+  DEPENDS:=+python3 +ninja/host
 endef
 
 define Package/meson/description
-  Easily download, build, install, upgrade, and uninstall Python packages
+  Meson is an open source build system meant to be both extremely fast and user friendly as possible.
 endef
 
 define Build/Compile
@@ -50,6 +53,9 @@ define Package/meson/install
 	$(call Host/Install)
 endef
 
+
+#CROSS_CONF contains utility which will be used
+#to crosscompile target based on meson.build file
 CROSS_CONF=$(STAGING_DIR)/cross_conf.txt
 
 define Host/Compile
