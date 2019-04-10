@@ -9,9 +9,8 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.1
-PKG_RELEASE:=25
+PKG_RELEASE:=29
 
-PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec@nic.cz>
@@ -53,19 +52,18 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/resolver_rpcd.py $(1)/usr/libexec/rpcd/resolver_rpcd.py
 	$(INSTALL_DIR) $(1)/etc/resolver/dns_servers
 	$(INSTALL_CONF) ./files/dns_servers/* $(1)/etc/resolver/dns_servers/
-ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+ifeq ($(CONFIG_TARGET_mvebu),y)
 	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolver
 	[ -z "`ls -1 ./files/dns_servers_omnia/`" ] || $(INSTALL_CONF) ./files/dns_servers_omnia/* $(1)/etc/resolver/dns_servers/
+	$(INSTALL_DATA) ./files/CZ.NIC2-cacert.pem $(1)/etc/resolver
 else
 	$(INSTALL_CONF) ./files/resolver-turris-config $(1)/etc/config/resolver
 	[ -z "`ls -1 ./files/dns_servers_turris/`" ] || $(INSTALL_CONF) ./files/dns_servers_turris/* $(1)/etc/resolver/dns_servers/
 endif
 
-# Run only for TurrisOS 4.0 version
-ifeq ($(shell expr $(CONFIG_VERSION_NUMBER) \>= 4.0), 1)
+	# Run only for TurrisOS 4.0 version
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/dhcp
 	$(LN) /etc/resolver/dhcp_host_domain_ng.py $(1)/etc/hotplug.d/dhcp/99-dhcp_host_domain_ng.py
-endif
 
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
