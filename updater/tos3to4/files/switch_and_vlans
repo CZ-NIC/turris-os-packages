@@ -1,0 +1,88 @@
+#!/bin/sh
+. /lib/functions.sh
+config_load network
+
+vlandir="$(mktemp -d)"
+cleanup() {
+	rm -rf "$vlandir"
+}
+trap cleanup EXIT TERM INT QUIT ABRT
+
+vlan_handle() {
+	local vlan="$1"
+	local ports vid
+	config_get ports "$vlan" ports
+	config_get vid "$vlan" vid 0
+	for port in $ports; do
+		case "$port" in
+			5)
+				echo "$vlan" > "$vlandir/eth0"
+				;;
+			5t)
+				echo "$vlan" > "$vlandir/eth0.$vid"
+				;;
+			6)
+				echo "$vlan" > "$vlandir/eth2"
+				;;
+			6t)
+				echo "$vlan" > "$vlandir/eth2.$vid"
+				;;
+		esac
+	done
+	# TODO if there is no CPU port then create new bridge for this vlan
+}
+config_foreach vlan_handle switch_vlan
+
+
+append_port() {
+	new_devices="$new_devices${new_devices:+ }$1"
+}
+append_lan_ports() {
+	[ -f "$vlandir/$ifn" ] || return # ignore VLANs that are not in switch
+	# Note: there can be tagged vlan going to switch but if switch is not
+	# configured for it it does not work anyway.
+
+	local vlan="$(cat "$vlandir/$ifn")"
+	local ports vid
+	config_get ports "$vlan" ports
+	config_get vid "$vlan" vid
+	for port in $ports; do
+		case "$port" in
+			5|5t|6|6t)
+				# Ignore CPU ports those are managed by DSA
+				;;
+			*t)
+				append_port "lan${port%t}.${vid}"
+				;;
+			*)
+				append_port "lan${port}"
+				;;
+		esac
+	done
+}
+interface_handle() {
+	local cnf="$1"
+	local devices new_devices type
+	config_get devices "$cnf" device
+	[ -n "$devices" ] || config_get devices "$cnf" ifname
+	for ifn in $devices; do
+		case "$ifn" in
+			eth0*|eth2*)
+				append_lan_ports
+				;;
+			*)
+				append_port "$ifn"
+				;;
+		esac
+	done
+	uci set "network.$cnf.ifname=$new_devices"
+}
+config_foreach interface_handle interface
+
+
+vlan_remove() {
+	uci delete "network.$1"
+}
+config_foreach vlan_remove switch_vlan
+
+uci commit network

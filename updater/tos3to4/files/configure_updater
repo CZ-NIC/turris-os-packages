@@ -1,0 +1,63 @@
+#!/bin/sh
+. /lib/functions.sh
+uci_load updater
+
+# New sections
+uci set updater.autorun=autorun
+uci set updater.turris=turris
+
+# updater.override
+config_get_bool autorun_disabled override disable 1
+config_get_bool turris_branch override branch 1
+if [ "$autorun_disabled" = "1" ]; then
+	uci set updater.autorun.enable=0
+else
+	uci set updater.autorun.enable=1
+fi
+uci set updater.turris.mode=branch
+case "$turris_branch" in
+	"")
+		uci set updater.turris.branch=hbs
+		;;
+	rc)
+		uci set updater.turris.branch=hbt
+		;;
+	*)
+		uci set updater.turris.branch=hbk
+		;;
+esac
+if [ "$(cat /tmp/sysinfo/model)" = "Turris" ]; then
+	# Turris 1.x is not currently supported outside of HBD
+	uci set updater.turris.branch=hbd
+fi
+uci delete updater.override
+
+# updater.approvals
+config_get autorun_approvals approvals need 0
+config_get autorun_auto_approve approvals auto_grant_seconds 0
+uci set updater.autorun.approvals=$autorun_approvals
+uci set updater.autorun.auto_approve_time=$(( autorun_auto_approve / 3600 ))
+uci delete updater.approvals
+
+# updater.pkglists
+pkglist_handle() {
+	local lst="$1"
+	case "$lst" in
+		datacollect|netboot|ssbackup)
+			# These are ignored for now as they are hidden before we add support
+			;;
+		dev-detect|dvb|honeypot|luci-controls|lxc|nas|netmetr|openvpn|pakon|printserver|tor)
+			uci add_list updater.turris.pkglists=$lst
+			;;
+		netutils)
+			uci add_list updater.turris.pkglists=3g
+			;;
+	esac
+}
+config_list_foreach pkglists lists pkglist_handle
+uci delete updater.pkglists
+
+# updater.l10n is without change
+
+
+uci commit updater
