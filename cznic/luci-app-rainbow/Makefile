@@ -9,6 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-rainbow
 PKG_VERSION:=2
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/luci-rainbow.git
 PKG_SOURCE_VERSION:=5828fadded08e4a15f2cf211c1a42d613743b58c
@@ -20,7 +21,7 @@ PKG_BUILD_DEPENDS:=luci-base/host
 
 include $(INCLUDE_DIR)/package.mk
 
-ifdef CONFIG_TARGET_mvebu_Turris-Omnia
+ifdef CONFIG_TARGET_mvebu_cortexa9_DEVICE_turris-omnia
 BOARD=omnia
 else
 BOARD=turris
