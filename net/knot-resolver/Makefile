@@ -36,7 +36,19 @@ define Package/knot-resolver
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Knot DNS Resolver
 	URL:=https://gitlab.labs.nic.cz/knot/resolver
-	DEPENDS=+knot-libs +knot-libzscanner +libuv +luajit +dnssec-rootkey +resolver-conf +luasec +luasocket +libstdcpp +lmdb
+	DEPENDS:=\
+		+knot-libs \
+		+knot-libzscanner \
+		+libuv \
+		+luajit \
+		+dnssec-rootkey \
+		+resolver-conf \
+		+luasec \
+		+luasocket \
+		+libstdcpp \
+		+lmdb \
+		+fstrm \
+		+libprotobuf-c
 	PROVIDES:=dns-resolver
 	USERID:=kresd=653:kresd=653
 endef
@@ -50,26 +62,15 @@ MAKE_FLAGS += \
 	ETCDIR=/etc/kresd
 
 
-#define Build/Configure
-#	$(call Build/Meson/Configure)
-#endef
-
-#define Build/Compile
-#	$(call Build/Meson/Compile)
-#endef
-
-#define Build/Install
-#	$(call Build/Meson/Install)
-#endef
-
 define Package/knot-resolver/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	#$(INSTALL_BIN) $(PKG_BUILD_DIR)/builddir/daemon/kresd $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/local/sbin/kresd $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/lib
-	#$(CP) $(PKG_BUILD_DIR)/builddir/lib/libkres.so* $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/local/lib/x86_64-linux-gnu/libkres.so* $(1)/usr/lib
+
+	$(INSTALL_DIR) $(1)/usr/lib/kres_modules
+	$(CP) $(PKG_INSTALL_DIR)/usr/local/lib/x86_64-linux-gnu/knot-resolver/kres_modules $(1)/usr/lib/
 
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/kresd.init $(1)/etc/init.d/kresd
