@@ -8,18 +8,23 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata-bin
-PKG_VERSION:=4.0.3
-PKG_RELEASE=4
+PKG_VERSION:=4.0.7
+PKG_RELEASE=1
 
 PKG_SOURCE:=suricata-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.openinfosecfoundation.org/download/
-PKG_MD5SUM:=8ab68a083a8c20ffab2a9fd03872443f
+PKG_HASH:=8a0e6791cf1663b2b64bf16b83a9325125d533cf7784b49dd93593627cf23dec
+
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=GPL-2.0
+PKG_LICENSE_FILES:=LICENSE
+PKG_CPE_ID:=cpe:/a:suricata-ids:suricata
+
 PKG_BUILD_DIR:=$(BUILD_DIR)/suricata-$(PKG_VERSION)
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
 PKG_BUILD_PARALLEL:=1
-PKG_LICENSE:=GPL-2.0
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -42,7 +47,8 @@ endif
 define Package/suricata-bin
   SECTION:=net
   CATEGORY:=Network
-  TITLE:=IDS
+  TITLE:=Network IDS, IPS and NSM engine
+  URL:=https://suricata-ids.org/
   DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +librt +libpcap $(LUAJIT_DEP) +libnetfilter-queue +iptables-mod-nfqueue +libnetfilter-log +libnfnetlink +iptables-mod-conntrack-extra +libhtp +libnet-1.2.x
 endef
 
