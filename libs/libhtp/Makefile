@@ -1,5 +1,6 @@
 
-# Copyright (C) 2017 OpenWrt.org
+#
+# Copyright (C) 2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,34 +9,42 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libhtp
-PKG_VERSION:=0.5.25
+PKG_VERSION:=0.5.30
 PKG_RELEASE=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/OISF/libhtp.git
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=$(PKG_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://codeload.github.com/OISF/libhtp/tar.gz/$(PKG_VERSION)?
+PKG_HASH:=7384f8461ad0431e9247c49b37a73929b284f39408d1f11b80949b188069b638
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
-PKG_BUILD_PARALLEL:=1
-PKG_LICENSE:=GPL-2.0
+
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=BSD 3-Clause
+PKG_LICENSE_FILES:=LICENSE
+PKG_CPE_ID:=cpe:/a:oisf:libhtp
 
 PKG_BUILD_DEPENDS:=libiconv-full
 
 include $(INCLUDE_DIR)/package.mk
 
-TARGET_CFLAGS += -I$(STAGING_DIR)/usr/lib/libiconv-full/include
-TARGET_LDFLAGS += -L$(STAGING_DIR)/usr/lib/libiconv-full/lib
-CONFIGURE_ARGS += --disable-static
-
 define Package/libhtp
   SECTION:=libs
   CATEGORY:=Libraries
-  TITLE:=HTP Library
-  DEPENDS:=+libiconv-full +zlib
+  TITLE:=HTTP normalizer and parser library
+  URL:=https://github.com/OISF/libhtp
+  DEPENDS:= \
+	+libiconv-full \
+	+zlib
 endef
+
+define Package/libhtp/description
+  LibHTP is a security-aware parser for the HTTP protocol and the related bits and pieces.
+endef
+
+TARGET_CFLAGS += -I$(STAGING_DIR)/usr/lib/libiconv-full/include
+TARGET_LDFLAGS += -L$(STAGING_DIR)/usr/lib/libiconv-full/lib
+CONFIGURE_ARGS += --disable-static
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) CFLAGS="$(TARGET_CFLAGS) $(EXTRA_CFLAGS) $(TARGET_CPPFLAGS) $(EXTRA_CPPFLAGS) -fno-stack-protector"
