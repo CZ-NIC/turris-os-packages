@@ -8,20 +8,21 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gnutls
-PKG_VERSION:=3.5.14
+PKG_VERSION:=3.6.7
 PKG_RELEASE:=1
 PKG_USE_MIPS16:=0
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=ftp://ftp.gnutls.org/gcrypt/gnutls/v3.5
-PKG_MD5SUM:=4aa12dec92f42a0434df794aca3d02f6f2a35b47b48c01252de65f355c051bda
+PKG_SOURCE_URL:=https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6
+PKG_HASH:=5b3409ad5aaf239808730d1ee12fdcd148c0be00262c7edf157af655a8a188e2
 #PKG_FIXUP:=autoreconf gettext-version
 PKG_MAINTAINER:=Nikos Mavrogiannopoulos <nmav@gnutls.org>
 PKG_LICENSE:=LGPLv2.1+
+PKG_CPE_ID:=cpe:/a:gnu:gnutls
 
 PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=1
 PKG_LIBTOOL_PATHS:=. lib
-PKG_CHECK_FORMAT_SECURITY:=0
 
 PKG_CONFIG_DEPENDS:= \
 	CONFIG_GNUTLS_ALPN \
@@ -31,10 +32,10 @@ PKG_CONFIG_DEPENDS:= \
 	CONFIG_GNUTLS_EXT_LIBTASN1 \
 	CONFIG_GNUTLS_HEARTBEAT \
 	CONFIG_GNUTLS_OCSP \
-	CONFIG_GNUTLS_OPENPGP \
 	CONFIG_GNUTLS_PKCS11 \
 	CONFIG_GNUTLS_PSK \
 	CONFIG_GNUTLS_SRP \
+	CONFIG_GNUTLS_TPM \
 	CONFIG_LIBNETTLE_MINI \
 
 include $(INCLUDE_DIR)/package.mk
@@ -62,6 +63,7 @@ define Package/certtool
 $(call Package/gnutls/Default)
   SECTION:=utils
   CATEGORY:=Utilities
+  SUBMENU:=Encryption
   TITLE+= (certool utility)
   DEPENDS+= +libgnutls
 endef
@@ -76,6 +78,7 @@ define Package/gnutls-utils
 $(call Package/gnutls/Default)
   SECTION:=utils
   CATEGORY:=Utilities
+  SUBMENU:=Encryption
   TITLE+= (utilities)
   DEPENDS+= +libgnutls
 endef
@@ -93,7 +96,7 @@ endef
 define Package/libgnutls
 $(call Package/gnutls/Default)
   TITLE+= (library)
-  DEPENDS+= +libnettle +libunistring +!LIBNETTLE_MINI:libgmp +GNUTLS_EXT_LIBTASN1:libtasn1 +GNUTLS_PKCS11:p11-kit +GNUTLS_CRYPTODEV:kmod-cryptodev
+  DEPENDS+= +libnettle +!LIBNETTLE_MINI:libgmp +GNUTLS_EXT_LIBTASN1:libtasn1 +GNUTLS_PKCS11:p11-kit +GNUTLS_CRYPTODEV:kmod-cryptodev +libatomic
 endef
 
 define Package/libgnutls/description
@@ -101,21 +104,28 @@ $(call Package/gnutls/Default/description)
  This package contains the GnuTLS shared library, needed by other programs.
 endef
 
+TARGET_CFLAGS += -std=c11
 
 CONFIGURE_ARGS+= \
 	--enable-shared \
 	--enable-static \
-	--disable-rpath \
-	--disable-libdane \
-	--disable-guile \
-	--disable-nls \
-	--without-zlib \
-	--enable-local-libopts \
 	--disable-doc \
+	--disable-gcc-warnings \
+	--disable-guile \
+	--disable-rpath \
+	--disable-seccomp-tests \
 	--disable-tests \
+	--disable-valgrind-tests \
+	\
+	--disable-libdane \
+	--disable-ssl2-support \
+	--disable-ssl3-support \
+	--enable-local-libopts \
+	--without-idn \
 	--with-default-trust-store-dir=/etc/ssl/certs/ \
-	--disable-crywrap \
-	--with-librt-prefix="$(LIBRT_ROOT_DIR)/"
+	--with-included-unistring \
+	--with-librt-prefix="$(LIBRT_ROOT_DIR)/" \
+	--with-pic
 
 ifneq ($(CONFIG_GNUTLS_EXT_LIBTASN1),y)
 CONFIGURE_ARGS += --with-included-libtasn1
@@ -149,10 +159,6 @@ ifneq ($(CONFIG_GNUTLS_PSK),y)
 CONFIGURE_ARGS += --disable-psk-authentication
 endif
 
-ifneq ($(CONFIG_GNUTLS_OPENPGP),y)
-CONFIGURE_ARGS += --disable-openpgp-authentication
-endif
-
 ifneq ($(CONFIG_GNUTLS_ANON),y)
 CONFIGURE_ARGS += --disable-anon-authentication
 endif
@@ -161,11 +167,13 @@ ifneq ($(CONFIG_GNUTLS_OCSP),y)
 CONFIGURE_ARGS += --disable-ocsp
 endif
 
+ifneq ($(CONFIG_GNUTLS_TPM),y)
+CONFIGURE_ARGS += --without-tpm
+endif
+
 ifeq ($(CONFIG_GNUTLS_CRYPTODEV),y)
 CONFIGURE_ARGS += --enable-cryptodev
 endif
-
-TARGET_CFLAGS += $(FPIC)
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include $(1)/usr/lib/pkgconfig
@@ -218,6 +226,11 @@ endif
 ifeq ($(CONFIG_GNUTLS_PKCS11),y)
 	$(CP) \
 		$(PKG_INSTALL_DIR)/usr/bin/p11tool \
+		$(1)/usr/bin/
+endif
+ifeq ($(CONFIG_GNUTLS_TPM),y)
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/bin/tpmtool \
 		$(1)/usr/bin/
 endif
 endef

@@ -1,0 +1,15 @@
+Index: gnutls-3.6.7/lib/random.c
+===================================================================
+--- gnutls-3.6.7.orig/lib/random.c
++++ gnutls-3.6.7/lib/random.c
+@@ -36,8 +36,8 @@ extern gnutls_crypto_rnd_st _gnutls_fuzz
+ #endif
+ 
+ /* Per thread context of random generator, and a flag to indicate initialization */
+-static _Thread_local void *gnutls_rnd_ctx;
+-static _Thread_local unsigned rnd_initialized = 0;
++static __thread void *gnutls_rnd_ctx;
++static __thread unsigned rnd_initialized = 0;
+ 
+ struct rnd_ctx_list_st {
+ 	void *ctx;
