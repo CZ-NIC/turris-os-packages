@@ -1,0 +1,17 @@
+#!/bin/sh
+# There is a GPIO we can read to see if SFP module is plugged in.
+detgpio=508
+dev="/sys/class/gpio/gpio$detgpio"
+
+if ! [ -e "$dev/value" ]; then
+	echo -n "$detgpio" > "/sys/class/gpio/export"
+	echo -n "out" > "$dev/direction"
+fi
+
+if [ "$(cat "$dev/value")" = "0" ]; then
+	# SFP plugged
+	ln -sf armada-385-turris-omnia-sfp.dtb /boot/dtb
+else
+	# SFP not inserted
+	ln -sf armada-385-turris-omnia-phy.dtb /boot/dtb
+fi
