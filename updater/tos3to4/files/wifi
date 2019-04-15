@@ -1,0 +1,22 @@
+#!/bin/sh
+. /lib/functions.sh
+config_load wireless
+ec=0
+
+wifi_handle() {
+	local radio="$1"
+	local path mac
+	config_get path "$radio" path
+	if [ -d "/sys/devices/platform/$path/ieee80211" ]; then
+		mac="$(cat /sys/devices/platform/"$path"/ieee80211/phy*/macaddress)"
+		uci set "wireless.$radio.macaddr=$mac"
+		uci delete "wireless.$radio.path"
+	else
+		echo "Unable to migrate Wi-Fi radio (not present): $radio: $path" >&2
+		ec=1
+	fi
+}
+config_foreach wifi_handle wifi-device
+
+uci commit wireless
+exit $ec

@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tos3to4
-PKG_VERSION:=2.0
+PKG_VERSION:=2.0.1
 PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -27,6 +27,7 @@ endef
 define Package/tos3to4/install
 	$(INSTALL_DIR) /usr/lib/tos3to4
 	$(INSTALL_BIN) ./files/switch_and_vlans /usr/lib/tos3to4/switch_and_vlans
+	$(INSTALL_BIN) ./files/wifi /usr/lib/tos3to4/wifi
 endef
 
 define Package/tos3to4-early/install
@@ -38,6 +39,7 @@ define Package/tos3to4/postinst
 [ -n "$$IPKG_INSTROOT" ] || {
 	ec=0
 	/usr/lib/tos3to4/switch_and_vlans || ec=$$?
+	/usr/lib/tos3to4/wifi || ec=$$?
 	exit $$ec
 }
 endef
