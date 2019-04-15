@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-proxy
 PKG_VERSION:=1.9
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_SOURCE_VERSION:=bbf8629d1d64840407eefc23d2b6c8835365347b
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/haas/proxy/raw/$(PKG_SOURCE_VERSION)/release/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -26,6 +26,7 @@ define Package/haas-proxy
   URL:=https://haas.nic.cz
   DEPENDS:=+python3-light +python3-cachetools +python3-requests +python3-twisted +python3-crypto +python3-service-identity +server-uplink +sshpass
   CONFLICTS:=mitmproxy
+  VARIANT:=python3
 endef
 
 define Package/haas-proxy/description
@@ -34,47 +35,37 @@ for SSH) to the HaaS server, where Cowrie honeypot simulates a device and
 records executed commands.
 endef
 
-define Build/Compile
-	$(call Build/Compile/Py3Mod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
-endef
-
 define Py3Package/haas-proxy/install
 	$(INSTALL_DIR) $(1)/etc/init.d/
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/files/haas.uci $(1)/etc/config/haas
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/init $(1)/etc/init.d/haas-proxy
+	$(INSTALL_DATA) ./files/haas.uci $(1)/etc/config/haas
+	$(INSTALL_BIN) ./files/init $(1)/etc/init.d/haas-proxy
 	$(INSTALL_DIR) $(1)/usr/share/haas/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/register.sh $(1)/usr/share/haas/register.sh
+	$(INSTALL_BIN) ./files/register.sh $(1)/usr/share/haas/register.sh
 	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/files/haas.cron $(1)/etc/cron.d/haas
+	$(INSTALL_DATA) ./files/haas.cron $(1)/etc/cron.d/haas
 	$(INSTALL_DIR) $(1)/etc/firewall.d/with_reload
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/haas.fw $(1)/etc/firewall.d/with_reload/99_haas.fw
+	$(INSTALL_BIN) ./files/haas.fw $(1)/etc/firewall.d/with_reload/99_haas.fw
 endef
 
 define Package/haas-proxy/conffiles
 /etc/config/haas
 endef
 
-define Package/haas-proxy/install
-	$(INSTALL_DIR) $(1)
-	$(CP) \
-		$(PKG_INSTALL_DIR)/* \
-		$(1)
-	$(RM) -rf $(1)/usr/lib/python2.7/site-packages/haas_proxy-1.*
-endef
-
 define Package/haas-proxy/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/haas-proxy enable || true
-/usr/share/haas/register.sh || true
+	/etc/init.d/haas-proxy enable || true
+	/usr/share/haas/register.sh || true
 }
 endef
 
 define Package/haas-proxy/prerm
 #!/bin/sh
-/etc/init.d/haas-proxy stop || true
-/etc/init.d/haas-proxy disable || true
+[ -n "$$IPKG_INSTROOT" ] || {
+	/etc/init.d/haas-proxy stop || true
+	/etc/init.d/haas-proxy disable || true
+}
 endef
 
 $(eval $(call Py3Package,haas-proxy))
