@@ -91,7 +91,6 @@ stop_debug () {
 
 	if [ "${resolver}" == "kresd" ]; then
 		echo "== kresd disabled verbose logging ==" |test_log
-		set_kresd_log 0
 		run_kresd_command "verbose(false)"
 	elif [ "${resolver}" == "unbound" ]; then
 		echo "== unbound disabled verbose logging ==" |test_log
