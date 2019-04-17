@@ -1,4 +1,3 @@
 MAILTO=""
 
 0	*	*	*	*	root	/usr/share/server-uplink/registration_code.sh
-0	*	*	*	*	root	/usr/share/server-uplink/contract_valid.sh

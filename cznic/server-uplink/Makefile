@@ -36,7 +36,6 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_DIR) $(1)/usr/share/server-uplink/
 	$(INSTALL_BIN) files/registration_code.sh $(1)/usr/share/server-uplink/
-	$(INSTALL_BIN) files/contract_valid.sh $(1)/usr/share/server-uplink/
 	$(INSTALL_BIN) files/registered.sh $(1)/usr/share/server-uplink/
 endef
 
@@ -45,7 +44,6 @@ define Package/$(PKG_NAME)/postinst
 [ -n "$${IPKG_INSTROOT}" ] || {
 	# run scripts to update files
 	/usr/share/server-uplink/registration_code.sh
-	/usr/share/server-uplink/contract_valid.sh
 }
 endef
 
