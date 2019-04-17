@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
 PKG_VERSION:=63.0.3
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater/updater.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -26,7 +26,7 @@ HOST_BUILD_DEPENDS:= \
 	uriparser/host \
 	libb64/host \
 	uthash/host
-PKG_BUILD_DEPENDS:=busybox libb64 uthash argp-standalone
+PKG_BUILD_DEPENDS:=libb64 uthash argp-standalone
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
@@ -39,6 +39,7 @@ define Package/$(PKG_NAME)
     +libevent2 \
     +libcurl \
     +liburiparser \
+    +busybox \
     +usign \
     +ca-certificates
 endef
@@ -79,7 +80,6 @@ endef
 define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) \
 		NO_DOC=1 LUA_COMPILE:=no \
-		BUSYBOX_EXEC=$(STAGING_DIR)/bin/busybox-static \
 		ARGP_STANDALONE=y \
 		UPDATER_VERSION:=$(PKG_VERSION)
 endef
