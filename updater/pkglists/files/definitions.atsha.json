@@ -22,7 +22,7 @@
 	"honeypot": {
 		"title": "SSH Honeypot",
 		"description": "Trap for password-guessing robots on SSH.",
-		"visible": false
+		"visible": true
 	},
 	"luci-controls": {
 		"title": "LuCI extensions",
@@ -67,7 +67,7 @@
 	"ssbackup": {
 		"title": "Cloud Backups",
 		"description": "Service for storing configuration backups on remote servers (EXPERIMENTAL).",
-		"visible": false
+		"visible": true
 	},
 	"tor": {
 		"title": "Tor",
