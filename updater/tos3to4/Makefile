@@ -25,17 +25,17 @@ define Package/tos3to4-early
 endef
 
 define Package/tos3to4/install
-	$(INSTALL_DIR) /usr/lib/tos3to4
-	$(INSTALL_BIN) ./files/switch_and_vlans /usr/lib/tos3to4/switch_and_vlans
-	$(INSTALL_BIN) ./files/wifi /usr/lib/tos3to4/wifi
+	$(INSTALL_DIR) $(1)/usr/lib/tos3to4
+	$(INSTALL_BIN) ./files/switch_and_vlans $(1)/usr/lib/tos3to4/switch_and_vlans
+	$(INSTALL_BIN) ./files/wifi $(1)/usr/lib/tos3to4/wifi
 ifdef CONFIG_TARGET_mvebu_cortexa9_DEVICE_turris-omnia
-	$(INSTALL_BIN) ./files/sfp-omnia /usr/lib/tos3to4/sfp-omnia
+	$(INSTALL_BIN) ./files/sfp-omnia $(1)/usr/lib/tos3to4/sfp-omnia
 endif
 endef
 
 define Package/tos3to4-early/install
-	$(INSTALL_DIR) /usr/lib/tos3to4
-	$(INSTALL_BIN) ./files/configure_updater /usr/lib/tos3to4/configure_updater
+	$(INSTALL_DIR) $(1)/usr/lib/tos3to4
+	$(INSTALL_BIN) ./files/configure_updater $(1)/usr/lib/tos3to4/configure_updater
 endef
 
 define Package/tos3to4/postinst
