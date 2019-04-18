@@ -80,9 +80,10 @@ interface_handle() {
 config_foreach interface_handle interface
 
 
-vlan_remove() {
+switch_vlan_remove() {
 	uci delete "network.$1"
 }
-config_foreach vlan_remove switch_vlan
+config_foreach switch_vlan_remove switch
+config_foreach switch_vlan_remove switch_vlan
 
 uci commit network
