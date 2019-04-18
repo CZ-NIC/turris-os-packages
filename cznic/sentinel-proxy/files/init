@@ -5,7 +5,7 @@ START=95
 STOP=10
 
 get_cert() {
-    /usr/bin/python3 /usr/libexec/sentinel_certgen.py --certdir /etc/sentinel/ -H sentinel.turris.cz -p 443
+    /usr/bin/python3 /usr/libexec/sentinel_certgen.py certs --cert-api-hostname 'sentinel.turris.cz'
 }
 
 start_service() {
