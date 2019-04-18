@@ -61,3 +61,6 @@ uci delete updater.pkglists
 
 
 uci commit updater
+
+# To settle new branch we run switch-branch in verify mode
+switch-branch --verify --force

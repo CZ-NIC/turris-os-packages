@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tos3to4
-PKG_VERSION:=2.0.2
+PKG_VERSION:=2.0.3
 PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -21,7 +21,7 @@ endef
 
 define Package/tos3to4-early
   TITLE:=Turris OS 3.x to 4.x migration package installed early
-  DEPENDS:=+uci
+  DEPENDS:=+uci +switch-branch
 endef
 
 define Package/tos3to4/install
