@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tos3to4
-PKG_VERSION:=1.0
+PKG_VERSION:=1.0.1
 PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -30,6 +30,20 @@ define Package/tos3to4/install
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
 	$(INSTALL_BIN) ./files/migrate3to4.lua $(1)/etc/updater/conf.d/migrate3to4.lua
 	$(INSTALL_BIN) ./files/os-release-$(BOARD) $(1)/etc/os-release
+endef
+
+define Package/tos3to4/postinst
+[ -n "$$IPKG_INSTROOT" ] || {
+	. /lib/functions.sh
+	uci_load updater
+	config_get autorun_approvals approvals need 0
+	if [ "$$approvals" = "1" ]; then
+		uci set "updater.approvals.need_migrate=1"
+		uci set "updater.approvals.need=0"
+		uci commit updater.approvals
+		create_notification -s error 'Updater approvals were deactivated to prevent problems during migration to latest major release of Turris OS!'
+	fi
+}
 endef
 
 Build/Compile:=:
