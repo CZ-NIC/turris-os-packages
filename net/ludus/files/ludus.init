@@ -1,0 +1,128 @@
+#!/bin/sh /etc/rc.common
+USE_PROCD=1
+
+START=96
+STOP=05
+
+SURICATA_LUDUS_CONFIG=/etc/ludus/suricata_for_ludus.yaml
+SURICATA_CONFIG=/etc/suricata/suricata.yaml
+SURICATA_RULES_DIR=/tmp/suricata/rules
+SURICATA_NORMAL_RULES_DIR=/etc/suricata/rules
+
+LUDUS_CONFIG=/etc/ludus/ludus.config
+LUDUS_TPL_CONFIG=/etc/ludus/ludus_template.conf
+
+LOG_DIR=/var/log/ludus
+PID_FILE=/var/run/ludus.pid
+SURICATA_LOG_DIR=/var/log/suricata
+
+ROUTER_IP=
+
+print_msg() {
+	echo "$1"
+	logger -t ludus "$1"
+}
+
+get_public_ip() {
+	local public_ip
+	local ip_from_net
+	config_get public_ip "common" public_ip  ""
+	if [ -z "$public_ip" ]; then
+		ip_from_net="$(curl -s https://ipecho.net/plain)"
+		ROUTER_IP="$(ipcalc.sh "$ip_from_net" | awk -F'=' 'NR==1{print $2}')"
+		print_msg "Public IP autodetection IP=$ROUTER_IP"
+	else
+		ROUTER_IP="$public_ip"
+		print_msg "Public IP set to IP=$ROUTER_IP"
+	fi
+}
+
+copy_suricata_normal_rules() {
+	local rules="http-events.rules smtp-events.rules dns-events.rules tls-events.rules"
+	print_msg "Copying normal suricata rules."
+	for i in $rules; do
+		if [ -f "$SURICATA_NORMAL_RULES_DIR/$i" ]; then
+			cp "$SURICATA_NORMAL_RULES_DIR/$i" "$SURICATA_RULES_DIR/"
+		else
+			print_msg "Warning! Rule $i not found in suricata dir"
+		fi
+	done
+}
+
+create_suricata_ludus_config() {
+	local public_ip="$1"
+	mkdir -p "/etc/ludus"
+
+	sed \
+	-e 's&[^$+#]HOME_NET:.*& HOME_NET: \"ROUTER_IP\"&' \
+	-e "s/ROUTER_IP/$public_ip/" \
+	-e 's/.*- eve-log:.*/  - eve-log:\n      rotate-interval: 1d/' \
+	-e '/^ *stats:/,/^ *[^:]*:/s&enabled: yes&enabled: no&' \
+	-e 's&default-rule-path: .*&default-rule-path: /tmp/suricata/rules&' \
+	"$SURICATA_CONFIG" > "$SURICATA_LUDUS_CONFIG"
+}
+
+create_ludus_config() {
+	local public_ip="$1"
+	local wan_interface="$(ubus call network.interface.wan status|jsonfilter -e '$.device')"
+	local hash="$(cat /dev/urandom 2>/dev/null | tr -dc 'a-zA-Z0-9' 2>/dev/null | head -c 32)"
+
+	sed \
+	-e "s/router_ip =.*/router_ip = $public_ip/g" \
+	-e "s/installation_hash =.*/installation_hash = $hash/g" \
+	-e "s/interface =.*/interface = $wan_interface/g" \
+	"$LUDUS_TPL_CONFIG" > "$LUDUS_CONFIG"
+}
+
+stop_service() {
+	local pid_num
+	if [ -f "$PID_FILE" ]; then
+		pid_num="$(cat $PID_FILE)"
+		kill -INT "$pid_num"
+		rm -f "$PID_FILE"
+	fi
+	print_msg "Stop ludus suricata"
+	kill $(ps|grep suricata|grep $SURICATA_LUDUS_CONFIG |grep -v grep|awk '{print $1}') 2> /dev/null
+}
+
+start_service() {
+	# Start sentinel-proxy if it's not running
+	if [ ! "$(pidof sentinel-proxy)" ]; then
+		if [ ! -f "/etc/init.d/sentinel-proxy"  ]; then
+			print_msg "Error sentinel-proxy not detected !"
+			exit 1
+		fi
+		print_msg "Starting sentinel proxy"
+		/etc/init.d/sentinel-proxy start
+	fi
+
+	# Create log dir
+	mkdir -p "$LOG_DIR"
+
+	# Create suricata log dir
+	mkdir -p "$SURICATA_LOG_DIR"
+
+	if [ ! -d "/tmp/suricata/rules" ]; then
+		print_msg "Warning /tmp/suricata/rules not found ! Suricata-emergingthreats-rules is probably not running."
+		if [ -f "/usr/bin/suricata_update_rules.sh" ]; then
+			print_msg "Trying to run suricata_update_rules.sh"
+			/usr/bin/suricata_update_rules.sh
+		else
+			print_msg "Error suricata_update_rules.sh not found !"
+			exit 1
+		fi
+	fi
+
+	config_load ludus
+
+	get_public_ip
+	create_suricata_ludus_config "$ROUTER_IP"
+	create_ludus_config "$ROUTER_IP"
+	copy_suricata_normal_rules
+
+	procd_open_instance
+	procd_set_param command /usr/share/ludus/ludus.py -c "$LUDUS_CONFIG" --pidfile "$PID_FILE"
+	procd_set_param stdout 1
+	procd_set_param stderr 1
+	procd_close_instance
+}
