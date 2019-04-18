@@ -34,6 +34,7 @@ uci delete updater.override
 
 # updater.approvals
 config_get autorun_approvals approvals need 0
+config_get autorun_approvals approvals need_migrate "$autorun_approvals"
 config_get autorun_auto_approve approvals auto_grant_seconds 0
 uci set updater.autorun.approvals=$autorun_approvals
 uci set updater.autorun.auto_approve_time=$(( autorun_auto_approve / 3600 ))
