@@ -70,6 +70,10 @@ interface_handle() {
 			eth0*|eth2*)
 				append_lan_ports
 				;;
+			eth1*)
+				# WAN port is now eth2 not eth1
+				append_port "eth2${ifn#eth1}"
+				;;
 			*)
 				append_port "$ifn"
 				;;
