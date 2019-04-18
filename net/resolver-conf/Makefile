@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.1
-PKG_RELEASE:=30
+PKG_RELEASE:=31
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
