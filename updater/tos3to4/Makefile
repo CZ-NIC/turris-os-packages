@@ -21,7 +21,7 @@ endef
 
 define Package/tos3to4-early
   TITLE:=Turris OS 3.x to 4.x migration package installed early
-  DEPENDS:=+uci +switch-branch
+  DEPENDS:=+uci +switch-branch +updater-opkg-wrapper
 endef
 
 define Package/tos3to4/install
