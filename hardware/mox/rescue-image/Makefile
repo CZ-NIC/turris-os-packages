@@ -35,6 +35,7 @@ DEVICE := $(subst DEVICE_cznic-,,$(CONFIG_TARGET_PROFILE))
 
 define Package/rescue-image
 	TITLE:=rescue-image
+	DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox
 endef
 
 define Build/Prepare
