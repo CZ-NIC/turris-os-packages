@@ -43,9 +43,7 @@ define Package/tos3to4/postinst
 	ec=0
 	/usr/lib/tos3to4/switch_and_vlans || ec=$$?
 	/usr/lib/tos3to4/wifi || ec=$$?
-ifdef CONFIG_TARGET_mvebu_cortexa9_DEVICE_turris-omnia
-	/usr/lib/sfp-omnia || ec=$$?
-endif
+	$(if $(CONFIG_TARGET_mvebu_cortexa9_DEVICE_turris-omnia),/usr/lib/sfp-omnia || ec=$$?)
 	exit $$ec
 }
 endef
