@@ -21,27 +21,25 @@ PKG_LICENSE:=GPL-3.0
 PKG_LICENSE_FILE:=LICENSE
 
 include $(INCLUDE_DIR)/package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 include ../foris-controller/files/foris-controller-module.mk
 
-$(call include_mk, python3-package.mk)
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
 		+foris-controller +fosquitto
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+	VARIANT:=python3
 endef
 
 define Package/$(PKG_NAME)/description
  This is a subordinates module for foris-controller
 endef
 
-define Build/Compile
-	$(call Build/Compile/Py3Mod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
-endef
-
-#
 # Package install definition
 $(eval $(call ForisControllerModule,$(PKG_NAME)))
-
+$(eval $(call Py3Package,$(PKG_NAME)))
 $(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,$(PKG_NAME)-src))
