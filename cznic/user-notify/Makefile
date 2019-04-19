@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=user-notify
-PKG_VERSION:=59.1
+PKG_VERSION:=61
 PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_SOURCE_PROTO:=git
@@ -22,7 +22,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/user-notify
 	TITLE:=user-notify
-	DEPENDS:=+at +msmtp +ca-certificates +crypto-wrapper +create_notification
+	DEPENDS:=+at +msmtp +ca-certificates +crypto-wrapper +sentinel-certgen +create_notification
 endef
 
 define Build/Compile
