@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-urllib3
-PKG_VERSION:=1.24.1
+PKG_VERSION:=1.25
 PKG_RELEASE:=1
 
 PKG_SOURCE:=urllib3-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/u/urllib3
-PKG_HASH:=de9529817c93f27c8ccbfead6985011db27bd0ddfcdb2d86f3f663385c6a9c22
+PKG_HASH:=f03eeb431c77b88cf8747d47e94233a91d0e0fdae1cf09e0b21405a885700266
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/urllib3-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=python3-setuptools
