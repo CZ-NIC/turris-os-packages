@@ -33,12 +33,25 @@ if mode == "version" and not version then
 	mode = "branch"
 end
 
+-- Detect host board
+local product = os_release["LEDE_DEVICE_PRODUCT"]
+if product:match("[Mm]ox") then
+	board = "mox"
+elseif product:match("[Oo]mnia") then
+	board = "omnia"
+elseif product:match("[Tt]urris 1.x") then
+	board = "turris1x"
+else
+	DIE("Unsupported Turris board: " .. tostring(product))
+end
+Export('board')
+
 -- Common URI to Turris OS lists
 local base_url
 if mode == "branch" then
-	base_url = "https://repo.turris.cz/" .. branch .. "/lists/"
+	base_url = "https://repo.turris.cz/" .. branch .. "/" .. board .. "/lists/"
 elseif mode == "version" then
-	base_url = "https://repo.turris.cz/archive/" .. version .. "/lists/"
+	base_url = "https://repo.turris.cz/archive/" .. version .. "/" .. board .. "/lists/"
 else
 	DIE("Invalid updater.turris.mode specified: " .. mode)
 end
