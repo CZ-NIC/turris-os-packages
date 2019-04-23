@@ -37,7 +37,7 @@ define Package/tos3to4/postinst
 	. /lib/functions.sh
 	uci_load updater
 	config_get autorun_approvals approvals need 0
-	if [ "$$approvals" = "1" ]; then
+	if [ "$$autorun_approvals" = "1" ]; then
 		uci set "updater.approvals.need_migrate=1"
 		uci set "updater.approvals.need=0"
 		uci commit updater.approvals
