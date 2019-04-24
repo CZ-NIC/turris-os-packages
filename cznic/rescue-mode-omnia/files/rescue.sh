@@ -50,6 +50,13 @@ BIN_REBOOT="/sbin/reboot"
 BIN_MDEV="`which mdev`"
 [ -z "$BIN_MDEV" ] || BIN_MDEV="$BIN_MDEV -s"
 
+mkdir -p /etc/schnapps
+if [ -n "$(cat /proc/cmdline | grep boot=/dev/sda1)" ]; then
+	DEV="/dev/sda"
+	FS_DEV="/dev/sda1"
+fi
+echo "ROOT_DEV=$FS_DEV" > /etc/schnapps/config
+
 d() {
 	if [ $DEBUG -gt 0 ]; then
 		echo "$@"
@@ -190,7 +197,7 @@ EOF
 }
 
 check_reset_clock () {
-	D=${1:-`$BIN_DATE '+%s' -d 201606010000`}
+	D=${1:-`$BIN_DATE '+%s' -d 201904010000`}
 	CD=`$BIN_DATE '+%s'`
 
 	# reset clock to the date in param if it is before the 
