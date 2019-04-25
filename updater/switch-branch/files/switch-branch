@@ -211,9 +211,9 @@ uci commit updater.turris
 
 ## Tweak opkg distribution feeds
 if $version; then
-	sed -i "s#https://repo\.turris\.cz/.*/packages/#https://repo\.turris\.cz/archive/$branch/packages/#" /etc/opkg/distfeeds.conf
+	sed -i "s#https://repo\.turris\.cz/.*/\([^/]*\)/packages/#https://repo\.turris\.cz/archive/$branch/\1/packages/#" /etc/opkg/distfeeds.conf
 else
-	sed -i "s#https://repo\.turris\.cz/.*/packages/#https://repo\.turris\.cz/$branch/packages/#" /etc/opkg/distfeeds.conf
+	sed -i "s#https://repo\.turris\.cz/.*/\([^/]*\)/packages/#https://repo\.turris\.cz/$branch/\1/packages/#" /etc/opkg/distfeeds.conf
 fi
 
 # If we are verifying configuration than the work is done.
