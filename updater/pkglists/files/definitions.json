@@ -22,7 +22,7 @@
 	"honeypot": {
 		"title": "SSH Honeypot",
 		"description": "Trap for password-guessing robots on SSH.",
-		"visible": false
+		"visible": true
 	},
 	"luci-controls": {
 		"title": "LuCI extensions",

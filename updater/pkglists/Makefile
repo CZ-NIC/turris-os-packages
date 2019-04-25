@@ -9,26 +9,21 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pkglists
 PKG_VERSION:=1.0.6
+PKG_RELEASE:=2
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
-	TITLE:=Packages lists for the updater
-endef
-
-define Build/Compile
-	true
+  TITLE:=Packages lists for the updater
 endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/updater/
-ifeq ($(CONFIG_TARGET_mvebu_cortexa9_DEVICE_turris-omnia)$(CONFIG_TARGET_mpc85xx_p2020_nand)$(CONFIG_TARGET_mpc85xx_p2020_nor)$(CONFIG_TARGET_mpc85xx_p2020_TURRIS),)
 	$(INSTALL_DATA) ./files/definitions.json $(1)/usr/share/updater/pkglists.json
-else
-	$(INSTALL_DATA) ./files/definitions.atsha.json $(1)/usr/share/updater/pkglists.json
-endif
 endef
+
+Build/Compile:=:
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
