@@ -2,18 +2,8 @@
 cznic/foris/ @shenek
 cznic/fosquitto/ @shenek
 cznic/mozilla-iot-gateway-webapp/ @miska
-cznic/nikola/ @shenek
-cznic/oneshot/ @miska
-cznic/netmetr/ @shenek @mprudek
-cznic/ssbackups/ @shenek @mmladek
-cznic/turris-diagnostics/ @Cynerd
-cznic/turris-translations/ @shenek
-cznic/server-uplink/ @shenek
 cznic/turrishw/ @shenek
-cznic/switch-branch/ @Cynerd
-cznic/turris-webapps/ @miska
 cznic/turris-netboot/ @miska
-cznic/haas-proxy/ @miska
 
 #  Hardware
 hardware/ @miska
@@ -39,6 +29,7 @@ net/resolver-conf/ @ja-pa
 net/resolver-debug/ @ja-pa
 net/lighttpd/ @miska
 net/lighttpd-https-cert/ @miska
+net/netmetr/ @shenek @mprudek
 net/nextcloud/ @miska
 net/dnssec-rootkey/ @ja-pa @vcunat
 net/lighttpd/ @miska
@@ -53,5 +44,11 @@ cznic/pakon-lists/ @mmatejek
 # Updater
 updater/ @Cynerd
 
+# Data collection
+collect/ @miska
+
 # Utils
 utils/ @miska @ja-pa @Cynerd
+
+# Web related packages
+web/ @miska @shenek @Cynerd

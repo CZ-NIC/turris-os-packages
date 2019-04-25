@@ -2,18 +2,8 @@
 cznic/foris/ @shenek
 cznic/fosquitto/ @shenek
 cznic/mozilla-iot-gateway-webapp/ @mhrusecky
-cznic/nikola/ @shenek
-cznic/oneshot/ @mhrusecky
-cznic/netmetr/ @shenek @mprudek
-cznic/ssbackups/ @shenek @mmladek
-cznic/turris-diagnostics/ @kkoci
-cznic/turris-translations/ @shenek
-cznic/server-uplink/ @shenek
 cznic/turrishw/ @shenek
-cznic/switch-branch/ @kkoci
 cznic/turris-webapps/ @mhrusecky
-cznic/turris-netboot/ @mhrusecky
-cznic/haas-proxy/ @mhrusecky
 
 #  Hardware
 hardware/ @mhrusecky
@@ -43,6 +33,7 @@ net/nextcloud/ @mhrusecky
 net/dnssec-rootkey/ @jpavlinec @vcunat
 net/lighttpd/ @mhrusecky
 net/nextcloud/ @mhrusecky
+net/nextcloud/ @mhrusecky
 net/rmbt/ @mprudek
 
 # Pakon related stuff
@@ -53,5 +44,11 @@ cznic/pakon-lists/ @mmatejek
 # Updater
 updater/ @kkoci
 
+# Data collection
+collect/ @mhrusecky
+
 # Utils
 utils/ @mhrusecky @jpavlinec @kkoci
+
+# Web related packages
+web/ @mhrusecky @shenek @kkoci
