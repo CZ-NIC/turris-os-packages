@@ -29,10 +29,10 @@ define Package/$(PKG_NAME)/postinst
 [ -n "$$IPKG_INSTROOT" ] || {
 	# TODO: If ever anything gets removed from this list, use -r, not delete it manually.
 	/usr/sbin/cert-backup \
-		/etc/ssl/www_turris_cz_ca.pem \
 		/etc/ssl/turris.pem \
 		/usr/bin/get-api-crl \
 		/etc/ssl/ucollect-server.pem \
+		-r /etc/ssl/www_turris_cz_ca.pem \
 		-r /etc/ssl/startcom.pem \
 		-r /etc/ssl/api.turris.pem
 	get-api-crl
@@ -54,7 +54,6 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/ssl/
 	# TODO: If anything is modified here, it needs to be updated in the postinst too
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/emergency-ca/ca.crt $(1)/etc/ssl/turris.pem
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/letsencrypt.pem $(1)/etc/ssl/www_turris_cz_ca.pem
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/ucollect-server.pem $(1)/etc/ssl/
 	ln -s /tmp/crl.pem $(1)/etc/ssl/crl.pem
 
