@@ -1,7 +1,0 @@
-#!/bin/sh
-
-TEMP=`sensors armada_thermal-virtual-0`
-
-CPU_TEMP=`echo "$TEMP" | sed -nr 's/^temp1:[ \t]+[+-]{0,1}([0-9]+).*$/\1/p'` 
-
-printf "CPU:\t%s\n" $CPU_TEMP
