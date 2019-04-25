@@ -9,7 +9,8 @@ get_cert() {
 }
 
 start_service() {
-    [ ! -f /etc/sentinel/router.crt ] && get_cert
+    get_cert
+
     procd_open_instance
     procd_set_param command /usr/bin/sentinel-proxy
     procd_set_param respawn ${respawn_threshold:-600} ${respawn_timeout:-5} ${respawn_retry:-5}
