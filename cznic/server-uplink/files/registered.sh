@@ -34,12 +34,10 @@ LANG="$2"
 LANG=${LANG:-en}
 
 TIMEOUT=120
-CA_FILE=/etc/ssl/www_turris_cz_ca.pem
 
 
 CODE=$(cat /usr/share/server-uplink/registration_code)
 URL="https://project.turris.cz/api/registration-lookup.txt"
 curl -G -s -S -L -H "Accept: plain/text" -H "Accept-Language: $LANG" \
 	--data-urlencode "registration_code=${CODE}" --data-urlencode "email=${EMAIL}" \
-	--cacert "$CA_FILE" \
 	--cert-status -m "$TIMEOUT" "$URL" -w "\ncode: %{http_code}"
