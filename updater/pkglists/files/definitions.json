@@ -64,11 +64,6 @@
 		"description": "Services allowing to connect a printer to the router and use it for remote printing.",
 		"visible": true
 	},
-	"ssbackup": {
-		"title": "Cloud Backups",
-		"description": "Service for storing configuration backups on remote servers (EXPERIMENTAL).",
-		"visible": false
-	},
 	"tor": {
 		"title": "Tor",
 		"description": "Service to increase anonymity on the Internet.",
