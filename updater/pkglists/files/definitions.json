@@ -7,7 +7,7 @@
 	"datacollect": {
 		"title": "Data Collection",
 		"description": "Software for participation in data collection and dynamic distributed firewall.",
-		"visible": false
+		"visible": true
 	},
 	"dev-detect": {
 		"title": "Device detection",
