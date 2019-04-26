@@ -29,3 +29,17 @@ Index: u-boot-omnia-2019-04/include/configs/turris_omnia.h
  	BOOTENV
  
  #endif /* CONFIG_SPL_BUILD */
+Index: u-boot-omnia-2019-04/cmd/pxe.c
+===================================================================
+--- u-boot-omnia-2019-04.orig/cmd/pxe.c
++++ u-boot-omnia-2019-04/cmd/pxe.c
+@@ -22,6 +22,9 @@
+ 
+ const char *pxe_default_paths[] = {
+ #ifdef CONFIG_SYS_SOC
++#ifdef CONFIG_SYS_BOARD
++	"default-" CONFIG_SYS_ARCH "-" CONFIG_SYS_SOC "-" CONFIG_SYS_BOARD,
++#endif
+ 	"default-" CONFIG_SYS_ARCH "-" CONFIG_SYS_SOC,
+ #endif
+ 	"default-" CONFIG_SYS_ARCH,
