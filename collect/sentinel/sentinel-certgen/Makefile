@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-certgen
-PKG_VERSION:=4.0
+PKG_VERSION:=4.2
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/certgen.git
@@ -27,7 +27,7 @@ define Package/sentinel-certgen
 	CATEGORY:=Network
 	SUBMENU:=Client application of our LE-like automated certification authority.
 	TITLE:=sentinel-certgen
-	DEPENDS:=+python3-light +python3-six +python3-cryptography +crypto-wrapper
+	DEPENDS:=+python3-light +python3-six +python3-requests +python3-cryptography +crypto-wrapper
 endef
 
 define Package/$(PKG_NAME)/description
