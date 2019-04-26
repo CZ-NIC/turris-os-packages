@@ -19,11 +19,14 @@ PKG_VERSION:=$(PYTHON_VERSION).$(PYTHON_VERSION_MICRO)
 
 PKG_SOURCE:=Python-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://www.python.org/ftp/python/$(PKG_VERSION)
-PKG_MD5SUM:=82b143ebbf4514d7e05876bed7a6b1f5
-PKG_HASH:=b0c5f904f685e32d9232f7bdcbece9819a892929063b6e385414ad2dd6a23622
+PKG_MD5SUM:=d83fe8ce51b1bb48bbcf0550fd265b9a75cdfdfa93f916f9e700aef8444bf1bb
+
 
 PKG_LICENSE:=PSF
 PKG_LICENSE_FILES:=LICENSE Modules/_ctypes/libffi_msvc/LICENSE Modules/_ctypes/darwin/LICENSE Modules/_ctypes/libffi/LICENSE Modules/_ctypes/libffi_osx/LICENSE Tools/pybench/LICENSE
+PKG_CPE_ID:=cpe:/a:python:python
+
+PKG_MAINTAINER:=Alexandru Ardelean <ardeleanalex@gmail.com>, Jeffery To <jeffery.to@gmail.com>
 
 # This file provides the necsessary host build variables
 include ./files/python3-host.mk
@@ -50,7 +53,6 @@ define Package/python3/Default
   CATEGORY:=Languages
   TITLE:=Python $(PYTHON_VERSION) programming language
   URL:=https://www.python.org/
-  MAINTAINER:=Alexandru Ardelean <ardeleanalex@gmail.com>
 endef
 
 define Package/python3/Default/description
@@ -76,7 +78,7 @@ endef
 define Package/python3-light
 $(call Package/python3/Default)
   TITLE:=Python $(PYTHON_VERSION) light installation
-  DEPENDS:=+python3-base +libffi +libbz2
+  DEPENDS:=+python3-base +libffi +libbz2  +libuuid +libssl +libopenssl +liblzma +libsqlite3 +libcrypto +libgdbm +libpanel +libncurses +libdb4 +libdb-4.7  +libdb-4 +libdb47
 endef
 
 define Package/python3-light/description
@@ -255,7 +257,7 @@ define Host/Install
 
 	$(INSTALL_DIR) $(HOST_PYTHON3_DIR)/bin/
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/Parser/pgen $(HOST_PYTHON3_DIR)/bin/pgen3
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/Programs/_freeze_importlib $(HOST_PYTHON3_DIR)/bin/_freeze_importlib
+	#$(INSTALL_BIN) $(HOST_BUILD_DIR)/Programs/_freeze_importlib $(HOST_PYTHON3_DIR)/bin/_freeze_importlib
 endef
 
 $(eval $(call HostBuild))
