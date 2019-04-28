@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tos3to4
 PKG_VERSION:=1.0.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -28,8 +28,8 @@ endif
 
 define Package/tos3to4/install
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
-	$(INSTALL_BIN) ./files/migrate3to4.lua $(1)/etc/updater/conf.d/migrate3to4.lua
 	$(INSTALL_BIN) ./files/os-release-$(BOARD) $(1)/etc/os-release
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/migrate3to4.lua $(1)/etc/updater/conf.d/migrate3to4.lua
 endef
 
 define Package/tos3to4/postinst
@@ -46,6 +46,8 @@ define Package/tos3to4/postinst
 }
 endef
 
-Build/Compile:=:
+define Build/Compile
+	m4 -D__BOARD__=$(BOARD) ./files/migrate3to4.lua > $(PKG_INSTALL_DIR)/migrate3to4.lua
+endef
 
 $(eval $(call BuildPackage,tos3to4))
