@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tos3to4
 PKG_VERSION:=2.0.6
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
@@ -43,7 +43,7 @@ define Package/tos3to4/postinst
 	ec=0
 	/usr/lib/tos3to4/switch_and_vlans || ec=$$?
 	/usr/lib/tos3to4/wifi || ec=$$?
-	$(if $(CONFIG_TARGET_mvebu_cortexa9_DEVICE_turris-omnia),/usr/lib/sfp-omnia || ec=$$?)
+	$(if $(CONFIG_TARGET_mvebu_cortexa9_DEVICE_turris-omnia),/usr/lib/tos3to4/sfp-omnia || ec=$$?)
 	exit $$ec
 }
 endef
