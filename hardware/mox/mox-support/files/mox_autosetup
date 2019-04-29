@@ -4,55 +4,55 @@ modules="`ls -1 /sys/bus/moxtet/devices`"
 # First setup
 if [ \! -f /etc/mox_modules ]; then
 
-# Drop all network configuration
-uci delete network.lan
-uci delete network.wan
+	# Drop all network configuration
+	uci delete network.lan
+	uci delete network.wan
 
-lans="$(echo $(cd /sys/class/net/; ls -d lan* 2> /dev/null))"
-wan_if=""
-lan_if=""
+	lans="$(echo $(cd /sys/class/net/; ls -d lan* 2> /dev/null))"
+	wan_if=""
+	lan_if=""
 
-# If we have SFP, it is definitely WAN
-if expr "$modules" : '.*sfp.*' > /dev/null; then
-	wan_if=eth1
-	lan_if="eth0 $lans"
+	# If we have SFP, it is definitely WAN
+	if expr "$modules" : '.*sfp.*' > /dev/null; then
+		wan_if=eth1
+		lan_if="eth0 $lans"
 
-# If we have switch, then CPU port is obviously WAN
-elif expr "$modules" : '.*topaz.*' > /dev/null || expr "$modules" : '.*peridot.*' > /dev/null; then
-	wan_if=eth0
-	lan_if="$lans"
+	# If we have switch, then CPU port is obviously WAN
+	elif expr "$modules" : '.*topaz.*' > /dev/null || expr "$modules" : '.*peridot.*' > /dev/null; then
+		wan_if=eth0
+		lan_if="$lans"
 
-# If we have just one port, it has to be LAN
-else
-	lan_if="eth0"
-fi
+	# If we have just one port, it has to be LAN
+	else
+		lan_if="eth0"
+	fi
 
-uci set network.wan=interface
-uci set network.wan.ifname=$wan_if
-uci set network.wan.proto=none
+	uci set network.wan=interface
+	uci set network.wan.ifname=$wan_if
+	uci set network.wan.proto=none
 
-uci set network.lan=interface
-uci set network.lan.type=bridge
-uci set network.lan.ifname="$lan_if"
-uci set network.lan.proto=none
-uci commit
-/etc/init.d/network restart
+	uci set network.lan=interface
+	uci set network.lan.type=bridge
+	uci set network.lan.ifname="$lan_if"
+	uci set network.lan.proto=none
+	uci commit
+	/etc/init.d/network restart
 
-# Try dhcpp on LAN after interfaces settle a little bit
-sleep 5
-if udhcpc -fqnR -i br-lan; then
-	uci set network.lan.proto=dhcp
-	uci set network.lan._turris_mode=unmanaged
-else
-	uci set network.lan.proto=static
-	uci set network.lan.ipaddr=192.168.1.1
-	uci set network.lan.netmask=255.255.255.0
-	uci set network.lan._turris_mode=managed
-	uci set network.lan.ip6assign='60'
-fi
-uci commit
-/etc/init.d/network restart
-echo "$modules" > /etc/mox_modules
+	# Try dhcpp on LAN after interfaces settle a little bit
+	sleep 5
+	if udhcpc -fqnR -i br-lan; then
+		uci set network.lan.proto=dhcp
+		uci set network.lan._turris_mode=unmanaged
+	else
+		uci set network.lan.proto=static
+		uci set network.lan.ipaddr=192.168.1.1
+		uci set network.lan.netmask=255.255.255.0
+		uci set network.lan._turris_mode=managed
+		uci set network.lan.ip6assign='60'
+	fi
+	uci commit
+	/etc/init.d/network restart
+	echo "$modules" > /etc/mox_modules
 
 # Modules changes
 elif [ "`cat /etc/mox_modules`" \!= "$modules" ]; then
@@ -70,4 +70,5 @@ elif [ "`cat /etc/mox_modules`" \!= "$modules" ]; then
 	fi
 	uci commit
 	/etc/init.d/network restart
+	echo "$modules" > /etc/mox_modules
 fi
