@@ -47,7 +47,8 @@ define Package/tos3to4/postinst
 endef
 
 define Build/Compile
-	m4 -D__BOARD__=$(BOARD) ./files/migrate3to4.lua > $(PKG_INSTALL_DIR)/migrate3to4.lua
+	mkdir -p "$(PKG_INSTALL_DIR)"
+	m4 -D__BOARD__="$(BOARD)" ./files/migrate3to4.lua > "$(PKG_INSTALL_DIR)/migrate3to4.lua"
 endef
 
 $(eval $(call BuildPackage,tos3to4))
