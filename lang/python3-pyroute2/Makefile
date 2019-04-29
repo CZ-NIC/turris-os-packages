@@ -13,15 +13,14 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=pyroute2-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/p/pyroute2
-PKG_HASH:=ad679a91d453fe8426c4076d0da3a67265e5ccfe641879d75c9bc7660d075dfa
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_MD5SUM:=ad679a91d453fe8426c4076d0da3a67265e5ccfe641879d75c9bc7660d075dfa
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/pyroute2-$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
-include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
-
-PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
+$(call include_mk, python3-package.mk)
 
 define Package/python3-pyroute2
   SUBMENU:=Python
@@ -30,13 +29,8 @@ define Package/python3-pyroute2
   TITLE:=Python netlink library
   URL:=http://github.com/svinota/pyroute2
   DEPENDS:= \
-          +python3-light \
-          +python3-distutils \
-          +python3-logging \
-          +python3-multiprocessing \
-          +python3-sqlite3 \
-          +python3-ctypes
-  VARIANT:=python3
+          +python3 \
+          +python3-setuptools
 endef
 
 define Package/python3-pyroute2/description
@@ -45,8 +39,9 @@ define Package/python3-pyroute2/description
   but now it supports many netlink protocols.
 endef
 
-PYTHON3_PKG_SETUP_ARGS:=
+define Build/Compile
+	$(call Build/Compile/Py3Mod,, install --root="$(PKG_INSTALL_DIR)" --prefix="/usr")
+endef
 
 $(eval $(call Py3Package,$(PKG_NAME)))
 $(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)-src))
