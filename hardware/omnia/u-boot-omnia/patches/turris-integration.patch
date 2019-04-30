@@ -15,20 +15,8 @@ Index: u-boot-omnia-2019-04/configs/turris_omnia_defconfig
 +CONFIG_CMD_AES=y
 +CONFIG_CMD_HASH=y
 +CONFIG_CMD_SHA1SUM=y
-+CONFIG_BOOTCOMMAND="run turris_boot"
-Index: u-boot-omnia-2019-04/include/configs/turris_omnia.h
-===================================================================
---- u-boot-omnia-2019-04.orig/include/configs/turris_omnia.h
-+++ u-boot-omnia-2019-04/include/configs/turris_omnia.h
-@@ -146,6 +146,8 @@
- 	LOAD_ADDRESS_ENV_SETTINGS \
- 	"fdtfile=" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" \
- 	"console=ttyS0,115200\0" \
-+	"turris_boot=i2c dev 1; i2c read 0x2a 0x9 1 0x00FFFFF0; setexpr.b rescue *0x00FFFFF0; if test $rescue -ge 1; then echo rescueboot; run rescue_boot; else echo distro_boot; run distro_bootcmd; fi\0" \
-+	"rescue_boot=i2c mw 0x2a.1 0x3 0x1c 1; i2c mw 0x2a.1 0x4 0x1c 1; mw.l 0x01000000 0x00ff000c; i2c write 0x01000000 0x2a.1 0x5 4 -s; setenv bootargs \"$bootargs omniarescue=$rescue\"; sf probe; sf read 0x1000000 0x100000 0x700000; bootm 0x1000000; bootz 0x1000000\0" \
- 	BOOTENV
- 
- #endif /* CONFIG_SPL_BUILD */
++CONFIG_TURRIS_OMNIA_RSTBTN_OVERWRITE_BOOTCMD=y
++CONFIG_TURRIS_OMNIA_RSTBTN_BOOTCMD_VALUE="i2c dev 2; i2c mw 0x2a.1 0x3 0x1c 1; i2c mw 0x2a.1 0x4 0x1c 1; mw.l 0x01000000 0x00ff000c; i2c write 0x01000000 0x2a.1 0x5 4 -s; setenv bootargs \\\"$bootargs omniarescue=$omnia_reset\\\"; sf probe; sf read 0x1000000 0x100000 0x700000; bootm 0x1000000; bootz 0x1000000"
 Index: u-boot-omnia-2019-04/cmd/pxe.c
 ===================================================================
 --- u-boot-omnia-2019-04.orig/cmd/pxe.c
