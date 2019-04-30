@@ -32,6 +32,8 @@ MM_BLACKHOLE=""
 MMX_UNREACHABLE=""
 MM_UNREACHABLE=""
 
+# return true(=0) if has any mwan3 interface enabled
+# otherwise return false
 mwan3_rtmon_ipv4()
 {
 	local tid=1
@@ -61,6 +63,8 @@ mwan3_rtmon_ipv4()
 	return $ret
 }
 
+# return true(=0) if has any mwan3 interface enabled
+# otherwise return false
 mwan3_rtmon_ipv6()
 {
 	local tid=1
@@ -163,9 +167,11 @@ mwan3_init()
 
 mwan3_lock() {
 	lock /var/run/mwan3.lock
+#	$LOG debug "$1 $2 (lock)"
 }
 
 mwan3_unlock() {
+#	$LOG debug "$1 $2 (unlock)"
 	lock -u /var/run/mwan3.lock
 }
 
@@ -871,6 +877,10 @@ mwan3_set_user_iptables_rule()
 	config_get use_policy $1 use_policy
 	config_get family $1 family any
 
+	config_get rule_logging $1 logging 0
+	config_get global_logging globals logging 0
+	config_get loglevel globals loglevel notice
+
 	if [ "$1" != $(echo "$1" | cut -c1-15) ]; then
 		$LOG warn "Rule $1 exceeds max of 15 chars. Not setting rule" && return 0
 	fi
@@ -945,6 +955,17 @@ mwan3_set_user_iptables_rule()
 			for IPT in "$IPT4" "$IPT6"; do
 				case $proto in
 					tcp|udp)
+					[ "$global_logging" = "1" ] && [ "$rule_logging" = "1" ] && {
+						$IPT -A mwan3_rules \
+							-p $proto \
+							-s $src_ip \
+							-d $dest_ip $ipset \
+							-m multiport --sports $src_port \
+							-m multiport --dports $dest_port \
+							-m mark --mark 0/$MMX_MASK \
+							-m comment --comment "$1" \
+							-j LOG --log-level "$loglevel" --log-prefix "MWAN3($1)" &> /dev/null
+					}
 					$IPT -A mwan3_rules \
 						-p $proto \
 						-s $src_ip \
@@ -956,6 +977,15 @@ mwan3_set_user_iptables_rule()
 						-j $policy &> /dev/null
 					;;
 					*)
+					[ "$global_logging" = "1" ] && [ "$rule_logging" = "1" ] && {
+						$IPT -A mwan3_rules \
+							-p $proto \
+							-s $src_ip \
+							-d $dest_ip $ipset \
+							-m mark --mark 0/$MMX_MASK \
+							-m comment --comment "$1" \
+							-j LOG --log-level "$loglevel" --log-prefix "MWAN3($1)" &> /dev/null
+					}
 					$IPT -A mwan3_rules \
 						-p $proto \
 						-s $src_ip \
@@ -971,6 +1001,17 @@ mwan3_set_user_iptables_rule()
 
 			case $proto in
 				tcp|udp)
+				[ "$global_logging" = "1" ] && [ "$rule_logging" = "1" ] && {
+					$IPT -A mwan3_rules \
+						-p $proto \
+						-s $src_ip \
+						-d $dest_ip $ipset \
+						-m multiport --sports $src_port \
+						-m multiport --dports $dest_port \
+						-m mark --mark 0/$MMX_MASK \
+						-m comment --comment "$1" \
+						-j LOG --log-level "$loglevel" --log-prefix "MWAN3($1)" &> /dev/null
+				}
 				$IPT4 -A mwan3_rules \
 					-p $proto \
 					-s $src_ip \
@@ -982,6 +1023,15 @@ mwan3_set_user_iptables_rule()
 					-j $policy &> /dev/null
 				;;
 				*)
+				[ "$global_logging" = "1" ] && [ "$rule_logging" = "1" ] && {
+					$IPT4 -A mwan3_rules \
+						-p $proto \
+						-s $src_ip \
+						-d $dest_ip $ipset \
+						-m mark --mark 0/$MMX_MASK \
+						-m comment --comment "$1" \
+						-j LOG --log-level "$loglevel" --log-prefix "MWAN3($1)" &> /dev/null
+				}
 				$IPT4 -A mwan3_rules \
 					-p $proto \
 					-s $src_ip \
@@ -996,6 +1046,17 @@ mwan3_set_user_iptables_rule()
 
 			case $proto in
 				tcp|udp)
+				[ "$global_logging" = "1" ] && [ "$rule_logging" = "1" ] && {
+					$IPT6 -A mwan3_rules \
+						-p $proto \
+						-s $src_ip \
+						-d $dest_ip $ipset \
+						-m multiport --sports $src_port \
+						-m multiport --dports $dest_port \
+						-m mark --mark 0/$MMX_MASK \
+						-m comment --comment "$1" \
+						-j LOG --log-level "$loglevel" --log-prefix "MWAN3($1)" &> /dev/null
+				}
 				$IPT6 -A mwan3_rules \
 					-p $proto \
 					-s $src_ip \
@@ -1007,6 +1068,15 @@ mwan3_set_user_iptables_rule()
 					-j $policy &> /dev/null
 				;;
 				*)
+				[ "$global_logging" = "1" ] && [ "$rule_logging" = "1" ] && {
+					$IPT6 -A mwan3_rules \
+						-p $proto \
+						-s $src_ip \
+						-d $dest_ip $ipset \
+						-m mark --mark 0/$MMX_MASK \
+						-m comment --comment "$1" \
+						-j LOG --log-level  "$loglevel" --log-prefix "MWAN3($1)" &> /dev/null
+				}
 				$IPT6 -A mwan3_rules \
 					-p $proto \
 					-s $src_ip \
@@ -1046,7 +1116,7 @@ mwan3_set_iface_hotplug_state() {
 mwan3_get_iface_hotplug_state() {
 	local iface=$1
 
-	cat $MWAN3_STATUS_DIR/iface_state/$iface 2>/dev/null || echo "unknown"
+	cat $MWAN3_STATUS_DIR/iface_state/$iface 2>/dev/null || echo "offline"
 }
 
 mwan3_report_iface_status()
@@ -1069,7 +1139,7 @@ mwan3_report_iface_status()
 	fi
 
 	if [ -z "$id" -o -z "$device" ]; then
-		result="unknown"
+		result="offline"
 	elif [ -n "$($IP rule | awk '$1 == "'$(($id+1000)):'"')" ] && \
 		[ -n "$($IP rule | awk '$1 == "'$(($id+2000)):'"')" ] && \
 		[ -n "$($IPT -S mwan3_iface_in_$1 2> /dev/null)" ] && \
