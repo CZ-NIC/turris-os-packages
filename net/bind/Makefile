@@ -23,6 +23,8 @@ PKG_SOURCE_URL:= \
 	https://ftp.isc.org/isc/bind9/$(PKG_VERSION)
 PKG_MD5SUM:=e27a5aee2b0c1a925001dda71eea7e19b0cce54a7b18a61912cde5ff0afbc7c5
 
+PKG_BUILD_DEPENDS:=python-ply/host
+
 PKG_FIXUP:=autoreconf
 PKG_REMOVE_FILES:=aclocal.m4 libtool.m4
 
