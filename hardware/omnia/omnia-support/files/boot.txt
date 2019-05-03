@@ -1,7 +1,4 @@
-setenv bootargs 'earlyprintk console=ttyS0,115200 rootfstype=btrfs rootwait root=b301 rootflags=subvol=@,commit=5 rw'
+setenv bootargs 'earlyprintk console=ttyS0,115200 rootfstype=btrfs rootwait root=/dev/mmcblk0p1 rootflags=subvol=@,commit=5 rw'
 setenv select_wan 'i2c bus 0; i2c mw 0x70 0x0f 0x0f; i2c read 0x71 0x01 0x00FFFFF1; setexpr.b sfppin *0x00FFFFF1 \\& 0x10; if test $sfppin -gt 0; then setenv wan phy; else setenv wan sfp; fi'
-setenv turris_boot 'i2c dev 1; i2c read 0x2a 0x9 1 0x00FFFFF0; setexpr.b rescue *0x00FFFFF0; if test $rescue -ge 1; then echo BOOT RESCUE; run rescueboot; else echo BOOT eMMC FS; run mmcboot; fi'
-setenv boot_cmd 'select_wan; turris_boot;
-setenv mmcboot 'setenv bootargs "$bootargs cfg80211.freg=$regdomain"; btrload mmc 0 0x01000000 boot/zImage @; btrload mmc 0 0x02000000 boot/armada-385-turris-omnia-$wan.dtb @; bootz 0x01000000 - 0x02000000'
-setenv rescueboot 'i2c mw 0x2a.1 0x3 0x1c 1; i2c mw 0x2a.1 0x4 0x1c 1; mw.l 0x01000000 0x00ff000c; i2c write 0x01000000 0x2a.1 0x5 4 -s; setenv bootargs "$bootargs omniarescue=$rescue"; sf probe; sf read 0x1000000 0x100000 0x700000; bootz 0x1000000'
-run mmc_boot
+setenv mmcboot 'load mmc 0 ${kernel_addr_r} /@/boot/zImage @; load mmc 0 ${fdt_addr_r} /@/boot/armada-385-turris-omnia-$wan.dtb @; bootz ${kernel_addr_r} - ${fdt_addr_r}'
+setenv boot_cmd 'select_wan; mmc_boot;

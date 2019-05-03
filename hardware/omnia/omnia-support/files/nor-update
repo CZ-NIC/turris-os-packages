@@ -1,0 +1,16 @@
+#!/bin/sh
+DEVEL=""
+while [ -n "$1" ]; do
+    [ "x$1" \!= "x-d" ] || DEVEL="y"
+    shift
+done
+if [ -n "$DEVEL" ]; then
+    [ -f /usr/share/omnia/uboot-devel ] && \
+    mtd verify /usr/share/omnia/uboot-devel /dev/mtd0 || \
+    mtd -e /dev/mtd0 write /usr/share/omnia/uboot-devel /dev/mtd0
+    wget -O /tmp/omnia-rescue https://repo.turris.cz/omnia-nightly/nor_fw/omnia-initramfs-zimage && \
+    mtd verify /tmp/omnia-rescue /dev/mtd1 || \
+    mtd -e /dev/mtd1 write /tmp/omnia-rescue /dev/mtd1
+else
+    echo "No stable images yet!"
+fi
