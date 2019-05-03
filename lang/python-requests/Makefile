@@ -34,7 +34,12 @@ define Package/python-requests
   CATEGORY:=Languages
   TITLE:=Python HTTP for Humans.
   URL:=http://python-requests.org
-  DEPENDS:=+python
+  DEPENDS:= \
+	  +python \
+	  +python-chardet \
+	  +python-idna \
+	  +python-urllib3 \
+	  +python-certifi
 endef
 
 define Package/python-requests/description
