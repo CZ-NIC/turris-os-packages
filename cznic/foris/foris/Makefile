@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=99.7.5
-PKG_RELEASE:=1
+PKG_VERSION:=99.10
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
@@ -132,7 +132,7 @@ define Package/foris-common/postinst
 set -x
 [ -n "$$IPKG_INSTROOT" ] || {
 /etc/init.d/lighttpd enable
-/etc/init.d/lighttpd restart
+/usr/bin/maintain-lighttpd-restart
 }
 endef
 
@@ -147,7 +147,7 @@ define Package/foris-config/postinst
 #!/bin/sh
 set -x
 [ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/lighttpd restart
+/usr/bin/maintain-lighttpd-restart
 }
 endef
 
@@ -155,7 +155,7 @@ define Package/foris-config/postrm
 #!/bin/sh
 set -x
 [ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/lighttpd restart
+/usr/bin/maintain-lighttpd-restart
 }
 endef
 

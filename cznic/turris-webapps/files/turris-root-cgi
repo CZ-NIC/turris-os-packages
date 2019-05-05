@@ -73,6 +73,7 @@ if [ "$WIZARD_FINISHED" = "1" ]; then
 	}
 	.name {
 		height: 160px;
+		width: 290px;
 		display: table-cell;
 		vertical-align: middle;
 	}
@@ -97,10 +98,11 @@ if [ "$WIZARD_FINISHED" = "1" ]; then
 	<body>
 	<script>
 	var timer = $DELAY;
+	var timer_id;
 
 	window.onload = function () {
 		document.querySelector('#timeout').textContent = timer;
-		setInterval(function () {
+		timer_id = setInterval(function () {
 			document.querySelector('#timeout').textContent = timer;
 			timer = Math.max(0, timer - 1);
 			if(timer == 0) {
@@ -110,7 +112,7 @@ if [ "$WIZARD_FINISHED" = "1" ]; then
 	};
 
 	function redirect_to(url) {
-		timer=999;
+		clearInterval(timer_id);
 		location.replace(url);
 	}
 	</script>

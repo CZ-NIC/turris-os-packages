@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2015 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-requests
-PKG_VERSION:=2.7.0
+PKG_VERSION:=2.21.0
 PKG_RELEASE:=2
+
+PKG_MAINTAINER:=Josef Schlehofer <josef.schlehofer@nic.cz>, Alexandru Ardelean <ardeleanalex@gmail.com>
+PKG_LICENSE:=Apache-2.0
+PKG_LICENSE_FILES:=LICENSE
+PKG_CPE_ID:=cpe:/a:python-requests:requests
 
 PKG_SOURCE:=requests-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/r/requests/
-PKG_MD5SUM:=29b173fd5fa572ec0764d1fd7b527260
+PKG_HASH:=502a824f31acdacb3a35b6690b5fbf0bc41d63a24a45c4004352b0242707598e
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/requests3-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=python3-setuptools
@@ -27,13 +32,18 @@ define Package/python3-requests
   SUBMENU:=Python
   SECTION:=lang
   CATEGORY:=Languages
-  TITLE:=Python HTTP for Humans.
+  TITLE:=Python HTTP for Humans
   URL:=http://python-requests.org
-  DEPENDS:=+python3
+  DEPENDS:= \
+	  +python3 \
+	  +python3-chardet \
+	  +python3-idna \
+	  +python3-urllib3 \
+	  +python3-certifi
 endef
 
 define Package/python3-requests/description
-  Python HTTP for Humans.
+  Requests is the only Non-GMO HTTP library for Python, safe for human consumption
 endef
 
 define Build/Compile

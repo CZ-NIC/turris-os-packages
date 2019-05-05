@@ -21,14 +21,12 @@
 set -e
 
 TIMEOUT=120
-CA_FILE=/etc/ssl/www_turris_cz_ca.pem  # let's encrypt inside
 URL='https://haas.nic.cz/api/turris/register'
 
 if [ -z "$(uci -q get haas.settings.token 2>/dev/null)" ]; then
 	CODE=$(cat /usr/share/server-uplink/registration_code)
 	TOKEN=$(curl -sS -H "Content-Type: application/json" \
 		-X POST -d "{\"registration_code\": \"${CODE}\"}" \
-		--cacert "$CA_FILE" \
 		-m "${TIMEOUT}" \
 		"${URL}" | sed -n -e 's/^.*"token":[[:blank:]]*"\([^"]*\)".*/\1/p')
 

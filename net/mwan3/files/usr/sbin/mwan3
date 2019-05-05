@@ -61,20 +61,19 @@ ifup()
 		echo "Too many arguments. Usage: mwan3 ifup <interface>" && exit 0
 	fi
 
-	config_get_bool enabled globals 'enabled' 0
-	[ ${enabled} -gt 0 ] || {
-		echo "Warning: mwan3 is global disabled. Usage: /etc/init.d/mwan3 start"
-		exit 0
-	}
+	#config_get_bool enabled globals 'enabled' 0
+	#[ ${enabled} -gt 0 ] || {
+	#	echo "Warning: mwan3 is global disabled. Usage: /etc/init.d/mwan3 start"
+	#	exit 0
+	#}
 
 	status=$(ubus -S call network.interface.$1 status)
 	[ -n "$status" ] && {
 		json_load $status
-		json_get_vars up l3_device 
+		json_get_vars up l3_device
 	}
 
 	config_get enabled "$1" enabled 0
-
 
 	if [ "$up" = "1" ] \
 		&& [ -n "$l3_device" ] \
@@ -132,7 +131,7 @@ status()
 
 start()
 {
-	local enabled src_ip local_source
+	local enabled
 
 	uci_toggle_state mwan3 globals enabled "1"
 
@@ -159,7 +158,9 @@ start()
 
 stop()
 {
-	local ipset route rule table IP IPT pid src_ip
+	local ipset route rule table IP IPT pid
+
+	mwan3_lock "command" "mwan3"
 
 	for pid in $(pgrep -f "mwan3rtmon"); do
 		kill -TERM "$pid" > /dev/null 2>&1
@@ -208,6 +209,8 @@ stop()
 	for ipset in $($IPS -n list | grep mwan3 | grep -E '_v4|_v6'); do
 		$IPS -q destroy $ipset
 	done
+
+	mwan3_unlock "command" "mwan3"
 
 	mwan3_lock_clean
 	rm -rf $MWAN3_STATUS_DIR $MWAN3TRACK_STATUS_DIR
