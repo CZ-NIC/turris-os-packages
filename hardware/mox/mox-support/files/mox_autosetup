@@ -11,6 +11,7 @@ if [ \! -f /etc/mox_modules ]; then
 	lans="$(echo $(cd /sys/class/net/; ls -d lan* 2> /dev/null))"
 	wan_if=""
 	lan_if=""
+	lan_mac="$(cat /sys/class/net/eth1/address)"
 
 	# If we have SFP, it is definitely WAN
 	if expr "$modules" : '.*sfp.*' > /dev/null; then
@@ -25,6 +26,7 @@ if [ \! -f /etc/mox_modules ]; then
 	# If we have just one port, it has to be LAN
 	else
 		lan_if="eth0"
+		lan_mac="$(cat /sys/class/net/eth0/address)"
 	fi
 
 	uci set network.wan=interface
@@ -33,6 +35,7 @@ if [ \! -f /etc/mox_modules ]; then
 
 	uci set network.lan=interface
 	uci set network.lan.type=bridge
+	uci set network.lan.macaddr="$lan_mac"
 	uci set network.lan.ifname="$lan_if"
 	uci set network.lan.proto=none
 	uci commit
