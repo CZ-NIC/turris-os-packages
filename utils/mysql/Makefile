@@ -10,7 +10,7 @@ include $(INCLUDE_DIR)/uclibc++.mk
 
 PKG_NAME:=mysql
 PKG_VERSION:=5.1.73
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=\
@@ -171,7 +171,7 @@ define Package/mysql-server/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/my_print_defaults $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/etc/init.d/
 	$(INSTALL_BIN) files/mysqld.init $(1)/etc/init.d/mysqld
-	$(INSTALL_CONF) conf/my.cnf $(1)/etc/
+	$(CP) conf/my.cnf $(1)/etc/
 	$(INSTALL_DIR) $(1)/usr/share/mysql
 	$(INSTALL_DIR) $(1)/usr/share/mysql/english
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/share/mysql/english/errmsg.sys $(1)/usr/share/mysql/english
