@@ -30,10 +30,14 @@ echo "This script is meant to help beginners to get started fast."
 echo
 echo "If you are sure you want to continue with simplified automatic setup, type uppercase yes"
 echo
-read answer
-if [ $answer \!= YES ]; then
-    echo "You decided not to proceed, so not doing anything"
-    exit 0
+if [ "x$1" = x--batch ]; then
+    shift
+else
+    read answer
+    if [ "$answer" \!= YES ]; then
+        echo "You decided not to proceed, so not doing anything"
+        exit 0
+    fi
 fi
 
 # Enable dependencies
