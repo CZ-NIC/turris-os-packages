@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-certifi
 PKG_VERSION:=2019.3.9
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=certifi-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/c/certifi
@@ -22,7 +22,7 @@ define Package/python-certifi
   CATEGORY:=Languages
   TITLE:=Python package for providing Mozilla's CA Bundle
   URL:=https://certifi.io/
-  DEPENDS:=+python3
+  DEPENDS:=+python
 endef
 
 define Package/python-certifi/description
