@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=user-notify
-PKG_VERSION:=61
+PKG_VERSION:=61.1
 PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_SOURCE_PROTO:=git
