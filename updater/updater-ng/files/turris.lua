@@ -28,13 +28,13 @@ if mode == "version" and not version then
 	mode = "branch"
 end
 
--- Convert lists to set set of lists (ensures uniqueness)
+-- Convert pkglists to set set of lists (ensures uniqueness)
 if type(pkglists) == "string" then -- if there is single list then uci returns just a string
 	pkglists = {pkglists}
 end
 local lists = {}
 for list in pairs(pkglists) do
-	lists[list] = true
+	lists["pkglists/" .. list] = true
 end
 
 -- Load lists forced by boot arguments
