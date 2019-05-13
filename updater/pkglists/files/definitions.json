@@ -2,71 +2,75 @@
 	"3g": {
 		"title": "Extensions of network protocols for 3G/LTE",
 		"description": "Support for additional protocols and connection types.",
-		"visible": true
+		"official": true
 	},
 	"datacollect": {
 		"title": "Data Collection",
 		"description": "Software for participation in data collection and dynamic distributed firewall.",
-		"visible": true
+		"url": "https://doc.turris.cz/doc/en/howto/collect",
+		"official": true
 	},
 	"dev-detect": {
 		"title": "Device detection",
 		"description": "Software for detecting new devices on local network (EXPERIMENTAL).",
-		"visible": true
+		"official": true
 	},
 	"dvb": {
 		"title": "DVB tuner",
 		"description": "Software for sharing television received by a DVB tuner on Turris. Does not include device drivers.",
-		"visible": true
+		"url": "https://doc.turris.cz/doc/en/howto/dvb"
 	},
 	"honeypot": {
 		"title": "SSH Honeypot",
 		"description": "Trap for password-guessing robots on SSH.",
-		"visible": true
+		"official": true
 	},
 	"luci-controls": {
 		"title": "LuCI extensions",
-		"description": "Several addional tabs and controls for the advanced LuCI interface.",
-		"visible": true
+		"description": "Several addional tabs and controls for the advanced LuCI interface."
 	},
 	"lxc": {
 		"title": "LXC utilities",
 		"description": "Set of utilities to manage Linux Containers (lightweight virtualization technology).",
-		"visible": true
+		"url": "https://doc.turris.cz/doc/en/howto/lxc",
+		"official": true
 	},
 	"nas": {
 		"title": "NAS",
 		"description": "Services allowing to connect a disk to the router and use it as network data store.",
-		"visible": true
+		"url": "https://doc.turris.cz/doc/en/howto/nas",
+		"official": true
 	},
 	"netboot": {
 		"title": "Turris MOX network boot",
-		"description": "Server side for Turris MOX without SD card used as Wi-Fi access point.",
-		"visible": false
+		"description": "Server side for Turris MOX without SD card used as Wi-Fi access point. (EXPERIMENTAL)",
+		"official": true
 	},
 	"netmetr": {
 		"title": "Internet connection speed measurement",
 		"description": "Actively measures speed of Internet connection using netmetr.cz service.",
-		"visible": true
+		"url": "https://www.netmetr.cz",
+		"official": true
 	},
 	"openvpn": {
 		"title": "OpenVPN",
 		"description": "An easy setup of OpenVPN server from Foris.",
-		"visible": true
+		"url": "https://doc.turris.cz/doc/en/howto/openvpn_plugin",
+		"official": true
 	},
 	"pakon": {
 		"title": "Pakon",
 		"description": "Software for in depth monitoring of your traffic.",
-		"visible": true
+		"url": "https://doc.turris.cz/doc/en/howto/pakon",
+		"official": true
 	},
 	"printserver": {
 		"title": "Print server",
 		"description": "Services allowing to connect a printer to the router and use it for remote printing.",
-		"visible": true
+		"url": "https://doc.turris.cz/doc/en/howto/printer_sharing"
 	},
 	"tor": {
 		"title": "Tor",
-		"description": "Service to increase anonymity on the Internet.",
-		"visible": true
+		"description": "Service to increase anonymity on the Internet."
 	}
 }
