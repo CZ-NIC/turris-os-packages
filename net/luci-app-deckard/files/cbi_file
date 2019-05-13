@@ -1,0 +1,2 @@
+config 'info' 'A'
+	option 'name' 'OpenWRT'
