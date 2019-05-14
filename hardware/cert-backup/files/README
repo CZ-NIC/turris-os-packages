@@ -1,0 +1,17 @@
+cert-backup
+===========
+
+A script that stores the given certificate onto a backup partition for the case
+of full restart (eg. data wipe).
+
+Call with list of files to store or remove. Each file to remove must be
+preceded by -r.
+
+For example, to add files /etc/a and /etc/b and remove /etc/c and /etc/d, you'd
+call it as:
+
+  ./cert-backup /etc/a /etc/b -r /etc/c -r /etc/d
+
+In addition to -r, a file name may be prefixed with -x. In such case, the file
+is extracted from the backup, not stored. As with -r, -x modifies behaviour for
+only the single following file.
