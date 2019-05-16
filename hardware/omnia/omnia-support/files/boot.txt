@@ -1,11 +1,37 @@
-setenv bootargs 'earlyprintk console=ttyS0,115200 rootfstype=btrfs rootwait root=/dev/mmcblk0p1 rootflags=subvol=@,commit=5 rw ${contract}'
+if part uuid ${devtype} ${devnum}:${distro_bootpart} partuuid; then
+	if test "${bootfstype}" = "btrfs"; then
+		rootflags="commit=5,subvol=@"
+		subvol="/@"
+	else
+		rootflags="commit=5"
+		subvol=""
+	fi
 
-if gpio input gpio@71_4; then
-    setenv wan sfp
-else
-    setenv wan phy
+	# determine if SFP is connected (need this for device tree selection)
+	if gpio input gpio@71_4; then
+		dtb_variant=sfp
+	else
+		dtb_variant=phy
+	fi
+
+	if load ${devtype} ${devnum}:${distro_bootpart} ${fdt_addr_r} ${subvol}/boot/armada-385-turris-omnia-${dtb_variant}.dtb; then
+		has_dtb=1
+	elif load ${devtype} ${devnum}:${distro_bootpart} ${fdt_addr_r} ${subvol}/boot/dtb; then
+		has_dtb=1
+	else
+		setenv has_dtb 0
+		echo "Cannot find device tree binary!"
+	fi
+
+	if test $has_dtb -eq 1; then
+		if load ${devtype} ${devnum}:${distro_bootpart} ${kernel_addr_r} ${subvol}/boot/zImage; then
+			setenv bootargs "earlyprintk rootwait ${contract} console=ttyS0,115200 rootfstype=${bootfstype} root=PARTUUID=${partuuid} rootflags=${rootflags} rw cfg80211.freg=${regdomain}"
+			bootz ${kernel_addr_r} - ${fdt_addr_r}
+			echo "Booting zImage failed"
+		else
+			echo "Cannot load kernel binary"
+		fi
+	fi
+
+	env delete partuuid
 fi
-
-load mmc 0 ${kernel_addr_r} /@/boot/zImage @
-load mmc 0 ${fdt_addr_r} /@/boot/armada-385-turris-omnia-$wan.dtb @
-bootz ${kernel_addr_r} - ${fdt_addr_r}
