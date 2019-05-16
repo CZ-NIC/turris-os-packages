@@ -1,7 +1,8 @@
 package 'dev-detect'
 
 config watchlist 'watchlist'
-	list ifaces 'br-lan'
+    list ifaces 'br-lan'
+    list ifaces 'br-guest_turris'
 
 config storage 'storage'
-    option db_path   '/tmp/dev-detect.db'
+    option db_path   '/srv/dev-detect/dev-detect.db'

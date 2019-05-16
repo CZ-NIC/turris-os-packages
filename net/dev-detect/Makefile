@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dev-detect
-PKG_VERSION:=0.1.1
+PKG_VERSION:=0.1.2
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/dev-detect.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_VERSION:=6e44ff4113f9f4c28fafb5f1d755266ced6b34d9
+PKG_SOURCE_VERSION:=c4fd0070e9237fd758cfdf62cce55230ab00a497
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
@@ -56,6 +56,8 @@ define Py3Package/dev-detect/install
 
 	$(INSTALL_DIR) $(1)/usr/libexec
 	$(INSTALL_BIN) ./files/notify_new_device.sh $(1)/usr/libexec/
+
+	$(INSTALL_DIR) $(1)/srv/dev-detect
 endef
 
 $(eval $(call Py3Package,dev-detect))
