@@ -9,21 +9,20 @@ PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
-	VERSION:=$(LINUX_VERSION)-$(LINUX_RELEASE)-$(LINUX_VERMAGIC)
-	DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_turris-omnia
+  TITLE:=$(PKG_NAME)
+  VERSION:=$(LINUX_VERSION)-$(LINUX_RELEASE)-$(LINUX_VERMAGIC)
+  DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
 endef
 
 define Package/$(PKG_NAME)/description
- Contains supporting files for Turris Omnia.
+  Contains supporting files for Turris Omnia.
 endef
 
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
 endef
 
-define Build/Configure
-endef
+Build/Configure:=:
 
 define Build/Compile
 	$(KERNEL_MAKE) zImage dtbs

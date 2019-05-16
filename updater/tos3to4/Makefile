@@ -16,7 +16,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/tos3to4
   TITLE:=Turris OS 3.x to 4.x migration package
-  DEPENDS:=+uci +TARGET_mvebu_cortexa9_DEVICE_turris-omnia:omnia-support
+  DEPENDS:=+uci +TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia:omnia-support
 endef
 
 define Package/tos3to4-early
@@ -28,7 +28,7 @@ define Package/tos3to4/install
 	$(INSTALL_DIR) $(1)/usr/lib/tos3to4
 	$(INSTALL_BIN) ./files/switch_and_vlans $(1)/usr/lib/tos3to4/switch_and_vlans
 	$(INSTALL_BIN) ./files/wifi $(1)/usr/lib/tos3to4/wifi
-ifdef CONFIG_TARGET_mvebu_cortexa9_DEVICE_turris-omnia
+ifdef CONFIG_TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
 	$(INSTALL_BIN) ./files/sfp-omnia $(1)/usr/lib/tos3to4/sfp-omnia
 endif
 endef
@@ -43,7 +43,7 @@ define Package/tos3to4/postinst
 	ec=0
 	/usr/lib/tos3to4/switch_and_vlans || ec=$$?
 	/usr/lib/tos3to4/wifi || ec=$$?
-	$(if $(CONFIG_TARGET_mvebu_cortexa9_DEVICE_turris-omnia),/usr/lib/tos3to4/sfp-omnia || ec=$$?)
+	$(if $(CONFIG_TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia),/usr/lib/tos3to4/sfp-omnia || ec=$$?)
 	exit $$ec
 }
 endef

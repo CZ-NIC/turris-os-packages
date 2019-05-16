@@ -21,7 +21,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_turris-omnia
+	DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
 endef
 
 define Build/Compile

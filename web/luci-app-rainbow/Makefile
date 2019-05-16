@@ -21,7 +21,7 @@ PKG_BUILD_DEPENDS:=luci-base/host
 
 include $(INCLUDE_DIR)/package.mk
 
-ifdef CONFIG_TARGET_mvebu_cortexa9_DEVICE_turris-omnia
+ifdef CONFIG_TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
 BOARD=omnia
 else
 BOARD=turris
