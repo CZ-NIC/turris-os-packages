@@ -49,7 +49,6 @@ define Package/$(PKG_NAME)/postinst
 set -x
 if [ -z "$${IPKG_INSTROOT}" ]; then
 	/etc/init.d/foris-controller restart
-	netmetr
 fi
 endef
 
