@@ -22,7 +22,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) ./files/cert-backup/cert-backup $(1)/usr/sbin/
+	$(INSTALL_BIN) ./files/cert-backup $(1)/usr/sbin/
 endef
 
 Build/Compile:=:
