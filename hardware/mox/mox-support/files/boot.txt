@@ -1,10 +1,10 @@
 if part uuid ${devtype} ${devnum}:${distro_bootpart} partuuid; then
 	if test "${bootfstype}" = "btrfs"; then
 		rootflags="commit=5,subvol=@"
-        subvol="/@"
+		subvol="/@"
 	else
 		rootflags="commit=5"
-        subvol=""
+		subvol=""
 	fi
 
 	if load ${devtype} ${devnum}:${distro_bootpart} ${fdt_addr_r} ${subvol}/boot/armada-3720-turris-mox.dtb; then
