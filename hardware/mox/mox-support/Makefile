@@ -36,7 +36,6 @@ define Package/$(PKG_NAME)/install
 	ln -s boot/boot.scr "$(1)"/boot.scr
 	ln -s boot.scr "$(1)"/boot/boot-ext4.scr
 	ln -s boot.scr "$(1)"/boot/boot-btrfs.scr
-	mkimage -T script -C none -n boot -d "$(PKG_BUILD_DIR)"/boot-btrfs.txt "$(1)"/boot/boot-btrfs.scr
 	$(INSTALL_DIR) $(1)/sbin
 	$(INSTALL_BIN) ./files/nor-update $(1)/sbin
 	$(INSTALL_DIR) $(1)/usr/share/mox
