@@ -17,7 +17,7 @@ if part uuid ${devtype} ${devnum}:${distro_bootpart} partuuid; then
 	if test $has_dtb -eq 1; then
 		if load ${devtype} ${devnum}:${distro_bootpart} ${kernel_addr_r} ${subvol}/boot/Image; then
 			setenv bootargs "earlyprintk console=ttyMV0,115200 earlycon=ar3700_uart,0xd0012000 rootfstype=${bootfstype} root=PARTUUID=${partuuid} rootflags=${rootflags} rootwait ${contract} rw cfg80211.freg=${regdomain}"
-			bootz ${kernel_addr_r} - ${fdt_addr_r}
+			booti ${kernel_addr_r} - ${fdt_addr_r}
 			echo "Booting Image failed"
 		else
 			echo "Cannot load kernel binary"
