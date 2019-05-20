@@ -7,6 +7,7 @@ PID_FILE="/var/run/suricata.pid"
 RULES_MD5_FILE="/tmp/suricata/rules.md5"
 
 download_rules() {
+    [ -d /tmp/suricata ] || mkdir /tmp/suricata
     cd /tmp/suricata/
     curl -s $RULES_URL | gzip -cd - | tar -xf - rules
     curl -s $RULES_MD5_URL > $RULES_MD5_FILE
