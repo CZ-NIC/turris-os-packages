@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=omnia-support
-PKG_VERSION:=2.4
+PKG_VERSION:=2.5
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
 
@@ -31,7 +31,8 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/boot
 	$(INSTALL_DATA) $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts/armada-385-turris-omnia-*.dtb "$(1)"/boot
-	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot.scr
+	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot/boot.scr
+	ln -s boot/boot.scr "$(1)"/boot.scr
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_DATA) files/nor-update $(1)/usr/sbin
 endef
