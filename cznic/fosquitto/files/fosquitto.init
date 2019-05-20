@@ -8,6 +8,7 @@ USE_PROCD=1
 GENERATED_CONF=/tmp/fosquitto.generated.conf
 PLAIN_PASSWORD=/etc/fosquitto/credentials.plain  # local:<random_password>
 HASHED_PASSWORD=/etc/fosquitto/credentials.hashed  # local:<hashed_random_password>
+TIMEOUT=0.2
 
 generate_password() {
 	local new_password=$(hexdump -n 16 -e '4/4 "%08X" 1 "\n"' /dev/urandom)
@@ -157,7 +158,12 @@ service_triggers() {
 
 restart() {
 	trap '' TERM
+	# read password
+	user="$(cat $PLAIN_PASSWORD| cut -d: -f1)"
+	pass="$(cat $PLAIN_PASSWORD| cut -d: -f2)"
+	mosquitto_pub -h localhost -p 11883 -q 2 -t foris-controller/fosquitto_restart -m '{"left": '$TIMEOUT'}' -u "${user}" -P "${pass}"
+	sleep $TIMEOUT
 	stop
-	sleep 0.2
+	sleep $TIMEOUT
 	start
 }
