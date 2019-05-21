@@ -34,7 +34,9 @@ def parse_cmdline():
     parser.add_argument("-H", "--host", default=None, required=False)
     parser.add_argument("-P", "--port", type=int, default=0, required=False)
     parser.add_argument(
-        "-F", "--passwd-file", type=lambda x: read_passwd_file(x),
+        "-F",
+        "--passwd-file",
+        type=lambda x: read_passwd_file(x),
         help="path to passwd file (first record will be used to authenticate)",
         default="/etc/fosquitto/credentials.plain",
     )
@@ -45,12 +47,20 @@ def parse_cmdline():
     listen_parser = commands.add_parser("listen", help="listen for messages on the bus")
 
     listen_parser.add_argument(
-        "-a", "--show-advertize", action="store_true", default=False,
-        help="display advertize messages"
+        "-a",
+        "--show-advertize",
+        action="store_true",
+        default=False,
+        help="display advertize messages",
     )
     listen_parser.add_argument(
-        "-f", "--filter-ids", default=[], dest="filter_ids", nargs="+",
-        help="display only messages containing specified ids", required=False
+        "-f",
+        "--filter-ids",
+        default=[],
+        dest="filter_ids",
+        nargs="+",
+        help="display only messages containing specified ids",
+        required=False,
     )
 
     detect_parser = commands.add_parser("detect", help="detects ids of connected devices")
@@ -58,21 +68,31 @@ def parse_cmdline():
 
     list_parser = commands.add_parser("list", help="print list of modules and actions")
     list_parser.add_argument(
-        "-i", "--device-id", required=True, help="device id - obtained via detect cmd")
+        "-i", "--device-id", required=True, help="device id - obtained via detect cmd"
+    )
     list_parser.add_argument(
-        "-m", "--filter-modules", default=[], dest="filter_modules", nargs="+",
-        help="display only data regarding specific modules", required=False
+        "-m",
+        "--filter-modules",
+        default=[],
+        dest="filter_modules",
+        nargs="+",
+        help="display only data regarding specific modules",
+        required=False,
     )
 
     schemas_parser = commands.add_parser("schemas", help="prints current json schemas")
     schemas_parser.add_argument(
-        "-i", "--device-id", required=True, help="device id - obtained via detect cmd")
+        "-i", "--device-id", required=True, help="device id - obtained via detect cmd"
+    )
 
     return parser.parse_args()
 
 
 def listener(
-    host: str, port: int, show_advertize: bool, filter_ids: typing.Set[str],
+    host: str,
+    port: int,
+    show_advertize: bool,
+    filter_ids: typing.Set[str],
     credentials: typing.Tuple[str],
 ):
     def on_connect(client, userdata, flags, rc):
@@ -83,26 +103,28 @@ def listener(
         print(f"Subscribed to mid='{mid}'.")
 
     def on_message(client, userdata, msg):
-        if re.match(
-            f"foris-controller/[^/]+/notification/remote/action/advertize", msg.topic
-        ) and not show_advertize:
+        if (
+            re.match(f"foris-controller/[^/]+/notification/remote/action/advertize", msg.topic)
+            and not show_advertize
+        ):
             return
         try:
-            parsed = json.loads(msg.payload)
-
             # filter id
             if filter_ids:
                 match = re.match(r"^foris-controller/([^/]+).*", msg.topic)
                 if match.group(1) not in filter_ids:
                     return
 
-            title = \
+            title = (
                 f"===================== message recieved for '{msg.topic}' ====================="
-            print(title)
-            print(json.dumps(parsed, indent=2))
+            )
+            parsed = json.loads(msg.payload)
+            content = json.dumps(parsed, indent=2)
         except ValueError:
-            print(msg.payload)
+            content = msg.payload
 
+        print(title)
+        print(content)
         print("=" * len(title))
 
     client = mqtt.Client()
@@ -143,39 +165,39 @@ def detect_ids(host: str, port: int, timeout: int, credentials: typing.Tuple[str
 
 
 def query_bus(host: str, port: int, topic: str, device_id: str, credentials: typing.Tuple[str]):
-        result = {"data": None}
+    result = {"data": None}
 
-        msg_id = uuid.uuid1()
-        reply_topic = "foris-controller/%s/reply/%s" % (device_id, msg_id)
+    msg_id = uuid.uuid1()
+    reply_topic = "foris-controller/%s/reply/%s" % (device_id, msg_id)
 
-        def on_connect(client, userdata, flags, rc):
-            client.subscribe(reply_topic)
+    def on_connect(client, userdata, flags, rc):
+        client.subscribe(reply_topic)
 
-        def on_subscribe(client, userdata, mid, granted_qos):
-            client.publish(topic, json.dumps({"reply_msg_id": str(msg_id)}))
+    def on_subscribe(client, userdata, mid, granted_qos):
+        client.publish(topic, json.dumps({"reply_msg_id": str(msg_id)}))
 
-        def on_message(client, userdata, msg):
-            try:
-                parsed = json.loads(msg.payload)
-            except Exception:
-                return
-            result["data"] = parsed
-            client.loop_stop(True)
-            client.disconnect()
+    def on_message(client, userdata, msg):
+        try:
+            parsed = json.loads(msg.payload)
+        except Exception:
+            return
+        result["data"] = parsed
+        client.loop_stop(True)
+        client.disconnect()
 
-        client = mqtt.Client()
-        client.on_subscribe = on_subscribe
-        client.on_message = on_message
-        client.on_connect = on_connect
-        client.username_pw_set(*credentials)
-        client.connect(host, port, 30)
-        client.loop_start()
-        client._thread.join(5)
+    client = mqtt.Client()
+    client.on_subscribe = on_subscribe
+    client.on_message = on_message
+    client.on_connect = on_connect
+    client.username_pw_set(*credentials)
+    client.connect(host, port, 30)
+    client.loop_start()
+    client._thread.join(5)
 
-        if result["data"] is None:
-            raise Exception("No answer recieved.")
+    if result["data"] is None:
+        raise Exception("No answer recieved.")
 
-        return result["data"]
+    return result["data"]
 
 
 def list_objects(
