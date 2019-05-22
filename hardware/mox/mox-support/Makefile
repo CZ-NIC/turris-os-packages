@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=mox-support
-PKG_VERSION:=26
+PKG_VERSION:=27
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
 
@@ -32,8 +32,8 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/boot
 	$(CP) $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts/marvell/armada-3720-turris-mox.dtb "$(1)"/boot
-	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot/.scr
-	ln -s boot/boot.scr "$(1)"/boot.scr
+	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot/boot.scr
+	ln -s boot/boot-ext4.scr "$(1)"/boot.scr
 	ln -s boot.scr "$(1)"/boot/boot-ext4.scr
 	ln -s boot.scr "$(1)"/boot/boot-btrfs.scr
 	$(INSTALL_DIR) $(1)/sbin
