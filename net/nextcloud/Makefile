@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2018-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,16 +8,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nextcloud
-PKG_VERSION:=15.0.7
+PKG_VERSION:=16.0.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).zip
-PKG_MD5SUM:=fc901e165ccb42a7174cf41886fefd54
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
+PKG_HASH:=a80ce586e9e930b2fba69707311e575346cd4dc4402e84678c730f9930d78aee
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0
+PKG_LICENSE_FILES:=COPYING
 
 PKG_INSTALL:=0
 
