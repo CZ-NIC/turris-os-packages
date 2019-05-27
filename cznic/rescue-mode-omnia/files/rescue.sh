@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 #
 # Turris Omnia rescue script
 # (C) 2016 CZ.NIC, z.s.p.o.
@@ -129,8 +129,10 @@ reflash () {
 			if [ $? -ne 0 ]; then
 				continue
 			fi
-			d "Searching for ${SRCFS_MOUNTPOINT}/${MEDKIT_FILENAME} on $dev"
-			IMG="$(ls -1 ${SRCFS_MOUNTPOINT}/${MEDKIT_FILENAME} | sort | tail -n 1)"
+			d "Searching for ${SRCFS_MOUNTPOINT}/rootfs/${MEDKIT_FILENAME} on $dev"
+			IMG="$(ls -1 ${SRCFS_MOUNTPOINT}/rootfs/${MEDKIT_FILENAME} | sort | tail -n 1)"
+			UBOOT="$(ls -1 ${SRCFS_MOUNTPOINT}/uboot/uboot* | sort | grep -v '.env$' | tail -n 1)"
+			RESCUE="$(ls -1 ${SRCFS_MOUNTPOINT}/rescue/* | sort | tail -n 1)"
 			if [ -n "${IMG}" ] && [ -f "${IMG}" ]; then
 				d "Found medkit file $IMG on device $dev"
 				break
@@ -140,9 +142,33 @@ reflash () {
 				umount_fs $SRCFS_MOUNTPOINT
 			fi
 		done
-		[ -z "${IMG}" ] || break
+		[ -z "${IMG}" ] || [ -z "${UBOOT}" ] || break
 		sleep 1
 	done
+
+	mkdir -p /var/lock
+
+	if [ -f "$UBOOT" ]; then
+		mtd verify "$UBOOT" /dev/mtd0 || \
+		{ mtd -e /dev/mtd0 write "$UBOOT" /dev/mtd0; echo b > /proc/sysrq-trigger; }
+	fi
+
+	if [ -f "$RESCUE" ]; then
+		mtd verify "$RESCUE" /dev/mtd0 || \
+		{ mtd -e /dev/mtd0 write "$RESCUE" /dev/mtd0; echo b > /proc/sysrq-trigger; }
+	fi
+
+	fw_printenv
+	
+	if [ -f "$UBOOT".env ]; then
+		UENV="`cat "$UBOOT".env`
+`fw_printenv`"
+		if [ "$UENV" \!= "`fw_printenv`" ]; then
+			echo "$UENV" >  /tmp/uenv
+			fw_setenv --script /tmp/uenv
+		fi
+	fi
+
 
 	if [ -n "${IMG}" ]; then
 		if [ -r "${IMG}".md5 ]; then
@@ -174,7 +200,7 @@ EOF
 			umount_fs $SRCFS_MOUNTPOINT
 			exit 23
 		fi
-		$BIN_MKFS -M -f $FS_DEV || do_panic
+		$BIN_MKFS -L turris -f $FS_DEV || do_panic
 		mount_fs $FS_DEV $FS_MOUNTPOINT
 		$BIN_BTRFS subvolume create "${FS_MOUNTPOINT}/@"
 		ROOTDIR="${FS_MOUNTPOINT}/@"
@@ -184,6 +210,7 @@ EOF
 		RD=`$BIN_DATE '+%s' -r sbin/init`
 		cd /
 		$BIN_BTRFS subvolume snapshot "${FS_MOUNTPOINT}/@" "${FS_MOUNTPOINT}/@factory"
+		ln -s @/boot/boot.scr "${FS_MOUNTPOINT}"/boot.scr
 		umount_fs $FS_MOUNTPOINT
 		umount_fs $SRCFS_MOUNTPOINT
 
@@ -238,35 +265,16 @@ d "MODE=$MODE"
 
 if [ -z "${MODE}" ]; then
 	e "Invalid (empty) mode."
-	exit -10
+	exit 10
 fi
 
-case "$MODE" in
-	0)
-		e "Invalid mode 0 - normal boot expected. Exit to shell."
-		exit 11
-		;;
-	1)
-		d "Mode: Rollback to the last snapshot..."
-		schnapps rollback
-		;;
+mkdir -p /etc
+echo "/dev/mtd0 0xf0000 0x10000 0x10000" > /etc/fw_env.config
+reflash
 
-	2)
-		d "Mode: Rollback to first snapshot..."
-		schnapps rollback factory
-		;;
-	3)
-		d "Mode: Reflash..."
-		reflash
-		;;
-	4)
-		d "Mode: Rescue shell..."
-		rescue_shell
-		;;
-	*)
-		e "Invalid mode $MODE. Exit to shell."
-		exit 12
-esac
+rainbow all enable ffff00
+
+sleep 6666666
 
 exit 0
 

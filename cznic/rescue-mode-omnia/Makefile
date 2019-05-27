@@ -17,7 +17,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+rainbow-omnia +mtd +btrfs-progs @TARGET_mvebu_Turris-Omnia @!ALL @!PACKAGE_oneshot @!PACKAGE_procd +schnapps
+	DEPENDS:=+rainbow-omnia +mtd +btrfs-progs @TARGET_mvebu_Turris-Omnia @!ALL @!PACKAGE_oneshot @!PACKAGE_procd +schnapps +uboot-envtools
 endef
 
 define Package/$(PKG_NAME)/conffiles
