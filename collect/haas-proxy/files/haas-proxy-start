@@ -1,0 +1,14 @@
+#!/bin/sh
+# This is script to start haas proxy with cgroups
+CGROUPS="/sys/fs/cgroup/cpu/haas"
+
+if [ -d "$CGROUPS" ]; then
+	mkdir -p "$CGROUPS"
+	echo 128 > "$CGROUPS"/cpu.shares
+	echo 1000000 > "$CGROUPS"/cpu.cfs_period_us
+	echo 150000 > "$CGROUPS"/cpu.cfs_quota_us
+	echo 1 > "$CGROUPS"/cgroup.clone_children
+	echo 0 >"$CGROUPS"/cgroup.procs
+fi
+
+exec python3 -m haas_proxy "$@"

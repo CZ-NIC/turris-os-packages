@@ -1,10 +1,15 @@
 config haas 'settings'
+	# Token that you can get from here: https://haas.nic.cz/devices
+	# This is required as otherwise HaaS won't start.
 	option token ''
-	option local_port '2525'
-	option setup_fw '1'
-	# This options specifies where to log if anywhere, valid values are
-	# absolute path to the file or 'none'
-	option log 'none'
+	# Firewall zone HaaS should be accessible from on port 22.
+	# You can set more than one zone.
+	list fw_zone 'wan'
+	# Local port to use. In default: 2525
+	#option local_port '2525'
+	# This options specifies where to log, if anywhere. Valid values are
+	# absolute path to the file or 'none'. Default is 'none'.
+	#option log 'none'
 	# Verbosity of the log, valid options are
 	# 'error', 'warning' (default), 'info' and 'debug'
-	option log_level 'warning'
+	#option log_level 'warning'

@@ -3,71 +3,64 @@
 USE_PROCD=1
 START=99
 STOP=10
-EXTRA_COMMANDS="check_fw"
+EXTRA_COMMANDS="firewall"
 
-iptables_ensure(){
-	iptables -C $@ 2>/dev/null || iptables -I $@
+DEFAULT_LOCAL_PORT=2525
+DEFAULT_FIREWALL_ZONE="wan"
+
+firewall_drop() {
+	iptables -t nat -S | sed -n '/--comment "!haas:/s/^-A//p' | while read -r rule; do
+		eval "iptables -t nat -D $rule"
+	done
 }
 
-check_fw() {
-	FW_SETUP="`uci -q get haas.settings.setup_fw | egrep -i '(1|yes|true|enabled|on)'`"
-	PORT="`uci -q get haas.settings.local_port`"
-	WAN_IP="`ubus call network.interface.wan status | sed -n 's|.*address":[[:blank:]]*"\([0-9.]*\)".*|\1|p'`"
-	if [ -n "$FW_SETUP" -a -n "$PORT" ]; then
-		if [ -n "$WAN_IP" ]; then
-			iptables_ensure zone_wan_prerouting -t nat -p tcp -m tcp --dport 22 -m comment --comment "haas" -j DNAT --to-destination $WAN_IP:$PORT
-			iptables_ensure zone_wan_prerouting -t nat -p tcp -m tcp --dport 22 -j MARK --set-mark 0x10
-			echo "iptables -t nat -D zone_wan_prerouting -p tcp -m tcp --dport 22 -m comment --comment \"haas\" -j DNAT --to-destination $WAN_IP:$PORT" > /tmp/haas-remove-iptables
-			echo "iptables -t nat -D zone_wan_prerouting -p tcp -m tcp --dport 22 -j MARK --set-mark 0x10" >> /tmp/haas-remove-iptables
-		else
-			( sleep 60 && /etc/init.d/haas-proxy check_fw ) &
-		fi
+iptables_insert() {
+	iptables -C "$@" 2>/dev/null || iptables -I "$@"
+}
+
+_firewall_zone() {
+	local fw_zone="$1"
+	# Note: variable port is from caller
+	iptables_insert "zone_${fw_zone}_prerouting" -t nat -p tcp -m tcp --dport 22 -m comment --comment "!haas:dnat" -j DNAT --to-destination ":$port"
+	iptables_insert "zone_${fw_zone}_prerouting" -t nat -p tcp -m tcp --dport 22 -m comment --comment "!haas:mark" -j MARK --set-mark 0x10
+}
+
+firewall() {
+	firewall_drop
+
+	config_load haas
+	local port fw_zone
+	config_get port settings local_port "$DEFAULT_LOCAL_PORT"
+	config_get fw_zone settings fw_zone
+	if [ -n "$fw_zone" ]; then
+		config_list_foreach settings fw_zone _firewall_zone
+	else
+		_firewall_zone "$DEFAULT_FIREWALL_ZONE"
 	fi
-	[ \! -e /sys/fs/cgroup/haas/tasks ] || cat /tmp/haas.pid 2> /dev/null > /sys/fs/cgroup/haas/tasks
 }
 
 start_service() {
-	TOKEN="`uci -q get haas.settings.token`"
-	LOG_LEVEL="`uci -q get haas.settings.log_level`"
-	PORT="`uci -q get haas.settings.local_port`"
-	FW_SETUP="`uci -q get haas.settings.setup_fw | egrep -i '(1|yes|true|enabled|on)'`"
-	LOG="`uci -q get haas.settings.log`"
-	if [ -z "$LOG" ] || [ "$LOG" = none ]; then
-		LOG=""
-	else
-		LOG="--log-file=$LOG"
-	fi
-	[ -n "$TOKEN" ] || exit 1
-	[ -n "$LOG_LEVEL" ] || LOG_LEVEL="warning"
-	check_fw
-	CGROUPS="`test -f /sys/fs/cgroup/cpu.shares && echo /sys/fs/cgroup/`"
-	[ -n "$CGROUPS" ] || CGROUPS="`test -d /sys/fs/cgroup/cpu && echo /sys/fs/cgroup/cpu`"
-	if [ -n "$CGROUPS" ]; then
-		echo 1 > "$CGROUPS"/cgroup.clone_children
-		mkdir -p "$CGROUPS"/haas
-		echo 128 > "$CGROUPS"/haas/cpu.shares
-		echo 1000000 > "$CGROUPS"/haas/cpu.cfs_period_us
-		echo  150000 > "$CGROUPS"/haas/cpu.cfs_quota_us
-	fi
+	config_load haas
+	local token log log_level port
+	config_get token settings token ''
+	config_get log settings log 'none'
+	config_get log_level settings log_level 'warning'
+	config_get port settings local_port "$DEFAULT_LOCAL_PORT"
+	[ -n "$token" ] || {
+		echo "Token not set. Please set HAAS token to allow it to start." >&2
+		exit 1
+	}
+
+	firewall
+
 	procd_open_instance
-	procd_set_param command /usr/bin/python2.7 -m haas_proxy -n --pidfile=/tmp/haas.pid haas_proxy $LOG --log-level "$LOG_LEVEL" --device-token $TOKEN --port $PORT
-	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
+	procd_set_param command /usr/libexec/haas-proxy-start -n haas_proxy --log-level="$log_level" --device-token="$token" --port="$port"
+	[ -z "$log" -o "$log" = "none" ] || procd_append_param command --log="$log"
+	procd_set_param respawn "${respawn_threshold:-3600}" "${respawn_timeout:-5}" "${respawn_retry:-5}"
 	procd_set_param file /etc/config/haas
 	procd_close_instance
-	sleep 5 && cat /tmp/haas.pid 2> /dev/null > /sys/fs/cgroup/haas/tasks &
-	sleep 120 && cat /tmp/haas.pid 2> /dev/null > /sys/fs/cgroup/haas/tasks &
 }
 
 stop_service() {
-	FW_SETUP="`uci -q get haas.settings.setup_fw | egrep -i '(1|yes|true|enabled|on)'`"
-	if [ "$FW_SETUP" ] && [ -f /tmp/haas-remove-iptables ]; then
-		sh /tmp/haas-remove-iptables
-		rm -f /tmp/haas-remove-iptables
-	fi
-	if [ -f /tmp/haas.pid ]; then
-		kill `cat /tmp/haas.pid 2>/dev/null` > /dev/null 2>&1
-		sleep 1
-		kill -9 `cat /tmp/haas.pid 2>/dev/null` > /dev/null 2>&1
-		rm -f /tmp/haas.pid
-	fi
+	firewall_drop
 }
