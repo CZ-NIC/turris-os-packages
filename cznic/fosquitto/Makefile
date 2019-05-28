@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fosquitto
-PKG_VERSION:=14
+PKG_VERSION:=16
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -16,7 +16,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+mosquitto-ssl
+	DEPENDS:=+mosquitto-ssl +mosquitto-client-ssl
 endef
 
 define Package/$(PKG_NAME)/description

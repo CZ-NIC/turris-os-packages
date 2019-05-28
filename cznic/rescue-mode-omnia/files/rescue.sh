@@ -51,7 +51,7 @@ BIN_MDEV="`which mdev`"
 [ -z "$BIN_MDEV" ] || BIN_MDEV="$BIN_MDEV -s"
 
 mkdir -p /etc/schnapps
-if [ -n "$(cat /proc/cmdline | grep boot=/dev/sda1)" ]; then
+if [ -n "$(cat /proc/cmdline | grep root=/dev/sda1)" ]; then
 	DEV="/dev/sda"
 	FS_DEV="/dev/sda1"
 fi
@@ -174,7 +174,7 @@ EOF
 			umount_fs $SRCFS_MOUNTPOINT
 			exit 23
 		fi
-		$BIN_MKFS -M -f $FS_DEV || do_panic
+		$BIN_MKFS -L turris -f $FS_DEV || do_panic
 		mount_fs $FS_DEV $FS_MOUNTPOINT
 		$BIN_BTRFS subvolume create "${FS_MOUNTPOINT}/@"
 		ROOTDIR="${FS_MOUNTPOINT}/@"
@@ -184,6 +184,7 @@ EOF
 		RD=`$BIN_DATE '+%s' -r sbin/init`
 		cd /
 		$BIN_BTRFS subvolume snapshot "${FS_MOUNTPOINT}/@" "${FS_MOUNTPOINT}/@factory"
+		ln -s @/boot/boot.scr "${FS_MOUNTPOINT}"/boot.scr
 		umount_fs $FS_MOUNTPOINT
 		umount_fs $SRCFS_MOUNTPOINT
 

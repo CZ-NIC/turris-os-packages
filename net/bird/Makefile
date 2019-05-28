@@ -7,12 +7,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bird
-PKG_VERSION:=1.6.5
+PKG_VERSION:=1.6.6
 PKG_RELEASE:=1
 
 PKG_SOURCE:=bird-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=ftp://bird.network.cz/pub/bird
-PKG_MD5SUM:=cc40c851afc354cd5348a63fc5f6fe75de590182522102e348b30a995733d21a
+PKG_MD5SUM:=975b3b7aefbe1e0dc9c11e55517f0ca2d82cca1d544e2e926f78bc843aaf2d70
 PKG_BUILD_DEPENDS:=libncurses libreadline
 
 include $(INCLUDE_DIR)/package.mk

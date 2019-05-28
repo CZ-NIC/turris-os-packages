@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-certgen
 PKG_VERSION:=4.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/certgen.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -42,8 +42,8 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/sentinel
 	$(INSTALL_BIN) ./files/ca.pem $(1)/etc/sentinel/ca.pem
-	$(INSTALL_DIR) $(1)/usr/libexec
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/certgen.py $(1)/usr/libexec/sentinel_certgen.py
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/certgen.py $(1)/usr/sbin/sentinel_certgen
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
