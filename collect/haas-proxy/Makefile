@@ -25,7 +25,7 @@ define Package/haas-proxy
   TITLE:=haas-proxy
   URL:=https://haas.nic.cz
   DEPENDS:=+python3-light +python3-cachetools +python3-requests +python3-twisted +python3-crypto +python3-service-identity +sshpass
-  DEPENDS+= @KERNEL_CONFIG_CFS_BANDWIDTH
+  DEPENDS+= +kmod-ipt-nat6 @KERNEL_CONFIG_CFS_BANDWIDTH
   CONFLICTS:=mitmproxy
   VARIANT:=python3
 endef

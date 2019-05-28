@@ -12,17 +12,54 @@ firewall_drop() {
 	iptables -t nat -S | sed -n '/--comment "!haas:/s/^-A//p' | while read -r rule; do
 		eval "iptables -t nat -D $rule"
 	done
+	ip6tables -t nat -S | sed -n '/--comment "!haas:/s/^-A//p' | while read -r rule; do
+		eval "ip6tables -t nat -D $rule"
+	done
 }
 
-iptables_insert() {
-	iptables -C "$@" 2>/dev/null || iptables -I "$@"
+iptb_insert() {
+	local iptb="$1"
+	shift
+	"$iptb" -C "$@" 2>/dev/null || "$iptb" -I "$@"
+}
+
+iptb_set() {
+	local iptb="$1"
+	local chain="$2"
+	local comment="$3"
+	shift 3
+	# Note: variable port is from caller
+	iptb_insert "$iptb" "$chain" -t nat "$@" -p tcp -m tcp --dport 22 -m comment --comment "!haas:dnat$comment" -j DNAT --to-destination ":$port"
+	iptb_insert "$iptb" "$chain" -t nat "$@" -p tcp -m tcp --dport 22 -m comment --comment "!haas:mark$comment" -j MARK --set-mark 0x10
+}
+
+_ip6fw_network_handle() {
+	local interface="$1"
+	(
+	config_load network
+	config_get ifname "$interface" ifname
+	[ -n "$ifname" ] || return
+	iptb_set ip6tables PREROUTING ":$ifname" -i "$ifname"
+	)
+}
+
+_ip6fw_zones_handle() {
+	local zone="$1"
+	local zone_name
+	config_get zone_name "$zone" name
+	[ "$zone_name" = "$fw_zone" ] || return
+	config_list_foreach "$zone" network _ip6fw_network_handle
 }
 
 _firewall_zone() {
 	local fw_zone="$1"
-	# Note: variable port is from caller
-	iptables_insert "zone_${fw_zone}_prerouting" -t nat -p tcp -m tcp --dport 22 -m comment --comment "!haas:dnat" -j DNAT --to-destination ":$port"
-	iptables_insert "zone_${fw_zone}_prerouting" -t nat -p tcp -m tcp --dport 22 -m comment --comment "!haas:mark" -j MARK --set-mark 0x10
+	# IPv4
+	iptb_set iptables "zone_${fw_zone}_prerouting" ""
+	# IPv6 (fw3 does not provide us with convenient chains so we have to filter interfaces on our own)
+	(
+	config_load firewall
+	config_foreach _ip6fw_zones_handle zone
+	)
 }
 
 firewall() {
