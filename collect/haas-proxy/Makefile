@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-proxy
 PKG_VERSION:=1.9
-PKG_RELEASE:=6
+PKG_RELEASE:=7
 PKG_SOURCE_VERSION:=bbf8629d1d64840407eefc23d2b6c8835365347b
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/haas/proxy/raw/$(PKG_SOURCE_VERSION)/release/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_HASH:=7cccc79ee930f9e3e5115f7e90983b6a6a42b9f4180d3871fa5af0ab0dbdca6a
+
 PKG_MAINTAINER:=CZ.NIC <packaging@nic.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -22,9 +22,10 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 define Package/haas-proxy
   SECTION:=net
   CATEGORY:=Network
-  TITLE:=haas-proxy
+  TITLE:=Honeypot as a Service proxy
   URL:=https://haas.nic.cz
   DEPENDS:=+python3-light +python3-cachetools +python3-requests +python3-twisted +python3-crypto +python3-service-identity +sshpass
+  DEPENDS+= @KERNEL_CONFIG_CFS_BANDWIDTH
   CONFLICTS:=mitmproxy
   VARIANT:=python3
 endef
@@ -36,8 +37,10 @@ define Package/haas-proxy/description
 endef
 
 define Py3Package/haas-proxy/install
+	$(INSTALL_DIR) $(1)/usr/libexec/
+	$(INSTALL_BIN) ./files/haas-proxy-start $(1)/usr/libexec/haas-proxy-start
 	$(INSTALL_DIR) $(1)/etc/init.d/
-	$(INSTALL_BIN) ./files/init $(1)/etc/init.d/haas-proxy
+	$(INSTALL_BIN) ./files/haas-proxy.init $(1)/etc/init.d/haas-proxy
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./files/haas.uci $(1)/etc/config/haas
 	$(INSTALL_DIR) $(1)/etc/firewall.d/with_reload
