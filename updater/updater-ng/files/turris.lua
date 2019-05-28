@@ -33,7 +33,7 @@ if type(pkglists) == "string" then -- if there is single list then uci returns j
 	pkglists = {pkglists}
 end
 local lists = {}
-for list in pairs(pkglists) do
+for _, list in pairs(pkglists) do
 	lists["pkglists/" .. list] = true
 end
 
