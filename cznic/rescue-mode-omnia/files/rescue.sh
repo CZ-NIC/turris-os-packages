@@ -150,16 +150,16 @@ reflash () {
 
 	if [ -f "$UBOOT" ]; then
 		mtd verify "$UBOOT" /dev/mtd0 || \
-		{ mtd -e /dev/mtd0 write "$UBOOT" /dev/mtd0; echo b > /proc/sysrq-trigger; }
+		{ mtd -e /dev/mtd0 write "$UBOOT" /dev/mtd0;
+			fw_setenv bootcmd 'env default -f -a; saveenv; reset;'
+		  echo b > /proc/sysrq-trigger; }
 	fi
 
 	if [ -f "$RESCUE" ]; then
-		mtd verify "$RESCUE" /dev/mtd0 || \
-		{ mtd -e /dev/mtd0 write "$RESCUE" /dev/mtd0; echo b > /proc/sysrq-trigger; }
+		mtd verify "$RESCUE" /dev/mtd1 || \
+		{ mtd -e /dev/mtd1 write "$RESCUE" /dev/mtd1; echo b > /proc/sysrq-trigger; }
 	fi
 
-	fw_printenv
-	
 	if [ -f "$UBOOT".env ]; then
 		UENV="`cat "$UBOOT".env`
 `fw_printenv`"
