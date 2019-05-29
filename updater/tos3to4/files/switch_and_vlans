@@ -33,10 +33,6 @@ vlan_handle() {
 }
 config_foreach vlan_handle switch_vlan
 
-
-append_port() {
-	new_devices="$new_devices${new_devices:+ }$1"
-}
 append_lan_ports() {
 	[ -f "$vlandir/$ifn" ] || return # ignore VLANs that are not in switch
 	# Note: there can be tagged vlan going to switch but if switch is not
@@ -52,17 +48,17 @@ append_lan_ports() {
 				# Ignore CPU ports those are managed by DSA
 				;;
 			*t)
-				append_port "lan${port%t}.${vid}"
+				uci add_list "network.$cnf.ifname=lan${port%t}.${vid}"
 				;;
 			*)
-				append_port "lan${port}"
+				uci add_list "network.$cnf.ifname=lan${port}"
 				;;
 		esac
 	done
 }
 interface_handle() {
 	local cnf="$1"
-	local devices new_devices type
+	local devices type
 	config_get devices "$cnf" device
 	[ -n "$devices" ] || config_get devices "$cnf" ifname
 	for ifn in $devices; do
@@ -72,14 +68,13 @@ interface_handle() {
 				;;
 			eth1*)
 				# WAN port is now eth2 not eth1
-				append_port "eth2${ifn#eth1}"
+				uci add_list "network.$cnf.ifname=eth2${ifn#eth1}"
 				;;
 			*)
-				append_port "$ifn"
+				uci add_list "network.$cnf.ifname=$ifn"
 				;;
 		esac
 	done
-	uci set "network.$cnf.ifname=$new_devices"
 }
 config_foreach interface_handle interface
 
