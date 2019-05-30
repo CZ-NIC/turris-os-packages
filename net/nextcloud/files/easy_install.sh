@@ -79,7 +79,7 @@ CREATE DATABASE nextcloud; \
 FLUSH PRIVILEGES;
 CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY '$DBPASS'; \
 GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost';
-" | mysql -u root -B --socket=/tmp/mysql_nextcloud.sock || dies "Creating nextcloud database failed"
+" | mysql -u root -B --socket=/tmp/mysql_nextcloud.sock || die "Creating nextcloud database failed"
 sleep 1
 kill "$PID"
 i=0
