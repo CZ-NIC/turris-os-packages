@@ -23,6 +23,7 @@ if [ -f /srv/www/nextcloud/config/config.php ]; then
     exit 1
 fi
 
+if [ -f /srv/www/nextcloud/.occ]; then
 echo "This script will setup Nextcloud for you automatically."
 echo "It will try to create MySQL database, change files on your filesystem and more."
 echo "If you know what you are doing, you can set it up manually."
@@ -38,6 +39,7 @@ else
         echo "You decided not to proceed, so not doing anything"
         exit 0
     fi
+fi
 fi
 
 # Enable dependencies
@@ -108,7 +110,6 @@ if [ -z "$IP" ]; then
 fi
 sudo -u nobody php-cli ./occ config:system:set --value false updatechecker
 sudo -u nobody php-cli ./occ config:system:set --value $IP trusted_domains 1
-
 # Create cron script
 echo "*/15  *  *  *  *   /usr/bin/su --shell /bin/ash --command '/usr/bin/php-cli -f /srv/www/nextcloud/cron.php' nobody" >/etc/cron.d/nextcloud
 
