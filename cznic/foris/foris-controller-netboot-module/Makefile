@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-netboot-module
-PKG_VERSION:=0.3
-PKG_RELEASE:=2
+PKG_VERSION:=0.4
+PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-netboot-module.git
@@ -51,6 +51,15 @@ uci commit
 /etc/init.d/foris-controller restart
 /etc/init.d/foris-ws restart
 }
+endef
+
+# redefine install
+define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)$(PYTHON3_PKG_DIR)
+	if [ -d $(PKG_INSTALL_DIR)/usr/bin ]; then find $(PKG_INSTALL_DIR)/usr/bin -mindepth 1 -maxdepth 1 -type f -exec $(CP) \{\} $(1)/usr/bin/ \; ; fi
+	find $(PKG_INSTALL_DIR)$(PYTHON3_PKG_DIR) -mindepth 1 -maxdepth 1 \( -type f -o -type d \) -exec $(CP) \{\} $(1)$(PYTHON3_PKG_DIR)/ \;
+	$(RM) $(1)/usr/lib/python*/site-packages/foris_controller_modules/__init__.py
+	$(RM) $(1)/usr/lib/python*/site-packages/foris_controller_backends/__init__.py
 endef
 
 $(eval $(call Py3Package,$(PKG_NAME)))
