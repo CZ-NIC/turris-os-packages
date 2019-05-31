@@ -1,0 +1,50 @@
+#!/bin/sh /etc/rc.common
+
+#Copyright 2019, CZ.NIC z.s.p.o. (http://www.nic.cz/)
+#
+#This file is part of foris-controller configuration server.
+#
+#foris-controller is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#foris-controller is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with foris-controller.  If not, see <http://www.gnu.org/licenses/>.
+
+# Should after fosquitto starts
+START=70
+STOP=30
+
+USE_PROCD=1
+PROG=/usr/bin/foris-netboot-observer
+
+start_service() {
+	config_load foris-controller
+	config_get_bool debug main debug 0
+
+	if [ "$debug" == "1" ]; then
+		debug_arg="-d"
+	fi
+
+	procd_open_instance
+
+	config_get host mqtt host "localhost"
+	config_get port mqtt port "11883"
+	config_get credentials_file mqtt credentials_file "/etc/fosquitto/credentials.plain"
+	serial_number=$(crypto-wrapper serial-number)
+	if [ "$?" == 0 ] ; then
+		controller_id="--controller-id $serial_number"
+	fi
+	procd_set_param command "$PROG" ${debug_arg:-} --host "${host}" --port "${port}" --passwd-file "${credentials_file}" ${controller_id}
+
+	procd_set_param stdout 1 # forward stdout of the command to logd
+	procd_set_param stderr 1 # same for stderr
+	procd_set_param respawn
+	procd_close_instance
+}
