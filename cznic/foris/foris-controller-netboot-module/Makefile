@@ -75,7 +75,7 @@ define Package/$(PKG_NAME)/install
 	$(RM) $(1)/usr/lib/python*/site-packages/foris_controller_modules/__init__.py
 	$(RM) $(1)/usr/lib/python*/site-packages/foris_controller_backends/__init__.py
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/foris-netboot-observer.init $(1)/usr/init.d/foris-netboot-observer.init
+	$(INSTALL_BIN) ./files/foris-netboot-observer.init $(1)/etc/init.d/foris-netboot-observer.init
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
