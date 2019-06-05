@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-netboot-module
 PKG_VERSION:=0.4
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-netboot-module.git
@@ -75,7 +75,7 @@ define Package/$(PKG_NAME)/install
 	$(RM) $(1)/usr/lib/python*/site-packages/foris_controller_modules/__init__.py
 	$(RM) $(1)/usr/lib/python*/site-packages/foris_controller_backends/__init__.py
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/foris-netboot-observer.init $(1)/etc/init.d/foris-netboot-observer.init
+	$(INSTALL_BIN) ./files/foris-netboot-observer.init $(1)/etc/init.d/foris-netboot-observer
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
