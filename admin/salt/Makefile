@@ -15,13 +15,14 @@ PKG_LICENSE:=Apache 2.0
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 PKG_SOURCE:=salt-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/41/d4/7f6d6bb139506741771ff9feb8429d5a5ed860de9ab5a358e771e8cc3b76/
+PKG_SOURCE_URL:=https://pypi.python.org/packages/source/s/salt/
 PKG_HASH:=5695bb2b3fa288bcfc0e3b93d9449afd75220bd8f0deefb5e7fc03af381df6cd
 PKG_BUILD_DIR:=$(BUILD_DIR)/salt-$(PKG_VERSION)
-PKG_UNPACK=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
+
+PYTHON3_PKG_SETUP_ARGS:=
 
 define Package/salt
 	SECTION:=admin
