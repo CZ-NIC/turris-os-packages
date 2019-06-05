@@ -26,8 +26,7 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 define Package/salt
 	SECTION:=admin
 	CATEGORY:=Administration
-	SUBMENU:=Python
-	TITLE:=Portable, distributed, remote execution and configuration management system
+	TITLE:=Remote execution and configuration management system
 	URL:=http://saltstack.org
 	DEPENDS:=+python3 +python3-msgpack +python3-yaml +python3-requests +python3-pyopenssl +python3-crypto +python3-tornado
 	VARIANT:=python3
