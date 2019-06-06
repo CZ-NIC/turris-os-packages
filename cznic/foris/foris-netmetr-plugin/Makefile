@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-netmetr-plugin
 PKG_VERSION:=4.6
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-netmetr-plugin.git
@@ -42,12 +42,7 @@ define Package/$(PKG_NAME)/description
  Foris plugin for netmetr program
 endef
 
-# Package install definition
-$(eval $(call ForisPlugin,$(PKG_NAME),netmetr))
-
-# Translation definitions
 FORIS_TRANSLATIONS:=cs it de sk ru pl it hu fr nb
-$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),netmetr,$(trans))))
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call BuildPackage,$(PKG_NAME)-l10n-$(trans))))
+$(eval $(call ForisPlugin,$(PKG_NAME),netmetr))
+# call BuildPackage <= assures OWR build system that this is package

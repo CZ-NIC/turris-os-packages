@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-diagnostics-module
 PKG_VERSION:=0.5
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-diagnostics-module.git
@@ -38,8 +38,5 @@ define Package/$(PKG_NAME)/description
  This is a diagnostics module for foris-controller
 endef
 
-# Package install definition
 $(eval $(call ForisControllerModule,$(PKG_NAME)))
-$(eval $(call Py3Package,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)-src))
+# call BuildPackage <= assures OWR build system that this is package

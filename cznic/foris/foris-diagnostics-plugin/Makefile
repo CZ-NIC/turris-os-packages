@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-diagnostics-plugin
 PKG_VERSION:=11
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-diagnostics-plugin.git
@@ -42,12 +42,7 @@ define Package/$(PKG_NAME)/description
  Foris plugin for generating diagnostics
 endef
 
-# Package install definition
-$(eval $(call ForisPlugin,$(PKG_NAME),diagnostics))
-
-# Translation definitions
 FORIS_TRANSLATIONS:=cs de sk pl fr ru lt hu it nb
-$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),diagnostics,$(trans))))
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call BuildPackage,$(PKG_NAME)-l10n-$(trans))))
+$(eval $(call ForisPlugin,$(PKG_NAME),diagnostics))
+# call BuildPackage <= assures OWR build system that this is package

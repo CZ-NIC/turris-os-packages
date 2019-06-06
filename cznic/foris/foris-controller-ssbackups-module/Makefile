@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018 CZ.NIC z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2018-2019 CZ.NIC z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-ssbackups-module
 PKG_VERSION:=0.5.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-ssbackups-module.git
@@ -42,24 +42,12 @@ define Package/$(PKG_NAME)/conffiles
 /etc/config/ssbackups
 endef
 
-
-$(eval $(call ForisControllerModule,$(PKG_NAME)))
-
-# redefine install
-define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)$(PYTHON3_PKG_DIR)
-	if [ -d $(PKG_INSTALL_DIR)/usr/bin ]; then find $(PKG_INSTALL_DIR)/usr/bin -mindepth 1 -maxdepth 1 -type f -exec $(CP) \{\} $(1)/usr/bin/ \; ; fi
-	find $(PKG_INSTALL_DIR)$(PYTHON3_PKG_DIR) -mindepth 1 -maxdepth 1 \( -type f -o -type d \) -exec $(CP) \{\} $(1)$(PYTHON3_PKG_DIR)/ \;
-	$(RM) $(1)/usr/lib/python$(PYTHON3_VERSION)/site-packages/foris_controller_modules/__init__.py
-	$(RM) $(1)/usr/lib/python$(PYTHON3_VERSION)/site-packages/foris_controller_backends/__init__.py
-	$(INSTALL_DIR) $(1)/etc/cron.d
+define ForisControllerModule/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)/etc/cron.d $(1)/etc/config $(1)/usr/libexec
 	$(INSTALL_DATA) ./files/ssbackups.cron $(1)/etc/cron.d/ssbackups
-	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/ssbackups.uci $(1)/etc/config/ssbackups
-	$(INSTALL_DIR) $(1)/usr/libexec
 	$(INSTALL_BIN) ./files/ssbackups.sh $(1)/usr/libexec/ssbackups.sh
 endef
 
-$(eval $(call Py3Package,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)-src))
+$(eval $(call ForisControllerModule,$(PKG_NAME)))
+# call BuildPackage <= assures OWR build system that this is package

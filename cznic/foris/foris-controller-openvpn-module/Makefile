@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-openvpn-module
 PKG_VERSION:=0.6
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-openvpn-module.git
@@ -39,7 +39,6 @@ define Package/$(PKG_NAME)/description
 endef
 
 define Package/${PKG_NAME}/postinst
-#!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 	if uci -q get openvpn.server_turris.comp_lzo > /dev/null ; then
 		uci del openvpn.server_turris.comp_lzo
@@ -51,8 +50,5 @@ define Package/${PKG_NAME}/postinst
 }
 endef
 
-# Package install definition
 $(eval $(call ForisControllerModule,$(PKG_NAME)))
-$(eval $(call Py3Package,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)-src))
+# call BuildPackage <= assures OWR build system that this is package

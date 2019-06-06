@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
 PKG_VERSION:=100.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris.git
@@ -56,7 +56,16 @@ define Package/foris/conffiles
 /etc/config/foris
 endef
 
-define Package/foris/install
+define Py3Package/foris/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
+
+	$(RM) -r $(1)$(PYTHON3_PKG_DIR)/foris/locale/
+	$(RM) -rf $(1)$(PYTHON3_PKG_DIR)/foris/langs/??.py
+	$(RM) -rf $(1)$(PYTHON3_PKG_DIR)/foris/langs/??.pyc
+	$(INSTALL_DIR) $(1)$(PYTHON3_PKG_DIR)/foris/locale
+	touch $(1)$(PYTHON3_PKG_DIR)/foris/locale/.keep
+
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
 	$(INSTALL_DATA) ./files/00_foris.conf $(1)/usr/share/turris-webapps/
 	$(INSTALL_DIR) $(1)/www/webapps-icons
@@ -72,35 +81,16 @@ define Package/foris/install
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./files/foris.conf $(1)/etc/config/foris
-
-	$(INSTALL_DIR) $(1)$(PYTHON3_PKG_DIR)
-
-	$(CP) \
-		$(PKG_INSTALL_DIR)$(PYTHON3_PKG_DIR)/* \
-		$(1)$(PYTHON3_PKG_DIR)/
-	$(RM) -r $(1)$(PYTHON3_PKG_DIR)/foris/locale/
-	$(RM) -rf $(1)$(PYTHON3_PKG_DIR)/foris/langs/??.py
-	$(RM) -rf $(1)$(PYTHON3_PKG_DIR)/foris/langs/??.pyc
-
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/foris $(1)/usr/bin/foris
-
-	$(INSTALL_DIR) $(1)$(PYTHON3_PKG_DIR)/foris/locale
-	touch $(1)$(PYTHON3_PKG_DIR)/foris/locale/.keep
 endef
 
 define Package/foris/postinst
-#!/bin/sh
-set -x
 [ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/lighttpd enable
-/usr/bin/maintain-lighttpd-restart
+	/etc/init.d/lighttpd enable
+	/usr/bin/maintain-lighttpd-restart
 }
 endef
 
 define Package/foris/prerm
-#!/bin/sh
-set -x
 /usr/bin/maintain-lighttpd-restart
 endef
 
@@ -126,14 +116,10 @@ define ForisTranslation
  endef
 
  define Package/foris-l10n-$(1)/postrm
-#!/bin/sh
-set -x
 [ -n "$$$${IPKG_INSTROOT}" ] || /etc/init.d/lighttpd restart
  endef
 
  define Package/foris-l10n-$(1)/postinst
-#!/bin/sh
-set -x
 [ -n "$$$${IPKG_INSTROOT}" ] || /etc/init.d/lighttpd restart
  endef
 

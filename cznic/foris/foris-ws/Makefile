@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-ws
 PKG_VERSION:=1.4
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-ws
@@ -48,9 +48,10 @@ define Package/foris-ws/conffiles
 /etc/config/foris-ws
 endef
 
-define Package/foris-ws/install
-	$(INSTALL_DIR) $(1)
-	$(CP) $(PKG_INSTALL_DIR)/* $(1)/
+define Py3Package/foris-ws/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
+
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) ./files/foris-ws.conf $(1)/etc/config/foris-ws
 	$(INSTALL_DIR) $(1)/etc/init.d/
@@ -64,8 +65,6 @@ define Package/foris-ws/install
 endef
 
 define Package/foris-ws/postinst
-#!/bin/sh
-set -x
 [ -n "$$IPKG_INSTROOT" ] || {
 /etc/init.d/foris-ws enable
 /etc/init.d/foris-ws restart
@@ -73,8 +72,6 @@ set -x
 endef
 
 define Package/foris-ws/prerm
-#!/bin/sh
-set -x
 /etc/init.d/foris-ws stop
 /etc/init.d/foris-ws disable
 endef

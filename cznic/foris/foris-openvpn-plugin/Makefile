@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-openvpn-plugin
 PKG_VERSION:=16.6
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-openvpn-plugin.git
@@ -42,12 +42,7 @@ define Package/$(PKG_NAME)/description
  Foris plugin for OpenVPN server configuration
 endef
 
-# Package install definition
-$(eval $(call ForisPlugin,$(PKG_NAME),openvpn))
-
-# Translation definitions
 FORIS_TRANSLATIONS:=cs de sk pl fr ru hu it nb
-$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call ForisPluginTranslation,$(PKG_NAME),openvpn,$(trans))))
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(foreach trans,$(FORIS_TRANSLATIONS),$(eval $(call BuildPackage,$(PKG_NAME)-l10n-$(trans))))
+$(eval $(call ForisPlugin,$(PKG_NAME),openvpn))
+# call BuildPackage <= assures OWR build system that this is package

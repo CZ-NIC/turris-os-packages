@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller
 PKG_VERSION:=1.0.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller
@@ -30,9 +30,8 @@ define Package/foris-controller
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
-define Package/foris-controller/install
-	true  # This is required otherwise the package won't be created
-endef
+# This is required otherwise the package won't be created
+Package/foris-controller/install:=:
 
 define Package/foris-controller-app
 	TITLE:=foris-controller-app
@@ -55,9 +54,10 @@ define Package/foris-controller-app/conffiles
 /etc/config/foris-controller
 endef
 
-define Package/foris-controller-app/install
-	$(INSTALL_DIR) $(1)
-	$(CP) $(PKG_INSTALL_DIR)/* $(1)/
+define Py3Package/foris-controller-app/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
+
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) ./files/foris-controller.conf $(1)/etc/config/foris-controller
 ifeq ($(CONFIG_TARGET_mvebu_cortexa53_DEVICE_cznic-mox),y)
@@ -82,17 +82,13 @@ define Package/foris-controller-hotplug/install
 endef
 
 define Package/foris-controller-app/postinst
-#!/bin/sh
-set -x
 [ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/foris-controller enable
-/etc/init.d/foris-controller restart
+	/etc/init.d/foris-controller enable
+	/etc/init.d/foris-controller restart
 }
 endef
 
 define Package/foris-controller-app/prerm
-#!/bin/sh
-set -x
 /etc/init.d/foris-controller stop
 /etc/init.d/foris-controller disable
 endef

@@ -38,44 +38,29 @@ define Package/$(PKG_NAME)/description
  This is a netboot module for foris-controller
 endef
 
-# Package install definition
-$(eval $(call ForisControllerModule,$(PKG_NAME)))
+define Package/$(PKG_NAME)/postinst
+[ -n "$${IPKG_INSTROOT}" ] || {
+	uci set foris-ws.main.bus=mqtt
+	uci set foris-controller.main.bus=mqtt
+	uci commit
+	/etc/init.d/foris-controller restart
+	/etc/init.d/foris-ws restart
+	/etc/init.d/lighttpd restart
 
-define Package/$(1)/postinst
-#!/bin/sh
-set -x
-[ -n "$$$${IPKG_INSTROOT}" ] || {
-uci set foris-ws.main.bus=mqtt
-uci set foris-controller.main.bus=mqtt
-uci commit
-/etc/init.d/foris-controller restart
-/etc/init.d/foris-ws restart
-/etc/init.d/lighttpd restart
-
-/etc/init.d/foris-netboot-observer enable
-/etc/init.d/foris-netboot-observer start
+	/etc/init.d/foris-netboot-observer enable
+	/etc/init.d/foris-netboot-observer start
 }
 endef
 
-define Package/$(1)/prerm
-#!/bin/sh
-set -x
+define Package/$(PKG_NAME)/prerm
 /etc/init.d/foris-netboot-observer stop
 /etc/init.d/foris-netboot-observer disable
 endef
 
-# redefine install
-define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)$(PYTHON3_PKG_DIR)
-	$(INSTALL_DIR) $(1)/usr/bin
-	if [ -d $(PKG_INSTALL_DIR)/usr/bin ]; then find $(PKG_INSTALL_DIR)/usr/bin -mindepth 1 -maxdepth 1 -type f -exec $(CP) \{\} $(1)/usr/bin/ \; ; fi
-	find $(PKG_INSTALL_DIR)$(PYTHON3_PKG_DIR) -mindepth 1 -maxdepth 1 \( -type f -o -type d \) -exec $(CP) \{\} $(1)$(PYTHON3_PKG_DIR)/ \;
-	$(RM) $(1)/usr/lib/python*/site-packages/foris_controller_modules/__init__.py
-	$(RM) $(1)/usr/lib/python*/site-packages/foris_controller_backends/__init__.py
+define ForisControllerModule/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/foris-netboot-observer.init $(1)/etc/init.d/foris-netboot-observer
 endef
 
-$(eval $(call Py3Package,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)-src))
+$(eval $(call ForisControllerModule,$(PKG_NAME)))
+# call BuildPackage <= assures OWR build system that this is package
