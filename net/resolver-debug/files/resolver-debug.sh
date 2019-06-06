@@ -66,6 +66,9 @@ set_kresd_log() {
 	uci set resolver.kresd.log_stdout="$1"
 	uci commit resolver
 	/etc/init.d/resolver restart 2>&1 | logger &
+	# We need kresd to be started, but on the other hand we don't want
+	# to wait a minute for the ipv6-disabling hack.
+	sleep 5
 }
 
 start_debug () {
