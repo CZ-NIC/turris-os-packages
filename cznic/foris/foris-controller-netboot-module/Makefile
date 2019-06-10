@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-netboot-module
 PKG_VERSION:=0.4
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-netboot-module.git
@@ -44,7 +44,7 @@ endef
 # Package install definition
 $(eval $(call ForisControllerModule,$(PKG_NAME)))
 
-define Package/$(1)/postinst
+define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 set -x
 [ -n "$$$${IPKG_INSTROOT}" ] || {
@@ -59,7 +59,7 @@ uci commit
 }
 endef
 
-define Package/$(1)/prerm
+define Package/$(PKG_NAME)/prerm
 #!/bin/sh
 set -x
 /etc/init.d/foris-netboot-observer stop
