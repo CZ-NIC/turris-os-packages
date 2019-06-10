@@ -42,7 +42,7 @@ define Build/Prepare
 	$(PKG_UNPACK)
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/sbin"
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/etc"
-	echo -e 'nameserver 217.31.204.130\nnameserver 2001:678:1::206\nnameserver 193.29.206.206' > "$(PKG_BUILD_DIR)/rootfs/etc/resolv.conf"
+	echo -e 'nameserver 193.17.47.1\nnameserver 2001:148f:ffff::1\nnameserver 185.43.135.1' > "$(PKG_BUILD_DIR)/rootfs/etc/resolv.conf"
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/tmp"
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/var/lock"
 	mkdir -p "$(PKG_BUILD_DIR)/busybox"
