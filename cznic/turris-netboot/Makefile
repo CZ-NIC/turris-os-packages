@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-netboot
-PKG_VERSION:=1.0
+PKG_VERSION:=0.5.1
 PKG_RELEASE:=1
 BB_VERSION:=1.29.3
 PKG_BB_SOURCE:=busybox-$(BB_VERSION).tar.bz2
@@ -20,10 +20,10 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_BUILD_DEPENDS:=opkg/host
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=git@gitlab.labs.nic.cz:turris/turris-netboot.git
-PKG_SOURCE_VERSION:=bfea1953018601828291389171c1f6dcae1fbd55
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/turris-netboot.git
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.bz2
-ROOTFS_INSTALL:=+libgcc +libc +libubox +libpthread +librt +libattr +libuuid +zlib +libblkid +liblzo +uboot-envtools +usign +cznic-repo-keys +libopenssl +libpcre +wget +openssh-client +openssh-keygen +openssh-client-utils
+ROOTFS_INSTALL:=+libgcc +libc +libubox +libpthread +librt +libattr +libuuid +zlib +libblkid +liblzo +uboot-envtools +libopenssl +libpcre +openssh-client +openssh-keygen +openssh-client-utils
 PKG_BUILD_DEPENDS:=opkg/host busybox openssh-utils openssh-client uboot-envtools
 
 include $(INCLUDE_DIR)/kernel.mk
@@ -42,7 +42,7 @@ define Build/Prepare
 	$(PKG_UNPACK)
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/sbin"
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/etc"
-	echo -e 'nameserver 217.31.204.130\nnameserver 2001:678:1::206\nnameserver 193.29.206.206' > "$(PKG_BUILD_DIR)/rootfs/etc/resolv.conf"
+	echo -e 'nameserver 193.17.47.1\nnameserver 2001:148f:ffff::1\nnameserver 185.43.135.1' > "$(PKG_BUILD_DIR)/rootfs/etc/resolv.conf"
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/tmp"
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/var/lock"
 	mkdir -p "$(PKG_BUILD_DIR)/busybox"
@@ -62,6 +62,10 @@ define Build/Configure
 	# Busybox
 	cp files/busybox-config $(PKG_BUILD_DIR)/busybox/.config
 	$(MAKE) -C "$(PKG_BUILD_DIR)/busybox" $(MAKE_FLAGS) oldconfig
+endef
+
+define Package/turris-netboot-tools/conffiles
+/etc/config/netboot
 endef
 
 define Build/Compile
@@ -87,8 +91,20 @@ define Package/turris-netboot-data/install
 	$(INSTALL_DATA) ./files/mox.its $(1)/usr/share/turris-netboot
 endef
 
+define Package/turris-netboot-tools/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+/etc/init.d/cron restart
+/usr/bin/netboot-setup
+}
+endef
+
 define Package/turris-netboot-tools/install
 	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/netboot $(1)/etc/config/netboot
+	$(INSTALL_DATA) ./files/netboot-update.cron $(1)/etc/cron.d/netboot-update
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/server.sh $(1)/usr/bin/netboot-server
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/manage.sh $(1)/usr/bin/netboot-manager
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/setup.sh $(1)/usr/bin/netboot-setup
