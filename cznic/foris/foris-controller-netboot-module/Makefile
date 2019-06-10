@@ -44,7 +44,7 @@ endef
 # Package install definition
 $(eval $(call ForisControllerModule,$(PKG_NAME)))
 
-define Package/$(1)/postinst
+define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 set -x
 [ -n "$$$${IPKG_INSTROOT}" ] || {
@@ -59,7 +59,7 @@ uci commit
 }
 endef
 
-define Package/$(1)/prerm
+define Package/$(PKG_NAME)/prerm
 #!/bin/sh
 set -x
 /etc/init.d/foris-netboot-observer stop
