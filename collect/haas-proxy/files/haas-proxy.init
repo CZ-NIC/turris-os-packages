@@ -9,8 +9,10 @@ DEFAULT_LOCAL_PORT=2525
 DEFAULT_FIREWALL_ZONE="wan"
 
 firewall_drop() {
-	iptables -t nat -S | sed -n '/--comment "!haas:/s/^-A//p' | while read -r rule; do
-		eval "iptables -t nat -D $rule"
+	iptables -t nat -L --line-numbers \
+			| awk '/\/\* !haas:.* \*\// {print $1, $2}' \
+			| while read -r num chain; do
+		iptables -t nat -D "$chain" "$num"
 	done
 }
 
