@@ -9,26 +9,26 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-bottle-i18n
 PKG_VERSION:=0.1.5
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE:=bottle-i18n-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://pypi.python.org/packages/source/b/bottle-i18n/
+PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/b/bottle-i18n/
 PKG_HASH:=7f9d343ae30b18a9676cbe612a8be2e99d4741aa4aa6a1b875ea232ba94c7678
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-bottle-i18n-$(PKG_VERSION)
+PKG_BUILD_DIR:=$(BUILD_DIR)/bottle-i18n-$(PKG_VERSION)
+
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=MIT
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
-
-PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/python3-bottle-i18n
   SUBMENU:=Python
   SECTION:=lang
   CATEGORY:=Languages
-  URL:=https://github.com/iocast/bottle-i18n
-  MAINTAINER:=CZ.NIC <packaging@turris.cz>
   TITLE:=python3-bottle-i18n
+  URL:=https://github.com/iocast/bottle-i18n
   DEPENDS:=+python3-light +python3-bottle
   VARIANT:=python3
 endef
