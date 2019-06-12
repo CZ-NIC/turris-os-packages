@@ -53,6 +53,7 @@ uci set foris-controller.main.bus=mqtt
 uci commit
 /etc/init.d/foris-controller restart
 /etc/init.d/foris-ws restart
+/etc/init.d/lighttpd restart
 
 /etc/init.d/foris-netboot-observer enable
 /etc/init.d/foris-netboot-observer start
