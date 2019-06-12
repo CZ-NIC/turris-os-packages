@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-netboot-module
 PKG_VERSION:=0.4
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-netboot-module.git
@@ -50,6 +50,7 @@ uci set foris-controller.main.bus=mqtt
 uci commit
 /etc/init.d/foris-controller restart
 /etc/init.d/foris-ws restart
+/etc/init.d/lighttpd restart
 
 /etc/init.d/foris-netboot-observer enable
 /etc/init.d/foris-netboot-observer start
