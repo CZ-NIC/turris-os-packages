@@ -6,8 +6,13 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/cython/cython/archive
-PKG_BUILD_DIR:=$(BUILD_DIR)/cython-$(PKG_VERSION)
 PKG_HASH:=bcd6a24ca0cba54ad8b1755852bb5cd567bb06abea6f776c82fbb10bb46bae37
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/cython-$(PKG_VERSION)
+
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=Apache-2.0	
+PKG_LICENSE_FILES:=LICENSE.txt
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
