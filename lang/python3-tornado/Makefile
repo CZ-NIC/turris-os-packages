@@ -11,13 +11,15 @@ PKG_NAME:=python3-tornado
 PKG_VERSION:=6.0.2
 PKG_RELEASE:=1
 
-PKG_LICENSE:=Apache 2.0
-PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-
 PKG_SOURCE:=tornado-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/t/tornado/
 PKG_HASH:=457fcbee4df737d2defc181b9073758d73f54a6cfc1f280533ff48831b39f4a8
+
 PKG_BUILD_DIR:=$(BUILD_DIR)/tornado-$(PKG_VERSION)
+
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=Apache 2.0
+PKG_LICENSE_FILES:=LICENSE
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
