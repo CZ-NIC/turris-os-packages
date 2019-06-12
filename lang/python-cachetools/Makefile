@@ -8,15 +8,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-cachetools
-PKG_VERSION:=3.1.0
+PKG_VERSION:=3.1.1
 PKG_RELEASE:=1
-PKG_LICENSE:=MIT
 
 PKG_SOURCE_URL:=https://github.com/tkem/cachetools/archive/
-PKG_HASH:=9863c750b563850db89c73332b8f7b92ec8de03050daf396b84d89b48fb009e3
+PKG_HASH:=8ea2d3ce97850f31e4a08b0e2b5e6c34997d7216a9d2c98e0f3978630d4da69a
 PKG_SOURCE:=v$(PKG_VERSION).tar.gz
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-cachetools-$(PKG_VERSION)
+
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=MIT
+PKG_LICENSE_FILES:=LICENSE
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python-package.mk
@@ -28,7 +31,6 @@ define Package/$(PKG_NAME)/Default
   SUBMENU:=Python
   SECTION:=lang
   CATEGORY:=Languages
-  MAINTAINER:=Thomas Kemmer
   TITLE:=Extensible memoizing collections and decorators
   URL:=https://pypi.python.org/pypi/cachetools
 endef
@@ -60,6 +62,7 @@ endef
 $(eval $(call PyPackage,python-cachetools))
 $(eval $(call BuildPackage,python-cachetools))
 $(eval $(call BuildPackage,python-cachetools-src))
+
 $(eval $(call Py3Package,python3-cachetools))
 $(eval $(call BuildPackage,python3-cachetools))
 $(eval $(call BuildPackage,python3-cachetools-src))
