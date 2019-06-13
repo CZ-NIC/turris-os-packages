@@ -38,8 +38,8 @@ append_lan_ports() {
 	# Note: there can be tagged vlan going to switch but if switch is not
 	# configured for it it does not work anyway.
 
-	local vlan="$(cat "$vlandir/$ifn")"
-	local ports vid
+	local vlan ports vid
+	vlan="$(cat "$vlandir/$ifn")"
 	config_get ports "$vlan" ports
 	config_get vid "$vlan" vid
 	for port in $ports; do
@@ -61,6 +61,7 @@ interface_handle() {
 	local devices type
 	config_get devices "$cnf" device
 	[ -n "$devices" ] || config_get devices "$cnf" ifname
+	uci delete "network.$cnf.ifname" # devices are now in variable so we can remove all ifname
 	for ifn in $devices; do
 		case "$ifn" in
 			eth0*|eth2*)
