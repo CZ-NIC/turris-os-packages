@@ -12,7 +12,7 @@ PKG_VERSION:=4.6.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=zope.interface-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/z/zope-interface/
+PKG_SOURCE_URL:=https://pypi.python.org/packages/source/z/zope-interface/
 PKG_HASH:=1b3d0dcabc7c90b470e59e38a9acaa361be43b3a6ea644c0063951964717f0e5
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/zope.interface-$(PKG_VERSION)
