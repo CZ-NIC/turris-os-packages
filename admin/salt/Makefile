@@ -1,23 +1,16 @@
-#
-# Copyright (C) 2015 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=salt
 PKG_VERSION:=2019.2.0
-PKG_RELEASE:=0
+PKG_RELEASE:=1
 
-PKG_LICENSE:=Apache 2.0
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=Apache-2.0
+PKG_LICENSE_FILES:=LICENSE
 
-PKG_SOURCE:=salt-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://pypi.python.org/packages/source/s/salt/
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/s/salt/
 PKG_HASH:=5695bb2b3fa288bcfc0e3b93d9449afd75220bd8f0deefb5e7fc03af381df6cd
-PKG_BUILD_DIR:=$(BUILD_DIR)/salt-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -25,12 +18,20 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 PYTHON3_PKG_SETUP_ARGS:=
 
 define Package/salt
-	SECTION:=admin
-	CATEGORY:=Administration
-	TITLE:=Remote execution and configuration management system
-	URL:=http://saltstack.org
-	DEPENDS:=+python3 +python3-msgpack +python3-yaml +python3-requests +python3-pyopenssl +python3-crypto +python3-tornado
-	VARIANT:=python3
+  SECTION:=admin
+  CATEGORY:=Administration
+  TITLE:=Remote execution and configuration management system
+  URL:=https://www.saltstack.com/
+  DEPENDS:= \
+  +python3-light \
+  +python3-jinja2 \
+  +python3-msgpack \
+  +python3-yaml \
+  +python3-markupsafe \
+  +python3-requests \
+  +python3-tornado \
+  +python3-pyzmq
+  VARIANT:=python3
 endef
 
 define Package/salt/description
@@ -41,7 +42,6 @@ define Package/salt/description
  fast enough to communicate with them in seconds.
 endef
 
-
-$(eval $(call Py3Package,salt))
-$(eval $(call BuildPackage,salt))
-$(eval $(call BuildPackage,salt-src))
+$(eval $(call Py3Package,$(PKG_NAME)))
+$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,$(PKG_NAME)-src))
