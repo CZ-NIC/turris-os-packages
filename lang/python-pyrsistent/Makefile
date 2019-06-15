@@ -8,13 +8,18 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-pyrsistent
-PKG_VERSION:=0.14.11
+PKG_VERSION:=0.15.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=pyrsistent-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/p/pyrsistent/
-PKG_HASH:=3ca82748918eb65e2d89f222b702277099aca77e34843c5eb9d52451173970e2
+PKG_HASH:=16692ee739d42cf5e39cef8d27649a8c1fdb7aa99887098f1460057c5eb75c3a
+
 PKG_BUILD_DIR:=$(BUILD_DIR)/pyrsistent-$(PKG_VERSION)
+
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=MIT
+PKG_LICENSE_FILES:=LICENSE.mit
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -25,7 +30,6 @@ define Package/python3-pyrsistent
   CATEGORY:=Languages
   TITLE:=python3-pyrsistent
   URL:=https://github.com/tobgu/pyrsistent
-  MAINTAINER:=CZ.NIC <packaging@turris.cz>
   DEPENDS:=+python3-light +python3-six
   VARIANT:=python3
 endef
