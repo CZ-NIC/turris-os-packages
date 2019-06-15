@@ -11,11 +11,15 @@ PKG_NAME:=python-msgpack
 PKG_VERSION:=0.6.1
 PKG_RELEASE:=1
 
-PKG_SOURCE:=v$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/msgpack/msgpack-python/archive/
-PKG_HASH:=734e1abc6f14671f28acd5266de336ae6d8de522fe1c8d0b7146365ad1fe6b0f
+PKG_SOURCE:=msgpack-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/m/msgpack/
+PKG_HASH:=4008c72f5ef2b7936447dcb83db41d97e9791c83221be13d5e19db0796df1972
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/msgpack-python-$(PKG_VERSION)
+PKG_BUILD_DIR:=$(BUILD_DIR)/msgpack-$(PKG_VERSION)
+
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=Apache-2.0
+PKG_LICENSE_FILES:=COPYING
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -24,8 +28,8 @@ define Package/python3-msgpack
   SUBMENU:=Python
   SECTION:=lang
   CATEGORY:=Languages
-  TITLE:=Python msgpack library
-  URL:=https://pypi.python.org/pypi/msgpack
+  TITLE:=MessagePack (de)serializer
+  URL:=https://msgpack.org/
   DEPENDS:=+python3-light +libstdcpp
   VARIANT:=python3
 endef
