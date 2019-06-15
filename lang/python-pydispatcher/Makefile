@@ -17,6 +17,10 @@ PKG_HASH:=5570069e1b1769af1fe481de6dd1d3a388492acddd2cdad7a3bde145615d5caf
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/PyDispatcher-$(PKG_VERSION)
 
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=BSD-2-Clause
+PKG_LICENSE_FILES:=license.txt
+
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
