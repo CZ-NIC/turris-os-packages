@@ -12,7 +12,7 @@ PKG_VERSION:=0.3.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=Flask-Session-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://pypi.python.org/packages/source/f/flask-session/
+PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/f/flask-session/
 PKG_HASH:=a31c27e0c3287f00c825b3d9625aba585f4df4cccedb1e7dd5a69a215881a731
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/Flask-Session-$(PKG_VERSION)
