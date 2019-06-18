@@ -48,20 +48,19 @@ append_lan_ports() {
 				# Ignore CPU ports those are managed by DSA
 				;;
 			*t)
-				uci add_list "network.$cnf.ifname=lan${port%t}.${vid}"
+				append new_ifname "lan${port%t}.${vid}"
 				;;
 			*)
-				uci add_list "network.$cnf.ifname=lan${port}"
+				append new_ifname "lan${port}"
 				;;
 		esac
 	done
 }
 interface_handle() {
 	local cnf="$1"
-	local devices type
+	local devices new_ifname
 	config_get devices "$cnf" device
 	[ -n "$devices" ] || config_get devices "$cnf" ifname
-	uci delete "network.$cnf.ifname" # devices are now in variable so we can remove all ifname
 	for ifn in $devices; do
 		case "$ifn" in
 			eth0*|eth2*)
@@ -69,13 +68,25 @@ interface_handle() {
 				;;
 			eth1*)
 				# WAN port is now eth2 not eth1
-				uci add_list "network.$cnf.ifname=eth2${ifn#eth1}"
+				append new_ifname "eth2${ifn#eth1}"
 				;;
 			*)
-				uci add_list "network.$cnf.ifname=$ifn"
+				append new_ifname "$ifn"
 				;;
 		esac
 	done
+
+	uci delete "network.$cnf.ifname"
+	case "$new_ifname" in
+		*\ *)
+			for ifn in $new_ifname; do
+				uci add_list "network.$cnf.ifname=$ifn"
+			done
+			;;
+		*)
+			uci set "network.$cnf.ifname=$new_ifname"
+			;;
+	esac
 }
 config_foreach interface_handle interface
 
