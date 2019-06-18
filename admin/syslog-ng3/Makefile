@@ -30,7 +30,7 @@ include $(INCLUDE_DIR)/nls.mk
 define Package/syslog-ng3
   SECTION:=admin
   CATEGORY:=Administration
-  DEPENDS:=+libpcre +glib2 +libopenssl +libwrap +libpthread +librt +zlib +libdbi +psmisc +libjson-c +libcurl +libuuid
+  DEPENDS:=+libpcre +glib2 +libopenssl +libwrap +libpthread +librt +zlib +libdbi +psmisc +libjson-c +libcurl +libuuid +libmaxminddb
   PROVIDES:=syslog
   TITLE:=A powerful syslog daemon
   URL:=https://www.syslog-ng.com/products/open-source-log-management/
@@ -70,8 +70,10 @@ CONFIGURE_ARGS +=  \
 	--with-jsonc=system \
 	--enable-json=yes \
 	--enable-http=yes \
+	--enable-geoip2=yes \
 	--disable-smtp \
 	--disable-redis \
+	--disable-maxmind \
 	--disable-dependency-tracking \
 	--disable-python \
 	--disable-java \
