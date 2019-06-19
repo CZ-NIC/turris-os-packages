@@ -269,7 +269,7 @@ if [ -z "${MODE}" ]; then
 fi
 
 mkdir -p /etc
-echo "/dev/mtd0 0xf0000 0x10000 0x10000" > /etc/fw_env.config
+echo "/dev/mtd0 0xC0000 0x10000 0x40000" > /etc/fw_env.config
 reflash
 
 rainbow all enable ffff00
