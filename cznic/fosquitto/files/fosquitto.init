@@ -103,6 +103,7 @@ generate_subordinate() {
 	echo "connection ${id}" >> "$GENERATED_CONF"
 	echo "address ${address}:${port}" >> "$GENERATED_CONF"
 	echo "restart_timeout 5" >> "$GENERATED_CONF"
+	echo "keepalive_interval 5" >> "$GENERATED_CONF"
 	echo "bridge_cafile /etc/fosquitto/bridges/${id}/ca.crt" >> "$GENERATED_CONF"
 	echo "bridge_certfile /etc/fosquitto/bridges/${id}/token.crt" >> "$GENERATED_CONF"
 	echo "bridge_keyfile /etc/fosquitto/bridges/${id}/token.key" >> "$GENERATED_CONF"
