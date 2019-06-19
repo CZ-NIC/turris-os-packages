@@ -5,7 +5,7 @@ STOP=40
 
 USE_PROCD=1
 
-GENERATED_CONF=/tmp/fosquitto.generated.conf
+GENERATED_CONF=/var/etc/fosquitto.generated.conf
 PLAIN_PASSWORD=/etc/fosquitto/credentials.plain  # local:<random_password>
 HASHED_PASSWORD=/etc/fosquitto/credentials.hashed  # local:<hashed_random_password>
 
