@@ -23,59 +23,59 @@ generate_password() {
 generate_global() {
 	config_get_bool debug global debug "0"
 	if [ "$debug" = "1" ] ; then
-		echo "log_type all" >> "$GENERATED_CONF"
+		echo "log_type all"
 	else
-		echo "log_type error" >> "$GENERATED_CONF"
-		echo "log_type warning" >> "$GENERATED_CONF"
+		echo "log_type error"
+		echo "log_type warning"
 	fi
-	echo "log_dest stderr" >> "$GENERATED_CONF"
-	echo "per_listener_settings true" >> "$GENERATED_CONF"
-	echo "autosave_interval 0" >> "$GENERATED_CONF"
-	echo "persistence true" >> "$GENERATED_CONF"
-	echo "persistence_file /tmp/fosquitto.db" >> "$GENERATED_CONF"
-	echo "queue_qos0_messages true" >> "$GENERATED_CONF"
-	echo "password_file ${HASHED_PASSWORD}" >> "$GENERATED_CONF"
-	echo "allow_anonymous false" >> "$GENERATED_CONF"
-	echo  >> "$GENERATED_CONF"
+	echo "log_dest stderr"
+	echo "per_listener_settings true"
+	echo "autosave_interval 0"
+	echo "persistence true"
+	echo "persistence_file /tmp/fosquitto.db"
+	echo "queue_qos0_messages true"
+	echo "password_file ${HASHED_PASSWORD}"
+	echo "allow_anonymous false"
+	echo
 }
 
 generate_local() {
 	config_get port local port 11883
-	echo "port $port" >> "$GENERATED_CONF"
-	echo "bind_address localhost" >> "$GENERATED_CONF"
-	echo  >> "$GENERATED_CONF"
+	echo "port $port"
+	echo "bind_address localhost"
+	echo
 }
 
 generate_remote() {
-	echo >> "$GENERATED_CONF"
+	echo
 
 	config_get_bool enabled remote enabled "0"
 	config_get port remote port "11884"
 	if [ "$enabled" -eq 1 -a -f /etc/ssl/ca/remote/ca.crt -a -f /etc/ssl/ca/remote/01.crt -a -f /etc/ssl/ca/remote/ca.crl ]; then
-		echo "listener ${port} 0.0.0.0" >> "$GENERATED_CONF"
-		echo "protocol mqtt" >> "$GENERATED_CONF"
-		echo "tls_version tlsv1.2" >> "$GENERATED_CONF"
-		echo "use_identity_as_username true" >> "$GENERATED_CONF"
-		echo "cafile /etc/ssl/ca/remote/ca.crt" >> "$GENERATED_CONF"
-		echo "certfile /etc/ssl/ca/remote/01.crt" >> "$GENERATED_CONF"
-		echo "keyfile /etc/ssl/ca/remote/01.key" >> "$GENERATED_CONF"
-		echo "crlfile /etc/ssl/ca/remote/ca.crl" >> "$GENERATED_CONF"
-		echo "require_certificate true" >> "$GENERATED_CONF"
+		echo "listener ${port} 0.0.0.0"
+		echo "protocol mqtt"
+		echo "tls_version tlsv1.2"
+		echo "use_identity_as_username true"
+		echo "cafile /etc/ssl/ca/remote/ca.crt"
+		echo "certfile /etc/ssl/ca/remote/01.crt"
+		echo "keyfile /etc/ssl/ca/remote/01.key"
+		echo "crlfile /etc/ssl/ca/remote/ca.crl"
+		echo "require_certificate true"
 
-		echo  >> "$GENERATED_CONF"
+		echo
 	fi
 }
 
 append_topic() {
 	local id=$(echo $1 | xargs)  # removes trailing whitespaces
 	if [ -n $id ] ; then
-		echo "topic foris-controller/$id/notification/+/action/+ in 0" >> "$GENERATED_CONF"
-		echo "topic foris-controller/$id/request/+/action/+ out 0" >> "$GENERATED_CONF"
-		echo "topic foris-controller/$id/list out 0" >> "$GENERATED_CONF"
-		echo "topic foris-controller/$id/request/+/list out 0" >> "$GENERATED_CONF"
-		echo "topic foris-controller/$id/list out 0" >> "$GENERATED_CONF"
-		echo "topic foris-controller/$id/schema out 0" >> "$GENERATED_CONF"
-		echo "topic foris-controller/$id/reply/+ in 0" >> "$GENERATED_CONF"
+		echo "topic foris-controller/$id/notification/+/action/+ in 0"
+		echo "topic foris-controller/$id/request/+/action/+ out 0"
+		echo "topic foris-controller/$id/list out 0"
+		echo "topic foris-controller/$id/request/+/list out 0"
+		echo "topic foris-controller/$id/list out 0"
+		echo "topic foris-controller/$id/schema out 0"
+		echo "topic foris-controller/$id/reply/+ in 0"
 	fi
 }
 
@@ -99,16 +99,16 @@ generate_subordinate() {
 		return
 	fi
 
-	echo >> "$GENERATED_CONF"
-	echo "connection ${id}" >> "$GENERATED_CONF"
-	echo "address ${address}:${port}" >> "$GENERATED_CONF"
-	echo "restart_timeout 5" >> "$GENERATED_CONF"
-	echo "keepalive_interval 5" >> "$GENERATED_CONF"
-	echo "bridge_cafile /etc/fosquitto/bridges/${id}/ca.crt" >> "$GENERATED_CONF"
-	echo "bridge_certfile /etc/fosquitto/bridges/${id}/token.crt" >> "$GENERATED_CONF"
-	echo "bridge_keyfile /etc/fosquitto/bridges/${id}/token.key" >> "$GENERATED_CONF"
-	echo "bridge_insecure true" >> "$GENERATED_CONF"
-	echo "bridge_tls_version tlsv1.2" >> "$GENERATED_CONF"
+	echo
+	echo "connection ${id}"
+	echo "address ${address}:${port}"
+	echo "restart_timeout 5"
+	echo "keepalive_interval 5"
+	echo "bridge_cafile /etc/fosquitto/bridges/${id}/ca.crt"
+	echo "bridge_certfile /etc/fosquitto/bridges/${id}/token.crt"
+	echo "bridge_keyfile /etc/fosquitto/bridges/${id}/token.key"
+	echo "bridge_insecure true"
+	echo "bridge_tls_version tlsv1.2"
 
 	append_topic "$id"
 	local subsub_varname=subsubordinate_$id
@@ -116,20 +116,22 @@ generate_subordinate() {
 		append_topic "$subsub_id"
 	done
 
-	echo >> "$GENERATED_CONF"
+	echo
 }
 
 generate_config() {
 	echo "Generating fosquitto config file in $GENERATED_CONF"
-	echo "# fosquitto.conf file generated from UCI config." > $GENERATED_CONF
+	echo "# fosquitto.conf file generated from UCI config." > "$GENERATED_CONF"
 
 	config_load fosquitto
 
-	generate_global
-	generate_local
-	generate_remote
-	config_foreach load_subsubordinate subsubordinate
-	config_foreach generate_subordinate subordinate
+	{
+		generate_global
+		generate_local
+		generate_remote
+		config_foreach load_subsubordinate subsubordinate
+		config_foreach generate_subordinate subordinate
+	} >> "$GENERATED_CONF"
 }
 
 start_service() {
