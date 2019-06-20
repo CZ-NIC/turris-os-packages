@@ -54,7 +54,7 @@ define ForisControllerModule/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/libexec $(1)/etc/init.d $(1)/etc/config
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/format_and_set_srv.sh $(1)/usr/libexec
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/srv.init $(1)/etc/init.d/srv
-	$(INSTALL_FILE) ./files/storage.uci $(1)/etc/config/storage
+	$(INSTALL_DATA) ./files/storage.uci $(1)/etc/config/storage
 ifneq ($(CONFIG_RSYNC_xattr),y)
 	sed -i 's|\(.*rsync .*\)X\(.*\)|\1\2|' $(1)/etc/init.d/srv
 endif
