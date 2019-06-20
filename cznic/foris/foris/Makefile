@@ -56,13 +56,17 @@ define Package/foris/conffiles
 /etc/config/foris
 endef
 
+define Py3Package/foris/filespec
++|$(PYTHON3_PKG_DIR)
+-|$(PYTHON3_PKG_DIR)/foris/locale/
+-|$(PYTHON3_PKG_DIR)/foris/langs/??.py
+-|$(PYTHON3_PKG_DIR)/foris/langs/??.pyc
+endef
+
 define Py3Package/foris/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 
-	$(RM) -r $(1)$(PYTHON3_PKG_DIR)/foris/locale/
-	$(RM) -rf $(1)$(PYTHON3_PKG_DIR)/foris/langs/??.py
-	$(RM) -rf $(1)$(PYTHON3_PKG_DIR)/foris/langs/??.pyc
 	$(INSTALL_DIR) $(1)$(PYTHON3_PKG_DIR)/foris/locale
 	touch $(1)$(PYTHON3_PKG_DIR)/foris/locale/.keep
 
