@@ -61,7 +61,7 @@ define ForisPlugin
  $$(eval $$(call Py3Package,$(1)))
  $$(eval $$(call BuildPackage,$(1)))
  $$(eval $$(call BuildPackage,$(1)-src))
- $(foreach trans,$(FORIS_TRANSLATIONS),$(call ForisPluginTranslation,$(1),netmetr,$(trans)))
+ $(foreach trans,$(FORIS_TRANSLATIONS),$(call ForisPluginTranslation,$(1),$(2),$(trans)))
 
 endef
 
