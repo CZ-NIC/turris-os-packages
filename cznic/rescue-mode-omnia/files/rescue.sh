@@ -161,7 +161,7 @@ reflash () {
 	fi
 
 	if [ -f "$UBOOT".env ]; then
-		UENV="`fw_printenv`
+		UENV="`fw_printenv | sed 's|^\(bootargs.*\)|\1 $contract|'`
 `cat "$UBOOT".env`"
 		if [ "$UENV" \!= "`fw_printenv`" ]; then
 			echo "$UENV" >  /tmp/uenv
