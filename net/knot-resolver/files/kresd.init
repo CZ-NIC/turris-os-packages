@@ -1,5 +1,7 @@
 #!/bin/sh /etc/rc.common
 
+. /usr/share/resolver/functions.sh
+
 START=61
 STOP=00
 
@@ -141,7 +143,7 @@ load_uci_config_common() {
 
 	#check custom forwarding
 	if [ -n "$forward_dns" ] && [ "$do_forward" = "1" ]; then
-		dns_config_load "$forward_dns"
+		dns_config_load "$forward_dns" print_kresd_forward_config
 	else
 		if [ "$do_forward" = "1" ] ; then
 			local SERVERS
@@ -281,56 +283,14 @@ run_instance() {
 	  fi) &
 }
 
+print_kresd_forward_config() {
 
-print_dns_config() {
-	local name description enable_tls port ipv4 ipv6 pin_sha256 hostname ca_file
-	local net_ipv6 net_ipv4
-
-	name="$1"
-	description="$2"
-	enable_tls="$3"
-	port="$4"
-	ipv4="$5"
-	ipv6="$6"
-	pin_sha256="$7"
-	hostname="$8"
-	ca_file="$9"
-	net_ipv4="$10"
-	net_ipv6="$11"
-
-
-	if   [ "$net_ipv4" == "1" ] && [ "$net_ipv6" == "1" ]; then
-		if [ ! -z "$ipv4" ] && [ ! -z "$ipv6" ]; then
-			ip_list="$ipv4 $ipv6"
-		elif [ ! -z "$ipv4" ] && [ -z "$ipv6" ]; then
-			ip_list="$ipv4"
-		elif [ -z "$ipv4" ] && [ ! -z "$ipv6" ]; then
-			ip_list="$ipv6"
-		else
-			echo "Error ipv4 and ipv6 not set !"
-			exit -1
-		fi
-	elif [ "$net_ipv4" != "1" ] && [ "$net_ipv6" == "1" ]; then
-		if [ ! -z "$ipv6" ]; then
-			ip_list="$ipv6"
-		else
-			echo "Error ipv6 not set !"
-			exit -1
-		fi
-	elif [ "$net_ipv4" == "1" ] && [ "$net_ipv6" != "1" ]; then
-		if [ ! -z "$ipv4" ]; then
-			ip_list="$ipv4"
-		else
-			echo "Error ipv4 not set !"
-			exit -1
-		fi
-	else
-		echo "net_ipv4=$net_ipv4 net_ipv6=$net_ipv6"
-		echo "Error cannot choose IP address because of net_ipv4 and net_ipv6 settings!"
-		exit -1
-	fi
-
-	#([ "$enable_tls" == "0" ] || [ -z "$enable_tls" ]) && echo -ne "{" >> $CONFIGFILE
+	local ip_list="$1"
+	local enable_tls="$2"
+	local port="$3"
+	local pin_sha256="$4"
+	local hostname="$5"
+	local ca_files="$6"
 
 	# Slight hack around https://gitlab.labs.nic.cz/knot/knot-resolver/issues/205#note_94566
 	echo "table.insert(policy.special_names, { count = 0, cb = policy.all(" >> $CONFIGFILE
@@ -339,7 +299,6 @@ print_dns_config() {
 	else
 		echo "policy.FORWARD(" >> $CONFIGFILE
 	fi
-	#TODO add stub !!
 
 	echo -ne "{" >> $CONFIGFILE
 	for ip in $ip_list
@@ -385,32 +344,6 @@ print_dns_config() {
 	done
 	echo "}))})" >> $CONFIGFILE
 }
-
-dns_config_load() {
-	local config_name config_file ret
-	local name description enable_tls port ipv4 ipv6 pin_sha256 hostname ca_file
-	local net_ipv4 net_ipv6
-
-	config_name="$1"
-	config_file="/etc/resolver/dns_servers/${config_name}.conf"
-	config_load resolver
-
-	#check file config file
-	if [ -f "$config_file" ]; then
-		enable_tls="0" #set default value
-		config_get net_ipv6 "common" "net_ipv6" 1
-		config_get net_ipv4 "common" "net_ipv4" 1
-
-		echo "loading file from ... $config_file"
-		source $config_file
-		echo print_dns_config  "$name" "$description" "$enable_tls" "$port" "$ipv4" "$ipv6" "$pin_sha256" "$hostname" "$ca_file" "$net_ipv4" "$net_ipv6"
-		print_dns_config  "$name" "$description" "$enable_tls" "$port" "$ipv4" "$ipv6" "$pin_sha256" "$hostname" "$ca_file" "$net_ipv4" "$net_ipv6"
-	else
-		echo "Error DNS Resolver config not found!"
-	fi
-	echo "ret_value_dns_load=$ret"
-}
-
 
 start_service() {
 	config_load resolver
