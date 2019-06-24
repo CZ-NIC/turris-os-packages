@@ -51,20 +51,10 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/libexec/rpcd
 	$(INSTALL_BIN) ./files/resolver_rpcd.py $(1)/usr/libexec/rpcd/resolver_rpcd.py
 	$(INSTALL_DIR) $(1)/etc/resolver/dns_servers
+	$(INSTALL_DIR) $(1)/usr/share/resolver
+	$(INSTALL_BIN) ./files/resolver-func.sh $(1)/usr/share/resolver/functions.sh
 	$(INSTALL_CONF) ./files/dns_servers/* $(1)/etc/resolver/dns_servers/
-ifeq ($(CONFIG_TARGET_mvebu),y)
-	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolver
-	[ -z "`ls -1 ./files/dns_servers_omnia/`" ] || $(INSTALL_CONF) ./files/dns_servers_omnia/* $(1)/etc/resolver/dns_servers/
 	$(INSTALL_DATA) ./files/CZ.NIC2-cacert.pem $(1)/etc/resolver
-else
-	$(INSTALL_CONF) ./files/resolver-turris-config $(1)/etc/config/resolver
-	[ -z "`ls -1 ./files/dns_servers_turris/`" ] || $(INSTALL_CONF) ./files/dns_servers_turris/* $(1)/etc/resolver/dns_servers/
-endif
-
-	# Run only for TurrisOS 4.0 version
-	$(INSTALL_DIR) $(1)/etc/hotplug.d/dhcp
-	$(LN) /etc/resolver/dhcp_host_domain_ng.py $(1)/etc/hotplug.d/dhcp/99-dhcp_host_domain_ng.py
-
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
