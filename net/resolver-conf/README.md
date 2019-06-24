@@ -1,14 +1,15 @@
+
 # DNS over TLS
 
 
-UCI configuration for DNS-over-TLS is located in **/etc/config/resolver**. You can enable redirection to custom DNS resolver by setting option **forward_custom**.
+UCI configuration for DNS-over-TLS is located in **/etc/config/resolver**. You can enable redirection to custom DNS resolver by setting option **forward_custom** and enabling **forward_upstream**.
 
 ### Example:
 ```
 uci set resolver.common.forward_custom='cloudflare-dns'
 uci commit resolver
 ```
-Where  cloudflare-dns is name defined in config file from /etc/resolver/dns_servers or name defined in dns_server config section in /etc/config/resolver
+Where  cloudflare-dns is name defined in config file from /etc/resolver/dns_servers/
 
 Configuration files for DNS server are located in /etc/resolver/dns_servers directory and they have **config** suffix.
 
@@ -18,14 +19,23 @@ name="cloudflare-dns"
 description="something something darkside..."
 enable_tls="1"
 port="853"
-ipv4="1.1.1.1"
-ipv6="2606:4700:4700::1111"
+ipv4="1.1.1.1 1.0.0.1"
+ipv6="2606:4700:4700::1111 2606:4700:4700::1001"
 pin_sha256="yioEpqeR4WtDwE9YxNVnCEkTxIjx6EEIwFSQW+lJsbc="
 ```
 
+Variables in config file have this meaning:
+ - name - service name (used in Foris)
+ - description - longer description of server
+ - enable_tls - 1/0=forward with/without enabled TLS
+ - port - server port with DNS-over-TLS service
+ - ipv4 - primary DNS IPv4 address, secondary DNS server separated with space
+ - ipv6 - primary DNS IPv6 address, secondary DNS server separated with space
+ - pin_sha256 - sha256 pin see [rfc7858](https://tools.ietf.org/html/rfc7858#section-4.2)
+
 > Note: Config files shouldn't be modified by users because they'll be rewrited after every update.
 
-If you want to edit configuration for a particular server you should create **dns_server** section **/etc/config/resolver** with same name as is defined in config file and change value of desired variable. System will prefere option set inside UCI config.
+If you want to edit configuration for a particular server you should create new config file in **/etc/resolver/dns_server** with different name than config provided in package.
 
 ### How to show configuration
 
@@ -67,7 +77,7 @@ You will get ouput in json format similar to this:
 
 ## Difference between Knot-resolver an Unbound
 ### Knot-resolver
-Knot-resolver support **pin sha256** and **CA** authentication. Preferred and default authentication is **pin sha256**. If you want to use CA authentication you have to add **hostname** and **ca_file** options to /etc/resolver/dns_servers/*.config or create new section in /etc/config/resolver.
+Knot-resolver support **pin sha256** and **CA** authentication. Preferred and default authentication is **CA** authentication.
 
 Note: If you want to get pin sha256 from DNS resolver use this command __(9.9.9.9 is DNS resolver IP)__. For more information about pin see [rfc 7858](https://tools.ietf.org/html/rfc7858#section-4.2)
 ```
@@ -75,5 +85,6 @@ echo | openssl s_client -connect '9.9.9.9:853' 2>/dev/null | openssl x509 -pubke
 ```
 
 ### Unbound
-Unbound at this moment (v 1.7.3) doesn't support pin authentication. Default option is CA authentication. This is done by setting **ca_file** and **hostname** option in **/etc/resolver/dns_server/*.config** config.
-It's also possible to set Unbound to use **opportunistic DNS-over-TLS encryption**, however in that case traffic is secured only agains passive atacker and active attack are still posible.
+Unbound at this moment (v 1.9.2) doesn't support pin authentication. Default option is CA authentication. This is done by setting **ca_file** and **hostname** option in **/etc/resolver/dns_server/*.config** config.
+
+
