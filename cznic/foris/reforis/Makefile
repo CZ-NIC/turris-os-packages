@@ -61,7 +61,7 @@ define Py3Package/reforis/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_DATA) ./files/reforis-lighttpd.conf $(1)/etc/lighttpd/conf.d/reforis.conf
 
-	$(INSTALL_DIR) $(1)/usr/share/reforis
+	$(INSTALL_DIR) $(1)/usr/libexec/reforis
 	$(INSTALL_BIN) ./files/reforis-lighttpd-dynamic.sh $(1)/usr/libexec/reforis/lighttpd-dynamic
 	$(SED) 's%/usr/lib/python...%/usr/lib/python$(PYTHON3_VERSION)%g' $(1)/usr/libexec/reforis/lighttpd-dynamic
 
