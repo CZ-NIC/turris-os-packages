@@ -55,8 +55,10 @@ endef
 
 define Package/$(PKG_NAME)/prerm
 #!/bin/sh
-/etc/init.d/foris-netboot-observer stop
-/etc/init.d/foris-netboot-observer disable
+[ -n "$${IPKG_INSTROOT}" ] || {
+	/etc/init.d/foris-netboot-observer stop
+	/etc/init.d/foris-netboot-observer disable
+}
 endef
 
 define ForisControllerModule/$(PKG_NAME)/install

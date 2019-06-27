@@ -80,7 +80,7 @@ endef
 
 define Package/reforis/prerm
 #!/bin/sh
-/usr/bin/maintain-lighttpd-restart
+[ -n "$$IPKG_INSTROOT" ] || /usr/bin/maintain-lighttpd-restart
 endef
 
 $(eval $(call Py3Package,reforis))

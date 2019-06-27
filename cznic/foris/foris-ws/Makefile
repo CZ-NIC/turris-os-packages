@@ -67,15 +67,17 @@ endef
 define Package/foris-ws/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-/etc/init.d/foris-ws enable
-/etc/init.d/foris-ws restart
+	/etc/init.d/foris-ws enable
+	/etc/init.d/foris-ws restart
 }
 endef
 
 define Package/foris-ws/prerm
 #!/bin/sh
-/etc/init.d/foris-ws stop
-/etc/init.d/foris-ws disable
+[ -n "$$IPKG_INSTROOT" ] || {
+	/etc/init.d/foris-ws stop
+	/etc/init.d/foris-ws disable
+}
 endef
 
 $(eval $(call Py3Package,foris-ws))

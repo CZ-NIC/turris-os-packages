@@ -97,7 +97,7 @@ endef
 
 define Package/foris/prerm
 #!/bin/sh
-/usr/bin/maintain-lighttpd-restart
+[ -n "$$IPKG_INSTROOT" ] || /usr/bin/maintain-lighttpd-restart
 endef
 
 # $1 = translation name

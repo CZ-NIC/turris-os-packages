@@ -91,8 +91,10 @@ endef
 
 define Package/foris-controller-app/prerm
 #!/bin/sh
-/etc/init.d/foris-controller stop
-/etc/init.d/foris-controller disable
+[ -n "$$IPKG_INSTROOT" ] || {
+	/etc/init.d/foris-controller stop
+	/etc/init.d/foris-controller disable
+}
 endef
 
 $(eval $(call Py3Package,foris-controller-app))
