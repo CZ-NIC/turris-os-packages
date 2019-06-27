@@ -39,6 +39,7 @@ define Package/$(PKG_NAME)/description
 endef
 
 define Package/$(PKG_NAME)/postinst
+#!/bin/sh
 [ -n "$${IPKG_INSTROOT}" ] || {
 	uci set foris-ws.main.bus=mqtt
 	uci set foris-controller.main.bus=mqtt
@@ -53,6 +54,7 @@ define Package/$(PKG_NAME)/postinst
 endef
 
 define Package/$(PKG_NAME)/prerm
+#!/bin/sh
 /etc/init.d/foris-netboot-observer stop
 /etc/init.d/foris-netboot-observer disable
 endef

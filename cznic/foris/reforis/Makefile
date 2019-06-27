@@ -71,6 +71,7 @@ define Py3Package/reforis/install
 endef
 
 define Package/reforis/postinst
+#!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 	/etc/init.d/lighttpd enable
 	/usr/bin/maintain-lighttpd-restart
@@ -78,6 +79,7 @@ define Package/reforis/postinst
 endef
 
 define Package/reforis/prerm
+#!/bin/sh
 /usr/bin/maintain-lighttpd-restart
 endef
 

@@ -18,10 +18,12 @@ define ForisPluginTranslation
  endef
 
  define Package/$(1)-l10n-$(3)/postrm
+#!/bin/sh
 [ -n "$$$${IPKG_INSTROOT}" ] || /etc/init.d/lighttpd restart
  endef
 
  define Package/$(1)-l10n-$(3)/postinst
+#!/bin/sh
 [ -n "$$$${IPKG_INSTROOT}" ] || /etc/init.d/lighttpd restart
  endef
 
@@ -52,12 +54,14 @@ define ForisPlugin
 
  ifndef Package/$(1)/postrm
   define Package/$(1)/postrm
+#!/bin/sh
 [ -n "$$$${IPKG_INSTROOT}" ] || /etc/init.d/lighttpd restart
   endef
  endif
 
  ifndef Package/$(1)/postinst
   define Package/$(1)/postinst
+#!/bin/sh
 [ -n "$$$${IPKG_INSTROOT}" ] || /etc/init.d/lighttpd restart
   endef
  endif

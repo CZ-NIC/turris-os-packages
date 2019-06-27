@@ -21,12 +21,14 @@ define ForisControllerModule
 
  ifndef Package/$(1)/postrm
   define Package/$(1)/postrm
+#!/bin/sh
 [ -n "$$$${IPKG_INSTROOT}" ] || /etc/init.d/foris-controller restart
   endef
  endif
 
  ifndef Package/$(1)/postinst
   define Package/$(1)/postinst
+#!/bin/sh
 [ -n "$$$${IPKG_INSTROOT}" ] || /etc/init.d/foris-controller restart
   endef
  endif

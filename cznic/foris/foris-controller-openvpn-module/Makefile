@@ -39,6 +39,7 @@ define Package/$(PKG_NAME)/description
 endef
 
 define Package/${PKG_NAME}/postinst
+#!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 	if uci -q get openvpn.server_turris.comp_lzo > /dev/null ; then
 		uci del openvpn.server_turris.comp_lzo

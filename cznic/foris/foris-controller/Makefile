@@ -82,6 +82,7 @@ define Package/foris-controller-hotplug/install
 endef
 
 define Package/foris-controller-app/postinst
+#!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 	/etc/init.d/foris-controller enable
 	/etc/init.d/foris-controller restart
@@ -89,6 +90,7 @@ define Package/foris-controller-app/postinst
 endef
 
 define Package/foris-controller-app/prerm
+#!/bin/sh
 /etc/init.d/foris-controller stop
 /etc/init.d/foris-controller disable
 endef

@@ -65,6 +65,7 @@ define Py3Package/foris-ws/install
 endef
 
 define Package/foris-ws/postinst
+#!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 /etc/init.d/foris-ws enable
 /etc/init.d/foris-ws restart
@@ -72,6 +73,7 @@ define Package/foris-ws/postinst
 endef
 
 define Package/foris-ws/prerm
+#!/bin/sh
 /etc/init.d/foris-ws stop
 /etc/init.d/foris-ws disable
 endef

@@ -88,6 +88,7 @@ define Py3Package/foris/install
 endef
 
 define Package/foris/postinst
+#!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 	/etc/init.d/lighttpd enable
 	/usr/bin/maintain-lighttpd-restart
@@ -95,6 +96,7 @@ define Package/foris/postinst
 endef
 
 define Package/foris/prerm
+#!/bin/sh
 /usr/bin/maintain-lighttpd-restart
 endef
 
@@ -120,10 +122,12 @@ define ForisTranslation
  endef
 
  define Package/foris-l10n-$(1)/postrm
+#!/bin/sh
 [ -n "$$$${IPKG_INSTROOT}" ] || /etc/init.d/lighttpd restart
  endef
 
  define Package/foris-l10n-$(1)/postinst
+#!/bin/sh
 [ -n "$$$${IPKG_INSTROOT}" ] || /etc/init.d/lighttpd restart
  endef
 
