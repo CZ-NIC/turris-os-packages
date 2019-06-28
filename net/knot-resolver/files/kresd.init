@@ -105,8 +105,10 @@ load_uci_config_common() {
 		if [ -n "$keyfile" ]; then
 			ROOTKEYFILE=$keyfile
 			check_root_key cert-backup -x $ROOTKEYFILE
-			procd_append_param command -k "$keyfile"
+			echo "trust_anchors.add_file('$ROOTKEYFILE')">>$CONFIGFILE
 		fi
+	else
+		echo "trust_anchors.remove('.')">>$CONFIGFILE
 	fi
 
 	# verbosity
@@ -143,7 +145,7 @@ load_uci_config_common() {
 
 	#check custom forwarding
 	if [ -n "$forward_dns" ] && [ "$do_forward" = "1" ]; then
-		dns_config_load "$forward_dns" print_kresd_forward_config
+		dns_config_load "$forward_dns"
 	else
 		if [ "$do_forward" = "1" ] ; then
 			local SERVERS
