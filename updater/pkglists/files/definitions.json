@@ -41,6 +41,12 @@
 		"url": "https://doc.turris.cz/doc/en/howto/nas",
 		"official": true
 	},
+	"nextcloud": {
+		"title": "Nextcloud",
+		"description": "Self-hosted files hosting and productivity platform that keeps you in control. Alternative to services such as Dropbox or Google Drive. (EXPERIMENTAL)",
+		"url": "https://doc.turris.cz/doc/en/howto/nextcloud",
+		"official": true
+	},
 	"netboot": {
 		"title": "Turris MOX network boot",
 		"description": "Server side for Turris MOX without SD card used as Wi-Fi access point. (EXPERIMENTAL)",
