@@ -54,7 +54,7 @@ if root_dir == "/" then
 end
 
 -- Detect host board
-local product = os_release["LEDE_DEVICE_PRODUCT"]
+local product = os_release["OPENWRT_DEVICE_PRODUCT"] or os_release["LEDE_DEVICE_PRODUCT"]
 if product:match("[Mm]ox") then
 	board = "mox"
 elseif product:match("[Oo]mnia") then
