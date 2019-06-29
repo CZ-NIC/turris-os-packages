@@ -2,6 +2,7 @@
 
 die() {
     echo "$@" >&2
+    rm -f /tmp/nextcloud_configuring
     exit 1
 }
 
@@ -22,6 +23,9 @@ if [ -f /srv/www/nextcloud/config/config.php ]; then
     echo "WARNING: This will delete all your data from Nextcloud!!"
     exit 1
 fi
+
+[ \! -f /tmp/nextcloud_configuring ] || die "Installation already in process"
+touch /tmp/nextcloud_configuring
 
 echo "This script will setup Nextcloud for you automatically."
 echo "It will try to create MySQL database, change files on your filesystem and more."
@@ -117,3 +121,5 @@ echo "*/15  *  *  *  *   /usr/bin/su --shell /bin/ash --command '/usr/bin/php-cl
 
 echo "Your Nextcloud installation should be available at http://$IP/nextcloud"
 echo "Your username is '$ALOGIN' and password '$APASS'"
+
+rm -f /tmp/nextcloud_configuring
