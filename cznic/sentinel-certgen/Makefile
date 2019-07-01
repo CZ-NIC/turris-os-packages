@@ -10,6 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=sentinel-certgen
 PKG_VERSION:=6.1.1
 PKG_RELEASE:=1
+
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/certgen.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -18,7 +19,7 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_LICENSE:=GPL-3.0
+PKG_LICENSE:=GPL-3.0-or-later
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -27,7 +28,7 @@ define Package/sentinel-certgen
 	TITLE:=sentinel-certgen
 	URL:=https://gitlab.labs.nic.cz/turris/sentinel/certgen
 	DEPENDS:=+python3-light +python3-six +python3-requests +python3-cryptography +crypto-wrapper
-	VARIANT=python3
+	VARIANT:=python3
 endef
 
 define Package/$(PKG_NAME)/description
@@ -41,4 +42,3 @@ endef
 
 $(eval $(call Py3Package,$(PKG_NAME)))
 $(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)-src))
