@@ -106,12 +106,14 @@ done
 cd /srv/www/nextcloud
 sudo -u nobody php-cli ./occ maintenance:install --database=mysql --database-name=nextcloud --database-user=nextcloud --admin-user="$ALOGIN" --admin-pass="$APASS" --database-pass="$DBPASS" --database-host=127.0.0.1 --database-port=3306 --no-interaction || die "Installation failed"
 IP="`uci -q get network.lan.ipaddr`"
+[ -n "$IP" ] || IP="$(ip a s br-lan | sed -n 's|.*inet \([0-9.]*\)/.*|\1|p')"
 if [ -z "$IP" ]; then
     echo "Autodetection of your router IP failed, what is your routers IP address?"
     read IP
 fi
 sudo -u nobody php-cli ./occ config:system:set --value false updatechecker
-sudo -u nobody php-cli ./occ config:system:set --value $IP trusted_domains 1
+[ -z "$IP" ] || sudo -u nobody php-cli ./occ config:system:set --value "$IP" trusted_domains 1
+[ -z "$(uname -n)" ] || sudo -u nobody php-cli ./occ config:system:set --value "$(uname -n ).local" trusted_domains 2
 
 # Create cron script
 echo "*/15  *  *  *  *   /usr/bin/su --shell /bin/ash --command '/usr/bin/php-cli -f /srv/www/nextcloud/cron.php' nobody" >/etc/cron.d/nextcloud
