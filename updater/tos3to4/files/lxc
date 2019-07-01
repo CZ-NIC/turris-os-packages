@@ -1,0 +1,46 @@
+#!/bin/sh
+
+migrate_config() {
+	local conf="$1"
+	if grep -q '^lxc\.include = /usr/share/lxc/config/common.conf' "$conf"; then
+		# Original LXC1 config did not have common include so use it to detect migration
+		echo "Config is detected as migrated: $conf" >&2
+		return
+	fi
+	if [ "$(grep -c '^lxc\.network\.type')" -gt 1 ]; then
+		create_notification -s error \
+			"Automatic migration of LXC failed: Unable to migrate configuration with multiple network sections: $conf"
+		echo "Unable to migrate configuration with multiple network sections: $conf" >&2
+		return
+	fi
+
+	echo "Migrating config: $conf" >&2
+	cp "$conf" "$conf.lxc1" # backup old config for user to refer to
+	sed -E '
+		## Container specific configuration
+		# Remove obsolete tty options
+		/^\s*lxc\.tty\>/d
+		/^\s*lxc\.pts\>/d
+		# Change rootfs path option
+		s/^\s*lxc\.rootfs/lxc.rootfs.path/ # TODO what about btrfs: prefix
+		# Change utsname option
+		s/^\s*lxc\.utsname/lxc.uts.name/
+		# Append new configs
+		$a
+		$a# Additional container specific configuration
+		$alxc.include = /usr/share/lxc/config/common.conf
+		$alxc.hook.start-host = /usr/share/lxc/hooks/systemd-workaround
+
+		## Network configuration
+		# Drop obsolete script.up setting
+		/^\s*lxc\.network\.script\.up\>/d
+		# Replace sungle network of lxc1 to first network in lxc3
+		s/^\s*lxc\.network\./lxc.net.0./
+	' "$conf.lxc1" > "$conf"
+}
+
+[ -d /srv/lxc ] || exit 0 # LXC is not used
+for config in /srv/lxc/*/config; do
+	[ -f "$config" ] || continue
+	migrate_config "$config"
+done
