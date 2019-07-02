@@ -41,6 +41,8 @@ endef
 
 Hooks/Compile/Pre += prepare_pyzmq_setup
 
+PYTHON3_PKG_SETUP_ARGS:=
+
 $(eval $(call Py3Package,python3-zmq))
 $(eval $(call BuildPackage,python3-zmq))
 $(eval $(call BuildPackage,python3-zmq-src))
