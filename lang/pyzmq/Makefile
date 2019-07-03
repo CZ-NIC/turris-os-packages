@@ -15,7 +15,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/p/pyzmq/
 PKG_HASH:=8b319805f6f7c907b101c864c3ca6cefc9db8ce0791356f180b1b644c7347e4c
 
-PKG_BUILD_DEPENDS:=cython3
+PKG_BUILD_DEPENDS:=cython
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
