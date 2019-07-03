@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-certgen
 PKG_VERSION:=6.1.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/certgen.git
@@ -32,11 +32,6 @@ endef
 
 define Package/$(PKG_NAME)/description
   Client application for automated passwords and certificates retrieval.
-endef
-
-define Py3Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/usr/sbin
-	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/sbin/
 endef
 
 $(eval $(call Py3Package,$(PKG_NAME)))
