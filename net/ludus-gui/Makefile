@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ludus-gui
-PKG_VERSION:=0.1
+PKG_VERSION:=0.2
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=git@gitlab.labs.nic.cz:turris/ludus.git
+PKG_SOURCE_URL:=git@gitlab.labs.nic.cz:jpavlinec/ludus-gui.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=5b38a962b64cafbf070a2e02fd8a781344c499bb
+PKG_SOURCE_VERSION:=befb9c09d2224d58740200ac909798b634a76007
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 
 PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec@nic.cz>
@@ -35,6 +35,7 @@ define Package/ludus-gui
 	+python3-flask \
 	+python3-flask-login \
 	+python3-maxminddb \
+	+python3-pbkdf2 \
 	+ludus
 endef
 
