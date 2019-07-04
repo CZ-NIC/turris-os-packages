@@ -38,15 +38,15 @@ start_service() {
 	procd_open_instance
 	if [ "$bus" == "ubus" ]; then
 		config_get path ubus path "/var/run/ubus.sock"
-		procd_set_param command "$PROG" ${debug_arg:-} -a ubus -a filesystem --host "127.0.0.1" --port "$port" ubus --path "$path"
+		procd_set_param command "$PROG" ${debug_arg:-} -a ubus --host "127.0.0.1" --port "$port" ubus --path "$path"
 	elif [ "$bus" == "unix" ]; then
 		config_get path unix notification_path "/var/run/foris-controller-notifications.sock"
-		procd_set_param command "$PROG" ${debug_arg:-} -a ubus -a filesystem --host "127.0.0.1" --port "$port" unix-socket --path "$path"
+		procd_set_param command "$PROG" ${debug_arg:-} -a ubus --host "127.0.0.1" --port "$port" unix-socket --path "$path"
 	elif [ "$bus" == "mqtt" ]; then
 		config_get mqtt_host mqtt host "localhost"
 		config_get mqtt_port mqtt port "11883"
 		config_get credentials_file mqtt credentials_file "/etc/fosquitto/credentials.plain"
-		procd_set_param command "$PROG" ${debug_arg:-} -a ubus -a filesystem --host "127.0.0.1" --port "$port" mqtt --mqtt-host "${mqtt_host}" --mqtt-port "${mqtt_port}" --mqtt-passwd-file "${credentials_file}"
+		procd_set_param command "$PROG" ${debug_arg:-} -a ubus --host "127.0.0.1" --port "$port" mqtt --mqtt-host "${mqtt_host}" --mqtt-port "${mqtt_port}" --mqtt-passwd-file "${credentials_file}"
 	fi
 	procd_set_param respawn
 	procd_close_instance
