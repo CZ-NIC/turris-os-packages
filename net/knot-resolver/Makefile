@@ -22,6 +22,9 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_MAINTAINER:=Knot DNS <knot-dns@labs.nic.cz>
 PKG_LICENSE:=GPL-3.0
 
+PKG_BUILD_DEPENDS:=+liblmdb0 +lmdb
+
+
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
