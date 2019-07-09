@@ -1,0 +1,17 @@
+Index: lmdb-LMDB_0.9.23/liblmdb.pc
+===================================================================
+--- /dev/null
++++ lmdb-LMDB_0.9.23/liblmdb.pc
+@@ -0,0 +1,12 @@
++prefix=/usr
++exec_prefix=/usr
++libdir=${exec_prefix}/lib
++includedir=${prefix}/include
++
++
++Name: Lightning Memory-Mapped Database
++Description: Lightning Memory-Mapped Database
++Version: 0.9.23
++Requires:
++Libs: -L${libdir} -llmdb
++Cflags: -I${includedir}

@@ -74,11 +74,13 @@ define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) $(PKG_BUILD_DIR)/lmdb.h $(1)/usr/include
 	$(CP) $(PKG_BUILD_DIR)/liblmdb.a $(1)/usr/lib
+	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig/
+	$(CP) $(PKG_BUILD_DIR)/liblmdb.pc $(1)/usr/lib/pkgconfig/
 endef
 
 define Package/liblmdb0/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_BUILD_DIR)/libraries/liblmdb/*.so*  $(1)/usr/lib
+	$(CP) $(PKG_BUILD_DIR)/*.so  $(1)/usr/lib/
 endef
 
 define Package/lmdb-utils/install
