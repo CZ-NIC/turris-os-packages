@@ -22,18 +22,15 @@ define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
 endef
 
-define Build/Configure
-endef
+Build/Configure:=:
 
 define Build/Compile
-	$(KERNEL_MAKE) zImage turris-nand-bch.dtb
+	$(KERNEL_MAKE) zImage turris.dtb
 endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/boot
-	for d in $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/turris-nand-bch.dtb; do \
-		$(CP) $$$$d "$(1)"/boot/fdt; \
-	done
+	$(INSTALL_DATA) $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts/turris.dtb "$(1)"/boot/fdt
 	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot.scr
 endef
 
