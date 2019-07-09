@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mariadb
-PKG_VERSION:=10.1.37
-PKG_RELEASE:=4
+PKG_VERSION:=10.4.6
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL := \
@@ -18,9 +18,10 @@ PKG_SOURCE_URL := \
 	https://ftp.yz.yamagata-u.ac.jp/pub/dbms/mariadb/$(PKG_NAME)-$(PKG_VERSION)/source \
 	https://downloads.mariadb.org/interstitial/$(PKG_NAME)-$(PKG_VERSION)/source
 
-PKG_HASH:=8cd516b0a7f7aa36a7c1d6e687dbbad8c0b08c92d5fd60c6e691b19a6cab4d46
-PKG_MAINTAINER:=Sebastian Kemper <sebastian_ml@gmx.net>
-PKG_LICENSE:=GPL-2.0
+PKG_HASH:=a270fe6169a1aaf6f2cbbc945de2c954d818c48e1a0fc02fbed92ecb94678e70
+
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=GPL-2.0-or-later
 PKG_LICENSE_FILES:=COPYING
 
 HOST_BUILD_PARALLEL:=1
@@ -75,8 +76,6 @@ MARIADB_SERVER_PLUGINS := \
 	qa_auth_server \
 	query_cache_info \
 	query_response_time \
-	semisync_master \
-	semisync_slave \
 	server_audit \
 	simple_password_check \
 	sql_errlog \
@@ -119,8 +118,6 @@ plugin-qa_auth_interface        := PLUGIN_QA_AUTH_INTERFACE
 plugin-qa_auth_server           := PLUGIN_QA_AUTH_SERVER
 plugin-query_cache_info         := PLUGIN_QUERY_CACHE_INFO
 plugin-query_response_time      := PLUGIN_QUERY_RESPONSE_TIME
-plugin-semisync_master          := PLUGIN_SEMISYNC_MASTER
-plugin-semisync_slave           := PLUGIN_SEMISYNC_SLAVE
 plugin-server_audit             := PLUGIN_SERVER_AUDIT
 plugin-simple_password_check    := PLUGIN_SIMPLE_PASSWORD_CHECK
 plugin-sql_errlog               := PLUGIN_SQL_ERRLOG
@@ -553,8 +550,6 @@ $(eval $(call BuildPlugin,qa_auth_interface,))
 $(eval $(call BuildPlugin,qa_auth_server,))
 $(eval $(call BuildPlugin,query_cache_info,))
 $(eval $(call BuildPlugin,query_response_time,))
-$(eval $(call BuildPlugin,semisync_master,))
-$(eval $(call BuildPlugin,semisync_slave,))
 $(eval $(call BuildPlugin,server_audit,))
 $(eval $(call BuildPlugin,simple_password_check,))
 $(eval $(call BuildPlugin,sql_errlog,))
