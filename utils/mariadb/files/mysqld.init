@@ -30,7 +30,7 @@ start_service() {
 
 	# Auto installation
 	if [ \! -d "$datadir" ]; then
-		mysql_install_db --skip-auth-anonymous-user --user=mysql --skip-name-resolve
+		mysql_install_db --user=mysql --skip-name-resolve --skip-test-db
 		echo "$version" > "$datadir"/.version
 	fi	
 

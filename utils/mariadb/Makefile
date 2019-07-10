@@ -61,7 +61,6 @@ MARIADB_SERVER_PLUGINS := \
 	ha_example \
 	ha_federated \
 	ha_federatedx \
-	ha_innodb \
 	ha_sequence \
 	ha_sphinx \
 	ha_spider \
@@ -103,7 +102,6 @@ plugin-ha_connect               := PLUGIN_CONNECT
 plugin-ha_example               := PLUGIN_EXAMPLE
 plugin-ha_federated             := PLUGIN_FEDERATED
 plugin-ha_federatedx            := PLUGIN_FEDERATEDX
-plugin-ha_innodb                := PLUGIN_INNOBASE
 plugin-ha_sequence              := PLUGIN_SEQUENCE
 plugin-ha_sphinx                := PLUGIN_SPHINX
 plugin-ha_spider                := PLUGIN_SPIDER
@@ -357,7 +355,7 @@ CMAKE_OPTIONS += \
 	-DWITH_INNODB_BZIP2=OFF \
 	-DWITH_INNODB_LZ4=OFF \
 	-DWITH_INNODB_LZMA=ON \
-	-DWITH_INNODB_LZO=OFF \
+	-DWITH_INNODB_LZO=ON \
 	-DWITH_INNODB_SNAPPY=OFF \
 	-DWITH_LIBEDIT=OFF \
 	-DWITH_LIBNUMA=NO \
@@ -462,11 +460,10 @@ endef
 
 define Package/mariadb-server/install
 	$(foreach b,$(MARIADB_SERVER),$(call Package/mariadb/install/bin,$(1),$(b));)
-	$(INSTALL_DIR) $(1)/etc/default
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) files/mysqld.init $(1)/etc/init.d/mysqld
 	# DATA because spomebody thought giving CONF 0600 rights is a good idea
-	$(INSTALL_DATA) files/my.cnf $(1)/etc/mysql
+	$(INSTALL_DATA) files/my.cnf $(1)/etc/my.cnf
 	$(INSTALL_DIR) $(1)$(PLUGIN_DIR)
 	# DATA because spomebody thought giving CONF 0600 rights is a good idea
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)$(PLUGIN_DIR)/daemon_example.ini $(1)$(PLUGIN_DIR)
@@ -477,6 +474,7 @@ define Package/mariadb-server/install
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/mariadb/mysql_performance_tables.sql $(1)/usr/share/mariadb
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/mariadb/mysql_system_tables.sql $(1)/usr/share/mariadb
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/mariadb/mysql_system_tables_data.sql $(1)/usr/share/mariadb
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/mariadb/mysql_test_db.sql $(1)/usr/share/mariadb
 endef
 
 define Package/mariadb-server-extra/install
@@ -535,7 +533,6 @@ $(eval $(call BuildPlugin,ha_connect,+libxml2))
 $(eval $(call BuildPlugin,ha_example,))
 $(eval $(call BuildPlugin,ha_federated,))
 $(eval $(call BuildPlugin,ha_federatedx,))
-$(eval $(call BuildPlugin,ha_innodb,))
 $(eval $(call BuildPlugin,ha_sequence,))
 $(eval $(call BuildPlugin,ha_sphinx,))
 $(eval $(call BuildPlugin,ha_spider,))

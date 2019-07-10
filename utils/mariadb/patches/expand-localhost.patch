@@ -1,0 +1,18 @@
+Index: mariadb-10.4.6/scripts/mysql_system_tables_fix.sql
+===================================================================
+--- mariadb-10.4.6.orig/scripts/mysql_system_tables_fix.sql
++++ mariadb-10.4.6/scripts/mysql_system_tables_fix.sql
+@@ -800,3 +800,13 @@ IF 'BASE TABLE' = (select table_type fro
+   DROP TABLE user;
+ END IF//
+ DELIMITER ;
++
++-- Expand localhost to 127.0.0.1
++CREATE TEMPORARY TABLE localhost_expand SELECT * FROM global_priv WHERE host='localhost' AND user NOT IN (SELECT user FROM global_priv WHERE host='127.0.0.1');
++UPDATE localhost_expand SET host='127.0.0.1';
++INSERT INTO global_priv SELECT * from localhost_expand;
++DROP TABLE localhost_expand;
++CREATE TEMPORARY TABLE localhost_expand SELECT * FROM db WHERE host='localhost' AND user NOT IN (SELECT user FROM db WHERE host='127.0.0.1' OR host='%');
++UPDATE localhost_expand SET host='127.0.0.1';
++INSERT INTO db SELECT * from localhost_expand;
++DROP TABLE localhost_expand;
