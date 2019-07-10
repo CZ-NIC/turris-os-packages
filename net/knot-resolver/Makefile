@@ -22,8 +22,6 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_MAINTAINER:=Knot DNS <knot-dns@labs.nic.cz>
 PKG_LICENSE:=GPL-3.0
 
-PKG_BUILD_DEPENDS:=+liblmdb0 +lmdb
-
 
 PKG_INSTALL:=1
 
@@ -36,7 +34,7 @@ define Package/knot-resolver
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Knot DNS Resolver
 	URL:=https://gitlab.labs.nic.cz/knot/resolver
-	DEPENDS=+knot-libs +knot-libzscanner +libuv +luajit +dnssec-rootkey +resolver-conf +luasec +luasocket +libstdcpp +liblmdb0 +lmdb
+	DEPENDS=+knot-libs +knot-libzscanner +libuv +luajit +dnssec-rootkey +resolver-conf +luasec +luasocket +libstdcpp +lmdb
 	PROVIDES:=dns-resolver
 	USERID:=knot=3535:knot=3535
 endef
