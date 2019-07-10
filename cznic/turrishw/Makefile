@@ -8,13 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turrishw
-PKG_VERSION:=0.4.2
+PKG_VERSION:=0.4.3
 PKG_RELEASE:=1
+
 PKG_LICENSE:=GPLv3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/turrishw.git
-PKG_SOURCE_VERSION:=a3fa745a238ce1c9933987857f9212c5812d5a3e
+PKG_SOURCE_VERSION:=29d8973dd645eb67e726bacc6972747c01985170
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
@@ -34,7 +35,7 @@ define Package/turrishw
 endef
 
 define Package/turrishw/description
-turrishw is a package for providing abstraction over available interfaces on various Turris (Mox, Omnia) routers
+  turrishw is a package for providing abstraction over available interfaces on various Turris (Mox, Omnia) routers.
 endef
 
 $(eval $(call Py3Package,turrishw))
