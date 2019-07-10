@@ -1,0 +1,21 @@
+alias.url += (
+        "/ltemetr/" => "/www/ltemetr/public/"
+)
+$HTTP["url"] == "/ltemetr/status" {
+    proxy.server = ( "" => (( "host" => "127.0.0.1", "port" => 9090 )))
+}
+$HTTP["url"] == "/ltemetr/start" {
+    proxy.server = ( "" => (( "host" => "127.0.0.1", "port" => 9090 )))
+}
+$HTTP["url"] == "/ltemetr/stop" {
+    proxy.server = ( "" => (( "host" => "127.0.0.1", "port" => 9090 )))
+}
+$HTTP["url"] == "/ltemetr/latest" {
+    proxy.server = ( "" => (( "host" => "127.0.0.1", "port" => 9090 )))
+}
+$HTTP["url"] == "/ltemetr/export" {
+    proxy.server = ( "" => (( "host" => "127.0.0.1", "port" => 9090 )))
+}
+$HTTP["url"] == "/ltemetr/settings" {
+    proxy.server = ( "" => (( "host" => "127.0.0.1", "port" => 9090 )))
+}
