@@ -28,9 +28,9 @@ endef
 
 TARGET_CFLAGS+=-fPIC
 
-define Package/liblmdb0
-  $(call Package/lmdb/Default)
-  TITLE+= mdb0
+define Package/lmdb
+	$(call Package/lmdb/Default)
+	TITLE+= mdb0
 endef
 
 define Package/liblmdb0/description
@@ -38,8 +38,8 @@ define Package/liblmdb0/description
 endef
 
 define Package/lmdb-utils
-  call Package/lmdb/Default)
-  TITLE+= utils
+	$(call Package/lmdb/Default)
+	TITLE+= utils
 endef
 
 define Package/lmdb-utils/description
@@ -47,8 +47,8 @@ define Package/lmdb-utils/description
 endef
 
 define Package/lmdb-test
-  $(call Package/lmdb/Default)
-  TITLE+= test
+	$(call Package/lmdb/Default)
+	TITLE+= test
 endef
 
 define Package/lmdb-test/description
@@ -93,6 +93,6 @@ define Package/lmdb-test/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mtest $(1)/usr/bin
 endef
 
-$(eval $(call BuildPackage,liblmdb0))
+$(eval $(call BuildPackage,lmdb))
 $(eval $(call BuildPackage,lmdb-utils))
 $(eval $(call BuildPackage,lmdb-test))
