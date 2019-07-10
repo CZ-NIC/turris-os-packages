@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ltemetr-core
 PKG_VERSION:=0.2.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=core-v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/ltemetr/core/-/archive/v$(PKG_VERSION)/
@@ -43,7 +43,7 @@ define Build/Compile
 	$(call Build/Compile/Py3Mod,,install --prefix=/usr --root=$(PKG_INSTALL_DIR))
 endef
 
-define Package/$(PKG_NAME)/install
+define Py3Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)
 	$(CP) $(PKG_INSTALL_DIR)/* $(1)/
 
