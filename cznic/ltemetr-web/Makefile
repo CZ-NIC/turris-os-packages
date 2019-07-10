@@ -44,7 +44,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_DATA) ./files/ltemetr.lighttpd-conf $(1)/etc/lighttpd/conf.d/ltemetr.conf
 
-	$(INSTALL_DIR)  $(1)/www/ltemetr/public
+	$(INSTALL_DIR)  $(1)/www/ltemetr
 	$(CP) -r $(PKG_BUILD_DIR)/public $(1)/www/ltemetr
 endef
 
