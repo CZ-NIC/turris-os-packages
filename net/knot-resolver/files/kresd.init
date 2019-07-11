@@ -103,8 +103,10 @@ load_uci_config_common() {
 		if [ -n "$keyfile" ]; then
 			ROOTKEYFILE=$keyfile
 			check_root_key cert-backup -x $ROOTKEYFILE
-			procd_append_param command -k "$keyfile"
+			echo "trust_anchors.add_file('$ROOTKEYFILE')">>$CONFIGFILE
 		fi
+	else
+		echo "trust_anchors.remove('.')">>$CONFIGFILE
 	fi
 
 	# verbosity
