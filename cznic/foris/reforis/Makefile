@@ -32,7 +32,8 @@ define Package/reforis
     +python3-light \
     +python3-flask \
     +python3-flask-babel \
-    +python3-flask-session
+    +python3-flask-session \
+    +python3-flask-seasurf
   VARIANT=python3
 endef
 
