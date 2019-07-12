@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018 CZ.NIC
+# Copyright (C) 2018-2019 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,11 +9,10 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mozilla-iot-gateway-webapp
 PKG_VERSION:=1.0
-PKG_RELEASE:=0
+PKG_RELEASE:=1
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-
-PKG_LICENSE:=GPL-3.0
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=GPL-3.0-or-later
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -23,8 +22,7 @@ define Package/mozilla-iot-gateway-webapp
   CATEGORY:=Languages
   TITLE:=Things Gateway by Mozilla (Webapps integration)
   URL:=https://iot.mozilla.org/gateway/
-  DEPENDS:=+turris-webapps
-  MAINTAINER:=CZ.NIC <packaging@turris.cz>
+  DEPENDS:=+turris-webapps +node-mozilla-iot-gateway
 endef
 
 define Build/Compile
