@@ -30,7 +30,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/boot
-	$(INSTALL_DATA) $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts/turris.dtb "$(1)"/boot/fdt
+	$(INSTALL_DATA) $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/turris.dtb "$(1)"/boot/fdt
 	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot.scr
 endef
 
