@@ -145,7 +145,7 @@ load_uci_config_common() {
 
 	#check custom forwarding
 	if [ -n "$forward_dns" ] && [ "$do_forward" = "1" ]; then
-		dns_config_load "$forward_dns"
+		dns_config_load "$forward_dns" print_kresd_forward_config
 	else
 		if [ "$do_forward" = "1" ] ; then
 			local SERVERS
