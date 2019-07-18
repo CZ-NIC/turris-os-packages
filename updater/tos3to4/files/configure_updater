@@ -26,10 +26,6 @@ case "$turris_branch" in
 		uci set updater.turris.branch=hbk
 		;;
 esac
-if [ "$(cat /tmp/sysinfo/model)" = "Turris" ]; then
-	# Turris 1.x is not currently supported outside of HBD
-	uci set updater.turris.branch=hbd
-fi
 uci delete updater.override
 
 # updater.approvals
