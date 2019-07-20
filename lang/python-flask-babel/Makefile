@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2015-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -14,7 +14,6 @@ PKG_RELEASE:=2
 PKG_SOURCE:=Flask-Babel-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/f/flask-babel/
 PKG_HASH:=316ad183e42003f3922957fa643d0a1e8e34a0f0301a88c3a8f605bc37ba5c86
-
 PKG_BUILD_DIR:=$(BUILD_DIR)/Flask-Babel-$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -40,7 +39,8 @@ endef
 
 define Package/python3-flask-babel/description
   Implements i18n and l10n support for Flask.
-  This is based on the Python babel module as well as pytz both of which are installed automatically for you if you install this library.
+  This is based on the Python babel module as well as pytz
+  both of which are installed automatically for you if you install this library.
 endef
 
 $(eval $(call Py3Package,python3-flask-babel))

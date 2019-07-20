@@ -25,10 +25,10 @@ include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/python3-jsonschema
-  SUBMENU:=Python
   SECTION:=lang
   CATEGORY:=Languages
-  TITLE:=An implementation of JSON Schema validation for Python
+  SUBMENU:=Python
+  TITLE:=An implementation of JSON Schema validation
   URL:=https://github.com/Julian/jsonschema
   DEPENDS:=+python3-light +python3-attrs +python3-six +python3-pyrsistent
   VARIANT:=python3

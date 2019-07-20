@@ -14,7 +14,6 @@ PKG_RELEASE:=1
 PKG_SOURCE:=Flask-SeaSurf-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/f/flask-seasurf/
 PKG_HASH:=c57918c17e9afd988bdc30d8dcb7bfb833741dee38b06c1bbd17821d6fa2b6cf
-
 PKG_BUILD_DIR:=$(BUILD_DIR)/Flask-SeaSurf-$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
