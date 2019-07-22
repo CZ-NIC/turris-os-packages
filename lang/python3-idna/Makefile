@@ -8,25 +8,21 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=idna
-PKG_VERSION:=2.1
+PKG_VERSION:=2.8
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://pypi.python.org/packages/source/i/idna
-PKG_MD5SUM:=f6473caa9c5e0cc1ad3fd5d04c3c114b
-
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
+PKG_HASH:=c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407
 
 PKG_BUILD_DEPENDS:=python3 python3-setuptools
 
+PKG_MAINTAINER:=Jeffery To <jeffery.to@gmail.com>
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=LICENSE.rst
-PKG_MAINTAINER:=Jeffery To <jeffery.to@gmail.com>
 
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python3-package.mk)
-
-PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/python3-idna
 	SECTION:=lang
@@ -39,10 +35,10 @@ define Package/python3-idna
 endef
 
 define Package/python3-idna/description
-A library to support the Internationalised Domain Names in Applications
-(IDNA) protocol as specified in RFC 5891. This version of the protocol
-is often referred to as "IDNA2008" and can produce different results
-from the earlier standard from 2003.
+  A library to support the Internationalised Domain Names in Applications
+  (IDNA) protocol as specified in RFC 5891. This version of the protocol
+  is often referred to as "IDNA2008" and can produce different results
+  from the earlier standard from 2003.
 endef
 
 define Build/Compile

@@ -8,7 +8,6 @@ USE_PROCD=1
 GENERATED_CONF=/tmp/fosquitto.generated.conf
 PLAIN_PASSWORD=/etc/fosquitto/credentials.plain  # local:<random_password>
 HASHED_PASSWORD=/etc/fosquitto/credentials.hashed  # local:<hashed_random_password>
-TIMEOUT=0.2
 
 generate_password() {
 	local new_password=$(hexdump -n 16 -e '4/4 "%08X" 1 "\n"' /dev/urandom)
@@ -104,6 +103,7 @@ generate_subordinate() {
 	echo "connection ${id}" >> "$GENERATED_CONF"
 	echo "address ${address}:${port}" >> "$GENERATED_CONF"
 	echo "restart_timeout 5" >> "$GENERATED_CONF"
+	echo "keepalive_interval 5" >> "$GENERATED_CONF"
 	echo "bridge_cafile /etc/fosquitto/bridges/${id}/ca.crt" >> "$GENERATED_CONF"
 	echo "bridge_certfile /etc/fosquitto/bridges/${id}/token.crt" >> "$GENERATED_CONF"
 	echo "bridge_keyfile /etc/fosquitto/bridges/${id}/token.key" >> "$GENERATED_CONF"
@@ -146,7 +146,7 @@ start_service() {
 	procd_set_param pidfile /var/run/fosquitto.pid
 	procd_set_param stdout 1 # forward stdout of the command to logd
 	procd_set_param stderr 1 # same for stderr
-	procd_set_param respawn
+	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-0.2} ${respawn_retry:-25}
 	procd_close_instance
 }
 
@@ -154,16 +154,4 @@ start_service() {
 service_triggers() {
 	# Makes "reload_config" work
 	procd_add_reload_trigger "fosquitto"
-}
-
-restart() {
-	trap '' TERM
-	# read password
-	user="$(cat $PLAIN_PASSWORD| cut -d: -f1)"
-	pass="$(cat $PLAIN_PASSWORD| cut -d: -f2)"
-	mosquitto_pub -h localhost -p 11883 -q 2 -t foris-controller/fosquitto_restart -m '{"left": '$TIMEOUT'}' -u "${user}" -P "${pass}"
-	sleep $TIMEOUT
-	stop
-	sleep $TIMEOUT
-	start
 }

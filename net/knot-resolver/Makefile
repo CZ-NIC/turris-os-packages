@@ -10,35 +10,36 @@ PKG_RELRO_FULL:=0
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
-PKG_VERSION:=3.2.1
+PKG_VERSION:=4.1.0
 PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-resolver
-PKG_MD5SUM:=d1396888ec3a63f19dccdf2b7dbcb0d16a5d8642766824b47f4c21be90ce362b
-
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_MD5SUM:=2fe470f9bb1007667cdd448f758087244b7195a0234c2b100a9beeed0a2d3e68
 
 PKG_MAINTAINER:=Knot DNS <knot-dns@labs.nic.cz>
-PKG_LICENSE:=GPL-3.0
+PKG_LICENSE:=GPL-3.0-only
+PKG_LICENSE_FILES:=COPYING
 
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/meson.mk
 
 define Package/knot-resolver
-	SECTION:=net
-	CATEGORY:=Network
-	SUBMENU:=IP Addresses and Names
-	TITLE:=Knot DNS Resolver
-	URL:=https://gitlab.labs.nic.cz/knot/resolver
-	DEPENDS=+knot-libs +knot-libzscanner +libuv +luajit +dnssec-rootkey +resolver-conf +luasec +luasocket +libstdcpp
-	PROVIDES:=dns-resolver
-	USERID:=knot=3535:knot=3535
+  SECTION:=net
+  CATEGORY:=Network
+  SUBMENU:=IP Addresses and Names
+  TITLE:=Knot DNS Resolver
+  URL:=https://www.knot-resolver.cz
+  DEPENDS=+knot-libs +knot-libzscanner +libuv +luajit +dnssec-rootkey +resolver-conf +luasec +luasocket +libstdcpp +lmdb
+  PROVIDES:=dns-resolver
+  USERID:=kresd=3536:kresd=3536
 endef
 
 define Package/knot-resolver/description
-  The Knot DNS Resolver is a minimalistic caching resolver implementation.
+  The Knot Resolver is a caching full resolver
+  implementation, including both a resolver library and a daemon.
 endef
 
 MAKE_FLAGS += \
@@ -47,18 +48,17 @@ MAKE_FLAGS += \
 
 define Package/knot-resolver/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/*bin/kresd $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/local/sbin/kresd $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libkres.so* $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/kdns_modules $(1)/usr/lib
-
+	$(CP) $(PKG_INSTALL_DIR)/usr/local/lib/*so* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/kresd.init $(1)/etc/init.d/kresd
 
 	$(INSTALL_DIR) $(1)/etc/kresd
-	$(CP) $(PKG_BUILD_DIR)/etc/icann-ca.pem $(1)/etc/kresd
-	$(CP) $(PKG_BUILD_DIR)/etc/root.hints $(1)/etc/kresd
+	$(CP) $(PKG_INSTALL_DIR)/etc/kresd/root.hints $(1)/etc/kresd
+
 	$(INSTALL_BIN) ./files/kresd.postinst $(1)/etc/kresd/kresd.postinst.sh
 	$(INSTALL_BIN) ./files/convert_config.sh $(1)/etc/kresd/convert_config.sh
 endef

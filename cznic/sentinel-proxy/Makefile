@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-proxy
 PKG_VERSION:=1.1
-PKG_RELEASE:=3
+PKG_RELEASE:=5
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/proxy.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -34,10 +34,20 @@ define Build/Compile
 endef
 
 define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)/etc/sentinel
+	$(INSTALL_BIN) ./files/ca.pem $(1)/etc/sentinel/ca.pem
+
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/sentinel_proxy $(1)/usr/bin/sentinel-proxy
+
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) files/init $(1)/etc/init.d/sentinel-proxy
+
+	$(INSTALL_DIR) $(1)/etc/sentinel-certgen_hooks.d
+	$(INSTALL_BIN) files/restart-proxy-hook.sh $(1)/etc/sentinel-certgen_hooks.d/restart-proxy
+
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_DATA) files/renew.cron $(1)/etc/cron.d/certgen-certs-renew
 endef
 
 define Package/$(PKG_NAME)/postinst
