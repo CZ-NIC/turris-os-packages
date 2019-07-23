@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.1
-PKG_RELEASE:=30
+PKG_RELEASE:=31
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -45,7 +45,7 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/config
 ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
-	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolve
+	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolver
 else
 	$(INSTALL_CONF) ./files/resolver-turris-config $(1)/etc/config/resolver
 endif
