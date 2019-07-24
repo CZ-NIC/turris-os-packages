@@ -35,7 +35,7 @@ endef
 
 define Package/turris-netboot-tools
   TITLE:=Turris Netboot tools
-  DEPENDS:=+dnsmasq +dtc +uboot-mkimage +openssh-server +python3-cryptography +wget +foris-client +python3-pyuci
+  DEPENDS:=+dnsmasq +dtc +uboot-mkimage +openssh-server +python3-cryptography +wget +foris-client +python3-uci
 endef
 
 define Build/Prepare
@@ -86,7 +86,7 @@ define Package/turris-netboot-data/install
 	$(INSTALL_DIR) $(1)/usr/share/turris-netboot
 	cd $(LINUX_DIR); ./scripts/gen_initramfs_list.sh \
 	-o $(1)/usr/share/turris-netboot/initrd-$(CONFIG_ARCH).gz -u squash -g squash \
-	"$(PKG_BUILD_DIR)/rootfs" "$(PKG_BUILD_DIR)/rootfs.extra" 
+	"$(PKG_BUILD_DIR)/rootfs" "$(PKG_BUILD_DIR)/rootfs.extra"
 	gzip -d $(1)/usr/share/turris-netboot/initrd-$(CONFIG_ARCH).gz
 	$(INSTALL_DATA) ./files/mox.its $(1)/usr/share/turris-netboot
 endef
