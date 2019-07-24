@@ -27,8 +27,8 @@ define Package/$(PKG_NAME)
   SECTION:=lang
   CATEGORY:=Languages
   TITLE:=python3-zmq
-  URL:=http://walac.github.io/pyusb/
-  DEPENDS:=+python3 +libzmq
+  URL:=https://pyzmq.readthedocs.org/
+  DEPENDS:=+python3 +cython3 +libzmq
   MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
