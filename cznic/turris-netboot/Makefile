@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-netboot
 PKG_VERSION:=0.5.8
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 BB_VERSION:=1.29.3
 PKG_BB_SOURCE:=busybox-$(BB_VERSION).tar.bz2
 PKG_BB_SOURCE_URL:=https://www.busybox.net/downloads \
@@ -35,7 +35,7 @@ endef
 
 define Package/turris-netboot-tools
   TITLE:=Turris Netboot tools
-  DEPENDS:=+dnsmasq +dtc +uboot-mkimage +openssh-server +python3-cryptography +wget +foris-client
+  DEPENDS:=+dnsmasq +dtc +uboot-mkimage +openssh-server +python3-cryptography +wget +foris-client +python3-pyuci
 endef
 
 define Build/Prepare
@@ -109,6 +109,7 @@ define Package/turris-netboot-tools/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/manage.sh $(1)/usr/bin/netboot-manager
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/setup.sh $(1)/usr/bin/netboot-setup
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/encrypt.py $(1)/usr/bin/netboot-encrypt
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/set-static-lease.py $(1)/usr/bin/netboot-set-static-lease
 	$(INSTALL_DIR) $(1)/usr/share/turris-netboot
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/network-setup.sh $(1)/usr/share/turris-netboot/setup.sh
 endef
