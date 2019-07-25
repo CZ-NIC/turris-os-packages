@@ -1,0 +1,20 @@
+#!/bin/sh
+# This one shot script is used to address incompatility changes in knot-resolver
+# custom configuration from version 3.x->4.x
+
+custom_config="$(uci get resolver.kresd.include_config)"
+
+text_en="Comand $cmd in your knot-resolver custom config file ($custom_config) is not supported in the new version. Please read knot-resolver upgrade recommendation to switch to new API  https://knot-resolver.readthedocs.io/en/stable/upgrading.html"
+text_cz="Příkaz $cmd použitý ve Vaší konfiguraci knot-resolveru ($custom_config) není v nové verzi podporován. Přečtěte si prosím doporušení jak migrovat na nové API knot-resolveru https://knot-resolver.readthedocs.io/en/stable/upgrading.html"
+
+if [ -f "$custom_config" ]; then
+	# unsupported commands
+	cmd_list="trust_anchors.file trust_anchors.config trust_anchors.negative"
+	for cmd in $cmd_list
+	do
+		if grep -q "$cmd" "$custom_config"; then
+			create_notification -s error "$text_cz" "$text_en"
+		fi
+	done
+
+fi
