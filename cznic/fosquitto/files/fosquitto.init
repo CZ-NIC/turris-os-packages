@@ -13,8 +13,9 @@ generate_password() {
 	local new_password=$(hexdump -n 16 -e '4/4 "%08X" 1 "\n"' /dev/urandom)
 	local stored_umask=$(umask)
 	umask 0077
-	mkdir -p /etc/fosquitto
+	mkdir -p /etc/fosquitto/bridges
 	chown mosquitto /etc/fosquitto
+	chown -R mosquitto /etc/fosquitto/bridges
 	echo "local:${new_password}" > "${PLAIN_PASSWORD}"
 	cp "${PLAIN_PASSWORD}" "${HASHED_PASSWORD}"
 	mosquitto_passwd -U "${HASHED_PASSWORD}"
@@ -136,6 +137,7 @@ generate_config() {
 try_chown_dirs() {
 	if [ ! mosquitto = "$(stat -c '%U' /etc/fosquitto)" ] ; then
 		chown mosquitto /etc/fosquitto/
+		mkdir -p /etc/fosquitto/bridges
 		chown -R mosquitto /etc/fosquitto/bridges
 	fi
 }
