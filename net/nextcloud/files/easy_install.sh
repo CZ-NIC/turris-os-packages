@@ -17,6 +17,7 @@ if [ -f /srv/www/nextcloud/config/config.php ]; then
     echo
     echo "    DROP DATABASE nextcloud;"
     echo "    DROP USER 'nextcloud'@'localhost';"
+    echo "    DROP USER 'nextcloud'@'127.0.0.1';"
     echo
     echo "You can enter MySQL console using 'mysql -u root' command"
     echo
@@ -79,10 +80,12 @@ while [ "$i" -lt 15 ] && [ \! -S /tmp/mysql_nextcloud.sock ]; do
     i="`expr $i + 1`"
 done
 echo "
-CREATE DATABASE nextcloud; \
+CREATE DATABASE nextcloud;
 FLUSH PRIVILEGES;
-CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY '$DBPASS'; \
+CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY '$DBPASS';
 GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost';
+CREATE USER 'nextcloud'@'127.0.0.1' IDENTIFIED BY '$DBPASS';
+GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'127.0.0.1';
 " | mysql -u root -B --socket=/tmp/mysql_nextcloud.sock || die "Creating nextcloud database failed"
 sleep 1
 kill "$PID"

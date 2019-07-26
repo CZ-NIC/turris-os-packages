@@ -77,11 +77,13 @@ endef
 
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
+sed -i 's|
 # check if we are on real system
 if [ -z "$$IPKG_INSTROOT" ]; then
 	if [ -f /srv/www/nextcloud/config/config.php ]; then
 		cd /srv/www/nextcloud/
 		VER="`cat ./config/config.php | sed -n 's|.*version[^0-9]*\([0-9]\+\)\.\([0-9]\+\)\.\([0-9]\+\)\..*|\1\2\3|p'`"
+		sed -i 's|\(.*dbhost.*=>.*\)localhost\(.\),|\1127.0.0.1\2,|' config/config.php 
 		if [ -n "$$VER" ] && [ $$VER -lt "`echo $(PKG_VERSION) | sed 's|\.||g'`" ]; then
 			sudo -u nobody php-cli ./occ upgrade --no-app-disable --no-interaction
 		fi
