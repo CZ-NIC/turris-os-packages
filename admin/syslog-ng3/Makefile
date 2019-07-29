@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=syslog-ng
 PKG_VERSION:=3.21.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_LICENSE:=LGPL-2.1+
 PKG_LICENSE_FILES:=COPYING
@@ -30,7 +30,7 @@ include $(INCLUDE_DIR)/nls.mk
 define Package/syslog-ng3
   SECTION:=admin
   CATEGORY:=Administration
-  DEPENDS:=+libpcre +glib2 +libopenssl +libwrap +libpthread +librt +zlib +libdbi +psmisc +libjson-c +libcurl +libuuid +libmaxminddb
+  DEPENDS:=+libpcre +glib2 +libopenssl +libwrap +libpthread +librt +zlib +libdbi +psmisc +libjson-c +libcurl +libuuid
   PROVIDES:=syslog
   TITLE:=A powerful syslog daemon
   URL:=https://www.syslog-ng.com/products/open-source-log-management/
@@ -76,6 +76,7 @@ CONFIGURE_ARGS +=  \
 	--disable-maxmind \
 	--disable-dependency-tracking \
 	--disable-python \
+	--disable-geoip2 \
 	--disable-java \
 	--disable-java-modules \
 	--with-librabbitmq-client=no \
