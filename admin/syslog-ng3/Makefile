@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=syslog-ng
-PKG_VERSION:=3.22.1
+PKG_VERSION:=3.21.1
 PKG_RELEASE:=1
 
 PKG_LICENSE:=LGPL-2.1+
@@ -17,7 +17,7 @@ PKG_CPE_ID:=cpe:/a:balabit:syslog-ng
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/balabit/syslog-ng/releases/download/$(PKG_NAME)-$(PKG_VERSION)/
-PKG_MD5SUM:=0656443776fa554320cb81bbebeac72bdf871298dd2ebef7413c393aec4d74c8
+PKG_MD5SUM:=8d163da5ad79cf3a5f043b2ed0fe18a4888d0d740542703bf2508f0b9996cd25
 
 PKG_BUILD_PARALLEL:=1
 
@@ -30,7 +30,7 @@ include $(INCLUDE_DIR)/nls.mk
 define Package/syslog-ng3
   SECTION:=admin
   CATEGORY:=Administration
-  DEPENDS:=+libpcre +glib2 +libopenssl +libwrap +libpthread +librt +zlib +libdbi +psmisc +libjson-c +libcurl +libuuid
+  DEPENDS:=+libpcre +glib2 +libopenssl +libwrap +libpthread +librt +zlib +libdbi +psmisc +libjson-c +libcurl +libuuid +libmaxminddb
   PROVIDES:=syslog
   TITLE:=A powerful syslog daemon
   URL:=https://www.syslog-ng.com/products/open-source-log-management/
@@ -63,7 +63,6 @@ return 0
 endef
 
 CONFIGURE_ARGS +=  \
-	--disable-snmp-dest \
 	$(call autoconf_bool,CONFIG_IPV6,ipv6) \
 	--disable-spoof-source \
 	--disable-sql \
@@ -71,12 +70,12 @@ CONFIGURE_ARGS +=  \
 	--with-jsonc=system \
 	--enable-json=yes \
 	--enable-http=yes \
+	--enable-geoip2=yes \
 	--disable-smtp \
 	--disable-redis \
 	--disable-maxmind \
 	--disable-dependency-tracking \
 	--disable-python \
-	--disable-geoip2 \
 	--disable-java \
 	--disable-java-modules \
 	--with-librabbitmq-client=no \
