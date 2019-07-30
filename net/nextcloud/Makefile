@@ -77,7 +77,6 @@ endef
 
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
-sed -i 's|
 # check if we are on real system
 if [ -z "$$IPKG_INSTROOT" ]; then
 	if [ -f /srv/www/nextcloud/config/config.php ]; then
