@@ -23,7 +23,9 @@ HOST_PYTHON3_PACKAGE_BUILD_DEPENDS:= \
 	libsass==0.14.5 \
 	MarkupSafe==1.1.1 \
 	Jinja2==2.10
-PKG_BUILD_DEPENDS:=ruby/host
+PKG_BUILD_DEPENDS:= \
+	compass/host \
+	ruby-breakpoint/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
