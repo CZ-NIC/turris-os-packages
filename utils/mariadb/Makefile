@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mariadb
 PKG_VERSION:=10.4.6
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL := \
@@ -430,6 +430,7 @@ define Build/InstallDev
 	$(LN) $(STAGING_DIR)/usr/bin/mysql_config $(2)/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/mysql $(1)/usr/include
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib*/libmysqlclient*.so* $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib*/libmaria*.so* $(1)/usr/lib
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/pkgconfig/mariadb.pc $(1)/usr/lib/pkgconfig
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/aclocal/mysql.m4 $(1)/usr/share/aclocal
 endef
@@ -437,6 +438,8 @@ endef
 define Package/libmariadbclient/install
 	$(INSTALL_DIR) $(1)$(PLUGIN_DIR)
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib*/libmysqlclient*.so* $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib*/libmaria*.so* $(1)/usr/lib
+
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)$(PLUGIN_DIR)/dialog.so $(1)$(PLUGIN_DIR)
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)$(PLUGIN_DIR)/mysql_clear_password.so $(1)$(PLUGIN_DIR)
 endef
