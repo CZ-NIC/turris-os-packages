@@ -1,7 +1,5 @@
-Index: mariadb-10.4.6/scripts/mysql_system_tables_fix.sql
-===================================================================
---- mariadb-10.4.6.orig/scripts/mysql_system_tables_fix.sql
-+++ mariadb-10.4.6/scripts/mysql_system_tables_fix.sql
+--- a/scripts/mysql_system_tables_fix.sql
++++ b/scripts/mysql_system_tables_fix.sql
 @@ -800,3 +800,13 @@ IF 'BASE TABLE' = (select table_type fro
    DROP TABLE user;
  END IF//

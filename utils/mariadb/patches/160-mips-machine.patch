@@ -10,8 +10,8 @@ Description: Fix DEFAULT_MACHINE on mips
 Author: James Cowgill <jcowgill@debian.org>
 ---
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
---- mariadb-10.1.orig/cmake/package_name.cmake
-+++ mariadb-10.1/cmake/package_name.cmake
+--- a/cmake/package_name.cmake
++++ b/cmake/package_name.cmake
 @@ -34,6 +34,10 @@ IF(NOT VERSION)
        SET(DEFAULT_MACHINE "mips")
      ENDIF()

@@ -1,7 +1,5 @@
-Index: mariadb-10.4.6/scripts/mysql_system_tables_data.sql
-===================================================================
---- mariadb-10.4.6.orig/scripts/mysql_system_tables_data.sql
-+++ mariadb-10.4.6/scripts/mysql_system_tables_data.sql
+--- a/scripts/mysql_system_tables_data.sql
++++ b/scripts/mysql_system_tables_data.sql
 @@ -26,8 +26,6 @@
  -- a plain character
  SELECT LOWER( REPLACE((SELECT REPLACE(@@hostname,'_','\_')),'%','\%') )INTO @current_hostname;
