@@ -40,6 +40,7 @@ get_public_ip() {
 copy_suricata_normal_rules() {
 	local rules="http-events.rules smtp-events.rules dns-events.rules tls-events.rules"
 	print_msg "Copying normal suricata rules."
+	mkdir -p "$SURICATA_RULES_DIR"
 	for i in $rules; do
 		if [ -f "$SURICATA_NORMAL_RULES_DIR/$i" ]; then
 			cp "$SURICATA_NORMAL_RULES_DIR/$i" "$SURICATA_RULES_DIR/"
@@ -102,7 +103,8 @@ start_service() {
 	# Create suricata log dir
 	mkdir -p "$SURICATA_LOG_DIR"
 
-	if [ ! -d "/tmp/suricata/rules" ]; then
+
+	if [ ! -f "/tmp/suricata/rules.md5" ] || [ ! "$(grep -q '[^[:space:]]' /tmp/suricata/rules.md5)" ]; then
 		print_msg "Warning /tmp/suricata/rules not found ! Suricata-emergingthreats-rules is probably not running."
 		if [ -f "/usr/bin/suricata_update_rules.sh" ]; then
 			print_msg "Trying to run suricata_update_rules.sh"
