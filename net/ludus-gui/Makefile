@@ -9,12 +9,12 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ludus-gui
 PKG_VERSION:=0.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=git@gitlab.labs.nic.cz:turris/ludus.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=7d7f96d8c929d5b24f058fd36ed263aac0716ba2
+PKG_SOURCE_VERSION:=8e4eeb2c0daefbb43c2a4dddda3beff36e8acd22
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
