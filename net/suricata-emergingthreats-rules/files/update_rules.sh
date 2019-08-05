@@ -21,6 +21,7 @@ reload_suricata() {
 }
 
 if [ ! -f "$RULES_MD5_FILE" ] || [ "$(cat $RULES_MD5_FILE)" != "$(curl -s $RULES_MD5_URL)" ]; then
+    sleep 20
     download_rules
     reload_suricata
 fi
