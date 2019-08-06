@@ -15,12 +15,6 @@ config_get SENTRY_DSN sentry dsn ""
 SCRIPTNAME=$(echo "$SCRIPTNAME" | sed -e 's;\\;\\\\;g' | sed -e 's;/*$;;g' | sed -e 's;^/*;;g' | sed -e 's;/+;/;g')
 [ "$SCRIPTNAME" != "" ] && SCRIPTNAME="/$SCRIPTNAME"
 
-FORIS_PATHS=""
-tmp_out=$(eval /usr/bin/reforis-cli urls)
-for path in $tmp_out;  do
-	FORIS_PATHS="$FORIS_PATHS|${path:1}"  # remove first '/' character
-done
-
 # get bus config
 config_load foris-controller
 config_get BUS main bus "mqtt"
@@ -40,9 +34,8 @@ esac
 echo "var.reforis.bin = \"/usr/bin/reforis\""
 echo "var.reforis.scriptname = \"/reforis\""
 
-echo "var.reforis.paths = \"$FORIS_PATHS\""
 echo
-echo "\$HTTP[\"url\"] =~ \"^\" + var.reforis.scriptname + \"/(\" + var.reforis.paths + \")$\" {"
+echo "\$HTTP[\"url\"] =~ \"^\" + var.reforis.scriptname + \"/(.*)$\" {"
 case $SERVER in
 	flup)
 		echo '	fastcgi.debug = 0'
