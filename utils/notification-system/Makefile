@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=notification-system
 PKG_VERSION:=0.3.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/notification-system.git
@@ -33,7 +33,8 @@ define Package/notification-system
         +python3-light \
         +python3-yaml \
         +python3-jinja2 \
-        +python3-logging
+        +python3-logging \
+        +python3-uci
   PROVIDES:=user-notify
   CONFLICTS:=user-notify
   VARIANT:=python3
