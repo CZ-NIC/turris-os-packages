@@ -38,8 +38,7 @@
 	"nas": {
 		"title": "NAS",
 		"description": "Services allowing to connect a disk to the router and use it as network data store.",
-		"url": "https://doc.turris.cz/doc/en/howto/nas",
-		"official": true
+		"url": "https://doc.turris.cz/doc/en/howto/nas"
 	},
 	"nextcloud": {
 		"title": "Nextcloud",
