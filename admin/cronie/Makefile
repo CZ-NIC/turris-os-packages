@@ -30,8 +30,6 @@ define Package/$(PKG_NAME)
   TITLE:=Cronie standard Unix crond
   URL:=https://github.com/cronie-crond/cronie
   DEPENDS:=@(!BUSYBOX_CONFIG_CROND&&!BUSYBOX_CONFIG_CRONTAB)
-  PROVIDES:=vixie-cron
-  CONFLICTS:=vixie-cron
   USERID:=cron=16:cron=16
 endef
 

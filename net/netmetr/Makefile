@@ -31,7 +31,7 @@ define Package/$(PKG_NAME)
   +python3-setuptools \
   +python3-pyserial \
   +rmbt-client \
-  +vixie-cron \
+  +cronie \
   +xz
   VARIANT:=python3
 endef

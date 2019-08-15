@@ -24,7 +24,7 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/$(PKG_NAME)
   TITLE:=Next generation updater supervisor and its library
-  DEPENDS:=+updater-ng +python3-light +python3-uci +pkglists +l10n_supported
+  DEPENDS:=+updater-ng +python3-light +python3-uci +pkglists +l10n_supported +cronie
   VARIANT:=python3
 endef
 
