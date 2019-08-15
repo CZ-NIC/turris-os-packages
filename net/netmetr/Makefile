@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netmetr
 PKG_VERSION:=1.5.2
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_SOURCE:=netmetr-client-v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/netmetr-client/-/archive/v$(PKG_VERSION)/
@@ -31,7 +31,7 @@ define Package/$(PKG_NAME)
   +python3-setuptools \
   +python3-pyserial \
   +rmbt-client \
-  +vixie-cron \
+  +cronie \
   +xz
   VARIANT:=python3
 endef
