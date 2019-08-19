@@ -1,0 +1,10 @@
+#!/bin/sh /etc/rc.common
+START=99
+
+start() {
+    if ! openssl verify /etc/lighttpd-self-signed.pem > /dev/null 2>&1; then'
+	    openssl req -new -x509 -keyout /etc/lighttpd-self-signed.pem -out /etc/lighttpd-self-signed.pem -days 7300 -nodes -subj "/C=CZ/ST=Prague/L=Prague/O=Turris"'
+	    [ -f /etc/lighttpd/conf.d/ssl-enable.conf ] || cp /etc/lighttpd/conf.d/ssl-enable.conf.example /etc/lighttpd/conf.d/ssl-enable.conf'
+	    /etc/init.d/lighttpd restart'
+	fi &
+}
