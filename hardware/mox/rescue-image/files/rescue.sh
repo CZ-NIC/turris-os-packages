@@ -142,7 +142,7 @@ download_medkit() {
     echo "Got IPv4!"
     ip a s
     ip r s
-    grep -q nameserver /etc/resolv.conf || echo nameserver 217.31.204.130 > /etc/resolv.conf
+    grep -q nameserver /etc/resolv.conf || echo nameserver 193.17.47.1 > /etc/resolv.conf
     mkdir -p /mnt/src
     i=0
     while ! { \
