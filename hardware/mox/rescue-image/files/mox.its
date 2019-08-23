@@ -21,6 +21,20 @@
                 algo = "sha1";
             };
         };
+        ramdisk@1 {
+            description = "Initial Ramdisk";
+            data = /incbin/("./initrd.gz");
+            type = "ramdisk";
+            arch = "arm";
+            os = "linux";
+            compression = "none";
+            hash@1 {
+                algo = "crc32";
+            };
+            hash@2 {
+                algo = "sha1";
+            };
+        };
         fdt@1 {
             description = "Flattened Device Tree blob";
             data = /incbin/("./dts/marvell/armada-3720-turris-mox.dtb");
@@ -41,6 +55,7 @@
         conf@1 {
             description = "Turris MOX rescue image";
             kernel = "kernel@1";
+			ramdisk = "ramdisk@1";
             fdt = "fdt@1";
         };
     };

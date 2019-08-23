@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rescue-image
-PKG_VERSION:=2.2.2
+PKG_VERSION:=3.0
 PKG_RELEASE:=0
 BB_VERSION:=1.30.1
 PKG_SOURCE:=busybox-$(BB_VERSION).tar.bz2
@@ -31,11 +31,12 @@ include $(INCLUDE_DIR)/quilt.mk
 include $(INCLUDE_DIR)/package.mk
 
 PATCH_DIR := $(PLATFORM_DIR)/patches$(if $(wildcard $(PLATFORM_DIR)/patches-$(KERNEL_PATCHVER)),-$(KERNEL_PATCHVER))
-DEVICE := $(subst DEVICE_cznic-,,$(CONFIG_TARGET_PROFILE))
+DEVICE := $(subst _,,$(subst -,,$(subst turris,,$(subst DEVICE_cznic,,$(CONFIG_TARGET_PROFILE)))))
+kernel_files=$(TOPDIR)/target/linux/$(BOARD)/files-$(KERNEL_PATCHVER)/. $(TOPDIR)/target/linux/generic/files/.
 
 define Package/rescue-image
 	TITLE:=rescue-image
-	DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox
+	DEPENDS:=@(TARGET_mvebu_cortexa53_DEVICE_cznic-mox||TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia)
 endef
 
 define Build/Prepare
@@ -60,7 +61,7 @@ define Build/Prepare
 endef
 
 define Build/Configure
-	sed -i 's|^BORAD=.*|BOARD=$(DEVICE)|' "$(PKG_BUILD_DIR)/rootfs/init"
+	sed -i 's|^BOARD=.*|BOARD=$(DEVICE)|' "$(PKG_BUILD_DIR)/rootfs/init"
 	# Kernel
 	$(call Kernel/Configure)
 	sed -i 's|=m$$$$|=n|' "$(LINUX_DIR)/.config"
@@ -70,10 +71,6 @@ define Build/Configure
 	sed -i 's|^.*\(CONFIG_NET_VENDOR_MARVELL\).*|CONFIG_NET_VENDOR_MARVELL=y|' "$(LINUX_DIR)/.config"
 	sed -i 's|^\(CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE\)=y|# \1 is not set|' "$(LINUX_DIR)/.config"
 	for cfg in \
-	NET_DSA \
-	NET_DSA_MV88E6XXX \
-	NET_DSA_MV88E606 \
-	NET_DSA_MV88E6XXX_GLOBAL2 \
 	CGROUPS \
 	CHECKPOINT_RESTORE \
 	NAMESPACES \
@@ -85,7 +82,6 @@ define Build/Configure
 	UNMAP_KERNEL_AT_EL0 \
 	HARDEN_BRANCH_PREDICTOR \
 	ARM64_SSBD \
-	HIGH_RES_TIMERS \
 	TICK_CPU_ACCOUNTING \
 	WIRELESS \
 	WLAN \
@@ -97,6 +93,8 @@ define Build/Configure
 	NET_CLS_U32 \
 	NET_CLS_FLOW \
 	ISDN \
+	COREDUMP \
+	VLAN_8021Q \
 	JFFS2_FS \
 	SQUASHFS \
 	INOTIFY_USER \
@@ -105,16 +103,41 @@ define Build/Configure
 	TMPFS_XATTR \
 	NETWORK_FILESYSTEMS \
 	DEBUG_INFO \
-	IKCONFIG \
 	BINFMT_MISC \
 	SECURITY_DMESG_RESTRICT \
 	CRYPTO_HW \
 	BPF \
+	ARM_APPENDED_DTB \
+	ATAGS \
+	CRASH_DUMP \
+	PCI \
+	ROOT_NFS \
 	BPF_SYSCALL \
 	HAVE_EBPF_JIT \
+	ZSTD_COMPRESS \
+	ZSTD_DECOMPRESS \
+	CONFIG_SATA_MV \
+	CONFIG_SATA_PMP \
+	SATA_AHCI_PLATFORM \
 	NET_SCHED \
 	NET_CLS \
 	NET_CLS_ACT \
+	NET_EMATCH \
+	NET_EMATCH_STACK \
+	HAMRADIO \
+	HAVE_IDE \
+	AHCI_MVEBU \
+	ATA_SFF \
+	SATA_MV \
+	NET_CADENCE \
+	MISC_FILESYSTEMS \
+	UBIFS_FS \
+	UBIFS_FS_LZO \
+	UBIFS_FS_ZLIB \
+	UBIFS_FS_FORMAT4 \
+	DEBUG_FS \
+	DEBUG_KERNEL \
+	ALLOW_DEV_COREDUMP \
 	NET_CLS_TCINDEX; do \
 		sed -i "/^CONFIG_$$$$cfg=/ d" "$(LINUX_DIR)/.config"; \
 		echo "CONFIG_$$$$cfg=n" >> "$(LINUX_DIR)/.config"; \
@@ -128,17 +151,18 @@ define Build/Configure
 	echo "CONFIG_INITRAMFS_COMPRESSION_LZ4=n" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_INITRAMFS_COMPRESSION_XZ=n" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_INITRAMFS_COMPRESSION=\"\"" >> "$(LINUX_DIR)/.config"
-	echo "CONFIG_RD_XZ=y" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_VFAT_FS=y" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_NTFS_FS=y" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_CC_OPTIMIZE_FOR_SIZE=y" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_CC_STACKPROTECTOR_NONE=y" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_DEFAULT_HOSTNAME=\"turris-rescue\"" >> "$(LINUX_DIR)/.config"
-	echo "CONFIG_INITRAMFS_SOURCE=\"$(PKG_BUILD_DIR)/rootfs $(PKG_BUILD_DIR)/rootfs.extra\"" >> "$(LINUX_DIR)/.config"
+	echo "CONFIG_INITRAMFS_SOURCE=\"\"" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_INITRAMFS_ROOT_UID=$$$$(id -u)" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_INITRAMFS_ROOT_GID=$$$$(id -g)" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_NLS_CODEPAGE_437=y" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_NLS_ISO8859_1=y" >> "$(LINUX_DIR)/.config"
+	echo "CONFIG_IKCONFIG=n" >> "$(LINUX_DIR)/.config"
+	echo "CONFIG_IKCONFIG_PROC=n" >> "$(LINUX_DIR)/.config"
 	# Busybox
 	cp files/busybox-config $(PKG_BUILD_DIR)/busybox/.config
 	$(MAKE) -C "$(PKG_BUILD_DIR)/busybox" $(MAKE_FLAGS) oldconfig
@@ -156,7 +180,11 @@ define Build/Compile
 		$(STAGING_DIR_HOST)/bin/opkg --offline-root "$(PKG_BUILD_DIR)/rootfs" --force-depends install \{\} \; ;\
 	done
 	rm -rf "$(PKG_BUILD_DIR)/rootfs"/usr/lib/opkg
-	$(KERNEL_MAKE) $(PKG_JOBS) silentoldconfig Image dtbs
+	$(KERNEL_MAKE) $(PKG_JOBS) silentoldconfig $(KERNELNAME)
+	cd $(LINUX_DIR); ./scripts/gen_initramfs_list.sh \
+	-o "$(PKG_BUILD_DIR)"/kernel/linux-$(LINUX_VERSION)/arch/$(LINUX_KARCH)/boot/initrd.gz -u squash -g squash \
+	"$(PKG_BUILD_DIR)/rootfs" "$(PKG_BUILD_DIR)/rootfs.extra"
+	gzip -d "$(PKG_BUILD_DIR)"/kernel/linux-$(LINUX_VERSION)/arch/$(LINUX_KARCH)/boot/initrd.gz
 	$(CP) "$(PKG_BUILD_DIR)"/rescue.its "$(PKG_BUILD_DIR)"/kernel/linux-$(LINUX_VERSION)/arch/$(LINUX_KARCH)/boot/rescue.its
 endef
 
@@ -166,6 +194,7 @@ define Package/rescue-image/install
 	PATH="$(PKG_BUILD_DIR)/kernel/linux-$(LINUX_VERSION)/scripts/dtc:$$PATH" \
 	"$(STAGING_DIR_HOST)"/bin/mkimage -f rescue.its $(1)/usr/share/rescue-image/image.fit
 	xz -k9 -F lzma $(1)/usr/share/rescue-image/image.fit
+	[ "`stat -c '%s' $(1)/usr/share/rescue-image/image.fit.lzma`" -lt 7340032 ]
 endef
 
 $(eval $(call BuildPackage,rescue-image))
