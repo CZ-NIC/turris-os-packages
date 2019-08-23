@@ -3,10 +3,25 @@
 # Global defaults
 BOARD=mox
 DELAY=60
-RESCUE_IF="eth0"
+RESCUE_IF="`ip a s | sed -n 's|^[0-9]*:[[:blank:]]*\(lan0\)@.*|\1|p'`"
+RESCUE_IF_UP="`ip a s | sed -n 's|^[0-9]*:[[:blank:]]*\(lan0\)@\([^:]*\):.*|\2|p'`"
+WAN_IF="eth0"
 HAVE_BTRFS=1
 REPARTITION=1
 MODE=1
+
+# Generic functions used by board specific ones
+
+predie() {
+        ret_code="$1"
+        shift
+        if [ -f /tmp/debug.txt ]; then
+            echo "Debug info:"
+            cat /tmp/debug.txt
+        fi
+        echo "$1"
+        setsid cttyhack sh &
+}
 
 # Board specific functions
 
@@ -34,6 +49,7 @@ if [ "$BOARD" = mox ]; then
         BUTTON_STATE="$(cat /sys/class/gpio/gpio466/value)"
         TARGET_DRIVE="/dev/mmcblk1"
         TARGET_PART="1"
+        [ -n "$RESCUE_IF" ] || RESCUE_IF=eth0
         handle_reset &
     }
 
@@ -60,28 +76,13 @@ if [ "$BOARD" = mox ]; then
         echo default-on > /sys/class/leds/red/trigger
     }
 
-    board_reset() {
-        mtd erase /dev/mtd1
-    }
-
-    set_pulic_port() {
-        :
-    }
-
     busy() {
         echo timer > /sys/class/leds/red/trigger
         while sleep 0.5; do [ "$(cat /sys/class/gpio/gpio466/value)" -eq 1 ] || reboot; done &
     }
 
     die() {
-        ret_code="$1"
-        shift
-        if [ -f /tmp/debug.txt ]; then
-            echo "Debug info:"
-            cat /tmp/debug.txt
-        fi
-        echo "$1"
-        setsid cttyhack sh &
+        predie "$1" "$2"
         while sleep 0.5; do
             sleep 0.3
             for i in $(seq 1 "$ret_code"); do
@@ -94,10 +95,83 @@ if [ "$BOARD" = mox ]; then
         done
     }
 
+elif [ "$BOARD" = omnia ]; then
+
+    board_init() {
+        mkdir -p /etc
+        echo '/dev/mtd0 0xF0000 0x10000 0x10000' > /etc/fw_env.config
+        TARGET_DRIVE="/dev/mmcblk0"
+        TARGET_PART="1"
+        MODE=7
+        BRIGHT="`cat /sys/class/leds/omnia-led\:all/device/global_brightness`"
+        WAN_IF="eth2"
+        DELAY=40
+        RESCUE_IF="`ip a s | sed -n 's|^[0-9]*:[[:blank:]]*\(lan4\)@.*|\1|p'`"
+        RESCUE_IF_UP="`ip a s | sed -n 's|^[0-9]*:[[:blank:]]*\(lan4\)@\([^:]*\):.*|\2|p'`"
+        echo '0 255 0' >  /sys/class/leds/omnia-led\:all/color
+        echo default-on > /sys/class/leds/omnia-led\:all/trigger
+    }
+
+    check_for_mode_change() {
+        if [ "`cat /sys/class/leds/omnia-led\:all/device/global_brightness`" -ne "$BRIGHT" ]; then
+            echo "$BRIGHT" > /sys/class/leds/omnia-led\:all/device/global_brightness
+            return 0
+        fi
+        return 1
+    }
+
+    display_mode() {
+        MODE_TG=default-on
+        echo '255 64 0' >  /sys/class/leds/omnia-led\:all/color
+        for i in /sys/class/leds/omnia-led*; do
+            echo none > "$i"/trigger
+        done
+        echo "$MODE_TG" > /sys/class/leds/omnia-led\:power/trigger
+        if [ "$MODE" -gt 1 ]; then
+            echo "$MODE_TG" > /sys/class/leds/omnia-led\:lan0/trigger
+        fi
+        if [ "$MODE" -gt 2 ]; then
+            echo "$MODE_TG" > /sys/class/leds/omnia-led\:lan1/trigger
+        fi
+        if [ "$MODE" -gt 3 ]; then
+            echo "$MODE_TG" > /sys/class/leds/omnia-led\:lan2/trigger
+        fi
+        if [ "$MODE" -gt 4 ]; then
+            echo "$MODE_TG" > /sys/class/leds/omnia-led\:lan3/trigger
+        fi
+        if [ "$MODE" -gt 5 ]; then
+            echo "$MODE_TG" > /sys/class/leds/omnia-led\:lan4/trigger
+        fi
+        if [ "$MODE" -gt 6 ]; then
+            echo "$MODE_TG" > /sys/class/leds/omnia-led\:wan/trigger
+        fi
+        if [ "$MODE" -gt 7 ]; then
+            echo "$MODE_TG" > /sys/class/leds/omnia-led\:pci1/trigger
+        fi
+        if [ "$MODE" -gt 8 ]; then
+            echo "$MODE_TG" > /sys/class/leds/omnia-led\:pci2/trigger
+        fi
+        if [ "$MODE" -gt 9 ]; then
+            echo "$MODE_TG" > /sys/class/leds/omnia-led\:pci3/trigger
+        fi
+    }
+
+    busy() {
+        echo '255 0 0' >  /sys/class/leds/omnia-led\:all/color
+    }
+
+    die() {
+        predie "$1" "$2"
+        echo '0 0 255' >  /sys/class/leds/omnia-led\:all/color
+        echo timer > /sys/class/leds/omnia-led\:all/trigger
+        while true; do
+            sleep 1
+        done
+    }
+
 fi
 
 # Generic helper functions
-
 reset_uenv() {
     fw_setenv bootcmd 'env default -f -a; saveenv; reset'
 }
@@ -133,7 +207,8 @@ DHCP_OPTS="-qfn"
 download_medkit() {
     tries=3
     i=0
-    while ! udhcpc -i "$RESCUE_IF" $DHCP_OPTS; do
+    ip l set up dev "$WAN_IF"
+    while ! udhcpc -i "$WAN_IF" $DHCP_OPTS; do
         echo "No DHCP :-("
         sleep 2
         i="$(expr "$i" + 1)"
@@ -233,7 +308,7 @@ EOF
         mkdir -p "$1"
         mount "$TARGET_DRIVE"p"$TARGET_PART" "$1" || die 5 "Can't mount the partition"
         btrfs subvolume create "$1"/@ >> /tmp/debug.txt 2>&1 || die 6 "Can't create a subvolume"
-        ln -s @/boot/boot-btrfs.scr "$1"/boot.scr
+        ln -s @/boot/boot.scr "$1"/boot.scr
         umount "$1"
         mount "$TARGET_DRIVE"p"$TARGET_PART" -o subvol=@ "$1"
     fi
@@ -316,6 +391,8 @@ init() {
     mkdir /dev/pts
     mount -t devpts devpts /dev/pts
     sleep 1
+    ip a a 127.0.0.1/8 dev lo
+    ip l s up dev lo
     simple_udev &
 }
 
@@ -354,9 +431,17 @@ mode_4() {
 MODE5="Unsecure SSH on 192.168.1.1"
 mode_5() {
     echo "Running unsecure ssh"
-    set_public_port
-    ip link set dev "$RESCUE_IF" up
-    ip addr add dev "$RESCUE_IF" 192.168.1.1/24
+    ip link add name br_lan type bridge
+    ip link set br_lan up
+    for i in $RESCUE_IF $RESCUE_IF_UP; do
+        ip link set $i up
+    done
+    for i in $RESCUE_IF; do
+        ip link set $i master br_lan
+        ip link set $i up
+    done
+    ip link set br_lan up
+    ip addr add 192.168.1.1/24 dev br_lan
     rm -f /etc/dropbear/*
     dropbear -R -B -E
     setsid cttyhack sh
@@ -385,7 +470,9 @@ mode_7() {
 init
 board_init
 cmd_mode="$(sed -n 's|.*rescue_mode=\([0-9]\+\).*|\1|p' /proc/cmdline)"
-[ -z "$cmd_mode" ] || MODE="$cmd_mode"
+[ -z "$cmd_mode" ] || MODE="$(expr $cmd_mode + 1)"
+[ "$MODE" -le 7 ] || MODE=1
+echo "Booting rescue mode for $BOARD in mode $MODE"
 if [ -n "$HAVE_BTRFS" ]; then
     mkdir -p /etc/schnapps
     echo "ROOT_DEV='${TARGET_DRIVE}p${TARGET_PART}'" > /etc/schnapps/config
