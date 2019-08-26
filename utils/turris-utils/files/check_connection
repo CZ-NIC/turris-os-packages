@@ -5,7 +5,7 @@ if [ "$#" = 0 ] ;
 then
 	TESTS=" IP4 IP4GATE IP6 IP6GATE DNS DNSSEC "
 else
-	TESTS=" $@ "
+	TESTS=" $* "
 fi
 
 TESTS="$(echo "$TESTS" | sed -e 's/ /X/g')"
@@ -70,7 +70,17 @@ dig_name() {
 
 echo_res() {
 	echo -n "$2: "
-	$1 && echo "OK" || echo "FAILED"
+	case "$1" in
+		true)
+			echo "OK"
+			;;
+		false)
+			echo "FAILED"
+			;;
+		*)
+			echo "UNKNOWN"
+			;;
+	esac
 }
 
 defgw() {
@@ -93,53 +103,51 @@ GW4="$(ip -4 route | defgw)"
 GW6="$(ip -6 route | defgw)"
 
 # Results
-RES_IP4_G=false
-RES_IP4=false
-RES_IP6_G=false
-RES_IP6=false
-RES_DNS=false
-RES_DNSSEC=false
+RES_IP4_G="unknown"
+RES_IP4="unknown"
+RES_IP6_G="unknown"
+RES_IP6="unknown"
+RES_DNS="unknown"
+RES_DNSSEC="unknown"
 
 # IPv4 gateway
 if [ -z "${TESTS##*XIP4GATEX*}" ]; then
-	do_tests_positive ping_ip4 $GW4 && RES_IP4_G=true || :
+	if [ -n "$GW4" ]; then
+		do_tests_positive ping_ip4 $GW4 && RES_IP4_G="true" || RES_IP4_G="false"
+	fi
 	echo_res $RES_IP4_G "IPv4 Gateway"
 fi
 
 # IPv4
 if [ -z "${TESTS##*XIP4X*}" ]; then
-	if $RES_IP4_G; then
-		do_tests_positive ping_ip4 $IP4 && RES_IP4=true || :
-	fi
+	do_tests_positive ping_ip4 $IP4 && RES_IP4="true" || RES_IP4="false"
 	echo_res $RES_IP4 "IPv4"
 fi
 
 # IPv6 gateway
 if [ -z "${TESTS##*XIP6GATEX*}" ]; then
-	do_tests_positive ping_ip6 $GW6 && RES_IP6_G=true || :
+	if [ -n "$GW6" ]; then
+		do_tests_positive ping_ip6 $GW6 && RES_IP6_G="true" || RES_IP6_G="false"
+	fi
 	echo_res $RES_IP6_G "IPv6 Gateway"
 fi
 # IPv6
 if [ -z "${TESTS##*XIP6X*}" ]; then
-	if $RES_IP6_G; then
-		do_tests_positive ping_ip6 $IP6 && RES_IP6=true || :
-	fi
+	do_tests_positive ping_ip6 $IP6 && RES_IP6="true" || RES_IP6="false"
 	echo_res $RES_IP6 "IPv6"
 fi
 
 # DNS
 if [ -z "${TESTS##*XDNSX*}" ]; then
-	if $RES_IP4 || $RES_IP6; then
-		do_tests_positive dig_name $NAMES && RES_DNS=true || :
-	fi
+	do_tests_positive dig_name $NAMES && RES_DNS="true" || RES_DNS="false"
 	echo_res $RES_DNS "DNS"
 fi
 
 # DNSSEC
 if [ -z "${TESTS##*XDNSSECX*}" ]; then
-	if $RES_DNS; then
+	if [ "$RES_DNS" = "true" ]; then
 		# Bad names shouldn't be resolved
-		do_tests_negative dig_name $BAD_NAMES && RES_DNSSEC=true || :
+		do_tests_negative dig_name $BAD_NAMES && RES_DNSSEC="true" || RES_DNSSEC="false"
 	fi
 	echo_res $RES_DNSSEC "DNSSEC"
 fi
