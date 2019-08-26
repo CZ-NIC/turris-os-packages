@@ -163,8 +163,6 @@ define Build/Configure
 	echo "CONFIG_CC_STACKPROTECTOR_NONE=y" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_DEFAULT_HOSTNAME=\"turris-rescue\"" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_INITRAMFS_SOURCE=\"\"" >> "$(LINUX_DIR)/.config"
-	echo "CONFIG_INITRAMFS_ROOT_UID=$$$$(id -u)" >> "$(LINUX_DIR)/.config"
-	echo "CONFIG_INITRAMFS_ROOT_GID=$$$$(id -g)" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_NLS_CODEPAGE_437=y" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_NLS_ISO8859_1=y" >> "$(LINUX_DIR)/.config"
 	echo "CONFIG_IKCONFIG=n" >> "$(LINUX_DIR)/.config"
