@@ -31,7 +31,13 @@ include $(INCLUDE_DIR)/quilt.mk
 include $(INCLUDE_DIR)/package.mk
 
 PATCH_DIR := $(PLATFORM_DIR)/patches$(if $(wildcard $(PLATFORM_DIR)/patches-$(KERNEL_PATCHVER)),-$(KERNEL_PATCHVER))
-DEVICE := $(subst _,,$(subst -,,$(subst turris,,$(subst DEVICE_cznic,,$(CONFIG_TARGET_PROFILE)))))
+ifeq ($(CONFIG_TARGET_mvebu_cortexa53_DEVICE_cznic-mox),y)
+DEVICE := mox
+else ifeq ($(CONFIG_TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia),y)
+DEVICE := omnia
+else
+DEVICE := unknown
+endif
 kernel_files=$(TOPDIR)/target/linux/$(BOARD)/files-$(KERNEL_PATCHVER)/. $(TOPDIR)/target/linux/generic/files/.
 
 define Package/rescue-image
