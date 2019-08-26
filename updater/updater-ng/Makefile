@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=63.1
-PKG_RELEASE:=2
+PKG_VERSION:=63.1.1
+PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater/updater.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
