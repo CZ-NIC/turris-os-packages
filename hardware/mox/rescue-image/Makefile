@@ -51,12 +51,14 @@ define Build/Prepare
 	$(call Kernel/Patch/Default)
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/sbin"
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/etc"
+	mkdir -p "$(PKG_BUILD_DIR)/rootfs/lib"
 	echo -e 'nameserver 193.17.47.1\nnameserver 2001:148f:ffff::1\nnameserver 185.43.135.1' > "$(PKG_BUILD_DIR)/rootfs/etc/resolv.conf"
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/tmp"
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/var/lock"
 	mkdir -p "$(PKG_BUILD_DIR)/busybox"
 	echo "root::0:0:root:/:/bin/sh" > "$(PKG_BUILD_DIR)/rootfs/etc/passwd"
 	echo "/bin/sh" > "$(PKG_BUILD_DIR)/rootfs/etc/shells"
+	$(INSTALL_BIN) ./files/helpers.sh "$(PKG_BUILD_DIR)/rootfs/lib/helpers.sh"
 	$(INSTALL_BIN) ./files/rescue.sh "$(PKG_BUILD_DIR)/rootfs/init"
 	$(HOST_TAR) -C $(PKG_BUILD_DIR)/busybox --strip-components=1 -xjf $(DL_DIR)/$(PKG_SOURCE)
 	mkdir -p "$(PKG_BUILD_DIR)"/rootfs//usr/share/udhcpc
