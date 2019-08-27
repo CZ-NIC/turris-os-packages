@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=follectd
-PKG_VERSION:=2
+PKG_VERSION:=3
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -25,7 +25,7 @@ define Package/$(PKG_NAME)
 		+collectd-mod-memory \
 		+collectd-mod-unixsock \
 
-	USERID:=follect=268:follect=268
+	USERID:=follectd=268:follectd=268
 endef
 
 define Package/$(PKG_NAME)/description
@@ -47,7 +47,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/follectd.init $(1)/etc/init.d/follectd
 
 	$(INSTALL_DIR) $(1)/usr/libexec/follect/
-	$(INSTALL_BIN) ./files/neighbours.sh $(1)/usr/libexec/follect/neighbours.sh
+	$(INSTALL_BIN) ./files/neighbours.sh $(1)/usr/libexec/follectd/neighbours.sh
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/follectd.conf $(1)/etc/follectd.conf
