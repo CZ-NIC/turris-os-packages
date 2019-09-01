@@ -8,14 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd
-PKG_VERSION:=1.4.50
-PKG_RELEASE:=5
+PKG_VERSION:=1.4.54
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://download.lighttpd.net/lighttpd/releases-1.4.x
-PKG_MD5SUM:=29378312d8887cbc14ffe8a7fadef2d5a08c7e7e1be942795142346ad95629eb
+PKG_HASH:=cf14cce2254a96d8fcb6d3181e1a3c29a8f832531c3e86ff6f2524ecda9a8721
 
-PKG_LICENSE:=BSD-3c
+PKG_MAINTAINER:=W. Michael Petullo <mike@flyn.org>
+PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=COPYING
 
 PKG_FIXUP:=autoreconf
@@ -27,8 +28,7 @@ define Package/lighttpd/Default
   SUBMENU:=Web Servers/Proxies
   SECTION:=net
   CATEGORY:=Network
-  URL:=http://www.lighttpd.net/
-  MAINTAINER:=W. Michael Petullo <mike@flyn.org>
+  URL:=https://www.lighttpd.net/
 endef
 
 define Package/lighttpd
