@@ -6,10 +6,6 @@ CLASS="0x010601"
 DEVICE="0x0612"
 VENDOR="0x1b21"
 
-status() {
-	return 0
-}
-
 start() {
 	cd /sys/bus/pci/devices
 	for D in *; do
