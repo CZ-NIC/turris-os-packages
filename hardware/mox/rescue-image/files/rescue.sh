@@ -13,6 +13,7 @@ MODE=1
 # Include all helper functions
 
 . /lib/helpers.sh
+. /lib/board.sh
 
 # Main loop
 

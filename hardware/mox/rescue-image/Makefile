@@ -60,6 +60,7 @@ define Build/Prepare
 	echo "/bin/sh" > "$(PKG_BUILD_DIR)/rootfs/etc/shells"
 	$(INSTALL_BIN) ./files/helpers.sh "$(PKG_BUILD_DIR)/rootfs/lib/helpers.sh"
 	$(INSTALL_BIN) ./files/rescue.sh "$(PKG_BUILD_DIR)/rootfs/init"
+	$(INSTALL_BIN) ./files/$(DEVICE).sh "$(PKG_BUILD_DIR)/rootfs/lib/board.sh"
 	$(HOST_TAR) -C $(PKG_BUILD_DIR)/busybox --strip-components=1 -xjf $(DL_DIR)/$(PKG_SOURCE)
 	mkdir -p "$(PKG_BUILD_DIR)"/rootfs//usr/share/udhcpc
 	cp "$(PKG_BUILD_DIR)"/busybox/examples/udhcp/simple.script "$(PKG_BUILD_DIR)"/rootfs//usr/share/udhcpc/default.script
