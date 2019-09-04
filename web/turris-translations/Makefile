@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2018 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2018-2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-translations
-PKG_VERSION:=1.1.0
-PKG_RELEASE:=4
+PKG_VERSION:=1.1.1
+PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/turris-translations.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
