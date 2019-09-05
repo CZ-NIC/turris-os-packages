@@ -9,8 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd-https-cert
 PKG_VERSION:=5
-PKG_MAINTAINER:=Robin Obůrka <robin.oburka@nic.cz>
+PKG_RELEASE:=2
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=GPL-3.0
 
 include $(INCLUDE_DIR)/package.mk
 
