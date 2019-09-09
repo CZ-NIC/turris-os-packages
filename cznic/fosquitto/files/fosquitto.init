@@ -20,6 +20,10 @@ generate_password() {
 	cp "${PLAIN_PASSWORD}" "${HASHED_PASSWORD}"
 	mosquitto_passwd -U "${HASHED_PASSWORD}"
 	umask ${stored_umask}
+
+	# Sync these files just to make sure that content is written to disk.
+	# In rare occurances only part of data is written which makes file content invalid.
+	sync
 }
 
 generate_global() {
@@ -142,10 +146,24 @@ try_chown_dirs() {
 	fi
 }
 
+check_credentials_in_file() {
+	local file=$1
+	grep -q '^local:' "$file"
+}
+
+check_fosquitto_credentials() {
+	check_credentials_in_file "$HASHED_PASSWORD" || return 1
+	check_credentials_in_file "$PLAIN_PASSWORD" || return 1
+}
+
+check_credentials_files() {
+	[ -e "$PLAIN_PASSWORD" -a -e "$HASHED_PASSWORD" ]
+}
+
 start_service() {
 	generate_config
 
-	if [ ! \( -e "$PLAIN_PASSWORD" \) -o ! \( -e "$HASHED_PASSWORD" \) ]; then
+	if ! check_credentials_files || ! check_fosquitto_credentials; then
 		generate_password
 	fi
 	try_chown_dirs

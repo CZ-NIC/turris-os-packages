@@ -7,9 +7,8 @@
 #
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=fosquitto
-PKG_VERSION:=20
-PKG_RELEASE:=2
+PKG_NAME:=follectd
+PKG_VERSION:=3
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -17,11 +16,20 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	DEPENDS:=+mosquitto-ssl +mosquitto-client-ssl
+	DEPENDS:=\
+		+collectd \
+		+collectd-mod-cpu \
+		+collectd-mod-disk \
+		+collectd-mod-exec \
+		+collectd-mod-interface \
+		+collectd-mod-memory \
+		+collectd-mod-unixsock \
+
+	USERID:=follectd=268:follectd=268
 endef
 
 define Package/$(PKG_NAME)/description
-	Instance of mosquitto server used as foris message bus
+	Instance of collectd server used as data source for foris-controller-collectd-module
 endef
 
 # The built is empty. But as there's no makefile in the git repo, we need to
@@ -31,39 +39,27 @@ define Build/Compile
 endef
 
 define Package/$(PKG_NAME)/conffiles
-/etc/config/fosquitto
+/etc/follectd.conf
 endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/fosquitto.init $(1)/etc/init.d/fosquitto
+	$(INSTALL_BIN) ./files/follectd.init $(1)/etc/init.d/follectd
+
+	$(INSTALL_DIR) $(1)/usr/libexec/follect/
+	$(INSTALL_BIN) ./files/neighbours.sh $(1)/usr/libexec/follectd/neighbours.sh
 
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_CONF) ./files/fosquitto.uci $(1)/etc/config/fosquitto
+	$(INSTALL_CONF) ./files/follectd.conf $(1)/etc/follectd.conf
 endef
 
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 [ -n "$${IPKG_INSTROOT}" ] || {
 	# run scripts to update files
-	/etc/init.d/fosquitto enable
-	/etc/init.d/fosquitto restart
+	/etc/init.d/follectd enable
+	/etc/init.d/follectd restart
 }
 endef
 
-define Package/$(PKG_NAME)-monitor
-	TITLE:=$(PKG_NAME)-monitor
-	DEPENDS:=+$(PKG_NAME)
-endef
-
-define Package/$(PKG_NAME)-monitor/description
-	Script to monitor fosquitto messages
-endef
-
-define Package/$(PKG_NAME)-monitor/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) ./files/fosquitto-monitor.py $(1)/usr/bin/fosquitto-monitor
-endef
-
 $(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)-monitor))

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018 CZ.NIC z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2019 CZ.NIC z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -7,12 +7,12 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=foris-controller-openvpn-module
-PKG_VERSION:=0.6.1
+PKG_NAME:=foris-controller-openvpn_client-module
+PKG_VERSION:=0.1
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-openvpn-module.git
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-openvpn_client-module.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -28,12 +28,12 @@ $(call include_mk, python3-package.mk)
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
-		+foris-controller +turris-cagen +openvpn-openssl +dhparam
+		+foris-controller +turris-cagen +openvpn-openssl
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/$(PKG_NAME)/description
- This is a openvpn module for foris-controller
+ This is a openvpn client module for foris-controller
 endef
 
 define Build/Compile
@@ -41,20 +41,6 @@ define Build/Compile
 endef
 
 
-define Package/${PKG_NAME}/postinst
-#!/bin/sh
-[ -n "$$IPKG_INSTROOT" ] || {
-	if uci -q get openvpn.server_turris.comp_lzo > /dev/null ; then
-		uci del openvpn.server_turris.comp_lzo
-		if ! uci -q get openvpn.server_turris.compress > /dev/null ; then
-			uci set openvpn.server_turris.compress=lzo
-		fi
-		uci commit openvpn
-	fi
-}
-endef
-
-#
 # Package install definition
 $(eval $(call ForisControllerModule,$(PKG_NAME)))
 

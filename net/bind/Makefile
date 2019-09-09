@@ -9,19 +9,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bind
-PKG_VERSION:=9.12.4-P1
+PKG_VERSION:=9.12.4-P2
 PKG_RELEASE:=1
 USERID:=bind=57:bind=57
 
 PKG_MAINTAINER:=Noah Meyerhans <frodo@morgul.net>
-PKG_LICENSE := MPL-2.0
+PKG_LICENSE:=MPL-2.0
 PKG_CPE_ID:=cpe:/a:isc:bind
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:= \
 	https://www.mirrorservice.org/sites/ftp.isc.org/isc/bind9/$(PKG_VERSION) \
 	https://ftp.isc.org/isc/bind9/$(PKG_VERSION)
-PKG_MD5SUM:=e27a5aee2b0c1a925001dda71eea7e19b0cce54a7b18a61912cde5ff0afbc7c5
+PKG_MD5SUM:=b7ce60df0d0b3e9ed55c081ff71b3ae6752d57a8c200aab072ae3bc1065ffcd0
 
 PKG_BUILD_DEPENDS:=python-ply/host
 
