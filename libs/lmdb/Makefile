@@ -57,6 +57,10 @@ endef
 
 TARGET_CFLAGS += $(FPIC)
 
+ifdef CONFIG_LIBC_USE_UCLIBC
+TARGET_CFLAGS += -lpthread
+endif
+
 define Build/Compile
 	$(MAKE) -C "$(PKG_BUILD_DIR)/$(MAKE_PATH)/" \
 		CC="$(TARGET_CC)" \
