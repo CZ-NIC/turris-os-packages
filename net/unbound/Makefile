@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
 PKG_VERSION:=1.9.3
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://nlnetlabs.nl/downloads/unbound/
@@ -19,6 +19,9 @@ PKG_BUILD_DEPENDS:=libexpat
 PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
+
+PKG_CC_STACKPROTECTOR_REGULAR := 0
+PKG_CC_STACKPROTECTOR_STRONG := 0
 
 include $(INCLUDE_DIR)/package.mk
 
