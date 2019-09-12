@@ -20,6 +20,10 @@
 		"description": "Software for sharing television received by a DVB tuner on Turris. Does not include device drivers.",
 		"url": "https://doc.turris.cz/doc/en/howto/dvb"
 	},
+	"hardening": {
+		"title": "Hardening (experimental)",
+		"description": "Seccomp tools for system hardening."
+	},
 	"honeypot": {
 		"title": "SSH Honeypot",
 		"description": "Trap for password-guessing robots on SSH.",
