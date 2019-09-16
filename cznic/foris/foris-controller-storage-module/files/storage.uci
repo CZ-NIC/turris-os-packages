@@ -1,5 +1,6 @@
 
 config srv 'srv'
+	option raid 'custom'
 	option uuid ''
 	option old_uuid ''
 
