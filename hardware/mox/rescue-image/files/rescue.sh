@@ -12,16 +12,14 @@ MODE=1
 
 # Include all helper functions
 
-. /lib/helpers.sh
 . /lib/board.sh
+. /lib/helpers.sh
 
 # Main loop
 
-cmd_mode="$(sed -n 's|.*rescue_mode=\([0-9]\+\).*|\1|p' /proc/cmdline)"
-[ -z "$cmd_mode" ] || MODE="$(expr $cmd_mode + 1)"
-[ "$MODE" -le 7 ] || MODE=1
 init
 board_init
+fetch_cmd_mode
 echo "Booting rescue mode for $BOARD in mode $MODE"
 wait_for_mode_change
 echo "Mode $MODE selected!"

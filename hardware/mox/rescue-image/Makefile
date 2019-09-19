@@ -59,6 +59,7 @@ define Build/Prepare
 	echo "root::0:0:root:/:/bin/sh" > "$(PKG_BUILD_DIR)/rootfs/etc/passwd"
 	echo "/bin/sh" > "$(PKG_BUILD_DIR)/rootfs/etc/shells"
 	$(INSTALL_BIN) ./files/helpers.sh "$(PKG_BUILD_DIR)/rootfs/lib/helpers.sh"
+	$(INSTALL_BIN) ./files/board_helpers.sh "$(PKG_BUILD_DIR)/rootfs/lib/board_helpers.sh"
 	$(INSTALL_BIN) ./files/rescue.sh "$(PKG_BUILD_DIR)/rootfs/init"
 	$(INSTALL_BIN) ./files/$(DEVICE).sh "$(PKG_BUILD_DIR)/rootfs/lib/board.sh"
 	$(HOST_TAR) -C $(PKG_BUILD_DIR)/busybox --strip-components=1 -xjf $(DL_DIR)/$(PKG_SOURCE)

@@ -1,15 +1,15 @@
 #!/bin/sh
 
-# WARNING: This uses functions from helper library and is not stand alone
-#          If you want to use this, include helper library first!
+. /lib/board_helpers.sh
 
 board_init() {
     generic_pre_init
+    # Default mode on Omnia is serial
+    MODE=7
     mkdir -p /etc
     echo '/dev/mtd0 0xF0000 0x10000 0x10000' > /etc/fw_env.config
     TARGET_DRIVE="/dev/mmcblk0"
     TARGET_PART="1"
-    MODE=7
     BRIGHT="`cat /sys/class/leds/omnia-led\:all/device/global_brightness`"
     WAN_IF="eth2"
     DELAY=40

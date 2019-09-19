@@ -1,32 +1,5 @@
 #!/bin/sh
 
-# Generic functions used by board specific ones
-
-predie() {
-        ret_code="$1"
-        shift
-        if [ -f /tmp/debug.txt ]; then
-            echo "Debug info:"
-            cat /tmp/debug.txt
-        fi
-        echo "$1"
-        setsid cttyhack sh &
-}
-
-generic_pre_init() {
-    :
-}
-
-generic_post_init() {
-    if [ -n "$HAVE_BTRFS" ]; then
-        mkdir -p /etc/schnapps
-        echo "ROOT_DEV='${TARGET_DRIVE}p${TARGET_PART}'" > /etc/schnapps/config
-        MODE1_NEXT=2
-    else
-        MODE1_NEXT=4
-    fi
-}
-
 # Generic helper functions
 reset_uenv() {
     fw_setenv bootcmd 'env default -f -a; saveenv; reset'
@@ -41,12 +14,7 @@ wait_for_mode_change() {
     while [ "$waited" -le "$DELAY" ]; do
         if check_for_mode_change; then
             waited=-9
-            eval NEXT='$MODE'"$MODE"'_NEXT'
-            if [ -n "$NEXT" ]; then
-                MODE="$NEXT"
-            else
-                MODE="$(expr "$MODE" + 1 )"
-            fi
+            next_mode
             echo "Mode changed to $MODE"
             eval echo '$MODE'"$MODE"
             display_mode
@@ -252,6 +220,27 @@ init() {
     simple_udev &
 }
 
+next_mode() {
+    # Next mode in line is in MODE[1-9]_NEXT variable, so some of them can be skipped
+    eval NEXT='$MODE'"$MODE"'_NEXT'
+    if [ -n "$NEXT" ]; then
+        MODE="$NEXT"
+    else
+        # Default next mode is one number higher if not set
+        MODE="$(expr "$MODE" + 1 )"
+    fi
+}
+
+fetch_cmd_mode() {
+    cmd_mode="$(sed -n 's|.*rescue_mode=\([0-9]\+\).*|\1|p' /proc/cmdline)"
+    if [ -n "$cmd_mode" ]; then
+        MODE="$(expr "$cmd_mode" + 1)"
+        if [ "$MODE" -gt 7 ] || [ "$MODE" -le 0 ] || [ -z "$MODE" ]; then
+            MODE=1
+        fi
+    fi
+}
+
 # Various modes
 
 MODE1="Reset"
@@ -320,3 +309,5 @@ mode_7() {
     setsid cttyhack sh
     reboot
 }
+MAX_MODE=7
+

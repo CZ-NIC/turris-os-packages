@@ -1,7 +1,6 @@
 #!/bin/sh
 
-# WARNING: This uses functions from helper library and is not stand alone
-#          If you want to use this, include helper library first!
+. /lib/board_helpers.sh
 
 handle_reset() {
     while sleep 0.2; do
