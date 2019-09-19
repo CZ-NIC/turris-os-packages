@@ -18,12 +18,6 @@ generic_pre_init() {
 }
 
 generic_post_init() {
-    if [ -n "$HAVE_BTRFS" ]; then
-        mkdir -p /etc/schnapps
-        echo "ROOT_DEV='${TARGET_DRIVE}p${TARGET_PART}'" > /etc/schnapps/config
-        MODE1_NEXT=2
-    else
-        MODE1_NEXT=4
-    fi
+    :
 }
 

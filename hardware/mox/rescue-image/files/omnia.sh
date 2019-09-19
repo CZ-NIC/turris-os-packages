@@ -9,7 +9,7 @@ board_init() {
     mkdir -p /etc
     echo '/dev/mtd0 0xF0000 0x10000 0x10000' > /etc/fw_env.config
     TARGET_DRIVE="/dev/mmcblk0"
-    TARGET_PART="1"
+    TARGET_PART="${TARGET_DRIVE}p1"
     BRIGHT="`cat /sys/class/leds/omnia-led\:all/device/global_brightness`"
     WAN_IF="eth2"
     DELAY=40
@@ -17,6 +17,7 @@ board_init() {
     RESCUE_IF_UP="`ip a s | sed -n 's|^[0-9]*:[[:blank:]]*\(lan4\)@\([^:]*\):.*|\2|p'`"
     echo '0 255 0' >  /sys/class/leds/omnia-led\:all/color
     echo default-on > /sys/class/leds/omnia-led\:all/trigger
+    enable_btrfs
     generic_post_init
 }
 

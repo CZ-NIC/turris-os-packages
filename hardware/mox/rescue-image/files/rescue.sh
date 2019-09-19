@@ -24,5 +24,7 @@ echo "Booting rescue mode for $BOARD in mode $MODE"
 wait_for_mode_change
 echo "Mode $MODE selected!"
 busy
+override_root # Some alternative roots might take a while to initialize
 mode_"$MODE"
+echo "Everything done, rebooting!"
 reboot
