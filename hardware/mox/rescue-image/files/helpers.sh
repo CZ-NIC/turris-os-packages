@@ -31,7 +31,7 @@ DHCP_OPTS="-qfn"
 download_medkit() {
     tries=3
     i=0
-    ip l set up dev "$WAN_IF"
+    ip link set up dev "$WAN_IF"
     while ! udhcpc -i "$WAN_IF" $DHCP_OPTS; do
         echo "No DHCP :-("
         sleep 2
@@ -39,41 +39,36 @@ download_medkit() {
         [ "$i" -lt "$tries" ] || die 2 "Can't get IP"
     done
     echo "Got IPv4!"
-    ip a s
-    ip r s
+    ip addr show
+    ip route show
     grep -q nameserver /etc/resolv.conf || echo nameserver 193.17.47.1 > /etc/resolv.conf
     mkdir -p /mnt/src
-    i=0
-    while ! { \
-        wget --no-check-certificate -O /mnt/src/medkit.tar.gz https://repo.turris.cz/hbs/medkit/medkit-$BOARD-latest.tar.gz || \
-        wget --no-check-certificate -O /mnt/src/medkit.tar.gz https://repo.turris.cz/hbs/medkit/$BOARD-medkit-latest.tar.gz;   \
-        }; do
-            echo "Can't download image :-("
-            sleep 2
-            i="$(expr "$i" + 1)"
-            [ "$i" -lt "$tries" ] || die 2 "Can't get image"
-    done
-    i=0
-    while ! { \
-        wget --no-check-certificate -O /mnt/src/medkit.tar.gz.sig https://repo.turris.cz/hbs/medkit/medkit-$BOARD-latest.tar.gz.sig || \
-        wget --no-check-certificate -O /mnt/src/medkit.tar.gz.sig https://repo.turris.cz/hbs/medkit/$BOARD-medkit-latest.tar.gz.sig;   \
-        }; do
-            echo "Can't download signature :-("
-            sleep 2
-            i="$(expr "$i" + 1)"
-            [ "$i" -lt "$tries" ] || die 2 "Can't get signature"
+    for ext in .tar.gz .tar.gz.sig; do
+        i=0
+        while ! { \
+            wget --no-check-certificate -O /mnt/src/medkit.$ext https://repo.turris.cz/hbs/medkit/medkit-$BOARD-latest.$ext || \
+            wget --no-check-certificate -O /mnt/src/medkit.$ext https://repo.turris.cz/hbs/medkit/$BOARD-medkit-latest.$ext;   \
+            }; do
+                echo "Can't download $BOARD-medkit-latest.$ext :-("
+                sleep 2
+                i="$(expr "$i" + 1)"
+                [ "$i" -lt "$tries" ] || die 2 "Can't get $BOARD-medkit-latest.$ext"
+        done
     done
     usign -V -m /mnt/src/medkit.tar.gz -P /etc/opkg/keys || die 2 "Can't validate signature"
     echo "medkit.tar.gz" > /tmp/medkit-file
 }
 
+# Takes as an argument number of retries
 find_medkit() {
     echo "Searching for medkit"
     i=0
+    retries="$1"
     mkdir -p /mnt/src
     rm -f /tmp/medkit-drive /tmp/medkit-file
-    while [ "$i" -lt "$1" ] && [ \! -f /tmp/medkit-file ]; do
+    while [ "$i" -lt "$retries" ] && [ \! -f /tmp/medkit-file ]; do
         sleep 1
+        i="$(expr "$i" + 1)"
         for d in /dev/mmcblk*p* /dev/sd*; do
             [ -e "$d" ] || continue
             mount "$d" /mnt/src || continue
@@ -81,11 +76,13 @@ find_medkit() {
             for f in $(cd /mnt/src; ls -1 $BOARD-medkit*.tar.gz medkit-$BOARD.tar.gz medkit-$BOARD-*.tar.gz); do
                 [ -f "/mnt/src/$f" ] || continue
                 echo "Found $f on device $d"
-                if [ -f "/mnt/src/$f".md5 ]; then
-                    [ "$(cat "/mnt/src/$f".md5)" = "$(cd /mnt/src; md5sum "$f")" ] || continue
+                if [ -f "/mnt/src/$f".md5 ] && [ "$(cat "/mnt/src/$f".md5)" \!= "$(cd /mnt/src; md5sum "$f")" ]; then
+                    echo "Wrong md5 sum for $f"
+                    continue
                 fi
-                if [ -f "/mnt/src/$f".sha256 ]; then
-                    [ "$(cat "/mnt/src/$f".sha256)" = "$(cd /mnt/src; sha256sum "$f")" ] || continue
+                if [ -f "/mnt/src/$f".sha256 ] && [ "$(cat "/mnt/src/$f".sha256)" \!= "$(cd /mnt/src; sha256sum "$f")" ]; then
+                    echo "Wrong sha256 sum for $f"
+                    continue
                 fi
                 if [ -f "/mnt/src/$f".sig ]; then
                     usign -V -m "/mnt/src/$f" -P /etc/opkg/keys || continue
@@ -107,12 +104,14 @@ find_medkit() {
     [ -f /tmp/medkit-file ] || die 2 "No valid medkit found!"
 }
 
+# Takes as an argument directory where to mount target drive
 format_and_mount_target() {
+    trg_mnt_pth="$1"
     if [ -n "$HAVE_BTRFS" ]; then
         if [ -n "$REPARTITION" ]; then
             echo "Repartitioning the drive..."
-            dd if=/dev/zero of="$TARGET_DRIVE" bs=1024 count=10240 >> /tmp/debug.txt 2>&1
             fdisk "$TARGET_DRIVE" >> /tmp/debug.txt 2>&1 <<EOF
+o
 n
 p
 $TARGET_PART
@@ -122,19 +121,16 @@ p
 w
 EOF
             [ $? -eq 0 ] || die 3 "Partitioning drive failed" 
-            sleep 1
-            sync
         fi
         fdisk -l "$TARGET_DRIVE" >> /tmp/debug.txt
         echo "Formatting the drive..."
         mkfs.btrfs -f "$TARGET_DRIVE"p"$TARGET_PART" >> /tmp/debug.txt 2>&1 || die 4 "Can't format the partition"
-        sync
-        mkdir -p "$1"
-        mount "$TARGET_DRIVE"p"$TARGET_PART" "$1" || die 5 "Can't mount the partition"
-        btrfs subvolume create "$1"/@ >> /tmp/debug.txt 2>&1 || die 6 "Can't create a subvolume"
-        ln -s @/boot/boot.scr "$1"/boot.scr
-        umount "$1"
-        mount "$TARGET_DRIVE"p"$TARGET_PART" -o subvol=@ "$1"
+        mkdir -p "$trg_mnt_pth"
+        mount "$TARGET_DRIVE"p"$TARGET_PART" "$trg_mnt_pth" || die 5 "Can't mount the partition"
+        btrfs subvolume create "$trg_mnt_pth"/@ >> /tmp/debug.txt 2>&1 || die 6 "Can't create a subvolume"
+        ln -s @/boot/boot.scr "$trg_mnt_pth"/boot.scr
+        umount "$trg_mnt_pth"
+        mount "$TARGET_DRIVE"p"$TARGET_PART" -o subvol=@ "$trg_mnt_pth"
     fi
 }
 
@@ -144,11 +140,12 @@ create_factory() {
         mkdir -p /mnt/tmp
         mount "$TARGET_DRIVE"p"$TARGET_PART" /mnt/tmp
         btrfs subvolume snapshot /mnt/tmp/@ /mnt/tmp/@factory
-        umount -fl /mnt/tmp
         sync
+        umount -fl /mnt/tmp
     fi
 }
 
+# Adjust RTC if image is from the future
 check_clock() {
     hwclock -s
     current_date="$(date '+%s')"
@@ -179,8 +176,8 @@ reflash() {
     tar -C /mnt/trg -xzf /mnt/src/"$(cat /tmp/medkit-file)" >> /tmp/debug.txt
     echo "Rootfs should be ready"
     check_clock /mnt/trg/etc/shadow
-    umount -fl /mnt/trg
     sync
+    umount -fl /mnt/trg
     create_factory
 }
 
@@ -194,6 +191,8 @@ reboot() {
     /sbin/reboot -f
     echo s > /proc/sysrq-trigger
     echo b > /proc/sysrq-trigger
+    # Should be enough to let watchdog kill us
+    sleep 999999
 }
 
 # Simple udev
@@ -203,7 +202,7 @@ simple_udev() {
         if [ -e /dev/watchdog0 ] && ! pidof watchdog > /dev/null; then
             watchdog -t 10 -T 60 /dev/watchdog0
         fi
-        sleep 0.5
+        sleep 1
     done
 }
 
@@ -214,7 +213,6 @@ init() {
     mount -t proc none /proc
     mkdir /dev/pts
     mount -t devpts devpts /dev/pts
-    sleep 1
     ip a a 127.0.0.1/8 dev lo
     ip l s up dev lo
     simple_udev &
