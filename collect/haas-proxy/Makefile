@@ -24,7 +24,7 @@ define Package/haas-proxy
   CATEGORY:=Network
   TITLE:=Honeypot as a Service proxy
   URL:=https://haas.nic.cz
-  DEPENDS:=+python3-light +python3-cachetools +python3-requests +python3-twisted +python3-crypto +python3-service-identity +sshpass +@KERNEL_CFS_BANDWIDTH
+  DEPENDS:=+python3-light +python3-cachetools +python3-requests +python3-twisted +python3-crypto +python3-bcrypt +python3-service-identity +sshpass +@KERNEL_CFS_BANDWIDTH
   CONFLICTS:=mitmproxy
   VARIANT:=python3
 endef
