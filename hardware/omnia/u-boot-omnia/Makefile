@@ -9,10 +9,10 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=u-boot-omnia
 PKG_VERSION:=2019-07
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=git@gitlab.labs.nic.cz:turris/turris-omnia-uboot.git
-PKG_SOURCE_VERSION:=c2c4bff3babaa44327d7664dcb8398a3ba372eaa
+PKG_SOURCE_VERSION:=d445ea4dff500c12c4bc8b09b2fb531f42416153
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
