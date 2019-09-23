@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netmetr
-PKG_VERSION:=1.5.2
-PKG_RELEASE:=4
+PKG_VERSION:=1.5.3
+PKG_RELEASE:=1
 
 PKG_SOURCE:=netmetr-client-v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/netmetr-client/-/archive/v$(PKG_VERSION)/
