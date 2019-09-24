@@ -15,7 +15,7 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 PKG_SOURCE:=netmetr-client-v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/netmetr-client/-/archive/v$(PKG_VERSION)/
-PKG_HASH:=0c18eb6d2122918883cd834f3c3f55b49947e5d6232150292a8111e06976d878
+PKG_HASH:=50404366b4452d55e6634466f69a5c432bca5e7dc1d33fc197b562b30db1ccc7
 
 PKG_LICENSE:=GPLv3
 
