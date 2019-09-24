@@ -23,7 +23,7 @@
         };
         ramdisk@1 {
             description = "Initial Ramdisk";
-            data = /incbin/("./initrd.gz");
+            data = /incbin/("./initrd");
             type = "ramdisk";
             arch = "arm";
             os = "linux";
