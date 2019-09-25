@@ -9,27 +9,27 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=follectd
 PKG_VERSION:=4
+PKG_RELEASE:=1
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
-	DEPENDS:=\
-		+collectd \
-		+collectd-mod-cpu \
-		+collectd-mod-disk \
-		+collectd-mod-exec \
-		+collectd-mod-interface \
-		+collectd-mod-memory \
-		+collectd-mod-unixsock \
-
-	USERID:=follectd=268:follectd=268
+define Package/follectd
+  TITLE:=follectd
+  DEPENDS:=\
+    +collectd \
+    +collectd-mod-cpu \
+    +collectd-mod-disk \
+    +collectd-mod-exec \
+    +collectd-mod-interface \
+    +collectd-mod-memory \
+    +collectd-mod-unixsock
+  USERID:=follectd=268:follectd=268
 endef
 
-define Package/$(PKG_NAME)/description
-	Instance of collectd server used as data source for foris-controller-collectd-module
+define Package/follectd/description
+  Instance of collectd server used as data source for foris-controller-collectd-module.
 endef
 
 # The built is empty. But as there's no makefile in the git repo, we need to
@@ -62,4 +62,4 @@ define Package/$(PKG_NAME)/postinst
 }
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,follectd))
