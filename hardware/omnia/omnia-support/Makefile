@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=omnia-support
-PKG_VERSION:=2.5.1
+PKG_VERSION:=3.0
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
 
@@ -11,7 +11,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/$(PKG_NAME)
   TITLE:=$(PKG_NAME)
   VERSION:=$(LINUX_VERSION)-$(LINUX_RELEASE)-$(LINUX_VERMAGIC)
-  DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
+  DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia +mtd
 endef
 
 define Package/$(PKG_NAME)/description
