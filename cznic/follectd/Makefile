@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=follectd
-PKG_VERSION:=3
+PKG_VERSION:=4
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -46,7 +46,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/follectd.init $(1)/etc/init.d/follectd
 
-	$(INSTALL_DIR) $(1)/usr/libexec/follect/
+	$(INSTALL_DIR) $(1)/usr/libexec/follectd/
 	$(INSTALL_BIN) ./files/neighbours.sh $(1)/usr/libexec/follectd/neighbours.sh
 
 	$(INSTALL_DIR) $(1)/etc/config
