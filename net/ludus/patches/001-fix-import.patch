@@ -1,18 +1,83 @@
-Index: ludus-0.6/ludus.py
+Index: ludus-0.9/ludus.py
 ===================================================================
---- ludus-0.6.orig/ludus.py
-+++ ludus-0.6/ludus.py
-@@ -1,4 +1,4 @@
--#!/usr/bin/env python3
-+#!/usr/bin/python3
- #  Copyright (C) 2017  Sebastian Garcia, Ondrej Lukas
- #
- #  This program is free software; you can redistribute it and/or modify
-@@ -24,6 +24,7 @@
- #TODO:
- #   changes in suricata.yaml!
- #   check if sentinel is running !
+--- ludus-0.9.orig/ludus.py
++++ ludus-0.9/ludus.py
+@@ -39,6 +39,7 @@ import Suricata_Extractor.suricata_extra
+ from multiprocessing import Process
+ from argparse import ArgumentParser
+ from configparser import ConfigParser,NoOptionError
 +import configparser
- import time,datetime
- import sys
- import subprocess
+ 
+ 
+ 
+@@ -86,7 +87,7 @@ class Logger():
+     def log_event(self, msg):
+         with open(self._target_file, "a") as out_file:
+             print(f"[{datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S.%f')}]\t{msg}", file=out_file)
+-    
++
+     def update_target_file(self, filename):
+         self._target_file = filename
+ 
+@@ -165,7 +166,7 @@ class Ludus(object):
+             if r.status_code == 200:
+                 last_modified_url = r.headers["Last-Modified"].strip('\"')
+                 last_modified_url_dt = datetime.datetime.utcfromtimestamp(datetime.datetime.strptime(last_modified_url, "%a, %d %b %Y %H:%M:%S %Z").replace(tzinfo=datetime.timezone.utc).timestamp())
+-                
++
+                 current_strategy_dt = datetime.datetime.utcfromtimestamp(self.strategy_timestamp.replace(tzinfo=datetime.timezone.utc).timestamp())
+                 #compare the timestamps
+                 if current_strategy_dt < last_modified_url_dt:
+@@ -227,7 +228,7 @@ class Ludus(object):
+             self.tw_length = 600
+         except ValueError:
+             self.tw_length = 600
+-        #get router ip    
++        #get router ip
+         try:
+             self.router_ip = self.config_parser.get('settings', 'router_ip')
+             if not valid_ip4(self.router_ip):
+@@ -270,7 +271,7 @@ class Ludus(object):
+             self.strategy_url = self.config_parser.get("strategy","strategy_url")
+         except (ValueError, NoOptionError) as e:
+             self.strategy_url = "http://ludus.aic.fel.cvut.cz:443/newest.gpg"
+-        
++
+     def apply_strategy(self, suggested_honeypots,known_honeypots=['22', '23', '8080', '2323', '80', '3128', '8123']):
+         #close previously opened HP which we do not want anymore
+         try:
+@@ -395,8 +396,8 @@ class Ludus(object):
+         self.suricata_pid = suricata_process.pid
+         if not self.suricata_pid:
+             self.logger.log_event(f"Error while starting suricata: {proc.stderr.read()}")
+-            self.terminate(-1)                    
+-        
++            self.terminate(-1)
++
+         #start
+         self.logger.log_event("Ludus system started.")
+         #analyze the production ports
+@@ -426,14 +427,14 @@ class Ludus(object):
+         else:
+             self.logger.log_event("Terminating Ludus.")
+         sys.exit(status)
+-            
++
+ if __name__ == '__main__':
+     # Parse the parameters
+     parser = ArgumentParser()
+     parser.add_argument('-c', '--config', help='Path to config file', action='store', required=False, type=str, default="/etc/ludus/ludus.config")
+     parser.add_argument('--pidfile', help='Path to create pid file', action='store', required=False, type=str)
+     args = parser.parse_args()
+-    
++
+     if args.pidfile:
+         write_pid_file(args.pidfile)
+     #start the tool
+@@ -441,4 +442,4 @@ if __name__ == '__main__':
+     try:
+         ludus.start()
+     except KeyboardInterrupt:
+-        ludus.terminate(0)
+\ No newline at end of file
++        ludus.terminate(0)
