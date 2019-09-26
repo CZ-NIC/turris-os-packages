@@ -9,7 +9,8 @@ board_init() {
     mkdir -p /etc
     echo '/dev/mtd0 0xF0000 0x10000 0x10000' > /etc/fw_env.config
     TARGET_DRIVE="/dev/mmcblk0"
-    TARGET_PART="${TARGET_DRIVE}p1"
+    PART_NO="1"
+    TARGET_PART="${TARGET_DRIVE}p${PART_NO}"
     BRIGHT="`cat /sys/class/leds/omnia-led\:all/device/global_brightness`"
     WAN_IF="eth2"
     DELAY=40

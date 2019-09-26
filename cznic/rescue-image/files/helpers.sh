@@ -28,6 +28,7 @@ override_root() {
             NEW_TARGET_DRIVE="$(ls -d /sys/class/block/*/"$NEW_TARGET_PART" | sed 's|/.*/\([^/]*\)/'"$NEW_TARGET_PART"'|\1|')"
             if [ -d "/sys/class/block/$NEW_TARGET_DRIVE" ]; then
                 TARGET_PART="/dev/$NEW_TARGET_PART"
+                PART_NO="$(echo "$NEW_TARGET_PART" | sed -n 's|.*[^0-9]\([0-9]\+\)$|\1|p')"
                 TARGET_DRIVE="/dev/$NEW_TARGET_DRIVE"
             fi
         fi
@@ -149,7 +150,7 @@ format_and_mount_target() {
 o
 n
 p
-$TARGET_PART
+$PART_NO
 
 
 p

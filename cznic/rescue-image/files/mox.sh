@@ -24,7 +24,8 @@ board_init() {
     echo '/dev/mtd2 0 0x00010000' > /etc/fw_env.config
     BUTTON_STATE="$(cat /sys/class/gpio/gpio466/value)"
     TARGET_DRIVE="/dev/mmcblk1"
-    TARGET_PART="${TARGET_DRIVE}p1"
+    PART_NO="1"
+    TARGET_PART="${TARGET_DRIVE}p${PART_NO}"
     [ -n "$RESCUE_IF" ] || RESCUE_IF=eth0
     handle_reset &
     enable_btrfs
