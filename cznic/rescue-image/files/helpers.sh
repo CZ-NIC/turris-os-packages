@@ -156,7 +156,8 @@ $PART_NO
 p
 w
 EOF
-            [ $? -eq 0 ] || die 3 "Partitioning drive failed" 
+            [ $? -eq 0 ] || die 3 "Partitioning drive failed"
+            mdev -s
         fi
         fdisk -l "$TARGET_DRIVE" >> /tmp/debug.txt
         echo "Formatting the drive..."
