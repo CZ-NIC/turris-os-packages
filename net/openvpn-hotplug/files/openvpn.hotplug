@@ -1,0 +1,28 @@
+. /usr/share/libubox/jshn.sh
+
+service_is_running() {
+    (
+        local service=$1
+
+        json_init
+        json_load "$(ubus call service list)"
+        json_get_keys keys
+
+        for k in $keys; do
+            [ "$k" = "$service" ] && return 0
+        done
+        return 1
+    )
+}
+
+# Restart openvpn on ifup of every interface except vpn's own interfaces
+# to avoid endless loop of vpn restarts.
+# We resorted to this approach because there is no definite way to determine
+# which interface is uplink.
+
+if [ "$ACTION" = ifup ]; then
+    if [ service_is_running "openvpn" ] &&
+    [ -z "$(ip link show "$DEVICE" type tap)" ] && [ -z "$(ip link show "$DEVICE" type tun)" ]; then
+        /etc/init.d/openvpn restart
+    fi
+fi
