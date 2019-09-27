@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis
 PKG_VERSION:=0.4.3
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis
@@ -30,6 +30,7 @@ define Package/reforis
   URL:=https://gitlab.labs.nic.cz/turris/reforis
   DEPENDS:= \
     +python3-light \
+    +python3-simplejson \
     +python3-flask \
     +python3-flask-babel \
     +python3-flask-session \
