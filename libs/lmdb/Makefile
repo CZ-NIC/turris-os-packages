@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lmdb
 PKG_VERSION:=0.9.23
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=LMDB_$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/LMDB/lmdb/tar.gz/LMDB_$(PKG_VERSION)?
@@ -23,6 +23,7 @@ define Package/lmdb/Default
   CATEGORY:=Libraries
   TITLE:=Lightning Memory-Mapped Database
   URL:=https://symas.com/lmdb/
+  DEPENDS:=+USE_UCLIBC:libpthread
 endef
 
 define Package/lmdb
