@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ludus
-PKG_VERSION:=0.8
-PKG_RELEASE:=3
+PKG_VERSION:=0.9
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/stratosphereips/Ludus.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=20ab147a4f112a331d786cb22f3deeef5e12382d
+PKG_SOURCE_VERSION:=a68f5a86bda1b0deffe79459c6f46a0501e65791
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 
@@ -79,6 +79,7 @@ define Package/ludus/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/{ludus.py,install.py} $(1)/usr/share/ludus/
 	$(INSTALL_DIR) $(1)/etc/ludus
 	$(CP) ./files/ludus_template.conf $(1)/etc/ludus/
+	$(CP) $(PKG_BUILD_DIR)/ludus-public-key.asc $(1)/etc/ludus/
 	$(INSTALL_DIR) $(1)/etc/ludus/strategy
 	$(CP) $(PKG_BUILD_DIR)/Strategizer/strategies/* $(1)/etc/ludus/strategy/
 	$(INSTALL_DIR) $(1)/etc/init.d
