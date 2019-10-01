@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=atlas-probe
-PKG_VERSION:=4960
+PKG_VERSION:=2.0.0
 PKG_RELEASE=1
 
 PKG_SOURCE_PROTO:=git
@@ -58,6 +58,8 @@ define Package/atlas-probe/install
 	+$(MAKE_VARS) \
 	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
 		$(MAKE_FLAGS) CONFIG_PREFIX=$(1)/usr/libexec/atlas-probe install
+	$(INSTALL_DIR) $(1)/usr/libexec/atlas-probe/state
+	echo $(PKG_VERSION) > $(1)/usr/libexec/atlas-probe/state/FIRMWARE_APPS_VERSION
 endef
 
 $(eval $(call BuildPackage,atlas-probe))
