@@ -33,7 +33,7 @@ PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
 	DEPENDS:=\
-		+foris +foris-controller-storage-module
+		+foris +foris-controller-storage-module +foris-controller-nextcloud-module
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 	VARIANT:=python3
 endef
