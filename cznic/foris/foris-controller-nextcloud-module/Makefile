@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-nextcloud-module
 PKG_VERSION:=0.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller-nextcloud-module.git
@@ -49,10 +49,6 @@ endef
 
 define ForisControllerModule/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/libexec $(1)/etc/init.d $(1)/etc/config
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/srv.init $(1)/etc/init.d/srv
-ifneq ($(CONFIG_RSYNC_xattr),y)
-	sed -i 's|\(.*rsync .*\)X\(.*\)|\1\2|' $(1)/etc/init.d/srv
-endif
 endef
 
 $(eval $(call ForisControllerModule,$(PKG_NAME)))
