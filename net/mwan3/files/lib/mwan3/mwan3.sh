@@ -1,7 +1,7 @@
 #!/bin/sh
 
-IP4="/usr/sbin/ip -4"
-IP6="/usr/sbin/ip -6"
+IP4="ip -4"
+IP6="ip -6"
 IPS="ipset"
 IPT4="iptables -t mangle -w"
 IPT6="ip6tables -t mangle -w"
