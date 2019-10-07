@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-diagnostics-plugin
 PKG_VERSION:=0.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis_diagnostics
@@ -42,6 +42,7 @@ endef
 
 define Py3Package/reforis/filespec
 +|$(PYTHON3_PKG_DIR)
+-|$(PYTHON3_PKG_DIR)/reforis_static/__init__.*
 endef
 
 define Package/reforis/postinst
