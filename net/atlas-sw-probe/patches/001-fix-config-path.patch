@@ -1,0 +1,14 @@
+--- a/bin/ATLAS
++++ b/bin/ATLAS
+@@ -8,9 +8,9 @@
+ #set -x
+
+ DEVICE_NAME=
+-if [ -f bin/config.sh ]
++if [ -f /usr/libexec/atlas-probe-scripts/bin/config.sh ]
+ then
+-	. bin/config.sh
++	. /usr/libexec/atlas-probe-scripts/bin/config.sh
+ 	export DEVICE_NAME SUB_ARCH
+ elif [ -f  /etc/board.json ]
+ then
