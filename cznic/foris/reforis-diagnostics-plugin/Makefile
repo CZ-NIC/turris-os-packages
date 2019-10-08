@@ -42,7 +42,7 @@ endef
 
 define Py3Package/reforis/filespec
 +|$(PYTHON3_PKG_DIR)
--|$(PYTHON3_PKG_DIR)/reforis_static/__init__.*
+-|$(PYTHON3_PKG_DIR)/reforis_static/__init__.py
 endef
 
 define Package/reforis/postinst
