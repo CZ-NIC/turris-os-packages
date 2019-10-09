@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-diagnostics-plugin
 PKG_VERSION:=2.0.0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis_diagnostics
@@ -36,16 +36,16 @@ define Package/reforis-diagnostics-plugin
   VARIANT=python3
 endef
 
-define Package/reforis/description
+define Package/reforis-diagnostics-plugin/description
   Reforis diagnostics plugin
 endef
 
-define Py3Package/reforis/filespec
+define Py3Package/reforis-diagnostics-plugin/filespec
 +|$(PYTHON3_PKG_DIR)
--|$(PYTHON3_PKG_DIR)/reforis_static/__init__.py
+-|$(PYTHON3_PKG_DIR)/reforis_static/__init__.py*
 endef
 
-define Package/reforis/postinst
+define Package/reforis-diagnostics-plugin/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 	/etc/init.d/lighttpd enable
@@ -53,7 +53,7 @@ define Package/reforis/postinst
 }
 endef
 
-define Package/reforis/prerm
+define Package/reforis-diagnostics-plugin/prerm
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || /usr/bin/maintain-lighttpd-restart
 endef
