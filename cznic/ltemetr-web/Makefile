@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ltemetr-web
-PKG_VERSION:=0.2.1
+PKG_VERSION:=0.3
 PKG_RELEASE:=1
 
 PKG_SOURCE:=web-v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://devpub.labs.nic.cz/ltemetr/
-PKG_HASH:=1a459763f9853b6443d960f726ee5390d6e4364d77defbb2402cf5ff68431dbc
+PKG_HASH:=e0abf8d1c958f4a63e50b0e7b5fddb1eafee54e01fedaee5970664ba3cbf2882
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-2.0-or-later
