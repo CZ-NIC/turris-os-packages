@@ -13,8 +13,6 @@ Upstream-Status: Pending
  src/peekfd.c | 13 ++++++++-----
  1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/src/peekfd.c b/src/peekfd.c
-index cba2130..0d39878 100644
 --- a/src/peekfd.c
 +++ b/src/peekfd.c
 @@ -30,8 +30,11 @@
@@ -28,8 +26,8 @@ index cba2130..0d39878 100644
 +#include <stdint.h>
  #include <getopt.h>
  #include <ctype.h>
- 
-@@ -228,11 +231,11 @@ int main(int argc, char **argv)
+ #include <dirent.h>
+@@ -266,11 +269,11 @@ int main(int argc, char **argv)
  		if (WIFSTOPPED(status)) {
  #ifdef PPC
  			struct pt_regs regs;
@@ -46,5 +44,3 @@ index cba2130..0d39878 100644
  #elif defined(ARM)
  			struct pt_regs regs;
  			ptrace(PTRACE_GETREGS, pid, 0, &regs);
--- 
-1.9.1

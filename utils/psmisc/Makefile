@@ -1,19 +1,16 @@
-#
-# Copyright (C) 2006-2012 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=psmisc
-PKG_VERSION:=23.1
+PKG_VERSION:=23.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@SF/psmisc
-PKG_MD5SUM:=bbba1f701c02fb50d59540d1ff90d8d1
+PKG_HASH:=4b7cbffdc9373474da49b85dc3457ae511c43dc7fa7d94513fe06f89dcb87880
+
+PKG_MAINTAINER:=Josef Schlehofer <pepe.schlehofer@gmail.com>
+PKG_LICENSE:=GPL-2.0-or-later
+PKG_LICENSE_FILES:=COPYING
 
 PKG_INSTALL:=1
 
@@ -22,14 +19,15 @@ include $(INCLUDE_DIR)/package.mk
 define Package/psmisc
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libncurses
   TITLE:=proc utilities
-  URL:=http://psmisc.sourceforge.net/
+  URL:=https://gitlab.com/psmisc/psmisc/
+  DEPENDS:=+libncurses
 endef
 
 define Package/psmisc/description
- psmisc is a set of additional small useful utilities that use
- the proc filesystem: fuser, killall, pstree, and prtstat
+  psmisc is a set of additional small useful utilities that use
+  the proc filesystem like fuser, killall, prtstat, pslog,
+  pstree, and peekfd
 endef
 
 CONFIGURE_ARGS += \
