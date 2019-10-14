@@ -5,9 +5,9 @@ set -e
 # * --list-versions option that allows any external script to list all available versions
 
 branch=
-version=false
-verify=false
-force=false
+version="n"
+verify="n"
+force="n"
 while [ $# -gt 0 ]; do
 	case "$1" in
 		-h|--help)
@@ -23,13 +23,13 @@ while [ $# -gt 0 ]; do
 			exit 0
 			;;
 		--version)
-			version=true
+			version="y"
 			;;
 		--verify)
-			verify=true
+			verify="y"
 			;;
 		--force)
-			force=true
+			force="y"
 			;;
 		*)
 			branch="$1"
@@ -60,7 +60,7 @@ fi
 uci_load updater
 
 # Fetch all existing versions
-if $version; then
+if [ "$version" = "y" ]; then
 	versions="$(curl "https://repo.turris.cz/archive/" | \
 		sed -n 's|.*alt="\[DIR\]".*<a href="\([^"]*\)/".*|\1|p' | \
 		grep -Ev "^(omnia|turris|3.x)$" | sort -r)"
@@ -104,22 +104,22 @@ branch_alts() {
 # Checks if branch is supported (accept any branch if forced, otherwise only the
 # selected ones)
 check_branch() {
-	$force || echo "$branch" | grep -qE '^(hbd|hbk|hbt|hbs)$'
+	[ "$force" = "y" ] || echo "$branch" | grep -qE '^(hbd|hbk|hbt|hbs)$'
 }
 # Check if given version is valid/existing version (force again allows usage of
 # any version)
 check_version() {
-	$force || echo "$versions" | grep -qxF "$branch"
+	[ "$force" = "y" ] || echo "$versions" | grep -qxF "$branch"
 }
 
 # Get branch from uci in case of no branch is specified and veryfication
-if $verify && [ -z "$branch" ]; then
+if [ "$verify" = "y" ] && [ -z "$branch" ]; then
 	branch="$(get_branch)"
 fi
 
 # If branch provided then verify it
 if [ -n "$branch" ]; then
-	if $version; then
+	if [ "$version" = "y" ]; then
 		if ! check_version; then
 			echo "Version $branch seems to not be existing released version!" >&2
 			exit 1
@@ -135,7 +135,7 @@ fi
 
 # Interactive selection of branch if branch was not yet set
 while [ -z "$branch" ]; do
-	if $version; then
+	if [ "$version" = "y" ]; then
 		echo
 		echo "You are using version: $(get_version)"
 		echo
@@ -180,7 +180,7 @@ EOF
 done
 
 # For test branches install test keys
-if ! $version; then
+if [ "$version" != "y" ]; then
 	case "$branch" in
 		hbs|hbt)
 			# We don't have to remove cznic-repo-keys-test as it's removed automaticaly by updater
@@ -200,7 +200,7 @@ set -x
 
 ## Set uci configuration
 uci set updater.turris=turris
-if $version; then
+if [ "$version" = "y" ]; then
 	uci set updater.turris.mode="version"
 	uci set updater.turris.version="$branch"
 else
@@ -210,7 +210,7 @@ fi
 uci commit updater.turris
 
 ## Tweak opkg distribution feeds
-if $version; then
+if [ "$version" = "y" ]; then
 	sed -i "s#https://repo\.turris\.cz/.*/\([^/]*\)/packages/#https://repo\.turris\.cz/archive/$branch/\1/packages/#" /etc/opkg/distfeeds.conf
 else
 	sed -i "s#https://repo\.turris\.cz/.*/\([^/]*\)/packages/#https://repo\.turris\.cz/$branch/\1/packages/#" /etc/opkg/distfeeds.conf
@@ -218,7 +218,7 @@ fi
 
 # If we are verifying configuration than the work is done.
 # We don't want to run updater nor printing info about branch.
-if $verify; then
+if [ "$verify" = "y" ]; then
 	exit 0
 fi
 
@@ -283,7 +283,7 @@ EOF
 
 # Print some info about new version
 echo
-if $version; then
+if [ "$version" = "y" ]; then
 	if [ "$branch" = "$(latest_version)" ]; then
 		echo "You are using now latest stable version of Turris OS." >&2
 		echo "If you encounter some problems please contact Turris support (https://doc.turris.cz/doc/en/howto/error_reporting)." >&2
