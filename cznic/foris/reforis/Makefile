@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis
 PKG_VERSION:=0.4.4
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis
@@ -31,6 +31,7 @@ define Package/reforis
   TITLE:=reforis
   URL:=https://gitlab.labs.nic.cz/turris/reforis
   DEPENDS:= \
+    +foris-controller-app \
     +python3-light \
     +python3-simplejson \
     +python3-flask \
@@ -70,7 +71,6 @@ define Py3Package/reforis/install
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./files/reforis.uci $(1)/etc/config/reforis
-
 endef
 
 define Package/reforis/postinst
