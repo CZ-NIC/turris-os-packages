@@ -92,10 +92,13 @@ branch_alts() {
 		testing|turtles)
 			branch='hbt'
 			;;
-		kittens)
+		next-fixup|kittens)
 			branch='hbk'
 			;;
-		dragons)
+		next-minor|lions)
+			branch='hbl'
+			;;
+		next-major|dragons)
 			branch='hbd'
 			;;
 	esac
@@ -104,7 +107,7 @@ branch_alts() {
 # Checks if branch is supported (accept any branch if forced, otherwise only the
 # selected ones)
 check_branch() {
-	[ "$force" = "y" ] || echo "$branch" | grep -qE '^(hbd|hbk|hbt|hbs)$'
+	[ "$force" = "y" ] || echo "$branch" | grep -qE '^(hbd|hbl|hbk|hbt|hbs)$'
 }
 # Check if given version is valid/existing version (force again allows usage of
 # any version)
@@ -133,7 +136,7 @@ if [ -n "$branch" ]; then
 	fi
 fi
 
-# Interactive selection of branch if branch was not yet set
+# Interactive selection of branch or version unless provided already
 while [ -z "$branch" ]; do
 	if [ "$version" = "y" ]; then
 		echo
@@ -160,14 +163,21 @@ You can choose from one of these rolling releases:
   hbt (testing, turtles)
     This rolling release contains next stable version. Please join this branch to
     help us test it and to get new stuff few weeks up-front.
-  hbk (kittens)
-    This rolling release tracks stable OpenWRT upstream and contains latest Turris
-    development. Manual intervention might be sometimes required to fix introduced
-    bugs and because of that it is suggested to be used only by experienced users.
-  hbd (dragons)
+  hbk (kittens, next-fixup)
+    This rolling release tracks stable OpenWRT upstream and stable Turris
+    development. It is used to prepare next fixup releases (aka 1.0.x). Manual
+    intervention might be sometimes required to fix introduced bugs and because of
+    that it is suggested to be used only by experienced users.
+  hbl (lions, next-minor)
+    This rolling release tracks stable OpenWRT upstream and latest Turris
+    development. It is used to prepare next minor releases (aka 1.x.0). Manual
+    intervention might be sometimes required to fix introduced bugs and because of
+    that it is suggested to be used only by experienced users.
+  hbd (dragons, next-major)
     This rolling release not only tracks latest Turris but also latest OpenWRT
-    development. It can frequently break and is suggested to be used only by
-    experienced users on non-critical infrastructure.
+    development. It is used to prepare next major release (aka x.0.0). It can
+    frequently break and is suggested to be used only by experienced users on
+    non-critical infrastructure.
 EOF
 		read -r -p "Please enter name of a branch: " branch
 		branch_alts
@@ -264,6 +274,24 @@ print_kitten() {
 EOF
 }
 
+print_lion() {
+	cat <<"EOF"
+             ,%%%%%%%%,
+           ,%%/\%%%%/\%%
+          ,%%%\c "" J/%%%
+ %.       %%%%/ o  o \%%%
+ `%%.     %%%%    _  |%%%
+  `%%     `%%%%(__Y__)%%'
+  //       ;%%%%`\-/%%%'
+ ((       /  `%%%%%%%'
+  \\    .'          |
+   \\  /       \  | |
+    \\/         ) | |
+     \         /_ | |__
+     (___________)))))))
+EOF
+}
+
 print_dragon() {
 	cat <<"EOF"
                 \||/
@@ -311,6 +339,15 @@ else
 		hbk)
 			print_kitten
 			echo "You are now in branch containing software build every night. It often contains bugs and sometimes requires manual intervention!" >&2
+			echo "It is based on latest stable OpenWRT branch with Turris OS changes." >&2
+			echo "Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/)." >&2
+			echo "If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/)," >&2
+			echo "You shouldn't be in this branch unless you are advanced user!" >&2
+			echo "To return to stable branch run this command: switch-branch hbs" >&2
+			;;
+		hbl)
+			print_lion
+			echo "You are now in branch containing software build every night. It often contains bugs and sometimes requires manual intervention!" >&2
 			echo "It is based on latest stable OpenWRT branch with latest Turris OS changes." >&2
 			echo "Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/)." >&2
 			echo "If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/)," >&2
@@ -327,7 +364,7 @@ else
 			echo "To return to stable branch run this command: switch-branch hbs" >&2
 			;;
 		*)
-			echo "You are now in unknown version. Unless you are a developer you shouldn't use this branch!" >&2
+			echo "You are now in unknown branch. Unless you are a developer you shouldn't use this branch!" >&2
 			echo "Turris team provides no guarantees and no support for this branch." >&2
 			echo "To return to stable branch run this command: switch-branch hbs" >&2
 			;;
