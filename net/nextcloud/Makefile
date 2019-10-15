@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nextcloud
 PKG_VERSION:=16.0.5
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
@@ -45,10 +45,6 @@ endef
 
 define Package/$(PKG_NAME)_install/description
   Nextcloud is a safe home for all your data. And this is simple installation script.
-endef
-
-define Package/$(PKG_NAME)/conffiles
-/etc/lighttpd/conf.d/nextcloud.conf
 endef
 
 define Build/Compile
