@@ -12,7 +12,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/ripe-atlas-software-probe
-PKG_SOURCE_VERSION:=ffbf0d77cd8124a568175c0b3d1004c0b1b803e1
+PKG_SOURCE_VERSION:=10ae89f5b29b9ffa7fb5ef599569b4b965b82836
 PKG_SOURCE:=ripe-atlas-software-probe-$(PKG_VERSION).tar.gz
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -32,9 +32,9 @@ define Package/atlas-sw-probe
 endef
 
 define Package/atlas-sw-probe/description
-  RIPE Atlas SW probe is software varian of RIPE Atlas Probe.
+  RIPE Atlas SW probe is software variant of RIPE Atlas Probe.
   It contains utilities which helps actively measure
-  Internet connectiviy through ping, traceroute, DNS, SSL/TLS, NTP and HTTP.
+  Internet connectivity through ping, traceroute, DNS, SSL/TLS, NTP, and HTTP.
   Data are then collected, aggregated and published by the RIPE NCC.
 endef
 
@@ -68,7 +68,7 @@ define Package/atlas-sw-probe/install
 	# Copy firmware version
 	$(CP) $(PKG_BUILD_DIR)/atlas-config/state/FIRMWARE_APPS_VERSION $(1)/$(SCRIPTS_DIR)/state/
 	# Set probe mode
-	echo "dev" > $(1)/$(SCRIPTS_DIR)/state/mode
+	echo "prod" > $(1)/$(SCRIPTS_DIR)/state/mode
 
 	# Copy scripts
 	$(CP) $(PKG_BUILD_DIR)/bin/{ATLAS,common-pre.sh,common.sh,reginit.sh,resolvconf} $(1)/$(SCRIPTS_DIR)/bin/

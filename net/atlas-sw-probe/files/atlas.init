@@ -2,10 +2,10 @@
 
 USE_PROCD=1
 START=30
-EXTRA_COMMANDS="get_key probeid status"
+EXTRA_COMMANDS="get_key probeid log"
 EXTRA_HELP="	get_key	print probe public key (used for probe registration)
 	probeid	print probe id
-	status print probe status log
+	log print probe status log
 "
 
 SCRIPTS_DIR="/usr/libexec/atlas-probe-scripts"
@@ -15,14 +15,15 @@ PROBE_ID_FILE="$TMP_BASE_DIR/status/reg_init_reply.txt"
 LOG_FILE="/tmp/log/ripe_sw_probe"
 STATE_CONFIG="$SCRIPTS_DIR/state/config.txt"
 
-status() {
+log() {
 	if [ -f "$LOG_FILE" ];then
 		tail "$LOG_FILE"
 	else
 		print_msg "Error. No log file found. Probe isn't probably running"
+		exit 1
 	fi
-
 }
+
 get_key() {
 	if [ -f "$PUB_KEY_FILE" ]; then
 		echo "Probe public key (use for registration)"
@@ -30,6 +31,7 @@ get_key() {
 		cat "$PUB_KEY_FILE"
 	else
 		print_msg "Error! Pub. key not found"
+		exit 1
 	fi
 }
 
@@ -37,17 +39,19 @@ probeid() {
 	if [ -f "$PROBE_ID_FILE" ]; then
 		probe_id="$(cat "$PROBE_ID_FILE" |grep "PROBE_ID"|awk '{print $2}')"
 		if [ -z "$probe_id" ]; then
-			print_msg "Probe ID not found SW probe isn't probably registred yet"
+			print_msg "Probe ID not found SW probe isn't probably registered yet"
+			exit 1
 		else
 			print_msg "Probe ID is $probe_id"
 		fi
 	else
-		print_msg "Probe ID not found. SW probe is not running or probe_key isn't registred yet"
+		print_msg "Probe ID not found. SW probe is not running or probe_key isn't registered yet"
+		exit 1
 	fi
 }
 
 print_msg() {
-	echo "$1"
+	echo "$1" >&2
 	logger -t atlas-sw-probe "$1"
 }
 
@@ -56,31 +60,36 @@ stop_service() {
 	print_msg "Stopping atlas sw probe"
 	run_pids="$(ls -1 $SCRIPTS_DIR/run/*.vol 2>/dev/null | wc -l)"
 	if [ "$run_pids" != "0" ]; then
-		print_msg "Kill all atlas process"
+		print_msg "Kill all atlas processes"
 		kill $(cat $SCRIPTS_DIR/run/*.vol)
 	fi
 
 	if [ -f "$SCRIPTS_DIR/status/con_keep_pid.vol" ]; then
-		echo "Kill ssh tunnel"
+		print_msg "Kill ssh tunnel"
 		kill "$(cat $SCRIPTS_DIR/status/con_keep_pid.vol)"
 	fi
 }
 
+safe_mkdir() {
+    local dir="$1"
+    if [ -e "$dir" ] && [ ! -d "$dir" -o -L "$dir" ]; then
+        rm -rf "$dir"
+    fi
+    mkdir -p "$dir"
+    chmod 700 "$dir"
+    chown root:root "$dir"
+}
+
 create_tmp_dirs() {
+	local dirs
 
 	chown -R atlas:atlas "$SCRIPTS_DIR/bin"
 	chmod 755 "$SCRIPTS_DIR/bin"
+	dirs='crons data run status /'
 
-	[ ! -d "$TMP_BASE_DIR" ] && mkdir -p "$TMP_BASE_DIR"
-	[ ! -d "$TMP_BASE_DIR/crons" ] && mkdir -p "$TMP_BASE_DIR/crons"
-	[ ! -d "$TMP_BASE_DIR/data" ] && mkdir -p "$TMP_BASE_DIR/data"
-	[ ! -d "$TMP_BASE_DIR/run" ] && mkdir -p "$TMP_BASE_DIR/run"
-	[ ! -d "$TMP_BASE_DIR/status" ] && mkdir -p "$TMP_BASE_DIR/status"
-
-	chown -R atlas:atlas "$TMP_BASE_DIR/crons"
-	chmod -R g+rwx "$TMP_BASE_DIR/data"
-	chown -R atlas:atlas "$TMP_BASE_DIR/data"
-	chown atlas:atlas "$TMP_BASE_DIR/run"
+	for i in $dirs;	do
+		safe_mkdir "$TMP_BASE_DIR/$i"
+	done
 }
 
 start_service() {
@@ -97,7 +106,7 @@ start_service() {
 	config_get_bool rxtxrpt "common" rxtxrpt "1"
 	test_setting=$(grep "^[ 	]*RXTXRPT=yes" "$STATE_CONFIG")
 
-	# Decide if we should write to permanent storage 
+	# Decide if we should write to permanent storage
 	if [ "$rxtxrpt" == "1" ] &&  [ -z "$test_setting" ]; then
 		echo "RXTXRPT=yes">$STATE_CONFIG
 	elif [ "$rxtxrpt" == "0" ] &&  [ ! -z "$test_setting" ]; then
