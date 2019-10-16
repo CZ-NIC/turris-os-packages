@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-diagnostics-plugin
 PKG_VERSION:=2.0.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis_diagnostics
@@ -26,13 +26,15 @@ PKG_BUILD_DEPENDS:=\
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
+include ../reforis/files/reforis-plugin.mk
+include ../reforis/files/reforis-translations.mk
 
 define Package/reforis-diagnostics-plugin
   TITLE:=reforis
   URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis_diagnostics
   DEPENDS:= \
     +reforis \
-
+    +turris-diagnostics
   VARIANT=python3
 endef
 
@@ -40,24 +42,6 @@ define Package/reforis-diagnostics-plugin/description
   Reforis diagnostics plugin
 endef
 
-define Py3Package/reforis-diagnostics-plugin/filespec
-+|$(PYTHON3_PKG_DIR)
--|$(PYTHON3_PKG_DIR)/reforis_static/__init__.py*
-endef
+REFORIS_TRANSLATIONS:=cs
 
-define Package/reforis-diagnostics-plugin/postinst
-#!/bin/sh
-[ -n "$$IPKG_INSTROOT" ] || {
-	/etc/init.d/lighttpd enable
-	/usr/bin/maintain-lighttpd-restart
-}
-endef
-
-define Package/reforis-diagnostics-plugin/prerm
-#!/bin/sh
-[ -n "$$IPKG_INSTROOT" ] || /usr/bin/maintain-lighttpd-restart
-endef
-
-$(eval $(call Py3Package,reforis-diagnostics-plugin))
-$(eval $(call BuildPackage,reforis-diagnostics-plugin))
-$(eval $(call BuildPackage,reforis-diagnostics-plugin-src))
+$(eval $(call ReForisPlugin,$(PKG_NAME),reforis_diagnostics))

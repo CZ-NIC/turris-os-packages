@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis
 PKG_VERSION:=0.4.4
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis
@@ -26,17 +26,30 @@ PKG_BUILD_DEPENDS:=\
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
+include ./files/reforis-translations.mk
 
 define Package/reforis
   TITLE:=reforis
   URL:=https://gitlab.labs.nic.cz/turris/reforis
   DEPENDS:= \
-    +python3-light \
-    +python3-simplejson \
+    +crypto-wrapper \
+    +foris-client \
+    +foris-controller-app \
+    +foris-ws \
+    +fosquitto \
+    +lighttpd \
+    +lighttpd-mod-alias \
+    +lighttpd-mod-fastcgi \
+    +lighttpd-mod-redirect \
+    +lighttpd-mod-setenv \
     +python3-flask \
     +python3-flask-babel \
+    +python3-flask-seasurf \
     +python3-flask-session \
-    +python3-flask-seasurf
+    +python3-light \
+    +python3-paho-mqtt \
+    +python3-simplejson \
+    +turris-maintain
   VARIANT=python3
 endef
 
@@ -50,6 +63,7 @@ endef
 
 define Py3Package/reforis/filespec
 +|$(PYTHON3_PKG_DIR)
+-|$(PYTHON3_PKG_DIR)/reforis/translations/*
 endef
 
 define Py3Package/reforis/install
@@ -89,3 +103,4 @@ endef
 $(eval $(call Py3Package,reforis))
 $(eval $(call BuildPackage,reforis))
 $(eval $(call BuildPackage,reforis-src))
+$(foreach trans,$(REFORIS_TRANSLATIONS),$(call ReForisTranslation,$(trans)))
