@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-diagnostics
-PKG_VERSION:=10.1
+PKG_VERSION:=11
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/diagnostics.git
@@ -22,21 +22,27 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
   TITLE:=$(PKG_NAME)
-  DEPENDS:=+lsblk +socat +crypto-wrapper
+  DEPENDS:=+lsblk +socat +crypto-wrapper +gettext-tools
 endef
 
 define Package/$(PKG_NAME)/description
   Obtains diagnostics which are useful for troubleshooting of turris related functionality.
 endef
 
+define Build/Compile
+	make install
+endef
+
 define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)/usr/share/locale/
+	$(CP) -r $(PKG_BUILD_DIR)/locale/* $(1)/usr/share/locale/
+	$(RM) -rf $(1)/usr/share/locale/*.pot
+	$(RM) -rf $(1)/usr/share/locale/*/LC_MESSAGES/*.po*
 	$(INSTALL_DIR) $(1)/usr/share/diagnostics/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/diagnostics.sh $(1)/usr/share/diagnostics/diagnostics.sh
 	$(INSTALL_DIR) $(1)/usr/share/diagnostics/modules
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/modules/module.sh $(1)/usr/share/diagnostics/modules/module.sh
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/modules/*.module $(1)/usr/share/diagnostics/modules/
 endef
-
-Build/Compile:=:
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
