@@ -29,10 +29,6 @@ define Package/$(PKG_NAME)/description
   Obtains diagnostics which are useful for troubleshooting of turris related functionality.
 endef
 
-define Build/Compile
-	make install
-endef
-
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/locale/
 	$(CP) -r $(PKG_BUILD_DIR)/locale/* $(1)/usr/share/locale/
@@ -44,5 +40,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/modules/module.sh $(1)/usr/share/diagnostics/modules/module.sh
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/modules/*.module $(1)/usr/share/diagnostics/modules/
 endef
+
+Build/Compile:=:
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
