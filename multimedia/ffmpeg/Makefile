@@ -80,6 +80,11 @@ $(call Package/ffmpeg/Default/description)
  This package contains full-featured FFmpeg shared libraries.
 endef
 
+# Strip off FPU notation
+REAL_CPU_TYPE:=$(firstword $(subst +, ,$(CONFIG_CPU_TYPE)))
+# Fixup cpu types recogized by ffmpeg configure
+REAL_CPU_TYPE:=$(subst octeonplus,octeon+,$(REAL_CPU_TYPE))
+
 FFMPEG_CONFIGURE:= \
 	CFLAGS="$(TARGET_CFLAGS) $(TARGET_CPPFLAGS) $(FPIC)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
@@ -87,71 +92,86 @@ FFMPEG_CONFIGURE:= \
 	--enable-cross-compile \
 	--cross-prefix="$(TARGET_CROSS)" \
 	--arch="$(ARCH)" \
+	$(if $(REAL_CPU_TYPE),--cpu=$(call qstrip,$(REAL_CPU_TYPE)),) \
 	--target-os=linux \
 	--prefix="/usr" \
 	--pkg-config="pkg-config" \
 	--enable-shared \
 	--enable-static \
-	--enable-small \
 	--enable-pthreads \
 	--enable-zlib \
-	--disable-runtime-cpudetect \
 	--disable-doc \
 	--disable-debug \
-	\
 	--enable-gpl \
 	--enable-version3 \
 	\
-	--disable-altivec \
-	--disable-amd3dnow \
-	--disable-amd3dnowext \
-	--disable-asm \
-	--disable-mmx \
-	--disable-mmxext \
-	--disable-sse \
-	--disable-sse2 \
-	--disable-sse3 \
-	--disable-ssse3 \
-	--disable-sse4 \
-	--disable-sse42 \
-	--disable-avx \
-	--disable-xop \
-	--disable-fma3 \
-	--disable-fma4 \
-	--disable-avx2 \
-	--disable-inline-asm \
-	--disable-yasm \
-	--disable-mips32r2 \
-	--disable-mipsdspr2 \
-	--disable-mipsfpu \
-	\
-	--disable-dxva2 \
 	--disable-lzma \
 	--disable-vaapi \
 	--disable-vdpau \
-	--enable-outdev=fbdev \
+	--disable-outdevs \
 	--enable-avresample
 
-ifeq ($(CONFIG_LIBC_USE_MUSL),y)
+ifeq ($(CONFIG_SOFT_FLOAT),y)
 FFMPEG_CONFIGURE+= \
-	--enable-libfreetype
-else
+	--disable-altivec \
+	--disable-vsx \
+	--disable-power8 \
+	--disable-armv5te \
+	--disable-armv6 \
+	--disable-armv6t2 \
+	--disable-inline-asm \
+	--disable-mipsdsp \
+	--disable-mipsdspr2 \
+	--disable-mipsfpu \
+	--disable-msa \
+	--disable-mmi \
+	--disable-fast-unaligned \
+	--disable-runtime-cpudetect
+
+else ifneq ($(findstring arm,$(CONFIG_ARCH)),)
 FFMPEG_CONFIGURE+= \
-	--disable-libfreetype
+	--disable-runtime-cpudetect
+# XXX: GitHub issue 3320 ppc cpu with fpu but no altivec (WNDR4700)
+else ifneq ($(findstring powerpc,$(CONFIG_ARCH)),)
+FFMPEG_CONFIGURE+= \
+	--disable-altivec
 endif
 
-ifeq ($(CONFIG_TARGET_mvebu),)
+# libavcodec/mips/aacdec_mips.c build problem
+# XXX: disable use of assembly on MIPS. Patches welcome.
+ifneq ($(findstring mips,$(CONFIG_ARCH)),)
 FFMPEG_CONFIGURE+= \
-	--disable-vfp \
-	--disable-neon
-else
-FFMPEG_CONFIGURE+= \
-	--enable-vfp \
-	--enable-neon
+        --disable-asm --disable-inline-asm
+endif
+
+# selectively disable optimizations according to arch/cpu type
+ifneq ($(findstring arm,$(CONFIG_ARCH)),)
+	FFMPEG_CONFIGURE+= --enable-lto
+
+	ifneq ($(findstring vfp,$(CONFIG_TARGET_OPTIMIZATION)),)
+		FFMPEG_CONFIGURE+= --enable-vfp
+	else
+		FFMPEG_CONFIGURE+= --disable-vfp
+	endif
+	ifneq ($(findstring neon,$(CONFIG_TARGET_OPTIMIZATION)),)
+		FFMPEG_CONFIGURE+= \
+			--enable-neon \
+			--enable-vfp
+	else
+		FFMPEG_CONFIGURE+= --disable-neon
+	endif
+endif
+
+ifeq ($(ARCH),x86_64)
+	FFMPEG_CONFIGURE+= --enable-lto
 endif
 
 ifneq ($(CONFIG_TARGET_x86),)
-  TARGET_CFLAGS += -fomit-frame-pointer
+ifeq ($(CONFIG_NASM),y)
+  FFMPEG_CONFIGURE += --enable-x86asm
+else
+  FFMPEG_CONFIGURE += --disable-x86asm
+endif
 endif
 
 define Build/Configure
