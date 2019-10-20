@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ffmpeg
-PKG_VERSION:=4.0.2
-PKG_RELEASE:=0
+PKG_VERSION:=4.0.4
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=http://ffmpeg.org/releases/
-PKG_MD5SUM:=ae0bfdf809306a212b4f0e6eb8d1c75e
-PKG_MAINTAINER:=Ted Hess <thess@kitschensync.net>
+PKG_SOURCE_URL:=https://ffmpeg.org/releases/
+PKG_HASH:=fe3421c894cbb6cca223926505b99159c8dabc8de71d0d919dcd11a933aa1122
 
+PKG_MAINTAINER:=Ted Hess <thess@kitschensync.net>
 PKG_LICENSE:=LGPL-2.1+ GPL-2+ LGPL-3
 PKG_LICENSE_FILES:=COPYING.GPLv2 COPYING.GPLv3 COPYING.LGPLv2.1 COPYING.LGPLv3
 
@@ -25,7 +25,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/ffmpeg/Default
  TITLE:=FFmpeg
- URL:=http://ffmpeg.mplayerhq.hu/
+ URL:=https://www.ffmpeg.org/
 endef
 
 define Package/ffmpeg/Default/description
