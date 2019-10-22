@@ -9,10 +9,10 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-diagnostics-plugin
 PKG_VERSION:=2.0.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis_diagnostics
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-diagnostics
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
@@ -31,7 +31,7 @@ include ../reforis/files/reforis-translations.mk
 
 define Package/reforis-diagnostics-plugin
   TITLE:=reforis
-  URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis_diagnostics
+  URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-diagnostics
   DEPENDS:= \
     +reforis \
     +turris-diagnostics
