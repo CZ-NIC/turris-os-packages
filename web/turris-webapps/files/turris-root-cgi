@@ -8,7 +8,24 @@ config_get SCRIPTNAME server scriptname "/foris"
 
 SCRIPTNAME=$(echo "$SCRIPTNAME" | sed -e 's;\\;\\\\;g' | sed -e 's;/*$;;g' | sed -e 's;^/*;;g' | sed -e 's;/+;/;g')
 
+HTTPS_URL="https://$SERVER_NAME$REQUEST_URI"
+HTTPS_REDIRECT="
+			let xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if(this.status == 200 &&
+				   xhttp.responseText.search('redirectTo(url)')) {
+					redirectTo("$HTTPS_URL");
+				}
+			};
+			xhttp.open("GET", "$HTTPS_URL");
+			xhttp.send();
+"
+
 if [ "$WIZARD_FINISHED" = "1" ]; then
+  REDIRECT_SCRIPT=""
+  if [ "$REQUEST_SCHEME" = https ]; then
+    HTTPS_REDIRECT=""
+  fi
   DELAY="25"
   [ "$(ls -1 /usr/share/turris-webapps/[0-9]*.conf | wc -l)" -gt 2 ] || DELAY=5
   URL=""
@@ -106,12 +123,13 @@ if [ "$WIZARD_FINISHED" = "1" ]; then
 			document.querySelector('#timeout').textContent = timer;
 			timer = Math.max(0, timer - 1);
 			if(timer == 0) {
-				location.replace("$URL");
+				redirectTo("$URL");
 			}
 		}, 1000);
+$HTTPS_REDIRECT
 	};
 
-	function redirect_to(url) {
+	function redirectTo(url) {
 		clearInterval(timer_id);
 		location.replace(url);
 	}
@@ -131,7 +149,7 @@ HTML
 	[ -z "$LC_NAME" ] || NAME="$LC_NAME"
 	[ "$URL" \!= "$DEFAULT_URL" ] || extra=" selected"
 	[ -n "$ICON" ] || ICON=generic-web.svg
-	echo "<div class='choice$extra' onClick='redirect_to(\"$URL\");'><a href='$URL'><div class='icon'><img src='/static/webapps-icons/$ICON' alt='$NAME'/></div><div class="name"><p>$NAME</p></a></div></div>"
+	echo "<div class='choice$extra' onClick='redirectTo(\"$URL\");'><a href='$URL'><div class='icon'><img src='/static/webapps-icons/$ICON' alt='$NAME'/></div><div class="name"><p>$NAME</p></a></div></div>"
   done
   cat << HTML
   	</div>
