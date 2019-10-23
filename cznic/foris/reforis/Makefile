@@ -103,4 +103,4 @@ endef
 $(eval $(call Py3Package,reforis))
 $(eval $(call BuildPackage,reforis))
 $(eval $(call BuildPackage,reforis-src))
-$(foreach trans,$(REFORIS_TRANSLATIONS),$(call ReForisTranslation,$(trans)))
+$(foreach trans,$(REFORIS_TRANSLATIONS),$(eval $(call ReForisTranslation,$(trans))))

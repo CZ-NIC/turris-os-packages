@@ -11,10 +11,10 @@ define ReForisPluginTranslation
  endef
 
  define Package/$(1)-l10n-$(3)/install
-	$(INSTALL_DIR) $$(1)$(PYTHON3_PKG_DIR)/$(2)/translations/$(3)/LC_MESSAGES
-	$(CP) \
+	$$(INSTALL_DIR) $$(1)$$(PYTHON3_PKG_DIR)/$(2)/translations/$(3)/LC_MESSAGES
+	$$(CP) \
 		$$(PKG_BUILD_DIR)/$(2)/translations/$(3)/LC_MESSAGES/*.mo \
-		$$(1)$(PYTHON3_PKG_DIR)/$(2)/translations/$(3)/LC_MESSAGES/
+		$$(1)$$(PYTHON3_PKG_DIR)/$(2)/translations/$(3)/LC_MESSAGES/
  endef
 
  define Package/$(1)-l10n-$(3)/postrm
@@ -39,15 +39,15 @@ define ReForisPlugin
  endif
 
  define Py3Package/$(1)/filespec
-+|$(PYTHON3_PKG_DIR)
--|$(PYTHON3_PKG_DIR)/reforis_static/__init__.py*
--|$(PYTHON3_PKG_DIR)/$(2)/translations/*
++|$$(PYTHON3_PKG_DIR)
+-|$$(PYTHON3_PKG_DIR)/reforis_static/__init__.py*
+-|$$(PYTHON3_PKG_DIR)/$(2)/translations/*
  endef
 
  define Py3Package/$(1)/install
-	if [ -d $(PKG_INSTALL_DIR)/usr/bin ]; then \
-		$(INSTALL_DIR) $$(1)/usr/bin ; \
-		$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $$(1)/usr/bin/ ; \
+	if [ -d $$(PKG_INSTALL_DIR)/usr/bin ]; then \
+		$$(INSTALL_DIR) $$(1)/usr/bin ; \
+		$$(CP) $$(PKG_INSTALL_DIR)/usr/bin/* $$(1)/usr/bin/ ; \
 	fi
 	$$(call ReForisPlugin/$(1)/install,$$(1))
  endef
