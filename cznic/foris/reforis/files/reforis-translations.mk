@@ -11,9 +11,9 @@ define ReForisTranslation
  endef
 
  define Package/reforis-l10n-$(1)/install
-	$$(INSTALL_DIR) $$(1)$$(PYTHON3_PKG_DIR)/reforis/translations/$(3)/LC_MESSAGES
+	$$(INSTALL_DIR) $$(1)$$(PYTHON3_PKG_DIR)/reforis/translations/$(1)/LC_MESSAGES
 	$$(CP) \
-		$$(PKG_BUILD_DIR)reforis/translations/$(1)/LC_MESSAGES/*.mo \
+		$$(PKG_BUILD_DIR)/build/lib/reforis/translations/$(1)/LC_MESSAGES/*.mo \
 		$$(1)$$(PYTHON3_PKG_DIR)/reforis/translations/$(1)/LC_MESSAGES/
  endef
 
