@@ -29,15 +29,15 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 include ../reforis/files/reforis-plugin.mk
 include ../reforis/files/reforis-translations.mk
 
-define Package/reforis-openvpn-plugin
-  TITLE:=reforis
+define Package/$(PKG_NAME)
+  TITLE:=$(PKG_NAME)
   URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-openvpn
   DEPENDS:= \
     +reforis
   VARIANT=python3
 endef
 
-define Package/reforis-openvpn-plugin/description
+define Package/$(PKG_NAME)/description
   Reforis OpenVPN plugin
 endef
 
