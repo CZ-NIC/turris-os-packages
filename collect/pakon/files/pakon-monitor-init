@@ -5,31 +5,12 @@ START=90
 STOP=10
 
 start_service() {
-  pgrep -f pakon-monitor.py > /dev/null && {
-      echo "Already running" >&2
-      exit 1
-  }
-
-  mkdir -p /var/lib
-  [ -f /srv/pakon/pakon.db.xz ] && cp /srv/pakon/pakon.db.xz /var/lib/ && xz -d -f /var/lib/pakon.db.xz
-  /usr/bin/sqlite3 /var/lib/pakon.db "pragma integrity_check" >/dev/null || rm -f /var/lib/pakon.db
-  [ -s /var/lib/pakon.db ] || rm -f /var/lib/pakon.db # sqlite3 integrity_check returns 0 even if the file has zero size...
-
-  # recreate database if it doesn't exist (was corrupted)
-  ARCHIVE_PATH=$(uci -q get pakon.archive.path || echo "/srv/pakon/pakon-archive.db")
-  [[ -f /var/lib/pakon.db && -f "$ARCHIVE_PATH" ]] || python3 /usr/libexec/pakon-light/create_db.py
-
   procd_open_instance
-  procd_set_param command /usr/libexec/pakon-light/pakon-monitor.py
+  procd_set_param command pakon-monitor
   procd_set_param respawn ${respawn_threshold:-600} ${respawn_timeout:-5} ${respawn_retry:-5}
   procd_close_instance
 }
 
-stop_service() {
-  mkdir -p /srv/pakon/
-  [ -f /var/lib/pakon.db ] && /usr/libexec/pakon-light/backup_sqlite.sh /var/lib/pakon.db /srv/pakon/pakon.db.xz
-}
-
 reload_service() {
-  pgrep -f pakon-monitor.py | xargs kill -s USR1
+  procd_send_signal pakon-monitor USR1
 }

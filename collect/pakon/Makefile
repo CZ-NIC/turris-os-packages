@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2017-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,22 +8,23 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon
-PKG_VERSION:=1.2.1
-PKG_RELEASE:=1
+PKG_VERSION:=1.2.2
+PKG_RELEASE:=5
+
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
-PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=v$(PKG_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_VERSION:=d5287c8f92cc2971e6aca08b8b81e2057956a78e
+PKG_SOURCE_SUBDIR:=pakon-light
+PKG_BUILD_DIR:=$(BUILD_DIR)/pakon-light-$(PKG_VERSION)
 
-PKG_MAINTAINER:=Martin Petracek <martin.petracek@nic.cz>
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0
 
-PKG_INSTALL:=0
-
 include $(INCLUDE_DIR)/package.mk
+include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
+
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/pakon
 	SECTION:=net
@@ -31,25 +32,18 @@ define Package/pakon
 	SUBMENU:=Collect traffic events from suricata IDS
 	TITLE:=PArental KONtrol - light
 	DEPENDS:=+suricata-pakon +xz +python3-light +python3-logging +python3-ctypes +python3-cachetools +python3-sqlite3 +sqlite3-cli +pakon-lists +ouidb +suricata-conntrack-flows
+	VARIANT:=python3
 endef
 
 define Package/$(PKG_NAME)/description
   Simple daemon that is able to collect events from suricata, store them locally to SQLite DB.
 endef
 
-define Build/Compile
-  true
-endef
-
-define Build/Install
-  true
-endef
-
 define Package/$(PKG_NAME)/conffiles
 /etc/config/pakon
 endef
 
-define Package/$(PKG_NAME)/install
+define Py3Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/suricata-pakon/output_conf.d
 	$(INSTALL_DATA) ./files/pakon-output.yaml $(1)/etc/suricata-pakon/output_conf.d/pakon.yaml
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -60,13 +54,8 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/pakon-light/domains_replace
 	$(INSTALL_DIR) $(1)/usr/share/pakon-light/domains_ignore
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/show.py $(1)/usr/bin/pakon-show
+	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/usr/libexec/pakon-light
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/monitor.py $(1)/usr/libexec/pakon-light/pakon-monitor.py
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/handler.py $(1)/usr/libexec/pakon-light/pakon-handler.py
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/archive.py $(1)/usr/libexec/pakon-light/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/create_db.py $(1)/usr/libexec/pakon-light/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/domains_reapply.py $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/notify_new_device.sh $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) ./files/backup_sqlite.sh $(1)/usr/libexec/pakon-light/
 	$(INSTALL_DIR) $(1)/etc/config
@@ -76,7 +65,7 @@ endef
 define Package/pakon/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-	/usr/libexec/pakon-light/create_db.py
+	/usr/bin/pakon-maintain create-databases
 	# one time fix - convert all names to lowercase. Mixed case names shouldn't be saved anymore (fixed in monitor)
 	[ -f /var/lib/pakon.db ] && sqlite3 /var/lib/pakon.db "UPDATE traffic SET app_hostname = LOWER(app_hostname);" || true
 	[ -f /srv/pakon/pakon-archive.db ] && /usr/bin/sqlite3 /srv/pakon/pakon-archive.db "UPDATE traffic SET app_hostname = LOWER(app_hostname);" || true
@@ -96,4 +85,6 @@ define Package/pakon/prerm
         /etc/init.d/pakon-handler stop
 endef
 
+$(eval $(call Py3Package,pakon))
 $(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,$(PKG_NAME)-src))

@@ -1,4 +1,4 @@
 MAILTO=""
-05	02	*	*	*	root	/usr/bin/python3 /usr/libexec/pakon-light/archive.py && /usr/libexec/pakon-light/backup_sqlite.sh /var/lib/pakon.db /srv/pakon/pakon.db.xz 
+05	02	*	*	*	root	pakon-maintain archive && pakon-maintain backup 
 
-05	10,18	*	*	*	root	/usr/libexec/pakon-light/backup_sqlite.sh /var/lib/pakon.db /srv/pakon/pakon.db.xz
+05	10,18	*	*	*	root	pakon-maintain backup
