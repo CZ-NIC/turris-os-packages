@@ -13,7 +13,7 @@ define ReForisPluginTranslation
  define Package/$(1)-l10n-$(3)/install
 	$$(INSTALL_DIR) $$(1)$$(PYTHON3_PKG_DIR)/$(2)/translations/$(3)/LC_MESSAGES
 	$$(CP) \
-		$$(PKG_BUILD_DIR)/$(2)/translations/$(3)/LC_MESSAGES/*.mo \
+		$$(PKG_BUILD_DIR)/build/lib/$(2)/translations/$(3)/LC_MESSAGES/*.mo \
 		$$(1)$$(PYTHON3_PKG_DIR)/$(2)/translations/$(3)/LC_MESSAGES/
  endef
 

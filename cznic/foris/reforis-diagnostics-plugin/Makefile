@@ -22,7 +22,7 @@ PKG_LICENSE_FILES:=LICENSE
 
 PKG_BUILD_DEPENDS:=\
 	node/host \
-	foris-plugins-distutils/host \
+	reforis-distutils/host \
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -34,7 +34,7 @@ define Package/$(PKG_NAME)
   URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-diagnostics
   DEPENDS:= \
     +reforis \
-    +turris-diagnostics
+    +foris-controller-diagnostics-module
   VARIANT=python3
 endef
 
@@ -45,3 +45,4 @@ endef
 REFORIS_TRANSLATIONS:=cs
 
 $(eval $(call ReForisPlugin,$(PKG_NAME),reforis_diagnostics))
+# call BuildPackage <= assures OWR build system that this is package

@@ -22,7 +22,7 @@ PKG_LICENSE_FILES:=LICENSE
 
 PKG_BUILD_DEPENDS:=\
 	node/host \
-	foris-plugins-distutils/host \
+	reforis-distutils/host \
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -33,8 +33,10 @@ define Package/$(PKG_NAME)
   TITLE:=$(PKG_NAME)
   URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-openvpn
   DEPENDS:= \
-    +reforis
-  VARIANT=python3
+    +reforis \
+    +foris-controller-openvpn-module \
+    +foris-controller-openvpn_client-module
+  VARIANT:=python3
 endef
 
 define Package/$(PKG_NAME)/description
@@ -44,3 +46,4 @@ endef
 REFORIS_TRANSLATIONS:=cs
 
 $(eval $(call ReForisPlugin,$(PKG_NAME),reforis_openvpn))
+# call BuildPackage <= assures OWR build system that this is package

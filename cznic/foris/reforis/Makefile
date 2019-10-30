@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis
 PKG_VERSION:=0.4.4
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis
@@ -22,7 +22,7 @@ PKG_LICENSE_FILES:=LICENSE
 
 PKG_BUILD_DEPENDS:=\
 	node/host \
-	foris-plugins-distutils/host \
+	reforis-distutils/host \
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -50,7 +50,7 @@ define Package/reforis
     +python3-paho-mqtt \
     +python3-simplejson \
     +turris-maintain
-  VARIANT=python3
+  VARIANT:=python3
 endef
 
 define Package/reforis/description
