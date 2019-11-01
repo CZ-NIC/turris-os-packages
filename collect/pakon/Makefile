@@ -9,12 +9,12 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon
 PKG_VERSION:=1.2.2
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_VERSION:=d5287c8f92cc2971e6aca08b8b81e2057956a78e
+PKG_SOURCE_VERSION:=84bb455089b4acec21a33c8a392fddf6cd561c85
 PKG_SOURCE_SUBDIR:=pakon-light
 PKG_BUILD_DIR:=$(BUILD_DIR)/pakon-light-$(PKG_VERSION)
 
