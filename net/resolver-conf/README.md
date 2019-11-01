@@ -48,10 +48,10 @@ You will get ouput in json format similar to this:
                         "name": "cloudflare-dns"
                 },
                 {
-                        "ipv6": "2001:1488:800:400::130",
-                        "ipv4": "217.31.204.130",
+                        "ipv6": "2001:148f:ffff::1",
+                        "ipv4": "193.17.47.1",
                         "name": "ODVR NIC.CZ",
-                        "description": "DNS resolvery cznic"
+                        "description": "CZ.NIC DNS resolvers"
                 },
                 {
                         "ipv4": "89.233.43.71",
