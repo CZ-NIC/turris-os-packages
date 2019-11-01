@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon
 PKG_VERSION:=1.2.2
-PKG_RELEASE:=6
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
@@ -19,31 +19,30 @@ PKG_SOURCE_SUBDIR:=pakon-light
 PKG_BUILD_DIR:=$(BUILD_DIR)/pakon-light-$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_LICENSE:=GPL-3.0
+PKG_LICENSE:=GPL-3.0-or-later
+PKG_LICENSE_FILES:=COPYING
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
-PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
-
 define Package/pakon
-	SECTION:=net
-	CATEGORY:=Network
-	SUBMENU:=Collect traffic events from suricata IDS
-	TITLE:=PArental KONtrol - light
-	DEPENDS:=+suricata-pakon +xz +python3-light +python3-logging +python3-ctypes +python3-cachetools +python3-sqlite3 +sqlite3-cli +pakon-lists +ouidb +suricata-conntrack-flows
-	VARIANT:=python3
+  SECTION:=net
+  CATEGORY:=Network
+  SUBMENU:=Collect traffic events from suricata IDS
+  TITLE:=PArental KONtrol - light
+  DEPENDS:=+suricata-pakon +xz +python3-light +python3-logging +python3-ctypes +python3-cachetools +python3-sqlite3 +sqlite3-cli +pakon-lists +ouidb +suricata-conntrack-flows
+  VARIANT:=python3
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/pakon/description
   Simple daemon that is able to collect events from suricata, store them locally to SQLite DB.
 endef
 
-define Package/$(PKG_NAME)/conffiles
+define Package/pakon/conffiles
 /etc/config/pakon
 endef
 
-define Py3Package/$(PKG_NAME)/install
+define Py3Package/pakon/install
 	$(INSTALL_DIR) $(1)/etc/suricata-pakon/output_conf.d
 	$(INSTALL_DATA) ./files/pakon-output.yaml $(1)/etc/suricata-pakon/output_conf.d/pakon.yaml
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -79,12 +78,14 @@ endef
 
 define Package/pakon/prerm
 #!/bin/sh
-        /etc/init.d/pakon-monitor disable
-        /etc/init.d/pakon-monitor stop
-        /etc/init.d/pakon-handler disable
-        /etc/init.d/pakon-handler stop
+[ -n "$$IPKG_INSTROOT" ] || {
+	/etc/init.d/pakon-monitor disable
+	/etc/init.d/pakon-monitor stop
+	/etc/init.d/pakon-handler disable
+	/etc/init.d/pakon-handler stop
+}
 endef
 
 $(eval $(call Py3Package,pakon))
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)-src))
+$(eval $(call BuildPackage,pakon))
+$(eval $(call BuildPackage,pakon-src))
