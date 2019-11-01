@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon
 PKG_VERSION:=1.2.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
@@ -24,6 +24,8 @@ PKG_LICENSE_FILES:=COPYING
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
+
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/pakon
   SECTION:=net
