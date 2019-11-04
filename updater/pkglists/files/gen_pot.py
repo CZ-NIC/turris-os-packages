@@ -31,23 +31,30 @@ po.metadata = {
     'Content-Transfer-Encoding': '8bit',
 }
 
+
+def add_string(string):
+    """Add given string to PO file.
+    """
+    po.append(polib.POEntry(
+        msgid=string,
+        msgstr=u'',
+        occurrences=[(DEFS, '')]
+    ))
+
+
 # Fill it
 with open(DEFS, 'r') as file:
     content = json.load(file)
 
+
 for name, lst in content.items():
-    if 'title' in lst:
-        po.append(polib.POEntry(
-            msgid=lst['title'],
-            msgstr=u'',
-            occurrences=[(DEFS, '')]
-        ))
-    if 'description' in lst:
-        po.append(polib.POEntry(
-            msgid=lst['description'],
-            msgstr=u'',
-            occurrences=[(DEFS, '')]
-        ))
+    add_string(lst['title'])
+    add_string(lst['description'])
+    if 'options' in lst:
+        for opt in lst['options']:
+            add_string(opt['title'])
+            add_string(opt['description'])
+
 
 # Merge with previous version
 if os.path.isfile(OUT):
