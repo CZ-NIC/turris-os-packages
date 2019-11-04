@@ -32,7 +32,7 @@ Every option has name that is used in updater's pkglist and some additional
 fields. Required fields are __title__ and __description__. Their meaning is same
 as for root package list. On top of those there is option __default__. That is
 of boolean type and servers to set default state of option when not configured by
-user.
+user. In default __default__ is `false`.
 
 ### Translations
 To generate translations you can use `gen_pot.py` script. It expect you to run it
