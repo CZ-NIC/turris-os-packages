@@ -35,6 +35,4 @@ of boolean type and servers to set default state of option when not configured b
 user. In default __default__ is `false`.
 
 ### Translations
-To generate translations you can use `gen_pot.py` script. It expect you to run it
-in directory with `definitions.json` and first arguments has to be path to output
-file (if exists then it's merged).
+To generate translations you can use `manage.py` script with `pot` argument.
