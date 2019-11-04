@@ -14,7 +14,7 @@ PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_VERSION:=84bb455089b4acec21a33c8a392fddf6cd561c85
+PKG_SOURCE_VERSION:=06ffc7904e7d97939198e5962e2ff573b3080c02
 PKG_SOURCE_SUBDIR:=pakon-light
 PKG_BUILD_DIR:=$(BUILD_DIR)/pakon-light-$(PKG_VERSION)
 
@@ -42,6 +42,8 @@ endef
 
 define Package/pakon/conffiles
 /etc/config/pakon
+/etc/config/pakon-alert
+/etc/config/pakon-flow
 endef
 
 define Py3Package/pakon/install
@@ -60,7 +62,9 @@ define Py3Package/pakon/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/notify_new_device.sh $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) ./files/backup_sqlite.sh $(1)/usr/libexec/pakon-light/
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/pakon-uci.example $(1)/etc/config/pakon
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/config_files/alert $(1)/etc/config/pakon-alert
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/config_files/flow $(1)/etc/config/pakon-flow
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/config_files/pakon $(1)/etc/config/pakon
 endef
 
 define Package/pakon/postinst
