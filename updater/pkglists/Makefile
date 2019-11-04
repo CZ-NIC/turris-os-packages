@@ -24,6 +24,9 @@ endef
 define Package/pkglists/install
 	$(INSTALL_DIR) $(1)/usr/share/updater/
 	$(INSTALL_DATA) ./files/definitions.json $(1)/usr/share/updater/pkglists.json
+
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/pkglists.uci $(1)/etc/config/pkglists
 endef
 
 Build/Compile:=:

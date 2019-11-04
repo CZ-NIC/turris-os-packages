@@ -1,19 +1,41 @@
 {
 	"3g": {
 		"title": "Extensions of network protocols for 3G/LTE",
-		"description": "Support for additional protocols and connection types.",
+		"description": "Support for Turris Omnia and Turris MOX LTE pack.",
+		"url": "https://wiki.turris.cz/doc/en/howto/lte_modem_install",
 		"official": true
 	},
 	"datacollect": {
 		"title": "Data Collection",
-		"description": "Software for participation in data collection and dynamic distributed firewall.",
-		"url": "https://doc.turris.cz/doc/en/howto/collect",
-		"official": true
-	},
-	"dev-detect": {
-		"title": "Device detection",
-		"description": "Software for detecting new devices on local network (EXPERIMENTAL).",
-		"official": true
+		"description": "Software for participation in data collection and distributed adaptive firewall.",
+		"url": "https://docs.turris.cz/basics/collect/",
+		"official": true,
+		"options": {
+			"survey": {
+				"title": "Usage Survey",
+				"description": "Collect data about router usage (installed packages, Internet connection type and etc.).",
+				"default": true
+			},
+			"dynfw": {
+				"title": "Dynamic Firewall",
+				"description": "Add firewall rules to block attackers detected by Turris collection network.",
+				"default": true
+			},
+			"nikola": {
+				"title": "Firewall Logs",
+				"description": "Collect logs from firewall for attempted connections.",
+				"default": true
+			},
+			"minipot": {
+				"title": "Minipots",
+				"description": "Minimal honeypots to catch attackers for various protocols.",
+				"default": true
+			},
+			"haas": {
+				"title": "SSH Honeypot",
+				"description": "SSH honeypot using Honeypot as a Service (haas.nic.cz)."
+			}
+		}
 	},
 	"dvb": {
 		"title": "DVB tuner",
@@ -24,59 +46,107 @@
 		"title": "Hardening (experimental)",
 		"description": "Seccomp tools for system hardening."
 	},
-	"honeypot": {
-		"title": "SSH Honeypot",
-		"description": "Trap for password-guessing robots on SSH.",
-		"official": true
-	},
-	"luci-controls": {
+	"luci_controls": {
 		"title": "LuCI extensions",
-		"description": "Several addional tabs and controls for the advanced LuCI interface."
+		"description": "Several additional tabs and controls for the advanced LuCI interface.",
+		"options": {
+			"adblock": {
+				"title": "AdBlock",
+				"description": "Script to block ad/abuse domains."
+			},
+			"sqm": {
+				"title": "SQM",
+				"description": "Active Queue Management to boost performance on heavily loaded network."
+			},
+			"tinyproxy": {
+				"title": "Tinyproxy",
+				"description": "HTTP(S) proxy."
+			},
+			"upnp": {
+				"title": "UPnP",
+				"description": "Universal Plug and Play service."
+			},
+			"printserver": {
+				"title": "Print server (p910nd)",
+				"description": "Services allowing to connect a printer to the router and use it for remote printing."
+			},
+			"statistics": {
+				"title": "Statistics",
+				"description": "Gather and render diagrams for system statistics by using collectd."
+			}
+		}
 	},
 	"lxc": {
 		"title": "LXC utilities",
 		"description": "Set of utilities to manage Linux Containers (lightweight virtualization technology).",
-		"url": "https://doc.turris.cz/doc/en/howto/lxc",
+		"url": "https://docs.turris.cz/geek/lxc/lxc/",
 		"official": true
 	},
 	"nas": {
 		"title": "NAS",
 		"description": "Services allowing to connect a disk to the router and use it as network data store.",
-		"url": "https://doc.turris.cz/doc/en/howto/nas"
+		"url": "https://wiki.turris.cz/doc/en/howto/nas",
+		"options": {
+			"samba": {
+				"title": "Samba",
+				"description": "Implementation of SMB network protocol."
+			},
+			"dlna": {
+				"title": "DLNA",
+				"description": "Digital media sharing server."
+			},
+			"transmission": {
+				"title": "Transmission",
+				"description": "BitTorrent client."
+			},
+			"raid": {
+				"title": "mdadm",
+				"description": "Software RAID storage support using mdadm."
+			},
+			"encrypt": {
+				"title": "Encrypted Storage",
+				"description": "Add support to access encrypted storage devices using dm-crypt."
+			}
+		}
 	},
-	"nextcloud": {
-		"title": "Nextcloud",
-		"description": "Self-hosted files hosting and productivity platform that keeps you in control. Alternative to services such as Dropbox or Google Drive. (EXPERIMENTAL)",
-		"url": "https://doc.turris.cz/doc/en/howto/nextcloud",
-		"official": true
+	"net_monitoring": {
+		"title": "Network monitoring and parental control",
+		"description": "Tools to monitor local network and users on it.",
+		"official": true,
+		"options": {
+			"netmetr": {
+				"title": "Internet connection speed measurement",
+				"description": "Actively measures speed of Internet connection using netmetr.cz service.",
+				"url": "https://docs.turris.cz/basics/apps/netmetr/"
+			},
+			"dev_detect": {
+				"title": "New devices detection",
+				"description": "Software for detecting new devices on local network."
+			},
+			"pakon": {
+				"title": "Pakon",
+				"description": "Software for in depth monitoring of your traffic using Suricata.",
+				"url": "https://docs.turris.cz/basics/apps/pakon/"
+			}
+		}
 	},
 	"netboot": {
 		"title": "Turris MOX network boot",
-		"description": "Server side for Turris MOX without SD card used as Wi-Fi access point. (EXPERIMENTAL)",
-		"official": true
+		"description": "Server side for Turris MOX without SD card used as Wi-Fi access point.",
+		"url": "https://docs.turris.cz/basics/apps/netboot/",
+		"official": true,
 	},
-	"netmetr": {
-		"title": "Internet connection speed measurement",
-		"description": "Actively measures speed of Internet connection using netmetr.cz service.",
-		"url": "https://www.netmetr.cz",
+	"nextcloud": {
+		"title": "Nextcloud",
+		"description": "Self-hosted files hosting and productivity platform that keeps you in control. Alternative to services such as Dropbox or Google Drive.",
+		"url": "https://docs.turris.cz/geek/nextcloud/nextcloud/",
 		"official": true
 	},
 	"openvpn": {
 		"title": "OpenVPN",
-		"description": "An easy setup of OpenVPN server from Foris.",
-		"url": "https://doc.turris.cz/doc/en/howto/openvpn_plugin",
+		"description": "Easy setup of the OpenVPN server from Foris.",
+		"url": "https://docs.turris.cz/basics/apps/openvpn/openvpn/",
 		"official": true
-	},
-	"pakon": {
-		"title": "Pakon",
-		"description": "Software for in depth monitoring of your traffic.",
-		"url": "https://doc.turris.cz/doc/en/howto/pakon",
-		"official": true
-	},
-	"printserver": {
-		"title": "Print server",
-		"description": "Services allowing to connect a printer to the router and use it for remote printing.",
-		"url": "https://doc.turris.cz/doc/en/howto/printer_sharing"
 	},
 	"reforis": {
 		"title": "reForis (experimental)",
