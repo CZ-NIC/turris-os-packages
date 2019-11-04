@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pkglists
-PKG_VERSION:=1.2.2
+PKG_VERSION:=1.3
 PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -16,14 +16,16 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
   TITLE:=Packages lists for the updater
+  DEPENDS:=+updater-ng +json4lua +libuci-lua
 endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/updater/
 	$(INSTALL_DATA) ./files/definitions.json $(1)/usr/share/updater/pkglists.json
 
-	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_DIR) $(1)/etc/config $(1)/etc/updater/conf.d
 	$(INSTALL_CONF) ./files/pkglists.uci $(1)/etc/config/pkglists
+	$(INSTALL_DATA) ./files/updater.lua $(1)/etc/updater/conf.d/turris-pkglists.lua
 endef
 
 Build/Compile:=:
