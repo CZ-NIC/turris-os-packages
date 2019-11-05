@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018 CZ.NIC <packaging@turris.cz>
+# Copyright (C) 2019 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=atlas-probe
 PKG_VERSION:=2.0.0
-PKG_RELEASE=1
+PKG_RELEASE=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/RIPE-NCC/ripe-atlas-probe-busybox.git
@@ -59,7 +59,7 @@ define Package/atlas-probe/install
 	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
 		$(MAKE_FLAGS) CONFIG_PREFIX=$(1)/usr/libexec/atlas-probe install
 	$(INSTALL_DIR) $(1)/usr/libexec/atlas-probe/state
-	echo $(PKG_VERSION) > $(1)/usr/libexec/atlas-probe/state/FIRMWARE_APPS_VERSION
+	echo $(PKG_VERSION) > $(1)/usr/libexec/atlas-probe/state/VERSION
 endef
 
 $(eval $(call BuildPackage,atlas-probe))

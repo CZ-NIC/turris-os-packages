@@ -83,4 +83,4 @@ sender.notify(
     "maintain", "network-restart", {"ips": ips, "remains": 0}, controller_id=controller_id,
 )
 
-subprocess.call(["/etc/init.d/network", "restart"])
+subprocess.call(["/etc/init.d/network", "reload"])
