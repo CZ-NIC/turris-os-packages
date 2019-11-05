@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fix
 PKG_VERSION:=1
-PKG_RELEASE:=2
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -79,7 +79,14 @@ define Package/fix-dns-forward-quad9-split/description
   variant. This replaces quad9 with quad9_unfiltered setting as compatible change.
 endef
 
+define Package/fix-pkglists-options/description
+  Migrate pkglists from /etc/config/updater to separate pkglists configuration
+  file and set all appropriate options for pkglists.
+  This is installed if pkglists version is below than 1.3.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
 $(eval $(call FIX,dns-forward-quad9-split,+resolver-conf +uci))
+$(eval $(call FIX,pkglists-options,pkglists))
