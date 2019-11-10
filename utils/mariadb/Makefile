@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mariadb
 PKG_VERSION:=10.4.10
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL := \
@@ -221,7 +221,8 @@ define Package/mariadb-client
   TITLE:=MariaDB database core client binaries
   DEPENDS:= \
 	  $(MARIADB_COMMON_DEPENDS) \
-	  +libncursesw
+	  +libncursesw \
+	  +libedit
 endef
 
 define Package/mariadb-client/description
