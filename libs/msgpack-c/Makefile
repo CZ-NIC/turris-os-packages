@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=msgpack-c
 PKG_VERSION:=3.2.0
-PKG_RELEASE=1
+PKG_RELEASE=2
 
 PKG_SOURCE:=msgpack-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/msgpack/msgpack-c/releases/download/cpp-$(PKG_VERSION)/
@@ -32,6 +32,10 @@ define Package/msgpack-c
   CATEGORY:=Libraries
   TITLE:=Msgpack C/C++ library
   DEPENDS:=
+endef
+
+define Build/InstallDev
+	$(CP) $(PKG_INSTALL_DIR)/* $(1)/
 endef
 
 define Package/msgpack-c/install

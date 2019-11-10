@@ -1,0 +1,26 @@
+From 65c35caab25e98e08df77f18e18bcc2fa207129f Mon Sep 17 00:00:00 2001
+From: Josef Schlehofer <pepe.schlehofer@gmail.com>
+Date: Sun, 10 Nov 2019 11:37:08 +0100
+Subject: [PATCH] Include <sys/uio.h> in Linux
+
+This is needed when cross-compiling for OpenWrt.
+
+Pull request: https://github.com/msgpack/msgpack-c/pull/817
+Do the right the commit (supersedes): https://gitlab.labs.nic.cz/turris/turris-os-packages/commit/4cfdec1a0565c62cdf4d84c700632b65c082972c
+---
+ include/msgpack/vrefbuffer.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/msgpack/vrefbuffer.h b/include/msgpack/vrefbuffer.h
+index 574c3cb9..ab51aefa 100644
+--- a/include/msgpack/vrefbuffer.h
++++ b/include/msgpack/vrefbuffer.h
+@@ -13,7 +13,7 @@
+ #include "zone.h"
+ #include <stdlib.h>
+
+-#if defined(unix) || defined(__unix) || defined(__APPLE__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__QNX__) || defined(__QNXTO__)
++#if defined(unix) || defined(__unix) || defined(__linux__) || defined(__APPLE__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__QNX__) || defined(__QNXTO__)
+ #include <sys/uio.h>
+ #else
+ struct iovec {
