@@ -1,11 +1,9 @@
-Index: mariadb-10.4.7/plugin/auth_pam/testing/pam_mariadb_mtr.c
-===================================================================
---- mariadb-10.4.7.orig/plugin/auth_pam/testing/pam_mariadb_mtr.c
-+++ mariadb-10.4.7/plugin/auth_pam/testing/pam_mariadb_mtr.c
+--- a/plugin/auth_pam/testing/pam_mariadb_mtr.c
++++ b/plugin/auth_pam/testing/pam_mariadb_mtr.c
 @@ -56,7 +56,7 @@ int pam_sm_authenticate(pam_handle_t *pa
      if (strcmp(r1, "crash pam module") == 0 && atoi(r2) == 616)
        abort();
-
+ 
 -    if (strlen(r1) == (size_t)atoi(r2) % 100)
 +    if (strlen(r1) == (unsigned int)atoi(r2) % 100)
        retval = PAM_SUCCESS;
