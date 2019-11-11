@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=atlas-probe
-PKG_VERSION:=2.0.0
-PKG_RELEASE:=2
+PKG_VERSION:=2.1.1
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/RIPE-NCC/ripe-atlas-probe-busybox.git
@@ -21,6 +21,7 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-2.0-or-later
 PKG_LICENSE_FILES:=LICENSE
 
+PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -45,7 +46,7 @@ CONFIGURE_ARGS += \
 	--disable-shared \
 	--enable-static
 
-CONFIGURE_PATH = libevent-2.0.20-stable
+CONFIGURE_PATH = libevent-2.1.11-stable
 
 TARGET_LDFLAGS = -L$(PKG_BUILD_DIR)/$(CONFIGURE_PATH)/.libs
 
