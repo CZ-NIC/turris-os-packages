@@ -42,7 +42,7 @@ define Package/turris1x-btrfs/description
 endef
 
 define Package/turris1x-btrfs-migrate/description
- This tool will allow you to plug SD card into your Turris 1.x, format it to Btrfs
+  This tool will allow you to plug SD card into your Turris 1.x, format it to Btrfs
   and use it for your root filesystem.
 endef
 
