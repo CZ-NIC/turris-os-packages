@@ -157,10 +157,10 @@ while [ -z "$branch" ]; do
 You are currently in: $(get_branch)
 
 You can choose from one of these rolling releases:
-  hbs (stable, snails)
+  hbs (snails, stable)
     The default and most stable rolling release. Suggested for unexperienced
     users and for critical infrastructure.
-  hbt (testing, turtles)
+  hbt (turtles, testing)
     This rolling release contains next stable version. Please join this branch to
     help us test it and to get new stuff few weeks up-front.
   hbk (kittens, next-fixup)
