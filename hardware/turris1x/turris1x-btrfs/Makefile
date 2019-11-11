@@ -10,8 +10,6 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=turris1x-btrfs
 PKG_VERSION:=2.0
 PKG_RELEASE:=1
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-2.0
