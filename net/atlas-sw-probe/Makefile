@@ -8,11 +8,12 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=atlas-sw-probe
 PKG_VERSION:=1.0.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/ripe-atlas-software-probe
-PKG_SOURCE_VERSION:=ffbf0d77cd8124a568175c0b3d1004c0b1b803e1
+PKG_SOURCE_VERSION:=4708e4c1a8083ab5ab2e1da934661a4c2ab87cae
+
 PKG_SOURCE:=ripe-atlas-software-probe-$(PKG_VERSION).tar.gz
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -77,6 +78,7 @@ define Package/atlas-sw-probe/install
 	# Create config info
 	echo "DEVICE_NAME=turris-sw-probe" > $(1)/$(SCRIPTS_DIR)/bin/config.sh
 	echo "ATLAS_BASE=$(SCRIPTS_DIR)" >> $(1)/$(SCRIPTS_DIR)/bin/config.sh
+	echo "ATLAS_STATIC=$(SCRIPTS_DIR)" >> $(1)/$(SCRIPTS_DIR)/bin/config.sh
 	echo "SUB_ARCH=turris-$(ARCH)-$(PKG_VERSION)-$(PKG_RELEASE)" >> $(1)/$(SCRIPTS_DIR)/bin/bin/config.sh
 
 	# Enable sending interface traffic statistics as Atlas measurement results
