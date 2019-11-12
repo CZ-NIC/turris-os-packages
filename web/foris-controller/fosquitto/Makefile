@@ -16,19 +16,15 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
-	DEPENDS:=+mosquitto-ssl +mosquitto-client-ssl
+  TITLE:=$(PKG_NAME)
+  DEPENDS:=+mosquitto-ssl +mosquitto-client-ssl
 endef
 
 define Package/$(PKG_NAME)/description
-	Instance of mosquitto server used as foris message bus
+  Instance of mosquitto server used as foris message bus
 endef
 
-# The built is empty. But as there's no makefile in the git repo, we need to
-# override the default that runs "make".
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
 define Package/$(PKG_NAME)/conffiles
 /etc/config/fosquitto
@@ -52,12 +48,12 @@ define Package/$(PKG_NAME)/postinst
 endef
 
 define Package/$(PKG_NAME)-monitor
-	TITLE:=$(PKG_NAME)-monitor
-	DEPENDS:=+$(PKG_NAME)
+  TITLE:=$(PKG_NAME)-monitor
+  DEPENDS:=+$(PKG_NAME)
 endef
 
 define Package/$(PKG_NAME)-monitor/description
-	Script to monitor fosquitto messages
+  Script to monitor fosquitto messages
 endef
 
 define Package/$(PKG_NAME)-monitor/install
