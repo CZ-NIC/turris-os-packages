@@ -32,11 +32,7 @@ define Package/follectd/description
   Instance of collectd server used as data source for foris-controller-collectd-module.
 endef
 
-# The built is empty. But as there's no makefile in the git repo, we need to
-# override the default that runs "make".
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
 define Package/$(PKG_NAME)/conffiles
 /etc/follectd.conf

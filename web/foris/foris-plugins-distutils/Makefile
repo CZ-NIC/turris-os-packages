@@ -16,7 +16,7 @@ PKG_SOURCE_PROTO:=git
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-plugins-distutils
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris/foris-plugins-distutils
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 
@@ -38,7 +38,7 @@ HOST_UNPACK:=$(HOST_TAR) -C $(HOST_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR
 
 define Package/$(PKG_NAME)
 	TITLE:=$(PKG_NAME)
-	URL:=https://gitlab.labs.nic.cz/turris/foris-plugins-distutils
+	URL:=https://gitlab.labs.nic.cz/turris/foris/foris-plugins-distutils
 	DEPENDS:=+python3-light
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 	VARIANT:=python3
