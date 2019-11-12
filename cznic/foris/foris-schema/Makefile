@@ -12,7 +12,7 @@ PKG_VERSION:=0.7.1
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-schema
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris/foris-schema
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -24,7 +24,7 @@ $(call include_mk, python3-package.mk)
 
 define Package/Common
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
-	URL:=https://gitlab.labs.nic.cz/turris/foris-schema
+	URL:=https://gitlab.labs.nic.cz/turris/foris/foris-schema
 endef
 
 define Package/foris-schema
