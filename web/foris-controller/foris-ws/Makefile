@@ -12,7 +12,7 @@ PKG_VERSION:=1.6.1
 PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris/foris-ws
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller/foris-ws
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
@@ -25,7 +25,7 @@ PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/
 
 define Package/foris-ws
 	TITLE:=foris-ws
-	URL:=https://gitlab.labs.nic.cz/turris/foris/foris-ws
+	URL:=https://gitlab.labs.nic.cz/turris/foris-controller/foris-ws
 	DEPENDS:= \
 		+python3-light \
 		+python3-websockets \
