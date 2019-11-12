@@ -14,22 +14,18 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
-	DEPENDS:=+openssl-util
+define Package/turris-cagen
+  TITLE:=turris-cagen
+  DEPENDS:=+openssl-util
 endef
 
 define Package/$(PKG_NAME)/description
   A simple program which should be capeable to generate CAs, certificates, dhparams, ...
 endef
 
-# The built is empty. But as there's no makefile in the git repo, we need to
-# override the default that runs "make".
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
-define Package/$(PKG_NAME)/install
+define Package/turris-cagen/install
 	$(INSTALL_DIR) $(1)/etc/cagen
 	$(INSTALL_CONF) files/openssl.cnf $(1)/etc/cagen/
 
@@ -42,4 +38,4 @@ define Package/$(PKG_NAME)/install
 endef
 
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,turris-cagen))
