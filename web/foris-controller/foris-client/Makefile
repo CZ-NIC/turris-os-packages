@@ -12,7 +12,7 @@ PKG_VERSION:=1.0.2
 PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris/foris-client
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller/foris-client
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
@@ -24,7 +24,7 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/foris-client
-	URL:=https://gitlab.labs.nic.cz/turris/foris/foris-client
+	URL:=https://gitlab.labs.nic.cz/turris/foris-controller/foris-client
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 	TITLE:=foris-client
 	DEPENDS:= \
