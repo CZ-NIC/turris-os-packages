@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-netboot-module
-PKG_VERSION:=0.4
+PKG_VERSION:=0.4.1
 PKG_RELEASE:=4
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
