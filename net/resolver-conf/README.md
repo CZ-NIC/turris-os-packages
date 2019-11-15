@@ -1,4 +1,3 @@
-
 # DNS over TLS
 
 
@@ -9,7 +8,7 @@ UCI configuration for DNS-over-TLS is located in **/etc/config/resolver**. You c
 uci set resolver.common.forward_custom='cloudflare-dns'
 uci commit resolver
 ```
-Where  cloudflare-dns is name defined in config file from /etc/resolver/dns_servers/
+Where cloudflare-dns is name defined in config file from /etc/resolver/dns_servers/
 
 Configuration files for DNS server are located in /etc/resolver/dns_servers directory and they have **config** suffix.
 
@@ -25,17 +24,17 @@ pin_sha256="yioEpqeR4WtDwE9YxNVnCEkTxIjx6EEIwFSQW+lJsbc="
 ```
 
 Variables in config file have this meaning:
- - name - service name (used in Foris)
+ - name - resolver name (used in Foris)
  - description - longer description of server
  - enable_tls - 1/0=forward with/without enabled TLS
  - port - server port with DNS-over-TLS service
- - ipv4 - primary DNS IPv4 address, secondary DNS server separated with space
- - ipv6 - primary DNS IPv6 address, secondary DNS server separated with space
+ - ipv4 - primary IPv4 address, secondary IPv4 address separated with space
+ - ipv6 - primary IPv6 address, secondary IPv6 address separated with space
  - pin_sha256 - sha256 pin see [rfc7858](https://tools.ietf.org/html/rfc7858#section-4.2)
 
 > Note: Config files shouldn't be modified by users because they'll be rewrited after every update.
 
-If you want to edit configuration for a particular server you should create new config file in **/etc/resolver/dns_server** with different name than config provided in package.
+If you want to edit the configuration for a particular server, you should create a new config file in **/etc/resolver/dns_server** with a different name than config files provided by this package.
 
 ### How to show configuration
 
@@ -85,6 +84,6 @@ echo | openssl s_client -connect '9.9.9.9:853' 2>/dev/null | openssl x509 -pubke
 ```
 
 ### Unbound
-Unbound at this moment (v 1.9.2) doesn't support pin authentication. Default option is CA authentication. This is done by setting **ca_file** and **hostname** option in **/etc/resolver/dns_server/*.config** config.
+Unfortunately, Unbound doesn't support pin authentication, yet. Default option is CA authentication. This is done by setting **ca_file** and **hostname** option in **/etc/resolver/dns_server/*.config** config.
 
 
