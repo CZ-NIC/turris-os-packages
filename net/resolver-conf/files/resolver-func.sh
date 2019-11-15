@@ -69,7 +69,7 @@ dns_config_load() {
 
 		if [ "$enable_tls" == "1" ];then
 			if [ -z "${pin_sha256// }" ]  && ([ -z "${hostname// }" ] || [ -z "${ca_file// }"   ] ); then
-				echoerr "Error! $config_name does not contain variables for DoT !"
+				echoerr "Error! $config_name does not contain variables for DNS over TLS!"
 				exit 1
 			fi
 		fi
