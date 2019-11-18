@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-diagnostics-plugin
 PKG_VERSION:=2.0.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis_diagnostics
@@ -35,7 +35,7 @@ define Package/reforis-diagnostics-plugin
   DEPENDS:= \
     +reforis \
     +turris-diagnostics
-  VARIANT=python3
+  VARIANT:=python3
 endef
 
 define Package/reforis-diagnostics-plugin/description
