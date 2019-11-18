@@ -64,6 +64,7 @@ endef
 define Py3Package/reforis/filespec
 +|$(PYTHON3_PKG_DIR)
 -|$(PYTHON3_PKG_DIR)/reforis/translations/*
++|$(PYTHON3_PKG_DIR)/reforis/translations/en
 endef
 
 define Py3Package/reforis/install
