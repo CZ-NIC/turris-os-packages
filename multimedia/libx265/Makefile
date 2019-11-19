@@ -1,22 +1,15 @@
-#
-# Copyright (C) 2016 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=x265
-PKG_VERSION:=2.8
-PKG_RELEASE:=0
+PKG_VERSION:=3.2
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)_$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://ftp.videolan.org/pub/videolan/x265
-PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_HASH:=b68dcd4e8a495e53e53034a11fec5eb9
+PKG_HASH:=364d79bcd56116a9e070fdeb1d9d2aaef1a786b4970163fb56ff0991a183133b
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)_$(PKG_VERSION)
 
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-2.0
 PKG_LICENSE_FILES:=COPYING
 
@@ -34,14 +27,14 @@ TARGET_CXXFLAGS+= -fPIC
 define Package/libx265
   SECTION:=libs
   CATEGORY:=Libraries
-  TITLE:=H265/HEVC free codec library.
+  TITLE:=H265/HEVC free codec library
   DEPENDS:=+libpthread @BUILD_PATENTED +libstdcpp
-  URL:=http://www.videolan.org/developers/x264.html
+  URL:=https://www.videolan.org/developers/x265.html
 endef
 
 define Package/libx265/description
-  x264 is a free software library for encoding 
-  video streams into the H.265/MPEG-4 HEVC compression format.
+  x265 is a free software library and application for encoding
+  video streams into the H.265/MPEG-H HEVC compression format.
 endef
 
 define Build/InstallDev
