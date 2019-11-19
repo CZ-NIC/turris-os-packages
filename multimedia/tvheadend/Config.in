@@ -6,6 +6,10 @@ config TVHEADEND_LINUXDVB_SUPPORT
 	bool "Linux DVB support"
 	default y
 
+config TVHEADEND_CAM_SUPPORT
+	bool "CAM support"
+	default n
+
 config TVHEADEND_DVBSCAN_SUPPORT
 	bool "Fetch DVB-scan data"
 	depends on TVHEADEND_LINUXDVB_SUPPORT
