@@ -126,7 +126,7 @@ print_help() {
 RESTORE="no"
 for ARG in "$@"; do
 	case "$ARG" in
-		-h|-?|--help)
+		-h|-\?|--help)
 			print_help
 			exit 0
 			;;
