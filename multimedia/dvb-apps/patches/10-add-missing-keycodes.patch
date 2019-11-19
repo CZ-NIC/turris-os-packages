@@ -1,0 +1,34 @@
+--- a/util/av7110_loadkeys/generate-keynames.sh
++++ b/util/av7110_loadkeys/generate-keynames.sh
+@@ -10,6 +10,10 @@ echo "#if !defined(KEY_OK)" >> $1
+ echo "#include \"input_fake.h\"" >> $1
+ echo "#endif" >> $1
+ echo >> $1
++echo "#if !defined(KEY_10CHANNELSUP)" >> $1
++echo "#include \"input_faketoo.h\"" >> $1
++echo "#endif" >> $1
++echo >> $1
+ echo >> $1
+ echo "struct input_key_name {" >> $1
+ echo "        const char *name;" >> $1
+--- /dev/null
++++ b/util/av7110_loadkeys/input_faketoo.h
+@@ -0,0 +1,18 @@
++#ifndef _INPUT_FAKETOO_H
++#define _INPUT_FAKETOO_H
++
++#include <linux/input.h>
++
++
++#if !defined(KEY_10CHANNELSUP)
++
++/**
++ *  define some additional remote control keys in case they
++ *  were not already defined above in <linux/input.h>
++ */
++
++#define KEY_10CHANNELSUP   	0x1b8
++#define KEY_10CHANNELSDOWN  0x1b9
++
++#endif  /* !defined(KEY_10CHANNELSUP)  */
++#endif  /* _INPUT_FAKETOO_H */
