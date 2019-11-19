@@ -105,8 +105,8 @@ p
 
 w
 EOF
-	mkfs.vfat /dev/mmcblk0p1 || die "Can't create fat!"
-	mkfs.btrfs -f /dev/mmcblk0p2 || die "Can't format btrfs partition!"
+	mkfs.vfat "${SDCARD}p1" || die "Can't create fat!"
+	mkfs.btrfs -f "${SDCARD}p2" || die "Can't format btrfs partition!"
 }
 
 ##################################################################################
