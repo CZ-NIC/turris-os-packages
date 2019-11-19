@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis
 PKG_VERSION:=0.4.4
-PKG_RELEASE:=6
+PKG_RELEASE:=7
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis
@@ -64,6 +64,7 @@ endef
 define Py3Package/reforis/filespec
 +|$(PYTHON3_PKG_DIR)
 -|$(PYTHON3_PKG_DIR)/reforis/translations/*
++|$(PYTHON3_PKG_DIR)/reforis/translations/en
 endef
 
 define Py3Package/reforis/install
