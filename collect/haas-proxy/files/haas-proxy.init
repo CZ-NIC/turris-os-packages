@@ -7,12 +7,16 @@ EXTRA_COMMANDS="firewall"
 
 DEFAULT_LOCAL_PORT=2525
 DEFAULT_FIREWALL_ZONE="wan"
+DEFAULT_LOG="none"
+DEFAULT_LOG_LEVEL="warning"
 
 firewall_drop() {
-	iptables -t nat -L --line-numbers \
-			| awk '/\/\* !haas:.* \*\// {print $1, $2}' \
-			| while read -r num chain; do
-		iptables -t nat -D "$chain" "$num"
+	iptables -t nat -L | grep 'Chain' | while read -r _ chain _; do
+		iptables -t nat -L "$chain" --line-numbers | awk '/\/\* !haas:.* \*\// {print $1}' | sort -r | \
+				while read -r num; do
+			# Note: we remove rules by number from last one to not shift down rules to be removed
+			iptables -t nat -D "$chain" "$num"
+		done
 	done
 }
 
@@ -45,8 +49,8 @@ start_service() {
 	config_load haas
 	local token log log_level port
 	config_get token settings token ''
-	config_get log settings log 'none'
-	config_get log_level settings log_level 'warning'
+	config_get log settings log "$DEFAULT_LOG"
+	config_get log_level settings log_level "$DEFAULT_LOG_LEVEL"
 	config_get port settings local_port "$DEFAULT_LOCAL_PORT"
 	[ -n "$token" ] || {
 		echo "Token not set. Please set HAAS token to allow it to start." >&2
