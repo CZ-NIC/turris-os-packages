@@ -90,8 +90,8 @@ EOF
 
 # Setup partitions on SD card
 format_sdcard() {
-	dd if=/dev/zero of=/dev/mmcblk0 bs=10M count=11
-	fdisk /dev/mmcblk0 <<EOF
+	dd if=/dev/zero of="$SDCARD" bs=10M count=11
+	fdisk "$SDCARD" <<EOF
 o
 n
 p
