@@ -8,7 +8,8 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-proxy
 PKG_VERSION:=1.9
-PKG_RELEASE:=9
+PKG_RELEASE:=10
+
 PKG_SOURCE_VERSION:=bbf8629d1d64840407eefc23d2b6c8835365347b
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/haas/proxy/raw/$(PKG_SOURCE_VERSION)/release/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -44,25 +45,12 @@ define Py3Package/haas-proxy/install
 	$(INSTALL_BIN) ./files/haas-proxy.init $(1)/etc/init.d/haas-proxy
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./files/haas.uci $(1)/etc/config/haas
-	$(INSTALL_DIR) $(1)/etc/firewall.d/with_reload
-	$(INSTALL_BIN) ./files/haas.fw $(1)/etc/firewall.d/with_reload/99_haas.fw
+	$(INSTALL_DIR) $(1)/etc/uci-defaults
+	$(INSTALL_BIN) ./files/haas-proxy.uci.defaults $(1)/etc/uci-defaults/99-haas-proxy
 endef
 
 define Package/haas-proxy/conffiles
 /etc/config/haas
-endef
-
-define Package/haas-proxy/postinst
-[ -n "$$IPKG_INSTROOT" ] || {
-	/etc/init.d/haas-proxy enable || true
-}
-endef
-
-define Package/haas-proxy/prerm
-[ -n "$$IPKG_INSTROOT" ] || {
-	/etc/init.d/haas-proxy stop || true
-	/etc/init.d/haas-proxy disable || true
-}
 endef
 
 $(eval $(call Py3Package,haas-proxy))
