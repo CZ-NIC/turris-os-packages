@@ -1,0 +1,23 @@
+#!/bin/sh
+uci -q batch <<EOT
+	delete firewall.haas_proxy_mark
+	set firewall.haas_proxy_mark=rule
+	set firewall.haas_proxy_mark.name=HaaS proxy WAN port 22 mark to pass Sentinel dynamic firewall
+	set firewall.haas_proxy_mark.src=wan
+	set firewall.haas_proxy_mark.src_dport=22
+	set firewall.haas_proxy_mark.set_mark=0x10
+	set firewall.haas_proxy_mark.proto=tcp
+	set firewall.haas_proxy_mark.target=MARK
+
+	delete firewall.haas_proxy
+	set firewall.haas_proxy=redirect
+	set firewall.haas_proxy.name=HaaS proxy WAN port 22 redirect
+	set firewall.haas_proxy.src=wan
+	set firewall.haas_proxy.src_dport=22
+	set firewall.haas_proxy.dest_port=2525
+	set firewall.haas_proxy.proto=tcp
+	set firewall.haas_proxy.target=DNAT
+
+	commit firewall
+EOT
+# TODO we should possibly move marking rule before drop rule of Sentinel dynamic firewall

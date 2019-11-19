@@ -5,10 +5,6 @@ config haas 'settings'
 	# This is required as otherwise HaaS won't start.
 	option token ''
 
-	# Firewall zone HaaS should be accessible from on port 22.
-	# You can set more than one zone.
-	list fw_zone 'wan'
-
 	# Local port to use. In default: 2525
 	#option local_port '2525'
 
