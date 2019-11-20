@@ -1,0 +1,12 @@
+#!/bin/sh
+uci -q batch <<EOT
+	delete firewall.sentinel_dynfw_client
+	set firewall.sentinel_dynfw_client=rule
+	set firewall.sentinel_dynfw_client.name=Sentinel dynamic firewall blocking rule
+	set firewall.sentinel_dynfw_client.src=wan
+	set firewall.sentinel_dynfw_client.ipset=turris-sn-dynfw-block
+	set firewall.sentinel_dynfw_client.mark=0x10/0x10
+	set firewall.sentinel_dynfw_client.extra=-m state --state NEW
+	set firewall.sentinel_dynfw_client.target=DROP
+	commit firewall
+EOT
