@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-certgen
 PKG_VERSION:=6.1.3
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/certgen.git
@@ -23,17 +23,20 @@ PKG_LICENSE_FILES:=LICENSE.md
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
-define Package/$(PKG_NAME)
-  TITLE:=sentinel-certgen
+define Package/sentinel-certgen
+  SECTION:=net
+  CATEGORY:=Network
+  SUBMENU:=Sentinel
+  TITLE:=Certgen
   URL:=https://gitlab.labs.nic.cz/turris/sentinel/certgen
   DEPENDS:=+python3-light +python3-six +python3-requests +python3-cryptography +crypto-wrapper
   VARIANT:=python3
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/sentinel-certgen/description
   Client application for automated passwords and certificates retrieval.
 endef
 
-$(eval $(call Py3Package,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)-src))
+$(eval $(call Py3Package,sentinel-certgen))
+$(eval $(call BuildPackage,sentinel-certgen))
+$(eval $(call BuildPackage,sentinel-certgen-src))
