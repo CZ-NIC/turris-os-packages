@@ -1,0 +1,26 @@
+#!/bin/sh
+uci -q batch <<EOT
+	delete firewall.sentinel_minipot_telnet_mark
+	set firewall.sentinel_minipot_telnet_mark=rule
+	set firewall.sentinel_minipot_telnet_mark.name=Sentinel Telnet minipot mark to pass Sentine dynamic firewall
+	set firewall.sentinel_minipot_telnet_mark.src=wan
+	set firewall.sentinel_minipot_telnet_mark.src_dport=23
+	set firewall.sentinel_minipot_telnet_mark.set_mark=0x10
+	set firewall.sentinel_minipot_telnet_mark.proto=tcp
+	set firewall.sentinel_minipot_telnet_mark.target=MARK
+
+	delete firewall.sentinel_minipot_telnet
+	set firewall.sentinel_minipot_telnet=redirect
+	set firewall.sentinel_minipot_telnet.name=Sentinel Telnet minipot redirect
+	set firewall.sentinel_minipot_telnet.src=wan
+	set firewall.sentinel_minipot_telnet.src_dport=23
+	set firewall.sentinel_minipot_telnet.dest_port=2333
+	set firewall.sentinel_minipot_telnet.proto=tcp
+	set firewall.sentinel_minipot_telnet.target=DNAT
+
+	commit firewall
+
+	set sentinel.minipot=minipot
+	set sentinel.minipot.telnet_port=2333
+	commit sentinel.minipot
+EOT
