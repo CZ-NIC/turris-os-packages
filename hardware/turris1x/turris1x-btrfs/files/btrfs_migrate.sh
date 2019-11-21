@@ -109,6 +109,39 @@ EOF
 	mkfs.btrfs -f "${SDCARD}p2" || die "Can't format btrfs partition!"
 }
 
+clean() (
+	set +e # just to continue if unmount fails with another umount
+	local tmp="$1"
+	umount -R "$tmp/target"
+	rmdir "$tmp/target"
+	umount "$tmp/src"
+	rmdir "$tmp/src"
+	rmdir "$tmp"
+	# Note: we use here rmdir to not recursivelly remove mounted FS if umount fails.
+)
+
+# Copy current root to SD card
+migrate_to_sdcard() {
+	local tmp="$(mktemp -d)"
+	trap 'clean "$tmp"' EXIT 
+
+	mkdir -p "$tmp/target"
+	mkdir -p "$tmp/src"
+	# Mount and migrate root filesystem
+	mount "${SDCARD}p2" "$tmp/target" || die "Can't mount mmclbk0p2"
+	btrfs subvolume create "$tmp/target/@" || die "Can't create subvolume!"
+	mount -o bind / "$tmp/src" || die "Can't bind btrfs mount."
+	tar -C "$tmp/src" -cf - . | tar -C "$tmp/target/@" -xf - || die "Filesystem copy failed!"
+
+	# Copy kernel image and DTB to FAT partition
+	mkdir -p "$tmp/@/boot/tefi"
+	mount "${SDCARD}p1" "$tmp/target/@/boot/tefi" || die "Can't mount fat"
+	cp /boot/zImage /boot/fdt "$tmp/target/@/boot/tefi" || die "Can't copy kernel"
+
+	trap "" EXIT
+	clean
+}
+
 ##################################################################################
 
 print_usage() {
@@ -146,37 +179,9 @@ are_you_sure
 
 configure_schnapps
 
-if [ "$RESTORE" = "yes" ]; then
-
+if [ "$RESTORE" = "no" ]; then
 	format_sdcard
-
-	TMP="$(mktemp -d)"
-	clean() {
-		set +e
-		umount -R "$TMP/target"
-		rmdir "$TMP/target"
-		umount -R "$TMP/src"
-		rmdir "$TMP/src"
-		rmdir "$TMP"
-	}
-	trap clean EXIT 
-
-	mkdir -p "$TMP/target"
-	mkdir -p "$TMP/src"
-	# Mount and migrate root filesystem
-	mount "${SDCARD}p2" "$TMP/target" || die "Can't mount mmclbk0p2"
-	btrfs subvolume create "$TMP/target/@" || die "Can't create subvolume!"
-	mount -o bind / "$TMP/src" || die "Can't bind btrfs mount."
-	tar -C "$TMP/src" -cf - . | tar -C "$TMP/target/@" -xf - || die "Filesystem copy failed!"
-
-	# Copy kernel image and DTB to FAT partition
-	mkdir -p "$TMP/@/boot/tefi"
-	mount "${SDCARD}p1" "$TMP/target/@/boot/tefi" || die "Can't mount fat"
-	cp /boot/zImage /boot/fdt "$TMP/target/@/boot/tefi" || die "Can't copy kernel"
-
-	trap "" EXIT
-	clean
-
+	migrate_to_sdcard
 fi
 
 setup_uboot

@@ -61,7 +61,7 @@ endef
 define Package/turris1x-btrfs/prerm
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-	grep -q '^/dev/mmcblk0p2 / btrfs' /proc/mounts || create_notification -s error "Odinstalovali jste podporu btrfs, ale stále ji používáte, váš router se pravděpodobně rozbije" "You deinstalled btrfs support but your router is still using it, so it will likelly break."
+	grep -q '^/dev/mmcblk0p2 / btrfs' /proc/mounts || create_notification -s error "Odinstalovali jste podporu btrfs, ale stále ji používáte, váš router se pravděpodobně rozbije" "You uninstalled btrfs support but your router is still using it, so it will likelly break."
 }
 endef
 
