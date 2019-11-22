@@ -32,7 +32,7 @@ endif
 define Package/luci-app-rainbow
   TITLE:=luci-app-rainbow
   URL:=https://gitlab.labs.nic.cz/turris/luci-rainbow
-  DEPENDS:=+luci @(PACKAGE_rainbow-omnia||PACKAGE_rainbow)
+  DEPENDS:=+luci +turris-rainbow
 endef
 
 define Build/Compile
