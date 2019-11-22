@@ -25,6 +25,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/rainbow
   TITLE:=rainbow
   URL:=https://gitlab.labs.nic.cz/turris/rainbow
+  PROVIDES:=turris-rainbow
   DEPENDS:=@(TARGET_mpc85xx_p2020_nand||TARGET_mpc85xx_p2020_nor)
 endef
 
