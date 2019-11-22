@@ -7,7 +7,7 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=rainbow
+PKG_NAME:=turris1x-rainbow
 PKG_VERSION:=17
 PKG_RELEASE:=2
 
@@ -22,14 +22,14 @@ PKG_LICENSE_FILES:=LICENSE
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/rainbow
-  TITLE:=rainbow
+define Package/turris1x-rainbow
+  TITLE:=turris1x-rainbow
   URL:=https://gitlab.labs.nic.cz/turris/rainbow
   PROVIDES:=turris-rainbow
   DEPENDS:=@(TARGET_mpc85xx_p2020_nand||TARGET_mpc85xx_p2020_nor)
 endef
 
-define Package/rainbow/conffiles
+define Package/turris1x-rainbow/conffiles
 /etc/config/rainbow
 endef
 
@@ -37,7 +37,7 @@ define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS)
 endef
 
-define Package/rainbow/install
+define Package/turris1x-rainbow/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/rainbow $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/etc/init.d/
@@ -49,7 +49,7 @@ define Package/rainbow/install
 	$(INSTALL_BIN) ./files/rainbow_button_sync.sh $(1)/usr/bin/rainbow_button_sync.sh
 endef
 
-define Package/rainbow/postinst
+define Package/turris1x-rainbow/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
     /etc/init.d/rainbow enable
@@ -57,7 +57,7 @@ define Package/rainbow/postinst
 }
 endef
 
-define Package/rainbow/prerm
+define Package/turris1x-rainbow/prerm
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
     /etc/init.d/rainbow stop
@@ -66,4 +66,4 @@ define Package/rainbow/prerm
 }
 endef
 
-$(eval $(call BuildPackage,rainbow))
+$(eval $(call BuildPackage,turris1x-rainbow))
