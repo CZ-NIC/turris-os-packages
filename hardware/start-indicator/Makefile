@@ -18,6 +18,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/start-indicator
   TITLE:=start-indicator
+  DEPENDS:=+turris-rainbow
 endef
 
 define Package/start-indicator/install
