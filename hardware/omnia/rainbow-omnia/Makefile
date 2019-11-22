@@ -25,7 +25,8 @@ include $(INCLUDE_DIR)/package.mk
 define Package/rainbow-omnia
   TITLE:=rainbow-omnia
   URL:=https://gitlab.labs.nic.cz/turris/rainbow_omnia
-  DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
+  PROVIDES:=turris-rainbow
+  DEPENDS+=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
 endef
 
 define Package/rainbow-omnia/conffiles
