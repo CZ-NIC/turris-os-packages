@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rescue-image
 PKG_VERSION:=3.0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 BB_VERSION:=1.30.1
 PKG_SOURCE:=busybox-$(BB_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://www.busybox.net/downloads \
@@ -17,7 +17,7 @@ PKG_SOURCE_URL:=https://www.busybox.net/downloads \
 PKG_HASH:=0a367e19cdfd157e8258d87f893ee516
 PKG_MAINTAINER:=Michal Hrusecky <michal.hrusecky@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-ROOTFS_INSTALL:=+libgcc +libc +libubox +mtd +libpthread +librt +libattr +libuuid +zlib +libblkid +liblzo +btrfs-progs +schnapps +dropbear +uboot-envtools +usign +cznic-repo-keys +libopenssl +libpcre +wget
+ROOTFS_INSTALL:=+libgcc +libc +libubox +mtd +libpthread +librt +libattr +libuuid +zlib +libblkid +liblzo +btrfs-progs +schnapps +dropbear +uboot-envtools +usign +cznic-repo-keys +libopenssl +libpcre +gnu-wget
 PKG_BUILD_DEPENDS:=opkg/host mtd btrfs-progs schnapps wget cznic-repo-keys usign uboot-envtools dropbear
 
 KERNEL_BUILD_DIR:=$(PKG_BUILD_DIR)/kernel
