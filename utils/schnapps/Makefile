@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=schnapps
-PKG_VERSION:=2.0
+PKG_VERSION:=2.1
 PKG_RELEASE:=0
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/schnapps.git
