@@ -1,0 +1,41 @@
+From c8eb1a8326954c437ce32aa918d8d21662ff2344 Mon Sep 17 00:00:00 2001
+From: Josef Schlehofer <pepe.schlehofer@gmail.com>
+Date: Mon, 25 Nov 2019 23:55:25 +0100
+Subject: [PATCH] Fix compilation for OpenWrt
+
+Fixes
+In file included from src/tvheadend.h:31:0,
+                  from src/intlconv.c:2:
+/build/staging_dir/toolchain-arm_cortex-a9+vfpv3_gcc-7.3.0_musl_eabi/include/fortify/string.h: In function 'mempcpy':
+/build/staging_dir/toolchain-arm_cortex-a9+vfpv3_gcc-7.3.0_musl_eabi/include/fortify/string.h:149:9: error: called object '__orig_mempcpy' is not a function or function pointer
+return __orig_mempcpy(__d, __s, __n);
+---
+ src/tvheadend.h | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/src/tvheadend.h b/src/tvheadend.h
+index e9ec6bbe3..0c112b13a 100644
+--- a/src/tvheadend.h
++++ b/src/tvheadend.h
+@@ -20,8 +20,6 @@
+ 
+ #include "build.h"
+ 
+-#define _GNU_SOURCE
+-#include <pthread.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <errno.h>
+@@ -32,9 +30,6 @@
+ #include <assert.h>
+ #include <unistd.h>
+ #include <limits.h>
+-#if ENABLE_LOCKOWNER || ENABLE_ANDROID
+-#include <sys/syscall.h>
+-#endif
+ #include "queue.h"
+ #include "tvh_string.h"
+ #include "hts_strtab.h"
+-- 
+2.24.0
+
