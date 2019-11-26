@@ -1,7 +1,7 @@
 #
-# Copyright (C) 2018-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+## Copyright (C) 2018-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
-# This is free software, licensed under the GNU General Public License v3.
+## This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
 #
 
@@ -23,17 +23,17 @@ PKG_LICENSE_FILES:=LICENSE.md
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
-define Package/$(PKG_NAME)
+define Package/sentinel-certgen
   TITLE:=sentinel-certgen
   URL:=https://gitlab.labs.nic.cz/turris/sentinel/certgen
   DEPENDS:=+python3-light +python3-six +python3-requests +python3-cryptography +crypto-wrapper
   VARIANT:=python3
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/sentinel-certgen/description
   Client application for automated passwords and certificates retrieval.
 endef
 
-$(eval $(call Py3Package,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)-src))
+$(eval $(call Py3Package,sentinel-certgen))
+$(eval $(call BuildPackage,sentinel-certgen))
+$(eval $(call BuildPackage,sentinel-certgen-src))
