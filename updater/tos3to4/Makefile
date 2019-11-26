@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tos3to4
-PKG_VERSION:=2.0.11
+PKG_VERSION:=2.0.12
 PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -36,6 +36,7 @@ endef
 define Package/tos3to4-early/install
 	$(INSTALL_DIR) $(1)/usr/lib/tos3to4
 	$(INSTALL_BIN) ./files/configure_updater $(1)/usr/lib/tos3to4/configure_updater
+	$(INSTALL_BIN) ./files/localrepo $(1)/usr/lib/tos3to4/localrepo
 endef
 
 define Package/tos3to4/postinst
@@ -49,7 +50,12 @@ define Package/tos3to4/postinst
 endef
 
 define Package/tos3to4-early/postinst
-[ -n "$$IPKG_INSTROOT" ] || /usr/lib/tos3to4/configure_updater
+[ -n "$$IPKG_INSTROOT" ] || {
+	ec=0
+	/usr/lib/tos3to4/configure_updater || ec=$$?
+	/usr/lib/tos3to4/localrepo || ec=$$?
+	exit $$ec
+}
 endef
 
 Build/Compile:=
