@@ -1,0 +1,4 @@
+
+config cronie 'cronie'
+	# In default cronie logs to syslog. To send mails set this to 1
+	option sendmail '0'

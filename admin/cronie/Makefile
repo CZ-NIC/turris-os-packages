@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cronie
 PKG_VERSION:=1.5.5
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/cronie-crond/cronie/archive
@@ -58,6 +58,8 @@ define Package/cronie/install
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/crond $(1)/usr/sbin/crond
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/cron.init $(1)/etc/init.d/cron
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_BIN) ./files/cronie.uci $(1)/etc/config/cronie
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	touch $(1)/etc/cron.d/.keep
