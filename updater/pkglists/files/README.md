@@ -15,9 +15,6 @@ and for that there should be following fields:
 All fields have to be defined as appropriate values of specified type unless stated
 otherwise.
 
-There is also an obsolete field __visible__ that should be now considered as
-always `true`.
-
 Name of package list has to be string with only word characters used
 (`[a-zA-Z0-9_]`).
 
