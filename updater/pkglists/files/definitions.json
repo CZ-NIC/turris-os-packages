@@ -65,6 +65,10 @@
 				"title": "UPnP",
 				"description": "Universal Plug and Play service."
 			},
+			"printserver": {
+				"title": "Print server (p910nd)",
+				"description": "Services allowing to connect a printer to the router and use it for remote printing."
+			},
 			"statistics": {
 				"title": "Statistics",
 				"description": "Gather and render diagrams for system statistics."
@@ -134,11 +138,6 @@
 		"description": "An easy setup of OpenVPN server from Foris.",
 		"url": "https://docs.turris.cz/basics/apps/openvpn/openvpn",
 		"official": true
-	},
-	"printserver": {
-		"title": "Print server",
-		"description": "Services allowing to connect a printer to the router and use it for remote printing.",
-		"url": "https://doc.turris.cz/doc/en/howto/printer_sharing"
 	},
 	"tor": {
 		"title": "Tor",
