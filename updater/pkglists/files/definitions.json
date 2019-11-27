@@ -7,7 +7,7 @@
 	"datacollect": {
 		"title": "Data Collection",
 		"description": "Software for participation in data collection and distributed adaptive firewall.",
-		"url": "https://doc.turris.cz/doc/en/howto/collect",
+		"url": "https://docs.turris.cz/basics/collect",
 		"official": true,
 		"options": {
 			"survey": {
