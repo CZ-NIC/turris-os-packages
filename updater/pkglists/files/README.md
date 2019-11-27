@@ -7,7 +7,8 @@ and for that there should be following fields:
   string__.
 * __description__: This is long text describing content of given package list.
   __Type is string__.
-* __url__:  This is URL to documentation. It is not required. __Type is string__.
+* __url__:  This is URL to documentation. __Type is string__.  __This field is
+  option__.
 * __official__: This differentiates between officially supported and community
   supported lists. If not specified then `false` is used. __Type is boolean__.
 * __options__: Additional options for pkglist. __This has to be a dictionary__.
