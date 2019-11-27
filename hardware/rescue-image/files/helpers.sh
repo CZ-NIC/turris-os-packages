@@ -2,11 +2,15 @@
 
 # Generic helper functions
 reset_uenv() {
+    local bootcmd="env default -f -a;"
     if [ -n "$(fw_printenv root_uuid 2> /dev/null)" ]; then
-        fw_setenv bootcmd "env default -f -a; setenv root_uuid $(blkid "$NEW_TARGET_PART" | sed 's|.*UUID="\([^"]*\)".*|\1|'); saveenv; reset"
-    else
-        fw_setenv bootcmd 'env default -f -a; saveenv; reset'
+        bootcmd="$bootcmd setenv root_uuid $(blkid "$NEW_TARGET_PART" | sed 's|.*UUID="\([^"]*\)".*|\1|');"
     fi
+    local contract="$(fw_printenv contract 2> /dev/null)"
+    if [ -n "$contract" ]; then
+        bootcmd="$bootcmd setenv contract=$contract;"
+    fi
+    fw_setenv bootcmd "$bootcmd saveenv; reset"
 }
 
 enable_btrfs() {
