@@ -25,7 +25,18 @@ pkglist_handle() {
 			set_option datacollect haas
 			;;
 		luci-controls)
-			set_list luci_controls
+			# These were removed from package list
+			{
+				echo 'Install("luci-app-mjpg-streamer")'
+				echo 'Install("luci-proto-openconnect")'
+				echo 'Install("luci-proto-vpnc")'
+			} >> /etc/updater/conf.d/opkg-auto.lua
+			# Enable all original features
+			set_option luci_controls adblock
+			set_option luci_controls sqm
+			set_option luci_controls tinyproxy
+			set_option luci_controls upnp
+			set_option luci_controls statistics
 			;;
 		nas)
 			# Enable all original features
@@ -40,6 +51,9 @@ pkglist_handle() {
 			;;
 		pakon)
 			set_option net_monitoring pakon
+			;;
+		printserver)
+			set_option luci_controls printserver
 			;;
 		*)
 			add_list "$lst"
