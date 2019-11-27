@@ -40,7 +40,6 @@ $$(eval $$(call BuildPackage,fix-$(1)))
 
 endef
 
-
 define Package/fix-pkglists-options/description
   Migrate pkglists from /etc/config/updater to separate pkglists configuration
   file and set all appropriate options for pkglists.
