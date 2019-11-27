@@ -132,7 +132,7 @@
 	"openvpn": {
 		"title": "OpenVPN",
 		"description": "An easy setup of OpenVPN server from Foris.",
-		"url": "https://doc.turris.cz/doc/en/howto/openvpn_plugin",
+		"url": "https://docs.turris.cz/basics/apps/openvpn/openvpn",
 		"official": true
 	},
 	"printserver": {
