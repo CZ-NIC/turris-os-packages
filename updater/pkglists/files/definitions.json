@@ -107,7 +107,7 @@
 	"net_monitoring": {
 		"title": "Network monitoring and parental control",
 		"description": "Tools to monitor local network and users on it.",
-		"url": "https://doc.turris.cz/doc/en/howto/pakon",
+		"url": "https://docs.turris.cz/basics/apps/pakon/",
 		"official": true,
 		"options": {
 			"netmetr": {
