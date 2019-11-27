@@ -74,7 +74,7 @@
 	"lxc": {
 		"title": "LXC utilities",
 		"description": "Set of utilities to manage Linux Containers (lightweight virtualization technology).",
-		"url": "https://doc.turris.cz/doc/en/howto/lxc",
+		"url": "https://docs.turris.cz/geek/lxc/lxc",
 		"official": true
 	},
 	"nas": {
