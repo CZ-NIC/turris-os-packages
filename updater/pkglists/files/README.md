@@ -3,14 +3,16 @@ Package lists definitions
 Definitions are in JSON file format. It's expected to contain name of package list
 and for that there should be following fields:
 
-* __title__: This is supposed to be a title for given package list. Type is string.
+* __title__: This is supposed to be a title for given package list. __Type is
+  string__.
 * __description__: This is long text describing content of given package list.
-  Type is string.
-* __url__:  This is URL to documentation. It is not required. Type is string.
+  __Type is string__.
+* __url__:  This is URL to documentation. It is not required. __Type is string__.
 * __official__: This differentiates between officially supported and community
-  supported lists. If not specified then `false` is used. Type is boolean.
-* __options__: Additional options for pkglist. This has to be a dictionary. For
-  content of this dictionary see next section about that. This field is optional.
+  supported lists. If not specified then `false` is used. __Type is boolean__.
+* __options__: Additional options for pkglist. __This has to be a dictionary__.
+  For content of this dictionary see next section about that. __This field is
+  optional__.
 
 All fields have to be defined as appropriate values of specified type unless stated
 otherwise.
