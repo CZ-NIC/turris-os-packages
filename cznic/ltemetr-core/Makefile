@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ltemetr-core
-PKG_VERSION:=0.3
+PKG_VERSION:=0.3.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=core-v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/ltemetr/core/-/archive/v$(PKG_VERSION)/
-PKG_HASH:=0cf4207a77c2ec9a7ccfbfb176756a6d93e8720dde8b4a6471809ac255cf764c
+PKG_HASH:=f798d4128b79c362ca9a4f4806981f1a72ab3843d282b04dfa42060f4efd204f
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-2.0-or-later
