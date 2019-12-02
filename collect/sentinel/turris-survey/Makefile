@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-survey
 PKG_VERSION:=0.1.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/turris-survey.git
@@ -29,7 +29,7 @@ define Package/turris-survey
   SUBMENU:=Sentinel
   TITLE:=Turris Survey
   URL:=https://gitlab.labs.nic.cz/turris/sentinel/certgen
-  DEPENDS:=+python3-light +python3-msgpack +python3-zmq +sentinel-proxy +updater-supervisor +vixie-cron
+  DEPENDS:=+python3-light +python3-msgpack +python3-zmq +sentinel-proxy +updater-supervisor +cronie
   VARIANT:=python3
 endef
 
