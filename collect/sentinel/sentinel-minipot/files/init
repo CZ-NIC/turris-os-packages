@@ -9,7 +9,7 @@ DEFAULT_TELNET_PORT=2333
 start_service() {
 	config_load sentinel
 	local telnet_port
-	config_get telent_port sentinel miniport telnet_port "$DEFAULT_TELNET_PORT"
+	config_get telnet_port minipot telnet_port "$DEFAULT_TELNET_PORT"
 
 	procd_open_instance
 	procd_set_param command /usr/bin/sentinel-minipot
