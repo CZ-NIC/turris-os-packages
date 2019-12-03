@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-proxy
 PKG_VERSION:=1.9
-PKG_RELEASE:=10
+PKG_RELEASE:=11
 
 PKG_SOURCE_VERSION:=bbf8629d1d64840407eefc23d2b6c8835365347b
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/haas/proxy/raw/$(PKG_SOURCE_VERSION)/release/
@@ -27,7 +27,7 @@ define Package/haas-proxy
   CATEGORY:=Network
   TITLE:=Honeypot as a Service proxy
   URL:=https://haas.nic.cz
-  DEPENDS:=+python3-light +python3-cachetools +python3-requests +python3-twisted +python3-crypto +python3-service-identity +sshpass +@KERNEL_CFS_BANDWIDTH
+  DEPENDS:=+python3-light +python3-cachetools +python3-bcrypt +python3-requests +python3-twisted +python3-crypto +python3-service-identity +sshpass +@KERNEL_CFS_BANDWIDTH
   CONFLICTS:=mitmproxy
   VARIANT:=python3
 endef
