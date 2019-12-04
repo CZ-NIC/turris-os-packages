@@ -108,7 +108,8 @@ to *develop* branch.
 *refactor/*:: This has same flow as feature but does not change packages
 versions or affects anything that requires package version change.
 
-*hack/*:: This is feature that is to be reverted in future.
+*hack/*:: This is feature that is to be reverted in future. This should never be
+merged as fast-forward to ease future revert.
 
 After this prefix you should add short name for what you are about to do.
 Acceptable is for example name of package or feature you are about to implement.
@@ -170,16 +171,17 @@ Hotfixes should always be merged to both *stable* and *develop* branch.
 [,sh]
 ----------------------------------------------------------------------------------
 git checkout stable
-git merge --strategy=octopus --no-ff --gpg-sign hotfix/foo
+git merge --ff-only --gpg-sign hotfix/foo
 git checkout develop
 git merge --no-ff --gpg-sign hotfix/foo
 git push origin stable develop :hotfix/foo
 ----------------------------------------------------------------------------------
 
 Hotfix merge to *stable* should always be clean. That means that there should be
-no merge conflicts (ensured by `octopus` strategy). This is to ensure that stable
-won't be broken by merge. When that can't be done rebase to latest changes has to
-be performed. The maintainer can either ask author or do it by himself. 
+no merge conflicts (ensured by requiring fast forward only). This is to ensure
+that stable won't be broken by merge. When that can't be done rebase to latest
+changes has to be performed. The maintainer can either ask author or do it by
+himself. 
 
 There is possibility that hotfix is not required in *develop* branch because it
 can be fixed by some other means or was already fixed by some previous feature. In
@@ -191,19 +193,46 @@ strategy `ours`.
 git checkout develop
 git merge --strategy=ours --gpg-sign hotfix/foo
 ----------------------------------------------------------------------------------
+Or you can revert some changes and merge rest.
+[,sh]
+----------------------------------------------------------------------------------
+git revert HEAD^
+git checkout develop
+git merge --no-ff --gpg-sign hotfix/foo
+----------------------------------------------------------------------------------
 
 === Merging new feature, bugfix and others
 
 Branches with new features, bugfixes, refactoring or hacks are merged to *develop*
-branch. This merge should be without conflict but `octopus` strategy is not
-enforced which allows automatic file merging. On merge conflict it should be
-evaluated, rebased on latest commit in *develop* (to resolve conflict) and test
-again before merge.
+branch. This merge should be without conflict as well to prevent bugs created by
+merge skipping testing. On merge conflict it should be evaluated, rebased on
+latest commit in *develop* (to resolve conflict) and test again before merge.
 [,sh]
 ----------------------------------------------------------------------------------
 git checkout develop
-git merge --no-ff --gpg-sign feature/foo
+git merge --ff-only --gpg-sign feature/foo
 git push origin develop :feature/foo
+----------------------------------------------------------------------------------
+
+=== Merging and reverting hack
+
+Hacks are intended to be present only temporally and so it is expected that in
+future we want them reverted and that way removed. This means that hacks are
+merged as an exception with merge commit instead of doing fast-forward merge.
+[,sh]
+----------------------------------------------------------------------------------
+git checkout develop
+git merge --ff-only --gpg-sign feature/foo
+git push origin develop :feature/foo
+----------------------------------------------------------------------------------
+
+Later hack, thanks to merge commit, can be just reverted by locating appropriate
+merge commit hash and reverting it. Note that this is considered as refactor and
+new appropriate merge request should be created and review should be performed.
+[,sh]
+----------------------------------------------------------------------------------
+git checkout -b refactor/FOO origin/develop
+git revert -m 1 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ----------------------------------------------------------------------------------
 
 === Tagging version of released Turris OS
@@ -242,17 +271,6 @@ Tips for developers and maintainers
 
 This is collection of various tips and primarily configuration options you can use
 to simplify commands described in this flow.
-
-Always create merge commit without needing to use `--no-ff`::
-This workflow is build on merge commits and identifiable merged branches. This
-requires that there are no fast-forward merges to *develop* and *stable*. To
-automatically ensure that without needing to remember to add `--no-ff` option to
-`git-merge` you can configure `branch.<name>.mergeOptions`.
-[,sh]
-----------------------------------------------------------------------------------
-git config --local branch.stable.mergeOptions "--no-ff"
-git config --local branch.develop.mergeOptions "--no-ff"
-----------------------------------------------------------------------------------
 
 Sign commits and tags with GPG without using `--gpg-sign` and `-s`::
 You can configure global or local git option `commit.gpgSign` and `tag.gpgSign`.
