@@ -12,7 +12,7 @@ Primary (protected) branches of this repository
 
 There are two primary branches in this repository
 
-*stable*:: is default branch and contains latest stable version with possible few
+*master*:: is default branch and contains latest stable version with possible few
 fixes on top of it. This branch is used in *hbk* branch in turris-build
 repository.
 
@@ -23,10 +23,10 @@ repository. It is used in *hbl* and *hbd* branches in turris-build repository.
 Overview of flow in this repository
 -----------------------------------
 
-Branch *stable* is parent branch for all work in this repository. Branch
+Branch *master* is parent branch for all work in this repository. Branch
 *develop* is forked off of it initially.
 ..................................................................................
-           develop            stable
+           develop            master
               _________________/|
               |                 |<- v5.1.0
               |                 |
@@ -60,15 +60,15 @@ That is later merged to *develop* the same way as original feature.
              \|                 |
               |                 |
 ..................................................................................
-When problem is discovered in current stable version then branch to fix it is
-forked off *stable* branch.
+When problem is discovered in current master version then branch to fix it is
+forked off *master* branch.
 ..................................................................................
               |   hotfix/foo    |
               |        ________/|
               |        |        |
               |        |        |
 ..................................................................................
-And later merged back to both *stable* and *develop* branch when finished and
+And later merged back to both *master* and *develop* branch when finished and
 tested.
 ..................................................................................
               |        |        |
@@ -77,7 +77,7 @@ tested.
               |                 |
 ..................................................................................
 To make new major or minor release (that is release containing latest Turris
-changes and improvements) we merge *develop* to *stable* branch.
+changes and improvements) we merge *develop* to *master* branch.
 ..................................................................................
               |                |
               |_______________ |
@@ -95,10 +95,10 @@ For quick orientation of maintainers in repository stable naming convention is
 required. Depending on what you are planning to do you can create new branch with
 name prefixed with one of following:
 
-*hotfix/*:: This is fix for problem discovered in *stable*. It has to be based on
-*stable* branch and merged to both *develop* and *stable* branch.
+*hotfix/*:: This is fix for problem discovered in *master*. It has to be based on
+*master* branch and merged to both *develop* and *master* branch.
 
-*bugfix/*:: This is fix for problem not affecting *stable*. It has to be
+*bugfix/*:: This is fix for problem not affecting *master*. It has to be
 based on *develop* branch and merged only to *develop* only.
 
 *feature/*:: New feature based on *develop* branch. This can be new package
@@ -121,26 +121,26 @@ Operations performed by developers
 ----------------------------------
 
 Developer is anyone who wants to contribute to this repository. Developers are not
-allowed to merge to primary branches (*stable* and *develop*) and have to ask
+allowed to merge to primary branches (*master* and *develop*) and have to ask
 maintainers to do so (submit pull or merge request).
 
-=== Implementing fix for problem in *stable* (hotfix)
-You have to base your work on latest commit in *stable*. For example:
+=== Implementing fix for problem in *master* (hotfix)
+You have to base your work on latest commit in *master*. For example:
 [,sh]
 ----------------------------------------------------------------------------------
 git fetch
-git checkout -b hotfix/FOO origin/stable
+git checkout -b hotfix/FOO origin/master
 ----------------------------------------------------------------------------------
 
 Also not that you might and will be asked by maintainer to possibly rebase your
-changes on latest *stable* commit.
+changes on latest *master* commit.
 [,sh]
 ----------------------------------------------------------------------------------
 git fetch
-git rebase origin/stable
+git rebase origin/master
 ----------------------------------------------------------------------------------
 
-=== Implementing new feature or fixing something not affecting *stable* (bugfix/feature/refactor/hack)
+=== Implementing new feature or fixing something not affecting *master* (bugfix/feature/refactor/hack)
 You have to base you work on latest commit in *develop* branch. For example:
 [,sh]
 ----------------------------------------------------------------------------------
@@ -161,32 +161,32 @@ Operations performed by maintainers
 -----------------------------------
 
 There are few well informed maintainers who are well educated with git-craft and
-with flow of this repository that they are allowed to manage *stable* and
+with flow of this repository that they are allowed to manage *master* and
 *develop* branch. For those not so lucky and new in this craft there is following
 list of operations commonly performed by maintainer.
 
 === Merging hotfix
 
-Hotfixes should always be merged to both *stable* and *develop* branch.
+Hotfixes should always be merged to both *master* and *develop* branch.
 [,sh]
 ----------------------------------------------------------------------------------
-git checkout stable
+git checkout master
 git merge --ff-only --gpg-sign hotfix/foo
 git checkout develop
 git merge --no-ff --gpg-sign hotfix/foo
-git push origin stable develop :hotfix/foo
+git push origin master develop :hotfix/foo
 ----------------------------------------------------------------------------------
 
-Hotfix merge to *stable* should always be clean. That means that there should be
+Hotfix merge to *master* should always be clean. That means that there should be
 no merge conflicts (ensured by requiring fast forward only). This is to ensure
-that stable won't be broken by merge. When that can't be done rebase to latest
-changes has to be performed. The maintainer can either ask author or do it by
-himself. 
+that stable release won't be broken by merge. When that can't be done rebase to
+latest changes has to be performed. The maintainer can either ask author or do it
+by himself. 
 
 There is possibility that hotfix is not required in *develop* branch because it
 can be fixed by some other means or was already fixed by some previous feature. In
 such case it should be merged nonetheless to ease future merge of *develop* back
-to *stable*. For doing merge without merging changes you can use git merge
+to *master*. For doing merge without merging changes you can use git merge
 strategy `ours`.
 [,sh]
 ----------------------------------------------------------------------------------
@@ -253,17 +253,17 @@ git push --tags origin vX.X.X
 === Preparing next minor or major version of Turris OS
 
 On new major or minor release of Turris OS we have to move all development changes
-to stable. This is done by merging *develop* to *stable* in appropriate moment
-against turris-build repository. This operation is required to be done anytime
-merge of *hbl* is performed to *hbk*.
+to stable release. This is done by merging *develop* to *master* in appropriate
+moment against turris-build repository. This operation is required to be done
+anytime merge of *hbl* is performed to *hbk*.
 
 If all previous operations were performed correctly then we can now do clean
 recursive merge (without merge conflicts).
 [,sh]
 ----------------------------------------------------------------------------------
-git checkout stable
+git checkout master
 git merge --no-ff --gpg-sign develop
-git push origin stable
+git push origin master
 ----------------------------------------------------------------------------------
 
 Tips for developers and maintainers
