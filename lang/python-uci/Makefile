@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-uci
-PKG_VERSION:=0.6.1
+PKG_VERSION:=0.7
 PKG_RELEASE:=1
 PKG_LICENSE:=GPLv3
 
