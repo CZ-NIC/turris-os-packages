@@ -12,7 +12,7 @@ start_service() {
 		echo "Can't download server certificate" >&2
 		exit 1
 	}
-	ipset create "turris-sn-wan-input-block" hash:ip -exist
+	ipset create "turris-sn-dynfw-block" hash:ip -exist
 
 	procd_open_instance
 	procd_set_param command sentinel-dynfw-client
