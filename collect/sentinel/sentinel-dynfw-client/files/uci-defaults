@@ -1,12 +1,30 @@
 #!/bin/sh
-uci -q batch <<EOT
-	delete firewall.sentinel_dynfw_client
-	set firewall.sentinel_dynfw_client=rule
-	set firewall.sentinel_dynfw_client.name=Sentinel dynamic firewall blocking rule
-	set firewall.sentinel_dynfw_client.src=wan
-	set firewall.sentinel_dynfw_client.ipset=turris-sn-dynfw-block
-	set firewall.sentinel_dynfw_client.mark=0x10/0x10
-	set firewall.sentinel_dynfw_client.extra=-m state --state NEW
-	set firewall.sentinel_dynfw_client.target=DROP
-	commit firewall
+
+if [ "$(uci -q get firewall.sentinel_dynfw_client)" != "rule" ]; then
+	uci -q batch <<EOT
+		delete firewall.sentinel_dynfw_client
+		set firewall.sentinel_dynfw_client='rule'
+		set firewall.sentinel_dynfw_client.name='Sentinel dynamic firewall blocking rule'
+		set firewall.sentinel_dynfw_client.src='wan'
+		set firewall.sentinel_dynfw_client.ipset='turris-sn-dynfw-block'
+		set firewall.sentinel_dynfw_client.mark='!0x10/0x10'
+		set firewall.sentinel_dynfw_client.extra='-m state --state NEW'
+		set firewall.sentinel_dynfw_client.proto='all'
+		set firewall.sentinel_dynfw_client.target='DROP'
+		reorder firewall.sentinel_dynfw_client='0'
+		commit firewall.sentinel_dynfw_client
 EOT
+# Note: we reorder this rule to index 0 to ensure that it is first rule in order
+# TODO possibly move to index of first rule instead of 0
+fi
+
+if [ "$(uci -q get firewall.sentinel_dynfw_client_ipset)" != "ipset" ]; then
+	uci -q batch <<EOT
+		delete firewall.sentinel_dynfw_client_ipset
+		set firewall.sentinel_dynfw_client_ipset='ipset'
+		set firewall.sentinel_dynfw_client_ipset.external='turris-sn-dynfw-block'
+		set firewall.sentinel_dynfw_client_ipset.match='src_ip'
+		set firewall.sentinel_dynfw_client_ipset.storage='hash'
+		commit firewall.sentinel_dynfw_client_ipset
+EOT
+fi
