@@ -1,0 +1,11 @@
+#!/bin/sh
+
+uci -q batch <<EOT
+	delete firewall.sentinel_dynfw_client
+	delete firewall.sentinel_dynfw_client_ipset
+	delete firewall.sentinel_minipot_telnet_mark
+	delete firewall.sentinel_minipot_telnet
+	delete firewall.haas_proxy_mark
+	delete firewall.haas_proxy
+	commit firewall
+EOT
