@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cython
-PKG_VERSION:=0.29.11
+PKG_VERSION:=0.29.14
 PKG_RELEASE:=1
 
 PKG_SOURCE:=Cython-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/C/Cython/
-PKG_HASH:=763a522cc5d1673ba7a4092c0914790f11704b1d4c41e2671e50d0f702a8c6a0
+PKG_HASH:=e4d6bb8703d0319eb04b7319b12ea41580df44fd84d83ccda13ea463c6801414
 PKG_BUILD_DIR:=$(BUILD_DIR)/Cython-$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
