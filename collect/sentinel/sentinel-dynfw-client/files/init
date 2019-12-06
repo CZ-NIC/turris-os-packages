@@ -5,7 +5,7 @@ START=90
 STOP=10
 EXTRA_COMMANDS="getcert"
 
-CERT_KEY="/tmp/run/sentinel_server.key"
+CERT_KEY="/tmp/sentinel_server.key"
 
 start_service() {
 	getcert || {
