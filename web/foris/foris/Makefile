@@ -1,7 +1,7 @@
 #
 # Copyright (C) 2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
-# This is free software, licensed under the GNU General Public License v2.
+# This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
 #
 
@@ -9,13 +9,17 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
 PKG_VERSION:=100.6
-PKG_RELEASE:=1
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
+PKG_RELEASE:=2
+
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris/foris.git
 PKG_SOURCE_VERSION:=package-v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-$(PKG_NAME)-$(PKG_VERSION)
+
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=LICENSE
+PKG_LICENSE_FILES:=GPL-3.0-or-later
 
 HOST_PYTHON3_PACKAGE_BUILD_DEPENDS:= \
 	pytz==2018.9 \
@@ -31,22 +35,19 @@ include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 include ./files/foris-translations.mk
 
-PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
-
 define Package/foris
-	TITLE:=foris
-	DEPENDS:=\
-		+python3-light +python3-bottle +python3-bottle-i18n +python3-setuptools \
-		+python3-flup +python3-ubus +python3-jinja2 +lighttpd +lighttpd-mod-fastcgi \
-		+lighttpd-mod-redirect +lighttpd-mod-setenv +lighttpd-mod-alias +foris-ws \
-		+foris-client +luci +fosquitto +python3-paho-mqtt \
-		+crypto-wrapper
-	MAINTAINER:=CZ.NIC <packaging@turris.cz>
-	VARIANT:=python3
+  TITLE:=Foris
+  DEPENDS:= \
+    +python3-light +python3-bottle +python3-bottle-i18n +python3-setuptools \
+    +python3-flup +python3-ubus +python3-jinja2 +lighttpd +lighttpd-mod-fastcgi \
+    +lighttpd-mod-redirect +lighttpd-mod-setenv +lighttpd-mod-alias +foris-ws \
+    +foris-client +luci +fosquitto +python3-paho-mqtt \
+    +crypto-wrapper
+  VARIANT:=python3
 endef
 
 define Package/foris/description
- Web administration interface using nuci for communication.
+  Turris Web administration interface.
 endef
 
 define run_foris_makefile

@@ -1,7 +1,7 @@
 #
 ## Copyright (C) 2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
-## This is free software, licensed under the GNU General Public License v2.
+## This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
 # #
 #
@@ -9,28 +9,28 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fosquitto
 PKG_VERSION:=20
-PKG_RELEASE:=2
+PKG_RELEASE:=3
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-  TITLE:=$(PKG_NAME)
+define Package/fosquitto
+  TITLE:=fosquitto
   DEPENDS:=+mosquitto-ssl +mosquitto-client-ssl
 endef
 
 define Package/$(PKG_NAME)/description
-  Instance of mosquitto server used as foris message bus
+  Instance of mosquitto server used as foris message bus.
 endef
 
 Build/Compile:=:
 
-define Package/$(PKG_NAME)/conffiles
+define Package/fosquitto/conffiles
 /etc/config/fosquitto
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/fosquitto/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/fosquitto.init $(1)/etc/init.d/fosquitto
 
@@ -38,7 +38,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_CONF) ./files/fosquitto.uci $(1)/etc/config/fosquitto
 endef
 
-define Package/$(PKG_NAME)/postinst
+define Package/fosquitto/postinst
 #!/bin/sh
 [ -n "$${IPKG_INSTROOT}" ] || {
 	# run scripts to update files
@@ -47,19 +47,19 @@ define Package/$(PKG_NAME)/postinst
 }
 endef
 
-define Package/$(PKG_NAME)-monitor
-  TITLE:=$(PKG_NAME)-monitor
-  DEPENDS:=+$(PKG_NAME)
+define Package/fosquitto-monitor
+  TITLE:=fosquitto-monitor
+  DEPENDS:=+fosquitto
 endef
 
-define Package/$(PKG_NAME)-monitor/description
-  Script to monitor fosquitto messages
+define Package/fosquitto-monitor/description
+  Script to monitor fosquitto messages.
 endef
 
-define Package/$(PKG_NAME)-monitor/install
+define Package/fosquitto-monitor/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/fosquitto-monitor.py $(1)/usr/bin/fosquitto-monitor
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)-monitor))
+$(eval $(call BuildPackage,fosquitto))
+$(eval $(call BuildPackage,fosquitto-monitor))

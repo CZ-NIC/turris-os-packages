@@ -34,11 +34,11 @@ endef
 
 Build/Compile:=:
 
-define Package/$(PKG_NAME)/conffiles
+define Package/follectd/conffiles
 /etc/follectd.conf
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/follectd/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/follectd.init $(1)/etc/init.d/follectd
 
@@ -49,7 +49,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_CONF) ./files/follectd.conf $(1)/etc/follectd.conf
 endef
 
-define Package/$(PKG_NAME)/postinst
+define Package/follectd/postinst
 #!/bin/sh
 [ -n "$${IPKG_INSTROOT}" ] || {
 	# run scripts to update files
