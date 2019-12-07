@@ -1,16 +1,15 @@
-LAN_BRIDGE_IF="br-lan"
-LXC_IF_PREFIX="veth"
-
 reattach_lxc_interfaces() {
-    for inf in /sys/class/net/*
+    running=$(lxc-ls --running)
+    for container in $running;
     do
-        ifname=$(basename "$inf")
-        if [ "$ifname" != "${ifname#$LXC_IF_PREFIX}" ]; then
-            brctl addif $LAN_BRIDGE_IF "$ifname"
-        fi
+        veth=$(lxc-info "$container" | grep Link | awk '{print $2}')
+        bridge=$(grep link /srv/lxc/"$container"/config | awk '{print $3}')
+
+        brctl addif "$bridge" "$veth"
     done
 }
 
-if [ "$ACTION" = ifup ] && [ "$DEVICE" = "$LAN_BRIDGE_IF" ]; then
+# what interface/action should trigger this?
+if [ "$ACTION" = ifup ] && [ "$DEVICE" = br-lan ]; then
     reattach_lxc_interfaces
 fi
