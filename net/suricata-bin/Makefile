@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata-bin
 PKG_VERSION:=4.0.7
-PKG_RELEASE=1
+PKG_RELEASE=2
 
 PKG_SOURCE:=suricata-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.openinfosecfoundation.org/download/
@@ -49,7 +49,7 @@ define Package/suricata-bin
   CATEGORY:=Network
   TITLE:=Network IDS, IPS and NSM engine
   URL:=https://suricata-ids.org/
-  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +librt +libpcap $(LUAJIT_DEP) +libnetfilter-queue +iptables-mod-nfqueue +libnetfilter-log +libnfnetlink +iptables-mod-conntrack-extra +libhtp +libnet-1.2.x
+  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +librt +libpcap $(LUAJIT_DEP) +libnetfilter-queue +iptables-mod-nfqueue +libnetfilter-log +libnfnetlink +iptables-mod-conntrack-extra +libhtp +libnet-1.2.x +nspr +libnss
 endef
 
 define Package/suricata-bin/install
