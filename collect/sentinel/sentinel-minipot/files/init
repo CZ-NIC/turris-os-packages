@@ -8,6 +8,11 @@ DEFAULT_TELNET_PORT=2333
 
 start_service() {
 	config_load sentinel
+
+	local enabled
+	config_get_bool enabled minipot enabled "0"
+	[ "$enabled" = "1" ] || return 0
+
 	local telnet_port
 	config_get telnet_port minipot telnet_port "$DEFAULT_TELNET_PORT"
 
