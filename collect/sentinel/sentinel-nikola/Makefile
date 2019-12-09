@@ -1,15 +1,15 @@
 #
-## Copyright (C) 2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2018-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
-## This is free software, licensed under the GNU General Public License v2.
+## This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
-# #
 #
+
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-nikola
 PKG_VERSION:=2.0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/nikola.git
@@ -17,6 +17,8 @@ PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=GPL-3.0-or-later
+PKG_LICENSE_FILES:=LICENSE.txt
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
