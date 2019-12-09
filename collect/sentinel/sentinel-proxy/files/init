@@ -5,6 +5,12 @@ START=95
 STOP=10
 
 start_service() {
+	config_load sentinel
+
+	local agreed_eula_version
+	config_get agreed_eula_version main agreed_with_eula_version "0"
+	[ "$agreed_eula_version" = "0" ] && return 0
+
     procd_open_instance
     procd_set_param command /bin/sh -c 'sentinel-certgen certs && exec sentinel-proxy'
     procd_set_param respawn 600 5 5
