@@ -6,6 +6,7 @@ STOP=10
 EXTRA_COMMANDS="getcert"
 
 CERT_KEY="/tmp/run/sentinel_server.key"
+IPSET="turris-sn-dynfw-block"
 
 start_service() {
 	getcert || {
@@ -15,7 +16,7 @@ start_service() {
 
 	procd_open_instance
 	procd_set_param command sentinel-dynfw-client
-	procd_append_param command --ipset "turris-sn-wan-input-block"
+	procd_append_param command --ipset "$IPSET"
 	procd_append_param command --cert "$CERT_KEY"
 	procd_set_param respawn 600 5 5
 	procd_close_instance

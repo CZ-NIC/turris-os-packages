@@ -43,6 +43,7 @@ define Package/sentinel-dynfw-client/install
 	$(INSTALL_BIN) ./files/server.pub $(1)/etc/sentinel_dynfw.pub
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) files/init $(1)/etc/init.d/sentinel-dynfw-client
+	$(INSTALL_BIN) files/ipset.init $(1)/etc/init.d/sentinel-dynfw-ipset
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/99-sentinel-dynfw-client
 endef
