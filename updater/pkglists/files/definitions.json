@@ -78,6 +78,11 @@
 		"description": "Services allowing to connect a printer to the router and use it for remote printing.",
 		"url": "https://doc.turris.cz/doc/en/howto/printer_sharing"
 	},
+	"reforis": {
+		"title": "reForis (experimental)",
+		"description": "Redesigned Foris is new web interface for Turris routers.",
+		"official": true
+	},
 	"tor": {
 		"title": "Tor",
 		"description": "Service to increase anonymity on the Internet."
