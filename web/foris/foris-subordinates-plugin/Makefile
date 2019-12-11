@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-subordinates-plugin
-PKG_VERSION:=0.4
+PKG_VERSION:=0.5
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
@@ -42,7 +42,7 @@ define Package/$(PKG_NAME)/description
  Foris plugin for managing subordinates devices
 endef
 
-FORIS_TRANSLATIONS:=cs de
+FORIS_TRANSLATIONS:=cs de pl ru sk
 
 $(eval $(call ForisPlugin,$(PKG_NAME),subordinates))
 # call BuildPackage <= assures OWR build system that this is package
