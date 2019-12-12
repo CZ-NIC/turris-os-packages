@@ -87,7 +87,7 @@ include_custom_config() {
 }
 
 load_uci_config_common() {
-	local interface keyfile verbose port msg_buffer_size net_ipv4 net_ipv6 msg_cache_size do_forward ignore_root_key keep_cache_bool
+	local interface keyfile verbose port edns_buffer_size net_ipv4 net_ipv6 msg_cache_size do_forward ignore_root_key keep_cache_bool
 	local forward_dns
 	local section="common"
 
@@ -117,8 +117,8 @@ load_uci_config_common() {
 	[ "$verbose" -ge 1 ] && procd_append_param command -v
 
 	# EDNS payload
-	config_get msg_buffer_size "$section" msg_buffer_size
-	[ "$msg_buffer_size" -ge 512 ] && set_param_func "net.bufsize" "$msg_buffer_size"
+	config_get edns_buffer_size "$section" edns_buffer_size
+	[ "$edns_buffer_size" -ge 512 ] && set_param_func "net.bufsize" "$edns_buffer_size"
 
 	# ipv4
 	config_get_bool net_ipv4 "$section" net_ipv4
