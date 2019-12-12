@@ -11,10 +11,8 @@ PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.1
 PKG_RELEASE:=34
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-
 PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec@nic.cz>
-PKG_LICENSE:=GPL-3.0
+PKG_LICENSE:=GPL-3.0-or-later
 
 PKG_INSTALL:=0
 
