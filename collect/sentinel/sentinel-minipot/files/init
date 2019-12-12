@@ -13,6 +13,8 @@ start_service() {
 	config_get_bool enabled minipot enabled "0"
 	[ "$enabled" = "1" ] || return 0
 
+	ps -C sentinel-proxy >/dev/null || return 0
+
 	local telnet_port
 	config_get telnet_port minipot telnet_port "$DEFAULT_TELNET_PORT"
 
