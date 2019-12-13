@@ -33,7 +33,7 @@ define Package/$(PKG_NAME)
   TITLE:=$(PKG_NAME)
   URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-remote-access
   DEPENDS:= \
-    +reforis \
+    +reforis
   VARIANT=python3
 endef
 
