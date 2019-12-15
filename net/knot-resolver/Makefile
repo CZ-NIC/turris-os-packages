@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2015-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2015-2020 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -11,20 +11,22 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
 PKG_VERSION:=4.3.0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-resolver
 PKG_HASH:=0ca0f171ae2b2d76830967a5150eb0fa496b48b2a48f41b2be65d3743aaece25
 
 PKG_MAINTAINER:=Knot DNS <knot-dns@labs.nic.cz>
-PKG_LICENSE:=GPL-3.0-only
+PKG_LICENSE:=GPL-3.0-later
 PKG_LICENSE_FILES:=COPYING
+
+PKG_BUILD_DEPENDS:=meson/host
 
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/meson.mk
+include $(TOPDIR)/feeds/packages/devel/meson/meson.mk
 
 define Package/knot-resolver
   SECTION:=net
@@ -42,11 +44,8 @@ define Package/knot-resolver/description
   implementation, including both a resolver library and a daemon.
 endef
 
-MESON_ARGS += --prefix=/usr
-
-MAKE_FLAGS += \
-	PREFIX=/usr \
-	ETCDIR=/etc/kresd
+MESON_ARGS+= \
+  --prefix=/usr
 
 define Package/knot-resolver/install
 	$(INSTALL_DIR) $(1)/usr/bin
@@ -65,7 +64,7 @@ define Package/knot-resolver/install
 	$(INSTALL_BIN) ./files/convert_config.sh $(1)/etc/kresd/convert_config.sh
 endef
 
-define Package/$(PKG_NAME)/postinst
+define Package/knot-resolver/postinst
 #!/bin/sh
 set -x
 if [ -z "$$IPKG_INSTROOT" ]; then
@@ -90,7 +89,7 @@ fi
 fi
 endef
 
-define Package/$(PKG_NAME)/prerm
+define Package/knot-resolver/prerm
 #!/bin/sh
 set -ex
 if [ -z "$$IPKG_INSTROOT" ]; then
