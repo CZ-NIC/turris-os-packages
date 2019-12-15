@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
 PKG_VERSION:=4.3.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-resolver
@@ -21,10 +21,12 @@ PKG_MAINTAINER:=Knot DNS <knot-dns@labs.nic.cz>
 PKG_LICENSE:=GPL-3.0-only
 PKG_LICENSE_FILES:=COPYING
 
+PKG_BUILD_DEPENDS:=meson/host
+
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/meson.mk
+include $(TOPDIR)/feeds/packages/devel/meson/meson.mk
 
 define Package/knot-resolver
   SECTION:=net
@@ -44,10 +46,6 @@ endef
 
 MESON_ARGS += --prefix=/usr
 
-MAKE_FLAGS += \
-	PREFIX=/usr \
-	ETCDIR=/etc/kresd
-
 define Package/knot-resolver/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/kresd $(1)/usr/bin/
@@ -65,7 +63,7 @@ define Package/knot-resolver/install
 	$(INSTALL_BIN) ./files/convert_config.sh $(1)/etc/kresd/convert_config.sh
 endef
 
-define Package/$(PKG_NAME)/postinst
+define Package/knot-resolver/postinst
 #!/bin/sh
 set -x
 if [ -z "$$IPKG_INSTROOT" ]; then
@@ -90,7 +88,7 @@ fi
 fi
 endef
 
-define Package/$(PKG_NAME)/prerm
+define Package/knot-resolver/prerm
 #!/bin/sh
 set -ex
 if [ -z "$$IPKG_INSTROOT" ]; then
