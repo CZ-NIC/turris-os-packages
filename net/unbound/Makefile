@@ -9,13 +9,12 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
 PKG_VERSION:=1.9.6
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://nlnetlabs.nl/downloads/unbound/
 PKG_HASH:=1d98fc6ea99197a20b4a0e540e87022cf523085786e0fc26de6ebb2720f5aaf0
 
-PKG_BUILD_DEPENDS:=libexpat
 PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -65,17 +64,13 @@ define Package/unbound-anchor/description
   This package contains the Unbound anchor utility.
 endef
 
-define Package/unbound-control/description
-  This package contains the Unbound control utility.
-endef
-
 define Package/unbound-control-setup
   $(call Package/unbound/Default)
   SECTION:=net
   CATEGORY:=Network
   SUBMENU:=IP Addresses and Names
   TITLE+= (control setup utility)
-  DEPENDS+= +unbound-control +openssl-util
+  DEPENDS+= +unbound +openssl-util
 endef
 
 define Package/unbound-control-setup/description
@@ -179,11 +174,6 @@ endef
 define Package/unbound-anchor/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(CP) $(PKG_INSTALL_DIR)/usr/sbin/unbound-anchor $(1)/usr/sbin/
-endef
-
-define Package/unbound-control/install
-	$(INSTALL_DIR) $(1)/usr/sbin
-	$(CP) $(PKG_INSTALL_DIR)/usr/sbin/unbound-control $(1)/usr/sbin/
 endef
 
 define Package/unbound-control-setup/install
