@@ -19,16 +19,8 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)
 
-HOST_BUILD_DEPENDS:= \
-	curl/host \
-	libevent2/host \
-	lua/host \
-	uriparser/host \
-	libb64/host \
-	uthash/host
 PKG_BUILD_DEPENDS:=busybox libb64 uthash argp-standalone
 
-include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
@@ -84,20 +76,4 @@ define Build/Compile
 		UPDATER_VERSION:=$(PKG_VERSION)
 endef
 
-define Host/Compile
-	$(MAKE) $(HOST_JOBS) -C $(HOST_BUILD_DIR) $(HOST_MAKE_FLAGS) \
-		NO_DOC=1 LUA_COMPILE:=no \
-		UPDATER_VERSION:=$(PKG_VERSION)
-endef
-
-define Host/Install
-	$(INSTALL_DIR) $(STAGING_DIR_HOST)/usr/lib/
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/lib/libupdater.so $(STAGING_DIR_HOST)/usr/lib/
-
-	$(INSTALL_DIR) $(STAGING_DIR_HOST)/usr/bin
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/pkgupdate $(STAGING_DIR_HOST)/usr/bin/
-	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/pkgtransaction $(STAGING_DIR_HOST)/usr/bin/
-endef
-
-$(eval $(call HostBuild))
 $(eval $(call BuildPackage,$(PKG_NAME)))
