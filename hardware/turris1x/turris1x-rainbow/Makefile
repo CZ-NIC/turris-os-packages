@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris1x-rainbow
 PKG_VERSION:=17
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/rainbow.git
@@ -26,7 +26,7 @@ define Package/turris1x-rainbow
   TITLE:=turris1x-rainbow
   URL:=https://gitlab.labs.nic.cz/turris/rainbow
   PROVIDES:=turris-rainbow
-  DEPENDS:=@TARGET_mpc85xx_p2020_TURRIS
+  DEPENDS:=@KERNEL_DEVMEM @TARGET_mpc85xx_p2020_DEVICE_turris1x
 endef
 
 define Package/turris1x-rainbow/conffiles
@@ -47,21 +47,10 @@ define Package/turris1x-rainbow/install
 	$(INSTALL_BIN) ./files/rainbow_button_sync.sh $(1)/usr/bin/rainbow_button_sync.sh
 endef
 
-define Package/turris1x-rainbow/postinst
-#!/bin/sh
-[ -n "$$IPKG_INSTROOT" ] || {
-    /etc/init.d/rainbow enable
-    /etc/init.d/rainbow restart
-}
-endef
-
 define Package/turris1x-rainbow/prerm
 #!/bin/sh
-[ -n "$$IPKG_INSTROOT" ] || {
-    /etc/init.d/rainbow stop
-    /etc/init.d/rainbow disable
-    rainbow all auto white
-}
+[ -n "$$IPKG_INSTROOT" ] || \
+	rainbow all auto white
 endef
 
 $(eval $(call BuildPackage,turris1x-rainbow))
