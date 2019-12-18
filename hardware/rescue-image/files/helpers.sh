@@ -8,7 +8,7 @@ reset_uenv() {
     fi
     local contract="$(fw_printenv contract 2> /dev/null)"
     if [ -n "$contract" ]; then
-        bootcmd="$bootcmd setenv contract=$contract;"
+        bootcmd="$bootcmd setenv contract $contract;"
     fi
     fw_setenv bootcmd "$bootcmd saveenv; reset"
 }
