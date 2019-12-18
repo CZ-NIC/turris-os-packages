@@ -28,16 +28,6 @@ define Package/unbound/Default
   PROVIDES:=dns-resolver
 endef
 
-ifeq ($(CONFIG_TARGET_mpc85xx_p2020_nand_TURRISNAND),y)
-
-TURRIS_DEPS:=+cert-backup
-endif
-
-ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
-
-TURRIS_DEPS:=+cert-backup
-endif
-
 define Package/unbound
   $(call Package/unbound/Default)
   SECTION:=net
