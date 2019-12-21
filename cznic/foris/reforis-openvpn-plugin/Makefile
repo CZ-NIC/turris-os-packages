@@ -7,12 +7,12 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=reforis-diagnostics-plugin
-PKG_VERSION:=2.2.1
+PKG_NAME:=reforis-openvpn-plugin
+PKG_VERSION:=1.1.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-diagnostics
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-openvpn
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
@@ -31,18 +31,19 @@ include ../reforis/files/reforis-translations.mk
 
 define Package/$(PKG_NAME)
   TITLE:=$(PKG_NAME)
-  URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-diagnostics
+  URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-openvpn
   DEPENDS:= \
     +reforis \
-    +foris-controller-diagnostics-module
-  VARIANT=python3
+    +foris-controller-openvpn-module \
+    +foris-controller-openvpn_client-module
+  VARIANT:=python3
 endef
 
 define Package/$(PKG_NAME)/description
-  Reforis diagnostics plugin
+  Reforis OpenVPN plugin
 endef
 
 REFORIS_TRANSLATIONS:=cs
 
-$(eval $(call ReForisPlugin,$(PKG_NAME),reforis_diagnostics))
+$(eval $(call ReForisPlugin,$(PKG_NAME),reforis_openvpn))
 # call BuildPackage <= assures OWR build system that this is package

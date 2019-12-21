@@ -7,12 +7,12 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=reforis-diagnostics-plugin
-PKG_VERSION:=2.2.1
+PKG_NAME:=reforis-remote-access-plugin
+PKG_VERSION:=1.0.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-diagnostics
+PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-remote-access
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
@@ -31,18 +31,17 @@ include ../reforis/files/reforis-translations.mk
 
 define Package/$(PKG_NAME)
   TITLE:=$(PKG_NAME)
-  URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-diagnostics
+  URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-remote-access
   DEPENDS:= \
-    +reforis \
-    +foris-controller-diagnostics-module
+    +reforis
   VARIANT=python3
 endef
 
 define Package/$(PKG_NAME)/description
-  Reforis diagnostics plugin
+  reForis Remote Access Plugin.
 endef
 
 REFORIS_TRANSLATIONS:=cs
 
-$(eval $(call ReForisPlugin,$(PKG_NAME),reforis_diagnostics))
+$(eval $(call ReForisPlugin,$(PKG_NAME),reforis_remote_access))
 # call BuildPackage <= assures OWR build system that this is package
