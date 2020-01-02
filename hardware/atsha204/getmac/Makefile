@@ -20,17 +20,17 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
-	DEPEDNDS:=@TARGET_mpc85xx_p2020_nor
+  TITLE:=Get MAC
+  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_turris1x
 endef
 
 define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR)/getmac $(MAKE_FLAGS)
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/getmac/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/getmac/getmac $(1)/usr/bin/
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,getmac))
