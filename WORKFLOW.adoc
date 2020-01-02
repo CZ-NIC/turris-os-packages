@@ -1,9 +1,9 @@
-Turris-os-packages repository workflow
+Turris OS packages repository workflow
 ======================================
 
 Before you start reading please be sure that you have read and understood workflow
 for https://gitlab.labs.nic.cz/turris/turris-build/blob/master/WORKFLOW.adoc[turris-build].
-This work-flow is referencing it as this repository is used as part of release
+This workflow is referencing it as this repository is used as part of release
 cycle of that one.
 
 
@@ -24,14 +24,14 @@ Overview of flow in this repository
 -----------------------------------
 
 Branch *master* is parent branch for all work in this repository. Branch
-*develop* is forked off of it initially.
+*develop* is forked from it initially.
 ..................................................................................
            develop            master
               _________________/|
               |                 |<- v5.1.0
               |                 |
 ..................................................................................
-Any new feature is forked off from *develop* branch.
+Any new feature is forked from *develop* branch.
 ..................................................................................
 feature/foo   |                 |
      ________/|                 |
@@ -45,7 +45,7 @@ And later merged back to *develop* branch when it is finished and tested.
              \|                 |
               |                 |
 ..................................................................................
-If bug is discovered in feature then new branch based on *develoop* is created
+If bug is discovered in feature then new branch based on *develop* is created
 to fix it.
 ..................................................................................
  bugfix/foo   |                 |
@@ -60,8 +60,8 @@ That is later merged to *develop* the same way as original feature.
              \|                 |
               |                 |
 ..................................................................................
-When problem is discovered in current master version then branch to fix it is
-forked off *master* branch.
+When problem is discovered in current stable version then branch to fix it is
+forked from *master* branch.
 ..................................................................................
               |   hotfix/foo    |
               |        ________/|
@@ -91,9 +91,9 @@ would fork new *develop* branch.
 Branch naming convention
 ------------------------
 
-For quick orientation of maintainers in repository stable naming convention is
-required. Depending on what you are planning to do you can create new branch with
-name prefixed with one of following:
+For quick orientation in repository stable naming convention is required.
+Depending on what you are planning to do you can create new branch with name
+prefixed with one of following:
 
 *hotfix/*:: This is fix for problem discovered in *master*. It has to be based on
 *master* branch and merged to both *develop* and *master* branch.
@@ -129,14 +129,15 @@ You have to base your work on latest commit in *master*. For example:
 [,sh]
 ----------------------------------------------------------------------------------
 git fetch
-git checkout -b hotfix/FOO origin/master
+git checkout -b hotfix/foo origin/master
 ----------------------------------------------------------------------------------
 
-Also not that you might and will be asked by maintainer to possibly rebase your
+Also note that you might and will be asked by maintainer to possibly rebase your
 changes on latest *master* commit.
 [,sh]
 ----------------------------------------------------------------------------------
 git fetch
+git checkout hotfix/foo
 git rebase origin/master
 ----------------------------------------------------------------------------------
 
@@ -145,7 +146,7 @@ You have to base you work on latest commit in *develop* branch. For example:
 [,sh]
 ----------------------------------------------------------------------------------
 git fetch
-git checkout -b bugfix/FOO origin/develop
+git checkout -b bugfix/foo origin/develop
 ----------------------------------------------------------------------------------
 
 Same as in case of hotfixes you might be asked by maintainer to rebase your work
@@ -153,6 +154,7 @@ on latest commit in *develop* branch.
 [,sh]
 ----------------------------------------------------------------------------------
 git fetch
+git checkout bugfix/foo
 git rebase origin/develop
 ----------------------------------------------------------------------------------
 
@@ -160,10 +162,10 @@ git rebase origin/develop
 Operations performed by maintainers
 -----------------------------------
 
-There are few well informed maintainers who are well educated with git-craft and
-with flow of this repository that they are allowed to manage *master* and
-*develop* branch. For those not so lucky and new in this craft there is following
-list of operations commonly performed by maintainer.
+There are well informed maintainers who are well educated with git-craft and with
+the flow of this repository that they are allowed to manage *master* and *develop*
+branches. For those not so lucky and new in this craft there is following list of
+operations commonly performed by maintainer.
 
 === Merging hotfix
 
@@ -185,20 +187,13 @@ by himself.
 
 There is possibility that hotfix is not required in *develop* branch because it
 can be fixed by some other means or was already fixed by some previous feature. In
-such case it should be merged nonetheless to ease future merge of *develop* back
-to *master*. For doing merge without merging changes you can use git merge
-strategy `ours`.
+such case it should be merged anyway to ease future merge of *develop* back to
+*master*. For doing merge without merging changes you can use git merge strategy
+`ours`.
 [,sh]
 ----------------------------------------------------------------------------------
 git checkout develop
-git merge --strategy=ours --gpg-sign hotfix/foo
-----------------------------------------------------------------------------------
-Or you can revert some changes and merge rest.
-[,sh]
-----------------------------------------------------------------------------------
-git revert HEAD^
-git checkout develop
-git merge --no-ff --gpg-sign hotfix/foo
+git merge --no-ff --strategy=ours --gpg-sign hotfix/foo
 ----------------------------------------------------------------------------------
 
 === Merging new feature, bugfix and others
@@ -222,7 +217,7 @@ merged as an exception with merge commit instead of doing fast-forward merge.
 [,sh]
 ----------------------------------------------------------------------------------
 git checkout develop
-git merge --ff-only --gpg-sign feature/foo
+git merge --no-ff --gpg-sign feature/foo
 git push origin develop :feature/foo
 ----------------------------------------------------------------------------------
 
@@ -231,7 +226,7 @@ merge commit hash and reverting it. Note that this is considered as refactor and
 new appropriate merge request should be created and review should be performed.
 [,sh]
 ----------------------------------------------------------------------------------
-git checkout -b refactor/FOO origin/develop
+git checkout -b refactor/foo origin/develop
 git revert -m 1 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ----------------------------------------------------------------------------------
 
@@ -240,22 +235,19 @@ git revert -m 1 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 This happens on same time as in turris-build repository. Maintainer creating tag
 in turris-build has to create tag in this repository as well.
 
-First found out exact hash for git hash in this repository from tag in
-turris-build. Then you can create appropriate tag.
+First find git hash for turris-os-packages feed from tag in turris-build. Then you
+can create appropriate tag.
 [,sh]
 ----------------------------------------------------------------------------------
-git tag -s -m "Turris OS packages for Turris OS X.X.X" vX.X.X HASH
-git push --tags origin vX.X.X
+git tag -s -m "Turris OS X.Y.Z" vX.Y.Z HASH
+git push --tags origin vX.Y.Z
 ----------------------------------------------------------------------------------
-// TODO: we should implement script that exactly tags commit the same way as
-// in turris-build.
 
 === Preparing next minor or major version of Turris OS
 
 On new major or minor release of Turris OS we have to move all development changes
-to stable release. This is done by merging *develop* to *master* in appropriate
-moment against turris-build repository. This operation is required to be done
-anytime merge of *hbl* is performed to *hbk*.
+to stable release. This is done by merging *develop* to *master* at the same time
+*hbl* branch is merged to *hbk* in turris-build repository.
 
 If all previous operations were performed correctly then we can now do clean
 recursive merge (without merge conflicts).
