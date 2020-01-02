@@ -1,5 +1,0 @@
-#!/bin/sh
-
-sync
-umount -a -d -r
-
