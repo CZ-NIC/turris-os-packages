@@ -1,24 +1,17 @@
- 
-# Copyright (C) 2009-2012 OpenWrt.org
-#
-# This is free software, licensed under the GNU General Public License v2.
-# See /LICENSE for more information.
-#
-#
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=nfacct
-PKG_VERSION:=1.0.1
+PKG_VERSION:=1.0.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=\
-	http://netfilter.org/projects/${PKG_NAME}/files/ \
-	ftp://ftp.netfilter.org/pub/${PKG_NAME}/
-PKG_MD5SUM:=992e863409d144350dbc8f0554a0f478
+PKG_SOURCE_URL:=https://netfilter.org/projects/nfacct/files/
+PKG_HASH:=ecff2218754be318bce3c3a5d1775bab93bf4168b2c4aac465785de5655fbd69
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=GPL-2.0-or-later
+PKG_LICENSE_FILES:=COPYING
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -26,22 +19,15 @@ PKG_INSTALL:=1
 include $(INCLUDE_DIR)/package.mk
 
 define Package/nfacct
-$(call Package/nfacct/Default)
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS+=+libnetfilter-acct +libmnl +iptables-mod-nfacct
-  TITLE:=command line tool to create/retrieve/delete accounting objects
-  URL:=http://netfilter.org/projects/nfacct/index.html
+  TITLE:=netfilter accounting object tool
+  URL:=https://netfilter.org/projects/nfacct/index.html
+  DEPENDS:=+libnetfilter-acct +libmnl +iptables-mod-nfacct
 endef
 
-
-define Package/libnetfilter-acct/description
- command line tool to create/retrieve/delete accounting objects
-endef
-
-
-define Build/Compile
-	$(call Build/Compile/Default)
+define Package/nfacct/description
+  nfacct is the command line tool to create/retrieve/delete accounting objects.
 endef
 
 define Package/nfacct/install
