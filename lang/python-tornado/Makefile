@@ -8,17 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-tornado
-PKG_VERSION:=6.0.2
+PKG_VERSION:=6.0.3
 PKG_RELEASE:=1
 
 PKG_SOURCE:=tornado-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/t/tornado/
-PKG_HASH:=457fcbee4df737d2defc181b9073758d73f54a6cfc1f280533ff48831b39f4a8
+PKG_HASH:=c845db36ba616912074c5b1ee897f8e0124df269468f25e4fe21fe72f6edd7a9
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/tornado-$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_LICENSE:=Apache 2.0
+PKG_LICENSE:=Apache-2.0
 PKG_LICENSE_FILES:=LICENSE
 
 include $(INCLUDE_DIR)/package.mk
