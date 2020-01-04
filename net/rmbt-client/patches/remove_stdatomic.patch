@@ -1,5 +1,3 @@
-diff --git a/src/rmbt_flow.h b/src/rmbt_flow.h
-index 310eb29..cba5814 100644
 --- a/src/rmbt_flow.h
 +++ b/src/rmbt_flow.h
 @@ -20,8 +20,6 @@

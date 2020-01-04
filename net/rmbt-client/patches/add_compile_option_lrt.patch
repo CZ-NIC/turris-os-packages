@@ -1,0 +1,11 @@
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -16,6 +16,8 @@ AM_CFLAGS += $(if $(GIT_VERSION),-DGIT_V
+ 
+ AM_LDFLAGS = -pthread
+ 
++AM_LDFLAGS += -lrt
++
+ bin_PROGRAMS = rmbt
+ rmbt_SOURCES = rmbt.c \
+     rmbt_common.h \
