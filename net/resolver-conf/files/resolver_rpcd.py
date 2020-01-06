@@ -42,7 +42,12 @@ def get_config(filename):
             arr = line.split("=", 1)
             if len(arr) == 2:
                 # remove quotation marks
-                ret.update({arr[0].strip(" '\"\n\'"): arr[1].strip(" '\"\n\'")})
+                name = arr[0].strip(" '\"\n\'")
+                vals = arr[1].strip(" '\"\n\'")
+                # return IP as list
+                if name == "ipv4" or name == "ipv6":
+                    vals=vals.split()
+                ret.update({name: vals})
         if not("name" in ret):
             return {}
     return ret
