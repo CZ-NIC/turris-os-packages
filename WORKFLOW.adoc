@@ -176,8 +176,11 @@ git checkout master
 git merge --ff-only --gpg-sign hotfix/foo
 git checkout develop
 git merge --no-ff --gpg-sign hotfix/foo
-git push origin master develop :hotfix/foo
+git push origin master develop
+git branch -d hotfix/foo && git push origin :hotfix/foo
 ----------------------------------------------------------------------------------
+IMPORTANT: Push target first before you remove source branch. Otherwise Gitlab
+merge request would be _closed_ and not _merged_.
 
 Hotfix merge to *master* should always be clean. That means that there should be
 no merge conflicts (ensured by requiring fast forward only). This is to ensure
@@ -206,8 +209,11 @@ latest commit in *develop* (to resolve conflict) and test again before merge.
 ----------------------------------------------------------------------------------
 git checkout develop
 git merge --ff-only --gpg-sign feature/foo
-git push origin develop :feature/foo
+git push origin develop
+git branch -d feature/foo && git push origin :feature/foo
 ----------------------------------------------------------------------------------
+IMPORTANT: Push target first before you remove source branch. Otherwise Gitlab
+merge request would be _closed_ and not _merged_.
 
 === Merging and reverting hack
 
@@ -217,9 +223,12 @@ merged as an exception with merge commit instead of doing fast-forward merge.
 [,sh]
 ----------------------------------------------------------------------------------
 git checkout develop
-git merge --no-ff --gpg-sign feature/foo
-git push origin develop :feature/foo
+git merge --no-ff --gpg-sign hotfix/foo
+git push origin develop
+git branch -d hotfix/foo && git push origin :hotfix/foo
 ----------------------------------------------------------------------------------
+IMPORTANT: Push target first before you remove source branch. Otherwise Gitlab
+merge request would be _closed_ and not _merged_.
 
 Later hack, thanks to merge commit, can be just reverted by locating appropriate
 merge commit hash and reverting it. Note that this is considered as refactor and
