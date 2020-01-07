@@ -1,0 +1,11 @@
+--- a/modules/policy/policy.lua
++++ b/modules/policy/policy.lua
+@@ -795,7 +795,7 @@ policy.layer = {
+ 		if bit.band(state, bit.bor(kres.FAIL, kres.DONE)) ~= 0 then return state end
+ 		local qry = req:current()
+ 		return policy.evaluate(policy.rules, req, qry, state)
+-			or (special_names_optim(req, qry.sname)
++			or (true--special_names_optim(req, qry.sname)
+ 					and policy.evaluate(policy.special_names, req, qry, state))
+ 			or state
+ 	end,
