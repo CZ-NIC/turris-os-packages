@@ -1,39 +1,13 @@
 #!/bin/sh
-# Copyright (c) 2013-2019, CZ.NIC, z.s.p.o. (http://www.nic.cz/)
-# All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are met:
-#    * Redistributions of source code must retain the above copyright
-#      notice, this list of conditions and the following disclaimer.
-#    * Redistributions in binary form must reproduce the above copyright
-#      notice, this list of conditions and the following disclaimer in the
-#      documentation and/or other materials provided with the distribution.
-#    * Neither the name of the CZ.NIC nor the
-#      names of its contributors may be used to endorse or promote products
-#      derived from this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL CZ.NIC BE LIABLE FOR ANY
-# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 set -e
-SUBVOLUME=certbackup
-TURRIS1X_STORAGE=/dev/mtdblock4
+BACKEND="/usr/share/cert-backup/backend.sh"
 
 [ "$(id -u)" = "0" ] || {
 	echo "You have to be root to run cert-backup" >&2
 	exit 1
 }
 
-# Load os-release variables
-. /etc/os-release
+. "$BACKEND"
 
 # Create temporally directory
 workdir="$(mktemp -d)"
@@ -44,42 +18,7 @@ cleanup() {
 trap cleanup EXIT INT QUIT TERM ABRT
 
 # Mount certificate store
-mount_jffs2() {
-	mount -t jffs2 -o compr=none "$1" "$workdir"
-}
-
-mount_btrfs() {
-	# Source in case of BTRFS contains subvolume at the end in square brackets
-	local partition="${1%%\[*\]}"
-	local root="$2"
-	if ! btrfs subvolume list -a "$root" | grep -q "path <FS_TREE>/$SUBVOLUME$"; then
-		# Create subvolume if it missing
-		mount -t btrfs -o subvol=/ "$partition" "$workdir"
-		btrfs subvolume create "$workdir/$SUBVOLUME"
-		umount "$workdir"
-	fi
-	mount -t btrfs -o subvol="/$SUBVOLUME" "$partition" "$workdir"
-}
-
-case "$LEDE_DEVICE_PRODUCT" in
-	"Turris 1.x")
-		# Turris 1.x has dedicated location as only router
-		mount_jffs2 "$TURRIS1X_STORAGE"
-		;;
-	*)
-		# Note: --pairs ensures safety of this eval
-		eval "$(findmnt --first-only --uniq --pairs --output SOURCE,FSTYPE /)"
-		case "$FSTYPE" in
-			btrfs)
-				mount_btrfs "$SOURCE" "/"
-				;;
-			*)
-				echo "cert-backup is available only on BTRFS root filesystem" >&2
-				exit 2
-				;;
-		esac
-		;;
-esac
+mount_store "$workdir"
 
 
 # Process arguments
