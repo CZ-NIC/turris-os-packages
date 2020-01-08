@@ -20,3 +20,14 @@ uci show dhcp | sed -ne 's/^dhcp\.//;s/=dhcp$//p' | while read INTERFACE ; do
 done
 uci commit dhcp
 uci commit system
+
+# set default DNS resolver and prefer knot-resolver if available
+if [ -f "/usr/bin/kresd" ]; then
+	uci set resolver.common.prefered_resolver="kresd"
+	uci commit resolver
+elif [ -f "/usr/sbin/unbound" ]; then
+	uci set resolver.common.prefered_resolver="unbound"
+	uci commit resolver
+else
+	logger -t resolver_conf "Error! Could not find resolver! DNS resolving will not work."
+fi
