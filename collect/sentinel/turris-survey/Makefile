@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-survey
 PKG_VERSION:=0.1.1
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/turris-survey.git
@@ -28,13 +28,13 @@ define Package/turris-survey
   CATEGORY:=Network
   SUBMENU:=Sentinel
   TITLE:=Turris Survey
-  URL:=https://gitlab.labs.nic.cz/turris/sentinel/certgen
+  URL:=https://gitlab.labs.nic.cz/turris/sentinel/turris-survey
   DEPENDS:=+python3-light +python3-msgpack +python3-zmq +sentinel-proxy +updater-supervisor +cronie
   VARIANT:=python3
 endef
 
 define Package/turris-survey/description
-  Periodically collect router usage statistics.
+  Periodically collect router statistics like usage, installed software.
 endef
 
 define Py3Package/turris-survey/install
