@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.1
-PKG_RELEASE:=33
+PKG_RELEASE:=34
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -25,14 +25,14 @@ define Package/resolver-conf
 	CATEGORY:=Network
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Resolver configuration
-	DEPENDS:=+python-light +python-multiprocessing +python-logging +ca-bundle
+	DEPENDS:=+python3-light +python3-multiprocessing +python3-logging +ca-bundle
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/resolver-conf/description
   Configuration for knot-resolver and unbound.
 endef
 
-define Package/$(PKG_NAME)/conffiles
+define Package/resolver-conf/conffiles
 /etc/config/resolver
 endef
 
@@ -42,7 +42,7 @@ endef
 define Build/Install
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/resolver-conf/install
 	$(INSTALL_DIR) $(1)/etc/config
 ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
 	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolver
@@ -64,11 +64,13 @@ endif
 	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
 	$(INSTALL_BIN) ./files/resolver-reload $(1)/etc/hotplug.d/iface/40-resolver-reload
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/dhcp/
+	$(INSTALL_BIN) ./files/dynamic-domains.hotplug $(1)/etc/hotplug.d/dhcp/40-dynamic-domains
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/resolver-defaults $(1)/etc/uci-defaults/resolver-defaults
 endef
 
-define Package/$(PKG_NAME)/postinst
+define Package/resolver-conf/postinst
 #!/bin/sh
 # check if we are on real system
 if [ -z "$$IPKG_INSTROOT" ]; then

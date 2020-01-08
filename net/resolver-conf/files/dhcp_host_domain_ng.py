@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import subprocess
 import sys
@@ -61,7 +61,7 @@ def call_cmd(cmd):
 
 
 def uci_get(path):
-    return call_cmd(["uci", "get", "%s" % path]).rstrip()
+    return str(call_cmd(["uci", "get", "%s" % path]).rstrip())
 
 
 def uci_get_bool(path, default):

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+export ACTION
+export MACADDR
+export IPADDR
+export HOSTNAME
+
+/usr/bin/python3 /etc/resolver/dhcp_host_domain_ng.py "$@"
