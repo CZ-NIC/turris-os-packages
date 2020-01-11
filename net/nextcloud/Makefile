@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2018-2020 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nextcloud
-PKG_VERSION:=16.0.5
+PKG_VERSION:=16.0.7
 PKG_RELEASE:=1
 
-PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
-PKG_HASH:=8709c64fa776fd731c8e5f1ab25d592a2e690e5e18a81601cccf363795fae551
+PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
+PKG_HASH:=b9632772f4845c16b14e1e861783a747ed1bc25a18347d99b2caccb1079c8de3
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -29,6 +29,7 @@ define Package/nextcloud
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Nextcloud server
+	URL:=https://nextcloud.com/
 	DEPENDS=+php7-mod-opcache +php7-fpm +php7-cli +sudo +php7-mod-ctype +php7-mod-fileinfo +php7-mod-xmlreader +php7-mod-openssl +php7-mod-hash +php7-mod-gd +php7-mod-xml +php7-mod-xmlwriter +php7-mod-json +php7-mod-mbstring +php7-mod-pcntl +php7-mod-opcache +php7-mod-session +php7-mod-simplexml +php7-mod-iconv +php7-mod-curl +php7-mod-zip +php7-mod-dom +coreutils-stat +php7 +lighttpd-mod-access +php7-mod-intl
 endef
 
