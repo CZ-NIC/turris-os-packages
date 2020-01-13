@@ -1,0 +1,292 @@
+Turris OS packages repository workflow
+======================================
+
+Before you start reading please be sure that you have read and understood workflow
+for https://gitlab.labs.nic.cz/turris/turris-build/blob/master/WORKFLOW.adoc[turris-build].
+This workflow is referencing it as this repository is used as part of release
+cycle of that one.
+
+
+Primary (protected) branches of this repository
+-----------------------------------------------
+
+There are two primary branches in this repository
+
+*master*:: is default branch and contains latest stable version with possible few
+fixes on top of it. This branch is used in *hbk* branch in turris-build
+repository.
+
+*develop*:: is branch we use to integrate latest changes and improvements in this
+repository. It is used in *hbl* and *hbd* branches in turris-build repository.
+
+
+Overview of flow in this repository
+-----------------------------------
+
+Branch *master* is parent branch for all work in this repository. Branch
+*develop* is forked from it initially.
+..................................................................................
+           develop            master
+              _________________/|
+              |                 |<- v5.1.0
+              |                 |
+..................................................................................
+Any new feature is forked from *develop* branch.
+..................................................................................
+feature/foo   |                 |
+     ________/|                 |
+     |        |                 |
+     |        |                 |
+..................................................................................
+And later merged back to *develop* branch when it is finished and tested.
+..................................................................................
+     |        |                 |
+     |_______ |                 |
+             \|                 |
+              |                 |
+..................................................................................
+If bug is discovered in feature then new branch based on *develop* is created
+to fix it.
+..................................................................................
+ bugfix/foo   |                 |
+     ________/|                 |
+     |        |                 |
+     |        |                 |
+..................................................................................
+That is later merged to *develop* the same way as original feature.
+..................................................................................
+     |        |                 |
+     |_______ |                 |
+             \|                 |
+              |                 |
+..................................................................................
+When problem is discovered in current stable version then branch to fix it is
+forked from *master* branch.
+..................................................................................
+              |   hotfix/foo    |
+              |        ________/|
+              |        |        |
+              |        |        |
+..................................................................................
+And later merged back to both *master* and *develop* branch when finished and
+tested.
+..................................................................................
+              |        |        |
+              | _______|_______ |
+              |/               \| <- v5.1.1
+              |                 |
+..................................................................................
+To make new major or minor release (that is release containing latest Turris
+changes and improvements) we merge *develop* to *master* branch.
+..................................................................................
+              |                |
+              |_______________ |
+                              \|
+                               | <- v5.2.0
+..................................................................................
+This makes them effectively in sync and flow starts from beginning just as we
+would fork new *develop* branch.
+
+
+Branch naming convention
+------------------------
+
+For quick orientation in repository stable naming convention is required.
+Depending on what you are planning to do you can create new branch with name
+prefixed with one of following:
+
+*hotfix/*:: This is fix for problem discovered in *master*. It has to be based on
+*master* branch and merged to both *develop* and *master* branch.
+
+*bugfix/*:: This is fix for problem not affecting *master*. It has to be
+based on *develop* branch and merged only to *develop* only.
+
+*feature/*:: New feature based on *develop* branch. This can be new package
+or new version of some package with tweaks to packages. It is merged only back
+to *develop* branch.
+
+*refactor/*:: This has same flow as feature but does not change packages
+versions or affects anything that requires package version change.
+
+*hack/*:: This is feature that is to be reverted in future. This should never be
+merged as fast-forward to ease future revert.
+
+After this prefix you should add short name for what you are about to do.
+Acceptable is for example name of package or feature you are about to implement.
+Please do not use issue numbers of nothing saying generic words (such as:
+hotfix/problem).
+
+
+Operations performed by developers
+----------------------------------
+
+Developer is anyone who wants to contribute to this repository. Developers are not
+allowed to merge to primary branches (*master* and *develop*) and have to ask
+maintainers to do so (submit pull or merge request).
+
+=== Implementing fix for problem in *master* (hotfix)
+You have to base your work on latest commit in *master*. For example:
+[,sh]
+----------------------------------------------------------------------------------
+git fetch
+git checkout -b hotfix/foo origin/master
+----------------------------------------------------------------------------------
+
+Also note that you might and will be asked by maintainer to possibly rebase your
+changes on latest *master* commit.
+[,sh]
+----------------------------------------------------------------------------------
+git fetch
+git checkout hotfix/foo
+git rebase origin/master
+----------------------------------------------------------------------------------
+
+=== Implementing new feature or fixing something not affecting *master* (bugfix/feature/refactor/hack)
+You have to base you work on latest commit in *develop* branch. For example:
+[,sh]
+----------------------------------------------------------------------------------
+git fetch
+git checkout -b bugfix/foo origin/develop
+----------------------------------------------------------------------------------
+
+Same as in case of hotfixes you might be asked by maintainer to rebase your work
+on latest commit in *develop* branch.
+[,sh]
+----------------------------------------------------------------------------------
+git fetch
+git checkout bugfix/foo
+git rebase origin/develop
+----------------------------------------------------------------------------------
+
+
+Operations performed by maintainers
+-----------------------------------
+
+There are well informed maintainers who are well educated with git-craft and with
+the flow of this repository that they are allowed to manage *master* and *develop*
+branches. For those not so lucky and new in this craft there is following list of
+operations commonly performed by maintainer.
+
+=== Merging hotfix
+
+Hotfixes should always be merged to both *master* and *develop* branch.
+[,sh]
+----------------------------------------------------------------------------------
+git checkout master
+git merge --ff-only --gpg-sign hotfix/foo
+git checkout develop
+git merge --no-ff --gpg-sign hotfix/foo
+git push origin master develop
+git branch -d hotfix/foo && git push origin :hotfix/foo
+----------------------------------------------------------------------------------
+IMPORTANT: Push target first before you remove source branch. Otherwise Gitlab
+merge request would be _closed_ and not _merged_.
+
+Hotfix merge to *master* should always be clean. That means that there should be
+no merge conflicts (ensured by requiring fast forward only). This is to ensure
+that stable release won't be broken by merge. When that can't be done rebase to
+latest changes has to be performed. The maintainer can either ask author or do it
+by himself. 
+
+There is possibility that hotfix is not required in *develop* branch because it
+can be fixed by some other means or was already fixed by some previous feature. In
+such case it should be merged anyway to ease future merge of *develop* back to
+*master*. For doing merge without merging changes you can use git merge strategy
+`ours`.
+[,sh]
+----------------------------------------------------------------------------------
+git checkout develop
+git merge --no-ff --strategy=ours --gpg-sign hotfix/foo
+----------------------------------------------------------------------------------
+
+=== Merging new feature, bugfix and others
+
+Branches with new features, bugfixes, refactoring or hacks are merged to *develop*
+branch. This merge should be without conflict as well to prevent bugs created by
+merge skipping testing. On merge conflict it should be evaluated, rebased on
+latest commit in *develop* (to resolve conflict) and test again before merge.
+[,sh]
+----------------------------------------------------------------------------------
+git checkout develop
+git merge --ff-only --gpg-sign feature/foo
+git push origin develop
+git branch -d feature/foo && git push origin :feature/foo
+----------------------------------------------------------------------------------
+IMPORTANT: Push target first before you remove source branch. Otherwise Gitlab
+merge request would be _closed_ and not _merged_.
+
+=== Merging and reverting hack
+
+Hacks are intended to be present only temporally and so it is expected that in
+future we want them reverted and that way removed. This means that hacks are
+merged as an exception with merge commit instead of doing fast-forward merge.
+[,sh]
+----------------------------------------------------------------------------------
+git checkout develop
+git merge --no-ff --gpg-sign hotfix/foo
+git push origin develop
+git branch -d hotfix/foo && git push origin :hotfix/foo
+----------------------------------------------------------------------------------
+IMPORTANT: Push target first before you remove source branch. Otherwise Gitlab
+merge request would be _closed_ and not _merged_.
+
+Later hack, thanks to merge commit, can be just reverted by locating appropriate
+merge commit hash and reverting it. Note that this is considered as refactor and
+new appropriate merge request should be created and review should be performed.
+[,sh]
+----------------------------------------------------------------------------------
+git checkout -b refactor/foo origin/develop
+git revert -m 1 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+----------------------------------------------------------------------------------
+
+=== Tagging version of released Turris OS
+
+This happens on same time as in turris-build repository. Maintainer creating tag
+in turris-build has to create tag in this repository as well.
+
+First find git hash for turris-os-packages feed from tag in turris-build. Then you
+can create appropriate tag.
+[,sh]
+----------------------------------------------------------------------------------
+git tag -s -m "Turris OS X.Y.Z" vX.Y.Z HASH
+git push --tags origin vX.Y.Z
+----------------------------------------------------------------------------------
+
+=== Preparing next minor or major version of Turris OS
+
+On new major or minor release of Turris OS we have to move all development changes
+to stable release. This is done by merging *develop* to *master* at the same time
+*hbl* branch is merged to *hbk* in turris-build repository.
+
+If all previous operations were performed correctly then we can now do clean
+recursive merge (without merge conflicts).
+[,sh]
+----------------------------------------------------------------------------------
+git checkout master
+git merge --no-ff --gpg-sign develop
+git push origin master
+----------------------------------------------------------------------------------
+
+Tips for developers and maintainers
+-----------------------------------
+
+This is collection of various tips and primarily configuration options you can use
+to simplify commands described in this flow.
+
+Sign commits and tags with GPG without using `--gpg-sign` and `-s`::
+You can configure global or local git option `commit.gpgSign` and `tag.gpgSign`.
+[,sh]
+----------------------------------------------------------------------------------
+git config --local commit.gpgSign true
+git config --local tag.gpgSign true
+----------------------------------------------------------------------------------
+
+Sign commits and tags with specific PGP key::
+If you have more than one PGP key (for example different for personal and work
+identity) then you can specify exactly which should be always used in git
+configuration option `user.signingKey`. Value of that option is fingerprint of
+your PGP key.
+[,sh]
+----------------------------------------------------------------------------------
+git config --local user.signingKey "XXXXXXXXXXXXXXXX"
+----------------------------------------------------------------------------------
