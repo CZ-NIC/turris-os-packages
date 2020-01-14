@@ -52,7 +52,7 @@ define Package/turris1x-btrfs/install
 	$(INSTALL_DIR) $(1)/etc/schnapps/rollback.d
 	$(INSTALL_BIN) ./files/kernel-rollback $(1)/etc/schnapps/rollback.d/kernel-rollback
 	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate/
-	$(INSTALL_BIN) ./files/kernel-updater $(1)/etc/updater/hook_postupdate/10_kernel-install
+	$(INSTALL_BIN) ./files/kernel-updater-install $(1)/etc/updater/hook_postupdate/10_kernel-install
 endef
 
 define Package/turris1x-btrfs-migrate/install
