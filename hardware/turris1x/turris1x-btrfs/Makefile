@@ -20,7 +20,7 @@ define Package/Common
   SECTION:=utils
   CATEGORY:=Utilities
   SUBMENU:=Filesystem
-  DEPENDS:=@TARGET_mpc85xx
+  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_turris1x
 endef
 
 define Package/turris1x-btrfs
