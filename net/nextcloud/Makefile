@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nextcloud
 PKG_VERSION:=17.0.5
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
@@ -70,6 +70,7 @@ endef
 define Package/$(PKG_NAME)-install/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/easy_install.sh $(1)/usr/bin/nextcloud_install
+	$(INSTALL_BIN) ./files/nextcloud_disable_trusted_domains.sh $(1)/usr/bin/nextcloud_disable_trusted_domains
 endef
 
 define Package/$(PKG_NAME)/postinst
