@@ -9,21 +9,24 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
 PKG_VERSION:=65.0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
+
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater/updater.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)
+PKG_LICENSE:=GPL-3.0-or-later
+PKG_LICENSE_FILES:=COPYING
 
 PKG_BUILD_DEPENDS:=busybox libb64 uthash argp-standalone
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/updater-ng
+  SECTION:=updater
+  CATEGORY:=Turris Updater
   TITLE:=The next generation updater
   DEPENDS:=\
     +liblua \
@@ -35,7 +38,7 @@ define Package/$(PKG_NAME)
     +ca-certificates
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/updater-ng/install
 	$(INSTALL_DIR) $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libupdater.so $(1)/usr/lib/
 
@@ -63,11 +66,10 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_CONF) ./files/updater.config $(1)/etc/config/updater
 endef
 
-define Package/$(PKG_NAME)/conffiles
+define Package/updater-ng/conffiles
 /etc/updater/conf.d/example.lua
 /etc/config/updater
 endef
-
 
 define Build/Compile
 	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) \
@@ -77,4 +79,4 @@ define Build/Compile
 		UPDATER_VERSION:=$(PKG_VERSION)
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,updater-ng))

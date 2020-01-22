@@ -9,9 +9,9 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fix
 PKG_VERSION:=1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -20,8 +20,8 @@ Build/Compile:=:
 define FIX
 
 define Package/fix-$(1)
-  SECTION:=utils
-  CATEGORY:=Utilities
+  SECTION:=updater
+  CATEGORY:=Turris Updater
   SUBMENU:=Fixes
   TITLE:=$(1)
   DEPENDS:=$(2)

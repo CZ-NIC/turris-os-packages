@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,26 +9,28 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-supervisor
 PKG_VERSION:=1.2.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
+
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater/supervisor.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_LICENSE:=MIT
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
-
-define Package/$(PKG_NAME)
+define Package/updater-supervisor
+  SECTION:=updater
+  CATEGORY:=Turris Updater
   TITLE:=Next generation updater supervisor and its library
-  DEPENDS:=+updater-ng +python3-light +python3-uci +pkglists +l10n_supported +cronie
+  DEPENDS:=+updater-ng +python3-light +python3-uci +pkglists +l10n-supported +cronie
   VARIANT:=python3
 endef
 
-define Py3Package/$(PKG_NAME)/install
+define Py3Package/updater-supervisor/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 
@@ -40,7 +42,6 @@ define Py3Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/files/hook_postupdate $(1)/etc/updater/hook_postupdate/99_approvals_cleanup
 endef
 
-
-$(eval $(call Py3Package,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)-src))
+$(eval $(call Py3Package,updater-supervisor))
+$(eval $(call BuildPackage,updater-supervisor))
+$(eval $(call BuildPackage,updater-supervisor-src))

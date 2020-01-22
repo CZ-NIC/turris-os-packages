@@ -16,7 +16,9 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 include $(INCLUDE_DIR)/package.mk
 
 define Package/switch-branch
-	TITLE:=Switch branch
+  SECTION:=updater
+  CATEGORY:=Turris Updater
+  TITLE:=Tool to set updater to follow different rolling branches
 endef
 
 Build/Compile:=:
@@ -30,9 +32,7 @@ define Package/switch-branch/install
 endef
 
 define Package/switch-branch/postinst
-if [ -z "$$IPKG_INSTROOT" ]; then
-	switch-branch --verify --force
-fi
+[ -n "$$IPKG_INSTROOT" ] || switch-branch --verify --force
 endef
 
 $(eval $(call BuildPackage,switch-branch))

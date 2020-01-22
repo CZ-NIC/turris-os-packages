@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,19 +9,28 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tos3to4
 PKG_VERSION:=2.0.13
-PKG_RELEASE:=1
+PKG_RELEASE:=2
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/tos3to4
+define Package/Common
+  SECTION:=updater
+  CATEGORY:=Turris Updater
   TITLE:=Turris OS 3.x to 4.x migration package
-  DEPENDS:=+uci +TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia:omnia-support
+  DEPENDS:=+uci
+endef
+
+define Package/tos3to4
+  $(call Package/Common)
+  DEPENDS+=+TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia:omnia-support
 endef
 
 define Package/tos3to4-early
-  TITLE:=Turris OS 3.x to 4.x migration package installed early
-  DEPENDS:=+uci +switch-branch
+  $(call Package/Common)
+  TITLE+= installed early
+  DEPENDS+=+switch-branch
 endef
 
 define Package/tos3to4/install
