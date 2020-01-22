@@ -1,13 +1,117 @@
 #!/bin/sh
 set -e
 
+# Return current mode
+get_mode() {
+	local mode
+	config_get mode turris mode "branch"
+	echo "$mode"
+}
+
+# Return current branch
+get_branch() {
+	local branch="hbs"
+	if [ "$(get_mode)" = "branch" ]; then
+		local branch
+		config_get branch turris branch "$branch"
+	fi
+	echo "$default"
+}
+
+# Return current version
+get_version() {
+	if [ "$(get_mode)" = "version" ]; then
+		local version
+		config_get version turris version
+		[ -z "$version" ] || {
+			echo "$version"
+			return
+		}
+	fi
+	cat /etc/turris-version
+}
+
+# Sets variables v_major v_minor v_fixup with appropriate fields from current
+# version
+get_version_parts() {
+	IFS=. read -r v_major v_minor v_fixup <<EOF
+	$(get_version)
+EOF
+}
+
+# This returns latest stable version (the only one that is supported)
+latest_version() {
+	echo "$versions" | head -1
+}
+
+
+# We allows some branch alternatives. This function replaces them with canon versions
+branch_alts() {
+	case "$target" in
+		stable|snails)
+			target='hbs'
+			;;
+		testing|turtles)
+			target='hbt'
+			;;
+		next-fixup|kittens)
+			target='hbk'
+			;;
+		next-minor|lions)
+			target='hbl'
+			;;
+		next-major|dragons)
+			target='hbd'
+			;;
+	esac
+}
+
+# We also support various aliases for versions.
+version_alts() {
+	local v_major v_minor v_fixup
+	case "$target" in
+		latest|major)
+			target="$(latest_version)"
+			;;
+		minor)
+			get_version_parts
+			target="$(echo "$versions" | \
+				awk -F . -v major="$v_major" '$1 == major { print; exit }')"
+			;;
+		fixup)
+			get_version_parts
+			target="$(echo "$versions" | \
+				awk -F . -v major="$v_major" -v minor="$v_minor" \
+					'$1 == major && $2 == minor { print; exit }')"
+			;;
+	esac
+}
+
+
+# Checks if branch is supported (accept any branch if forced, otherwise only the
+# selected ones)
+check_branch() {
+	[ "$force" = "y" ] || \
+		echo "$target" | grep -qE '^(hbd|hbl|hbk|hbt|hbs)$'
+}
+
+# Check if given version is valid/existing version (force again allows usage of
+# any version)
+check_version() {
+	[ "$force" = "y" ] || \
+		echo "$versions" | grep -qxF "$target"
+}
+
+##################################################################################
+
 print_help() {
 	echo "Usage: switch-branch [OPTION]... [BRANCH]"
 	echo "Script for easier switching between rolling versions of Turris OS."
 	echo "It configures both updater-ng and opkg repository source."
 	echo
 	echo "Options:"
-	echo "  --version        Instead of switching to branch switch to fixed version"
+	echo "  --branch         Switch to branch. This is expected in default unless --version or --verify used."
+	echo "  --version        Switch to fixed version"
 	echo "  --list-versions  List all available versions"
 	echo "  --verify         Verify and fix branch/version settings (apply setting from uci updater.turris)"
 	echo "  --force          Change to unknown (not-existing) branch/version"
@@ -22,186 +126,8 @@ print_help() {
 	echo "    'fixup' to stay on current major and minor version but switch to latest fixup"
 }
 
-branch=
-version="n"
-list_versions="n"
-verify="n"
-force="n"
-while [ $# -gt 0 ]; do
-	case "$1" in
-		-h|--help)
-			print_help
-			exit 0
-			;;
-		--version)
-			version="y"
-			;;
-		--list-versions)
-			list_versions="y"
-			;;
-		--verify)
-			verify="y"
-			;;
-		--force)
-			force="y"
-			;;
-		*)
-			branch="$1"
-			;;
-	esac
-	shift
-done
-
-if [ ! -f /etc/opkg/distfeeds.conf ] || ! grep -q "repo.turris.cz" /etc/opkg/distfeeds.conf; then
-	echo "File /etc/opkg/distfeeds.conf is unknown. Are we running on Turris?" >&2
-	exit 1
-fi
-if [ ! -f /etc/turris-version ]; then
-	echo "File /etc/turris-version is missing. Are we running on Turris?" >&2
-	exit 1
-fi
-if ! which opkg-cl >/dev/null 2>&1; then
-	echo "opkg-cl is missing. Are we running on Turris?" >&2
-	exit 1
-fi
-if ! which pkgupdate >/dev/null 2>&1; then
-	echo "pkgupdate is missing. Are we running on Turris?" >&2
-	exit 1
-fi
-
-# Load UCI configuration
-. /lib/functions.sh
-uci_load updater
-
-# Fetch all existing versions
-if [ "$version" = "y" ] || [ "$list_versions" = "y" ]; then
-	versions="$(curl "https://repo.turris.cz/archive/" | \
-		sed -n 's|.*alt="\[DIR\]".*<a href="\([^"]*\)/".*|\1|p' | \
-		grep -Ev "^(omnia|turris|3.x)$" | sort -r)"
-fi
-
-# List all version if requested
-if [ "$list_versions" = "y" ]; then
-	echo "$versions"
-	exit 0
-fi
-
-# Return current branch
-get_branch() {
-	uci get updater.turris.branch 2>/dev/null || echo "hbs"
-}
-# Return current version
-get_version() {
-	uci get updater.turris.version 2>/dev/null || cat /etc/turris-version
-}
-# Sets variables v_major v_minor v_fixup with appropriate fields from current
-# version
-get_version_parts() {
-	IFS=. read -r v_major v_minor v_fixup <<EOF
-	$(get_version)
-EOF
-}
-# Check if we should use version (or branch)
-use_version() {
-	uci get updater.turris.version >/dev/null 2>&1
-}
-# This returns the latest stable version (the only one that is supported)
-latest_version() {
-	echo "$versions" | head -1
-}
-
-# We allows some branch alternatives. This function replaces them with canon versions
-branch_alts() {
-	case "$branch" in
-		stable|snails)
-			branch='hbs'
-			;;
-		testing|turtles)
-			branch='hbt'
-			;;
-		next-fixup|kittens)
-			branch='hbk'
-			;;
-		next-minor|lions)
-			branch='hbl'
-			;;
-		next-major|dragons)
-			branch='hbd'
-			;;
-	esac
-}
-# We also support various aliases for versions.
-version_alts() {
-	local v_major v_minor v_fixup
-	case "$branch" in
-		latest|major)
-			branch="$(latest_version)"
-			;;
-		minor)
-			get_version_parts
-			branch="$(echo "$versions" | \
-				awk -F . -vmajor="$v_major" '$1 == major { print; exit }')"
-			;;
-		fixup)
-			get_version_parts
-			branch="$(echo "$versions" | \
-				awk -F . -vmajor="$v_major" -vminor="$v_minor" \
-					'$1 == major && $2 == minor { print; exit }')"
-			;;
-	esac
-}
-
-# Checks if branch is supported (accept any branch if forced, otherwise only the
-# selected ones)
-check_branch() {
-	[ "$force" = "y" ] || echo "$branch" | grep -qE '^(hbd|hbl|hbk|hbt|hbs)$'
-}
-# Check if given version is valid/existing version (force again allows usage of
-# any version)
-check_version() {
-	[ "$force" = "y" ] || echo "$versions" | grep -qxF "$branch"
-}
-
-# Get branch from uci in case of no branch is specified and veryfication
-if [ "$verify" = "y" ] && [ -z "$branch" ]; then
-	branch="$(get_branch)"
-fi
-
-# If branch provided then verify it
-if [ -n "$branch" ]; then
-	if [ "$version" = "y" ]; then
-		version_alts
-		if ! check_version; then
-			echo "Version $branch seems to not be existing released version!" >&2
-			exit 1
-		fi
-	else
-		branch_alts
-		if ! check_branch; then
-			echo "Branch $branch isn't supported branch!" >&2
-			exit 1
-		fi
-	fi
-fi
-
-# Interactive selection of branch or version unless provided already
-while [ -z "$branch" ]; do
-	if [ "$version" = "y" ]; then
-		echo
-		echo "You are using version: $(get_version)"
-		echo
-		echo "Following the latest versions are available:"
-		echo "$versions" | head -10 | sed 's/^/  /'
-		echo "Note that only the latest release is supported!"
-		echo -n "Please enter version: "
-		read -r branch
-		check_version || {
-			echo "Version seems to be not existing released version: $branch"
-			echo
-			branch=
-		}
-	else
-		cat <<EOF
+select_branch() {
+	cat <<EOF
 You are currently in: $(get_branch)
 
 You can choose from one of these rolling releases:
@@ -227,24 +153,169 @@ You can choose from one of these rolling releases:
     frequently break and is suggested to be used only by experienced users on
     non-critical infrastructure.
 EOF
-		read -r -p "Please enter name of a branch: " branch
-		branch_alts
-		check_branch || {
-			echo "There is no known branch: $branch"
-			echo
-			branch=
-		}
+	read -r -p "Please enter name of a branch: " target
+	branch_alts
+	check_branch || {
+		echo "There is no known branch: $target"
+		echo
+		branch=
+	}
+}
+
+select_version() {
+	echo
+	echo "You are using version: $(get_version)"
+	echo
+	echo "Following latest versions are available:"
+	echo "$versions" | sed '1,10s/^/  /'
+	echo "Note that only latest release is supported!"
+	read -r -p "Please enter version: " target
+	check_version || {
+		echo "Version seems to be not existing released version: $target"
+		echo
+		branch=
+	}
+}
+
+##################################################################################
+
+target=
+mode=
+list_versions="n"
+verify="n"
+force="n"
+while [ $# -gt 0 ]; do
+	case "$1" in
+		-h|--help)
+			print_help
+			exit 0
+			;;
+		--branch)
+			mode="branch"
+			;;
+		--version)
+			mode="version"
+			;;
+		--list-versions)
+			list_versions="y"
+			;;
+		--verify)
+			verify="y"
+			;;
+		--force)
+			force="y"
+			;;
+		*)
+			target="$1"
+			;;
+	esac
+	shift
+done
+
+if ! grep -q "repo.turris.cz" /etc/opkg/distfeeds.conf 2> /dev/null; then
+	echo "File /etc/opkg/distfeeds.conf is unknown. Are we running on Turris?" >&2
+	exit 1
+fi
+if [ ! -f /etc/turris-version ]; then
+	echo "File /etc/turris-version is missing. Are we running on Turris?" >&2
+	exit 1
+fi
+if ! which opkg-cl >/dev/null 2>&1; then
+	echo "opkg-cl is missing. Are we running on Turris?" >&2
+	exit 1
+fi
+if ! which pkgupdate >/dev/null 2>&1; then
+	echo "pkgupdate is missing. Are we running on Turris?" >&2
+	exit 1
+fi
+
+# Load UCI configuration
+. /lib/functions.sh
+config_load updater
+
+# Get configuration from UCI in case of no target and --verify
+if [ "$verify" = "y" ]; then
+	if [ -z "$mode" ]; then
+		case "$(get_mode)" in
+			branch)
+				mode="branch"
+				;;
+			version)
+				mode="version"
+				;;
+			*)
+				echo "Reseting mode to 'branch' because of invalid value: $(get_mode)"
+				mode="branch"
+				;;
+		esac
 	fi
+	if [ -z "$target" ]; then
+		case "$mode" in
+			branch)
+				target="$(get_branch)"
+				;;
+			version)
+				target="$(get_version)"
+				;;
+		esac
+	fi
+fi
+
+# In default we prefer mode branch
+[ -n "$mode" ] || mode="branch"
+
+# Fetch all existing versions
+if [ "$mode" = "version" ] || [ "$list_versions" = "y" ]; then
+	versions="$(curl "https://repo.turris.cz/archive/" | \
+		sed -n 's|.*alt="\[DIR\]".*<a href="\([^"]*\)/".*|\1|p' | \
+		grep -Ev "^(omnia|turris|3.x)$" | sort -Vr)"
+fi
+# List all versions if requested
+if [ "$list_versions" = "y" ]; then
+	echo "$versions"
+	exit 0
+fi
+
+# If branch provided then verify it
+if [ -n "$target" ]; then
+	case "$mode" in
+		branch)
+			branch_alts
+			if ! check_branch; then
+				echo "Branch $target isn't a supported branch!" >&2
+				exit 1
+			fi
+			;;
+		version)
+			version_alts
+			if ! check_version; then
+				echo "Version $target seems to not be existing released version!" >&2
+				exit 1
+			fi
+			;;
+	esac
+fi
+
+# Interactive selection of branch or version unless provided already
+while [ -z "$target" ]; do
+	case "$mode" in
+		branch)
+			select_branch
+			;;
+		version)
+			select_version
+			;;
+	esac
 done
 
 # For test branches install test keys
-if [ "$version" != "y" ]; then
-	case "$branch" in
+if [ "$mode" != "version" ]; then
+	case "$target" in
 		hbs|hbt)
-			# We don't have to remove cznic-repo-keys-test as it's removed automaticaly by updater
+			# We don't have to remove cznic-repo-keys-test as it's removed automatically by updater
 			;;
 		*)
-			# We should not use opkg to check for installed packages because it requires its lock which makes this tool impossible to use from install scripts
+			# We can't use opkg to check for installed packages because it requires its lock which makes this tool impossible to use from install scripts
 			if [ ! -f /usr/lib/opkg/info/cznic-repo-keys-test.control ]; then # If not installed
 				# We use opkg-cl instead of opkg to bypass updater wrapper and not to add it to /etc/updater/auto.lua
 				opkg-cl update
@@ -254,30 +325,30 @@ if [ "$version" != "y" ]; then
 	esac
 fi
 
+###################################
+
 set -x
 
-## Set uci configuration
 uci set updater.turris=turris
-if [ "$(get_mode)" = "branch" ]; then
-	uci set updater.turris.switch_from="$(get_branch)"
-else
-	uci set updater.turris.switch_from="hbs"
-fi
-if [ "$version" = "y" ]; then
-	uci set updater.turris.mode="version"
-	uci set updater.turris.version="$branch"
-else
-	uci set updater.turris.mode="branch"
-	uci set updater.turris.branch="$branch"
-fi
+case "$mode" in
+	branch)
+		# Set uci configuration
+		uci set updater.turris.mode="branch"
+		uci set updater.turris.branch="$target"
+		# Tweak opkg distribution feeds
+		sed -i "s|https://repo\.turris\.cz/.*/\([^/]*\)/packages/|https://repo\.turris\.cz/$target/\1/packages/|" /etc/opkg/distfeeds.conf
+		;;
+	version)
+		# Set uci configuration
+		uci set updater.turris.mode="version"
+		uci set updater.turris.version="$target"
+		# Tweak opkg distribution feeds
+		sed -i "s|https://repo\.turris\.cz/.*/\([^/]*\)/packages/|https://repo\.turris\.cz/archive/$target/\1/packages/|" /etc/opkg/distfeeds.conf
+		;;
+esac
 uci commit updater.turris
 
-## Tweak opkg distribution feeds
-if [ "$version" = "y" ]; then
-	sed -i "s#https://repo\.turris\.cz/.*/\([^/]*\)/packages/#https://repo\.turris\.cz/archive/$branch/\1/packages/#" /etc/opkg/distfeeds.conf
-else
-	sed -i "s#https://repo\.turris\.cz/.*/\([^/]*\)/packages/#https://repo\.turris\.cz/$branch/\1/packages/#" /etc/opkg/distfeeds.conf
-fi
+set +x
 
 # If we are verifying configuration than the work is done.
 # We don't want to run updater nor printing info about branch.
@@ -286,12 +357,14 @@ if [ "$verify" = "y" ]; then
 fi
 
 ## Update opkg
-opkg update || echo "OPKG update failed. Please see previous output to know what went wrong." >&2
+opkg update || \
+	echo "OPKG update failed. Please see previous output to know what went wrong." >&2
 
 ## Run updater
-updater-supervisor -d --ensure-run || echo "Updater failed to start. Please run it manualy: pkgupdate" >&2
+updater-supervisor -d --ensure-run || \
+	echo "Updater failed to start. Please run it manually: pkgupdate" >&2
 
-set +x
+##################################################################################
 
 print_snail() {
 	cat <<"EOF"
@@ -300,6 +373,8 @@ print_snail() {
    | | '\ \ \_/ )
  ,-\ `-.' /.'  /
 '---`----'----'
+You are now on stable latest version of Turris OS.
+In case of problems please contact Turris support (https://docs.turris.cz/basics/support/).
 EOF
 }
 
@@ -311,6 +386,9 @@ print_turtle() {
  '-<_><_><_><_>=/\
    `/_/====/_/-'\_\
     ""     ""    ""
+You are now in branch containing next release candidate.
+You can discuss problems on forum (https://forum.turris.cz).
+Please report unknown problems to support (https://docs.turris.cz/basics/support/).
 EOF
 }
 
@@ -321,6 +399,12 @@ print_kitten() {
  (_Y_.)'  ._   )  `._ `. ``-..-'
    _..`--'_..-_/  /--'_.'
   ((((.-''  ((((.'  (((.-'
+You are now in branch containing software build every night. It often contains bugs and sometimes requires manual intervention!
+It is based on latest stable OpenWrt branch with Turris OS changes.
+Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/).
+If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/),
+You shouldn't be in this branch unless you are advanced user!
+To return to stable branch run this command: switch-branch hbs
 EOF
 }
 
@@ -339,6 +423,12 @@ print_lion() {
     \\/         ) | |
      \         /_ | |__
      (___________)))))))
+You are now in branch containing software build every night. It often contains bugs and sometimes requires manual intervention!
+It is based on latest stable OpenWrt branch with latest Turris OS changes.
+Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/).
+If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/),
+You shouldn't be in this branch unless you are advanced user!
+To return to stable branch run this command: switch-branch hbs
 EOF
 }
 
@@ -355,68 +445,75 @@ print_dragon() {
  ||      /    \)___)\
  | \____(      )___) )___
   \______(_______;;; __;;;
+
+You are now in branch containing software build every night. It often contains bugs and very often requires manual intervention!
+It is based on latest OpenWrt development branch with latest Turris OS changes.
+Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/).
+If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/),
+You shouldn't be in this branch unless you are advanced user and OpenWrt developer!
+To return to stable branch run this command: switch-branch hbs
+EOF
+}
+
+print_unknown() {
+	cat <<"EOF"
+You are now in unknown branch. Unless you are a developer you shouldn't use this branch!
+Turris team provides no guarantees and no support for this branch.
+To return to stable branch run this command: switch-branch hbs
+EOF
+}
+
+print_latest_version() {
+	cat <<"EOF"
+You are using now latest stable version of Turris OS.
+If you encounter some problems please contact Turris support (https://docs.turris.cz/basics/support/).
+Note that this version is only supported by Turris support until new stable release is released.
+Do not forget to come back and switch to newer version when it is released!
+EOF
+}
+
+print_older_version() {
+	cat <<"EOF"
+You are now using one of the older versions of Turris OS.
+Old versions are not supported!
+Please switch to rolling branch or to latest branch as soon as possible!
+To switch to latest stable branch use: switch-branch hbs
 EOF
 }
 
 
 # Print some info about new version
+{
 echo
-if [ "$version" = "y" ]; then
-	if [ "$branch" = "$(latest_version)" ]; then
-		echo "You are using now the latest stable version of Turris OS." >&2
-		echo "If you encounter some problems please contact Turris support (https://docs.turris.cz/basics/support/)." >&2
-		echo "Note that this version is only supported by Turris support until new stable release is released." >&2
-		echo "Do not forget to come back and switch to newer version when it is released!" >&2
-	else
-		echo "You are now using one of the older versions of Turris OS." >&2
-		echo "Old versions are not supported!" >&2
-		echo "Please switch to rolling branch or to the latest branch as soon as possible!" >&2
-		echo "To switch to the latest stable branch use: switch-branch hbs" >&2
-	fi
-else
-	case "$branch" in
-		hbs)
-			print_snail
-			echo "You are now on stable the latest version of Turris OS." >&2
-			echo "With problems please contact Turris support (https://docs.turris.cz/basics/support/)." >&2
-			;;
-		hbt)
-			print_turtle
-			echo "You are now in branch containing next release candidate." >&2
-			echo "You can discuss problems on forum (https://forum.turris.cz)." >&2
-			echo "Please report unknown problems to support (https://docs.turris.cz/basics/support/)." >&2
-			;;
-		hbk)
-			print_kitten
-			echo "You are now in branch containing software build every night. It often contains bugs and sometimes requires manual intervention!" >&2
-			echo "It is based on the latest stable OpenWrt branch with Turris OS changes." >&2
-			echo "Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/)." >&2
-			echo "If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/)," >&2
-			echo "You shouldn't be in this branch unless you are advanced user!" >&2
-			echo "To return to stable branch run this command: switch-branch hbs" >&2
-			;;
-		hbl)
-			print_lion
-			echo "You are now in branch containing software build every night. It often contains bugs and sometimes requires manual intervention!" >&2
-			echo "It is based on the latest stable OpenWrt branch with the latest Turris OS changes." >&2
-			echo "Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/)." >&2
-			echo "If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/)," >&2
-			echo "You shouldn't be in this branch unless you are advanced user!" >&2
-			echo "To return to stable branch run this command: switch-branch hbs" >&2
-			;;
-		hbd)
-			print_dragon
-			echo "You are now in branch containing software build every night. It often contains bugs and very often requires manual intervention!" >&2
-			echo "It is based on the latest OpenWrt development branch with the latest Turris OS changes." >&2
-			echo "Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/)." >&2
-			echo "If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/)," >&2
-			echo "You shouldn't be in this branch unless you are advanced user and OpenWrt developer!" >&2
-			echo "To return to stable branch run this command: switch-branch hbs" >&2
-			;;
-		*)
-			echo "You are now in unknown branch. Unless you are a developer you shouldn't use this branch!" >&2
-			echo "Turris team provides no guarantees and no support for this branch." >&2
-			echo "To return to stable branch run this command: switch-branch hbs" >&2
-			;;
-	esac
-fi
+case "$mode" in
+	branch)
+		case "$target" in
+			hbs)
+				print_snail
+				;;
+			hbt)
+				print_turtle
+				;;
+			hbk)
+				print_kitten
+				;;
+			hbl)
+				print_lion
+				;;
+			hbd)
+				print_dragon
+				;;
+			*)
+				print_unknown
+				;;
+		esac
+		;;
+	version)
+		if [ "$target" = "$(latest_version)" ]; then
+			print_latest_version
+		else
+			print_older_version
+		fi
+		;;
+esac
+} >&2

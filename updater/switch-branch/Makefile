@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=switch-branch
-PKG_VERSION:=2.4.1
+PKG_VERSION:=2.5
 PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -19,6 +19,7 @@ define Package/switch-branch
   SECTION:=updater
   CATEGORY:=Turris Updater
   TITLE:=Tool to set updater to follow different rolling branches
+  DEPENDS:=+uci +coreutils-sort +opkg +updater-supervisor +curl
 endef
 
 Build/Compile:=:
