@@ -3,6 +3,7 @@ This file is part of switch-branch. Don't edit it.
 
 This script includes test keys if target branch is not in known list of
 stable branches.
+This excludes mode == "version" as final versions are never signed by test key.
 ]]
 
 -- Set of stable branches (signed by deploy or staging key)

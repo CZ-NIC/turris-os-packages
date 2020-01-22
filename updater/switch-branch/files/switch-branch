@@ -1,7 +1,26 @@
 #!/bin/sh
 set -e
-# TODO notest on what to add:
-# * --latest option that in combination with --version automatically sets latest release
+
+print_help() {
+	echo "Usage: switch-branch [OPTION]... [BRANCH]"
+	echo "Script for easier switching between rolling versions of Turris OS."
+	echo "It configures both updater-ng and opkg repository source."
+	echo
+	echo "Options:"
+	echo "  --version        Instead of switching to branch switch to fixed version"
+	echo "  --list-versions  List all available versions"
+	echo "  --verify         Verify and fix branch/version settings (apply setting from uci updater.turris)"
+	echo "  --force          Change to unknown (not-existing) branch/version"
+	echo "  --help           Print this help text"
+	echo "Branch:"
+	echo "  If BRANCH is specified then switch is immediately performed."
+	echo "  You can run without BRANCH to enter interactive mode."
+	echo "  When --version is used with BRANCH then version instead of branch name is expected."
+	echo "  You can use --list-versions to found out available versions or use aliases:"
+	echo "    'latest' or 'major' to switch to latest version (not branch)"
+	echo "    'minor' to stay on current major version but switch to latest minor"
+	echo "    'fixup' to stay on current major and minor version but switch to latest fixup"
+}
 
 branch=
 version="n"
@@ -11,16 +30,7 @@ force="n"
 while [ $# -gt 0 ]; do
 	case "$1" in
 		-h|--help)
-			echo "Usage: switch-branch [OPTION]... [BRANCH]"
-			echo "Script for easier switching between rolling versions of Turris OS."
-			echo "It configures both updater-ng and opkg repository source."
-			echo
-			echo "Options:"
-			echo "  --version        Instead of switching to branch switch to fixed version"
-			echo "  --list-versions  List all available versions"
-			echo "  --verify         Verify and fix branch/version settings (apply setting from uci updater.turris)"
-			echo "  --force          Change to unknown (not-existing) branch/version"
-			echo "  --help           Print this help text"
+			print_help
 			exit 0
 			;;
 		--version)
@@ -84,6 +94,13 @@ get_branch() {
 get_version() {
 	uci get updater.turris.version 2>/dev/null || cat /etc/turris-version
 }
+# Sets variables v_major v_minor v_fixup with appropriate fields from current
+# version
+get_version_parts() {
+	IFS=. read -r v_major v_minor v_fixup <<EOF
+	$(get_version)
+EOF
+}
 # Check if we should use version (or branch)
 use_version() {
 	uci get updater.turris.version >/dev/null 2>&1
@@ -113,6 +130,26 @@ branch_alts() {
 			;;
 	esac
 }
+# We also support various aliases for versions.
+version_alts() {
+	local v_major v_minor v_fixup
+	case "$branch" in
+		latest|major)
+			branch="$(latest_version)"
+			;;
+		minor)
+			get_version_parts
+			branch="$(echo "$versions" | \
+				awk -F . -vmajor="$v_major" '$1 == major { print; exit }')"
+			;;
+		fixup)
+			get_version_parts
+			branch="$(echo "$versions" | \
+				awk -F . -vmajor="$v_major" -vminor="$v_minor" \
+					'$1 == major && $2 == minor { print; exit }')"
+			;;
+	esac
+}
 
 # Checks if branch is supported (accept any branch if forced, otherwise only the
 # selected ones)
@@ -133,6 +170,7 @@ fi
 # If branch provided then verify it
 if [ -n "$branch" ]; then
 	if [ "$version" = "y" ]; then
+		version_alts
 		if ! check_version; then
 			echo "Version $branch seems to not be existing released version!" >&2
 			exit 1
