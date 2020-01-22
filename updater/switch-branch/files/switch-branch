@@ -2,10 +2,10 @@
 set -e
 # TODO notest on what to add:
 # * --latest option that in combination with --version automatically sets latest release
-# * --list-versions option that allows any external script to list all available versions
 
 branch=
 version="n"
+list_versions="n"
 verify="n"
 force="n"
 while [ $# -gt 0 ]; do
@@ -16,14 +16,18 @@ while [ $# -gt 0 ]; do
 			echo "It configures both updater-ng and opkg repository source."
 			echo
 			echo "Options:"
-			echo "  --version  Instead of switching to branch switch to fixed version"
-			echo "  --verify   Verify and fix branch/version settings (apply setting from uci updater.turris)"
-			echo "  --force    Change to unknown (not-existing) branch/version"
-			echo "  --help     Print this help text"
+			echo "  --version        Instead of switching to branch switch to fixed version"
+			echo "  --list-versions  List all available versions"
+			echo "  --verify         Verify and fix branch/version settings (apply setting from uci updater.turris)"
+			echo "  --force          Change to unknown (not-existing) branch/version"
+			echo "  --help           Print this help text"
 			exit 0
 			;;
 		--version)
 			version="y"
+			;;
+		--list-versions)
+			list_versions="y"
 			;;
 		--verify)
 			verify="y"
@@ -60,10 +64,16 @@ fi
 uci_load updater
 
 # Fetch all existing versions
-if [ "$version" = "y" ]; then
+if [ "$version" = "y" ] || [ "$list_versions" = "y" ]; then
 	versions="$(curl "https://repo.turris.cz/archive/" | \
 		sed -n 's|.*alt="\[DIR\]".*<a href="\([^"]*\)/".*|\1|p' | \
 		grep -Ev "^(omnia|turris|3.x)$" | sort -r)"
+fi
+
+# List all version if requested
+if [ "$list_versions" = "y" ]; then
+	echo "$versions"
+	exit 0
 fi
 
 # Return current branch
