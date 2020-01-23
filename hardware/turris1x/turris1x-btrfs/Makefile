@@ -32,7 +32,7 @@ endef
 define Package/turris1x-btrfs-migrate
   $(call Package/Common)
   TITLE:=Btrfs migration tool for Turris 1.x routers
-  DEPENDS+=+turris1x-btrfs-support +btrfs-progs +uboot-envtools +fdisk +dosfstools
+  DEPENDS+=+turris1x-btrfs +btrfs-progs +uboot-envtools +fdisk +dosfstools
 endef
 
 define Package/turris1x-btrfs/description
