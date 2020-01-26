@@ -43,5 +43,5 @@ endef
 
 FORIS_TRANSLATIONS:=cs it de sk ru pl it hu fr nb
 
-$(eval $(call ForisPlugin,/foris-netmetr-plugin,netmetr))
+$(eval $(call ForisPlugin,foris-netmetr-plugin,netmetr))
 # call BuildPackage <= assures OWR build system that this is package
