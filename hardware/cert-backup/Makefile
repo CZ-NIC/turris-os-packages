@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cert-backup
 PKG_VERSION:=14
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=BSD-3-Clause
@@ -53,12 +53,12 @@ endef
 
 define Package/cert-backup-btrfs/install
 	$(INSTALL_DIR) $(1)/usr/share/cert-backup
-	$(INSTALL_FILE) ./files/btrfs_backend.sh $(1)/usr/share/cert-backup/backend.sh
+	$(INSTALL_DATA) ./files/btrfs_backend.sh $(1)/usr/share/cert-backup/backend.sh
 endef
 
 define Package/cert-backup-turris1x/install
 	$(INSTALL_DIR) $(1)/usr/share/cert-backup
-	$(INSTALL_FILE) ./files/turris1x_backend.sh $(1)/usr/share/cert-backup/backend.sh
+	$(INSTALL_DATA) ./files/turris1x_backend.sh $(1)/usr/share/cert-backup/backend.sh
 endef
 
 Build/Compile:=:
