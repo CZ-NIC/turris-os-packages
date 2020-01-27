@@ -102,10 +102,10 @@ define Package/libunbound/description
 endef
 
 CONFIGURE_ARGS += \
+	--disable-dsa \
 	--disable-gost \
 	--enable-allsymbols \
 	--enable-subnet \
-	--with-ldns="$(STAGING_DIR)/usr" \
 	--with-libexpat="$(STAGING_DIR)/usr" \
 	--with-ssl="$(STAGING_DIR)/usr" \
 	--without-pthreads
