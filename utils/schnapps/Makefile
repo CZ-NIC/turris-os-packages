@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=schnapps
 PKG_VERSION:=2.2.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/schnapps.git
@@ -47,7 +47,7 @@ define Package/schnapps/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/schnapps.sh $(1)/usr/bin/schnapps
 
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps.uci $(1)/etc/config
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/schnapps.uci $(1)/etc/config/schnapps
 	$(INSTALL_DIR) $(1)/etc/schnapps/rollback.d/
 	$(INSTALL_BIN) ./files/cert-backup_hook.sh $(1)/etc/schnapps/rollback.d/10_cert-backup.sh
 
