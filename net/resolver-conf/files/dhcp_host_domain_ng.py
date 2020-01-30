@@ -47,7 +47,7 @@ def is_valid_ipv6(address):
 
 
 def log(text, priority=LOG_INFO, output="syslog"):
-    if output is "syslog":
+    if output == "syslog":
         syslog.syslog(priority, text)
     else:
         print(text)
