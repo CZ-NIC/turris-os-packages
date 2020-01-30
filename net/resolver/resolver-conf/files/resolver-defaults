@@ -21,13 +21,28 @@ done
 uci commit dhcp
 uci commit system
 
-# set default DNS resolver and prefer knot-resolver if available
-if [ -f "/usr/bin/kresd" ]; then
-	uci set resolver.common.prefered_resolver="kresd"
-	uci commit resolver
-elif [ -f "/usr/sbin/unbound" ]; then
-	uci set resolver.common.prefered_resolver="unbound"
-	uci commit resolver
-else
-	logger -t resolver_conf "Error! Could not find resolver! DNS resolving will not work."
+
+pref="$(uci get resolver.common.prefered_resolver)"
+if [ "$pref" == "kresd" ]; then
+	if [ -f "/etc/init.d/kresd" ]; then
+		set_pref="kresd"
+	elif [ -f "/etc/init.d/unbound" ]; then
+		set_pref="unbound"
+	else
+		logger -t resolver_conf "Error! Could not find any resolver! DNS resolving will not work."
+		exit 1
+	fi
+elif [ "$pref" == "unbound" ]; then
+	if [ -f "/etc/init.d/unbound" ]; then
+		set_pref="unbound"
+	elif [ -f "/etc/init.d/kresd" ]; then
+		set_pref="kresd"
+	else
+		logger -t resolver_conf "Error! Could not find any resolver! DNS resolving will not work."
+		exit 1
+	fi
 fi
+
+uci set resolver.common.prefered_resolver="$pref"
+uci commit resolver
+
