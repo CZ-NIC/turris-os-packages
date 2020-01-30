@@ -11,8 +11,6 @@ PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.1
 PKG_RELEASE:=34
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-
 PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec@nic.cz>
 PKG_LICENSE:=GPL-3.0
 
@@ -21,11 +19,11 @@ PKG_INSTALL:=0
 include $(INCLUDE_DIR)/package.mk
 
 define Package/resolver-conf
-	SECTION:=net
-	CATEGORY:=Network
-	SUBMENU:=IP Addresses and Names
-	TITLE:=Resolver configuration
-	DEPENDS:=+python3-light +python3-multiprocessing +python3-logging +ca-bundle
+  SECTION:=net
+  CATEGORY:=Network
+  SUBMENU:=IP Addresses and Names
+  TITLE:=Resolver configuration
+  DEPENDS:=+python3-light +python3-multiprocessing +python3-logging +ca-bundle
 endef
 
 define Package/resolver-conf/description
