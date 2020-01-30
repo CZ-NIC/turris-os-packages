@@ -95,7 +95,7 @@ class Kresd:
         try:
             files = [f for f in listdir(path)]
             return os.path.join(path, files[0])
-        except:
+        except FileNotFoundError:
             log("Kresd is probably not running no socket found.", LOG_ERR)
             sys.exit(1)
 
