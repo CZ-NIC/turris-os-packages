@@ -1,0 +1,23 @@
+#!/bin/sh
+# set default DNS resolver
+
+DHCP_SCRIPT=/etc/resolver/dhcp_host_domain_ng.py
+DHCP_SCRIPT_OLD=/etc/kresd/dhcp_host_domain_ng.sh
+
+remove_dhcp_script() {
+        local config="$1"
+        local script
+
+	#config_load dhcp
+        config_get script "$config" dhcpscript
+	if 	[ "$script" == "$DHCP_SCRIPT" ] || \
+		[ "$script" == "$DHCP_SCRIPT_OLD" ]; \
+	then
+		echo "Info: Removing old dhcp script from dnsmasq config"
+		config_set "$config" dhcpscript ""
+	fi
+	uci_commit dhcp
+}
+
+config_load dhcp
+config_foreach remove_dhcp_script dnsmasq
