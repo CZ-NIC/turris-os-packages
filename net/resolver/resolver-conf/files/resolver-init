@@ -4,7 +4,6 @@
 SERVICE_USE_PID=0
 
 DHCP_SCRIPT=/etc/resolver/dhcp_host_domain_ng.py
-DHCP_SCRIPT_OLD=/etc/kresd/dhcp_host_domain_ng.sh
 
 START=60
 
@@ -23,30 +22,6 @@ prefered_resolver() {
 }
 
 PREF_RESOLVER=$(prefered_resolver)
-
-get_dhcp_script() {
-        local config="$1"
-        local tmp_dhcpscript
-
-	#config_load dhcp
-        config_get tmp_dhcpscript "$config" dhcpscript
-        echo $tmp_dhcpscript
-}
-
-remove_dhcp_script() {
-	local script
-
-	config_load dhcp
-	script=$(config_foreach get_dhcp_script dnsmasq)
-
-	if 	[ "$script" == "$DHCP_SCRIPT" ] || \
-		[ "$script" == "$DHCP_SCRIPT_OLD" ]; \
-	then
-		echo $script
-		uci_set dhcp "@dnsmasq[0]" dhcpscript ""
-		uci_commit dhcp
-	fi
-}
 
 run_dhcp_script() {
 	local action resolver dynamic_domains
@@ -126,8 +101,6 @@ run_cmd() {
 		#run script to refresh dynamic domains
 		config_load resolver
 		config_get_bool dynamic_domains "common" dynamic_domains 0
-		#remove dhcp script, because are using hotplug functionality
-		remove_dhcp_script
 		if [ "$dynamic_domains" == "1" ]; then
 			run_dhcp_script $param $LAST_SERVICE
 		fi
