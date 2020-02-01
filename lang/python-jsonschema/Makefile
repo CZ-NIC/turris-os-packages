@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018-2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2018-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-jsonschema
-PKG_VERSION:=3.0.1
-PKG_RELEASE:=4
+PKG_VERSION:=3.2.0
+PKG_RELEASE:=1
 
 PKG_SOURCE:=jsonschema-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/j/jsonschema/
-PKG_HASH:=0c0a81564f181de3212efa2d17de1910f8732fa1b71c42266d983cd74304e20d
+PKG_HASH:=c8a85b28d377cc7737e46e2d9f2b4f44ee3c0e1deac6bf46ddefc7187d30797a
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/jsonschema-$(PKG_VERSION)
 
