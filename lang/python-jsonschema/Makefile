@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-jsonschema
 PKG_VERSION:=3.2.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=jsonschema-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/j/jsonschema/
@@ -30,7 +30,7 @@ define Package/python3-jsonschema
   SUBMENU:=Python
   TITLE:=An implementation of JSON Schema validation
   URL:=https://github.com/Julian/jsonschema
-  DEPENDS:=+python3-light +python3-attrs +python3-six +python3-pyrsistent
+  DEPENDS:=+python3-light +python3-attrs +python3-six +python3-pyrsistent +python3-importlib-metadata
   VARIANT:=python3
 endef
 
