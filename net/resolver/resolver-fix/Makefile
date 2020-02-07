@@ -35,9 +35,12 @@ endef
 define Build/Install
 endef
 
-define Package/resolver-fi/install
+define Package/resolver-fix/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/resolver-fix $(1)/etc/uci-defaults/resolver-fix
+	$(INSTALL_DIR) $(1)/etc/resolver
+	$(INSTALL_BIN) ./files/dynamic-domain-conv $(1)/etc/resolver/dynamic-domain-conv.sh
+
 endef
 
 define Package/resolver-fix/postinst
@@ -45,6 +48,7 @@ define Package/resolver-fix/postinst
 # check if we are on real system
 if [ -z "$$IPKG_INSTROOT" ]; then
 	/etc/uci-defaults/resolver-fix && rm /etc/uci-defaults/resolver-fix
+	/etc/resolver/dynamic-domain-conv.sh
 fi
 endef
 
