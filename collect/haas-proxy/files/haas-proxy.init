@@ -27,7 +27,7 @@ start_service() {
 		 haas_proxy \
 		--log-level="$log_level" \
 		--device-token="$token" --port="$port"
-	[ -z "$log" -o "$log" = "none" ] || procd_append_param command --log="$log"
+	[ -z "$log" -o "$log" = "none" ] || procd_append_param command --log-file="$log"
 	procd_set_param respawn 3600 5 5
 	procd_set_param file /etc/config/haas
 	procd_set_param stdout 1
