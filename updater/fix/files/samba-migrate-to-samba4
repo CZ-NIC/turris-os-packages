@@ -1,0 +1,66 @@
+#!/bin/sh
+set -e
+. /lib/functions.sh
+config_load samba
+
+
+samba_option_migrate() {
+	local conf="$1"
+	local option="$2"
+	local value
+	config_get value "$conf" "$option"
+	[ -n "$value" ] || return 0
+	# We always set it to first section as it seems that it is not expected that
+	# there is more than one samba section.
+	uci set "samba4.@samba[0].$option=$value"
+}
+
+samba_homes() {
+	local conf="$1"
+	# Note: homes option is no longer supported by Samba4 UCI config
+	local homes
+	config_get_bool homes "$conf" homes "0"
+	[ "$homes" = "1" ] || return 0
+	create_notification -s update \
+		"Samba: Disabling option to share home-directories. Sharing home-directories is discouraged and disabled on Samba4."
+	echo "Disabling samba option: Share home-directories" >&2
+}
+
+samba_handle() {
+	local conf="$1"
+	# Note: samba section is provided by default samba4 config
+	samba_option_migrate "$conf" name
+	samba_option_migrate "$conf" workgroup
+	samba_option_migrate "$conf" description
+	samba_option_migrate "$conf" charset
+	samba_option_migrate "$conf" interface
+	samba_homes "$conf"
+}
+config_foreach samba_handle samba
+
+
+sambashare_option_migrate() {
+	local conf="$1"
+	local newconf="$2"
+	local option="$3"
+	local default="${4:-}"
+	config_get value "$conf" "$option" "$default"
+	[ -n "$value" ] || return 0
+	uci set "samba4.$newconf.$option=$value"
+}
+
+sambashare_handle() {
+	local conf="$1"
+	local newconf
+	newconf="$(uci add samba4 sambashare)"
+	sambashare_option_migrate "$conf" "$newconf" name
+	sambashare_option_migrate "$conf" "$newconf" path
+	sambashare_option_migrate "$conf" "$newconf" users
+	sambashare_option_migrate "$conf" "$newconf" read_only
+	sambashare_option_migrate "$conf" "$newconf" guest_ok
+	sambashare_option_migrate "$conf" "$newconf" create_mask "0644"
+	sambashare_option_migrate "$conf" "$newconf" dir_mask "0755"
+}
+config_foreach sambashare_handle sambashare
+
+uci commit samba4

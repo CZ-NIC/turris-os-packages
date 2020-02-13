@@ -47,4 +47,12 @@ define Package/fix-sentinel-remove-invalid-firewall-rules/description
   inserted and so they were invalid. Although this can be reused later.
 endef
 
+define Package/samba-migrate-to-samba4/description
+  With Turris OS 5.0 Samba4 was introduced and switch to it was performed in
+  package lists. To support parallel installation of both Samba3 and Samba4
+  OpenWrt chose to have two separate configs. This fix package migrates existing
+  configuration from Samba3 to Samba4 specific configuration file.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
+$(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
