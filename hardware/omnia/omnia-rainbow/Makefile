@@ -26,7 +26,7 @@ define Package/omnia-rainbow
   TITLE:=omnia-rainbow
   URL:=https://gitlab.labs.nic.cz/turris/rainbow_omnia
   PROVIDES:=turris-rainbow
-  DEPENDS+=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
+  DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
 endef
 
 define Package/omnia-rainbow/conffiles
