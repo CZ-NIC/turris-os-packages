@@ -41,4 +41,6 @@ define Package/start-indicator/prerm
 }
 endef
 
+Compile:=:
+
 $(eval $(call BuildPackage,start-indicator))
