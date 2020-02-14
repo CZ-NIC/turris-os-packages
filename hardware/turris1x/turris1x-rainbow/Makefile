@@ -26,7 +26,7 @@ define Package/turris1x-rainbow
   TITLE:=turris1x-rainbow
   URL:=https://gitlab.labs.nic.cz/turris/rainbow
   PROVIDES:=turris-rainbow
-  DEPENDS:=@(TARGET_mpc85xx_p2020_nand||TARGET_mpc85xx_p2020_nor)
+  DEPENDS:=@TARGET_mpc85xx_p2020_TURRIS
 endef
 
 define Package/turris1x-rainbow/conffiles
