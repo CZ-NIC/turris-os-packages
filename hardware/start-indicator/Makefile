@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=start-indicator
 PKG_VERSION:=0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-2.0-or-later
@@ -18,7 +18,6 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/start-indicator
   TITLE:=start-indicator
-  DEPENDS:=+turris-rainbow
 endef
 
 define Package/start-indicator/install
