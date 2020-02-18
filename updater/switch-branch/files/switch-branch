@@ -104,8 +104,12 @@ check_version() {
 
 ##################################################################################
 
+print_usage() {
+	echo "Usage: switch-branch [OPTION]... [--] [BRANCH]"
+}
+
 print_help() {
-	echo "Usage: switch-branch [OPTION]... [BRANCH]"
+	print_usage
 	echo "Script for easier switching between rolling versions of Turris OS."
 	echo "It configures both updater-ng and opkg repository source."
 	echo
@@ -178,13 +182,14 @@ select_version() {
 }
 
 ##################################################################################
-
 target=
 mode=
 list_versions="n"
 verify="n"
 force="n"
-while [ $# -gt 0 ]; do
+noopts="n"
+
+arg_option() {
 	case "$1" in
 		-h|--help)
 			print_help
@@ -205,10 +210,33 @@ while [ $# -gt 0 ]; do
 		--force)
 			force="y"
 			;;
+		--)
+			noopts="y"
+			;;
 		*)
-			target="$1"
+			echo "Invalid option: $1" >&2
+			print_usage
+			exit 1
 			;;
 	esac
+}
+
+while [ $# -gt 0 ]; do
+	if [ "$noopts" != "y" ]; then
+		case "$1" in
+			-*)
+				arg_option "$1"
+				shift
+				continue
+				;;
+		esac
+	fi
+	[ -z "$target" ] || {
+		echo "Invalid argument: $1" >&2
+		print_usage
+		exit 1
+	}
+	target="$1"
 	shift
 done
 
