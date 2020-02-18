@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata-bin
 PKG_VERSION:=4.0.7
-PKG_RELEASE=2
+PKG_RELEASE=3
 
 PKG_SOURCE:=suricata-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.openinfosecfoundation.org/download/
@@ -52,6 +52,14 @@ define Package/suricata-bin
   DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +librt +libpcap $(LUAJIT_DEP) +libnetfilter-queue +iptables-mod-nfqueue +libnetfilter-log +libnfnetlink +iptables-mod-conntrack-extra +libhtp +libnet-1.2.x
 endef
 
+define Package/suricata-rules
+  SECTION:=net
+  CATEGORY:=Network
+  TITLE:=Rules files for Suricata
+  URL:=https://suricata-ids.org/
+  DEPENDS:=+suricata-bin
+endef
+
 define Package/suricata-bin/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/suricata* $(1)/usr/bin
@@ -62,4 +70,10 @@ define Package/suricata-bin/install
 	$(CP) $(PKG_BUILD_DIR)/threshold.config $(1)/etc/suricata
 endef
 
+define Package/suricata-rules/install
+	$(INSTALL_DIR) $(1)/etc/suricata/rules
+	$(CP) $(PKG_BUILD_DIR)/rules/*.rules $(1)/etc/suricata/rules
+endef
+
 $(eval $(call BuildPackage,suricata-bin))
+$(eval $(call BuildPackage,suricata-rules))
