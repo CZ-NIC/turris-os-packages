@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-remote-access-plugin
-PKG_VERSION:=1.0.0
+PKG_VERSION:=1.1.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-remote-access
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -32,7 +32,7 @@ include ../reforis/files/reforis-translations.mk
 define Package/reforis-remote-access-plugin
   TITLE:=reForis remote access plugin
   URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-remote-access
-  DEPENDS:= \
+  DEPENDS:=\
     +reforis
   VARIANT:=python3
 endef
