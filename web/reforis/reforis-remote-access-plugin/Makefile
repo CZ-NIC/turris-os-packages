@@ -29,19 +29,19 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 include ../reforis/files/reforis-plugin.mk
 include ../reforis/files/reforis-translations.mk
 
-define Package/$(PKG_NAME)
-  TITLE:=$(PKG_NAME)
+define Package/reforis-remote-access-plugin
+  TITLE:=reForis remote access plugin
   URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-remote-access
   DEPENDS:= \
     +reforis
-  VARIANT=python3
+  VARIANT:=python3
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/reforis-remote-access-plugin/description
   reForis Remote Access Plugin.
 endef
 
 REFORIS_TRANSLATIONS:=cs
 
-$(eval $(call ReForisPlugin,$(PKG_NAME),reforis_remote_access))
+$(eval $(call ReForisPlugin,reforis-remote-access-plugin,reforis_remote_access))
 # call BuildPackage <= assures OWR build system that this is package
