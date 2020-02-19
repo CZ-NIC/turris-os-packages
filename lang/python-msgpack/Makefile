@@ -8,19 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-msgpack
-PKG_VERSION:=0.6.2
+PKG_VERSION:=1.0.0
 PKG_RELEASE:=1
 
-PKG_SOURCE:=msgpack-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/m/msgpack/
-PKG_HASH:=ea3c2f859346fcd55fc46e96885301d9c2f7a36d453f5d8f2967840efa1e1830
-
-PKG_BUILD_DIR:=$(BUILD_DIR)/msgpack-$(PKG_VERSION)
+PYPI_NAME:=msgpack
+PKG_HASH:=9534d5cc480d4aff720233411a1f765be90885750b07df772380b34c10ecb5c0
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=Apache-2.0
 PKG_LICENSE_FILES:=COPYING
 
+include $(TOPDIR)/feeds/packages/lang/python/pypi.mk
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
