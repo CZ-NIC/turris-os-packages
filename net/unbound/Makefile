@@ -9,6 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
 PKG_VERSION:=1.9.6
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://nlnetlabs.nl/downloads/unbound/
@@ -109,6 +110,7 @@ define Package/libunbound/description
 endef
 
 CONFIGURE_ARGS += \
+	--disable-dsa \
 	--disable-gost \
 	--enable-allsymbols \
 	--enable-subnet \
