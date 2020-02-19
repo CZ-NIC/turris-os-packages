@@ -9,13 +9,12 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-babel
 PKG_VERSION:=2.8.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
-PKG_SOURCE:=Babel-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/b/babel/
+PYPI_NAME:=Babel
 PKG_HASH:=1aac2ae2d0d8ea368fa90906567f5c08463d98ade155c0c4bfedd6a0f7160e38
-PKG_BUILD_DIR:=$(BUILD_DIR)/Babel-$(PKG_VERSION)
 
+include $(TOPDIR)/feeds/packages/lang/python/pypi.mk
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
@@ -23,7 +22,7 @@ define Package/python3-babel
   SUBMENU:=Python
   SECTION:=lang
   CATEGORY:=Languages
-  TITLE:=World timezone definitions, modern and historical
+  TITLE:=Internationalization utilities
   URL:=http://babel.pocoo.org/en/latest/
   DEPENDS:=+python3-light +python3-pytz
   VARIANT:=python3
