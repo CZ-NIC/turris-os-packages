@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2015 OpenWrt.org
+# Copyright (C) 2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -11,16 +11,14 @@ PKG_NAME:=python-tornado
 PKG_VERSION:=6.0.3
 PKG_RELEASE:=1
 
-PKG_SOURCE:=tornado-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/t/tornado/
+PYPI_NAME:=tornado
 PKG_HASH:=c845db36ba616912074c5b1ee897f8e0124df269468f25e4fe21fe72f6edd7a9
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/tornado-$(PKG_VERSION)
-
-PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_MAINTAINER:=Josef Schlehofer <josef.schlehofer@nic.cz>
 PKG_LICENSE:=Apache-2.0
 PKG_LICENSE_FILES:=LICENSE
 
+include $(TOPDIR)/feeds/packages/lang/python/pypi.mk
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
