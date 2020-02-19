@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2019-2020 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,18 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-flask-babel
-PKG_VERSION:=0.12.2
-PKG_RELEASE:=2
+PKG_VERSION:=1.0.0
+PKG_RELEASE:=1
 
-PKG_SOURCE:=Flask-Babel-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/f/flask-babel/
-PKG_HASH:=316ad183e42003f3922957fa643d0a1e8e34a0f0301a88c3a8f605bc37ba5c86
-PKG_BUILD_DIR:=$(BUILD_DIR)/Flask-Babel-$(PKG_VERSION)
+PYPI_NAME:=Flask-Babel
+PKG_HASH:=d6a70468f9a8919d59fba2a291a003da3a05ff884275dddbd965f3b98b09ab3e
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=LICENSE
 
+include $(TOPDIR)/feeds/packages/lang/python/pypi.mk
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
@@ -29,11 +28,12 @@ define Package/python3-flask-babel
   SUBMENU:=Python
   TITLE:=Flask Babel
   URL:=https://github.com/python-babel/flask-babel
-  DEPENDS+= \
+  DEPENDS:= \
   +python3-light \
   +python3-flask \
   +python3-babel \
-  +python3-jinja2
+  +python3-jinja2 \
+  +python3-pytz
   VARIANT:=python3
 endef
 
