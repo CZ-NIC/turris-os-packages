@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2016-2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2016-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=64.0
+PKG_VERSION:=65.0
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater/updater.git
@@ -42,6 +42,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgupdate $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgtransaction $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/update_alternatives.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/updater
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/conf.lua $(1)/etc/updater
@@ -52,7 +53,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/updater/hook_preupdate
 	touch $(1)/etc/updater/hook_preupdate/.keep
 	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/hook_postupdate/update_alternatives.sh $(1)/etc/updater/hook_postupdate/20_update_alternatives.sh
+	touch $(1)/etc/updater/hook_postupdate/.keep
 	$(INSTALL_DIR) $(1)/etc/updater/hook_reboot_required
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/hook_reboot_required/50-create-notification.sh $(1)/etc/updater/hook_reboot_required/50-create-notification.sh
 
