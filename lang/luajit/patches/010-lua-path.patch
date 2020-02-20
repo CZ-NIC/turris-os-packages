@@ -1,0 +1,15 @@
+diff --git a/src/luaconf.h b/src/luaconf.h
+index 6c6f1131..c1374911 100644
+--- a/src/luaconf.h
++++ b/src/luaconf.h
+@@ -35,8 +35,8 @@
+ #ifndef LUA_LMULTILIB
+ #define LUA_LMULTILIB	"lib"
+ #endif
+-#define LUA_LROOT	"/usr/local"
+-#define LUA_LUADIR	"/lua/5.1/"
++#define LUA_LROOT	"/usr"
++#define LUA_LUADIR	"/lua/"
+ #define LUA_LJDIR	"/moonjit-2.2.0/"
+ 
+ #ifdef LUA_ROOT
