@@ -33,8 +33,6 @@ define Package/turris1x-rainbow/conffiles
 /etc/config/rainbow
 endef
 
-Build/Compile:=:
-
 define Package/turris1x-rainbow/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/rainbow $(1)/usr/bin/
