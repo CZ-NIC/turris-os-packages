@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=schnapps
 PKG_VERSION:=2.2.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/schnapps.git
@@ -56,7 +56,7 @@ define Package/schnapps/install
 
 	$(INSTALL_DIR) $(1)/etc/updater/hook_preupdate $(1)/etc/updater/hook_postupdate
 	$(INSTALL_BIN) ./files/updater_preupdate.sh $(1)/etc/updater/hook_preupdate/05_schnapps.sh
-	$(INSTALL_BIN) ./files/updater_postupdate.sh $(1)/etc/updater/hook_preupdate/95_schnapps.sh
+	$(INSTALL_BIN) ./files/updater_postupdate.sh $(1)/etc/updater/hook_postupdate/95_schnapps.sh
 endef
 
 $(eval $(call BuildPackage,schnapps))
