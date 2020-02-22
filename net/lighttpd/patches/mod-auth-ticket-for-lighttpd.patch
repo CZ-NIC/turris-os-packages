@@ -1,10 +1,8 @@
-Index: lighttpd-1.4.50/src/Makefile.am
-===================================================================
---- lighttpd-1.4.50.orig/src/Makefile.am	2018-08-13 06:07:22.000000000 +0200
-+++ lighttpd-1.4.50/src/Makefile.am	2018-08-31 14:52:01.272006902 +0200
-@@ -323,6 +323,11 @@
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -340,6 +340,11 @@ mod_auth_la_SOURCES = mod_auth.c
  mod_auth_la_LDFLAGS = $(common_module_ldflags)
- mod_auth_la_LIBADD = $(common_libadd)
+ mod_auth_la_LIBADD = $(CRYPTO_LIB) $(common_libadd)
  
 +lib_LTLIBRARIES += mod_auth_ticket.la
 +mod_auth_ticket_la_SOURCES = mod_auth_ticket.c
@@ -14,7 +12,7 @@ Index: lighttpd-1.4.50/src/Makefile.am
  lib_LTLIBRARIES += mod_authn_file.la
  mod_authn_file_la_SOURCES = mod_authn_file.c
  mod_authn_file_la_LDFLAGS = $(common_module_ldflags)
-@@ -426,6 +431,7 @@
+@@ -450,6 +455,7 @@ lighttpd_SOURCES = \
    mod_accesslog.c \
    mod_alias.c \
    mod_auth.c \
@@ -22,10 +20,8 @@ Index: lighttpd-1.4.50/src/Makefile.am
    mod_authn_file.c \
    mod_cgi.c \
    mod_compress.c \
-Index: lighttpd-1.4.50/src/base64.c
-===================================================================
---- lighttpd-1.4.50.orig/src/base64.c	2018-08-13 06:07:22.000000000 +0200
-+++ lighttpd-1.4.50/src/base64.c	2018-08-31 14:52:01.276006924 +0200
+--- a/src/base64.c
++++ b/src/base64.c
 @@ -2,6 +2,8 @@
  
  #include "base64.h"
@@ -44,7 +40,7 @@ Index: lighttpd-1.4.50/src/base64.c
  /* BASE64_STANDARD: "A-Z a-z 0-9 + /" maps to 0-63, pad with "=" */
  static const char base64_standard_table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
  static const signed char base64_standard_reverse_table[] = {
-@@ -233,3 +237,63 @@
+@@ -233,3 +237,63 @@ char* buffer_append_base64_encode(buffer
  
  	return result;
  }
@@ -108,21 +104,17 @@ Index: lighttpd-1.4.50/src/base64.c
 +
 +	return result;
 +}
-Index: lighttpd-1.4.50/src/base64.h
-===================================================================
---- lighttpd-1.4.50.orig/src/base64.h	2018-08-13 06:07:22.000000000 +0200
-+++ lighttpd-1.4.50/src/base64.h	2018-08-31 14:52:01.276006924 +0200
-@@ -17,4 +17,6 @@
+--- a/src/base64.h
++++ b/src/base64.h
+@@ -17,4 +17,6 @@ size_t li_to_base64(char* out, size_t ou
  char* buffer_append_base64_encode_no_padding(buffer *out, const unsigned char* in, size_t in_length, base64_charset charset);
  char* buffer_append_base64_encode(buffer *out, const unsigned char* in, size_t in_length, base64_charset charset);
  
 +unsigned char * base64_decode(buffer *out, const char *in);
 +
  #endif
-Index: lighttpd-1.4.50/src/mod_auth_ticket.c
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ lighttpd-1.4.50/src/mod_auth_ticket.c	2018-08-31 14:54:01.872672278 +0200
+--- /dev/null
++++ b/src/mod_auth_ticket.c
 @@ -0,0 +1,626 @@
 +//
 +// mod_auth_ticket - Authentication based on signed cookie
