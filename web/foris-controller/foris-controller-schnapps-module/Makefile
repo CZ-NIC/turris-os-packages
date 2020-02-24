@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-schnapps-module
-PKG_VERSION:=0.2
-PKG_RELEASE:=3
+PKG_VERSION:=0.3
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller/foris-controller-schnapps-module.git
