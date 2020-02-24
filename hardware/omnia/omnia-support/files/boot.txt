@@ -25,7 +25,7 @@ if part uuid ${devtype} ${devnum}:${distro_bootpart} partuuid; then
 
 	if test $has_dtb -eq 1; then
 		if load ${devtype} ${devnum}:${distro_bootpart} ${kernel_addr_r} ${subvol}/boot/zImage; then
-			setenv bootargs "earlyprintk rootwait ${contract} console=ttyS0,115200 rootfstype=${bootfstype} root=PARTUUID=${partuuid} rootflags=${rootflags} rw cfg80211.freg=${regdomain}"
+			setenv bootargs "earlyprintk rootwait ${contract} console=ttyS0,115200 rootfstype=${bootfstype} root=PARTUUID=${partuuid} rootflags=${rootflags} rw cfg80211.freg=${regdomain} ${quirks}"
 			bootz ${kernel_addr_r} - ${fdt_addr_r}
 			echo "Booting zImage failed"
 		else
