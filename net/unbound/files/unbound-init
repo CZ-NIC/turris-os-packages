@@ -248,11 +248,10 @@ init_unbound() {
         SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' /tmp/resolv.conf.auto | sort)
         if [ "$SERVERS" ] ; then
             (
-            echo 'forward-zone:'
-            echo '	name: "."'
-            echo '	forward-first: yes'
+            echo 'config zone'
+            echo '	list zone_name: "."'
             for SERVER in $SERVERS ; do
-                echo "	forward-addr: $SERVER"
+                echo "	list server: $SERVER"
             done
             ) >> "$CONFIGFILE"
         fi
@@ -370,16 +369,14 @@ print_dns_config() {
     fi
 
     # set forwarding
-    echo "forward-zone:">>$CONFIGFILE
-    echo '	name: "."'>>$CONFIGFILE
+    echo "config zone:">>$CONFIGFILE
+    echo '	list zone_name: "."'>>$CONFIGFILE
 
-    # FIX disable forward-tls until we upgrade to openssl 1.1.0
-    echo "	forward-tls-upstream: no">>$CONFIGFILE
-    #if [ "$enable_tls" == "1" ]; then
-    #    echo "	forward-tls-upstream: yes">>$CONFIGFILE
-    #else
-    #    echo "	forward-tls-upstream: no">>$CONFIGFILE
-    #fi
+    if [ "$enable_tls" == "1" ]; then
+        echo "	option tls_upstream: '1'">>$CONFIGFILE
+    else
+        echo "	option tls_upstream: '0'">>$CONFIGFILE
+    fi
 
     for ip in $ip_list
     do
@@ -393,9 +390,9 @@ print_dns_config() {
                 val_ipport="$ip@$port"
             fi
             if [ ! -z "$hostname" ]; then
-                echo "	forward-addr: $val_ipport#$hostname" >> $CONFIGFILE
+                echo "	list server: $val_ipport#$hostname" >> $CONFIGFILE
             else
-                echo "	forward-addr: $val_ipport" >> $CONFIGFILE
+                echo "	list server: $val_ipport" >> $CONFIGFILE
             fi
         fi
     done
@@ -411,7 +408,7 @@ dns_config_load() {
     config_load resolver
     ret=$(config_foreach handle_dns_config_load dns_server "$config_name")
 
-    #uci part nof found, check file
+    #uci part not found, check file
     if [ "$?" == "1" ] && [ -f "$config_file" ]; then
         enable_tls="0" #set default value
         config_get net_ipv6 "common" "net_ipv6" 1
@@ -449,3 +446,4 @@ reload_service() {
     stop
     start
 }
+
