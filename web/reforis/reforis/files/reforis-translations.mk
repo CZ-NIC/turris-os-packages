@@ -1,4 +1,4 @@
-REFORIS_TRANSLATIONS:=cs
+REFORIS_TRANSLATIONS:=cs da de el en es fi fo fr hr hu it ja ko lt nb nl pl ro ru sk sv
 
 # $1 = translation name
 define ReForisTranslation
