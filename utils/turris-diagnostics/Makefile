@@ -1,33 +1,40 @@
 #
-## Copyright (C) 2018-2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2018-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
-## This is free software, licensed under the GNU General Public License v2.
+# This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 # #
 #
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-diagnostics
-PKG_VERSION:=11.2
+PKG_VERSION:=11.4
 PKG_RELEASE:=1
+
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/diagnostics.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_LICENSE:=GPL-3.0-or-later
+PKG_LICENSE_FILES:=LICENSE
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-  TITLE:=$(PKG_NAME)
+define Package/turris-diagnostics
+  SECTION:=utils
+  CATEGORY:=Utilities
+  TITLE:=Turris Diagnostics
   DEPENDS:=+lsblk +socat +crypto-wrapper +gettext-tools
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/turris-diagnostics/description
   Obtains diagnostics which are useful for troubleshooting of turris related functionality.
 endef
+
+#It won't try to compile it. It will just move and copy related files
+Build/Compile:=:
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/locale/
@@ -41,6 +48,4 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/modules/*.module $(1)/usr/share/diagnostics/modules/
 endef
 
-Build/Compile:=:
-
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,turris-diagnostics))
