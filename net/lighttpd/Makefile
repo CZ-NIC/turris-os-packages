@@ -70,13 +70,11 @@ CONFIGURE_ARGS+= \
 	--sysconfdir=/etc/lighttpd \
 	--enable-shared \
 	--disable-static \
-	--disable-rpath \
 	--without-attr \
 	--without-bzip2 \
 	--without-fam \
 	--without-ldap \
 	--with-lua \
-	--without-memcache \
 	--with-pcre \
 	--without-valgrind \
 	 $(call autoconf_bool,CONFIG_IPV6,ipv6)
