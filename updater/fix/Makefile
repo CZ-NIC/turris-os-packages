@@ -27,10 +27,12 @@ define Package/fix-$(1)
   DEPENDS:=$(2)
 endef
 
-define Package/fix-$(1)/install
+define Package/fix-$(1)/DefaultInstall
 	$(INSTALL_DIR) $$(1)/usr/libexec/fix
 	$(INSTALL_BIN) ./files/$(1) $$(1)/usr/libexec/fix/$(1)
 endef
+
+Package/fix-$(1)/install ?= $$(Package/fix-$(1)/DefaultInstall)
 
 define Package/fix-$(1)/$(or $(3),postinst)
 #!/bin/sh
@@ -63,6 +65,13 @@ define Package/fix-updater-v65.0-alternatives-update/description
   This just calls original script (now packaged as utility script) on removal. The
   reason why on removal is that this is removed once new version of package is
   installed and that ensures that now everything is going to be correctly linked.
+endef
+
+define Package/fix-updater-v65.0-alternatives-update/install
+	$(call Package/fix-updater-v65.0-alternatives-update/DefaultInstall)
+	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
+	$(INSTALL_BIN) "./files/updater-v65.0-alternatives-update" \
+		$(1)/etc/updater/hook_postupdate/20_update_alternatives.sh
 endef
 
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
