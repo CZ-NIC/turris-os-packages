@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
 PKG_VERSION:=65.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater/updater.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -42,7 +42,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgupdate $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgtransaction $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/update_alternatives.sh $(1)/usr/bin/
+	$(INSTALL_BIN) ./files/update_alternatives.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/updater
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/conf.lua $(1)/etc/updater
