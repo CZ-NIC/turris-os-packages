@@ -1,9 +1,11 @@
 #!/bin/sh
-# Updater now in default looks for Packages index instead of Packages.gz index.
-# This is because of change done in code. New localrepo generates plain Packages
-# indexes but old one generates gzipped ones. This just converts them initially to
-# plain ones before localrepo repositories are refactored with localrepo update.
+# Local repo contains possibly invalid packages so just flush it.
 
-find /usr/share/updater/localrepo -type f -name Packages.gz | while read -r index; do
-	zcat "$index" > "${index%.gz}"
-done
+SOURCE="/usr/share/updater/localrepo"
+COLLIDED="/usr/share/updater/collided$SOURCE"
+
+if [ -f "$SOURCE/localrepo.lua" ]; then
+	mv  "$SOURCE" "$COLLIDED"
+	create_notification -s error \
+		"Localrepo was preventively flushed because of binary compatibility. You can found your packages in: $COLLIDED"
+fi
