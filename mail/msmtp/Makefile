@@ -9,12 +9,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=msmtp
-PKG_VERSION:=1.6.2
-PKG_RELEASE:=2
+PKG_VERSION:=1.8.7
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
-PKG_SOURCE_URL:=@SF/msmtp
-PKG_MD5SUM:=3baca93c7e5f1aa9d36a2e5b38739ab9
+PKG_SOURCE_URL:=https://marlam.de/msmtp/releases
+PKG_MD5SUM:=9a53bcdc244ec5b1a806934ecc7746d9d09db581f587bedf597e9da2f48c51f1
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
@@ -27,7 +27,7 @@ define Package/msmtp/Default
   SECTION:=mail
   CATEGORY:=Mail
   TITLE:=Simple sendmail SMTP forwarding
-  URL:=http://msmtp.sourceforge.net/
+  URL:=https://marlam.de/msmtp/
 endef
 
 define Package/msmtp/Default/description
@@ -40,7 +40,7 @@ endef
 
 define Package/msmtp
 $(call Package/msmtp/Default)
-  DEPENDS+= +libopenssl
+  DEPENDS+= +libgnutls
   TITLE+= (with SSL support)
   VARIANT:=ssl
 endef
@@ -81,18 +81,17 @@ CONFIGURE_ARGS += \
 	--without-libintl-prefix \
 	--without-libgsasl \
 	--without-libidn \
-	--disable-gai-idn
+	--disable-gai-idn \
+	--without-msmtpd
 
 MAKE_FLAGS :=
 
 ifeq ($(BUILD_VARIANT),ssl)
-	CONFIGURE_ARGS += \
-		--with-ssl=openssl
+	CONFIGURE_ARGS += --with-tls=gnutls
 endif
 
 ifeq ($(BUILD_VARIANT),nossl)
-	CONFIGURE_ARGS += \
-		--with-ssl=no
+	CONFIGURE_ARGS += --without-tls
 endif
 
 define Package/msmtp/install
