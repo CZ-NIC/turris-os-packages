@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
 PKG_VERSION:=1.10.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://nlnetlabs.nl/downloads/unbound/
@@ -34,6 +34,7 @@ define Package/unbound
   CATEGORY:=Network
   SUBMENU:=IP Addresses and Names
   TITLE+= (daemon)
+  USERID:=unbound=553:unbound=553
   DEPENDS+= +libunbound +cert-backup
 endef
 

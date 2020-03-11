@@ -5,8 +5,11 @@ USE_PROCD=1
 
 CONFIGFILE="/var/etc/unbound/unbound.conf"
 ROOTKEYFILE="/etc/root.keys"
+ROOTKEYFILE_TMP="/var/etc/unbound/root.keys"
 DHCPLEASES="/tmp/dhcp.leases.dynamic"
 STATICLEASES="/var/etc/unbound/static.leases"
+USERNAME=unbound
+GROUP=unbound
 
 header() {
     cat > "$CONFIGFILE" <<-EOF
@@ -164,7 +167,10 @@ init_unbound() {
 
     if [ "$ignore_root_key" = "0" ] ; then
         set_rootkey keyfile
-        add_parameter "$ROOTKEYFILE" "auto-trust-anchor-file"
+	# copy rootkey file with right permissions
+	cp "$ROOTKEYFILE" "$ROOTKEYFILE_TMP"
+	chown $USERNAME:$GROUP "$ROOTKEYFILE_TMP"
+        add_parameter "$ROOTKEYFILE_TMP" "auto-trust-anchor-file"
     fi
 
     set_parameter msg_buffer_size msg-buffer-size 65552
@@ -201,7 +207,7 @@ init_unbound() {
     set_parameter infra_cache_slabs infra-cache-slabs 1
     set_parameter infra_cache_numhosts infra-cache-numhosts 200
     set_multiple_parameters access_control access-control
-    set_quoted_parameter username username ""
+    set_quoted_parameter username username "$USERNAME"
     set_quoted_parameter pidfile pidfile "/var/run/unbound.pid"
     set_quoted_parameter root_hints root-hints "/etc/unbound/named.cache"
     set_quoted_parameter target_fetch_policy target-fetch-policy "2 1 0 0 0 0"
@@ -428,8 +434,8 @@ dns_config_load() {
 start_service() {
 
     mkdir -p $(dirname "$CONFIGFILE")
-    #chown $USERNAME:$GROUP $(dirname "$CONFIGFILE")
-    #[ -f /etc/unbound/named.cache ] && chmod o+r /etc/unbound/named.cache
+    chown $USERNAME:$GROUP $(dirname "$CONFIGFILE")
+    [ -f /etc/unbound/named.cache ] && chmod o+r /etc/unbound/named.cache
 
     init_unbound
     config_get pidfile common pidfile /var/run/unbound.pid
