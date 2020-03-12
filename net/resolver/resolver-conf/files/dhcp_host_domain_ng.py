@@ -348,6 +348,6 @@ if __name__ == "__main__":
         hostname = os.environ.get('HOSTNAME')
         dd = DHCPv4()
         if sys_op and hostname and ipv4:
-        dd.update_dhcp(sys_op, hostname, ipv4)
+            dd.update_dhcp(sys_op, hostname, ipv4)
         dd.save_leases()
         dd.refresh_resolver()
