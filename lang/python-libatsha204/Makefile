@@ -34,6 +34,9 @@ define Package/python3-atsha204
   VARIANT:=python3
 endef
 
+PYTHON3_PKG_SETUP_DIR:=/src/python
+PYTHON3_PKG_SETUP_ARGS:=
+
 define Package/python3-atsha204/description
   Python3 bindings for libatsha204.
 endef
