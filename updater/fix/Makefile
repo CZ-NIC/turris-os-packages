@@ -68,7 +68,7 @@ define Package/fix-updater-v65.0-alternatives-update/description
 endef
 
 define Package/fix-updater-v65.0-alternatives-update/install
-	$(call Package/fix-updater-v65.0-alternatives-update/DefaultInstall)
+	$(call Package/fix-updater-v65.0-alternatives-update/DefaultInstall, $(1))
 	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
 	$(INSTALL_BIN) "./files/updater-v65.0-alternatives-update" \
 		$(1)/etc/updater/hook_postupdate/20_update_alternatives.sh
