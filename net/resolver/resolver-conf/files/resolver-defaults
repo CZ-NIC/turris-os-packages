@@ -1,10 +1,22 @@
 #!/bin/sh
 
-dhcp_port=$(uci -q get dhcp.@dnsmasq[0].port)
-if [ $? -eq 1 ]; then
-	uci set dhcp.@dnsmasq[0].port=0
-	touch /etc/resolver/dnsmasq_disabled
-fi
+. /lib/functions.sh
+
+handle_dns_port() {
+	config_get port $1 port
+	if [ "$port" -ne "0" ]; then
+		# Note we have to use uci utility because
+		# config_set is buggy see
+		# https://openwrt.org/docs/guide-developer/config-scripting#setting_options_config_set
+		uci set dhcp.$1.port=0
+		uci commit dhcp
+	fi
+}
+
+# Disable dnsmasq as default DNS resolver
+config_load dhcp
+config_foreach handle_dns_port dnsmasq
+
 # Make sure we can set time for resolution to work, before the resolution works.
 uci show system.ntp.server | grep -q '217\.31\.202\.100' || uci add_list system.ntp.server=217.31.202.100
 # Also, when we have turned the dnsmasq DNS off, ask dnsmasq to advertise us as DNS server
