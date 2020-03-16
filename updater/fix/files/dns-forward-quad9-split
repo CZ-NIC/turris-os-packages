@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+. /lib/functions.sh
+config_load resolver
+
+config_get forward common forward_custom
+if [ "$forward" = "99_quad9" ]; then
+	uci -q batch <<EOT
+		set resolver.common.forward_custom='99_quad9_unfiltered'
+		commit resolver.common.forward_custom
+EOT
+fi

@@ -74,6 +74,12 @@ define Package/fix-updater-v65.0-alternatives-update/install
 		$(1)/etc/updater/hook_postupdate/20_update_alternatives.sh
 endef
 
+define Package/fix-dns-forward-quad9-split/description
+  DNS forwarding setting for Quad9 DNS server was splitted to filtered and unfiltered
+  variant. This replaces quad9 with quad9_unfiltered setting as compatible change.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
+$(eval $(call FIX,dns-forward-quad9-split,+resolver-conf +uci))
