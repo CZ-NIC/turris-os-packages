@@ -43,8 +43,9 @@
 		"url": "https://doc.turris.cz/doc/en/howto/dvb"
 	},
 	"hardening": {
-		"title": "Hardening (experimental)",
-		"description": "Seccomp tools for system hardening."
+		"title": "Hardening",
+		"description": "Seccomp tools for system hardening.",
+		"experimental": true
 	},
 	"luci_controls": {
 		"title": "LuCI extensions",
@@ -135,12 +136,14 @@
 		"description": "Server side for Turris MOX without SD card used as Wi-Fi access point.",
 		"url": "https://docs.turris.cz/basics/apps/netboot/",
 		"official": true,
+		"experimental": true
 	},
 	"nextcloud": {
 		"title": "Nextcloud",
 		"description": "Self-hosted files hosting and productivity platform that keeps you in control. Alternative to services such as Dropbox or Google Drive.",
 		"url": "https://docs.turris.cz/geek/nextcloud/nextcloud/",
-		"official": true
+		"official": true,
+		"experimental": true
 	},
 	"openvpn": {
 		"title": "OpenVPN",
@@ -149,9 +152,10 @@
 		"official": true
 	},
 	"reforis": {
-		"title": "reForis (experimental)",
+		"title": "reForis",
 		"description": "Redesigned Foris is new web interface for Turris routers.",
-		"official": true
+		"official": true,
+		"experimental": true
 	},
 	"tor": {
 		"title": "Tor",

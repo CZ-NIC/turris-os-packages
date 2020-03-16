@@ -11,6 +11,13 @@ and for that there should be following fields:
   option__.
 * __official__: This differentiates between officially supported and community
   supported lists. If not specified then `false` is used. __Type is boolean__.
+* __experimental__: This marks list to be experimental. New lists are commonly
+  marked as experimental and unmarked after some time when they are fully
+  functional, tested and ready for broad use. If not specified then `false` is
+  used. __Type is boolean__.
+* __obsolete__: This marks list as ready to be removed in future. Software it
+  provides is planned to be removed and list itself dropped. Users should migrate
+  away. If not specified then `false` is used. __Type is boolean__.
 * __options__: Additional options for pkglist. __This has to be a dictionary__.
   For content of this dictionary see next section about that. __This field is
   optional__.
