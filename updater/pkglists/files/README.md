@@ -9,17 +9,11 @@ and for that there should be following fields:
   __Type is string__.
 * __url__:  This is URL to documentation. __Type is string__.  __This field is
   option__.
-* __official__: This differentiates between officially supported and community
-  supported lists. If not specified then `false` is used. __Type is boolean__.
-* __experimental__: This marks list to be experimental. New lists are commonly
-  marked as experimental and unmarked after some time when they are fully
-  functional, tested and ready for broad use. If not specified then `false` is
-  used. __Type is boolean__.
-* __obsolete__: This marks list as ready to be removed in future. Software it
-  provides is planned to be removed and list itself dropped. Users should migrate
-  away. If not specified then `false` is used. __Type is boolean__.
 * __options__: Additional options for pkglist. __This has to be a dictionary__.
   For content of this dictionary see next section about that. __This field is
+  optional__.
+* __labels__: Labes to associate with given package list. __This has to be a
+  list__. For content of this list see next section about that. __This field is
   optional__.
 
 All fields have to be defined as appropriate values of specified type unless stated
@@ -36,10 +30,31 @@ can use it in general by two ways:
 * package list has some additional optional features to install
 
 Every option has name that is used in updater's pkglist and some additional
-fields. Required fields are __title__ and __description__. Their meaning is same
-as for root package list. On top of those there is option __default__. That is
-of boolean type and servers to set default state of option when not configured by
-user. In default __default__ is `false`.
+fields. Required fields are __title__ and __description__ and optional are __url__
+and __labels__. Their meaning is same as for root package list. On top of those
+there is option __default__. That is of boolean type and serves to set default
+state of option when not configured by user. In default __default__ is `false`.
+
+#### __labels__ list and definition
+Labels are defined in separate file `labels.json`. It is in JSON format the same
+way as top level `definitions.json`. It is expected to contain name of label and
+for that there should be following fields:
+
+* __title__: Displayable name of label. Compared to name of label the difference
+  is that this is translated and should be displayed to user while label name is
+  technical name of label. __Type is string__.
+* __description__: This is text describing what given label means in context of
+  package lists. __Type is string__.
+* __severity__: How important this label is. In general it specified color to be
+  used. In default __primary__ is assumed. Following are defined:
+  * __danger__
+  * __warning__
+  * __info__
+  * __success__
+  * __primary__
+  * __secondary__
+  * __light__
+  * __dark__
 
 ### Translations
 To generate translations you can use `manage.py` script with `pot` argument.

@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pkglists
-PKG_VERSION:=1.3
+PKG_VERSION:=1.4
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -25,6 +25,7 @@ endef
 define Package/pkglists/install
 	$(INSTALL_DIR) $(1)/usr/share/updater/
 	$(INSTALL_DATA) ./files/definitions.json $(1)/usr/share/updater/pkglists.json
+	$(INSTALL_DATA) ./files/labels.json $(1)/usr/share/updater/pkglists-labels.json
 
 	$(INSTALL_DIR) $(1)/etc/config $(1)/etc/updater/conf.d
 	$(INSTALL_CONF) ./files/pkglists.uci $(1)/etc/config/pkglists

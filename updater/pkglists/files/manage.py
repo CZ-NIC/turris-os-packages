@@ -5,9 +5,10 @@ import json
 import datetime
 import argparse
 import polib
-from schema import Schema, Optional, Regex
+from schema import Schema, Optional, Regex, Or
 
 DEFINITIONS = 'definitions.json'
+LABELS = 'labels.json'
 
 
 def definitions():
@@ -17,13 +18,20 @@ def definitions():
         return json.load(file)
 
 
-def po_add_string(po, string):
+def labels():
+    """Load package list labels.
+    """
+    with open(os.path.join(os.path.dirname(__file__), LABELS)) as file:
+        return json.load(file)
+
+
+def po_add_string(po, string, occurance):
     """Add given string to PO file.
     """
     po.append(polib.POEntry(
         msgid=string,
         msgstr=u'',
-        occurrences=[(DEFINITIONS, '')]
+        occurrences=[(occurance, '')]
     ))
 
 
@@ -43,36 +51,53 @@ def op_pot(args):
         'Content-Transfer-Encoding': '8bit',
     }
     for _, lst in definitions().items():
-        po_add_string(po, lst['title'])
-        po_add_string(po, lst['description'])
+        po_add_string(po, lst['title'], DEFINITIONS)
+        po_add_string(po, lst['description'], DEFINITIONS)
         if 'options' in lst:
             for _, opt in lst['options'].items():
-                po_add_string(po, opt['title'])
-                po_add_string(po, opt['description'])
+                po_add_string(po, opt['title'], DEFINITIONS)
+                po_add_string(po, opt['description'], DEFINITIONS)
+    for _, lbl in labels().items():
+        po_add_string(po, lbl['title'], LABELS)
+        po_add_string(po, lbl['description'], LABELS)
     if os.path.isfile(args.OUTPUT):
-        po.merge(polib.pofile(args.OUTPUT))
+        existing_po = polib.pofile(args.OUTPUT)
+        existing_po.merge(po)
+        po = existing_po
     po.save(args.OUTPUT)
 
 
 def op_verify(_):
-    """verify operation implementation to check schema of definitions.json
+    """verify operation implementation to check schema of definitions.json and labels.json
     """
-    schema = Schema({
+    schema_labels = Schema({
+        Regex(r'^\w+$'): {
+            'title': str,
+            'description': str,
+            'severity': Or("danger", "warning", "info", "success", "primary", "secondary", "light", "dark")
+        }
+    })
+    lbls = labels()
+    schema_labels.validate(lbls)
+
+    schema_definitions = Schema({
         Regex(r'^\w+$'): {
             'title': str,
             'description': str,
             Optional('url'): str,
-            Optional('official'): bool,
+            Optional('labels'): [str],
             Optional('options'): {
                 Regex(r'^\w+$'): {
                     'title': str,
                     'description': str,
+                    Optional('url'): str,
+                    Optional('labels'): list(lbls.keys()),
                     Optional('default'): bool,
                 }
             }
         }
     })
-    schema.validate(definitions())
+    schema_definitions.validate(definitions())
 
 
 OPERATIONS = {
