@@ -1,0 +1,33 @@
+From b621d57dcd19749f8668fe30e2838938b0005701 Mon Sep 17 00:00:00 2001
+From: Josef Schlehofer <pepe.schlehofer@gmail.com>
+Date: Sat, 14 Mar 2020 03:02:08 +0100
+Subject: [PATCH] Update ptrace.h: include <asm/ptrace.h> for powerpc (#116)
+
+This fixes compilation error, which was found while using musl for powerpc:
+
+In file included from attach.c:43:0:
+ptrace.h:69:20: error: field 'regs' has incomplete type
+     struct pt_regs regs;
+                    ^~~~
+<builtin>: recipe for target 'attach.o' failed
+---
+ ptrace.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/ptrace.h b/ptrace.h
+index ad14e0d..ee05bd7 100644
+--- a/ptrace.h
++++ b/ptrace.h
+@@ -22,6 +22,9 @@
+ #ifndef PTRACE_H
+ #define PTRACE_H
+ 
++#ifdef __powerpc__
++#include <asm/ptrace.h>
++#endif
+ #include <sys/ptrace.h>
+ #include <sys/types.h>
+ #include <sys/user.h>
+-- 
+2.25.1
+
