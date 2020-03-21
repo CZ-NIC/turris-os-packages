@@ -314,7 +314,7 @@ echo
 if [ "$version" = "y" ]; then
 	if [ "$branch" = "$(latest_version)" ]; then
 		echo "You are using now latest stable version of Turris OS." >&2
-		echo "If you encounter some problems please contact Turris support (https://doc.turris.cz/doc/en/howto/error_reporting)." >&2
+		echo "If you encounter some problems please contact Turris support (https://docs.turris.cz/basics/support/)." >&2
 		echo "Note that this version is only supported by Turris support until new stable release is released." >&2
 		echo "Do not forget to come back and switch to newer version when it is released!" >&2
 	else
@@ -328,13 +328,13 @@ else
 		hbs)
 			print_snail
 			echo "You are now on stable latest version of Turris OS." >&2
-			echo "With problems please contact Turris support (https://doc.turris.cz/doc/en/howto/error_reporting)." >&2
+			echo "With problems please contact Turris support (https://docs.turris.cz/basics/support/)." >&2
 			;;
 		hbt)
 			print_turtle
 			echo "You are now in branch containing next release candidate." >&2
 			echo "You can discuss problems on forum (https://forum.turris.cz)." >&2
-			echo "Please report unknown problems to support (https://doc.turris.cz/doc/en/howto/error_reporting)." >&2
+			echo "Please report unknown problems to support (https://docs.turris.cz/basics/support/)." >&2
 			;;
 		hbk)
 			print_kitten
