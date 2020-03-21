@@ -2,7 +2,7 @@ Turris OS packages repository workflow
 ======================================
 
 Before you start reading please be sure that you have read and understood workflow
-for https://gitlab.labs.nic.cz/turris/turris-build/blob/master/WORKFLOW.adoc[turris-build].
+for https://gitlab.labs.nic.cz/turris/turris-build/blob/hbk/WORKFLOW.adoc[turris-build].
 This workflow is referencing it as this repository is used as part of release
 cycle of that one.
 
@@ -186,7 +186,7 @@ Hotfix merge to *master* should always be clean. That means that there should be
 no merge conflicts (ensured by requiring fast forward only). This is to ensure
 that stable release won't be broken by merge. When that can't be done rebase to
 latest changes has to be performed. The maintainer can either ask author or do it
-by himself. 
+by himself.
 
 There is possibility that hotfix is not required in *develop* branch because it
 can be fixed by some other means or was already fixed by some previous feature. In
