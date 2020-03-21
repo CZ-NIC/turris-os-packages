@@ -78,7 +78,7 @@ get_version() {
 use_version() {
 	uci get updater.turris.version >/dev/null 2>&1
 }
-# This returns latest stable version (the only one that is supported)
+# This returns the latest stable version (the only one that is supported)
 latest_version() {
 	echo "$versions" | head -1
 }
@@ -142,9 +142,9 @@ while [ -z "$branch" ]; do
 		echo
 		echo "You are using version: $(get_version)"
 		echo
-		echo "Following latest versions are available:"
+		echo "Following the latest versions are available:"
 		echo "$versions" | head -10 | sed 's/^/  /'
-		echo "Note that only latest release is supported!"
+		echo "Note that only the latest release is supported!"
 		echo -n "Please enter version: "
 		read -r branch
 		check_version || {
@@ -164,17 +164,17 @@ You can choose from one of these rolling releases:
     This rolling release contains next stable version. Please join this branch to
     help us test it and to get new stuff few weeks up-front.
   hbk (kittens, next-fixup)
-    This rolling release tracks stable OpenWRT upstream and stable Turris
+    This rolling release tracks stable OpenWrt upstream and stable Turris
     development. It is used to prepare next fixup releases (aka 1.0.x). Manual
     intervention might be sometimes required to fix introduced bugs and because of
     that it is suggested to be used only by experienced users.
   hbl (lions, next-minor)
-    This rolling release tracks stable OpenWRT upstream and latest Turris
+    This rolling release tracks stable OpenWrt upstream and the latest Turris
     development. It is used to prepare next minor releases (aka 1.x.0). Manual
     intervention might be sometimes required to fix introduced bugs and because of
     that it is suggested to be used only by experienced users.
   hbd (dragons, next-major)
-    This rolling release not only tracks latest Turris but also latest OpenWRT
+    This rolling release not only tracks the latest Turris but also the latest OpenWrt
     development. It is used to prepare next major release (aka x.0.0). It can
     frequently break and is suggested to be used only by experienced users on
     non-critical infrastructure.
@@ -313,21 +313,21 @@ EOF
 echo
 if [ "$version" = "y" ]; then
 	if [ "$branch" = "$(latest_version)" ]; then
-		echo "You are using now latest stable version of Turris OS." >&2
+		echo "You are using now the latest stable version of Turris OS." >&2
 		echo "If you encounter some problems please contact Turris support (https://docs.turris.cz/basics/support/)." >&2
 		echo "Note that this version is only supported by Turris support until new stable release is released." >&2
 		echo "Do not forget to come back and switch to newer version when it is released!" >&2
 	else
 		echo "You are now using one of the older versions of Turris OS." >&2
 		echo "Old versions are not supported!" >&2
-		echo "Please switch to rolling branch or to latest branch as soon as possible!" >&2
-		echo "To switch to latest stable branch use: switch-branch hbs" >&2
+		echo "Please switch to rolling branch or to the latest branch as soon as possible!" >&2
+		echo "To switch to the latest stable branch use: switch-branch hbs" >&2
 	fi
 else
 	case "$branch" in
 		hbs)
 			print_snail
-			echo "You are now on stable latest version of Turris OS." >&2
+			echo "You are now on stable the latest version of Turris OS." >&2
 			echo "With problems please contact Turris support (https://docs.turris.cz/basics/support/)." >&2
 			;;
 		hbt)
@@ -339,7 +339,7 @@ else
 		hbk)
 			print_kitten
 			echo "You are now in branch containing software build every night. It often contains bugs and sometimes requires manual intervention!" >&2
-			echo "It is based on latest stable OpenWRT branch with Turris OS changes." >&2
+			echo "It is based on the latest stable OpenWrt branch with Turris OS changes." >&2
 			echo "Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/)." >&2
 			echo "If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/)," >&2
 			echo "You shouldn't be in this branch unless you are advanced user!" >&2
@@ -348,7 +348,7 @@ else
 		hbl)
 			print_lion
 			echo "You are now in branch containing software build every night. It often contains bugs and sometimes requires manual intervention!" >&2
-			echo "It is based on latest stable OpenWRT branch with latest Turris OS changes." >&2
+			echo "It is based on the latest stable OpenWrt branch with the latest Turris OS changes." >&2
 			echo "Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/)." >&2
 			echo "If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/)," >&2
 			echo "You shouldn't be in this branch unless you are advanced user!" >&2
@@ -357,10 +357,10 @@ else
 		hbd)
 			print_dragon
 			echo "You are now in branch containing software build every night. It often contains bugs and very often requires manual intervention!" >&2
-			echo "It is based on latest OpenWRT development branch with latest Turris OS changes." >&2
+			echo "It is based on the latest OpenWrt development branch with the latest Turris OS changes." >&2
 			echo "Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/)." >&2
 			echo "If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/)," >&2
-			echo "You shouldn't be in this branch unless you are advanced user and OpenWRT developer!" >&2
+			echo "You shouldn't be in this branch unless you are advanced user and OpenWrt developer!" >&2
 			echo "To return to stable branch run this command: switch-branch hbs" >&2
 			;;
 		*)
