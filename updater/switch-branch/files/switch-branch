@@ -1,89 +1,6 @@
 #!/bin/sh
 set -e
 
-load_current_state() {
-	. /lib/functions.sh
-	config_load updater
-	# CUR_MODE
-	config_get CUR_MODE turris mode "branch"
-	# CUR_BRANCH
-	CUR_BRANCH="hbs"
-	[ "$CUR_MODE" = "branch" ] && \
-		config_get CUR_BRANCH turris branch "$CUR_BRANCH"
-	# CUR_VERSION
-	CUR_VERSION="$(cat /etc/turris-version)"
-	[ "$CUR_MODE" = "version" ] && \
-		config_get CUR_VERSION turris version "$CUR_VERSION"
-	# CUR_VERSION_MAJOR, CUR_VERSION_MINOR, CUR_VERSION_FIXUP
-	IFS=. read -r CUR_VERSION_MAJOR CUR_VERSION_MINOR CUR_VERSION_FIXUP <<-EOF
-		$CUR_VERSION
-	EOF
-}
-
-fetch_existing_versions() {
-	EXISTING_VERSIONS="$(curl "https://repo.turris.cz/archive/" | \
-		sed -n 's|.*alt="\[DIR\]".*<a href="\([^"]*\)/".*|\1|p' | \
-		grep -Ev "^(omnia|turris|3.x)$" | sort -Vr)"
-	LATEST_VERSION="$(echo "$EXISTING_VERSIONS" | head -1)"
-}
-
-# We allows some branch alternatives. This function replaces them with canon versions
-branch_alts() {
-	case "$target" in
-		stable|snails)
-			target='hbs'
-			;;
-		testing|turtles)
-			target='hbt'
-			;;
-		next-fixup|kittens)
-			target='hbk'
-			;;
-		next-minor|lions)
-			target='hbl'
-			;;
-		next-major|dragons)
-			target='hbd'
-			;;
-	esac
-}
-
-# We also support various aliases for versions.
-version_alts() {
-	case "$target" in
-		latest|major)
-			target="$LATEST_VERSION"
-			;;
-		minor)
-			target="$(echo "$EXISTING_VERSIONS" | \
-				awk -F . -v major="$CUR_VERSION_MAJOR" \
-					'$1 == major { print; exit }')"
-			;;
-		fixup)
-			target="$(echo "$EXISTING_VERSIONS" | \
-				awk -F . -v major="$CUR_VERSION_MAJOR" -v minor="$CUR_VERSION_MINOR" \
-					'$1 == major && $2 == minor { print; exit }')"
-			;;
-	esac
-}
-
-
-# Checks if branch is supported (accept any branch if forced, otherwise only the
-# selected ones)
-check_branch() {
-	[ "$force" = "y" ] || \
-		echo "$target" | grep -qE '^(hbd|hbl|hbk|hbt|hbs)$'
-}
-
-# Check if given version is valid/existing version (force again allows usage of
-# any version)
-check_version() {
-	[ "$force" = "y" ] || \
-		echo "$EXISTING_VERSIONS" | grep -qxF "$target"
-}
-
-##################################################################################
-
 print_usage() {
 	echo "Usage: switch-branch [OPTION]... [--] [BRANCH]"
 }
@@ -142,7 +59,7 @@ EOF
 	check_branch || {
 		echo "There is no known branch: $target"
 		echo
-		branch=
+		target=
 	}
 }
 
@@ -157,8 +74,97 @@ select_version() {
 	check_version || {
 		echo "Version seems to be not existing released version: $target"
 		echo
-		branch=
+		target=
 	}
+}
+
+##################################################################################
+
+load_current_state() {
+	. /lib/functions.sh
+	config_load updater
+	# CUR_MODE
+	config_get CUR_MODE turris mode "branch"
+	# CUR_BRANCH
+	CUR_BRANCH="hbs"
+	[ "$CUR_MODE" = "branch" ] && \
+		config_get CUR_BRANCH turris branch "$CUR_BRANCH"
+	# CUR_VERSION
+	CUR_VERSION="$(cat /etc/turris-version)"
+	[ "$CUR_MODE" = "version" ] && \
+		config_get CUR_VERSION turris version "$CUR_VERSION"
+	# CUR_VERSION_MAJOR, CUR_VERSION_MINOR, CUR_VERSION_FIXUP
+	IFS=. read -r CUR_VERSION_MAJOR CUR_VERSION_MINOR CUR_VERSION_FIXUP <<-EOF
+		$CUR_VERSION
+	EOF
+}
+
+fetch_existing_versions() {
+	EXISTING_VERSIONS="$(curl "https://repo.turris.cz/archive/" | \
+		sed -n 's|.*alt="\[DIR\]".*<a href="\([^"]*\)/".*|\1|p' | \
+		grep -Ev "^(omnia|turris|3.x)$" | sort -Vr)"
+	LATEST_VERSION="$(echo "$EXISTING_VERSIONS" | head -1)"
+}
+
+# We allows some branch alternatives. This function replaces them with canonical variant
+branch_alts() {
+	case "$target" in
+		stable|snails)
+			target='hbs'
+			;;
+		testing|turtles)
+			target='hbt'
+			;;
+		next-fixup|kittens)
+			target='hbk'
+			;;
+		next-minor|lions)
+			target='hbl'
+			;;
+		next-major|dragons)
+			target='hbd'
+			;;
+	esac
+}
+
+# We also support various aliases for versions.
+version_alts() {
+	case "$target" in
+		latest|major)
+			target="$LATEST_VERSION"
+			;;
+		minor)
+			target="$(echo "$EXISTING_VERSIONS" | \
+				awk -F . -v major="$CUR_VERSION_MAJOR" \
+					'$1 == major { print; exit }')"
+			;;
+		fixup)
+			target="$(echo "$EXISTING_VERSIONS" | \
+				awk -F . -v major="$CUR_VERSION_MAJOR" -v minor="$CUR_VERSION_MINOR" \
+					'$1 == major && $2 == minor { print; exit }')"
+			;;
+	esac
+}
+
+
+SUPPORTED_BRANCHES="hbs
+hbt
+hbk
+hbl
+hbd"
+
+# Checks if branch is supported (accept any branch if forced, otherwise only the
+# selected ones)
+check_branch() {
+	[ "$force" = "y" ] || \
+		echo "$target" | grep -qxF "$SUPPORTED_BRANCHES"
+}
+
+# Check if given version is valid/existing version (force again allows usage of
+# any version)
+check_version() {
+	[ "$force" = "y" ] || \
+		echo "$EXISTING_VERSIONS" | grep -qxF "$target"
 }
 
 ##################################################################################
@@ -294,7 +300,7 @@ if [ -n "$target" ]; then
 		version)
 			version_alts
 			if ! check_version; then
-				echo "Version $target seems to not be existing released version!" >&2
+				echo "Version $target seems not to be an existing released version!" >&2
 				exit 1
 			fi
 			;;
@@ -337,14 +343,12 @@ set -x
 uci set updater.turris=turris
 case "$mode" in
 	branch)
-		# Set uci configuration
 		uci set updater.turris.mode="branch"
 		uci set updater.turris.branch="$target"
 		# Tweak opkg distribution feeds
 		sed -i "s|https://repo\.turris\.cz/.*/\([^/]*\)/packages/|https://repo\.turris\.cz/$target/\1/packages/|" /etc/opkg/distfeeds.conf
 		;;
 	version)
-		# Set uci configuration
 		uci set updater.turris.mode="version"
 		uci set updater.turris.version="$target"
 		# Tweak opkg distribution feeds
@@ -392,7 +396,7 @@ print_turtle() {
    `/_/====/_/-'\_\
     ""     ""    ""
 You are now in branch containing next release candidate.
-You can discuss problems on forum (https://forum.turris.cz).
+You can discuss problems on forum (https://forum.turris.cz/).
 Please report unknown problems to support (https://docs.turris.cz/basics/support/).
 EOF
 }
@@ -407,7 +411,7 @@ print_kitten() {
 You are now in branch containing software build every night. It often contains bugs and sometimes requires manual intervention!
 It is based on latest stable OpenWrt branch with Turris OS changes.
 Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/).
-If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/),
+If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/turris/),
 You shouldn't be in this branch unless you are advanced user!
 To return to stable branch run this command: switch-branch hbs
 EOF
@@ -431,7 +435,7 @@ print_lion() {
 You are now in branch containing software build every night. It often contains bugs and sometimes requires manual intervention!
 It is based on latest stable OpenWrt branch with latest Turris OS changes.
 Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/).
-If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/),
+If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/turris/),
 You shouldn't be in this branch unless you are advanced user!
 To return to stable branch run this command: switch-branch hbs
 EOF
@@ -454,7 +458,7 @@ print_dragon() {
 You are now in branch containing software build every night. It often contains bugs and very often requires manual intervention!
 It is based on latest OpenWrt development branch with latest Turris OS changes.
 Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/).
-If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/),
+If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/turris/),
 You shouldn't be in this branch unless you are advanced user and OpenWrt developer!
 To return to stable branch run this command: switch-branch hbs
 EOF
