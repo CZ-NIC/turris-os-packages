@@ -1,49 +1,31 @@
 #!/bin/sh
 set -e
 
-# Return current mode
-get_mode() {
-	local mode
-	config_get mode turris mode "branch"
-	echo "$mode"
+load_current_state() {
+	. /lib/functions.sh
+	config_load updater
+	# CUR_MODE
+	config_get CUR_MODE turris mode "branch"
+	# CUR_BRANCH
+	CUR_BRANCH="hbs"
+	[ "$CUR_MODE" = "branch" ] && \
+		config_get CUR_BRANCH turris branch "$CUR_BRANCH"
+	# CUR_VERSION
+	CUR_VERSION="$(cat /etc/turris-version)"
+	[ "$CUR_MODE" = "version" ] && \
+		config_get CUR_VERSION turris version "$CUR_VERSION"
+	# CUR_VERSION_MAJOR, CUR_VERSION_MINOR, CUR_VERSION_FIXUP
+	IFS=. read -r CUR_VERSION_MAJOR CUR_VERSION_MINOR CUR_VERSION_FIXUP <<-EOF
+		$CUR_VERSION
+	EOF
 }
 
-# Return current branch
-get_branch() {
-	local branch="hbs"
-	if [ "$(get_mode)" = "branch" ]; then
-		local branch
-		config_get branch turris branch "$branch"
-	fi
-	echo "$default"
+fetch_existing_versions() {
+	EXISTING_VERSIONS="$(curl "https://repo.turris.cz/archive/" | \
+		sed -n 's|.*alt="\[DIR\]".*<a href="\([^"]*\)/".*|\1|p' | \
+		grep -Ev "^(omnia|turris|3.x)$" | sort -Vr)"
+	LATEST_VERSION="$(echo "$EXISTING_VERSIONS" | head -1)"
 }
-
-# Return current version
-get_version() {
-	if [ "$(get_mode)" = "version" ]; then
-		local version
-		config_get version turris version
-		[ -z "$version" ] || {
-			echo "$version"
-			return
-		}
-	fi
-	cat /etc/turris-version
-}
-
-# Sets variables v_major v_minor v_fixup with appropriate fields from current
-# version
-get_version_parts() {
-	IFS=. read -r v_major v_minor v_fixup <<EOF
-	$(get_version)
-EOF
-}
-
-# This returns latest stable version (the only one that is supported)
-latest_version() {
-	echo "$versions" | head -1
-}
-
 
 # We allows some branch alternatives. This function replaces them with canon versions
 branch_alts() {
@@ -68,20 +50,18 @@ branch_alts() {
 
 # We also support various aliases for versions.
 version_alts() {
-	local v_major v_minor v_fixup
 	case "$target" in
 		latest|major)
-			target="$(latest_version)"
+			target="$LATEST_VERSION"
 			;;
 		minor)
-			get_version_parts
-			target="$(echo "$versions" | \
-				awk -F . -v major="$v_major" '$1 == major { print; exit }')"
+			target="$(echo "$EXISTING_VERSIONS" | \
+				awk -F . -v major="$CUR_VERSION_MAJOR" \
+					'$1 == major { print; exit }')"
 			;;
 		fixup)
-			get_version_parts
-			target="$(echo "$versions" | \
-				awk -F . -v major="$v_major" -v minor="$v_minor" \
+			target="$(echo "$EXISTING_VERSIONS" | \
+				awk -F . -v major="$CUR_VERSION_MAJOR" -v minor="$CUR_VERSION_MINOR" \
 					'$1 == major && $2 == minor { print; exit }')"
 			;;
 	esac
@@ -99,7 +79,7 @@ check_branch() {
 # any version)
 check_version() {
 	[ "$force" = "y" ] || \
-		echo "$versions" | grep -qxF "$target"
+		echo "$EXISTING_VERSIONS" | grep -qxF "$target"
 }
 
 ##################################################################################
@@ -132,7 +112,7 @@ print_help() {
 
 select_branch() {
 	cat <<EOF
-You are currently in: $(get_branch)
+You are currently in: $CUR_BRANCH
 
 You can choose from one of these rolling releases:
   hbs (snails, stable)
@@ -168,10 +148,10 @@ EOF
 
 select_version() {
 	echo
-	echo "You are using version: $(get_version)"
+	echo "You are using version: $CUR_VERSION"
 	echo
 	echo "Following latest versions are available:"
-	echo "$versions" | sed '1,10s/^/  /'
+	echo "$EXISTING_VERSIONS" | sed -n '1,10s/^/  /p'
 	echo "Note that only latest release is supported!"
 	read -r -p "Please enter version: " target
 	check_version || {
@@ -257,14 +237,13 @@ if ! which pkgupdate >/dev/null 2>&1; then
 	exit 1
 fi
 
-# Load UCI configuration
-. /lib/functions.sh
-config_load updater
+# Set variables with current configuration
+load_current_state
 
 # Get configuration from UCI in case of no target and --verify
 if [ "$verify" = "y" ]; then
 	if [ -z "$mode" ]; then
-		case "$(get_mode)" in
+		case "$CUR_MODE" in
 			branch)
 				mode="branch"
 				;;
@@ -272,7 +251,7 @@ if [ "$verify" = "y" ]; then
 				mode="version"
 				;;
 			*)
-				echo "Reseting mode to 'branch' because of invalid value: $(get_mode)"
+				echo "Reseting mode to 'branch' because of invalid value: $CUR_MODE"
 				mode="branch"
 				;;
 		esac
@@ -280,10 +259,10 @@ if [ "$verify" = "y" ]; then
 	if [ -z "$target" ]; then
 		case "$mode" in
 			branch)
-				target="$(get_branch)"
+				target="$CUR_BRANCH"
 				;;
 			version)
-				target="$(get_version)"
+				target="$CUR_VERSION"
 				;;
 		esac
 	fi
@@ -294,13 +273,11 @@ fi
 
 # Fetch all existing versions
 if [ "$mode" = "version" ] || [ "$list_versions" = "y" ]; then
-	versions="$(curl "https://repo.turris.cz/archive/" | \
-		sed -n 's|.*alt="\[DIR\]".*<a href="\([^"]*\)/".*|\1|p' | \
-		grep -Ev "^(omnia|turris|3.x)$" | sort -Vr)"
+	fetch_existing_versions
 fi
 # List all versions if requested
 if [ "$list_versions" = "y" ]; then
-	echo "$versions"
+	echo "$EXISTING_VERSIONS"
 	exit 0
 fi
 
@@ -537,7 +514,7 @@ case "$mode" in
 		esac
 		;;
 	version)
-		if [ "$target" = "$(latest_version)" ]; then
+		if [ "$target" = "$LATEST_VERSION" ]; then
 			print_latest_version
 		else
 			print_older_version
