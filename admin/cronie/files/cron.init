@@ -6,7 +6,8 @@ USE_PROCD=1
 
 start_service() {
 	mkdir -p /var/spool/cron
-	ln -sf /etc/crontabs /var/spool/cron/crontabs
+	[ -L /var/spool/cron/crontabs ] || \
+		ln -sf /etc/crontabs /var/spool/cron/crontabs
 
 	local use_sendmail
 	config_load cronie
