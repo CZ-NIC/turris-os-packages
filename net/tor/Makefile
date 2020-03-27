@@ -8,16 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tor
-PKG_VERSION:=0.3.5.8
+PKG_VERSION:=0.4.2.7
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://dist.torproject.org/ \
 	https://archive.torproject.org/tor-package-archive
-PKG_MD5SUM:=d5c56603942a8927670f50a4a469fb909e29d3571fdd013389d567e57abc0b47
+PKG_MD5SUM:=06a1d835ddf382f6bca40a62e8fb40b71b2f73d56f0d53523c8bd5caf9b3026d
 PKG_MAINTAINER:=Hauke Mehrtens <hauke@hauke-m.de> \
 		Peter Wagner <tripolar@gmx.at>
 PKG_LICENSE_FILES:=LICENSE
+PKG_CPE_ID:=cpe:/a:torproject:tor
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
@@ -88,6 +89,7 @@ define Package/tor/conffiles
 /etc/tor/torrc
 /var/lib/tor/fingerprint
 /var/lib/tor/keys/*
+/etc/config/tor
 endef
 
 CONFIGURE_ARGS += \
@@ -99,9 +101,12 @@ CONFIGURE_ARGS += \
 	--disable-libscrypt \
 	--disable-unittests \
 	--disable-lzma \
+	--disable-zstd \
 	--with-tor-user=tor \
 	--with-tor-group=tor
 
+TARGET_CFLAGS += -ffunction-sections -fdata-sections -flto
+TARGET_LDFLAGS += -Wl,--gc-sections -flto
 EXTRA_CFLAGS += -std=gnu99
 
 ifneq ($(CONFIG_SSP_SUPPORT),y)
@@ -121,6 +126,8 @@ define Package/tor/install
 	$(INSTALL_BIN) ./files/tor.init $(1)/etc/init.d/tor
 	$(INSTALL_DIR) $(1)/etc/tor
 	$(INSTALL_CONF) $(PKG_INSTALL_DIR)/etc/tor/torrc.sample $(1)/etc/tor/torrc
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/tor.conf $(1)/etc/config/tor
 endef
 
 define Package/tor-gencert/install
