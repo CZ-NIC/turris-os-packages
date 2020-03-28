@@ -1,6 +1,4 @@
 #
-# Copyright (C) 2009-2014 OpenWrt.org
-#
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
@@ -8,22 +6,21 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=btrfs-progs
-PKG_VERSION:=4.17.1
+PKG_VERSION:=5.4.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-v$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@KERNEL/linux/kernel/people/kdave/btrfs-progs/
-PKG_MD5SUM:=130be469ced99b01948af64b6a6312f6
+PKG_MD5SUM:=f3e07fb248d608bdad5b63973513211de5daba47aaecfa44d29a836f6e7a9d69
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-v$(PKG_VERSION)
 
-PKG_LICENSE:=GPL-2.0
+PKG_MAINTAINER:=Karel Kočí <karel.koci@nic.cz>
+PKG_LICENSE:=GPL-2.0-only
 PKG_LICENSE_FILES:=COPYING
 
 PKG_INSTALL:=1
 PKG_BUILD_PARALLEL:=1
 PKG_BUILD_DEPENDS:=libacl
-
-PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -31,9 +28,16 @@ define Package/btrfs-progs
   SECTION:=utils
   CATEGORY:=Utilities
   SUBMENU:=Filesystem
-  DEPENDS:=+libattr +libuuid +zlib +libblkid +liblzo +libpthread
   TITLE:=Btrfs filesystems utilities
-  URL:=http://btrfs.wiki.kernel.org/
+  URL:=https://btrfs.wiki.kernel.org/
+  DEPENDS:= \
+    +libattr \
+    +libuuid \
+    +zlib \
+    +libblkid \
+    +liblzo \
+    +libpthread \
+    +kmod-fs-btrfs
 endef
 
 define Package/btrfs-progs/description
@@ -72,6 +76,12 @@ CONFIGURE_ARGS += \
 	--disable-python
 
 EXTRA_CFLAGS=$(TARGET_CPPFLAGS)
+
+define Build/InstallDev
+	$(INSTALL_DIR) $(1)/usr/include $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/* $(1)/usr/include/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libbtrfs* $(1)/usr/lib/
+endef
 
 define Package/btrfs-progs/install
 	$(INSTALL_DIR) $(1)/usr/lib
