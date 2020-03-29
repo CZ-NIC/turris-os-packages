@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2016-2019 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+## Copyright (C) 2016-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netmetr
-PKG_VERSION:=1.5.3
+PKG_VERSION:=1.5.4
 PKG_RELEASE:=1
 
 PKG_SOURCE:=netmetr-client-v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/netmetr-client/-/archive/v$(PKG_VERSION)/
-PKG_HASH:=50404366b4452d55e6634466f69a5c432bca5e7dc1d33fc197b562b30db1ccc7
+PKG_HASH:=0d9e86df19480007662400edb75f9c464e3eb52c3f8eb51290e3f034d2007caa
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
