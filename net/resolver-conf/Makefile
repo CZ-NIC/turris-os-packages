@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.1
-PKG_RELEASE:=37
+PKG_RELEASE:=38
 
 PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec@nic.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -61,7 +61,6 @@ ifeq ($(CONFIG_TARGET_mvebu),y)
 else
 	$(INSTALL_CONF) ./files/dns_servers_turris1x/* $(1)/etc/resolver/dns_servers/
 endif
-	$(INSTALL_DATA) ./files/CZ.NIC2-cacert.pem $(1)/etc/resolver
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
