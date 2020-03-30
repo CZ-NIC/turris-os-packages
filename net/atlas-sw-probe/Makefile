@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -7,12 +7,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=atlas-sw-probe
-PKG_VERSION:=1.0.0
-PKG_RELEASE:=2
+PKG_VERSION:=5010
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/ripe-atlas-software-probe
-PKG_SOURCE_VERSION:=4708e4c1a8083ab5ab2e1da934661a4c2ab87cae
+PKG_SOURCE_VERSION:=f937433d26675962f5c11b0aa00007a2b8fb8895
 
 PKG_SOURCE:=ripe-atlas-software-probe-$(PKG_VERSION).tar.gz
 
@@ -98,7 +98,7 @@ define Package/atlas-sw-probe/install
 	$(INSTALL_BIN) ./files/atlas.init $(1)/etc/init.d/atlas
 
 	$(INSTALL_DIR) $(1)/etc/config/
-	$(CP) ./files/atlas.conf $(1)/etc/config/atlas
+	$(INSTALL_CONF) ./files/atlas.conf $(1)/etc/config/atlas
 endef
 
 $(eval $(call BuildPackage,atlas-sw-probe))
