@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://linuxtv.org/hg/dvb-apps/archive/
-PKG_HASH:=70c1d293ea3ddbcb970e01c8a51487ee97a4dcf33a73c0236c7d57757c7f6fb0
+PKG_HASH:=f39e2f0ebed7e32bce83522062ad4d414f67fccd5df1b647618524497e15e057
 
 PKG_MAINTAINER:=Tomasz Maciej Nowak <tomek_n@o2.pl>
 PKG_LICENSE:=GPL-2.0 LGPL-2.1
