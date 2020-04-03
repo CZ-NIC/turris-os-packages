@@ -229,15 +229,11 @@ modify_rundir() {
 }
 
 load_uci_config_kresd() {
-	local addr config keyfile forks verbose log_stderr log_stdout hostname_config
+	local addr config keyfile verbose log_stderr log_stdout hostname_config
 	local section="kresd"
 
 	# knot-resolver config
 	procd_append_param command -c "$CONFIGFILE"
-
-	# number of forks
-	config_get forks "$section" forks 1
-	procd_append_param command -f "$forks"
 
 	# rundir
 	procd_append_param command "$DEFAULT_RUNDIR"
@@ -282,6 +278,7 @@ run_instance() {
 	procd_open_instance
 	procd_set_param file /etc/config/resolver
 	procd_set_param command "$PROG"
+	procd_append_param command --noninteractive
 	procd_set_param respawn
 	modify_rundir
 	init_header
