@@ -27,12 +27,14 @@ define Package/turris1x-btrfs
   $(call Package/Common)
   TITLE:=Btrfs support for Turris 1.x routers
   DEPENDS+=+schnapps +updater-ng
+  PROVIDES:=turris-btrfs
 endef
 
 define Package/turris1x-btrfs-migrate
   $(call Package/Common)
   TITLE:=Btrfs migration tool for Turris 1.x routers
   DEPENDS+=+turris1x-btrfs +btrfs-progs +uboot-envtools +fdisk +dosfstools
+  PROVIDES:=turris-btrfs-migrate
 endef
 
 define Package/turris1x-btrfs/description
