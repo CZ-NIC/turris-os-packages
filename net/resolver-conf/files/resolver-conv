@@ -59,7 +59,6 @@
 #	list addr '::#53'
 #	#option config '/etc/config/kresd'
 #	option keyfile '/etc/root.keys'
-#	option forks '1'
 #	option verbose '0'
 #	option rundir '/tmp/kresd'
 #	option log_stderr '0'
@@ -188,7 +187,6 @@ kresd_conv() {
 	set_configs kresd resolver
 	set_sections kresd kresd
 
-	conv_opt forks forks
 	conv_opt log_stdout log_stdout
 	conv_opt log_stderr log_stderr
 
@@ -212,7 +210,6 @@ kresd_conv() {
 	conv_opt rundir rundir
 	conv_opt log_stderr log_stderr
 	conv_opt log_stdout log_stdout
-	conv_opt forks forks
 }
 
 unbound_conv() {
