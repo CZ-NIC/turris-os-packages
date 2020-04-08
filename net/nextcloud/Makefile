@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nextcloud
-PKG_VERSION:=17.0.5
-PKG_RELEASE:=2
+PKG_VERSION:=18.0.7
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
-PKG_HASH:=d503eaf998e652554a27c14382f2b42c307e7fc9d6afa05f2829b547eb733161
+PKG_HASH:=4b2cc7475d925faf9ce6c655d290cbbee8c02a40aaf0628d3d41b7ccd8416a5e
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
