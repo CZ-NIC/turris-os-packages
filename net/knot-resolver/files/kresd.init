@@ -285,7 +285,7 @@ run_instance() {
 	load_uci_config_kresd
 	load_uci_config_common
 	procd_close_instance
-	[ \! -x "$(which at)" ] || echo "/etc/init.d/kresd test_ipv6" | at +2
+	[ \! -x "$(which at)" ] || echo "/etc/init.d/kresd test_ipv6" | at now+2min 2>&1 | fgrep -v 'warning: commands will be executed using /bin/sh'
 }
 
 print_kresd_forward_config() {
