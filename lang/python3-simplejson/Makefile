@@ -2,7 +2,8 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-simplejson
 PKG_VERSION:=3.10.0
-PKG_RELEASE:=2
+PKG_RELEASE:=3
+
 PKG_LICENSE:=MIT
 
 PKG_SOURCE:=simplejson-$(PKG_VERSION).tar.gz
@@ -30,6 +31,11 @@ endef
 
 define Build/Compile
   $(call Build/Compile/Py3Mod,,install --prefix="/usr" --root="$(PKG_INSTALL_DIR)")
+endef
+
+define Py3Package/python3-simplejson/filespec
++|$(PYTHON3_PKG_DIR)
+-|$(PYTHON3_PKG_DIR)/simplejson/tests
 endef
 
 $(eval $(call Py3Package,python3-simplejson))
