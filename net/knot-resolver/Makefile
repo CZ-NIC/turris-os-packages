@@ -42,11 +42,9 @@ define Package/knot-resolver/description
   implementation, including both a resolver library and a daemon.
 endef
 
-MESON_ARGS += --prefix=/usr
-
-MAKE_FLAGS += \
-	PREFIX=/usr \
-	ETCDIR=/etc/kresd
+MESON_ARGS+= \
+  -Ddnstap=disabled \
+  --prefix=/usr
 
 define Package/knot-resolver/install
 	$(INSTALL_DIR) $(1)/usr/bin
