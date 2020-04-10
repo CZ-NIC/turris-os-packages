@@ -45,6 +45,7 @@ define Package/knot-resolver/description
 endef
 
 MESON_ARGS+= \
+  -Ddnstap=disabled \
   --prefix=/usr
 
 define Package/knot-resolver/install
