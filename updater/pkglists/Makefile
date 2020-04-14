@@ -18,7 +18,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/pkglists
   SECTION:=updater
   CATEGORY:=Turris Updater
-  TITLE:=Packages lists for the updater
+  TITLE:=Package lists for the updater
 endef
 
 define Package/pkglists/install

@@ -24,7 +24,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/localrepo
   SECTION:=updater
   CATEGORY:=Turris Updater
-  TITLE:=Next generation updater local repository manager
+  TITLE:=Updater local repository manager
   DEPENDS:=+python3-light
 endef
 

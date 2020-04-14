@@ -24,7 +24,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/updater-opkg-wrapper
   SECTION:=updater
   CATEGORY:=Turris Updater
-  TITLE:=OPKG compatibility wrapper for next generation updater
+  TITLE:=OPKG compatibility wrapper for updater
   DEPENDS:=+opkg +updater-ng +localrepo
 endef
 

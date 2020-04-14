@@ -27,7 +27,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/updater-ng
   SECTION:=updater
   CATEGORY:=Turris Updater
-  TITLE:=The next generation updater
+  TITLE:=Updater
   DEPENDS:=\
     +liblua \
     +libuci-lua \

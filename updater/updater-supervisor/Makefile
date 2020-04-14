@@ -25,7 +25,7 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 define Package/updater-supervisor
   SECTION:=updater
   CATEGORY:=Turris Updater
-  TITLE:=Next generation updater supervisor and its library
+  TITLE:=Updater supervisor and its library
   DEPENDS:=+updater-ng +python3-light +python3-uci +pkglists +l10n-supported +cronie
   VARIANT:=python3
 endef
