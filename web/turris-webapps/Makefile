@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps
 PKG_VERSION:=1.2
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -18,7 +18,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/turris-webapps
 	TITLE:=turris-webapps
-	DEPENDS:=+lighttpd +lighttpd-mod-alias +lighttpd-mod-fastcgi
+	DEPENDS:=+lighttpd +lighttpd-mod-alias +lighttpd-mod-cgi
 endef
 
 define Package/turris-webapps/description
