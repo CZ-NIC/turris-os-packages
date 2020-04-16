@@ -6,6 +6,7 @@ START=61
 STOP=00
 
 USE_PROCD=1
+EXTRA_COMMANDS="test_ipv6"
 PROG=/usr/bin/kresd
 CONFIGFILE=/tmp/kresd.config
 ROOTKEYFILE=/etc/root.keys
