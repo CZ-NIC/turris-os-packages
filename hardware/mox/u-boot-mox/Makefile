@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=u-boot-mox
-PKG_VERSION:=2018-11-rc1
-PKG_RELEASE:=8
+PKG_VERSION:=2020-07-rc1
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=git@gitlab.labs.nic.cz:turris/mox-boot-builder.git
-PKG_SOURCE_VERSION:=5d6e645f5b00afa47d330017add5898056f9996b
+PKG_SOURCE_VERSION:=24de5b79eb0aeecaa611ced7513de8d87f0a1bcc
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
