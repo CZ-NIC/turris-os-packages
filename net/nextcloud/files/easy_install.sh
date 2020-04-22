@@ -119,7 +119,7 @@ sudo -u nobody php-cli ./occ config:system:set --value false updatechecker
 [ -z "$(uname -n)" ] || sudo -u nobody php-cli ./occ config:system:set --value "$(uname -n ).local" trusted_domains 2
 
 # Create cron script
-echo "*/15  *  *  *  *   /usr/bin/su --shell /bin/ash --command '/usr/bin/php-cli -f /srv/www/nextcloud/cron.php' nobody" >/etc/cron.d/nextcloud
+echo "*/15  *  *  *  *   nobody /usr/bin/php-cli -f /srv/www/nextcloud/cron.php" >/etc/cron.d/nextcloud
 
 /etc/init.d/php7-fpm restart
 /etc/init.d/lighttpd restart
