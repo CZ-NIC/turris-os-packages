@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import subprocess
 import sys
@@ -17,7 +17,7 @@ def is_valid_hostname(hostname):
         return False
     if hostname[-1] == ".":
         hostname = hostname[:-1]
-    allowed = re.compile("(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
+    allowed = re.compile(r"^(?!-)[A-Z\d_-]{1,63}(?<!-)$", re.IGNORECASE)
     for x in hostname.split("."):
         if allowed.match(x) is None:
             return False
@@ -56,7 +56,7 @@ def log(text, priority=LOG_INFO, output="syslog"):
 def call_cmd(cmd):
     assert isinstance(cmd, list)
     task = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE)
-    data = task.stdout.read()
+    data = task.stdout.read().decode(sys.getdefaultencoding())
     return data
 
 
@@ -91,11 +91,12 @@ class Kresd:
         self.__socket_path = self._get_socket_path()
 
     def _get_socket_path(self):
-        path = os.path.join(uci_get("resolver.kresd.rundir"), "tty")
-        try:
-            files = [f for f in listdir(path)]
-            return os.path.join(path, files[0])
-        except:
+        path_control = os.path.join(uci_get("resolver.kresd.rundir"), "control")
+        files_control = [f for f in listdir(path_control)]
+        if len(files_control)>0:
+            files=files_control
+            return os.path.join(path_control, files[0])
+        else:
             log("Kresd is probably not running no socket found.", LOG_ERR)
             sys.exit(1)
 
@@ -124,7 +125,8 @@ class Kresd:
         sock.settimeout(2)
         try:
             sock.connect(self.__socket_path)
-            sock.sendall(cmd + "\n")
+            full_cmd=cmd+"\n"
+            sock.sendall(full_cmd.encode() )
             ret = sock.recv(4096)
             sock.close()
             return ret
@@ -348,6 +350,6 @@ if __name__ == "__main__":
         hostname = os.environ.get('HOSTNAME')
         dd = DHCPv4()
         if sys_op and hostname and ipv4:
-                dd.update_dhcp(sys_op, hostname, ipv4)
+            dd.update_dhcp(sys_op, hostname, ipv4)
         dd.save_leases()
         dd.refresh_resolver()
