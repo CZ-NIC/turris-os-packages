@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=mox-support
-PKG_VERSION:=28
+PKG_VERSION:=29
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
 
