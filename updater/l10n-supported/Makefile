@@ -27,7 +27,7 @@ define Package/l10n-supported/install
 	$(INSTALL_DIR) $(1)/usr/share/updater/
 	$(INSTALL_DATA) ./files/list $(1)/usr/share/updater/l10n_supported
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
-	$(INSTALL_BIN) ./files/haas-proxy.uci.defaults $(1)/etc/uci-defaults/99-haas-proxy
+	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/10-l10n-supported
 endef
 
 $(eval $(call BuildPackage,l10n-supported))
