@@ -20,7 +20,7 @@ if uci then
 	-- Convert pkglists to set set of lists (ensures uniqueness) and add options
 	local lists = {}
 	for _, list in pairs(pkglists) do
-		lists[list] = uci_cursor:get("pkglists", list) or {}
+		lists[list] = uci_cursor:get_all("pkglists", list) or {}
 		for opt, value in pairs(lists[list]) do
 			lists[list][opt] = value == "1" or value == "yes" or value == "on" or value == "true" or value == "enabled"
 		end
