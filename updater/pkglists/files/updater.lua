@@ -8,6 +8,11 @@ if uci then
 
 	local pkglists = uci_cursor:get("pkglists", "pkglists", "pkglist")
 
+	-- If not pkglists were requested then we are done
+	if pkglists == nil then
+		return
+	end
+
 	-- If there is single list then uci returns just a string
 	if type(pkglists) == "string" then
 		pkglists = {pkglists}
