@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-dynfw-client
-PKG_VERSION:=1.1
-PKG_RELEASE:=4
+PKG_VERSION:=1.2.1
+PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/dynfw-client.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
