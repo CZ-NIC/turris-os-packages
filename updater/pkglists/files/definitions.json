@@ -152,11 +152,6 @@
 		"description": "Easy setup of the OpenVPN server from Foris.",
 		"url": "https://docs.turris.cz/basics/apps/openvpn/openvpn/"
 	},
-	"reforis": {
-		"title": "reForis",
-		"description": "Redesigned Foris is new web interface for Turris routers.",
-		"labels": ["experimental"]
-	},
 	"tor": {
 		"title": "Tor",
 		"description": "Service to increase anonymity on the Internet.",
