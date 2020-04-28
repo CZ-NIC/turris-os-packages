@@ -40,19 +40,21 @@ You can choose from one of these rolling releases:
     help us test it and to get new stuff few weeks up-front.
   hbk (kittens, next-fixup)
     This rolling release tracks stable OpenWrt upstream and stable Turris
-    development. It is used to prepare next fixup releases (aka 1.0.x). Manual
+    development. It is commonly used to prepare next fixup releases (aka 1.0.x)
+    or next minor or major if no more fixup version would be released. Manual
     intervention might be sometimes required to fix introduced bugs and because of
     that it is suggested to be used only by experienced users.
   hbl (lions, next-minor)
     This rolling release tracks stable OpenWrt upstream and the latest Turris
-    development. It is used to prepare next minor releases (aka 1.x.0). Manual
-    intervention might be sometimes required to fix introduced bugs and because of
-    that it is suggested to be used only by experienced users.
+    development. It is commonly used to prepare next minor releases (aka 1.x.0)
+    or next major if no more minor version would be released. Manual intervention
+    might be sometimes required to fix introduced bugs and because of that it is
+    suggested to be used only by experienced users.
   hbd (dragons, next-major)
-    This rolling release not only tracks the latest Turris but also the latest OpenWrt
-    development. It is used to prepare next major release (aka x.0.0). It can
-    frequently break and is suggested to be used only by experienced users on
-    non-critical infrastructure.
+    This rolling release not only tracks the latest Turris but also the latest
+    OpenWrt development. It is commonly used to prepare next major release
+    (aka x.0.0). It can frequently break and is suggested to be used only by
+    experienced users on non-critical infrastructure.
 EOF
 	read -r -p "Please enter name of a branch: " target
 	branch_alts
