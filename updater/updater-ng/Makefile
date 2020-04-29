@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=65.0
-PKG_RELEASE:=3
+PKG_VERSION:=66.0
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater/updater.git
@@ -35,6 +35,7 @@ define Package/updater-ng
     +libcurl \
     +liburiparser \
     +usign \
+    +libarchive \
     +ca-certificates
 endef
 
