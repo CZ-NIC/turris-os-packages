@@ -10,14 +10,13 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=updater-ng
 PKG_VERSION:=66.0
 PKG_RELEASE:=1
+
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater/updater.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)
 
 PKG_BUILD_DEPENDS:=busybox libb64 uthash argp-standalone
 
