@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.2
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec@nic.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -65,6 +65,8 @@ endif
 	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
 	$(INSTALL_BIN) ./files/resolver-reload $(1)/etc/hotplug.d/iface/40-resolver-reload
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/dhcp/
+	$(INSTALL_BIN) ./files/dynamic-domains.hotplug $(1)/etc/hotplug.d/dhcp/40-dynamic-domains
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/resolver-defaults $(1)/etc/uci-defaults/resolver-defaults
 endef
