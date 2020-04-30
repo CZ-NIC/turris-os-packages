@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-opkg-wrapper
-PKG_VERSION:=0.1.1
-PKG_RELEASE:=2
+PKG_VERSION:=0.2.0
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/updater/opkg-wrapper.git
@@ -33,8 +33,6 @@ define Package/updater-opkg-wrapper/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/opkg $(1)/usr/bin/opkg-pkgupdate-wrapper.sh
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/opkg.lua $(1)/etc/updater/conf.d/opkg.lua
-	$(INSTALL_DIR) $(1)/etc/updater/opkg-ignore
-	touch $(1)/etc/updater/opkg-ignore/.keep
 endef
 
 Build/Compile:=
