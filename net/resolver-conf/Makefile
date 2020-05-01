@@ -42,7 +42,7 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/config
-ifeq ($(CONFIG_TARGET_mvebu_Turris-Omnia),y)
+ifneq ($(filter-out n,$(CONFIG_PACKAGE_knot-resolver)),)
 	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolver
 else
 	$(INSTALL_CONF) ./files/resolver-turris-config $(1)/etc/config/resolver
@@ -56,7 +56,7 @@ endif
 	$(INSTALL_DIR) $(1)/etc/resolver/dns_servers
 	$(INSTALL_DIR) $(1)/usr/share/resolver
 	$(INSTALL_BIN) ./files/resolver-func.sh $(1)/usr/share/resolver/functions.sh
-ifeq ($(CONFIG_TARGET_mvebu),y)
+ifneq ($(filter-out n,$(CONFIG_PACKAGE_knot-resolver)),)
 	$(INSTALL_CONF) ./files/dns_servers/* $(1)/etc/resolver/dns_servers/
 else
 	$(INSTALL_CONF) ./files/dns_servers_turris1x/* $(1)/etc/resolver/dns_servers/
