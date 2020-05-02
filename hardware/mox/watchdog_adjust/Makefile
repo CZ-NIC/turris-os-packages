@@ -9,9 +9,9 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=watchdog_adjust
 PKG_VERSION:=6
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
+PKG_RELEASE:=1
+	
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -36,4 +36,4 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) ./files/etc/init.d/watchdog_adjust $(1)/etc/init.d/watchdog_adjust
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,watchdog_adjust))

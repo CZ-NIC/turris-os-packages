@@ -9,20 +9,21 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-utils
 PKG_VERSION:=2
+PKG_RELEASE:=1
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
+define Package/turris-utils
+	TITLE:=Turris utils
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/turris-utils/install
 	$(INSTALL_DIR) $(1)/sbin
 	$(INSTALL_BIN) ./files/check_connection $(1)/sbin/check_connection
 endef
 
 Build/Compile:=:
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,turris-utils))

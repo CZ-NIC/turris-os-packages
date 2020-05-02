@@ -9,9 +9,9 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=update_mac
 PKG_VERSION:=2
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
+PKG_RELEASE:=1
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -22,9 +22,9 @@ endef
 
 Build/Compile:=
 
-define Package/$(PKG_NAME)/install
+define Package/update_mac/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/update_mac $(1)/etc/init.d/update_mac
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,update_mac))

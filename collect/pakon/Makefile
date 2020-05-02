@@ -31,7 +31,7 @@ define Package/pakon
 	DEPENDS:=+suricata-pakon +xz +python3-light +python3-logging +python3-ctypes +python3-cachetools +python3-sqlite3 +sqlite3-cli +pakon-lists +ouidb +suricata-conntrack-flows
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/pakon/description
   Simple daemon that is able to collect events from suricata, store them locally to SQLite DB.
 endef
 
@@ -43,11 +43,11 @@ define Build/Install
   true
 endef
 
-define Package/$(PKG_NAME)/conffiles
+define Package/pakon/conffiles
 /etc/config/pakon
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/pakon/install
 	$(INSTALL_DIR) $(1)/etc/suricata-pakon/output_conf.d
 	$(INSTALL_DATA) ./files/pakon-output.yaml $(1)/etc/suricata-pakon/output_conf.d/pakon.yaml
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -94,4 +94,4 @@ define Package/pakon/prerm
         /etc/init.d/pakon-handler stop
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,pakon))

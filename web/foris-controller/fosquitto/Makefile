@@ -20,7 +20,7 @@ define Package/fosquitto
   DEPENDS:=+mosquitto-ssl +mosquitto-client-ssl
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/fosquitto/description
   Instance of mosquitto server used as foris message bus.
 endef
 

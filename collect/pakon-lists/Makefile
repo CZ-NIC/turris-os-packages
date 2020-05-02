@@ -15,19 +15,15 @@ PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light-lists.git
 PKG_SOURCE_VERSION:=a0afbc6604d55915b7246ac7e15bd65757b0f57f
 
-
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/pakon-lists
-	TITLE:=$(PKG_NAME)
+	TITLE:=Pakon lists
 endef
 
-
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
 define Package/pakon-lists/install
 	$(INSTALL_DIR) $(1)/usr/share/pakon-light/domains_ignore/
@@ -50,4 +46,4 @@ define Package/pakon-lists/postinst
 }
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,pakon-lists))

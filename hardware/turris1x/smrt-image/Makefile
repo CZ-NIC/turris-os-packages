@@ -32,4 +32,4 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/smrt.firmware $(1)/usr/share/smrt/firmware
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,smrt-image))

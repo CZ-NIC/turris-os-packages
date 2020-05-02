@@ -11,8 +11,6 @@ PKG_NAME:=dnssec-rootkey
 PKG_VERSION:=0.0.2
 PKG_RELEASE:=1
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-
 PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec@nic.cz>
 PKG_LICENSE:=GPL-3.0
 
@@ -33,14 +31,14 @@ set -ex
 }
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/dnssec-rootkey/description
   Root key for DNSSEC resolver
 endef
 
 define Build/Compile
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/dnssec-rootkey/install
 	$(INSTALL_DIR) $(1)/etc/
 	$(INSTALL_CONF) ./files/root.keys $(1)/etc/root.keys
 	$(INSTALL_DIR) $(1)/usr/bin/

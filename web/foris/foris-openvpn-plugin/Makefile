@@ -15,8 +15,6 @@ PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris/foris-openvpn-plugin.git
 PKG_SOURCE_VERSION:=package-v$(PKG_VERSION)
 
-
-
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=LICENSE

@@ -17,7 +17,7 @@ PKG_LICENSE:=GPL-3.0-or-later
 include $(INCLUDE_DIR)/package.mk
 
 define Package/turris-webapps
-	TITLE:=turris-webapps
+	TITLE:=Turris WebApps
 	DEPENDS:=+lighttpd +lighttpd-mod-alias +lighttpd-mod-cgi
 endef
 
@@ -25,11 +25,9 @@ define Package/turris-webapps/description
  Common landding page for various installed web apps.
 endef
 
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
-define Package/$(PKG_NAME)/install
+define Package/turris-webapps/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_DATA) ./files/turris-root.conf $(1)/etc/lighttpd/conf.d/turis-root.conf
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
@@ -38,11 +36,11 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) ./files/generic-web.svg $(1)/www/webapps-icons/
 endef
 
-define Package/$(PKG_NAME)/postinst
+define Package/turris-webapps/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 	/etc/init.d/lighttpd restart
 }
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,turris-webapps))

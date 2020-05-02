@@ -9,9 +9,10 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-maintain
 PKG_VERSION:=10
-PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_RELEASE:=1
 
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+	
 include $(INCLUDE_DIR)/package.mk
 
 define Package/$(PKG_NAME)
@@ -46,4 +47,4 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_CONF) ./files/backups.conf $(1)/etc/config/backups
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,turris-maintain))

@@ -9,8 +9,9 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cznic-repo-keys
 PKG_VERSION:=4.1
+PKG_RELEASE:=1
+
 PKG_MAINTAINER:=Michal Hrusecky <michal.hrusecky@nic.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 

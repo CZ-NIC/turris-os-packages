@@ -21,7 +21,7 @@ include $(INCLUDE_DIR)/package.mk
 
 TURRIS_DEPS:=+cert-backup
 
-define Package/$(PKG_NAME)/postinst
+define Package/cznic-cacert-bundle/postinst
 #!/bin/sh
 
 [ -n "$$IPKG_INSTROOT" ] || {
@@ -37,8 +37,8 @@ define Package/$(PKG_NAME)/postinst
 }
 endef
 
-define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
+define Package/cznic-cacert-bundle
+	TITLE:=CZNIC cacert bundle
 	DEPENDS:=+cert-backup +c-rehash
 endef
 
@@ -48,7 +48,7 @@ define Build/Compile
 	true
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/cznic-cacert-bundle/install
 	$(INSTALL_DIR) $(1)/etc/ssl/
 	# TODO: If anything is modified here, it needs to be updated in the postinst too
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/emergency-ca/ca.crt $(1)/etc/ssl/turris.pem
@@ -62,4 +62,4 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) ./files/get-crl.cron $(1)/etc/cron.d/get-api
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,cznic-cacert-bundle))

@@ -17,15 +17,10 @@ define Package/pakon-dev-detect
   DEPENDS:=+pakon
 endef
 
-define Build/Compile
-	true
-endef
+Build/Compile:=:
+Build/Install:=:
 
-define Package/pakon-dev-detect/install
-	true
-endef
-
-define Package/$(PKG_NAME)/postinst
+define Package/pakon-dev-detect/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 	/sbin/uci -q set pakon.monitor.notify_new_devices=1
@@ -34,7 +29,7 @@ define Package/$(PKG_NAME)/postinst
 }
 endef
 
-define Package/$(PKG_NAME)/prerm
+define Package/pakon-dev-detect/prerm
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 	/sbin/uci -q set pakon.monitor.notify_new_devices=0
