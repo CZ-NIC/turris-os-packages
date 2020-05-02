@@ -14,7 +14,7 @@ PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light-lists.git
 PKG_SOURCE_VERSION:=a0afbc6604d55915b7246ac7e15bd65757b0f57f
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
+
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
