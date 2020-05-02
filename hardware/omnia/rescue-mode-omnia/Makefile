@@ -19,7 +19,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/rescue-mode-omnia
   TITLE:=rescue-mode-omnia
   DEPENDS:=+btrfs-progs +mtd +schnapps +turris-rainbow
-  DEPENDS+=@TARGET_mvebu_Turris-Omnia @!ALL @!PACKAGE_oneshot @!PACKAGE_procd
+  DEPENDS+=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia @!ALL @!PACKAGE_oneshot @!PACKAGE_procd
 endef
 
 define Build/Compile

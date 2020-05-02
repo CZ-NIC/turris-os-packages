@@ -21,7 +21,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/mcutool
   TITLE:=mcutool
-  DEPENDS:=@TARGET_mvebu_Turris-Omnia
+  DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
 endef
 
 define Package/mcutool/description
