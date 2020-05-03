@@ -18,6 +18,7 @@ start_service() {
 	procd_set_param command sentinel-dynfw-client
 	procd_append_param command --ipset "$IPSET"
 	procd_append_param command --cert "$CERT_KEY"
+	procd_set_param stderr 1
 	procd_set_param respawn 600 5 5
 	procd_close_instance
 }
