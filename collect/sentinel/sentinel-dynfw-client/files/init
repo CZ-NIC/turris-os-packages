@@ -5,7 +5,7 @@ START=90
 STOP=10
 EXTRA_COMMANDS="getcert"
 
-CERT_KEY="/tmp/run/sentinel_server.key"
+CERT_KEY="/var/run/dynfw_server.pub"
 IPSET="turris-sn-dynfw-block"
 
 start_service() {
@@ -26,5 +26,4 @@ start_service() {
 getcert() {
 	[ -f "$CERT_KEY" ] && return 0
 	curl -f -s https://repo.turris.cz/sentinel/dynfw.pub -o "$CERT_KEY"
-	#TODO: add certificate gpg verification
 }
