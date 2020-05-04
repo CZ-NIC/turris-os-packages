@@ -1,7 +1,7 @@
 #
-# Copyright (C) 2018 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2018-2020 CZ.NIC, z.s.p.o. (https://www.nic.cz/)
 #
-# This is free software, licensed under the GNU General Public License v2.
+# This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
 #
 
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-dynfw-client
 PKG_VERSION:=1.0
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/dynfw-client.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -18,34 +18,31 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
-PKG_MAINTAINER:=Martin Petracek <martin.petracek@nic.cz>
-PKG_LICENSE:=GPL-3.0
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=GPL-3.0-or-later
 
 PKG_INSTALL:=0
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/sentinel-dynfw-client
-	SECTION:=net
-	CATEGORY:=Network
-	SUBMENU:=Receives updates of firewall rules and updates firewall accordingly
-	TITLE:=Sentinel dynamic firewall client
-	DEPENDS:=+python3-light +python3-zmq +ipset +python3-msgpack
+  SECTION:=net
+  CATEGORY:=Network
+  SUBMENU:=Receives updates of firewall rules and updates firewall accordingly
+  TITLE:=Sentinel dynamic firewall client
+  DEPENDS:=+python3-light +python3-zmq +ipset +python3-msgpack
 endef
 
-define Package/$(PKG_NAME)/description
-  Sentinel dynamic firewall client
+define Package/sentinel-dynfw-client/description
+  Sentinel dynamic firewall client. Receives updates of firewall rules and updates
+  firewall accordingly.
 endef
 
-define Build/Compile
-  true
-endef
+define Build/Compile:=:
 
-define Build/Install
-  true
-endef
+define Build/Install:=:
 
-define Package/$(PKG_NAME)/install
+define Package/sentinel-dynfw-client/install
 	$(INSTALL_DIR) $(1)/etc/
 	$(INSTALL_BIN) ./files/server.pub $(1)/etc/sentinel_dynfw.pub
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -56,7 +53,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/client.py $(1)/usr/bin/sentinel-dynfw-client
 endef
 
-define Package/$(PKG_NAME)/postinst
+define Package/sentinel-dynfw-client/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
         /etc/init.d/sentinel-dynfw-client enable
@@ -64,10 +61,10 @@ define Package/$(PKG_NAME)/postinst
 }
 endef
 
-define Package/$(PKG_NAME)/prerm
+define Package/sentinel-dynfw-client/prerm
 #!/bin/sh
         /etc/init.d/sentinel-dynfw-client disable
         /etc/init.d/sentinel-dynfw-client stop
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,sentinel-dynfw-client))
