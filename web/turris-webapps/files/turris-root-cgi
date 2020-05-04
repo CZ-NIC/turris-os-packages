@@ -14,10 +14,10 @@ HTTPS_REDIRECT="
 			xhttp.onreadystatechange = function() {
 				if(this.status == 200 &&
 				   xhttp.responseText.search('redirectTo(url)')) {
-					redirectTo("$HTTPS_URL");
+					redirectTo('$HTTPS_URL');
 				}
 			};
-			xhttp.open("GET", "$HTTPS_URL");
+			xhttp.open('GET', '$HTTPS_URL');
 			xhttp.send();
 "
 
