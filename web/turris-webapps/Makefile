@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps
-PKG_VERSION:=1.1
+PKG_VERSION:=1.2
 PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
