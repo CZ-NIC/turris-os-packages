@@ -27,12 +27,26 @@ local stable = {
 }
 
 -- Set of branches we can safely switch between (binary compatible)
-local safe_switch = stable + {
+local safe_switch = {
+	unpack(stable),
 	-- Kittens
 	["hbk"] = true,
 	["🐈"] = true,
 }
 
+
+--[[
+General function to store/write branch to state file
+]]
+local function write_state(state)
+	local file, err_str = io.open(swb_state, "w")
+	if not file then
+		ERROR("Failed to write state for branch switch: " .. err_str)
+		return
+	end
+	file:write(state)
+	file:close()
+end
 
 --[[
 General function to protectly read previous branch.
@@ -51,19 +65,6 @@ local function read_state()
 	local state = file:read()
 	file:close()
 	return state
-end
-
---[[
-General function to store/write branch to state file
-]]
-local function write_state(state)
-	local file, err_str = io.open(swb_state, "w")
-	if not file then
-		ERROR("Failed to write state for branch switch: " .. err_str)
-		return
-	end
-	file:write(state)
-	file:close()
 end
 
 --[[
