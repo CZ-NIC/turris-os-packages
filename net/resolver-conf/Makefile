@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2016 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2016-2020 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -19,15 +19,27 @@ PKG_INSTALL:=0
 include $(INCLUDE_DIR)/package.mk
 
 define Package/resolver-conf
-	SECTION:=net
-	CATEGORY:=Network
-	SUBMENU:=IP Addresses and Names
-	TITLE:=Resolver configuration
-	DEPENDS:=+python3-light +python3-multiprocessing +python3-logging +ca-bundle
+  SECTION:=net
+  CATEGORY:=Network
+  SUBMENU:=IP Addresses and Names
+  TITLE:=Resolver configuration
+  DEPENDS:=+ca-bundle
 endef
 
 define Package/resolver-conf/description
   Configuration for knot-resolver and unbound.
+endef
+
+define Package/resolver-conf-dynamic-domains
+  SECTION:=net
+  CATEGORY:=Network
+  SUBMENU:=IP Addresses and Names
+  TITLE:=Resolver-conf dynamic domains script
+  DEPENDS:=+python3-light +python3-multiprocessing +python3-logging +ca-bundle
+endef
+
+define Package/resolver-conf-dynamic-domains/description
+  Dynamic domains python script
 endef
 
 define Package/resolver-conf/conffiles
@@ -46,7 +58,6 @@ else
 endif
 	$(INSTALL_DIR) $(1)/etc/resolver
 	$(INSTALL_BIN) ./files/resolver-conv $(1)/etc/resolver/resolver-conv.sh
-	$(INSTALL_BIN) ./files/dhcp_host_domain_ng.py $(1)/etc/resolver/dhcp_host_domain_ng.py
 	$(INSTALL_BIN) ./files/dynamic-domain-conv $(1)/etc/resolver/dynamic-domain-conv.sh
 	$(INSTALL_DIR) $(1)/usr/libexec/rpcd
 	$(INSTALL_BIN) ./files/resolver_rpcd.py $(1)/usr/libexec/rpcd/resolver_rpcd.py
@@ -58,10 +69,15 @@ endif
 	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
 	$(INSTALL_BIN) ./files/resolver-reload $(1)/etc/hotplug.d/iface/40-resolver-reload
-	$(INSTALL_DIR) $(1)/etc/hotplug.d/dhcp/
-	$(INSTALL_BIN) ./files/dynamic-domains.hotplug $(1)/etc/hotplug.d/dhcp/40-dynamic-domains
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/resolver-defaults $(1)/etc/uci-defaults/resolver-defaults
+endef
+
+define Package/resolver-conf-dynamic-domains/install
+	$(INSTALL_DIR) $(1)/etc/resolver
+	$(INSTALL_BIN) ./files/dhcp_host_domain_ng.py $(1)/etc/resolver/dhcp_host_domain_ng.py
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/dhcp/
+	$(INSTALL_BIN) ./files/dynamic-domains.hotplug $(1)/etc/hotplug.d/dhcp/40-dynamic-domains
 endef
 
 define Package/resolver-conf/postinst
@@ -78,3 +94,4 @@ fi
 endef
 
 $(eval $(call BuildPackage,resolver-conf))
+$(eval $(call BuildPackage,resolver-conf-dynamic-domains))
