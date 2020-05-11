@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
 PKG_VERSION:=1.11.0
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://nlnetlabs.nl/downloads/unbound/
@@ -21,10 +21,17 @@ PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
+define Package/unbound/config
+	source "$(SOURCE)/Config.in"
+endef
+
 define Package/unbound/Default
   TITLE:=A validating, recursive & caching DNS resolver
   URL:=https://nlnetlabs.nl/projects/unbound/about/
   DEPENDS:=+libldns +libopenssl +dnssec-rootkey +resolver-conf
+ifeq ($(CONFIG_UNBOUND_DYNAMIC_DOMAINS),y)
+  DEPENDS+=+resolver-conf-dynamic-domains
+endif
   PROVIDES:=dns-resolver
 endef
 

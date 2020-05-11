@@ -1,0 +1,9 @@
+menu "Configuration"
+
+config UNBOUND_DYNAMIC_DOMAINS
+	bool "Enable dynamic domains dependency"
+	help
+	Add dependency for dynamic domains
+	default y
+
+endmenu
