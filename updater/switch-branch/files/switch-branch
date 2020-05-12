@@ -159,7 +159,7 @@ hbd"
 # selected ones)
 check_branch() {
 	[ "$force" = "y" ] || \
-		echo "$target" | grep -qxF "$SUPPORTED_BRANCHES"
+		echo "$SUPPORTED_BRANCHES" | grep -qxF "$target"
 }
 
 # Check if given version is valid/existing version (force again allows usage of
