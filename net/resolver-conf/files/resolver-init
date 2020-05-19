@@ -166,7 +166,7 @@ start() {
 
 stop() {
 	run_cmd stop $PREF_RESOLVER
-	rm /var/run/resolver.pid
+	rm -f /var/run/resolver.pid
 }
 
 reload() {

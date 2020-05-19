@@ -2,7 +2,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=samba
-PKG_VERSION:=4.9.8
+PKG_VERSION:=4.9.18
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=Andy Walsh <andy.walsh44+github@gmail.com>
@@ -11,7 +11,7 @@ PKG_LICENSE_FILES:=COPYING
 
 PKG_SOURCE_URL:=https://download.samba.org/pub/samba/stable/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_MD5SUM:=82ebb7c3f1847c39341dd97ff8b73f40fa83f5f794daeceb80f3c349ace3cf56
+PKG_MD5SUM:=c6d23982b7233ce8bc0c87b8b03585d782ddf3bd7c634c1ffa853d7d397d87f7
 
 # Buildroot bug? Can't add target deps via '+SAMBA4_SERVER_AD_DC:python-crypto' (as work-around we select via config.in)
 PKG_BUILD_DEPENDS:=SAMBA4_SERVER_AD_DC:python-crypto nfs-kernel-server/host
@@ -36,7 +36,7 @@ define Package/samba4/Default
   SECTION:=net
   CATEGORY:=Network
   TITLE:=Samba $(PKG_VERSION)
-  URL:=http://www.samba.org/
+  URL:=https://www.samba.org/
 endef
 
 define Package/samba4/Default/description

@@ -1,0 +1,30 @@
+From 9bf841c5f8b721cd80ff8e4ea8ab99331933d1c4 Mon Sep 17 00:00:00 2001
+From: Josef Schlehofer <pepe.schlehofer@gmail.com>
+Date: Sun, 3 May 2020 16:54:30 +0200
+Subject: [PATCH] Revert "meson: turn implicit-function warnings into hard
+ errors"
+
+More details:
+https://gitlab.labs.nic.cz/knot/knot-resolver/issues/570
+
+I am not able to compile with CFLAGS nor moving luajit higher in
+kresd_deps. Let's see if it helps for Turris OS 3.x.
+---
+ meson.build | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/meson.build b/meson.build
+index 31923a4b..b845c928 100644
+--- a/meson.build
++++ b/meson.build
+@@ -115,7 +115,6 @@ add_project_arguments(
+   '-Wformat-security',
+   '-Wtype-limits',
+   '-Wshadow',
+-  '-Werror=implicit-function-declaration', # Probably messed up includes; implicit functions are evil!
+   '-fvisibility=hidden',
+   '-DHAVE_ASPRINTF=' + have_asprintf.to_int().to_string(),
+ 
+-- 
+2.26.2
+

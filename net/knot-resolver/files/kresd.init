@@ -6,6 +6,7 @@ START=61
 STOP=00
 
 USE_PROCD=1
+EXTRA_COMMANDS="test_ipv6"
 PROG=/usr/bin/kresd
 CONFIGFILE=/tmp/kresd.config
 ROOTKEYFILE=/etc/root.keys
@@ -116,8 +117,8 @@ load_uci_config_common() {
 	[ "$verbose" -ge 1 ] && procd_append_param command -v
 
 	# EDNS payload
-	config_get msg_buffer_size "$section" msg_buffer_size
-	[ "$msg_buffer_size" -ge 512 ] && set_param_func "net.bufsize" "$msg_buffer_size"
+	config_get edns_buffer_size "$section" edns_buffer_size 4096
+	[ "$edns_buffer_size" -ge 512 ] && set_param_func "net.bufsize" "$edns_buffer_size"
 
 	# ipv4
 	config_get_bool net_ipv4 "$section" net_ipv4
@@ -151,15 +152,17 @@ load_uci_config_common() {
 			local SERVERS
 			SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' /tmp/resolv.conf.auto | sort -u |head -n 4)
 			if [ "$SERVERS" ] ; then
+				# Slight hack around https://gitlab.labs.nic.cz/knot/knot-resolver/issues/205#note_94566
+				echo "table.insert(policy.special_names, { count = 0, cb = policy.all(" >> $CONFIGFILE
 				if [ "$ignore_root_key" = "1"  ] ; then
-					echo "policy.add(policy.all(policy.STUB({">>$CONFIGFILE
+					echo "policy.STUB({">>$CONFIGFILE
 				else
-					echo "policy.add(policy.all(policy.FORWARD({">>$CONFIGFILE
+					echo "policy.FORWARD({">>$CONFIGFILE
 				fi
 				for SERVER in $SERVERS ; do
 					echo "	'$SERVER',">>$CONFIGFILE
 				done
-				echo "})))">>$CONFIGFILE
+				echo "}))})">>$CONFIGFILE
 			fi
 		fi
 		md5sum /tmp/resolv.conf.auto | cut -f1 -d\ >/tmp/resolv.conf.auto.last.md5
