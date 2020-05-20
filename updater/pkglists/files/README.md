@@ -15,6 +15,8 @@ and for that there should be following fields:
 * __labels__: Labes to associate with given package list. __This has to be a
   list__. For content of this list see next section about that. __This field is
   optional__.
+* __boards__: List of supported boards. __This has to be a list__. __This field is
+  optional__.
 
 All fields have to be defined as appropriate values of specified type unless stated
 otherwise.
@@ -30,10 +32,11 @@ can use it in general by two ways:
 * package list has some additional optional features to install
 
 Every option has name that is used in updater's pkglist and some additional
-fields. Required fields are __title__ and __description__ and optional are __url__
-and __labels__. Their meaning is same as for root package list. On top of those
-there is option __default__. That is of boolean type and serves to set default
-state of option when not configured by user. In default __default__ is `false`.
+fields. Required fields are __title__ and __description__ and optional are
+__url__, __labels__ and __boards__. Their meaning is same as for root package
+list.  On top of those there is option __default__. That is of boolean type and
+serves to set default state of option when not configured by user. In default
+__default__ is `false`.
 
 #### __labels__ list and definition
 Labels are defined in separate file `labels.json`. It is in JSON format the same

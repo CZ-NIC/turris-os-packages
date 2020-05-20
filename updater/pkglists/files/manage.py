@@ -10,6 +10,8 @@ from schema import Schema, Optional, Regex, Or
 DEFINITIONS = 'definitions.json'
 LABELS = 'labels.json'
 
+BOARDS = ("mox", "omnia", "turris1x")
+
 
 def definitions():
     """Load pkglists definitions.
@@ -85,13 +87,15 @@ def op_verify(_):
             'title': str,
             'description': str,
             Optional('url'): str,
-            Optional('labels'): [str],
+            Optional('labels'): list(lbls.keys()),
+            Optional('boards'): list(BOARDS),
             Optional('options'): {
                 Regex(r'^\w+$'): {
                     'title': str,
                     'description': str,
                     Optional('url'): str,
                     Optional('labels'): list(lbls.keys()),
+                    Optional('boards'): list(BOARDS),
                     Optional('default'): bool,
                 }
             }

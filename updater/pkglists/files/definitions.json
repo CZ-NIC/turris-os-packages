@@ -156,5 +156,21 @@
 		"title": "Tor",
 		"description": "Service to increase anonymity on the Internet.",
 		"labels": ["community", "advanced"]
+	},
+	"drivers": {
+		"title": "Alternative core drivers",
+		"description": "These options allow you to use alternative drivers over those available in default installation. You can try to enable these if you encounter some problems with default ones.",
+		"options": {
+			"ath10k_ct": {
+				"title": "Candela Technologies Wi-Fi drivers for Qualcomm Atheros QCA988x",
+				"description": "Alternative driver from Candela Technologies.",
+				"boards": ["omnia", "turris1x"]
+			},
+			"ath10k_ct_htt": {
+				"title": "Candela Technologies Wi-Fi drivers for Qualcomm Atheros QCA988x with improved stability in busy networks",
+				"description": "Alternative driver from Candela Technologies. It uses HTT TX data path for management frames, which improves stability in busy networks."
+			}
+		},
+		"labels": ["advanced", "community"]
 	}
 }
