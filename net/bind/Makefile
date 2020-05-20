@@ -9,21 +9,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=bind
-PKG_VERSION:=9.12.4-P2
+PKG_VERSION:=9.11.19
 PKG_RELEASE:=1
 USERID:=bind=57:bind=57
 
 PKG_MAINTAINER:=Noah Meyerhans <frodo@morgul.net>
 PKG_LICENSE:=MPL-2.0
+PKG_LICENSE_FILES:=LICENSE
 PKG_CPE_ID:=cpe:/a:isc:bind
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:= \
 	https://www.mirrorservice.org/sites/ftp.isc.org/isc/bind9/$(PKG_VERSION) \
 	https://ftp.isc.org/isc/bind9/$(PKG_VERSION)
-PKG_MD5SUM:=b7ce60df0d0b3e9ed55c081ff71b3ae6752d57a8c200aab072ae3bc1065ffcd0
-
-PKG_BUILD_DEPENDS:=python-ply/host
+PKG_HASH:=0dee554a4caa368948b32da9a0c97b516c19103bc13ff5b3762c5d8552f52329
 
 PKG_FIXUP:=autoreconf
 PKG_REMOVE_FILES:=aclocal.m4 libtool.m4
@@ -72,6 +71,7 @@ endef
 define Package/bind-server
   $(call Package/bind/Default)
   TITLE+= DNS server
+  DEPENDS+= +@OPENSSL_WITH_DEPRECATED
 endef
 
 define Package/bind-server/config
@@ -86,12 +86,6 @@ endef
 define Package/bind-tools
   $(call Package/bind/Default)
   TITLE+= administration tools (all)
-	DEPENDS:= \
-	+bind-check \
-	+bind-dig \
-	+bind-dnssec \
-	+bind-host \
-	+bind-rndc
 endef
 
 define Package/bind-rndc
@@ -121,11 +115,13 @@ endef
 
 export BUILD_CC="$(TARGET_CC)"
 
-TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
+TARGET_LDFLAGS += --std=gnu99
 
 CONFIGURE_ARGS += \
-	--enable-ipv6=$(if $(CONFIG_IPV6),yes,no) \
+	--enable-shared \
+	--enable-static \
 	--with-randomdev="/dev/urandom" \
+	--disable-atomic \
 	--disable-threads \
 	--disable-linux-caps \
 	--with-openssl="$(STAGING_DIR)/usr" \
@@ -135,9 +131,9 @@ CONFIGURE_ARGS += \
 	--with-gost=no \
 	--with-gssapi=no \
 	--with-ecdsa=$(if $(CONFIG_OPENSSL_WITH_EC),yes,no) \
-	--with-eddsa=$(if $(CONFIG_BIND_ENABLE_EDDSA),yes,no) \
+	--without-eddsa \
+	--without-python \
 	--with-readline=no \
-	--enable-atomic=no \
 	--sysconfdir=/etc/bind
 
 ifdef CONFIG_BIND_ENABLE_FILTER_AAAA
@@ -189,7 +185,6 @@ define Package/bind-server/install
 		./files/bind/db.255 \
 		./files/bind/db.local \
 		./files/bind/db.root \
-		./files/bind/bind.keys \
 		$(1)/etc/bind/
 	$(CP) ./files/bind/named.conf.example $(1)/etc/bind/named.conf
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -213,7 +208,16 @@ endef
 
 define Package/bind-tools/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/delv $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/dig $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/host $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/dnssec-keygen $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/dnssec-settime $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/dnssec-signzone $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/named-checkconf $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/named-checkzone $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/rndc $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/rndc-confgen $(1)/usr/sbin/
 endef
 
 define Package/bind-rndc/install
