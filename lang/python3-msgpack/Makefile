@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python3-msgpack
-PKG_VERSION:=0.5.6
-PKG_RELEASE:=2
+PKG_VERSION:=1.0.0
+PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_VERSION).tar.gz
+PKG_SOURCE:=v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/msgpack/msgpack-python/archive/
-PKG_MD5SUM:=e05e0edfebdd32d11b02bea88381595e
+PKG_MD5SUM:=420458874288b4ac0956f38c90b7d1043fcfd99deacd99563f166463ba0c514c
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/msgpack-python-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=python3-setuptools

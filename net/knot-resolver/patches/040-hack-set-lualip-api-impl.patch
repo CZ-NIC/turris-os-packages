@@ -1,0 +1,30 @@
+
+From 9bf841c5f8b721cd80ff8e4ea8ab99331933d1c4 Mon Sep 17 00:00:00 2001
+From: Vladimír Čunát <v@cunat.cz>
+Date: Sun, 3 May 2020 16:54:30 +0200
+Subject: [PATCH] Hack "impl.c: add LUALIB_API void""
+
+It is not possible to compile Knot Resolver in Turris OS 3.x.
+Due to following error:
+In file included from ../daemon/engine.c:19:0:
+../daemon/bindings/impl.h:14:3: error: #error "Incorrect Lua version in #include <lua.h> - LuaJIT compatible with Lua 5.1 is required"
+  #error "Incorrect Lua version in #include <lua.h> - LuaJIT compatible with Lua 5.1 is required"
+
+More details:
+https://gitlab.labs.nic.cz/knot/knot-resolver/issues/570
+---
+ impl.c | 1 -
+ 1 file changed, 1 insertion(+)
+
+--- a/daemon/bindings/impl.c
++++ b/daemon/bindings/impl.c
+@@ -46,6 +46,9 @@ void kr_bindings_register(lua_State *L)
+        kr_bindings_worker(L);
+ }
+ 
++
++LUALIB_API void luaL_traceback(lua_State *L, lua_State *L1, const char *msg, int level);
++
+ void lua_error_p(lua_State *L, const char *fmt, ...)
+ {
+        /* Add a stack trace and throw the result as a lua error. */

@@ -1,0 +1,45 @@
+From 5f0297da4c32d7452d9185fdb4b8c4984b31f713 Mon Sep 17 00:00:00 2001
+From: Josef Schlehofer <pepe.schlehofer@gmail.com>
+Date: Thu, 21 May 2020 09:29:13 +0200
+Subject: [PATCH] Revert "daemon/bindings: stricter luajit detection"
+
+In Turris OS 3.x, there is an issue that Knot Resolver can not be
+compiled. It was reported to Knot Resolver [1] as some warnings are treated as error
+because in Knot Resolver 5.1.0, there is enabled
+-Werror=implicit-function-declaration but this could be resolved by
+reverting that commit which enables it, but it is not a good solution at
+all. However, the warning/error was improved.
+
+Now it fails:
+In file included from ../daemon/network.c:7:0:
+../daemon/bindings/impl.h:14:3: error: #error "Incorrect Lua version in #include <lua.h> - LuaJIT compatible with Lua 5.1 is required"
+  #error "Incorrect Lua version in #include <lua.h> - LuaJIT compatible with Lua 5.1 is required"
+   ^
+
+Because of it, we need to revert commit 0b495b6273c11574af1ecab949494722cde905a2
+As it does not happen with Turris OS 5.0+.
+
+[1] https://gitlab.labs.nic.cz/knot/knot-resolver/issues/570
+---
+ daemon/bindings/impl.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/daemon/bindings/impl.h b/daemon/bindings/impl.h
+index bb11e1b2..0297805d 100644
+--- a/daemon/bindings/impl.h
++++ b/daemon/bindings/impl.h
+@@ -9,8 +9,9 @@
+ #include <lua.h>
+ #include <lauxlib.h>
+ /* It may happen that include files are messed up and we're hitting a header
+- * e.g. from vanilla Lua.  Even 5.1 won't work due to missing luaL_traceback() in <lauxlib.h>. */
+-#if (LUA_VERSION_NUM) != 501 || !defined(LUA_LJDIR)
++ * e.g. from Lua 5.2 or 5.3.  Header from 5.1 should work OK, and it's more difficult
++ * to differentiate from a luajit one. */
++#if LUA_VERSION_NUM != 501
+ 	#error "Incorrect Lua version in #include <lua.h> - LuaJIT compatible with Lua 5.1 is required"
+ #endif
+ 
+-- 
+2.26.2
+

@@ -8,16 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rmbt-client
-PKG_VERSION:=1.0
+PKG_VERSION:=1.1
 PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/lwimmer/rmbt-client.git
-PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=cd544e53c24c35ea36211bf95dc7983a5c7f6a9f
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://codeload.github.com/lwimmer/rmbt-client/tar.gz/v$(PKG_VERSION)?
+PKG_HASH:=1dd86cb88fd171b6a229c353384dc5f77a70411fcd7f13979cb24a084a467c62
+
 PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
