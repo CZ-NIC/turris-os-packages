@@ -1,0 +1,81 @@
+--- a/isc/siphash.c
++++ b/lib/isc/siphash.c
+@@ -93,6 +93,7 @@ isc_siphash24(const uint8_t *k,
+ 	REQUIRE(k != NULL);
+ 	REQUIRE(out != NULL);
+
++	size_t i=0;
+ 	uint64_t k0 = U8TO64_LE(k);
+ 	uint64_t k1 = U8TO64_LE(k + 8);
+
+@@ -110,8 +111,7 @@ isc_siphash24(const uint8_t *k,
+ 		uint64_t m = U8TO64_LE(in);
+
+ 		v3 ^= m;
+-
+-		for (size_t i = 0; i < cROUNDS; ++i) {
++		for (i = 0; i < cROUNDS; ++i) {
+ 			SIPROUND(v0, v1, v2, v3);
+ 		}
+
+@@ -148,16 +148,14 @@ isc_siphash24(const uint8_t *k,
+ 	}
+
+ 	v3 ^= b;
+-
+-	for (size_t i = 0; i < cROUNDS; ++i) {
++	for (i = 0; i < cROUNDS; ++i) {
+ 		SIPROUND(v0, v1, v2, v3);
+ 	}
+
+ 	v0 ^= b;
+
+ 	v2 ^= 0xff;
+-
+-	for (size_t i = 0; i < dROUNDS; ++i) {
++	for (i = 0; i < dROUNDS; ++i) {
+ 		SIPROUND(v0, v1, v2, v3);
+ 	}
+
+--- a/lib/isccfg/parser.c
++++ b/lib/isccfg/parser.c
+@@ -1215,8 +1215,9 @@ cfg_print_ustring(cfg_printer_t *pctx, c
+
+ static void
+ print_qstring(cfg_printer_t *pctx, const cfg_obj_t *obj) {
++	size_t i = 0;
+ 	cfg_print_cstr(pctx, "\"");
+-	for (size_t i = 0; i < obj->value.string.length; i++) {
++	for (i = 0; i < obj->value.string.length; i++) {
+ 		if (obj->value.string.base[i] == '"') {
+ 			cfg_print_cstr(pctx, "\\");
+ 		}
+--- a/lib/isc/stats.c
++++ b/lib/isc/stats.c
+@@ -309,8 +309,10 @@ copy_counters(isc_stats_t *stats, uint64
+ 	 * We use a "write" lock before "reading" the statistics counters as
+ 	 * an exclusive lock.
+ 	 */
++
++	isc_statscounter_t counter = 0;
+ 	MAYBE_RWLOCK(&stats->counterlock, isc_rwlocktype_write);
+-	for (isc_statscounter_t counter = 0;
++	for (counter = 0;
+ 	     counter < stats->ncounters;
+ 	     counter++)
+ 	{
+@@ -360,12 +362,13 @@ isc_stats_dump(isc_stats_t *stats, isc_s
+ 	uint64_t *counters;
+ 	bool verbose = ((options & ISC_STATSDUMP_VERBOSE) != 0);
+
++	isc_statscounter_t counter = 0;
+ 	counters = isc_mem_get(stats->mctx,
+ 			       sizeof(uint64_t) * stats->ncounters);
+
+ 	copy_counters(stats, counters);
+
+-	for (isc_statscounter_t counter = 0;
++	for (counter = 0;
+ 	     counter < stats->ncounters;
+ 	     counter++)
+ 	{
