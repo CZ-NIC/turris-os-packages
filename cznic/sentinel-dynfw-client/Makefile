@@ -38,9 +38,9 @@ define Package/sentinel-dynfw-client/description
   firewall accordingly.
 endef
 
-define Build/Compile:=:
+Build/Compile:=:
 
-define Build/Install:=:
+Build/Install:=:
 
 define Package/sentinel-dynfw-client/install
 	$(INSTALL_DIR) $(1)/etc/
