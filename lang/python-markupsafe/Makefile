@@ -13,6 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=MarkupSafe-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/m/markupsafe/
+PKG_HASH:=a6be69091dac236ea9c6bc7d012beab42010fa914c459791d627dad4910eb665
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/MarkupSafe-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/MarkupSafe-$(PKG_VERSION)
