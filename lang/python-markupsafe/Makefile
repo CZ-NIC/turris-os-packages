@@ -17,7 +17,7 @@ PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/m/markupsafe/
 PKG_BUILD_DIR:=$(BUILD_DIR)/MarkupSafe-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/MarkupSafe-$(PKG_VERSION)
 
-PKG_BUILD_DEPENDS:=python python3
+PKG_BUILD_DEPENDS:=python python3 python-setuptools python3-setuptools
 HOST_BUILD_DEPENDS:=python/host python3/host
 
 include $(INCLUDE_DIR)/package.mk
