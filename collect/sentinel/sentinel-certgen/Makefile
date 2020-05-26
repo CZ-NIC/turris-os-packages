@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-certgen
-PKG_VERSION:=6.1.3
-PKG_RELEASE:=2
+PKG_VERSION:=6.2
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/certgen.git
