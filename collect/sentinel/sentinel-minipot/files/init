@@ -7,6 +7,9 @@ STOP=10
 DEFAULT_TELNET_PORT=2333
 
 start_service() {
+	source /lib/functions/sentinel.sh
+	allowed_to_run "minipot" || return 1
+
 	config_load sentinel
 	local telnet_port
 	config_get telnet_port minipot telnet_port "$DEFAULT_TELNET_PORT"

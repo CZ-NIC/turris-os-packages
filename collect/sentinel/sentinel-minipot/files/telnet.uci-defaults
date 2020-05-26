@@ -32,7 +32,6 @@ if [ "$(uci -q get sentinel.minipot)" != "minipot" ]; then
 	uci -q batch <<EOT
 		delete sentinel.minipot
 		set sentinel.minipot='minipot'
-		set sentinel.minipot.telnet_port='2333'
 		commit sentinel.minipot
 EOT
 fi
