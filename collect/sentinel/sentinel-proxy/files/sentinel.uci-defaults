@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ "$(uci -q get sentinel.main)" != "main" ]; then
+	uci -q batch <<EOT
+		delete sentinel.main
+		set sentinel.main='main'
+		commit sentinel.main
+EOT
+fi
