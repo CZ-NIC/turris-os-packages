@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ "$(uci -q get sentinel.nikola)" != "nikola" ]; then
+	uci -q batch <<EOT
+		delete sentinel.nikola
+		set sentinel.nikola='nikola'
+		commit sentinel.nikola
+EOT
+fi
