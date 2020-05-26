@@ -19,6 +19,8 @@ PKG_MD5SUM:=84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/chardet-$(PKG_VERSION)
 
+PKG_BUILD_DEPENDS:=python-setuptools python3-setuptools
+
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python-package.mk)
 $(call include_mk, python3-package.mk)
