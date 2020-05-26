@@ -19,7 +19,7 @@ PKG_LICENSE:=BSD
 PKG_LICENSE_FILES:PKG-INFO
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python python3
+PKG_BUILD_DEPENDS:=python python3 python-setuptools python3-setuptools
 
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python-package.mk)
