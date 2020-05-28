@@ -14,7 +14,7 @@ test_log() {
 }
 
 run_kresd_command () {
-	KRESD_TTY="$(uci get resolver.kresd.rundir)/tty/$(pidof kresd|awk '{print $1}')"
+	KRESD_TTY="$(uci get resolver.kresd.rundir)/control/$(pidof kresd|awk '{print $1}')"
 	echo "${1}" | socat - "unix-connect:${KRESD_TTY}"
 }
 

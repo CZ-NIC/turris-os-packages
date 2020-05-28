@@ -284,7 +284,7 @@ run_instance() {
 	  if ! ip -6 r s | grep -q '^default' &&\
 	     ping -c 1 api.turris.cz > /dev/null 2>&1 && \
 	     ! ping -6 -c 1 api.turris.cz > /dev/null 2>&1; then
-		echo "net.ipv6 = false" | socat - UNIX-CONNECT:$(sleep 5; ls -1 $DEFAULT_RUNDIR/tty/*) > /dev/null 2>&1
+		echo "net.ipv6 = false" | socat - UNIX-CONNECT:$(sleep 5; ls -1 $DEFAULT_RUNDIR/control/*) > /dev/null 2>&1
 	  fi) &
 }
 
