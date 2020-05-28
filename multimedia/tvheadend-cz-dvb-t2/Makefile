@@ -15,8 +15,8 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
+define Package/tvheadend-cz-dvt-t2
+	TITLE:=Czech DVB-T2 mux for Tvheadend
 	DEPENDS:=+tvheadend
 endef
 
@@ -24,9 +24,7 @@ define Package/tvheadend-cz-dvt-t2/description
   Experimental mux definition for Czech DVB-T2
 endef
 
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
 define Package/tvheadend-cz-dvt-t2/install
 	$(INSTALL_DIR) $(1)/usr/share/tvheadend/data/dvb-scan/dvb-t

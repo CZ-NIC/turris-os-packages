@@ -10,20 +10,18 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=watchdog_adjust
 PKG_VERSION:=6
 PKG_RELEASE:=1
-	
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
+define Package/watchdog_adjust
+	TITLE:=Watchdog adjust
 endef
 
-define Build/Compile
-	echo Building OK
-endef
+Build/Compile:=:
 
-define Package/$(PKG_NAME)/postinst
+define Package/watchdog_adjust/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
 /etc/init.d/watchdog_adjust disable
@@ -31,7 +29,7 @@ define Package/$(PKG_NAME)/postinst
 }
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/watchdog_adjust/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/etc/init.d/watchdog_adjust $(1)/etc/init.d/watchdog_adjust
 endef

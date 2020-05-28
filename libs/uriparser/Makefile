@@ -11,13 +11,12 @@ PKG_NAME:=uriparser
 PKG_VERSION:=0.9.1
 PKG_RELEASE:=1
 
-PKG_SOURCE:=uriparser-$(PKG_VERSION).tar.gz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/uriparser/uriparser/archive
 PKG_HASH:=2d241d771368fb341c5d7231c2a754d4a5fa1280b958b82131dd7838900dc976
 PKG_BUILD_DIR:=$(BUILD_DIR)/uriparser-uriparser-$(PKG_VERSION)
-PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_URL:=https://uriparser.github.io
 
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
 
@@ -30,6 +29,7 @@ define Package/uriparser
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=uriparser
+	URL:=https://uriparser.github.io
   DEPENDS:=+liburiparser
 endef
 

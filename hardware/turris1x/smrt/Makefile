@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=smrt
 PKG_VERSION:=15
-	
+
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/smrt.git
 PKG_SOURCE_VERSION:=d3f4a37a88207beb41e01d2e77cc7dfa6b7edd8b
@@ -18,7 +18,7 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/smrt
 	TITLE:=smrt
 	DEPENDS:=+smrt-image
 endef

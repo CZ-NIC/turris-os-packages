@@ -49,7 +49,24 @@ define Package/suricata-bin
   CATEGORY:=Network
   TITLE:=Network IDS, IPS and NSM engine
   URL:=https://suricata-ids.org/
-  DEPENDS:=+libpcre +libyaml +jansson +libmagic +libpthread +librt +libpcap $(LUAJIT_DEP) +libnetfilter-queue +iptables-mod-nfqueue +libnetfilter-log +libnfnetlink +iptables-mod-conntrack-extra +libhtp +libnet-1.2.x +nspr +libnss
+  DEPENDS:= \
+	+libpcre \
+	+libyaml \
+	+jansson \
+	+libmagic \
+	+libpthread \
+	+librt \
+	+libpcap \
+	$(LUAJIT_DEP) \
+	+libnetfilter-queue \
+	+iptables-mod-nfqueue \
+	+libnetfilter-log \
+	+libnfnetlink \
+	+iptables-mod-conntrack-extra \
+	+libhtp \
+	+libnet-1.2.x \
+	+nspr \
+	+libnss
 endef
 
 define Package/suricata-rules

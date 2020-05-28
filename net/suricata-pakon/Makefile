@@ -23,14 +23,8 @@ define Package/suricata-pakon
   DEPENDS:=+suricata-bin
 endef
 
-define Build/Compile
-  true
-endef
-
-define Build/Install
-  true
-endef
-
+Build/Compile:=:
+Build/Install:=:
 
 define Package/suricata-pakon/install
 	$(INSTALL_DIR) $(1)/etc/init.d

@@ -11,19 +11,18 @@ PKG_NAME:=pkglists
 PKG_VERSION:=1.2.3
 PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/pkglists
   TITLE:=Packages lists for the updater
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/pkglists/install
 	$(INSTALL_DIR) $(1)/usr/share/updater/
 	$(INSTALL_DATA) ./files/definitions.json $(1)/usr/share/updater/pkglists.json
 endef
 
 Build/Compile:=:
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,pkglists))

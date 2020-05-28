@@ -11,10 +11,10 @@ PKG_NAME:=libb64
 PKG_VERSION:=1.2.1
 PKG_RELEASE:=1
 
-PKG_SOURCE:=libb64-$(PKG_VERSION).zip
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).zip
 PKG_SOURCE_URL:=https://sourceforge.net/projects/libb64/files
 PKG_HASH:=20106f0ba95cfd9c35a13c71206643e3fb3e46512df3e2efb2fdbf87116314b2
-PKG_BUILD_DIR:=$(BUILD_DIR)/libb64-$(PKG_VERSION)
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/host-build.mk

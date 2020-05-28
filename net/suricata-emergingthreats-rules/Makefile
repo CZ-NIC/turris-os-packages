@@ -20,9 +20,7 @@ define Package/suricata-emergingthreats-rules
   DEPENDS:=+suricata-pakon
 endef
 
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
 define Package/suricata-emergingthreats-rules/install
 	$(INSTALL_DIR) $(1)/etc/cron.d

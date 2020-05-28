@@ -15,21 +15,17 @@ PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/ouidb.git
 PKG_SOURCE_VERSION:=ca0ecbb2e89a21d22ec0613e3447959d5d36499c
 
-PKG_MAINTAINER:=Robin Obůrka <robin.oburka@nic.cz>
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
+define Package/ouidb
+	TITLE:=ouidb
 endef
 
-# The built is empty. But as there's no makefile in the git repo, we need to
-# override the default that runs "make".
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
-define Package/$(PKG_NAME)/install
+define Package/ouidb/install
 	$(INSTALL_DIR) $(1)/usr/share/ouidb/
 	$(INSTALL_DIR) $(1)/usr/bin/
 
@@ -38,4 +34,4 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/oui.db $(1)/usr/share/ouidb/
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,ouidb))

@@ -22,9 +22,7 @@ define Package/rescue-mode-omnia
   DEPENDS+=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia @!ALL @!PACKAGE_oneshot @!PACKAGE_procd
 endef
 
-define Build/Compile
-	echo Building rescue mode
-endef
+Build/Compile:=:
 
 define Package/rescue-mode-omnia/install
 	$(INSTALL_DIR) $(1)/bin

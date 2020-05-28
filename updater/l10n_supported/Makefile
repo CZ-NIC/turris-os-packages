@@ -15,20 +15,18 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/l10n_supported
 	TITLE:=List of localizations available in Turris repository
 endef
 
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
-define Package/$(PKG_NAME)/install
+define Package/l10n_supported/install
 	$(INSTALL_DIR) $(1)/usr/share/updater/
 	$(INSTALL_DATA) ./files/list $(1)/usr/share/updater/l10n_supported
 endef
 
-define Package/$(PKG_NAME)/postinst
+define Package/l10n_supported/postinst
 #!/bin/sh
 # When there is no l10n section then add it.
 if [ -z "$${IPKG_INSTROOT}" ] && ! uci -q get updater.l10n; then
@@ -41,4 +39,4 @@ if [ -z "$${IPKG_INSTROOT}" ] && ! uci -q get updater.l10n; then
 fi
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,l10n_supported))

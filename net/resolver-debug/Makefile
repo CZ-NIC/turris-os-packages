@@ -25,22 +25,19 @@ define Package/resolver-debug
 	TITLE:=Resolver debug utils
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/resolver-conf/description
   Debug utils for knot-resolver and unbound.
 endef
 
-define Build/Compile
-endef
+Build/Compile:=:
+Build/Install:=:
 
-define Build/Install
-endef
-
-define Package/$(PKG_NAME)/install
+define Package/resolver-debug/install
 	$(INSTALL_DIR) $(1)/etc/resolver
 	$(INSTALL_BIN) ./files/resolver-debug.sh $(1)/etc/resolver/resolver-debug.sh
 endef
 
-define Package/$(PKG_NAME)/postinst
+define Package/resolver-debug/postinst
 #!/bin/sh
 # check if we are on real system
 if [ -z "$$IPKG_INSTROOT" ]; then
@@ -48,7 +45,7 @@ if [ -z "$$IPKG_INSTROOT" ]; then
 fi
 endef
 
-define Package/$(PKG_NAME)/postrm
+define Package/resolver-debug/postrm
 #!/bin/sh
 # check if we are on real system
 if [ -z "$$IPKG_INSTROOT" ]; then

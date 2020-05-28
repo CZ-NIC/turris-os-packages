@@ -15,23 +15,19 @@ PKG_MAINTAINER:=Michal Hrusecky <michal.hrusecky@nic.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
+define Package/cznic-repo-keys
+	TITLE:=CZNIC repo keys
 	DEPENDS:=+cert-backup
 endef
 
-define Package/$(PKG_NAME)-test
-	TITLE:=$(PKG_NAME)
+define Package/cznic-repo-keys-test
+	TITLE:=CZNIC repo keys test
 	DEPENDS:=+cert-backup
 endef
 
-# The built is empty. But as there's no makefile in the git repo, we need to
-# override the default that runs "make".
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
-define Package/$(PKG_NAME)/install
+define Package/cznic-repo-keys/install
 	$(INSTALL_DIR) $(1)/etc/opkg/keys
 	$(INSTALL_DIR) $(1)/etc/updater/keys/
 	for i in release standby; do \
@@ -41,7 +37,7 @@ define Package/$(PKG_NAME)/install
 	done
 endef
 
-define Package/$(PKG_NAME)-test/install
+define Package/cznic-repo-keys-test/install
 	$(INSTALL_DIR) $(1)/etc/opkg/keys
 	$(INSTALL_DIR) $(1)/etc/updater/keys/
 	for i in test; do \
@@ -51,7 +47,7 @@ define Package/$(PKG_NAME)-test/install
 	done
 endef
 
-define Package/$(PKG_NAME)/postinst
+define Package/cznic-repo-keys/postinst
 #!/bin/sh
 [ -n "$${IPKG_INSTROOT}" ] || {
 # TODO: To remove files, use -r
@@ -59,7 +55,7 @@ define Package/$(PKG_NAME)/postinst
 }
 endef
 
-define Package/$(PKG_NAME)-test/postinst
+define Package/cznic-repo-keys-test/postinst
 #!/bin/sh
 [ -n "$${IPKG_INSTROOT}" ] || {
 # TODO: To remove files, use -r
@@ -67,10 +63,10 @@ define Package/$(PKG_NAME)-test/postinst
 }
 endef
 
-define Package/$(PKG_NAME)-test/postrm
+define Package/cznic-repo-keys-test/postrm
 #!/bin/sh
 /usr/sbin/cert-backup -r /etc/updater/keys/test.pub
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME)-test))
+$(eval $(call BuildPackage,cznic-repo-keys))
+$(eval $(call BuildPackage,cznic-repo-keys-test))

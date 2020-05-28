@@ -15,12 +15,12 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-  TITLE:=$(PKG_NAME)
+define Package/update_mac
+  TITLE:=Update MAC
   DEPENDS:=+libatsha204
 endef
 
-Build/Compile:=
+Build/Compile:=:
 
 define Package/update_mac/install
 	$(INSTALL_DIR) $(1)/etc/init.d

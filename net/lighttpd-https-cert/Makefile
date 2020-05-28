@@ -9,22 +9,20 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd-https-cert
 PKG_VERSION:=5
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
+define Package/lighttpd-https-cert
+	TITLE:=lighttpd HTTPS cert
 	DEPENDS:=+lighttpd-mod-openssl
 endef
 
-define Build/Compile
-	true
-endef
-
+Build/Compile:=:
+	
 define Package/lighttpd-https-cert/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_CONF) ./files/ssl-enable.conf $(1)/etc/lighttpd/conf.d/ssl-enable.conf

@@ -19,7 +19,7 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/getmac
   TITLE:=Get MAC
   DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_turris1x
 endef

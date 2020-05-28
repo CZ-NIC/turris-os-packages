@@ -15,7 +15,7 @@ PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/suricata_conntrack_flows.git
 PKG_SOURCE_VERSION:=a4fe20378c2451171b143511529179ae1d796dde
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_LICENSE:=GPL-3.0
+PKG_LICENSE:=GPL-3.0-or-later
 
 PKG_INSTALL:=0
 
@@ -24,8 +24,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/suricata-conntrack-flows
 	SECTION:=net
 	CATEGORY:=Network
-	SUBMENU:=Helper script to track flows bypassed by suricata
-	TITLE:=suricata_conntrack flows
+	TITLE:=Helper script to track flows bypassed by suricata
 	DEPENDS:=+python3-light
 endef
 

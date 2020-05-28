@@ -19,15 +19,13 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/smrt-image
 	TITLE:=smrt-image
 endef
 
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
-define Package/$(PKG_NAME)/install
+define Package/smrt-image/install
 	$(INSTALL_DIR) $(1)/usr/share/smrt/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/smrt.firmware $(1)/usr/share/smrt/firmware
 endef

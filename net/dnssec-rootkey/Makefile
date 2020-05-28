@@ -23,7 +23,7 @@ define Package/dnssec-rootkey
 	TITLE:=DNSSEC rootkey
 endef
 
-define Package/$(PKG_NAME)/postinst
+define Package/dnssec-rootkey/postinst
 #!/bin/sh
 set -ex
 [ -n "$$IPKG_INSTROOT" ] || {
@@ -35,8 +35,7 @@ define Package/dnssec-rootkey/description
   Root key for DNSSEC resolver
 endef
 
-define Build/Compile
-endef
+Build/Compile:=:
 
 define Package/dnssec-rootkey/install
 	$(INSTALL_DIR) $(1)/etc/

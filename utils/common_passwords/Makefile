@@ -28,9 +28,7 @@ define Package/common_passwords/description
  This package provides lists of commonly used passwords users can check their passwords against.
 endef
 
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
 define Package/common_passwords/install
 	$(INSTALL_DIR) $(1)/usr/share/common_passwords
