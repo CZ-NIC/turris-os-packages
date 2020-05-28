@@ -19,8 +19,6 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
-TURRIS_DEPS:=+cert-backup
-
 define Package/cznic-cacert-bundle/postinst
 #!/bin/sh
 
