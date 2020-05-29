@@ -23,12 +23,12 @@ include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/turrishw
-	SECTION:=lang
-	CATEGORY:=Languages
-	SUBMENU:=Python
-	TITLE:=turrishw
-	DEPENDS:=+python3-light
-	VARIANT:=python3
+  SECTION:=lang
+  CATEGORY:=Languages
+  SUBMENU:=Python
+  TITLE:=turrishw
+  DEPENDS:=+python3-light
+  VARIANT:=python3
 endef
 
 define Package/turrishw/description
