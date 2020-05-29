@@ -242,9 +242,9 @@ load_uci_config_kresd() {
 
 	# procd stdout/err logging
 	config_get_bool log_stderr "$section" log_stderr  1
-	procd_set_param stderr $log_stderr
+	procd_set_param stderr "$log_stderr"
 	config_get_bool log_stdout "$section" log_stdout  1
-	procd_set_param stdout $log_stdout
+	procd_set_param stdout "$log_stdout"
 
 	# hostnames for local DNS
 	config_list_foreach "$section" hostname_config add_hostname_config
@@ -267,12 +267,12 @@ load_uci_config_kresd() {
 }
 
 test_ipv6() {
-	if [ -s "$(ls -1 "$DEFAULT_RUNDIR"/tty/*)" ] && \
+	if [ -s "$(ls -1 "$DEFAULT_RUNDIR"/control/*)" ] && \
 	   ip -6 r s | grep -q '^default' && \
-	   ping -c 1 api.turris.cz > /dev/null 2>&1 && \
-	   ! ping -6 -c 1 api.turris.cz > /dev/null 2>&1; then
+	   ping -c 1 185.43.135.1 > /dev/null 2>&1 && \
+	   ! ping6 -c 1 2001:148f:fffe::1 > /dev/null 2>&1; then
 		echo "IPv6 seems broken, disabling it in knot-resolver..."
-		echo "net.ipv6 = false" | socat - UNIX-CONNECT:"$(ls -1 "$DEFAULT_RUNDIR"/tty/*)" > /dev/null 2>&1
+		echo "net.ipv6 = false" | socat - UNIX-CONNECT:"$(ls -1 "$DEFAULT_RUNDIR"/control/*)" > /dev/null 2>&1
 	fi
 }
 

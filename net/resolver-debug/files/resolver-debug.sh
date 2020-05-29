@@ -14,12 +14,13 @@ test_log() {
 }
 
 run_kresd_command () {
-	KRESD_TTY="$(uci get resolver.kresd.rundir)/tty/$(pidof kresd|awk '{print $1}')"
-	echo "${1}" | socat - "unix-connect:${KRESD_TTY}"
+	local kresd_socket
+	kresd_socket="$(uci get resolver.kresd.rundir)/control/$(pidof kresd|awk '{print $1}')"
+	echo "${1}" | socat - "unix-connect:${kresd_socket}"
 }
 
 run_unbound_command () {
-	cmd="$1"
+	local cmd="$1"
 	which unbound-control; echo $?
 	if [ "$?" -eq 0 ]; then
 		unbound-control "$cmd" | test_log
@@ -29,9 +30,10 @@ run_unbound_command () {
 }
 
 add_luci_custom_cmd () {
-	cmd="$1"
-	description="$2"
-	cfg_name=$(uci add luci command)
+	local cmd="$1"
+	local description="$2"
+	local cfg_name
+	cfg_name="$(uci add luci command)"
 
 	uci set luci.$cfg_name.name="$description"
 	uci set luci.$cfg_name.command="$cmd"
@@ -120,7 +122,7 @@ run_test () {
 	#ls -al "${ROOTKEYFILE}"  |test_log
 	md5sum "${ROOTKEYFILE}" |test_log
 	grep -H '' "${ROOTKEYFILE}" |test_log
-	cat ${ROOTKEYFILE} |test_log
+	cat "${ROOTKEYFILE}" |test_log
 	echo "== resolver process ==" |test_log
 
 	RESOLVER="$(uci get resolver.common.prefered_resolver)"
