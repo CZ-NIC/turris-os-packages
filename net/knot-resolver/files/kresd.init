@@ -282,8 +282,8 @@ run_instance() {
 	procd_close_instance
 	( sleep 60 # Wait for resolver to start working and system to boot up
 	  if ! ip -6 r s | grep -q '^default' &&\
-	     ping -c 1 api.turris.cz > /dev/null 2>&1 && \
-	     ! ping -6 -c 1 api.turris.cz > /dev/null 2>&1; then
+	     ping -c 1 185.43.135.1 > /dev/null 2>&1 && \
+	     ! ping6 -c 1 2001:148f:fffe::1 > /dev/null 2>&1; then
 		echo "net.ipv6 = false" | socat - UNIX-CONNECT:$(sleep 5; ls -1 $DEFAULT_RUNDIR/control/*) > /dev/null 2>&1
 	  fi) &
 }
