@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon
-PKG_VERSION:=1.2.1
+PKG_VERSION:=1.2.2
 PKG_RELEASE:=1
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
@@ -47,6 +47,8 @@ endef
 
 define Package/$(PKG_NAME)/conffiles
 /etc/config/pakon
+/etc/config/alert
+/etc/config/flow
 endef
 
 define Package/$(PKG_NAME)/install
@@ -70,7 +72,10 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/notify_new_device.sh $(1)/usr/libexec/pakon-light/
 	$(INSTALL_BIN) ./files/backup_sqlite.sh $(1)/usr/libexec/pakon-light/
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/pakon-uci.example $(1)/etc/config/pakon
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/config_files/pakon $(1)/etc/config/pakon
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/config_files/flow $(1)/etc/config/flow
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/config_files/alert $(1)/etc/config/alert
+
 endef
 
 define Package/pakon/postinst

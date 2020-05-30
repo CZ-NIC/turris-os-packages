@@ -11,4 +11,5 @@
             extended: yes
         - http:
             extended: yes
-
+        - alert:
+            metadata: yes
