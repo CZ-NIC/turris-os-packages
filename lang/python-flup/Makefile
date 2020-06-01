@@ -16,7 +16,7 @@ PKG_SOURCE_URL:=https://pypi.python.org/packages/source/f/flup/
 PKG_MD5SUM:=a64e7a6374e043480ee92534c735964e
 
 PKG_LICENSE:=BSD
-PKG_LICENSE_FILES:PKG-INFO
+PKG_LICENSE_FILES:=PKG-INFO
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=python python3 python-setuptools python3-setuptools
