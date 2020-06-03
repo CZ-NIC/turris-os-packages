@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cronie
 PKG_VERSION:=1.5.5
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/cronie-crond/cronie/archive
@@ -51,6 +51,10 @@ CONFIGURE_ARGS += \
 	--disable-anacron
 CONFIGURE_VARS += \
 		SPOOL_DIR=/var/spool/cron/crontabs
+
+define Package/cronie/conffiles
+/etc/config/cronie
+endef
 
 define Package/cronie/install
 	$(INSTALL_DIR) $(1)/usr/bin
