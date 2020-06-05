@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-supervisor
-PKG_VERSION:=1.3.0
+PKG_VERSION:=1.3.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
@@ -25,7 +25,10 @@ define Package/updater-supervisor
   SECTION:=updater
   CATEGORY:=Turris Updater
   TITLE:=Updater supervisor and its library
-  DEPENDS:=+updater-ng +python3-light +python3-uci +pkglists +l10n-supported +cronie
+  DEPENDS:= \
+    +updater-ng +pkglists +l10n-supported \
+    +python3-light +python3-uci +python3-distro \
+    +cronie
   VARIANT:=python3
 endef
 
