@@ -163,6 +163,7 @@ check_credentials_files() {
 }
 
 start_service() {
+	mkdir -p "/var/etc"
 	generate_config
 
 	if ! check_credentials_files || ! check_fosquitto_credentials; then
