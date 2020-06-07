@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018 CZ.NIC z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2018, 2020 CZ.NIC z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-netmetr-plugin
-PKG_VERSION:=4.6
+PKG_VERSION:=4.6.2
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
