@@ -1,0 +1,26 @@
+From 9c13f9030166be1b0e6f59d4693091500d9d5355 Mon Sep 17 00:00:00 2001
+From: Stepan Henek <stepan.henek@nic.cz>
+Date: Mon, 8 Jun 2020 11:49:16 +0200
+Subject: [PATCH] Guest: disable guest network fix
+
+---
+ reforis/foris_controller_api/modules/guest.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/reforis/foris_controller_api/modules/guest.py b/reforis/foris_controller_api/modules/guest.py
+index 71d948d..5a3de9d 100644
+--- a/reforis/foris_controller_api/modules/guest.py
++++ b/reforis/foris_controller_api/modules/guest.py
+@@ -21,7 +21,8 @@ def guest_network():
+             response['dhcp']['lease_time'] /= 3600
+     elif request.method == 'POST':
+         data = request.json
+-        if data['dhcp']['enabled'] is True:
++        # if enabled=False other 'dhcp' part is missing
++        if data['enabled'] and data['dhcp']['enabled'] is True:
+             # Convert hours to seconds
+             data['dhcp']['lease_time'] *= 3600
+         response = current_app.backend.perform('guest', 'update_settings', data)
+-- 
+2.25.1
+
