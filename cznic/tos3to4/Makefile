@@ -41,7 +41,7 @@ define Package/tos3to4/postinst
 		uci set "updater.approvals.need_migrate=1"
 		uci set "updater.approvals.need=0"
 		uci commit updater.approvals
-		create_notification -s error 'Updater approvals were deactivated to prevent problems during migration to latest major release of Turris OS!'
+		create_notification -s error 'Updater approvals were deactivated to prevent problems during migration to the latest major release of Turris OS!'
 	fi
 }
 endef
