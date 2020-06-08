@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2013 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2013-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,35 +8,36 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ouidb
-PKG_VERSION:=4
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/ouidb.git
-PKG_SOURCE:=$(PKG_NAME).tar.gz
-PKG_SOURCE_VERSION:=ca0ecbb2e89a21d22ec0613e3447959d5d36499c
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_MAINTAINER:=Robin Obůrka <robin.oburka@nic.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_VERSION:=20200531
+
+PKG_SOURCE_VERSION:=5e0ebc9fc05b1f0ad557136e748adc9088bfdca4
+PKG_SOURCE_URL:=https://github.com/wireshark/wireshark/raw/$(PKG_SOURCE_VERSION)
+PKG_SOURCE_URL_FILE:=manuf
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).txt
+PKG_HASH:=3241416dcc37c9778a0bab500fd1154e89996d51105a982bb9c02c6714303c8d
+
+UNPACK_CMD:=:
+
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
+define Package/ouidb
+  SECTION:=utils
+  CATEGORY:=Utilities
+  TITLE:=OUI database
 endef
 
-# The built is empty. But as there's no makefile in the git repo, we need to
-# override the default that runs "make".
 define Build/Compile
-	true
+	awk -v re='^[0-9A-F]{2}:[0-9A-F]{2}:[0-9A-F]{2}$$$$' \
+		'$$$$1 ~ re && $$$$3 { gsub(":", "", $$$$1); print $$$$1 "|" $$$$3 }' \
+		$(DL_DIR)/$(PKG_SOURCE) > $(PKG_BUILD_DIR)/oui.db
 endef
 
-define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/usr/share/ouidb/
-	$(INSTALL_DIR) $(1)/usr/bin/
-
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/ouidb $(1)/usr/bin/
-
+define Package/ouidb/install
+	$(INSTALL_DIR) $(1)/usr/bin/ $(1)/usr/share/ouidb/
+	$(INSTALL_BIN) ./files/ouidb $(1)/usr/bin/
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/oui.db $(1)/usr/share/ouidb/
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,ouidb))
