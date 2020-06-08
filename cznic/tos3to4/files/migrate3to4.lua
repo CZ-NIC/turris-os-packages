@@ -1,5 +1,4 @@
--- TODO set this to hbs when final release is imminent
-Script("https://repo.turris.cz/hbk/__BOARD__/lists/migrate3x.lua", {
+Script("https://repo.turris.cz/hbs/__BOARD__/lists/migrate3x.lua", {
 	security = "Local",
 	ca = system_cas,
 	crl = no_crl,
