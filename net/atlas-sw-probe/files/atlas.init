@@ -2,18 +2,60 @@
 
 USE_PROCD=1
 START=30
-EXTRA_COMMANDS="get_key probeid log"
+EXTRA_COMMANDS="get_key probeid log create_backup load_backup"
 EXTRA_HELP="	get_key	print probe public key (used for probe registration)
 	probeid	print probe id
-	log print probe status log
+	log	print probe status log
+	create_backup 	backup ssh key to tar.gz
+	load_backup 'backup.tar.gz' 	load backup ssh key from tar.gz
 "
 
 SCRIPTS_DIR="/usr/libexec/atlas-probe-scripts"
 TMP_BASE_DIR="/tmp/ripe_atlas_probe"
 PUB_KEY_FILE="$SCRIPTS_DIR/etc/probe_key.pub"
+PRIV_KEY_FILE="$SCRIPTS_DIR/etc/probe_key"
 PROBE_ID_FILE="$TMP_BASE_DIR/status/reg_init_reply.txt"
 LOG_FILE="/tmp/log/ripe_sw_probe"
 STATE_CONFIG="$SCRIPTS_DIR/state/config.txt"
+
+load_backup() {
+	local backup_arch
+	local tmp_dir
+
+	backup_arch="$1"
+	tmp_dir="$(mktemp -u -p /var/run/atlas)"
+	if [ -f "$backup_arch" ]; then
+		safe_mkdir "$tmp_dir"
+		tar -xzf "$backup_arch" -C "$tmp_dir/"
+		if [ -f "$tmp_dir/probe_key.pub" ] && [ -f "$tmp_dir/probe_key" ]; then
+			mv "$tmp_dir/probe_key.pub" "$PUB_KEY_FILE"
+			mv "$tmp_dir/probe_key" "$PRIV_KEY_FILE"
+			rm -rf "$tmp_dir"
+			print_msg "Info: public and private key loaded from backup"
+		else
+			print_msg "Error: Could not extract probe_key or probe_key form backup archive"
+			rm -rf "$tmp_dir"
+			exit 1
+		fi
+	else
+		print_msg "Error: Provided backup file $backup_arch does not exists"
+		exit 1
+	fi
+}
+
+create_backup() {
+	local back_dir
+
+	back_dir="$(pwd)"
+
+	if [ -f "$PUB_KEY_FILE" -a -f "$PRIV_KEY_FILE" ]; then
+		print_msg "Info: Creating backup arch in $back_dir"
+		tar -czf "$back_dir/atlas-key-backup.tar.gz" -C "$SCRIPTS_DIR/etc" probe_key probe_key.pub
+	else
+		print_msg "Error: private or public key does not exists."
+		exit 1
+	fi
+}
 
 log() {
 	if [ -f "$LOG_FILE" ];then
@@ -27,6 +69,7 @@ log() {
 get_key() {
 	if [ -f "$PUB_KEY_FILE" ]; then
 		echo "Probe public key (use for registration)"
+		echo "URL with registration form https://atlas.ripe.net/apply/swprobe/"
 		echo "=========================================="
 		cat "$PUB_KEY_FILE"
 	else
@@ -36,8 +79,10 @@ get_key() {
 }
 
 probeid() {
+	local probe_id
+
 	if [ -f "$PROBE_ID_FILE" ]; then
-		probe_id="$(cat "$PROBE_ID_FILE" |grep "PROBE_ID"|awk '{print $2}')"
+		probe_id="$(awk '/PROBE_ID/ {print $2}' "$PROBE_ID_FILE")"
 		if [ -z "$probe_id" ]; then
 			print_msg "Probe ID not found SW probe isn't probably registered yet"
 			exit 1
@@ -56,9 +101,10 @@ print_msg() {
 }
 
 stop_service() {
+	local run_pids
 
 	print_msg "Stopping atlas sw probe"
-	run_pids="$(ls -1 $SCRIPTS_DIR/run/*.vol 2>/dev/null | wc -l)"
+	run_pids="$(ls -1 "$SCRIPTS_DIR/run"/*.vol 2>/dev/null | wc -l)"
 	if [ "$run_pids" != "0" ]; then
 		print_msg "Kill all atlas processes"
 		kill $(cat $SCRIPTS_DIR/run/*.vol)
