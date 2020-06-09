@@ -7,7 +7,7 @@ migrate_config() {
 		echo "Config is detected as migrated: $conf" >&2
 		return
 	fi
-	if [ "$(grep -c '^lxc\.network\.type')" -gt 1 ]; then
+	if [ "$(grep -c '^lxc\.network\.type' "$conf")" -gt 1 ]; then
 		create_notification -s error \
 			"Automatic migration of LXC failed: Unable to migrate configuration with multiple network sections: $conf"
 		echo "Unable to migrate configuration with multiple network sections: $conf" >&2
