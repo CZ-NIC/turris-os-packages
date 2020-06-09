@@ -37,7 +37,7 @@ add_listen_addr() {
 	local addr="$1"
 	local port="$2"
 	[ "$addr" = "::0" ] && addr="::"
-	procd_append_param command -a "$addr#$port"
+	echo "net.listen('$addr',$port)">>$CONFIGFILE
 }
 
 init_header() {
@@ -96,7 +96,22 @@ load_uci_config_common() {
 	config_get port "$section" port
 
 	# list of listen addresses
-	config_list_foreach "$section" interface add_listen_addr $port
+	config_get interface "$section" interface
+
+	# in case of empty interface list try to listen automatically
+	if [ -z "$interface" ]; then
+		echo "for name, addr_list in pairs(net.interfaces()) do">>$CONFIGFILE
+		echo "	for k,ip in pairs(addr_list["addr"]) do">>$CONFIGFILE
+		echo "		if string.sub(ip,1,string.len("fe80"))~="fe80" then">>$CONFIGFILE
+		echo "		   net.listen(ip)">>$CONFIGFILE
+		echo "		   print(ip)">>$CONFIGFILE
+		echo "		end">>$CONFIGFILE
+		echo "	end">>$CONFIGFILE
+		echo "end">>$CONFIGFILE
+
+	else
+		config_list_foreach "$section" interface add_listen_addr "$port"
+	fi
 
 	# ignore keyfile
 	config_get_bool ignore_root_key "$section" ignore_root_key 0
