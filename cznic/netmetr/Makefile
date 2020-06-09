@@ -8,18 +8,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=netmetr
-PKG_VERSION:=1.5.4
+PKG_VERSION:=1.5.5
 PKG_RELEASE:=1
 
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/netmetr-client.git
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
+PKG_SOURCE:=netmetr-client-v$(PKG_SOURCE_VERSION).tar.gz
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-
-PKG_SOURCE:=netmetr-client-v$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/netmetr-client/-/archive/v$(PKG_VERSION)/
-PKG_HASH:=0d9e86df19480007662400edb75f9c464e3eb52c3f8eb51290e3f034d2007caa
-
-PKG_LICENSE:=GPLv3
-
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(BUILD_VARIANT)-netmetr-client-v$(PKG_VERSION)
+PKG_LICENSE:=GPL-3.0-or-later
 
 PKG_BUILD_DEPENDS:=python3 python3-setuptools
 
