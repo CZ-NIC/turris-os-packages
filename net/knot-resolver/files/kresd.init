@@ -106,7 +106,8 @@ load_uci_config_common() {
 		if [ -n "$keyfile" ]; then
 			ROOTKEYFILE=$keyfile
 			check_root_key cert-backup -x $ROOTKEYFILE
-			echo "trust_anchors.add_file('$ROOTKEYFILE')">>$CONFIGFILE
+			echo "trust_anchors.remove('.')">>$CONFIGFILE
+			echo "trust_anchors.add_file('$ROOTKEYFILE', true)">>$CONFIGFILE
 		fi
 	else
 		echo "trust_anchors.remove('.')">>$CONFIGFILE
