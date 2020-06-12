@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tos3to4
-PKG_VERSION:=2.0.15
+PKG_VERSION:=2.0.16
 PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -48,6 +48,30 @@ define Package/tos3to4/postinst
 	/usr/lib/tos3to4/wifi || ec=$$?
 	/usr/lib/tos3to4/lxc || ec=$$?
 	exit $$ec
+}
+endef
+
+define Package/tos3to4/postrm
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || create_notification -s update \
+		"Migraton from Turris OS 3.x was completed.
+
+These are primary changes:
+* Turris OS now closely tracks upstream OpenWrt development
+* API tokens are no longer available and mobile application no longer works.
+* Server side backups were dropped. Replacement is not yet provided.
+* uCollect was removed and replaced with Sentinel.
+* Automation package list with Domoticz and Home-Assistant is no longer provided.
+* Majordomo is no longer available as well as its package list. Use LuCI
+  statistics or Pakon instead.
+* Netutils package list was dropped and most of the advanced protocols have to be
+  now installed manually.
+* Print server Cups was dropped. Print server package list now provides only
+  p910nd protocol.
+* Sound card package list was dropped. Packages are still available and you have
+  to install them manually.
+* Squid proxy package list was dropped. Install `luci-app-squid` as a replacement.
+* Webcam package list been dropped. "
 }
 endef
 
