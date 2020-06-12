@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=mox-support
-PKG_RELEASE:=30
+PKG_VERSION:=31
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
 
@@ -50,7 +50,6 @@ define Package/mox-support/install
 	$(INSTALL_DATA) ./files/reset_btn $(1)/etc/hotplug.d/button/mox_reset
 	$(INSTALL_DIR) $(1)/lib/firmware/mrvl/
 	$(INSTALL_DATA) ./files/sd*.bin $(1)/lib/firmware/mrvl
-	echo '/dev/mtd2 0 0x00010000' > $(1)/etc/fw_env.config
 	ln -s sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl/sd8997_uapsta.bin
 endef
 
