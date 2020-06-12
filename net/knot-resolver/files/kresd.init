@@ -37,7 +37,8 @@ add_listen_addr() {
 	local addr="$1"
 	local port="$2"
 	[ "$addr" = "::0" ] && addr="::"
-	echo "net.listen('$addr',$port)">>$CONFIGFILE
+	echo "net.listen('$addr', $port, { kind = 'dns' })" >> "$CONFIGFILE"
+	echo "net.listen('$addr',   853, { kind = 'tls' })" >> "$CONFIGFILE"
 }
 
 init_header() {
@@ -100,14 +101,20 @@ load_uci_config_common() {
 
 	# in case of empty interface list try to listen automatically
 	if [ -z "$interface" ]; then
-		echo "for name, addr_list in pairs(net.interfaces()) do">>$CONFIGFILE
-		echo "	for k,ip in pairs(addr_list["addr"]) do">>$CONFIGFILE
-		echo "		if string.sub(ip,1,string.len("fe80"))~="fe80" then">>$CONFIGFILE
-		echo "		   net.listen(ip)">>$CONFIGFILE
-		echo "		   print(ip)">>$CONFIGFILE
-		echo "		end">>$CONFIGFILE
-		echo "	end">>$CONFIGFILE
-		echo "end">>$CONFIGFILE
+		{
+			echo "for iface_name, iface in pairs(net.interfaces()) do"
+			echo "	for _, ip in pairs(iface.addr) do"
+			echo "		local suffix = ''"
+			echo "		if string.sub(ip,1,string.len('fe80')) == 'fe80' then"
+			echo "			suffix = '%' .. iface_name"
+			echo "		end"
+			echo "		if iface_name == 'lo' or iface_name == 'br-lan' then"
+			echo "			net.listen(ip .. suffix, $port, { kind = 'dns' })"
+			echo "			net.listen(ip .. suffix,   853, { kind = 'tls' })"
+			echo "		end"
+			echo "	end"
+			echo "end"
+		} >> "$CONFIGFILE"
 
 	else
 		config_list_foreach "$section" interface add_listen_addr "$port"
