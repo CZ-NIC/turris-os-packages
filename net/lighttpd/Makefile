@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd
 PKG_VERSION:=1.4.55
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://download.lighttpd.net/lighttpd/releases-1.4.x
@@ -98,6 +98,14 @@ else
 	--without-mysql
 endif
 
+ifneq ($(SDK)$(CONFIG_PACKAGE_lighttpd-mod-authn_pam),)
+  CONFIGURE_ARGS+= \
+	--with-pam
+else
+  CONFIGURE_ARGS+= \
+	--without-pam
+endif
+
 ifneq ($(SDK)$(CONFIG_PACKAGE_lighttpd-mod-trigger_b4_dl),)
   CONFIGURE_ARGS+= \
 	--with-gdbm=yes
@@ -180,6 +188,7 @@ $(eval $(call BuildPlugin,redirect,URL redirection,+PACKAGE_lighttpd-mod-redirec
 # Next, permit authentication.
 $(eval $(call BuildPlugin,auth,Authentication,,20))
 $(eval $(call BuildPlugin,authn_file,File-based authentication,,20))
+$(eval $(call BuildPlugin,authn_pam,PAM-based authentication,+PACKAGE_lighttpd-mod-authn_pam:libpam,20))
 $(eval $(call BuildPlugin,auth_ticket,Cookie-based authentication,,20))
 
 # Finally, everything else.
