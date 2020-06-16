@@ -12,29 +12,26 @@ PKG_VERSION:=1
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
+define Package/tvheadend-cz-dvt-t2
+	TITLE:=Czech DVB-T2 mux for Tvheadend
 	DEPENDS:=+tvheadend
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/tvheadend-cz-dvt-t2/description
   Experimental mux definition for Czech DVB-T2
 endef
 
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
-define Package/$(PKG_NAME)/install
+define Package/tvheadend-cz-dvt-t2/install
 	$(INSTALL_DIR) $(1)/usr/share/tvheadend/data/dvb-scan/dvb-t
 	$(INSTALL_DATA) files/cz-dvb-T2 $(1)/usr/share/tvheadend/data/dvb-scan/dvb-t/cz-dvb-T2
 endef
 
-define Package/$(PKG_NAME)/postinst
+define Package/tvheadend-cz-dvt-t2/postinst
 #!/bin/sh
 set -x
 [ -n "$$IPKG_INSTROOT" ] || {
@@ -42,7 +39,7 @@ set -x
 }
 endef
 
-define Package/$(PKG_NAME)/postrm
+define Package/tvheadend-cz-dvt-t2/postrm
 #!/bin/sh
 set -x
 [ -n "$$IPKG_INSTROOT" ] || {
@@ -50,4 +47,4 @@ set -x
 }
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,tvheadend-cz-dvt-t2))

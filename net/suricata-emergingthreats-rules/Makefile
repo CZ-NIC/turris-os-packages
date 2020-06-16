@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata-emergingthreats-rules
 PKG_VERSION:=4
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+PKG_RELEASE:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -20,9 +20,7 @@ define Package/suricata-emergingthreats-rules
   DEPENDS:=+suricata-pakon
 endef
 
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
 define Package/suricata-emergingthreats-rules/install
 	$(INSTALL_DIR) $(1)/etc/cron.d
@@ -56,4 +54,3 @@ endef
 
 
 $(eval $(call BuildPackage,suricata-emergingthreats-rules))
- 

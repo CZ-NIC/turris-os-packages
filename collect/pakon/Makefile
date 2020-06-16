@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2017-2020 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,17 +9,15 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon
 PKG_VERSION:=1.2.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
+
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pakon-light.git
-PKG_SOURCE:=$(PKG_NAME).tar.gz
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
-PKG_MAINTAINER:=Martin Petracek <martin.petracek@nic.cz>
-PKG_LICENSE:=GPL-3.0
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=GPL-3.0-only
+PKG_LICENSE_FILES:=LICENSE
 
 PKG_INSTALL:=0
 
@@ -33,7 +31,7 @@ define Package/pakon
 	DEPENDS:=+suricata-pakon +xz +python3-light +python3-logging +python3-ctypes +python3-cachetools +python3-sqlite3 +sqlite3-cli +pakon-lists +ouidb +suricata-conntrack-flows
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/pakon/description
   Simple daemon that is able to collect events from suricata, store them locally to SQLite DB.
 endef
 
@@ -45,11 +43,11 @@ define Build/Install
   true
 endef
 
-define Package/$(PKG_NAME)/conffiles
+define Package/pakon/conffiles
 /etc/config/pakon
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/pakon/install
 	$(INSTALL_DIR) $(1)/etc/suricata-pakon/output_conf.d
 	$(INSTALL_DATA) ./files/pakon-output.yaml $(1)/etc/suricata-pakon/output_conf.d/pakon.yaml
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -96,4 +94,4 @@ define Package/pakon/prerm
         /etc/init.d/pakon-handler stop
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,pakon))

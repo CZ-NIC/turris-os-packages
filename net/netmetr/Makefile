@@ -51,7 +51,7 @@ define Py3Package/netmetr/install
 	$(INSTALL_DATA) ./files/netmetr.cron 		$(1)/etc/cron.d/netmetr
 endef
 
-define Package/$(PKG_NAME)/conffiles
+define Package/netmetr/conffiles
 /etc/config/netmetr
 endef
 

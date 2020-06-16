@@ -39,13 +39,8 @@ define Package/atlas-sw-probe/description
   Data are then collected, aggregated and published by the RIPE NCC.
 endef
 
-define Build/Compile
-	true
-endef
-
-define Build/Install
-	true
-endef
+Build/Compile:=:
+Build/Install:=:
 
 define Package/atlas-sw-probe/postinst
 	true

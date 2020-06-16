@@ -10,9 +10,8 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=c-rehash
 PKG_VERSION:=1.7
 PKG_RELEASE:=3
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -23,7 +22,7 @@ endef
 
 Build/Compile:=:
 
-define Package/$(PKG_NAME)/install
+define Package/c-rehash/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/openssl-c_rehash.sh $(1)/usr/bin/c_rehash
 endef

@@ -9,31 +9,28 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-maintain
 PKG_VERSION:=10
+PKG_RELEASE:=1
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
+define Package/turris-maintain
+	TITLE:=Turris maintain scripts
 	DEPENDS:=+uci +python3 +python3-uci +coreutils-base64 +bzip2 +crypto-wrapper
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/turris-maintain/description
  Contains a couple of scripts which are resposible for storing/restoring backups.
 endef
 
-# The built is empty. But as there's no makefile in the git repo, we need to
-# override the default that runs "make".
-define Build/Compile
-	true
-endef
+Build/Compile:=:
 
-define Package/$(PKG_NAME)/conffiles
+define Package/turris-maintain/conffiles
 	/etc/config/backups
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/turris-maintain/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) files/config-backup.sh $(1)/usr/bin/maintain-config-backup
 	$(INSTALL_BIN) files/config-restore.sh $(1)/usr/bin/maintain-config-restore
@@ -46,4 +43,4 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_CONF) ./files/backups.conf $(1)/etc/config/backups
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,turris-maintain))

@@ -55,3 +55,4 @@ endef
 
 $(eval $(call Py3Package,haas-proxy))
 $(eval $(call BuildPackage,haas-proxy))
+$(eval $(call BuildPackage,haas-proxy-src))

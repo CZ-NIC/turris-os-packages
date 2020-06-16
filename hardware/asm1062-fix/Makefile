@@ -14,19 +14,19 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/asm1062-fix
   TITLE:=fix problem with stability of asm1062
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/asm1062-fix/description
   This fixes problems with ASMedia Technology Inc. ASM1062 Serial ATA Controller.
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/asm1062-fix/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/init $(1)/etc/init.d/asm1062-fix
 endef
 
 Build/Compile:=:
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,asm1062-fix))

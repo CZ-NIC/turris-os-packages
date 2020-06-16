@@ -26,21 +26,18 @@ define Package/resolver-conf
 	DEPENDS:=+python3-light +python3-multiprocessing +python3-logging +ca-bundle
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/resolver-conf/description
   Configuration for knot-resolver and unbound.
 endef
 
-define Package/$(PKG_NAME)/conffiles
+define Package/resolver-conf/conffiles
 /etc/config/resolver
 endef
 
-define Build/Compile
-endef
+Build/Compile:=:
+Build/Install:=:
 
-define Build/Install
-endef
-
-define Package/$(PKG_NAME)/install
+define Package/resolver-conf/install
 	$(INSTALL_DIR) $(1)/etc/config
 ifneq ($(filter-out n,$(CONFIG_PACKAGE_knot-resolver)),)
 	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolver
@@ -71,7 +68,7 @@ endif
 	$(INSTALL_BIN) ./files/resolver-defaults $(1)/etc/uci-defaults/resolver-defaults
 endef
 
-define Package/$(PKG_NAME)/postinst
+define Package/resolver-conf/postinst
 #!/bin/sh
 # check if we are on real system
 if [ -z "$$IPKG_INSTROOT" ]; then

@@ -10,20 +10,16 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=cznic-cacert-bundle
 PKG_VERSION:=38
 PKG_RELEASE:=3
+
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
-PKG_SOURCE:=$(PKG_NAME).tar.gz
 PKG_SOURCE_VERSION:=1496ca959d1b51c2e98d623363e1fd9eba464d27
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-TURRIS_DEPS:=+cert-backup
-
-define Package/$(PKG_NAME)/postinst
+define Package/cznic-cacert-bundle/postinst
 #!/bin/sh
 
 [ -n "$$IPKG_INSTROOT" ] || {
@@ -39,8 +35,8 @@ define Package/$(PKG_NAME)/postinst
 }
 endef
 
-define Package/$(PKG_NAME)
-	TITLE:=$(PKG_NAME)
+define Package/cznic-cacert-bundle
+	TITLE:=CZNIC cacert bundle
 	DEPENDS:=+cert-backup +c-rehash
 endef
 
@@ -50,7 +46,7 @@ define Build/Compile
 	true
 endef
 
-define Package/$(PKG_NAME)/install
+define Package/cznic-cacert-bundle/install
 	$(INSTALL_DIR) $(1)/etc/ssl/
 	# TODO: If anything is modified here, it needs to be updated in the postinst too
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/emergency-ca/ca.crt $(1)/etc/ssl/turris.pem
@@ -64,4 +60,4 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) ./files/get-crl.cron $(1)/etc/cron.d/get-api
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,cznic-cacert-bundle))

@@ -14,7 +14,6 @@ PKG_RELEASE:=2
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/libatsha204.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -26,7 +25,7 @@ define Package/libatsha204
   TITLE:=libatsha204
   URL:=https://gitlab.labs.nic.cz/turris/libatsha204
   PROVIDES:=turris-otp
-  DEPENDS:=+libopenssl +libunbound 
+  DEPENDS:=+libopenssl +libunbound
   DEPENDS+=@(TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia||TARGET_mpc85xx_p2020_DEVICE_turris1x)
   VARIANT:=real
 endef
@@ -34,7 +33,7 @@ endef
 define Package/libatsha204-emul
   TITLE:=libatsha204-emul
   PROVIDES:=libatsha204 turris-otp
-  DEPENDS:=+libopenssl +libunbound 
+  DEPENDS:=+libopenssl +libunbound
   VARIANT:=emul
 endef
 
@@ -77,7 +76,6 @@ endef
 define Package/libatsha204-emul/install
 	$(call Common/install,$(1))
 endef
-
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include $(1)/usr/lib

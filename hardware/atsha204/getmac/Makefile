@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2014 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2014-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,17 +9,17 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=getmac
 PKG_VERSION:=1
+PKG_RELEASE:=1
+
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
 PKG_SOURCE_VERSION:=5b243eee1e4d5769dfb8260335118ec626849e3b
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)
-PKG_MAINTAINER:=Robin Obůrka <robin.oburka@nic.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
+
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/$(PKG_NAME)
+define Package/getmac
   TITLE:=Get MAC
   DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_turris1x
 endef
