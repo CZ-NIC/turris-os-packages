@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.2
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec@nic.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -53,11 +53,7 @@ endif
 	$(INSTALL_DIR) $(1)/etc/resolver/dns_servers
 	$(INSTALL_DIR) $(1)/usr/share/resolver
 	$(INSTALL_BIN) ./files/resolver-func.sh $(1)/usr/share/resolver/functions.sh
-ifneq ($(filter-out n,$(CONFIG_PACKAGE_knot-resolver)),)
 	$(INSTALL_CONF) ./files/dns_servers/* $(1)/etc/resolver/dns_servers/
-else
-	$(INSTALL_CONF) ./files/dns_servers_turris1x/* $(1)/etc/resolver/dns_servers/
-endif
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
