@@ -30,8 +30,6 @@ include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
-HOST_UNPACK:=$(HOST_TAR) -C $(HOST_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
-
 define Package/reforis-distutils
   TITLE:=reForis distutils
   URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-distutils
