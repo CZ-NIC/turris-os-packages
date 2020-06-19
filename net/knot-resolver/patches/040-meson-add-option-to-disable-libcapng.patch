@@ -1,0 +1,74 @@
+From 275c6230ff61befe038dbdd2ad9cc4fe9c2550a7 Mon Sep 17 00:00:00 2001
+From: Tomas Krizek <tomas.krizek@nic.cz>
+Date: Fri, 19 Jun 2020 12:33:40 +0200
+Subject: [PATCH] meson: add build options to disable libcapng
+
+---
+ meson.build       |  8 +++++++-
+ meson_options.txt | 12 ++++++++++++
+ 2 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/meson.build b/meson.build
+index 6c0b990b..09a10c0d 100644
+--- a/meson.build
++++ b/meson.build
+@@ -86,12 +86,16 @@ group = get_option('group')
+ 
+ ## Optional dependencies
+ message('--- optional dependencies ---')
+-capng = dependency('libcap-ng', required: false)
+ openssl = dependency('openssl', required: false)
+ 
+ have_asprintf = meson.get_compiler('c').has_function('asprintf',
+   prefix: '#define _GNU_SOURCE\n#include <stdio.h>')
+ 
++### capng
++# use empty name to disable the dependency, but still compile the dependent kresd
++capng_name = get_option('capng') == 'disabled' ? '' : 'libcap-ng'
++capng = dependency(capng_name, required: get_option('capng') == 'enabled')
++
+ ### sendmmsg
+ has_sendmmsg = meson.get_compiler('c').has_function('sendmmsg',
+   prefix: '#define _GNU_SOURCE\n#include <sys/socket.h>')
+@@ -280,6 +284,7 @@ s_build_extra_tests = build_extra_tests ? 'enabled' : 'disabled'
+ s_install_kresd_conf = install_kresd_conf ? 'enabled' : 'disabled'
+ s_sendmmsg = sendmmsg ? 'enabled': 'disabled'
+ s_openssl = openssl.found() ? 'present': 'missing'
++s_capng = capng.found() ? 'enabled': 'disabled'
+ message('''
+ 
+ ======================= SUMMARY =======================
+@@ -315,6 +320,7 @@ message('''
+     install_kresd_conf: @0@'''.format(s_install_kresd_conf) + '''
+     sendmmsg:           @0@'''.format(s_sendmmsg) + '''
+     openssl debug:      @0@'''.format(s_openssl) + '''
++    capng:              @0@'''.format(s_capng) + '''
+ 
+ =======================================================
+ 
+diff --git a/meson_options.txt b/meson_options.txt
+index 4c2a8a6d..f7ca06aa 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -89,6 +89,18 @@ option(
+   description: 'use sendmmsg syscall towards clients',
+ )
+ 
++option(
++  'capng',
++  type: 'combo',
++  choices: [
++    'auto',
++    'enabled',
++    'disabled',
++  ],
++  value: 'auto',
++  description: 'use libcapng to drop capabilities for non-root users',
++)
++
+ ## Systemd
+ option(
+   'systemd_files',
+-- 
+2.24.1
+
