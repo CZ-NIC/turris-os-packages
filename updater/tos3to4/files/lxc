@@ -34,8 +34,10 @@ migrate_config() {
 		## Network configuration
 		# Drop obsolete script.up setting
 		/^\s*lxc\.network\.script\.up\>/d
-		# Replace sungle network of lxc1 to first network in lxc3
+		# Replace single network of lxc1 to first network in lxc3
 		s/^\s*lxc\.network\./lxc.net.0./
+		# Update network address keys
+		s/^\s*(lxc\.net\.0\.ipv[46])\.ipv[46]/\1.address/
 	' "$conf.lxc1" > "$conf"
 }
 
