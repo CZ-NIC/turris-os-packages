@@ -1,9 +1,0 @@
-#!/bin/sh /etc/rc.common
-# Create ipset early in the boot before firewall is started and before we start
-# sentinel-dynfw-client
-
-START=18
-
-start() {
-	ipset create "turris-sn-dynfw-block" hash:ip -exist
-}

@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-dynfw-client
 PKG_VERSION:=1.3.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/dynfw-client.git
@@ -25,7 +25,7 @@ define Package/sentinel-dynfw-client
   CATEGORY:=Network
   SUBMENU:=Sentinel
   TITLE:=Dynamic firewall client
-  DEPENDS:=+python3-light +python3-zmq +ipset +python3-msgpack
+  DEPENDS:=+python3-light +python3-zmq +ipset +python3-msgpack +sentinel-firewall
 endef
 
 define Package/sentinel-dynfw-client/description
@@ -43,9 +43,11 @@ define Package/sentinel-dynfw-client/install
 	$(INSTALL_BIN) ./files/server.pub $(1)/etc/sentinel_dynfw.pub
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) files/init $(1)/etc/init.d/sentinel-dynfw-client
-	$(INSTALL_BIN) files/ipset.init $(1)/etc/init.d/sentinel-dynfw-ipset
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/99-sentinel-dynfw-client
+	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/firewall.d
+	$(INSTALL_BIN) ./files/sentinel-firewall.sh $(1)/usr/libexec/sentinel/firewall.d/50-dynfw.sh
+	$(INSTALL_DATA) ./files/sentinel-firewall-utils.sh $(1)/usr/libexec/sentinel/firewall.d/dynfw-utils.sh
 endef
 
 $(eval $(call BuildPackage,sentinel-dynfw-client))
