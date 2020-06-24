@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-proxy
 PKG_VERSION:=2.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=proxy-v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/haas/proxy/-/archive/v$(PKG_VERSION)/
@@ -27,7 +27,17 @@ define Package/haas-proxy
   CATEGORY:=Network
   TITLE:=Honeypot as a Service proxy
   URL:=https://haas.nic.cz
-  DEPENDS:=+python3-light +python3-cachetools +python3-bcrypt +python3-requests +python3-twisted +python3-crypto +python3-service-identity +sshpass +@KERNEL_CFS_BANDWIDTH
+  DEPENDS:= \
+    +python3-light \
+	+python3-cachetools \
+	+python3-bcrypt \
+	+python3-requests \
+	+python3-twisted \
+	+python3-crypto \
+	+python3-service-identity \
+	+sshpass \
+	+sentinel-firewall \
+	+@KERNEL_CFS_BANDWIDTH
   CONFLICTS:=mitmproxy
   VARIANT:=python3
 endef
@@ -46,7 +56,9 @@ define Py3Package/haas-proxy/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./files/haas.uci $(1)/etc/config/haas
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
-	$(INSTALL_BIN) ./files/haas-proxy.uci.defaults $(1)/etc/uci-defaults/99-haas-proxy
+	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/99-haas-proxy
+	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/firewall.d
+	$(INSTALL_BIN) ./files/sentinel-firewall.sh $(1)/usr/libexec/sentinel/firewall.d/70-haas-proxy.sh
 endef
 
 define Package/haas-proxy/conffiles
