@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-. /lib/functions.sh
+. /lib/functions/sentinel-firewall.sh
 
 # Remove old rules
 [ -z "$(uci -q get firewall.haas_proxy_mark)" ] || \
@@ -10,23 +10,7 @@ set -e
 
 
 # Enable for wan interface in default
-enable_on_wan_zone() {
-	local section="$1"
-	local zone
-	config_get zone "$section" "name"
-	[ "$zone" != "wan" ] && return 0
+config_firewall_default_enable "haas_proxy"
 
-	local enabled
-	config_get_bool enabled "$section" "haas_proxy" ""
-	if [ -z "$enabled" ]; then
-		uci -q set "firewall.$section.haas_proxy=1"
-	fi
-}
-config_load "firewall"
-config_foreach enable_on_wan_zone "zone"
-
-
-if [ -n "$(uci changes firewall)" ]; then
-	uci commit firewall
-	/etc/init.d/firewall reload
-fi
+# Always reload firewall to use latest version of sentinel-firewall script
+/etc/init.d/firewall reload

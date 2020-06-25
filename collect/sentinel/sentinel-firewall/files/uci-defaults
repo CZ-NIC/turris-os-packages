@@ -5,7 +5,7 @@ uci -q batch <<EOT
 	delete firewall.sentinel_firewall
 	set firewall.sentinel_firewall=include
 	set firewall.sentinel_firewall.type='script'
-	set firewall.sentinel_firewall.path='/usr/libexec/sentinel-firewall.sh'
+	set firewall.sentinel_firewall.path='/usr/libexec/sentinel/firewall.sh'
 	set firewall.sentinel_firewall.family='any'
 	set firewall.sentinel_firewall.reload='1'
 	reorder firewall.sentinel_firewall='$(uci show firewall | grep -E '^firewall\.[^.]+=' | wc -l)'

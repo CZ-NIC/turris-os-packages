@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-. /lib/functions.sh
+. /lib/functions/sentinel-firewall.sh
 
 # Minipot entry in sentinel config
 if [ "$(uci -q get sentinel.minipot)" != "minipot" ]; then
@@ -19,17 +19,7 @@ fi
 
 
 # Enable for wan interface in default
-enable_on_wan_zone() {
-	local section="$1"
-	local zone
-	config_get zone "$section" "name"
-	[ "$zone" != "wan" ] && return 0
+config_firewall_default_enable "sentinel_minipot"
 
-	local enabled
-	config_get_bool enabled "$section" "sentinel_minipot" ""
-	if [ -z "$enabled" ]; then
-		uci -q set "firewall.$section.sentinel_minipot=1"
-	fi
-}
-config_load "firewall"
-config_foreach enable_on_wan_zone "zone"
+# Always reload firewall to use latest version of sentinel-firewall script
+/etc/init.d/firewall reload

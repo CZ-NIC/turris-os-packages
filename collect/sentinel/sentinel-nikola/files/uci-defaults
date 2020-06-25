@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-. /lib/functions.sh
+. /lib/functions/sentinel-firewall.sh
 
 # Nikola entry in sentinel config
 if [ "$(uci -q get sentinel.nikola)" != "nikola" ]; then
@@ -12,25 +12,8 @@ EOT
 fi
 
 
-# Enable for default wan interface
-enable_on_wan_zone() {
-	local section="$1"
-	local zone
-	config_get zone "$section" "name"
-	[ "$zone" != "wan" ] && return 0
-
-	local enabled
-	config_get_bool enabled "$section" "sentinel_fwlogs" ""
-	if [ -z "$enabled" ]; then
-		uci -q set "firewall.$section.sentinel_fwlogs=1"
-	fi
-}
-config_load "firewall"
-config_foreach enable_on_wan_zone "zone"
-
-if [ -n "$(uci changes firewall)" ]; then
-	uci commit firewall
-fi
+# Enable for default interface
+config_firewall_default_enable "sentinel_fwlogs"
 
 # Always reload firewall to use latest version of sentinel-firewall script
 /etc/init.d/firewall reload

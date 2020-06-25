@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-. /lib/functions.sh
+. /lib/functions/sentinel-firewall.sh
 
 # Remove old rules
 [ -z "$(uci -q get firewall.sentinel_dynfw_client)" ] || \
@@ -10,25 +10,7 @@ set -e
 
 
 # Enable for default wan interface
-enable_on_wan_zone() {
-	local section="$1"
-	local zone
-	config_get zone "$section" "name"
-	[ "$zone" != "wan" ] && return 0
-
-	local enabled
-	config_get_bool enabled "$section" "sentinel_dynfw" ""
-	if [ -z "$enabled" ]; then
-		uci -q set "firewall.$section.sentinel_dynfw=1"
-	fi
-}
-config_load "firewall"
-config_foreach enable_on_wan_zone "zone"
-
-
-if [ -n "$(uci changes firewall)" ]; then
-	uci commit firewall
-fi
+config_firewall_default_enable "sentinel_dynfw"
 
 # Always reload firewall to use latest version of sentinel-firewall script
 /etc/init.d/firewall reload

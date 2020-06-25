@@ -1,3 +1,4 @@
+# These are common helpers for sentinel-firewall scripts.
 
 report_operation() {
 	echo "   *" "$@" >&2
@@ -19,7 +20,7 @@ iptables_chain_exists() {
 }
 
 # Add drop rule
-# zone: name of firewall zone incomit packets are coming from
+# zone: name of firewall zone incoming packets are coming from
 # chain: chain to be affected (input/forward)
 # Any additional arguments are passed to iptables call adding this rule
 iptables_drop() {
