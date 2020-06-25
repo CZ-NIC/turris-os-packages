@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2018-2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2018-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -27,7 +27,12 @@ define Package/sentinel-minipot
   SUBMENU:=Sentinel
   TITLE:=Minipots
   URL:=https://gitlab.labs.nic.cz/turris/sentinel/minipot
-  DEPENDS:=+czmq +libevent2 +msgpack-c +sentinel-proxy
+  DEPENDS:=\
+    +czmq \
+    +libevent2 \
+    +msgpack-c \
+    +sentinel-firewall \
+    +sentinel-proxy
 endef
 
 define Package/sentinel-minipot/description
@@ -37,10 +42,13 @@ endef
 define Package/sentinel-minipot/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/sentinel_minipot $(1)/usr/bin/sentinel-minipot
+
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/init $(1)/etc/init.d/sentinel-minipot
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
-	$(INSTALL_BIN) ./files/telnet.uci-defaults $(1)/etc/uci-defaults/99-sentinel-minipot-telnet
+	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/99-sentinel-minipot-telnet
+	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/firewall.d
+	$(INSTALL_BIN) ./files/sentinel-firewall.sh $(1)/usr/libexec/sentinel/firewall.d/70-minipot.sh
 
 	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/reload_hooks.d
 	$(INSTALL_BIN) ./files/restart-minipot-hook.sh $(1)/usr/libexec/sentinel/reload_hooks.d/60_minipot.sh

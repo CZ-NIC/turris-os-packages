@@ -1,0 +1,35 @@
+#!/bin/sh
+set -e
+. /lib/functions.sh
+
+# Minipot entry in sentinel config
+if [ "$(uci -q get sentinel.minipot)" != "minipot" ]; then
+	uci -q batch <<EOT
+		delete sentinel.minipot
+		set sentinel.minipot='minipot'
+		commit sentinel.minipot
+EOT
+fi
+
+# Remove old firewall rules
+[ -z "$(uci -q get firewall.sentinel_minipot_telnet_mark)" ] || \
+	uci -q delete firewall.sentinel_minipot_telnet_mark
+[ -z "$(uci -q get firewall.sentinel_minipot_telnet)" ] || \
+	uci -q delete firewall.sentinel_minipot_telnet
+
+
+# Enable for wan interface in default
+enable_on_wan_zone() {
+	local section="$1"
+	local zone
+	config_get zone "$section" "name"
+	[ "$zone" != "wan" ] && return 0
+
+	local enabled
+	config_get_bool enabled "$section" "sentinel_minipot" ""
+	if [ -z "$enabled" ]; then
+		uci -q set "firewall.$section.sentinel_minipot=1"
+	fi
+}
+config_load "firewall"
+config_foreach enable_on_wan_zone "zone"
