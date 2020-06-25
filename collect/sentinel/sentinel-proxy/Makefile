@@ -67,8 +67,8 @@ define Package/sentinel-proxy/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/sentinel.uci-defaults $(1)/etc/uci-defaults/99-sentinel-main
 
-	$(INSTALL_DIR) $(1)/etc/sentinel-certgen_hooks.d
-	$(INSTALL_BIN) ./files/restart-proxy-hook.sh $(1)/etc/sentinel-certgen_hooks.d/restart-proxy
+	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/renew_hooks.d
+	$(INSTALL_BIN) ./files/restart-proxy-hook.sh $(1)/usr/libexec/sentinel/renew_hooks.d/50_proxy_restart.sh
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/renew.cron $(1)/etc/cron.d/certgen-certs-renew

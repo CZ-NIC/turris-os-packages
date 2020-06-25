@@ -2,4 +2,4 @@
 #
 
 # Periodically check and renew Sentinel:Proxy certificate
-42 */12 * * * root sentinel-certgen certs --hooks-dir /etc/sentinel-certgen_hooks.d
+42 */12 * * * root sentinel-certgen certs --hooks-dir /usr/libexec/sentinel/renew_hooks.d
