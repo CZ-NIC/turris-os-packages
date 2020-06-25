@@ -62,7 +62,7 @@ define Package/sentinel-proxy/install
 	$(INSTALL_BIN) ./files/init $(1)/etc/init.d/sentinel-proxy
 
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_BIN) files/uci $(1)/etc/config/sentinel
+	$(INSTALL_BIN) ./files/uci $(1)/etc/config/sentinel
 
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/99-sentinel-main
