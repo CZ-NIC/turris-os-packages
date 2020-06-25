@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-proxy
 PKG_VERSION:=1.3
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/proxy.git
@@ -67,8 +67,13 @@ define Package/sentinel-proxy/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/sentinel.uci-defaults $(1)/etc/uci-defaults/99-sentinel-main
 
+	$(INSTALL_BIN) ./files/sentinel-reload.sh $(1)/usr/bin/sentinel-reload
+
 	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/renew_hooks.d
 	$(INSTALL_BIN) ./files/restart-proxy-hook.sh $(1)/usr/libexec/sentinel/renew_hooks.d/50_proxy_restart.sh
+
+	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/reload_hooks.d
+	$(INSTALL_BIN) ./files/restart-proxy-hook.sh $(1)/usr/libexec/sentinel/reload_hooks.d/50_proxy.sh
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/renew.cron $(1)/etc/cron.d/certgen-certs-renew

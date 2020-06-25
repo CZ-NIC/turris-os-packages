@@ -1,3 +1,3 @@
 #!/bin/sh
-# restart Sentinel:Proxy service after Certgen renews the certificate
+# restart Sentinel:Proxy service
 /etc/init.d/sentinel-proxy restart
