@@ -2,6 +2,24 @@
 . /lib/functions.sh
 config_load network
 
+if [ "$(cat /tmp/sysinfo/model)" = "Turris" ]; then
+	# Turris 1.x
+	CPU_LAN_1="eth0"
+	CPU_TRUNK_1="6"
+	CPU_LAN_2="eth1"
+	CPU_TRUNK_2="0"
+	WAN="eth2"
+	NEW_WAN="eth2"
+else
+	# Turris Omnia
+	CPU_LAN_1="eth0"
+	CPU_TRUNK_1="5"
+	CPU_LAN_2="eth2"
+	CPU_TRUNK_2="6"
+	WAN="eth1"
+	NEW_WAN="eth2"
+fi
+
 vlandir="$(mktemp -d)"
 cleanup() {
 	rm -rf "$vlandir"
@@ -15,21 +33,22 @@ vlan_handle() {
 	config_get vid "$vlan" vid 0
 	for port in $ports; do
 		case "$port" in
-			5)
-				echo "$vlan" > "$vlandir/eth0"
+			"$CPU_TRUNK_1")
+				echo "$vlan" > "$vlandir/$CPU_LAN_1"
 				;;
-			5t)
-				echo "$vlan" > "$vlandir/eth0.$vid"
+			"${CPU_TRUNK_1}t")
+				echo "$vlan" > "$vlandir/$CPU_LAN_1.$vid"
 				;;
-			6)
-				echo "$vlan" > "$vlandir/eth2"
+			"$CPU_TRUNK_2")
+				echo "$vlan" > "$vlandir/$CPU_LAN_2"
 				;;
-			6t)
-				echo "$vlan" > "$vlandir/eth2.$vid"
+			"${CPU_TRUNK_2}t")
+				echo "$vlan" > "$vlandir/$CPU_LAN_2.$vid"
 				;;
 		esac
 	done
-	# TODO if there is no CPU port then create new bridge for this vlan
+	# Note: if there is no CPU port then creating new bridge can be solution but
+	# at the moment we do not do it as we have routers not smart switches.
 }
 config_foreach vlan_handle switch_vlan
 
@@ -44,7 +63,7 @@ append_lan_ports() {
 	config_get vid "$vlan" vid
 	for port in $ports; do
 		case "$port" in
-			5|5t|6|6t)
+			"$CPU_TRUNK_1"|"${CPU_TRUNK_1}t"|"$CPU_TRUNK_2"|"${CPU_TRUNK_2}t")
 				# Ignore CPU ports those are managed by DSA
 				;;
 			*t)
@@ -63,12 +82,12 @@ interface_handle() {
 	[ -n "$devices" ] || config_get devices "$cnf" ifname
 	for ifn in $devices; do
 		case "$ifn" in
-			eth0*|eth2*)
+			"${CPU_LAN_1}"*|"${CPU_LAN_2}"*)
 				append_lan_ports
 				;;
-			eth1*)
-				# WAN port is now eth2 not eth1
-				append new_ifname "eth2${ifn#eth1}"
+			"${WAN}"*)
+				# Replace new old wan with new one and keep any VLAN configuration
+				append new_ifname "${NEW_WAN}${ifn#${WAN}}"
 				;;
 			*)
 				append new_ifname "$ifn"
@@ -91,10 +110,11 @@ interface_handle() {
 config_foreach interface_handle interface
 
 
-switch_vlan_remove() {
+network_section_remove() {
 	uci delete "network.$1"
 }
-config_foreach switch_vlan_remove switch
-config_foreach switch_vlan_remove switch_vlan
+config_foreach network_section_remove switch
+config_foreach network_section_remove switch_vlan
+config_foreach network_section_remove switch_port
 
 uci commit network
