@@ -12,7 +12,7 @@ PKG_VERSION:=0.8.1
 PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 
@@ -30,7 +30,7 @@ include ./files/reforis-translations.mk
 
 define Package/reforis
   TITLE:=reforis
-  URL:=https://gitlab.labs.nic.cz/turris/reforis
+  URL:=https://gitlab.nic.cz/turris/reforis
   DEPENDS:= \
     +crypto-wrapper \
     +foris-client \

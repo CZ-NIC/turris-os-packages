@@ -12,7 +12,7 @@ PKG_VERSION:=0.1.1
 PKG_RELEASE:=4
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/turris-survey.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/turris-survey.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -27,7 +27,7 @@ define Package/turris-survey
   CATEGORY:=Network
   SUBMENU:=Sentinel
   TITLE:=Turris Survey
-  URL:=https://gitlab.labs.nic.cz/turris/sentinel/turris-survey
+  URL:=https://gitlab.nic.cz/turris/sentinel/turris-survey
   DEPENDS:=+python3-light +python3-msgpack +python3-zmq +sentinel-proxy +updater-supervisor +cronie
   VARIANT:=python3
 endef

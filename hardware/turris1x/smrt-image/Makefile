@@ -12,7 +12,7 @@ PKG_VERSION:=1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/smrt-image.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/smrt-image.git
 PKG_SOURCE_VERSION:=090fbdee94cff4e1396063a78d680aafe66904d7
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

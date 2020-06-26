@@ -15,7 +15,7 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=LGPLv2.1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/python-ubus.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/python-ubus.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
@@ -28,7 +28,7 @@ define Package/python3-ubus
   SECTION:=lang
   CATEGORY:=Languages
   TITLE:=Python3 ubus
-  URL:=https://gitlab.labs.nic.cz/turris/python-ubus/
+  URL:=https://gitlab.nic.cz/turris/python-ubus/
   DEPENDS:=+libubus +libblobmsg-json +python3-light
   VARIANT:=python3
 endef

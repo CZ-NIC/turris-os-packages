@@ -11,7 +11,7 @@ PKG_VERSION:=1.9
 PKG_RELEASE:=14
 
 PKG_SOURCE_VERSION:=bbf8629d1d64840407eefc23d2b6c8835365347b
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/haas/proxy/raw/$(PKG_SOURCE_VERSION)/release/
+PKG_SOURCE_URL:=https://gitlab.nic.cz/haas/proxy/raw/$(PKG_SOURCE_VERSION)/release/
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_HASH:=7cccc79ee930f9e3e5115f7e90983b6a6a42b9f4180d3871fa5af0ab0dbdca6a
 

@@ -12,7 +12,7 @@ PKG_VERSION:=29.2
 PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/libatsha204.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/libatsha204.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -23,7 +23,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/libatsha204
   TITLE:=libatsha204
-  URL:=https://gitlab.labs.nic.cz/turris/libatsha204
+  URL:=https://gitlab.nic.cz/turris/libatsha204
   PROVIDES:=turris-otp
   DEPENDS:=+libopenssl +libunbound
   DEPENDS+=@(TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia||TARGET_mpc85xx_p2020_DEVICE_turris1x)

@@ -12,7 +12,7 @@ PKG_VERSION:=0.2.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-data-collection
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis-data-collection
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -30,7 +30,7 @@ include ../reforis/files/reforis-translations.mk
 
 define Package/reforis-data-collection-plugin
   TITLE:=reForis Data Collection plugin
-  URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-data-collection
+  URL:=https://gitlab.nic.cz/turris/reforis/reforis-data-collection
   DEPENDS:=\
     +reforis \
     +foris-controller-sentinel-module

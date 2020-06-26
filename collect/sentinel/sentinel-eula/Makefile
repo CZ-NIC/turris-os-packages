@@ -12,7 +12,7 @@ PKG_VERSION:=1.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/eula.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/eula.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -26,7 +26,7 @@ define Package/sentinel-eula
   CATEGORY:=Network
   SUBMENU:=Sentinel
   TITLE:=Sentinel EULA
-  URL:=https://gitlab.labs.nic.cz/turris/sentinel/eula
+  URL:=https://gitlab.nic.cz/turris/sentinel/eula
 endef
 
 define Package/sentinel-eula/description

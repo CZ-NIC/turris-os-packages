@@ -12,7 +12,7 @@ PKG_VERSION:=2018-11-rc1
 PKG_RELEASE:=9
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/mox-boot-builder.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/mox-boot-builder.git
 PKG_SOURCE_VERSION:=5d6e645f5b00afa47d330017add5898056f9996b
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

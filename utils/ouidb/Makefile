@@ -12,7 +12,7 @@ PKG_VERSION:=4
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/ouidb.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/ouidb.git
 PKG_SOURCE_VERSION:=ca0ecbb2e89a21d22ec0613e3447959d5d36499c
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

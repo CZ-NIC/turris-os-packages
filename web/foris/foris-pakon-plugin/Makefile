@@ -12,7 +12,7 @@ PKG_VERSION:=2.6.1
 PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris/foris-pakon-plugin.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris/foris-pakon-plugin.git
 PKG_SOURCE_VERSION:=package-v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

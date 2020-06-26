@@ -12,7 +12,7 @@ PKG_VERSION:=0.2.1
 PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/mox-otp.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/mox-otp.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -24,7 +24,7 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/mox-otp
   TITLE:=MOX OTP CLI
-  URL:=https://gitlab.labs.nic.cz/turris/mox-otp
+  URL:=https://gitlab.nic.cz/turris/mox-otp
   PROVIDES:=turris-otp
   DEPENDS:=+python3-light
   DEPENDS+=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox

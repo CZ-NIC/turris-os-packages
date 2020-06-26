@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/turris-netboot.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/turris-netboot.git
 
 BB_VERSION:=1.29.3
 PKG_BB_SOURCE:=busybox-$(BB_VERSION).tar.bz2

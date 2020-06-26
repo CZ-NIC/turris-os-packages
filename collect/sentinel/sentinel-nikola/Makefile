@@ -12,7 +12,7 @@ PKG_VERSION:=2.0.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/nikola.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/nikola.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -27,7 +27,7 @@ define Package/sentinel-nikola
   CATEGORY:=Network
   SUBMENU:=Sentinel
   TITLE:=Nikola
-  URL:=https://gitlab.labs.nic.cz/turris/sentinel/nikola
+  URL:=https://gitlab.nic.cz/turris/sentinel/nikola
   DEPENDS:=+python3-light +python3-setuptools +logrotate +syslog-ng +firewall +python3-msgpack +python3-zmq +sentinel-proxy
   VARIANT:=python3
 endef

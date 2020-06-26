@@ -12,7 +12,7 @@ PKG_VERSION:=0.3
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/christmas.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/christmas.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -24,7 +24,7 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/christmas
   TITLE:=Christmas
-  URL:=https://gitlab.labs.nic.cz/turris/christmas
+  URL:=https://gitlab.nic.cz/turris/christmas
   DEPENDS:=+python3-light +python3-uci
   DEPENDS+=@(TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia||TARGET_mpc85xx_p2020_DEVICE_turris1x)
   VARIANT:=python3

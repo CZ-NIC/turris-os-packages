@@ -12,7 +12,7 @@ PKG_VERSION:=1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/misc.git
 PKG_SOURCE_VERSION:=5b243eee1e4d5769dfb8260335118ec626849e3b
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
