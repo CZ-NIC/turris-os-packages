@@ -16,7 +16,7 @@ PKG_LICENSE_FILES:=License.txt
 PKG_MAINTAINER:=Pavel Spirek <pavel.spirek@nic.cz>
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=http://gitlab.labs.nic.cz/turris/domoticz-turris-gadgets.git
+PKG_SOURCE_URL:=http://gitlab.nic.cz/turris/domoticz-turris-gadgets.git
 PKG_SOURCE_VERSION:=$(PKG_REV)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)

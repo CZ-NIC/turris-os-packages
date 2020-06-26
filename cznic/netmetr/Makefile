@@ -14,7 +14,7 @@ PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 PKG_SOURCE:=netmetr-client-v$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/netmetr-client/-/archive/v$(PKG_VERSION)/
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/netmetr-client/-/archive/v$(PKG_VERSION)/
 PKG_HASH:=0d9e86df19480007662400edb75f9c464e3eb52c3f8eb51290e3f034d2007caa
 
 PKG_LICENSE:=GPLv3
@@ -30,7 +30,7 @@ PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/
 
 define Package/$(PKG_NAME)
 	TITLE:=Speed measurement application
-	URL:=https://gitlab.labs.nic.cz/turris/netmetr-client
+	URL:=https://gitlab.nic.cz/turris/netmetr-client
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 	DEPENDS:=+rmbt-client +vixie-cron +python3-light +python3-pyserial +xz
 	VARIANT:=python3

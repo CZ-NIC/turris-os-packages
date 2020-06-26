@@ -5,7 +5,7 @@ Subject: [PATCH] Revert "meson: turn implicit-function warnings into hard
  errors"
 
 More details:
-https://gitlab.labs.nic.cz/knot/knot-resolver/issues/570
+https://gitlab.nic.cz/knot/knot-resolver/issues/570
 
 I am not able to compile with CFLAGS nor moving luajit higher in
 kresd_deps. Let's see if it helps for Turris OS 3.x.

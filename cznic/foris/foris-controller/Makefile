@@ -12,7 +12,7 @@ PKG_VERSION:=1.0.2
 PKG_RELEASE:=1
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris-controller/foris-controller
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -23,14 +23,14 @@ $(call include_mk, python3-package.mk)
 
 define Package/foris-controller
 	TITLE:=foris-controller
-	URL:=https://gitlab.labs.nic.cz/turris/foris-controller/foris-controller
+	URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller
 	DEPENDS:=+foris-controller-app +foris-controller-hotplug
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
 define Package/foris-controller-app
 	TITLE:=foris-controller-app
-	URL:=https://gitlab.labs.nic.cz/turris/foris-controller/foris-controller
+	URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller
 	DEPENDS:=\
 		+python3-light +python3-ubus +python3-prctl +python3-multiprocessing +python3-pbkdf2 \
 		+foris-schema-python3 +python3-setuptools +python3-turrishw \
@@ -68,7 +68,7 @@ endef
 
 define Package/foris-controller-hotplug
 	TITLE:=foris-controller-hotplug
-	URL:=https://gitlab.labs.nic.cz/turris/foris-controller/foris-controller
+	URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller
 	DEPENDS:=\
 		+foris-controller-app +foris-client-bin +netifd
 	MAINTAINER:=CZ.NIC <packaging@turris.cz>

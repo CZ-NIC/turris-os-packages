@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=smrt-image
 PKG_VERSION:=1
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/smrt-image.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/smrt-image.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
 PKG_SOURCE_VERSION:=090fbdee94cff4e1396063a78d680aafe66904d7
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz

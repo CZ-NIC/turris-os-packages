@@ -12,7 +12,7 @@ include $$(TOPDIR)/rules.mk
 PKG_NAME:=$(1)
 PKG_VERSION:=$(2)
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/ucollect.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/ucollect.git
 PKG_SOURCE:=$$(PKG_NAME).tar.gz
 PKG_SOURCE_VERSION:=fb9a4adca0c256d8bbedb643c6be0155f911e3c3
 PKG_SOURCE:=$$(PKG_NAME)-$$(PKG_SOURCE_VERSION).tar.gz

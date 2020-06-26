@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=rainbow-omnia
 PKG_VERSION:=3.1
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/rainbow_omnia.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/rainbow_omnia.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
 PKG_SOURCE_VERSION:=d4ded015bd5a400059ea20f2234a311e749dc519
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz

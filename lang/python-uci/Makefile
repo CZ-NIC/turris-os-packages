@@ -13,7 +13,7 @@ PKG_RELEASE:=2
 PKG_LICENSE:=GPLv3
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/pyuci.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/pyuci.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
@@ -29,7 +29,7 @@ define Package/python-uci
   CATEGORY:=Languages
   TITLE:=python-uci
   DEPENDS:=+python-light +libuci
-  URL:=https://gitlab.labs.nic.cz/turris/pyuci/
+  URL:=https://gitlab.nic.cz/turris/pyuci/
   MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 

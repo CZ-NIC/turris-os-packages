@@ -12,7 +12,7 @@ PKG_VERSION:=0.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/dev-detect.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/dev-detect.git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_VERSION:=10255fbcdefa87d038b3fc20ee635550d22a862a
 
@@ -28,7 +28,7 @@ define Package/dev-detect
   CATEGORY:=Languages
   SUBMENU:=Python
   TITLE:=Device detection
-  URL:=https://gitlab.labs.nic.cz/turris/dev-detect
+  URL:=https://gitlab.nic.cz/turris/dev-detect
   DEPENDS:= \
         +python3-light \
         +python3-pyroute2 \

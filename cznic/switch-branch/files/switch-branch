@@ -160,7 +160,7 @@ case "$BRANCH" in
 		# TODO split off daily when we have some support for it
 		echo "You are now in branch containing software build every night. It often contains bugs and sometimes requires manual intervention!" >&2
 		echo "Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/)." >&2
-		echo "If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/)," >&2
+		echo "If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.nic.cz/)," >&2
 		echo "You shouldn't be in this branch unless you are advanced user!" >&2
 		echo "To return to deploy run this command: switch-branch deploy" >&2
 		;;

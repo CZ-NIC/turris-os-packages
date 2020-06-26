@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=smrt
 PKG_VERSION:=15
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/smrt.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/smrt.git
 PKG_SOURCE_VERSION:=d3f4a37a88207beb41e01d2e77cc7dfa6b7edd8b
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)

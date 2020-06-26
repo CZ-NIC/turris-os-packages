@@ -11,7 +11,7 @@ In file included from ../daemon/engine.c:19:0:
   #error "Incorrect Lua version in #include <lua.h> - LuaJIT compatible with Lua 5.1 is required"
 
 More details:
-https://gitlab.labs.nic.cz/knot/knot-resolver/issues/570
+https://gitlab.nic.cz/knot/knot-resolver/issues/570
 ---
  impl.c | 1 -
  1 file changed, 1 insertion(+)
