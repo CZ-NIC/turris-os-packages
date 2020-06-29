@@ -1,9 +1,7 @@
 # Common job's base detection
 
-git fetch
-
-master_base="$(git merge-base --fork-point master HEAD)"
-develop_base="$(git merge-base --fork-point develop HEAD)"
+master_base="$(git merge-base --fork-point origin/master HEAD)"
+develop_base="$(git merge-base --fork-point origin/develop HEAD)"
 if git merge-base --is-ancestor "$master_base" "$develop_base"; then
 	# We are closer to develop than master so build on HBL
 	branch="hbl"
