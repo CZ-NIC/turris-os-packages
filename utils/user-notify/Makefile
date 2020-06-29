@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=user-notify
-PKG_VERSION:=61.4
+PKG_VERSION:=61.5
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
@@ -28,8 +28,17 @@ endef
 Build/Compile:=:
 
 define Package/user-notify/install
-	cd $(PKG_BUILD_DIR); $(MAKE) DESTDIR="$(1)" install_scripts install_aux
-	rm $(1)/usr/bin/create_notification
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/scripts/list_notifications $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/scripts/notifier $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/scripts/user-notify-cleaner $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/scripts/user-notify-display $(1)/usr/bin/
+
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/user_notify.uci $(1)/etc/config/user_notify
+
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_DATA) ./files/user_notify.cron $(1)/etc/cron.d/user_notify
 endef
 
 define Package/user-notify/conffiles
