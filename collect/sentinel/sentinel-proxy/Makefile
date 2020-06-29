@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-proxy
 PKG_VERSION:=1.3
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/proxy.git
@@ -49,7 +49,7 @@ define Package/sentinel-proxy/install
 	$(INSTALL_CONF) ./files/sentinel.sh $(1)/lib/functions/sentinel.sh
 
 	$(INSTALL_DIR) $(1)/etc/sentinel
-	$(INSTALL_BIN) ./files/ca.pem $(1)/etc/sentinel/ca.pem
+	$(INSTALL_DATA) ./files/ca.pem $(1)/etc/sentinel/ca.pem
 
 	$(INSTALL_DIR) $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/.libs/libsentinel-device-token.so.1.0.0 $(1)/usr/lib/libsentinel-device-token.so.1
