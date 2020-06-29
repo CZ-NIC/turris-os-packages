@@ -1,6 +1,6 @@
 image: registry.labs.nic.cz/turris/turris-os-packages
 variables:
-  GIT_DEPTH: 10000
+  GIT_DEPTH:
   GIT_FETCH_EXTRA_FLAGS: master develop
 
 stages:
