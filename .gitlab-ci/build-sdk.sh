@@ -11,7 +11,7 @@ git clone --branch "bugfix/rework-repo-checkout" "https://gitlab.labs.nic.cz/tur
 
 if ! diff -q "tb-new/feeds.conf" "turris-build-$branch/feeds.conf" >/dev/null; then
 	(
-		cd turris-build-new
+		cd tb-new
 		../turris-build/compile_pkgs -t "$BOARD" -j"$(nproc)" -f prepare_tools
 	)
 	mv "turris-build-$branch" "tb-old"
