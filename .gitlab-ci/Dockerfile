@@ -1,7 +1,5 @@
 FROM debian:unstable
 
-ENV HOME /root
-
 RUN \
   apt-get update && \
   apt-get -y upgrade && \
@@ -14,6 +12,8 @@ RUN \
     && \
   apt-get clean
 
+USER build
+ENV HOME /build
 CMD [ "bash" ]
 
 # vim: ft=dockerfile
