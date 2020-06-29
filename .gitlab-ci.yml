@@ -1,4 +1,13 @@
 image: registry.labs.nic.cz/turris/turris-os-packages
+variables:
+  GIT_FETCH_EXTRA_FLAGS:
+    - master
+    - develop
+only:
+  - branches
+except:
+  - master
+  - develop
 
 stages:
   - sdk
