@@ -36,7 +36,8 @@ define Package/sentinel-proxy
     +zlib \
     +libopenssl \
     +libconfig \
-    +sentinel-certgen
+    +sentinel-certgen \
+    +sentinel-eula
 endef
 
 define Package/sentinel-proxy/description
