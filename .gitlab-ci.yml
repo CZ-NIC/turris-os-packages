@@ -1,0 +1,58 @@
+image: registry.labs.nic.cz/turris/turris-os-packages
+
+stages:
+  - sdk
+  - build
+
+## SDK ###########################################################################
+.sdk:
+  stage: sdk
+  script: ./.gitlab-ci/build-sdk.sh
+  cache:
+    paths:
+      - turris-build-*/
+  artefacts:
+    expire_in: 2 days
+    paths:
+      - turris-build-*/
+
+
+sdk:mox:
+  extends: .sdk
+  variables:
+    BOARD: mox
+
+sdk:omnia:
+  extends: .sdk
+  variables:
+    BOARD: omnia
+
+sdk:1x:
+  extends: .sdk
+  variables:
+    BOARD: turris1x
+
+## Build #########################################################################
+.build:
+  stage: build
+  script: ./.gitlab-ci/build-sdk.sh
+  artifacts:
+    expire_in: 1 week
+    paths:
+    - turrispackages/
+
+
+build:mox:
+  extends: .build
+  dependencies:
+    - sdk:mox
+
+build:omnia:
+  extends: .build
+  dependencies:
+    - sdk:omnia
+
+build:1x:
+  extends: .build
+  dependencies:
+    - sdk:1x
