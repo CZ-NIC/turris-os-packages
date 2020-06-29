@@ -3,19 +3,22 @@ variables:
   GIT_FETCH_EXTRA_FLAGS:
     - master
     - develop
-only:
-  - branches
-except:
-  - master
-  - develop
 
 stages:
   - sdk
   - build
 
+.limit:
+  only:
+    - branches
+  except:
+    - master
+    - develop
+
 ## SDK ###########################################################################
 .sdk:
   stage: sdk
+  extends: .limit
   script: ./.gitlab-ci/build-sdk.sh
   cache:
     paths:
@@ -44,6 +47,7 @@ sdk:1x:
 ## Build #########################################################################
 .build:
   stage: build
+  extends: .limit
   script: ./.gitlab-ci/build-sdk.sh
   artifacts:
     expire_in: 1 week
