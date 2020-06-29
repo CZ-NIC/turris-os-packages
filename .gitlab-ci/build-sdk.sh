@@ -9,7 +9,7 @@ git clone --branch "bugfix/rework-repo-checkout" "https://gitlab.labs.nic.cz/tur
 	./helpers/checkout_repo_branch.sh "$branch"
 )
 
-if diff -q "tb-new/feeds.conf" "turris-build-$branch/feekds.conf" >/dev/null; then
+if ! diff -q "tb-new/feeds.conf" "turris-build-$branch/feeds.conf" >/dev/null; then
 	(
 		cd turris-build-new
 		../turris-build/compile_pkgs -t "$BOARD" -j"$(nproc)" -f prepare_tools
