@@ -11,7 +11,7 @@ stages:
   cache:
     paths:
       - turris-build-*/
-  artefacts:
+  artifacts:
     expire_in: 2 days
     paths:
       - turris-build-*/
