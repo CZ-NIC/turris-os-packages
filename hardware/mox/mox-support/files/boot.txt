@@ -26,6 +26,18 @@ if part uuid ${devtype} ${devnum}:${distro_bootpart} partuuid; then
 	fi
 
 	if test $has_dtb -eq 1; then
+
+		# check whether running with stock U-Boot, and if yes, remove
+		# phy properties from USB3 node (old ATF has a bug in USB3 PHY
+		# initialization)
+		crc32 04100000 d0630 04effff8
+		mw 04effffc ff325d6a
+		if cmp.l 04effff8 04effffc 1; then
+			fdt addr ${fdt_addr_r}
+			fdt rm /soc/internal-regs@d0000000/usb@58000 phys
+			fdt rm /soc/internal-regs@d0000000/usb@58000 phy-names
+		fi
+
 		load ${devtype} ${devnum}:${distro_bootpart} ${kernel_addr_r} ${subvol}/boot/Image
 		if test "$filesize" = "0"; then
 			echo "Failed to load ${subvol}/boot/Image"
