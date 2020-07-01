@@ -12,7 +12,7 @@ PKG_VERSION:=0.1.0
 PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-distutils.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis-distutils.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -32,7 +32,7 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/reforis-distutils
   TITLE:=reForis distutils
-  URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-distutils
+  URL:=https://gitlab.nic.cz/turris/reforis/reforis-distutils
   DEPENDS:=\
     +python3-light \
     +python3-babel

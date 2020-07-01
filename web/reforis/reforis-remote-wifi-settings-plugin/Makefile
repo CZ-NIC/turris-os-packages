@@ -12,7 +12,7 @@ PKG_VERSION:=0.2.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-remote-wifi-settings
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis-remote-wifi-settings
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -30,7 +30,7 @@ include ../reforis/files/reforis-translations.mk
 
 define Package/reforis-remote-wifi-settings-plugin
   TITLE:=reForis Remote Wi-Fi Settings plugin
-  URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-remote-wifi-settings
+  URL:=https://gitlab.nic.cz/turris/reforis/reforis-remote-wifi-settings
   DEPENDS:=\
     +reforis \
     +reforis-remote-devices-plugin \

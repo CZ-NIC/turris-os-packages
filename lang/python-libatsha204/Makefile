@@ -12,7 +12,7 @@ PKG_VERSION:=29.2
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/libatsha204.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/libatsha204.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 
@@ -28,7 +28,7 @@ define Package/python3-atsha204
   CATEGORY:=Languages
   SUBMENU:=Python
   TITLE:=atsha204 access
-  URL:=https://gitlab.labs.nic.cz/turris/libatsha204
+  URL:=https://gitlab.nic.cz/turris/libatsha204
   DEPENDS:=+python3-light +libatsha204
   PROVIDES:=python3-libatsha204
   VARIANT:=python3

@@ -12,7 +12,7 @@ PKG_VERSION:=2020-07-rc1
 PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/mox-boot-builder.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/mox-boot-builder.git
 PKG_SOURCE_VERSION:=24de5b79eb0aeecaa611ced7513de8d87f0a1bcc
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

@@ -11,7 +11,7 @@ PKG_NAME:=sentinel-minipot
 PKG_VERSION:=1
 PKG_RELEASE:=10
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/minipot.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/minipot.git
 PKG_SOURCE_VERSION:=ebc6c8f96202b6c122fcc8f94b9413ec6bfd2e4f
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -26,7 +26,7 @@ define Package/sentinel-minipot
   CATEGORY:=Network
   SUBMENU:=Sentinel
   TITLE:=Minipots
-  URL:=https://gitlab.labs.nic.cz/turris/sentinel/minipot
+  URL:=https://gitlab.nic.cz/turris/sentinel/minipot
   DEPENDS:=\
     +czmq \
     +libevent2 \

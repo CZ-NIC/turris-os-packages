@@ -12,7 +12,7 @@ PKG_VERSION:=6.2
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/certgen.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/certgen.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -27,7 +27,7 @@ define Package/sentinel-certgen
   CATEGORY:=Network
   SUBMENU:=Sentinel
   TITLE:=Certgen
-  URL:=https://gitlab.labs.nic.cz/turris/sentinel/certgen
+  URL:=https://gitlab.nic.cz/turris/sentinel/certgen
   DEPENDS:=+python3-light +python3-six +python3-requests +python3-cryptography +crypto-wrapper
   VARIANT:=python3
 endef

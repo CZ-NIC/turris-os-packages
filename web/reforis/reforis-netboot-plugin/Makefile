@@ -12,7 +12,7 @@ PKG_VERSION:=0.3.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-netboot
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis-netboot
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -30,7 +30,7 @@ include ../reforis/files/reforis-translations.mk
 
 define Package/reforis-netboot-plugin
   TITLE:=reForis Netboot plugin
-  URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-netboot
+  URL:=https://gitlab.nic.cz/turris/reforis/reforis-netboot
   DEPENDS:=\
     +reforis \
     +reforis-remote-devices-plugin \

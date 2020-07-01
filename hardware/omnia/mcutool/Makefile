@@ -11,7 +11,7 @@ PKG_VERSION:=0.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/misc.git
 PKG_SOURCE_VERSION:=3d1e674fc992ded2a517a0a40a06edc4bdabc952
 
 PKG_MAINTAINER:=Michal Hrusecky <michal.hrusecky@nic.cz>

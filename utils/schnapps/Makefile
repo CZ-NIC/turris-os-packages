@@ -12,7 +12,7 @@ PKG_VERSION:=2.2.1
 PKG_RELEASE:=5
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/schnapps.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/schnapps.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@nic.cz>

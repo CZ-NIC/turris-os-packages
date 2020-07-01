@@ -12,7 +12,7 @@ PKG_VERSION:=1.5.5
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/netmetr-client.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/netmetr-client.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE:=netmetr-client-v$(PKG_SOURCE_VERSION).tar.gz
 
@@ -24,7 +24,7 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/netmetr
   TITLE:=Speed measurement application
-  URL:=https://gitlab.labs.nic.cz/turris/netmetr-client
+  URL:=https://gitlab.nic.cz/turris/netmetr-client
   DEPENDS:= \
   +python3-light \
   +python3-setuptools \

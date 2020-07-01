@@ -12,7 +12,7 @@ PKG_VERSION:=2.4.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-diagnostics
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis-diagnostics
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -30,7 +30,7 @@ include ../reforis/files/reforis-translations.mk
 
 define Package/reforis-diagnostics-plugin
   TITLE:=reForis diagnostics plugin
-  URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-diagnostics
+  URL:=https://gitlab.nic.cz/turris/reforis/reforis-diagnostics
   DEPENDS:= \
     +reforis \
     +foris-controller-diagnostics-module

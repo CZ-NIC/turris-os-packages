@@ -12,7 +12,7 @@ PKG_VERSION:=2019-07
 PKG_RELEASE:=8
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/turris-omnia-uboot.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/turris-omnia-uboot.git
 PKG_SOURCE_VERSION:=81ba547351a9436c5748e96f4c3359814627937f
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

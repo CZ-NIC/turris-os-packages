@@ -12,7 +12,7 @@ PKG_VERSION:=3.1
 PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/rainbow_omnia.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/rainbow_omnia.git
 PKG_SOURCE_VERSION:=d4ded015bd5a400059ea20f2234a311e749dc519
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -23,7 +23,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/omnia-rainbow
   TITLE:=omnia-rainbow
-  URL:=https://gitlab.labs.nic.cz/turris/rainbow_omnia
+  URL:=https://gitlab.nic.cz/turris/rainbow_omnia
   PROVIDES:=turris-rainbow
   DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
 endef

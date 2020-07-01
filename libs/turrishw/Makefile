@@ -12,7 +12,7 @@ PKG_VERSION:=0.4.3
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/turrishw.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/turrishw.git
 PKG_SOURCE_VERSION:=29d8973dd645eb67e726bacc6972747c01985170
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

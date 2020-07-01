@@ -12,7 +12,7 @@ PKG_VERSION:=1.3.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-openvpn
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis-openvpn
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -30,7 +30,7 @@ include ../reforis/files/reforis-translations.mk
 
 define Package/reforis-openvpn-plugin
   TITLE:=reForis OpenVPN plugin
-  URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-openvpn
+  URL:=https://gitlab.nic.cz/turris/reforis/reforis-openvpn
   DEPENDS:= \
     +reforis \
     +foris-controller-openvpn-module \

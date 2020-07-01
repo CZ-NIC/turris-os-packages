@@ -12,7 +12,7 @@ PKG_VERSION:=1.3
 PKG_RELEASE:=4
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/sentinel/proxy.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/proxy.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -29,7 +29,7 @@ define Package/sentinel-proxy
   CATEGORY:=Network
   SUBMENU:=Sentinel
   TITLE:=Proxy
-  URL:=https://gitlab.labs.nic.cz/turris/sentinel/proxy
+  URL:=https://gitlab.nic.cz/turris/sentinel/proxy
   DEPENDS:= \
     +czmq \
     +libpaho-mqtt-c \

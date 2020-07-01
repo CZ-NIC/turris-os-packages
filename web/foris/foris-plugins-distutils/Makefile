@@ -12,7 +12,7 @@ PKG_VERSION:=0.3
 PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/foris/foris-plugins-distutils
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris/foris-plugins-distutils
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -29,7 +29,7 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/foris-plugins-distutils
   TITLE:=Foris Distutils plugins
-  URL:=https://gitlab.labs.nic.cz/turris/foris/foris-plugins-distutils
+  URL:=https://gitlab.nic.cz/turris/foris/foris-plugins-distutils
   DEPENDS:=+python3-light
   VARIANT:=python3
 endef

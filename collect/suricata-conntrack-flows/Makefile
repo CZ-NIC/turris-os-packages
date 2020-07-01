@@ -11,7 +11,7 @@ PKG_NAME:=suricata-conntrack-flows
 PKG_VERSION:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/suricata_conntrack_flows.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/suricata_conntrack_flows.git
 PKG_SOURCE_VERSION:=a4fe20378c2451171b143511529179ae1d796dde
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
