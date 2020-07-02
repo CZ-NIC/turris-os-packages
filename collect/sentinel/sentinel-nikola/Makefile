@@ -83,6 +83,7 @@ syslog_ng_init="/etc/init.d/syslog-ng"
 		"$$syslog_ng_init" reload
 	fi
 }
+endef
 
 $(eval $(call Py3Package,sentinel-nikola))
 $(eval $(call BuildPackage,sentinel-nikola))
