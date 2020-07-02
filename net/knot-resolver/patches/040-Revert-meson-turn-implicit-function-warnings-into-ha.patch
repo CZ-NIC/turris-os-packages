@@ -14,7 +14,7 @@ kresd_deps. Let's see if it helps for Turris OS 3.x.
  1 file changed, 1 deletion(-)
 
 diff --git a/meson.build b/meson.build
-index 31923a4b..b845c928 100644
+index 9760156c..b27ec274 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -115,7 +115,6 @@ add_project_arguments(
@@ -22,9 +22,8 @@ index 31923a4b..b845c928 100644
    '-Wtype-limits',
    '-Wshadow',
 -  '-Werror=implicit-function-declaration', # Probably messed up includes; implicit functions are evil!
+   '-Werror=attributes',  # Missing cleanup attribute could lead to memory leaks.
    '-fvisibility=hidden',
    '-DHAVE_ASPRINTF=' + have_asprintf.to_int().to_string(),
- 
 -- 
-2.26.2
-
+2.27.0
