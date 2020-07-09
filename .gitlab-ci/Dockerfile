@@ -12,7 +12,7 @@ RUN \
     && \
   apt-get clean
 
-RUN useradd -ms /bin/bash -d /build buikd
+RUN useradd -ms /bin/bash -d /build build
 USER build
 ENV HOME /build
 

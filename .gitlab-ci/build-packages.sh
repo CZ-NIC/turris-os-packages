@@ -2,10 +2,12 @@
 set -eu
 . "${0%/*}/base.sh"
 
+target="$(git rev-parse HEAD)"
+
 cd "turris-build-$branch/build"
 mv feeds.conf feeds.conf.old
-awk -vBASE="$base" \
-	'$2 == "turrispackages" { gsub("[0-9a-z]+$", BASE, $3) }; { print }' \
+awk -vTARGET="$target" \
+	'$2 == "turrispackages" { gsub("[0-9a-z]+$", TARGET, $3) }; { print }' \
 	feeds.conf.old > feeds.conf
 ../compile_pkgs repatch_feeds
 
