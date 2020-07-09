@@ -12,8 +12,10 @@ RUN \
     && \
   apt-get clean
 
+RUN useradd -ms /bin/bash -d /build buikd
 USER build
 ENV HOME /build
+
 CMD [ "bash" ]
 
 # vim: ft=dockerfile
