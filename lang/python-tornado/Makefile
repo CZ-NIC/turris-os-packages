@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-tornado
-PKG_VERSION:=6.0.3
+PKG_VERSION:=6.0.4
 PKG_RELEASE:=1
 
 PYPI_NAME:=tornado
-PKG_HASH:=c845db36ba616912074c5b1ee897f8e0124df269468f25e4fe21fe72f6edd7a9
+PKG_HASH:=0fe2d45ba43b00a41cd73f8be321a44936dc1aba233dee979f17a042b83eb6dc
 
 PKG_MAINTAINER:=Josef Schlehofer <josef.schlehofer@nic.cz>
 PKG_LICENSE:=Apache-2.0
