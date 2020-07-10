@@ -10,7 +10,7 @@ component_enabled() (
 	config_load sentinel
 
 	local enabled
-	config_get_bool enabled "${component_name}" enabled "0"
+	config_get_bool enabled "${component_name}" enabled "1"
 	[ "$enabled" = "1" ] || {
 		echo "Sentinel ${component_name} not enabled" >&2
 		return 1
