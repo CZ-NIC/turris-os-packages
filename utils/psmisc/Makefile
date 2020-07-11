@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=psmisc
-PKG_VERSION:=23.2
+PKG_VERSION:=23.3
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=@SF/psmisc
-PKG_HASH:=4b7cbffdc9373474da49b85dc3457ae511c43dc7fa7d94513fe06f89dcb87880
+PKG_HASH:=41750e1a5abf7ed2647b094f58127c73dbce6876f77ba4e0a7e0995ae5c7279a
 
 PKG_MAINTAINER:=Josef Schlehofer <pepe.schlehofer@gmail.com>
 PKG_LICENSE:=GPL-2.0-or-later
@@ -50,13 +50,6 @@ define Package/psmisc/install
 	$(INSTALL_BIN) \
 		$(PKG_INSTALL_DIR)/usr/bin/{fuser,killall,prtstat,pstree} \
 		$(1)/usr/bin/
-endef
-
-define Package/psmisc/postrm
-#!/bin/sh
-ln -sf ../../bin/busybox $${IPKG_INSTROOT}/usr/bin/killall
-$${IPKG_INSTROOT}/usr/bin/killall 2>&1 | grep 'applet not found' > /dev/null 2>&1 && rm $${IPKG_INSTROOT}/usr/bin/killall
-exit 0
 endef
 
 $(eval $(call BuildPackage,psmisc))
