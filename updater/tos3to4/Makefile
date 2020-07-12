@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tos3to4
 PKG_VERSION:=2.0.17
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -81,7 +81,6 @@ These are primary changes:
   to install them manually.
 * Squid proxy package list was dropped. Install luci-app-squid as a replacement.
 * Webcam package list been dropped. "
-}
 endef
 
 define Package/tos3to4-early/postinst
