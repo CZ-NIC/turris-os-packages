@@ -20,9 +20,15 @@ PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=COPYING
 
 PKG_FIXUP:=autoreconf
+PKG_BUILD_DEPENDS:=meson/host
 PKG_INSTALL:=1
 
+PKG_CONFIG_DEPENDS:=CONFIG_LIGHTTPD_SSL $(patsubst %,CONFIG_PACKAGE_lighttpd-mod-%,$(REBUILD_MODULES))
+
+REBUILD_MODULES=authn_gssapi authn_ldap authn_mysql cml magnet mysql_vhost trigger_b4_dl webdav
+
 include $(INCLUDE_DIR)/package.mk
+include $(TOPDIR)/feeds/packages/devel/meson/meson.mk
 
 define Package/lighttpd/Default
   SUBMENU:=Web Servers/Proxies
@@ -57,79 +63,56 @@ config LIGHTTPD_SSL
 	default y
 	help
 	  Implements SSL support in lighttpd (using libopenssl). This
-	  option is required if you enable the SSL engine in your
-	  lighttpd confguration file.
+	  option is enabled by default for backwards compatibility.
+          Select one TLS module below if you enable the SSL engine in
+	  your lighttpd configuration file.
+          (mod_gnutls, mod_mbedtls, mod_nss, mod_openssl, mod_wolfssl)
+
+config LIGHTTPD_SSL_DEPENDS
+        bool
+        depends on LIGHTTPD_SSL
+        default PACKAGE_lighttpd-mod-mbedtls || PACKAGE_lighttpd-mod-wolfssl || PACKAGE_lighttpd-mod-gnutls || PACKAGE_lighttpd-mod-nss
+
+config LIGHTTPD_SSL_SELECT
+        tristate
+        depends on LIGHTTPD_SSL
+        default m if !LIGHTTPD_SSL_DEPENDS
+        select PACKAGE_lighttpd-mod-openssl
+
+config LIGHTTPD_LOGROTATE
+	bool "Logrotate support"
+	depends on PACKAGE_lighttpd
+	default n
+	help
+	  It adds support for logrotate functionality.
 endef
 
-TARGET_CFLAGS += --std=c99
+MESON_ARGS += \
+	-Dwith_bzip=false \
+	-Dwith_dbi=false \
+	-Dwith_fam=false \
+	-Dwith_gdbm=$(if $(CONFIG_PACKAGE_lighttpd-mod-trigger_b4_dl),true,false) \
+	-Dwith_geoip=$(if $(CONFIG_PACKAGE_lighttpd-mod-geoip),true,false) \
+	-Dwith_krb5=$(if $(CONFIG_PACKAGE_lighttpd-mod-authn_gssapi),true,false) \
+	-Dwith_ldap=$(if $(CONFIG_PACKAGE_lighttpd-mod-authn_ldap)$(CONFIG_PACKAGE_lighttpd-mod-vhostdb_ldap),true,false) \
+	-Dwith_libev=false \
+	-Dwith_libunwind=false \
+	-Dwith_lua=$(if $(CONFIG_PACKAGE_lighttpd-mod-cml)$(CONFIG_PACKAGE_lighttpd-mod-magnet),true,false) \
+	-Dwith_maxminddb=$(if $(CONFIG_PACKAGE_lighttpd-mod-maxminddb),true,false) \
+	-Dwith_memcached=false \
+	-Dwith_mysql=$(if $(CONFIG_PACKAGE_lighttpd-mod-authn_mysql)$(CONFIG_PACKAGE_lighttpd-mod-mysql_vhost)$(CONFIG_PACKAGE_lighttpd-mod-vhostdb_mysql),true,false) \
+	-Dwith_openssl=$(if $(CONFIG_LIGHTTPD_SSL),true,false) \
+	-Dwith_pam=$(if $(CONFIG_PACKAGE_lighttpd-mod-authn_pam),true,false) \
+	-Dwith_pcre=true \
+	-Dwith_pgsql=$(if $(CONFIG_PACKAGE_lighttpd-mod-vhostdb_pgsql),true,false) \
+	-Dwith_sasl=$(if $(CONFIG_PACKAGE_lighttpd-mod-authn_sasl),true,false) \
+	-Dwith_webdav_locks=$(if $(CONFIG_PACKAGE_lighttpd-mod-webdav),true,false) \
+	-Dwith_webdav_props=$(if $(CONFIG_PACKAGE_lighttpd-mod-webdav),true,false) \
+	-Dwith_xattr=false \
+	-Dwith_zlib=$(if $(CONFIG_PACKAGE_lighttpd-mod-compress)$(CONFIG_PACKAGE_lighttpd-mod-deflate),true,false)
+
 
 BASE_MODULES:=dirlisting indexfile staticfile
-
-CONFIGURE_ARGS+= \
-	--libdir=/usr/lib/lighttpd \
-	--sysconfdir=/etc/lighttpd \
-	--enable-shared \
-	--disable-static \
-	--without-attr \
-	--without-bzip2 \
-	--without-fam \
-	--without-ldap \
-	--with-lua \
-	--with-pcre \
-	--without-valgrind \
-	 $(call autoconf_bool,CONFIG_IPV6,ipv6)
-
-CONFIGURE_VARS+= \
-	PCRE_LIB="-lpcre" \
-
-ifneq ($(strip $(CONFIG_LIGHTTPD_SSL)),)
-  CONFIGURE_ARGS+= \
-	--with-openssl="$(STAGING_DIR)/usr"
-else
-  CONFIGURE_ARGS+= \
-	--without-openssl
-endif
-
-ifneq ($(SDK)$(CONFIG_PACKAGE_lighttpd-mod-mysql-vhost),)
-  CONFIGURE_ARGS+= \
-	--with-mysql
-else
-  CONFIGURE_ARGS+= \
-	--without-mysql
-endif
-
-ifneq ($(SDK)$(CONFIG_PACKAGE_lighttpd-mod-authn_pam),)
-  CONFIGURE_ARGS+= \
-	--with-pam
-else
-  CONFIGURE_ARGS+= \
-	--without-pam
-endif
-
-ifneq ($(SDK)$(CONFIG_PACKAGE_lighttpd-mod-trigger_b4_dl),)
-  CONFIGURE_ARGS+= \
-	--with-gdbm=yes
-endif
-
-ifneq ($(SDK)$(CONFIG_PACKAGE_lighttpd-mod-webdav),)
-  CONFIGURE_ARGS+= \
-	--with-webdav-locks \
-	--with-webdav-props
-  # XXX: needed by sqlite3 to prevent segfaults in mod_webdav.so
-  CONFIGURE_VARS+= \
-	LIBS="-lpthread"
-else
-  CONFIGURE_ARGS+= \
-	--without-webdav-locks \
-	--without-webdav-props
-endif
-
-define Build/Configure
-$(call Build/Configure/Default)
-	# XXX: override pcre (mis)detection by ./configure when cross-compiling
-	echo "#define HAVE_LIBPCRE 1" >>$(PKG_BUILD_DIR)/config.h
-	echo "#define HAVE_PCRE_H 1" >>$(PKG_BUILD_DIR)/config.h
-endef
 
 define Package/lighttpd/conffiles
 /etc/lighttpd/lighttpd.conf
@@ -163,9 +146,8 @@ define BuildPlugin
     TITLE:=$(2) module
   endef
 
-  define Package/lighttpd-mod-$(1)/postinst
-#!/bin/sh
-[ -n "$$IPKG_INSTROOT" ] || /etc/init.d/lighttpd restart
+  define Package/lighttpd-mod-$(1)/conffiles
+/etc/lighttpd/conf.d/$(4)-$(1).conf
   endef
 
   define Package/lighttpd-mod-$(1)/install
@@ -202,7 +184,7 @@ $(eval $(call BuildPlugin,compress,Compress output,+PACKAGE_lighttpd-mod-compres
 $(eval $(call BuildPlugin,evasive,Evasive,,30))
 $(eval $(call BuildPlugin,evhost,Enhanced Virtual-Hosting,,30))
 $(eval $(call BuildPlugin,expire,Expire,,30))
-$(eval $(call BuildPlugin,openssl,Openssl,,30))
+$(eval $(call BuildPlugin,openssl,TLS using openssl,@LIGHTTPD_SSL +PACKAGE_lighttpd-mod-openssl:libopenssl,30))
 $(eval $(call BuildPlugin,extforward,Extract client,,30))
 $(eval $(call BuildPlugin,fastcgi,FastCGI,,30))
 $(eval $(call BuildPlugin,flv_streaming,FLV streaming,,30))
