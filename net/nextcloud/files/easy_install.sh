@@ -114,7 +114,7 @@ if [ -z "$IP" ]; then
     echo "Autodetection of your router IP failed, what is your routers IP address?"
     read IP
 fi
-sudo -u nobody php-cli ./occ config:system:set --value false updatechecker
+sudo -u nobody php-cli ./occ config:system:set --value false updatechecker --type=boolean
 [ -z "$IP" ] || sudo -u nobody php-cli ./occ config:system:set --value "$IP" trusted_domains 1
 [ -z "$(uname -n)" ] || sudo -u nobody php-cli ./occ config:system:set --value "$(uname -n ).local" trusted_domains 2
 
