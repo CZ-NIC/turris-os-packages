@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=101.0
+PKG_VERSION:=101.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
