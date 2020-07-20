@@ -152,7 +152,7 @@ load_uci_config_common() {
 			local SERVERS
 			SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' /tmp/resolv.conf.auto | sort -u |head -n 4)
 			if [ "$SERVERS" ] ; then
-				# Slight hack around https://gitlab.labs.nic.cz/knot/knot-resolver/issues/205#note_94566
+				# Slight hack around https://gitlab.nic.cz/knot/knot-resolver/issues/205#note_94566
 				echo "table.insert(policy.special_names, { count = 0, cb = policy.all(" >> $CONFIGFILE
 				if [ "$ignore_root_key" = "1"  ] ; then
 					echo "policy.STUB({">>$CONFIGFILE
@@ -297,7 +297,7 @@ print_kresd_forward_config() {
 	local hostname="$5"
 	local ca_files="$6"
 
-	# Slight hack around https://gitlab.labs.nic.cz/knot/knot-resolver/issues/205#note_94566
+	# Slight hack around https://gitlab.nic.cz/knot/knot-resolver/issues/205#note_94566
 	echo "table.insert(policy.special_names, { count = 0, cb = policy.all(" >> $CONFIGFILE
 	if [ "$enable_tls" == "1" ]; then
 		echo "policy.TLS_FORWARD(" >> $CONFIGFILE

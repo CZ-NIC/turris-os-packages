@@ -10,7 +10,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=cert-backup
 PKG_VERSION:=9
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/misc.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
 PKG_SOURCE_VERSION:=ace5d6e699c19885a3baf1d9e526d5f634733ef3
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz

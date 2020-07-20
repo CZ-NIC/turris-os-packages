@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 PKG_LICENSE:=GPLv3
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/turrishw.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/turrishw.git
 PKG_SOURCE_VERSION:=a3fa745a238ce1c9933987857f9212c5812d5a3e
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
@@ -28,7 +28,7 @@ define Package/Common
   SUBMENU:=Python
   SECTION:=lang
   CATEGORY:=Languages
-  URL:=https://gitlab.labs.nic.cz/turris/pyuci/
+  URL:=https://gitlab.nic.cz/turris/pyuci/
   MAINTAINER:=CZ.NIC <packaging@turris.cz>
   DEPENDS:=
 endef

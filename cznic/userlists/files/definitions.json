@@ -1,4 +1,9 @@
 {
+	"3xmigrate": {
+		"title": "Migration to Turris OS 5.x (HIGHLY EXPERIMENTAL)",
+		"description": "This is experimental migration to the latest version of Turris OS. Make sure that you thoroughly read https://docs.turris.cz/geek/tos3_migration/ before enabling this!",
+		"visible": true
+	},
 	"api-token": {
 		"title": "Access tokens",
 		"description": "A Foris plugin allowing to manage remote API access tokens (for example for use in Spectator or Android application).",

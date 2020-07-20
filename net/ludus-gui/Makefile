@@ -12,7 +12,7 @@ PKG_VERSION:=0.1
 PKG_RELEASE:=5
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=git@gitlab.labs.nic.cz:turris/ludus.git
+PKG_SOURCE_URL:=git@gitlab.nic.cz:turris/ludus.git
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=473e0c9a07a77dc42d0ac2dd106c147c20a588c2
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
@@ -29,7 +29,7 @@ define Package/ludus-gui
   SECTION:=net
   CATEGORY:=Network
   TITLE:=Ludus web GUI
-  URL:=https://gitlab.labs.nic.cz/turris/ludus
+  URL:=https://gitlab.nic.cz/turris/ludus
   DEPENDS:= \
     +python3-light \
     +python3-flask \

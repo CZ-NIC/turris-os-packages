@@ -24,7 +24,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/ltemetr-web
   TITLE:=Web interface for ltemetr
-  URL:=https://gitlab.labs.nic.cz/turris/ltemetr/web
+  URL:=https://gitlab.nic.cz/turris/ltemetr/web
   DEPENDS:=+ltemetr-core +lighttpd
 endef
 

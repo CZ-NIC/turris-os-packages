@@ -15,7 +15,7 @@ PKG_LICENSE_FILES:=LICENSE
 PKG_MAINTAINER:=Pavel Spirek <pavel.spirek@nic.cz>
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/home-assistant-turris-gadgets.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/home-assistant-turris-gadgets.git
 PKG_SOURCE_VERSION:=package-v$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)

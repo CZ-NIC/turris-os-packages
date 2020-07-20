@@ -51,7 +51,9 @@ for name, lst in content.items():
 
 # Merge with previous version
 if os.path.isfile(OUT):
-    po.merge(polib.pofile(OUT))
+    existing_po = polib.pofile(OUT)
+    existing_po.merge(po)
+    po = existing_po
 
 # Save new version
 po.save(OUT)

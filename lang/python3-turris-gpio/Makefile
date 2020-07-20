@@ -14,7 +14,7 @@ PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENCE.txt
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/python-turris-gpio.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/python-turris-gpio.git
 PKG_SOURCE_VERSION:=$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)

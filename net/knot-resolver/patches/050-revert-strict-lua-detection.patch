@@ -19,7 +19,7 @@ In file included from ../daemon/network.c:7:0:
 Because of it, we need to revert commit 0b495b6273c11574af1ecab949494722cde905a2
 As it does not happen with Turris OS 5.0+.
 
-[1] https://gitlab.labs.nic.cz/knot/knot-resolver/issues/570
+[1] https://gitlab.nic.cz/knot/knot-resolver/issues/570
 ---
  daemon/bindings/impl.h | 5 +++--
  1 file changed, 3 insertions(+), 2 deletions(-)

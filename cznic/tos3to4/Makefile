@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tos3to4
-PKG_VERSION:=1.0.2
-PKG_RELEASE:=2
+PKG_VERSION:=1.0.3
+PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -41,7 +41,7 @@ define Package/tos3to4/postinst
 		uci set "updater.approvals.need_migrate=1"
 		uci set "updater.approvals.need=0"
 		uci commit updater.approvals
-		create_notification -s error 'Updater approvals were deactivated to prevent problems during migration to latest major release of Turris OS!'
+		create_notification -s error 'Updater approvals were deactivated to prevent problems during migration to the latest major release of Turris OS!'
 	fi
 }
 endef

@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 PKG_LICENSE:=LGPLv2.1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/python-ubus.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/python-ubus.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
@@ -30,7 +30,7 @@ define Package/Common
   SUBMENU:=Python
   SECTION:=lang
   CATEGORY:=Languages
-  URL:=https://gitlab.labs.nic.cz/turris/python-ubus/
+  URL:=https://gitlab.nic.cz/turris/python-ubus/
   MAINTAINER:=CZ.NIC <packaging@turris.cz>
 endef
 
