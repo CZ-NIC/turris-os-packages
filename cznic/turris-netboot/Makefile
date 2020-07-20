@@ -14,7 +14,7 @@ BB_VERSION:=1.29.3
 PKG_BB_SOURCE:=busybox-$(BB_VERSION).tar.bz2
 PKG_BB_SOURCE_URL:=https://www.busybox.net/downloads \
 		http://sources.buildroot.net
-PKG_BB_HASH:=0a367e19cdfd157e8258d87f893ee516
+PKG_BB_HASH:=2f321fa72d539128a3a6f9f35a422656756b7283
 PKG_MAINTAINER:=Michal Hrusecky <michal.hrusecky@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_BUILD_DEPENDS:=opkg/host
