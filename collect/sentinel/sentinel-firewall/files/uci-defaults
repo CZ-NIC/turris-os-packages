@@ -8,7 +8,6 @@ uci -q batch <<EOT
 	set firewall.sentinel_firewall.path='/usr/libexec/sentinel/firewall.sh'
 	set firewall.sentinel_firewall.family='any'
 	set firewall.sentinel_firewall.reload='1'
-	reorder firewall.sentinel_firewall='$(uci show firewall | grep -E '^firewall\.[^.]+=' | wc -l)'
 	commit firewall.sentinel_firewall
 EOT
 # We order include to last position in firewall config. The reason is that

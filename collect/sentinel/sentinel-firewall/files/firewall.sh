@@ -8,6 +8,18 @@
 #		option reload '1'
 
 
+# Make sure that we are last config.
+# We have to be last config to ensure that we can reliably insert general block
+# rules for dynamic firewall and other hacks.
+# This is not ideal as we won't apply it in this run but rather by subsequent one
+# but that is enough to ensure that we are last in the end.
+uci -q reorder "firewall.sentinel_firewall=$(uci show firewall | grep -cE '^firewall\.[^.]+=')"
+if [ -n "$(uci changes firewall.sentinel_firewall)" ]; then
+	uci commit firewall.sentinel_firewall
+	echo "Warning: Sentinel-firewall include reordered: another firewall reload suggested!"
+fi
+
+
 # Remove any existing rule
 # (firewall3 removes only rules in chains it knows so we have to do this to
 # potentially clean after ourselves)
