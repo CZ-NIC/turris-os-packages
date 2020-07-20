@@ -1,0 +1,4 @@
+## crontab
+
+MAILTO=""
+0 8 * * 1 root /usr/share/diagnostics/country-check.sh
