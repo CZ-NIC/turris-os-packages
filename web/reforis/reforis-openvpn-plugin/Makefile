@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-openvpn-plugin
 PKG_VERSION:=1.3.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis-openvpn
@@ -42,7 +42,7 @@ define Package/reforis-openvpn-plugin/description
   Reforis OpenVPN plugin.
 endef
 
-define Package/reforis-openvpn-plugin/install
+define ReForisPlugin/reforis-openvpn-plugin/install
 	$(INSTALL_DIR) $(1)/usr/share/foris/external-links
 	$(INSTALL_DATA) ./files/openvpn_client-external-redirect.csv $(1)/usr/share/foris/external-links/
 endef
