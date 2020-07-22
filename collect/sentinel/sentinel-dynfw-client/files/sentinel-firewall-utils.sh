@@ -11,7 +11,7 @@ bypass_dynamic_firewall() (
 	local port="$2"
 	local name_of_service="$3"
 
-	iptables -t mangle -A INPUT \
+	iptables -t mangle -A PREROUTING \
 		-p "$protocol" \
 		-m "$protocol" --dport "$port" \
 		-m comment --comment "!sentinel: Dynamic firewall bypass for $name_of_service" \
