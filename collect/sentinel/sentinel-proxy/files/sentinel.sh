@@ -31,9 +31,9 @@ Not agreed with EULA.
 EULA could be found at /usr/share/sentinel-eula/ and you can
 agree with it either in ReForis data collect tab or using
 uci config:
-uci set sentinel.main.agreed_with_eula_version=1
+uci set sentinel.main.agreed_with_eula_version=1 && uci commit
 
-EULA version may increase in time. See documentation for more details."
+EULA version may increase in time. See documentation for more details.
 EOF
 	return 1
 )
