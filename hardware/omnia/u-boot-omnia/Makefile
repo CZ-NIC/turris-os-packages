@@ -9,11 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=u-boot-omnia
 PKG_VERSION:=2019-07
-PKG_RELEASE:=8
+PKG_RELEASE:=9
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/turris-omnia-uboot.git
-PKG_SOURCE_VERSION:=81ba547351a9436c5748e96f4c3359814627937f
+PKG_SOURCE_VERSION:=4431b6a381c70a0648c432f3fb04b0d62d664e95
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-2.0-or-later
@@ -29,7 +29,7 @@ endef
 define Build/Compile
 	sed -i '/DCONFIG_KWB_SECURE/ d' $(PKG_BUILD_DIR)/tools/Makefile
 	cd $(PKG_BUILD_DIR); make CROSS_COMPILE=$(TARGET_CROSS) turris_omnia_defconfig
-	cd $(PKG_BUILD_DIR); make CROSS_COMPILE=$(TARGET_CROSS) u-boot-spl.kwb
+	cd $(PKG_BUILD_DIR); make CROSS_COMPILE=$(TARGET_CROSS) u-boot-spl.kwb OMNIA_OLD_SPL=1
 endef
 
 define Package/u-boot-omnia/install
