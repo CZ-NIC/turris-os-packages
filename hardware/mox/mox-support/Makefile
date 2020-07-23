@@ -1,26 +1,22 @@
+#
+## Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+#
+## This is free software, licensed under the GNU General Public License v3.
+# See /LICENSE for more information.
+#
+
 include $(TOPDIR)/rules.mk
-include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=mox-support
-PKG_VERSION:=32
+PKG_VERSION:=2.0
+PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/mox-dtb
-  TITLE:=Device tree for Turris MOX
-  VERSION:=$(LINUX_VERSION)-$(LINUX_RELEASE)-$(LINUX_VERMAGIC)
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox
-endef
-
-define Package/mox-dtb/description
- Contains device tree for Turris MOX.
-endef
-
 define Package/mox-generic-support
   TITLE:=Generic MOX support package
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mtd +kmod-gpio-button-hotplug
+  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mtd +kmod-gpio-button-hotplug +mox-dtb
 endef
 
 define Package/mox-generic-support/description
@@ -29,7 +25,7 @@ endef
 
 define Package/mox-support
   TITLE:=MOX support package
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mox-generic-support +mox-dtb
+  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mox-generic-support
 endef
 
 define Package/mox-support/description
@@ -38,25 +34,14 @@ endef
 
 define Package/shield-support
   TITLE:=Shield support package
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mox-generic-support +mox-dtb
+  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mox-generic-support
 endef
 
 define Package/shield-support/description
  Contains supporting files for Turris Shield.
 endef
 
-define Build/Prepare
-	mkdir -p $(PKG_BUILD_DIR)
-endef
-
-define Build/Compile
-	$(KERNEL_MAKE) Image dtbs
-endef
-
-define Package/mox-dtb/install
-	$(INSTALL_DIR) $(1)/boot
-	$(CP) $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts/marvell/armada-3720-turris-mox.dtb "$(1)"/boot
-endef
+Build/Compile:=:
 
 define Package/mox-generic-support/install
 	$(INSTALL_DIR) $(1)/sbin
@@ -96,6 +81,5 @@ define Package/shield-support/install
 endef
 
 $(eval $(call BuildPackage,mox-support))
-$(eval $(call BuildPackage,mox-dtb))
 $(eval $(call BuildPackage,mox-generic-support))
 $(eval $(call BuildPackage,shield-support))
