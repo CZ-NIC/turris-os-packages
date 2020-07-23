@@ -7,12 +7,12 @@
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-proxy
-PKG_VERSION:=2.0.1
-PKG_RELEASE:=1
+PKG_VERSION:=2.0
+PKG_RELEASE:=2
 
 PKG_SOURCE:=proxy-v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://gitlab.nic.cz/haas/proxy/-/archive/v$(PKG_VERSION)/
-PKG_HASH:=42c20a3dcf3eb7e8342238aea5efbfae9e5e3217beebbf99f3f00a203c9b7cf3
+PKG_HASH:=b6931eff11463bf67f20eee13c4dad95c5d5aa1f6c4b1c74ed1a2b44c45d035b
 PKG_BUILD_DIR:=$(BUILD_DIR)/proxy-v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@nic.cz>
