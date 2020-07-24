@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis
 PKG_VERSION:=0.9.9
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis
@@ -72,9 +72,9 @@ define Py3Package/reforis/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
-	$(INSTALL_DATA) ./files/01_reforis.conf $(1)/usr/share/turris-webapps/
+	$(INSTALL_DATA) ./files/01_reforis.json $(1)/usr/share/turris-webapps/
 	$(INSTALL_DIR) $(1)/www/webapps-icons
-	$(INSTALL_DATA) ./files/reforis.jpg $(1)/www/webapps-icons
+	$(INSTALL_DATA) ./files/reforis.svg $(1)/www/webapps-icons/
 
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_DATA) ./files/reforis-lighttpd.conf $(1)/etc/lighttpd/conf.d/reforis.conf

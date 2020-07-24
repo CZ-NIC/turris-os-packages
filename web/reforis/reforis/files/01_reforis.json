@@ -1,0 +1,10 @@
+{
+  "id": "reforis",
+  "title": "ReForis",
+  "url": "/reforis/",
+  "icon": "/icons/reforis.svg",
+  "description": {
+    "en": "Redesigned web interface for Turris OS",
+    "cs": "Vylepšený design rozhraní pro nastavení Turris OS"
+  }
+}
