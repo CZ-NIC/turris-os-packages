@@ -155,7 +155,7 @@
 	"tor": {
 		"title": "Tor",
 		"description": "Service to increase anonymity on the Internet.",
-		"labels": ["community", "advanced"]
+		"labels": ["advanced", "community"]
 	},
 	"drivers": {
 		"title": "Alternative core drivers",
