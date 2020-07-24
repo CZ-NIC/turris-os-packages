@@ -173,4 +173,9 @@
 		},
 		"labels": ["advanced", "community"]
 	}
+	"netdata": {
+                "title": "Netdata",
+                "description": "Real-time perfomance and health monitoring options.",
+                "labels": ["community", "high_memory"]
+        }
 }
