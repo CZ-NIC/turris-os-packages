@@ -101,18 +101,28 @@ print_msg() {
 }
 
 stop_service() {
-	local run_pids
+	local atlas_pid
+	local tunnel_pid
+	local pid_file
 
 	print_msg "Stopping atlas sw probe"
-	run_pids="$(ls -1 "$SCRIPTS_DIR/run"/*.vol 2>/dev/null | wc -l)"
-	if [ "$run_pids" != "0" ]; then
-		print_msg "Kill all atlas processes"
-		kill $(cat $SCRIPTS_DIR/run/*.vol)
-	fi
+	print_msg "Kill all atlas processes"
+
+	for pid_file in "$SCRIPTS_DIR/run/"*.vol; do
+		[ -f "$pid_file" ] || continue
+		# test if proccess is still running
+		atlas_pid="$(cat "$pid_file")"
+		if kill -0 "$atlas_pid" 2>/dev/null; then
+			kill "$atlas_pid"
+		fi
+	done
 
 	if [ -f "$SCRIPTS_DIR/status/con_keep_pid.vol" ]; then
 		print_msg "Kill ssh tunnel"
-		kill "$(cat $SCRIPTS_DIR/status/con_keep_pid.vol)"
+		tunnel_pid="$(cat "$SCRIPTS_DIR/status/con_keep_pid.vol")"
+		if kill -0 "$tunnel_pid" 2>/dev/null; then
+			kill "$tunnel_pid"
+		fi
 	fi
 }
 

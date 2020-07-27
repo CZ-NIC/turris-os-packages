@@ -8,11 +8,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=atlas-sw-probe
 PKG_VERSION:=5020
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/ripe-atlas-software-probe
-PKG_SOURCE_VERSION:=ce9daafbdcce731f2352877365e6b6b3a0a89a09
+PKG_SOURCE_VERSION:=6c08a2cd5dc24ad100f0dbca8375c0b7cba14b40
 
 PKG_SOURCE:=ripe-atlas-software-probe-$(PKG_VERSION).tar.gz
 
