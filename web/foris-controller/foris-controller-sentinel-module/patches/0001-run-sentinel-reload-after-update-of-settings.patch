@@ -1,0 +1,88 @@
+From 2e4fde43c49241e4087e1c7d3ea471a55777ad72 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Martin=20Mat=C4=9Bjek?= <martin.matejek@nic.cz>
+Date: Mon, 20 Jul 2020 19:36:32 +0200
+Subject: [PATCH] run sentinel-reload after update of settings
+
+---
+ foris_controller_backends/sentinel/__init__.py | 4 ++++
+ tests/test_root/usr/bin/pass                   | 5 +++++
+ tests/test_root/usr/bin/sentinel-reload        | 1 +
+ tests/test_sentinel.py                         | 5 ++++-
+ 4 files changed, 14 insertions(+), 1 deletion(-)
+ create mode 100755 tests/test_root/usr/bin/pass
+ create mode 120000 tests/test_root/usr/bin/sentinel-reload
+
+diff --git a/foris_controller_backends/sentinel/__init__.py b/foris_controller_backends/sentinel/__init__.py
+index 146cf52..fe44a36 100644
+--- a/foris_controller_backends/sentinel/__init__.py
++++ b/foris_controller_backends/sentinel/__init__.py
+@@ -25,6 +25,7 @@ import os
+ from io import StringIO
+ from secrets import token_hex
+ 
++from foris_controller_backends.cmdline import BaseCmdLine
+ from foris_controller_backends.files import BaseFile
+ from foris_controller_backends.uci import UciBackend, get_option_named, parse_bool, store_bool
+ 
+@@ -66,6 +67,9 @@ class SentinelUci:
+             if token:
+                 backend.set_option("sentinel", "main", "device_token", token)
+ 
++            # Reload sentinel components
++            BaseCmdLine._run_command_and_check_retval(["/usr/bin/sentinel-reload"], 0)
++
+         return True, eula, token if eula != 0 else None
+ 
+     def get_fakepot_settings(self) -> dict:
+diff --git a/tests/test_root/usr/bin/pass b/tests/test_root/usr/bin/pass
+new file mode 100755
+index 0000000..ce30955
+--- /dev/null
++++ b/tests/test_root/usr/bin/pass
+@@ -0,0 +1,5 @@
++#!/bin/sh
++set -e
++basename "$0" >> /tmp/command_called
++echo PASS
++exit 0
+diff --git a/tests/test_root/usr/bin/sentinel-reload b/tests/test_root/usr/bin/sentinel-reload
+new file mode 120000
+index 0000000..fc80254
+--- /dev/null
++++ b/tests/test_root/usr/bin/sentinel-reload
+@@ -0,0 +1 @@
++pass
+\ No newline at end of file
+diff --git a/tests/test_sentinel.py b/tests/test_sentinel.py
+index a6f15b2..b3e8cdf 100644
+--- a/tests/test_sentinel.py
++++ b/tests/test_sentinel.py
+@@ -35,7 +35,7 @@ from foris_controller_testtools.fixtures import (
+     UCI_CONFIG_DIR_PATH,
+ )
+ 
+-from foris_controller_testtools.utils import get_uci_module
++from foris_controller_testtools.utils import get_uci_module, command_was_called
+ 
+ 
+ def test_get_settings(file_root_init, infrastructure, uci_configs_init, start_buses):
+@@ -123,6 +123,8 @@ def test_update_settings_openwrt(
+     res = infrastructure.process_message(
+         {"module": "sentinel", "action": "update_settings", "kind": "request", "data": {"eula": 1}}
+     )
++    assert command_was_called(["sentinel-reload"])
++
+     res = infrastructure.process_message(
+         {"module": "sentinel", "action": "get_settings", "kind": "request"}
+     )
+@@ -143,6 +145,7 @@ def test_update_settings_openwrt(
+             "data": {"eula": 2, "token": token},
+         }
+     )
++    assert command_was_called(["sentinel-reload"])
+ 
+     with uci.UciBackend(UCI_CONFIG_DIR_PATH) as uci_backend:
+         data = uci_backend.read()
+-- 
+2.27.0
+

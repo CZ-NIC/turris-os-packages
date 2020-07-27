@@ -1,0 +1,13 @@
+#!/bin/sh
+
+[ -f /etc/lighttpd-self-signed.pem ] || \
+	openssl req -new \
+		-x509 -out /etc/lighttpd-self-signed.pem \
+		-nodes -keyout /etc/lighttpd-self-signed.pem \
+		-days 7300 \
+		-subj '/CN=turris.local'
+
+# Always apply updated lighttpd configuration
+if pgrep lighttpd >/dev/null; then
+	/etc/init.d/lighttpd reload
+fi

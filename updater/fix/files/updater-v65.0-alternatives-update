@@ -1,2 +1,3 @@
 #!/bin/sh
+[ "$ROOT_DIR" = "/" ] || exit 0
 update_alternatives.sh

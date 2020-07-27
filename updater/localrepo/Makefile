@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=localrepo
-PKG_VERSION:=0.2
+PKG_VERSION:=0.2.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
@@ -16,12 +16,15 @@ PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/updater/localrepo.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=MIT
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/localrepo
-	TITLE:=Next generation updater local repository manager
-	DEPENDS:=+python3-light
+  SECTION:=updater
+  CATEGORY:=Turris Updater
+  TITLE:=Updater local repository manager
+  DEPENDS:=+python3-light
 endef
 
 define Package/localrepo/install
@@ -35,9 +38,7 @@ endef
 # ensures that we will fix any problems that can be caused by older version of
 # localrepo
 define Package/localrepo/postinst
-[ -n "$$IPKG_INSTROOT" ] || {
-	localrepo check --fix
-}
+[ -n "$$IPKG_INSTROOT" ] || localrepo check --fix
 endef
 
 Build/Compile:=

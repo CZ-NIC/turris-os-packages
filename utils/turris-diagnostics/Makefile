@@ -1,14 +1,14 @@
 #
-# Copyright (C) 2018-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+## Copyright (C) 2018-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
-# This is free software, licensed under the GNU General Public License v2.
+## This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
-# #
 #
+
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-diagnostics
-PKG_VERSION:=11.6
+PKG_VERSION:=12.3.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
@@ -32,7 +32,6 @@ define Package/turris-diagnostics/description
   Obtains diagnostics which are useful for troubleshooting of turris related functionality.
 endef
 
-#It won't try to compile it. It will just move and copy related files
 Build/Compile:=:
 
 define Package/$(PKG_NAME)/install
@@ -40,8 +39,10 @@ define Package/$(PKG_NAME)/install
 	$(CP) -r $(PKG_BUILD_DIR)/locale/* $(1)/usr/share/locale/
 	$(RM) -rf $(1)/usr/share/locale/*.pot
 	$(RM) -rf $(1)/usr/share/locale/*/LC_MESSAGES/*.po*
+
 	$(INSTALL_DIR) $(1)/usr/share/diagnostics/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/diagnostics.sh $(1)/usr/share/diagnostics/diagnostics.sh
+
 	$(INSTALL_DIR) $(1)/usr/share/diagnostics/modules
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/modules/module.sh $(1)/usr/share/diagnostics/modules/module.sh
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/modules/*.module $(1)/usr/share/diagnostics/modules/

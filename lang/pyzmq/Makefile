@@ -8,15 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pyzmq
-PKG_VERSION:=18.1.1
-PKG_RELEASE:=2
+PKG_VERSION:=19.0.1
+PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://files.pythonhosted.org/packages/source/p/pyzmq/
-PKG_HASH:=8c69a6cbfa94da29a34f6b16193e7c15f5d3220cb772d6d17425ff3faa063a6d
+PYPI_NAME:=pyzmq
+PKG_HASH:=13a5638ab24d628a6ade8f794195e1a1acd573496c3b85af2f1183603b7bf5e0
 
 PKG_BUILD_DEPENDS:=cython
 
+include $(TOPDIR)/feeds/packages/lang/python/pypi.mk
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 

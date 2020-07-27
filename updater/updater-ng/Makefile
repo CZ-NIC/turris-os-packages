@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=66.0
+PKG_VERSION:=67.0.1.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
@@ -16,31 +16,43 @@ PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/updater/updater.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=GPL-3.0-or-later
+PKG_LICENSE_FILES:=COPYING
 
-PKG_BUILD_DEPENDS:=busybox libb64 uthash argp-standalone
+PKG_BUILD_DEPENDS:=busybox uthash argp-standalone
+
+PKG_INSTALL:=1
+PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/autotools.mk
 
-define Package/$(PKG_NAME)
-  TITLE:=The next generation updater
+define Package/updater-ng
+  SECTION:=updater
+  CATEGORY:=Turris Updater
+  TITLE:=Updater
   DEPENDS:=\
     +liblua \
     +libuci-lua \
     +libevent2 \
     +libcurl \
     +liburiparser \
-    +usign \
     +libarchive \
     +ca-certificates
 endef
 
+CONFIGURE_ARGS += \
+		--disable-tests \
+		--disable-linters \
+		--disable-docs \
+		--with-embed-busybox="$(STAGING_DIR)/bin/busybox-static"
+
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/lib/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/lib/libupdater.so $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libupdater.so* $(1)/usr/lib/
 
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgupdate $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/pkgtransaction $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 	$(INSTALL_BIN) ./files/update_alternatives.sh $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/etc/updater
@@ -62,18 +74,9 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_CONF) ./files/updater.config $(1)/etc/config/updater
 endef
 
-define Package/$(PKG_NAME)/conffiles
+define Package/updater-ng/conffiles
 /etc/updater/conf.d/example.lua
 /etc/config/updater
 endef
 
-
-define Build/Compile
-	$(MAKE_VARS) $(MAKE) -C $(PKG_BUILD_DIR) $(MAKE_FLAGS) \
-		NO_DOC=1 LUA_COMPILE:=no \
-		BUSYBOX_EXEC=$(STAGING_DIR)/bin/busybox-static \
-		ARGP_STANDALONE=y \
-		UPDATER_VERSION:=$(PKG_VERSION)
-endef
-
-$(eval $(call BuildPackage,$(PKG_NAME)))
+$(eval $(call BuildPackage,updater-ng))

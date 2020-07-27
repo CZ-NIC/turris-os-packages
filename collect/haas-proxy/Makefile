@@ -7,13 +7,13 @@
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=haas-proxy
-PKG_VERSION:=1.9
-PKG_RELEASE:=14
+PKG_VERSION:=2.0
+PKG_RELEASE:=2
 
-PKG_SOURCE_VERSION:=bbf8629d1d64840407eefc23d2b6c8835365347b
-PKG_SOURCE_URL:=https://gitlab.nic.cz/haas/proxy/raw/$(PKG_SOURCE_VERSION)/release/
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH:=7cccc79ee930f9e3e5115f7e90983b6a6a42b9f4180d3871fa5af0ab0dbdca6a
+PKG_SOURCE:=proxy-v$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://gitlab.nic.cz/haas/proxy/-/archive/v$(PKG_VERSION)/
+PKG_HASH:=b6931eff11463bf67f20eee13c4dad95c5d5aa1f6c4b1c74ed1a2b44c45d035b
+PKG_BUILD_DIR:=$(BUILD_DIR)/proxy-v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@nic.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -27,7 +27,17 @@ define Package/haas-proxy
   CATEGORY:=Network
   TITLE:=Honeypot as a Service proxy
   URL:=https://haas.nic.cz
-  DEPENDS:=+python3-light +python3-cachetools +python3-bcrypt +python3-requests +python3-twisted +python3-crypto +python3-service-identity +sshpass +@KERNEL_CFS_BANDWIDTH
+  DEPENDS:= \
+    +python3-light \
+	+python3-cachetools \
+	+python3-bcrypt \
+	+python3-requests \
+	+python3-twisted \
+	+python3-crypto \
+	+python3-service-identity \
+	+sshpass \
+	+sentinel-firewall \
+	+@KERNEL_CFS_BANDWIDTH
   CONFLICTS:=mitmproxy
   VARIANT:=python3
 endef
@@ -46,7 +56,9 @@ define Py3Package/haas-proxy/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./files/haas.uci $(1)/etc/config/haas
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
-	$(INSTALL_BIN) ./files/haas-proxy.uci.defaults $(1)/etc/uci-defaults/99-haas-proxy
+	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/99-haas-proxy
+	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/firewall.d
+	$(INSTALL_BIN) ./files/sentinel-firewall.sh $(1)/usr/libexec/sentinel/firewall.d/70-haas-proxy.sh
 endef
 
 define Package/haas-proxy/conffiles

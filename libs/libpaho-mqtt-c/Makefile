@@ -7,12 +7,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libpaho-mqtt-c
-PKG_VERSION:=1.3.1
+PKG_VERSION:=1.3.4
 PKG_RELEASE=1
 
 PKG_SOURCE:=v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/eclipse/paho.mqtt.c/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=7b4eed66ae3df3613629139c0df28b16abfa4e0927bd17360027d936784aa55e
+PKG_HASH:=1ae9b657b693254ed0710350df3dcf5232d1f479409a52861b5e5bb5cc3da046
 PKG_BUILD_DIR:=$(BUILD_DIR)/paho.mqtt.c-$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -33,7 +33,9 @@ define Package/libpaho-mqtt-c
   DEPENDS:=+libopenssl +libpthread
 endef
 
-CMAKE_OPTIONS += -DPAHO_WITH_SSL=TRUE
+CMAKE_OPTIONS += \
+	-DPAHO_WITH_SSL=TRUE \
+	-DPAHO_HIGH_PERFORMANCE=TRUE
 
 define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/* $(1)/

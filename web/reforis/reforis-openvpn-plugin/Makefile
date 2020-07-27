@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-openvpn-plugin
-PKG_VERSION:=1.3.0
-PKG_RELEASE:=1
+PKG_VERSION:=1.3.1
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis-openvpn
@@ -40,6 +40,11 @@ endef
 
 define Package/reforis-openvpn-plugin/description
   Reforis OpenVPN plugin.
+endef
+
+define ReForisPlugin/reforis-openvpn-plugin/install
+	$(INSTALL_DIR) $(1)/usr/share/foris/external-links
+	$(INSTALL_DATA) ./files/openvpn_client-external-redirect.csv $(1)/usr/share/foris/external-links/
 endef
 
 REFORIS_TRANSLATIONS:=cs

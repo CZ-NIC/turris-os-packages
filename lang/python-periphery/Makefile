@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-periphery
-PKG_VERSION:=2.0.1
+PKG_VERSION:=2.1.0
 PKG_RELEASE:=1
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
 
 PYPI_NAME:=python-periphery
-PKG_HASH:=5da4d5f40ff8974cf6c724587baa674d7e0593f07b6f6ee896104f11c1be18ec
+PKG_HASH:=57baa82e6bc59b67747317d16ad0cf9626826e8d43233af13bce924660500bd6
 
 include $(TOPDIR)/feeds/packages/lang/python/pypi.mk
 include $(INCLUDE_DIR)/package.mk

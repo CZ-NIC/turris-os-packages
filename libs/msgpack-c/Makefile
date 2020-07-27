@@ -7,12 +7,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=msgpack-c
-PKG_VERSION:=3.2.1
+PKG_VERSION:=3.3.0
 PKG_RELEASE=1
 
 PKG_SOURCE:=msgpack-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/msgpack/msgpack-c/releases/download/cpp-$(PKG_VERSION)/
-PKG_HASH:=433cbcd741e1813db9ae4b2e192b83ac7b1d2dd7968a3e11470eacc6f4ab58d2
+PKG_HASH:=6e114d12a5ddb8cb11f669f83f32246e484a8addd0ce93f274996f1941c1f07b
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/msgpack-$(PKG_VERSION)
 

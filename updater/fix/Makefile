@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -10,8 +10,8 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=fix
 PKG_VERSION:=1
 PKG_RELEASE:=1
+
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -20,8 +20,8 @@ Build/Compile:=:
 define FIX
 
 define Package/fix-$(1)
-  SECTION:=utils
-  CATEGORY:=Utilities
+  SECTION:=updater
+  CATEGORY:=Turris Updater
   SUBMENU:=Fixes
   TITLE:=$(1)
   DEPENDS:=$(2)
@@ -79,7 +79,23 @@ define Package/fix-dns-forward-quad9-split/description
   variant. This replaces quad9 with quad9_unfiltered setting as compatible change.
 endef
 
+define Package/fix-pkglists-options/description
+  Migrate pkglists from /etc/config/updater to separate pkglists configuration
+  file and set all appropriate options for pkglists.
+  This is installed if pkglists version is below than 1.3.
+endef
+
+define Package/uboot-env-reset/description
+  This fix simply removes the file /etc/config/ubootenv. After this the
+  uboot-tools package should be reinstalled to recreate that file. This is
+  intended as fix to apply changes for u-boot environment configuration without
+  need to hack script that creates it as that script just simply checks for
+  existence of /etc/config/ubootenv file and skips execution if not located.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
 $(eval $(call FIX,dns-forward-quad9-split,+resolver-conf +uci))
+$(eval $(call FIX,pkglists-options,+pkglists))
+$(eval $(call FIX,uboot-env-reset))

@@ -1,6 +1,5 @@
-
 #
-# Copyright (C) 2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libhtp
-PKG_VERSION:=0.5.31
+PKG_VERSION:=0.5.33
 PKG_RELEASE=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/OISF/libhtp/tar.gz/$(PKG_VERSION)?
-PKG_HASH:=ce16a3e57c7d1f1e8255a4f698e22ddd33c15fb4e737ab90b04c9a1f07e48780
+PKG_HASH:=953651fdfe828805bb82dc1aa8b56187b0e2f80781727343e68ccf8afd6a9122
 
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
@@ -34,8 +33,8 @@ define Package/libhtp
   TITLE:=HTTP normalizer and parser library
   URL:=https://github.com/OISF/libhtp
   DEPENDS:= \
-	+libiconv-full \
-	+zlib
+    +libiconv-full \
+    +zlib
 endef
 
 define Package/libhtp/description

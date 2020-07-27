@@ -1,0 +1,25 @@
+#!/bin/sh
+set -e
+. /lib/functions/sentinel-firewall.sh
+
+# Minipot entry in sentinel config
+if [ "$(uci -q get sentinel.minipot)" != "minipot" ]; then
+	uci -q batch <<EOT
+		delete sentinel.minipot
+		set sentinel.minipot='minipot'
+		commit sentinel.minipot
+EOT
+fi
+
+# Remove old firewall rules
+[ -z "$(uci -q get firewall.sentinel_minipot_telnet_mark)" ] || \
+	uci -q delete firewall.sentinel_minipot_telnet_mark
+[ -z "$(uci -q get firewall.sentinel_minipot_telnet)" ] || \
+	uci -q delete firewall.sentinel_minipot_telnet
+
+
+# Enable for wan interface in default
+config_firewall_default_enable "sentinel_minipot"
+
+# Always reload firewall to use latest version of sentinel-firewall script
+/etc/init.d/firewall reload

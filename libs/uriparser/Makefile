@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=uriparser
-PKG_VERSION:=0.9.1
+PKG_VERSION:=0.9.4
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/uriparser/uriparser/archive
-PKG_HASH:=2d241d771368fb341c5d7231c2a754d4a5fa1280b958b82131dd7838900dc976
+PKG_HASH:=85ec9a5cc9e00c726c60207ed2b16f28e23d4c353cd1df9d218ac84aee7adec0
 PKG_BUILD_DIR:=$(BUILD_DIR)/uriparser-uriparser-$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -22,14 +22,14 @@ PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
-include $(INCLUDE_DIR)/autotools.mk
+include $(INCLUDE_DIR)/cmake.mk
 
 
 define Package/uriparser
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=uriparser
-	URL:=https://uriparser.github.io
+  URL:=https://uriparser.github.io
   DEPENDS:=+liburiparser
 endef
 
@@ -47,11 +47,14 @@ define package/liburiparser/description
   strictly rfc 3986 compliant uri parsing and handling library written in c89
 endef
 
-CONFIGURE_ARGS += \
-		--disable-test \
-		--disable-doc \
-		--disable-wchar_t
-HOST_CONFIGURE_ARGS:=$(CONFIGURE_ARGS)
+CMAKE_OPTIONS := \
+	-DBUILD_SHARED_LIBS=ON \
+	-DURIPARSER_BUILD_CHAR=ON \
+	-DURIPARSER_BUILD_DOCS=OFF \
+	-DURIPARSER_BUILD_TESTS=OFF \
+	-DURIPARSER_BUILD_TOOLS=ON \
+	-DURIPARSER_BUILD_WCHAR_T=OFF
+CMAKE_HOST_OPTIONS := $(CMAKE_OPTIONS)
 
 define Package/uriparser/install
 	$(INSTALL_DIR) $(1)/usr/bin

@@ -1,0 +1,42 @@
+{
+	"advanced": {
+		"title": "Advanced users",
+		"description": "This functionality is usable only for advanced users.",
+		"severity": "secondary"
+	},
+	"community": {
+		"title": "Community",
+		"description": "This package list is not officially supported. Turris team has no responsibility for stability of software that is part of this list.",
+		"severity": "success"
+	},
+	"experimental": {
+		"title": "Experimental",
+		"description": "Software that is part of this package list is considered experimental. Problems when using it might be expected.",
+		"severity": "danger"
+	},
+	"deprecated": {
+		"title": "Deprecated",
+		"description": "This package list and/or software that provides is planned to be removed. It is advised to not use it.",
+		"severity": "warning"
+	},
+	"storage": {
+		"title": "External storage",
+		"description": "Using external storage is highly suggested for this package list usage. Software it contains can wear out flash storages as it performs increased amount of writes.",
+		"severity": "primary"
+	},
+	"high_memory": {
+		"title": "High memory usage",
+		"description": "Software in this package list consumes possibly higher amount of RAM to run. It is not suggested to use it with small memory.",
+		"severity": "info"
+	},
+	"high_storage": {
+		"title": "High storage usage",
+		"description": "Software in this package list consumes possibly higher amount of storage space to install. It is not suggested to use it with small storages such as internal storage of Turris 1.x and microSD cards with less than 1GB of storage.",
+		"severity": "info"
+	},
+	"netload": {
+		"title": "Network load",
+		"description": "This functionality can decrease network performance. That can be felt only on faster uplinks but because of that it still can be decremental to some users.",
+		"severity": "secondary"
+	}
+}

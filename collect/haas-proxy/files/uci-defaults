@@ -1,0 +1,16 @@
+#!/bin/sh
+set -e
+. /lib/functions/sentinel-firewall.sh
+
+# Remove old rules
+[ -z "$(uci -q get firewall.haas_proxy_mark)" ] || \
+	uci -q delete firewall.haas_proxy_mark
+[ -z "$(uci -q get firewall.haas_proxy)" ] || \
+	uci -q delete firewall.haas_proxy
+
+
+# Enable for wan interface in default
+config_firewall_default_enable "haas_proxy"
+
+# Always reload firewall to use latest version of sentinel-firewall script
+/etc/init.d/firewall reload

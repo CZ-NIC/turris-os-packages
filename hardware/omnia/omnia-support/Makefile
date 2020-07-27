@@ -2,16 +2,17 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=omnia-support
-PKG_VERSION:=3.1
+PKG_RELEASE:=3.2
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/omnia-support
-  TITLE:=Turris Omnia support package
+  TITLE:=Turris Omnia essential support
   VERSION:=$(LINUX_VERSION)-$(LINUX_RELEASE)-$(LINUX_VERMAGIC)
-  DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia +mtd
+  DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia \
+	  +mtd
 endef
 
 define Package/omnia-support/description
@@ -22,7 +23,7 @@ define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
 endef
 
-Build/Configure:=:
+Build/Configure:=
 
 define Build/Compile
 	$(KERNEL_MAKE) zImage dtbs
@@ -38,6 +39,7 @@ define Package/omnia-support/install
 endef
 
 define Package/omnia-support/postinst
+#!/bin/sh
 # Link default Omnia dtb unless there is existing link
 DTB="$$IPKG_INSTROOT/boot/dtb"
 [ -L "$$DTB" ] || ln -sf armada-385-turris-omnia-phy.dtb "$$DTB"

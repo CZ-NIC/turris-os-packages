@@ -1,7 +1,0 @@
-- eve-log:
-      enabled: yes
-      filetype: unix_dgram
-      filename: /tmp/suricata/dev_detect.sock
-      types:
-        - flow_start
-

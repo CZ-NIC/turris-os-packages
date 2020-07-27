@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,25 +9,25 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-maintain
 PKG_VERSION:=10
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/turris-maintain
-	TITLE:=Turris maintain scripts
-	DEPENDS:=+uci +python3 +python3-uci +coreutils-base64 +bzip2 +crypto-wrapper
+  SECTION:=utils
+  CATEGORY:=Utilities
+  TITLE:=Turris maintain scripts
+  DEPENDS:=+uci +python3 +python3-uci +coreutils-base64 +bzip2 +crypto-wrapper
 endef
 
 define Package/turris-maintain/description
  Contains a couple of scripts which are resposible for storing/restoring backups.
 endef
 
-Build/Compile:=:
-
 define Package/turris-maintain/conffiles
-	/etc/config/backups
+/etc/config/backups
 endef
 
 define Package/turris-maintain/install
@@ -42,5 +42,7 @@ define Package/turris-maintain/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/backups.conf $(1)/etc/config/backups
 endef
+
+Build/Compile:=:
 
 $(eval $(call BuildPackage,turris-maintain))

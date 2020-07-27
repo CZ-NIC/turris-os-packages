@@ -1,0 +1,26 @@
+From f58288e88e1e8ed99e4b3b280555ff7a52fb2cbf Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Martin=20Mat=C4=9Bjek?= <martin.matejek@nic.cz>
+Date: Mon, 27 Jul 2020 15:12:02 +0200
+Subject: [PATCH] wifi: fix reading of 802.11ac HT & VHT modes
+
+Don't try to read 802.11ac HT modes on non-ac wifi card
+---
+ foris_controller_backends/wifi/__init__.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/foris_controller_backends/wifi/__init__.py b/foris_controller_backends/wifi/__init__.py
+index f68da91..a031b8e 100644
+--- a/foris_controller_backends/wifi/__init__.py
++++ b/foris_controller_backends/wifi/__init__.py
+@@ -121,7 +121,7 @@ class WifiUci(object):
+         return [
+             {
+                 "available_channels": channels[hwmode],
+-                "available_htmodes": htmodes[MODES_MAP[hwmode]],
++                "available_htmodes": htmodes.get(MODES_MAP[hwmode], [DEFAULT_HTMODE]),
+                 "hwmode": hwmode,
+             }
+             for hwmode in ["11g", "11a"]
+-- 
+2.25.1
+
