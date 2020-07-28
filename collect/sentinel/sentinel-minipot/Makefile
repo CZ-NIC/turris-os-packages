@@ -19,7 +19,7 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=LICENSE
 
-PKG_BUILD_DEPENDS:=argp-standalone gperf
+PKG_BUILD_DEPENDS:=argp-standalone gperf/host
 
 PKG_FIXUP:=autoreconf
 
