@@ -78,6 +78,7 @@ define Package/shield-support/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/run_nor_update $(1)/etc/uci-defaults/00_nor-update
 	$(INSTALL_BIN) ./files/enable_sentinel $(1)/etc/uci-defaults/10_sentinel-enable
+	$(INSTALL_BIN) ./files/enable_updater $(1)/etc/uci-defaults/10_updater-enable
 endef
 
 $(eval $(call BuildPackage,mox-support))
