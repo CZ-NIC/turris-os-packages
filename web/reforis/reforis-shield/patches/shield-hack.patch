@@ -1,0 +1,127 @@
+diff --git a/js/src/guide/constants.js b/js/src/guide/constants.js
+index 368d00f..bff29f2 100644
+--- a/js/src/guide/constants.js
++++ b/js/src/guide/constants.js
+@@ -54,6 +54,12 @@ export const HELP_CONTENT = {
+             initial: _("Minimal device setup is finished. Note that you probably need to perform some further configuration updates to fit the device to your needs."),
+         },
+     },
++    bare: {
++        ...HELP_CONTENT_DEFAULTS,
++        finished: {
++            initial: _("Your device is now ready to be used. You can tweak the rest of the setting in administration interface later on."),
++        },
++    },
+     bridge: {
+         ...HELP_CONTENT_DEFAULTS,
+         networks: {
+diff --git a/js/src/main/pages.js b/js/src/main/pages.js
+index d732975..4bb2574 100644
+--- a/js/src/main/pages.js
++++ b/js/src/main/pages.js
+@@ -42,11 +42,6 @@ const PAGES = [
+         path: "/network-settings",
+         icon: "network-wired",
+         pages: [
+-            {
+-                name: _("Wi-Fi"),
+-                path: "/wifi",
+-                component: WiFi,
+-            },
+             {
+                 name: _("WAN"),
+                 path: "/wan",
+@@ -62,16 +57,6 @@ const PAGES = [
+                 path: "/dns",
+                 component: DNS,
+             },
+-            {
+-                name: _("Interfaces"),
+-                path: "/interfaces",
+-                component: Interfaces,
+-            },
+-            {
+-                name: _("Guest Network"),
+-                path: "/guest-network",
+-                component: GuestNetwork,
+-            },
+         ],
+     },
+     {
+@@ -103,37 +88,9 @@ const PAGES = [
+         ],
+     },
+     {
+-        name: _("Package Management"),
+-        submenuId: "package-management",
+-        path: "/package-management",
+-        icon: "box",
+-        pages: [
+-            {
+-                name: _("Update Settings"),
+-                path: "/update-settings",
+-                component: UpdateSettings,
+-            },
+-            {
+-                name: _("Updates"),
+-                path: "/updates",
+-                component: Updates,
+-            },
+-            {
+-                name: _("Packages"),
+-                path: "/packages",
+-                component: Packages,
+-            },
+-            {
+-                name: _("Languages"),
+-                path: "/languages",
+-                component: Languages,
+-            },
+-        ],
+-    },
+-    {
+-        name: _("Advanced Administration"),
+-        path: ForisURLs.luci,
+-        icon: "cog",
++        name: _("Global Threat Statistics"),
++        path: "https://view.sentinel.turris.cz",
++        icon: "chart-line",
+         isLinkOutside: true,
+     },
+     {
+diff --git a/reforis/translations/cs/LC_MESSAGES/messages.po b/reforis/translations/cs/LC_MESSAGES/messages.po
+index 3b6ab10..60b8633 100644
+--- a/reforis/translations/cs/LC_MESSAGES/messages.po
++++ b/reforis/translations/cs/LC_MESSAGES/messages.po
+@@ -740,6 +740,14 @@ msgstr ""
+ "přizpůsobení zařízení vašim potřebám bude nejspíš třeba provést v "
+ "nastavení ještě další změny."
+ 
++#: js/src/guide/constants.js:59
++msgid ""
++"Your device is now ready to be used. You can tweak the rest of the "
++"setting in administration interface later on."
++msgstr ""
++"Vaše zařízení je nyní připraveno k použití. Další nastavení naleznete "
++"v administračním rozhraní"
++
+ #: js/src/guide/constants.js:63
+ msgid ""
+ "You chose to act as local server this means that it doesn't make sense to"
+diff --git a/reforis/translations/messages.pot b/reforis/translations/messages.pot
+index d3bc666..ee1d744 100644
+--- a/reforis/translations/messages.pot
++++ b/reforis/translations/messages.pot
+@@ -571,6 +571,12 @@ msgid ""
+ "some further configuration updates to fit the device to your needs."
+ msgstr ""
+ 
++#: js/src/guide/constants.js:59
++msgid ""
++"Your device is now ready to be used. You can tweak the rest of the "
++"setting in administration interface later on."
++msgstr ""
++
+ #: js/src/guide/constants.js:63
+ msgid ""
+ "You chose to act as local server this means that it doesn't make sense to"
