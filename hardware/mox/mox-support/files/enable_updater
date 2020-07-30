@@ -1,0 +1,6 @@
+#!/bin/sh
+
+uci -q batch <<EOF
+  set updater.autorun.enable=1
+  commit updater.autorun.enable
+EOF
