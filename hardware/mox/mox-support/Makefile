@@ -9,18 +9,15 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mox-support
 PKG_VERSION:=2.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/mox-generic-support
   TITLE:=Generic MOX support package
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mtd +kmod-gpio-button-hotplug +mox-dtb
-endef
-
-define Package/mox-generic-support/description
- Contains generic supporting files for Turris MOX.
+  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox \
+    +mtd +kmod-gpio-button-hotplug +mox-dtb
 endef
 
 define Package/mox-support
@@ -28,13 +25,19 @@ define Package/mox-support
   DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mox-generic-support
 endef
 
-define Package/mox-support/description
- Contains supporting files for Turris MOX.
-endef
-
 define Package/shield-support
   TITLE:=Shield support package
   DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mox-generic-support
+  PROVIDES:=mox-support
+  CONFLICTS:=mox-support
+endef
+
+define Package/mox-generic-support/description
+ Contains generic supporting files for Turris MOX.
+endef
+
+define Package/mox-support/description
+ Contains supporting files for Turris MOX.
 endef
 
 define Package/shield-support/description
@@ -81,6 +84,6 @@ define Package/shield-support/install
 	$(INSTALL_BIN) ./files/enable_updater $(1)/etc/uci-defaults/10_updater-enable
 endef
 
-$(eval $(call BuildPackage,mox-support))
 $(eval $(call BuildPackage,mox-generic-support))
+$(eval $(call BuildPackage,mox-support))
 $(eval $(call BuildPackage,shield-support))
