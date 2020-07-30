@@ -83,8 +83,8 @@ download_medkit() {
         i=0
         # We are checking signature, so we don't care about https certificate
         while ! { \
-            wget --no-check-certificate -O /mnt/src/medkit.$ext https://repo.turris.cz/hbs/medkit/medkit-$BOARD-latest.$ext || \
-            wget --no-check-certificate -O /mnt/src/medkit.$ext https://repo.turris.cz/hbs/medkit/$BOARD-medkit-latest.$ext;   \
+            wget --no-check-certificate -O /mnt/src/medkit.$ext https://repo.turris.cz/hbs/medkit/medkit-${BOARD}${MDKT_VARIANT}-latest.$ext || \
+            wget --no-check-certificate -O /mnt/src/medkit.$ext https://repo.turris.cz/hbs/medkit/${BOARD}-medkit${MDKT_VARIANT}-latest.$ext;   \
             }; do
                 echo "Can't download $BOARD-medkit-latest.$ext :-("
                 sleep 2
@@ -113,7 +113,7 @@ find_medkit() {
             mount "$d" /mnt/src || continue
             echo "Trying device $d"
             # Search all files and find the best one
-            for f in $(cd /mnt/src; ls -1 $BOARD-medkit*.tar.gz medkit-$BOARD.tar.gz medkit-$BOARD-*.tar.gz); do
+            for f in $(cd /mnt/src; ls -1 $BOARD-medkit${MDKT_VARIANT}*.tar.gz medkit-$BOARD${MDKT_VARIANT}.tar.gz medkit-$BOARD${MDKT_VARIANT}-*.tar.gz); do
                 [ -f "/mnt/src/$f" ] || continue
                 echo "Found $f on device $d"
                 if [ -f "/mnt/src/$f".md5 ] && [ "$(cat "/mnt/src/$f".md5)" \!= "$(cd /mnt/src; md5sum "$f")" ]; then

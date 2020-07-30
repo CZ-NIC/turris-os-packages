@@ -18,6 +18,10 @@ generic_pre_init() {
 }
 
 generic_post_init() {
-    :
+	# Use contract medkits for contracted boards
+	local contract="$(fw_printenv contract | sed -n 's|^contract=turris_lists=contracts/||p')"
+	if [ -n "$contract" ]; then
+		MDKT_VARIANT="-contract-$contract"
+	fi
 }
 
