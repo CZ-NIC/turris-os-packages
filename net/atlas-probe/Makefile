@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=atlas-probe
-PKG_VERSION:=2.2.0
+PKG_VERSION:=2.2.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=ripe-atlas-probe-busybox-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/RIPE-NCC/ripe-atlas-probe-busybox/archive/v$(PKG_VERSION)
-PKG_HASH:=4fd1b5ace8218239d2395ef912080d22fad46a27ff7836b176d6634e79bfaa18
+PKG_HASH:=c5a3aca026cd1a3b93a77b159b36cd7a1098eb6d90e9ae4a69872cd7a419a87b
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/ripe-atlas-probe-busybox-$(PKG_VERSION)
 
