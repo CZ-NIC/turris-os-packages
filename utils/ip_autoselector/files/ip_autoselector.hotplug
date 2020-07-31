@@ -1,0 +1,84 @@
+#!/bin/sh
+
+# This script should be placed into /etc/hotplug.d/iface/ and it depends on
+# newly introduced list 'alternative_ip' in 'lan' interface configuration.
+# If there is at least one another IP in that list and if there is a conflict
+# between 'lan' and 'wan' segment, it will automatically change the IP on lan
+# network to one of the alternative IPs.
+
+# We are interested only on address updates on wan
+if [ "$INTERFACE" != wan ]; then
+	exit 0
+fi
+
+# Function to select and use alternative subnet
+#
+# Uses global variables with parsed network and uci data
+rotate_subnet_cb() {
+	local alt_net="$(subnet_to_net "$ip")"
+	local alt_ip="$(subnet_to_ip "$ip")"
+	if [ "$alt_net" != "$wan_net" ] && [ "$wan_gw" != "$alt_ip" ]; then
+		uci_set network lan ipaddr "$ip"
+		uci_commit network
+		ifdown lan
+		if /etc/init.d/dnsmasq enabled; then
+			/etc/init.d/dnsmasq restart
+		fi
+		ifup lan
+		# Workaround for bug https://gitlab.nic.cz/turris/project/-/issues/101
+		for iface in $(uci -q get network.lan.ifname); do
+			ethtool -r "$iface"
+		done
+		exit 0
+	fi
+}
+
+rotate_subnet() {
+	config_list_foreach lan "alternative_ip" rotate_subnet_cb
+}
+
+# Convert IP/mask to network
+subnet_to_net() {
+	ipcalc.sh "$1" | sed -n 's|^NETWORK=||p'
+}
+
+# Convert IP/mask to IP
+subnet_to_ip() {
+	ipcalc.sh "$1" | sed -n 's|^IP=||p'
+}
+
+# We are working with network and uci
+. /lib/functions.sh
+. /lib/functions/network.sh
+
+# Check that we have alternative IPs
+config_load network
+config_get alt_ips lan "alternative_ip"
+[ -n "$alt_ips" ] || exit 0
+
+#
+# Load important data from wan
+#
+
+network_get_gateway wan_gw
+network_get_subnet wan_sub wan
+wan_net="$(subnet_to_net "$wan_sub")"
+
+# Bail if we have no wan data
+
+if [ -z "$wan_gw" ] && [ -z "wan_net" ]; then
+	exit 0
+fi
+
+#
+# Load important data from lan
+#
+
+network_get_ipaddr lan_ip lan
+network_get_subnet lan_sub lan
+lan_net="$(subnet_to_net "$lan_sub")"
+
+
+if [ "$lan_net" = "$wan_net" ] || [ -n "$wan_gw" -a "$wan_gw" = "$lan_ip" ]; then
+	rotate_subnet
+fi

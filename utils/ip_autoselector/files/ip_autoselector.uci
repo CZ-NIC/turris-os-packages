@@ -1,0 +1,10 @@
+#!/bin/sh
+. /lib/functions.sh
+
+for ip in 192.168.1.1/24 172.16.1.1/24 172.16.11.1/24; do
+	uci -q batch <<"EOF"
+		del_list network.lan.alternative_ip=$ip
+		add_list network.lan.alternative_ip=$ip
+	EOF
+done
+uci_commit network
