@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-nikola
 PKG_VERSION:=3.1.0
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/nikola.git
@@ -54,8 +54,8 @@ define Py3Package/sentinel-nikola/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/cron/nikola $(1)/etc/cron.d/nikola
 	$(INSTALL_DIR) $(1)/etc/logrotate.d/
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/logrotate.d/iptables $(1)/etc/logrotate.d/iptables
-	$(INSTALL_DIR) $(1)/usr/share/syslog-ng/include/sentinel-nikola/
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/syslog/syslog-ng.conf $(1)/usr/share/syslog-ng/include/sentinel-nikola/nikola.conf
+	$(INSTALL_DIR) $(1)/usr/share/syslog-ng/include/scl/sentinel-nikola
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/conf/syslog/syslog-ng.conf $(1)/usr/share/syslog-ng/include/scl/sentinel-nikola/nikola.conf
 
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/99-sentinel-nikola
