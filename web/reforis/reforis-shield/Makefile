@@ -28,8 +28,8 @@ include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 include ./files/reforis-translations.mk
 
-define Package/reforis
-  TITLE:=reforis
+define Package/reforis-shield
+  TITLE:=reforis-shield
   URL:=https://gitlab.nic.cz/turris/reforis
   DEPENDS:= \
     +crypto-wrapper \
