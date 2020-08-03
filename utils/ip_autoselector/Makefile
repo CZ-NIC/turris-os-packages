@@ -32,7 +32,7 @@ define Package/ip_autoselector/install
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface
 	$(INSTALL_BIN) ./files/ip_autoselector.hotplug $(1)/etc/hotplug.d/iface/10_ip_autoselector
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
-	$(INSTALL_BIN) ./files/ip_selector.uci $(1)/etc/uci-defaults/10_ip_autoselector
+	$(INSTALL_BIN) ./files/ip_autoselector.uci $(1)/etc/uci-defaults/10_ip_autoselector
 endef
 
 $(eval $(call BuildPackage,ip_autoselector))
