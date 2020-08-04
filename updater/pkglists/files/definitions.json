@@ -35,6 +35,12 @@
 			}
 		}
 	},
+	"atlas": {
+		"title": "RIPE Atlas SW Probe",
+		"description": "Global platform, which measures Internet connectivity and reachability.",
+		"url": "https://wiki.turris.cz/doc/en/howto/atlas-probe",
+		"labels": ["community"]
+	},
 	"dvb": {
 		"title": "DVB tuner",
 		"description": "Software for sharing television received by a DVB tuner on Turris. Does not include device drivers.",
@@ -147,6 +153,11 @@
 		"url": "https://docs.turris.cz/basics/apps/netboot",
 		"labels": ["high_storage", "experimental"]
 	},
+	"netdata": {
+		"title": "Netdata",
+		"description": "Real-time perfomance and health monitoring options.",
+		"labels": ["community", "high_memory"]
+	},
 	"nextcloud": {
 		"title": "Nextcloud",
 		"description": "Self-hosted files hosting and productivity platform that keeps you in control. Alternative to services such as Dropbox or Google Drive.",
@@ -178,10 +189,5 @@
 			}
 		},
 		"labels": ["advanced", "community"]
-	},
-	"netdata": {
-                "title": "Netdata",
-                "description": "Real-time perfomance and health monitoring options.",
-                "labels": ["community", "high_memory"]
-        }
+	}
 }
