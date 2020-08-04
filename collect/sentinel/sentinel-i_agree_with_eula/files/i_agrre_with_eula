@@ -1,0 +1,6 @@
+#!/bin/sh
+
+uci -q batch <<EOF
+  set sentinel.main.agreed_with_eula_version=@VERSION@
+  commit sentinel.main.agreed_with_eula_version
+EOF

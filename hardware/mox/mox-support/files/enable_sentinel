@@ -1,10 +1,5 @@
 #!/bin/sh
 
-uci -q batch <<EOF
-  set sentinel.main.agreed_with_eula_version=1
-  commit sentinel.main.agreed_with_eula_version
-EOF
-
 # To make reForis show green checkmarks
 uci -q batch <<EOF
   del_list pkglists.pkglists.pkglist=datacollect
