@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mox-support
 PKG_VERSION:=2.1.0
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
@@ -83,6 +83,8 @@ define Package/shield-support/install
 	$(INSTALL_BIN) ./files/run_nor_update $(1)/etc/uci-defaults/00_nor-update
 	$(INSTALL_BIN) ./files/enable_sentinel $(1)/etc/uci-defaults/10_sentinel-enable
 	$(INSTALL_BIN) ./files/enable_updater $(1)/etc/uci-defaults/10_updater-enable
+	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
+	$(INSTALL_DATA) ./files/lighttpd-reforis-only.conf $(1)/etc/lighttpd/conf.d/reforis-redirect.conf
 endef
 
 $(eval $(call BuildPackage,mox-generic-support))
