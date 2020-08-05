@@ -23,6 +23,8 @@ include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/netmetr
+  SECTION:=net
+  CATEGORY:=Network
   TITLE:=Speed measurement application
   URL:=https://gitlab.nic.cz/turris/netmetr-client
   DEPENDS:= \
