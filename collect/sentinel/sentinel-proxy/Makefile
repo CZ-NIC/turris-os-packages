@@ -25,8 +25,8 @@ PKG_BUILD_DEPENDS:=argp-standalone
 include $(INCLUDE_DIR)/package.mk
 
 define Package/sentinel-proxy
-  SECTION:=net
-  CATEGORY:=Network
+  SECTION:=collect
+  CATEGORY:=Collect
   SUBMENU:=Sentinel
   TITLE:=Proxy
   URL:=https://gitlab.nic.cz/turris/sentinel/proxy

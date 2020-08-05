@@ -20,7 +20,9 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 include $(INCLUDE_DIR)/package.mk
 
 define Package/pakon-lists
-	TITLE:=Pakon lists
+  SECTION:=collect
+  CATEGORY:=Collect
+  TITLE:=Pakon lists
 endef
 
 Build/Compile:=:

@@ -23,8 +23,8 @@ include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/sentinel-certgen
-  SECTION:=net
-  CATEGORY:=Network
+  SECTION:=collect
+  CATEGORY:=Collect
   SUBMENU:=Sentinel
   TITLE:=Certgen
   URL:=https://gitlab.nic.cz/turris/sentinel/certgen

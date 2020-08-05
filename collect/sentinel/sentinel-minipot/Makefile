@@ -26,8 +26,8 @@ PKG_FIXUP:=autoreconf
 include $(INCLUDE_DIR)/package.mk
 
 define Package/sentinel-minipot
-  SECTION:=net
-  CATEGORY:=Network
+  SECTION:=collect
+  CATEGORY:=Collect
   SUBMENU:=Sentinel
   TITLE:=Minipots
   URL:=https://gitlab.nic.cz/turris/sentinel/minipot

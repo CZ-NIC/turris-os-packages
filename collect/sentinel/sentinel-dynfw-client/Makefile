@@ -21,8 +21,8 @@ PKG_LICENSE:=GPL-3.0-or-later
 include $(INCLUDE_DIR)/package.mk
 
 define Package/sentinel-dynfw-client
-  SECTION:=net
-  CATEGORY:=Network
+  SECTION:=collect
+  CATEGORY:=Collect
   SUBMENU:=Sentinel
   TITLE:=Dynamic firewall client
   DEPENDS:=+python3-light +python3-zmq +ipset +python3-msgpack +sentinel-firewall

@@ -24,11 +24,10 @@ PKG_INSTALL:=0
 include $(INCLUDE_DIR)/package.mk
 
 define Package/pakon
-	SECTION:=net
-	CATEGORY:=Network
-	SUBMENU:=Collect traffic events from suricata IDS
-	TITLE:=PArental KONtrol - light
-	DEPENDS:=+suricata-pakon +xz +python3-light +python3-logging +python3-ctypes +python3-cachetools +python3-sqlite3 +sqlite3-cli +pakon-lists +ouidb +suricata-conntrack-flows
+  SECTION:=collect
+  CATEGORY:=Collect
+  TITLE:=PArental KONtrol - light
+  DEPENDS:=+suricata-pakon +xz +python3-light +python3-logging +python3-ctypes +python3-cachetools +python3-sqlite3 +sqlite3-cli +pakon-lists +ouidb +suricata-conntrack-flows
 endef
 
 define Package/pakon/description

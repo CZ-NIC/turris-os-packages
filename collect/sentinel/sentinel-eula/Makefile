@@ -22,8 +22,8 @@ PKG_LICENSE_FILES:=LICENSE.md
 include $(INCLUDE_DIR)/package.mk
 
 define Package/sentinel-eula
-  SECTION:=net
-  CATEGORY:=Network
+  SECTION:=collect
+  CATEGORY:=Collect
   SUBMENU:=Sentinel
   TITLE:=Sentinel EULA
   URL:=https://gitlab.nic.cz/turris/sentinel/eula

@@ -22,10 +22,10 @@ PKG_INSTALL:=0
 include $(INCLUDE_DIR)/package.mk
 
 define Package/suricata-conntrack-flows
-	SECTION:=net
-	CATEGORY:=Network
-	TITLE:=Helper script to track flows bypassed by suricata
-	DEPENDS:=+python3-light
+  SECTION:=collect
+  CATEGORY:=Collect
+  TITLE:=Helper script to track flows bypassed by suricata
+  DEPENDS:=+python3-light
 endef
 
 define Package/suricata-conntrack-flows/description

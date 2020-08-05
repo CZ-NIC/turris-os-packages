@@ -16,8 +16,8 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 include $(INCLUDE_DIR)/package.mk
 
 define Package/sentinel-firewall
-  SECTION:=net
-  CATEGORY:=Network
+  SECTION:=collect
+  CATEGORY:=Collect
   SUBMENU:=Sentinel
   TITLE:=Firewall
   DEPENDS:=+firewall
