@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-dynfw-client
-PKG_VERSION:=1.3.1
-PKG_RELEASE:=3
+PKG_VERSION:=1.4.0
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/dynfw-client.git
@@ -25,7 +25,9 @@ define Package/sentinel-dynfw-client
   CATEGORY:=Network
   SUBMENU:=Sentinel
   TITLE:=Dynamic firewall client
-  DEPENDS:=+python3-light +python3-zmq +ipset +python3-msgpack +sentinel-firewall
+  DEPENDS:=+python3-light +python3-zmq +python3-msgpack +python3-urllib \
+    +ipset \
+    +sentinel-firewall
 endef
 
 define Package/sentinel-dynfw-client/description
