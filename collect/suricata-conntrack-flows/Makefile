@@ -9,6 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata-conntrack-flows
 PKG_VERSION:=1
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/suricata_conntrack_flows.git
@@ -24,7 +25,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/suricata-conntrack-flows
   SECTION:=collect
   CATEGORY:=Collect
-  TITLE:=Helper script to track flows bypassed by suricata
+  TITLE:=Suricata Conntrack Flows - helper script
   DEPENDS:=+python3-light
 endef
 
