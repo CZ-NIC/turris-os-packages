@@ -73,6 +73,12 @@
 			"statistics": {
 				"title": "Statistics",
 				"description": "Gather and render diagrams for system statistics by using collectd."
+			},
+			"wireguard": {
+				"title": "WireGuard",
+				"description": "Alternative to OpenVPN, it provides fast, modern and secure VPN tunnel.",
+				"url": "https://openwrt.org/docs/guide-user/services/vpn/wireguard/start",
+				"labels": ["advanced"]
 			}
 		},
 		"labels": ["community"]
