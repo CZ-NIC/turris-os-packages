@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps-netdata
 PKG_VERSION:=1.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -37,6 +37,11 @@ define Package/turris-webapps-netdata/install
 	$(CP) files/netdata-logomark.svg $(1)/www/webapps-icons/netdata.svg
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
 	$(CP) files/netdata.webapps $(1)/usr/share/turris-webapps/30_netdata.conf
+endef
+
+define Package/turris-webapps-netdata/postinst
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || /etc/init.d/lighttpd restart
 endef
 
 $(eval $(call BuildPackage,turris-webapps-netdata))
