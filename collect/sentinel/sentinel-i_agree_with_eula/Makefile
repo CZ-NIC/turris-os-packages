@@ -24,7 +24,7 @@ endef
 
 Build/Compile:=:
 
-define Package/i_agree_with_eula/install
+define Package/sentinel-i_agree_with_eula/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	sed 's|@VERSION@|$(PKG_VERSION)|g'  ./files/i_agrre_with_eula > $(1)/etc/uci-defaults/10_i_agrre_with_eula
 endef
