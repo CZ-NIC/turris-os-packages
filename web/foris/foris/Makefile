@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
 PKG_VERSION:=101.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris/foris.git
@@ -52,10 +52,6 @@ define run_foris_makefile
 	$(call Build/Compile/Default)
 endef
 Hooks/Compile/Pre += run_foris_makefile
-
-define Package/foris/conffiles
-/etc/config/foris
-endef
 
 define Py3Package/foris/filespec
 +|$(PYTHON3_PKG_DIR)
