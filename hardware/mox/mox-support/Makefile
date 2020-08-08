@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mox-support
 PKG_VERSION:=2.1.0
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
@@ -79,6 +79,7 @@ define Package/shield-support/install
 	$(INSTALL_DIR) $(1)/boot
 	sed 's|@CONTRACT@|shield|' files/contract-boot.txt | cat - files/boot.txt > $(PKG_BUILD_DIR)/boot.txt
 	mkimage -T script -C none -n boot -d $(PKG_BUILD_DIR)/boot.txt "$(1)"/boot/boot.scr
+	ln -s boot.scr "$(1)"/boot/boot-btrfs.scr
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/run_nor_update $(1)/etc/uci-defaults/00_nor-update
 	$(INSTALL_BIN) ./files/enable_sentinel $(1)/etc/uci-defaults/10_sentinel-enable
