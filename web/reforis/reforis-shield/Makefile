@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-shield
-PKG_VERSION:=0.99.3
+PKG_VERSION:=0.99.3.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
