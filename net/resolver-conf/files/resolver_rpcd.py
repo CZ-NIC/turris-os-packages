@@ -50,6 +50,7 @@ import sys
 import syslog
 from uci import Uci
 import socket
+import argparse
 
 
 DNS_SERVERS_DIR = "/etc/resolver/dns_servers/"
@@ -59,35 +60,15 @@ FORWARD_UPSTREAM = "forward_upstream"
 RECURSIVE = "recursive"
 
 
-def is_valid_ipv4(address):
-    """Return True/False for valid/ivalid IPv4 addr."""
-    try:
-        socket.inet_pton(socket.AF_INET, address)
-    except AttributeError:  # no inet_pton here, sorry
-        try:
-            socket.inet_aton(address)
-        except socket.error:
-            return False
-        return address.count('.') == 3
-    except socket.error:  # not a valid
-        return False
-    return True
-
-
-def is_valid_ipv6(address):
-    """Return True/False for valid/ivalid IPv6 addr."""
-    try:
-        socket.inet_pton(socket.AF_INET6, address)
-    except socket.error:  # not a valid
-        return False
-    return True
+def log():
+    pass
 
 
 def uci_conv_bool(str1, default):
     """Return converted uci bool string to boolean or default."""
-    if str1 in ('1', 'on', 'true', 'yes', 'enabled'):
+    if str1 in ("1", "on", "true", "yes", "enabled"):
         return True
-    elif str1 in ('0', 'off', 'false', 'no', 'disabled'):
+    elif str1 in ("0", "off", "false", "no", "disabled"):
         return False
     else:
         return default
@@ -113,6 +94,7 @@ class JsonUbusDecorator:
             ret = m(*func_args, **func_kwargs)
             print(json.dumps({name: ret}))
             return ret
+
         return w
 
 
@@ -139,13 +121,13 @@ class ResolverDoT:
                 arr = line.split("=", 1)
                 if len(arr) == 2:
                     # remove quotation marks
-                    name = arr[0].strip(" '\"\n\'")
-                    vals = arr[1].strip(" '\"\n\'")
+                    name = arr[0].strip(" '\"\n'")
+                    vals = arr[1].strip(" '\"\n'")
                     # return IP as list
                     if name == "ipv4" or name == "ipv6":
                         vals = vals.split()
                     ret.update({name: vals})
-            if not("name" in ret):
+            if not ("name" in ret):
                 return {}
         return ret
 
@@ -176,7 +158,11 @@ class ResolverDoT:
 
     def __get_file_list(self, mypath, extension="sh"):
         if os.path.isdir(mypath):
-            tmp_files = [f for f in listdir(mypath) if isfile(join(mypath, f)) and f.endswith("."+extension)]
+            tmp_files = [
+                f
+                for f in listdir(mypath)
+                if isfile(join(mypath, f)) and f.endswith("." + extension)
+            ]
             tmp_full = [os.path.join(mypath, f) for f in tmp_files]
             return {"files": tmp_files, "full_path": tmp_full}
         else:
@@ -199,7 +185,9 @@ class ResolverConf:
         elif os.path.isfile("/tmp/resolv.conf.d/resolv.conf.auto"):
             self.__resolv_path = "/tmp/resolv.conf.d/resolv.conf.auto"
         else:
-            raise FileExistsError("Could not find /tmp/resolv.conf.d/resolv.conf.auto or /tmp/resolv.conf.auto ")
+            raise FileExistsError(
+                "Could not find /tmp/resolv.conf.d/resolv.conf.auto or /tmp/resolv.conf.auto "
+            )
 
     def get_config(self):
         """Return dict with resolver config values."""
@@ -208,15 +196,17 @@ class ResolverConf:
         pref_resolver = resolver_common.get("prefered_resolver", None)
 
         ignore_root_key = uci_conv_bool(
-                resolver_common.get("ignore_root_key", None), None)
+            resolver_common.get("ignore_root_key", None), None
+        )
         forward_upstream = uci_conv_bool(
-                resolver_common.get("forward_upstream", None), None)
+            resolver_common.get("forward_upstream", None), None
+        )
         forward_custom = resolver_common.get("forward_custom", None)
         return {
             "forward_custom": forward_custom,
             "forward_upstream": forward_upstream,
             "dnssec_disabled": ignore_root_key,
-            "pref_resolver": pref_resolver
+            "pref_resolver": pref_resolver,
         }
 
     def get_active_mode(self):
@@ -246,6 +236,15 @@ class ResolverConf:
             for line in fp.readlines():
                 if line.startswith("nameserver"):
                     _, ip = line.split()
+                    try:
+                        addr=ipaddress.ip_ipaddress(ip)
+                        if addr.version == 4:
+                            ipv4_list.append(ip)
+                        else:
+                            ipv6_list.append(ip)
+                    except:
+                        print("Error")
+
                     if is_valid_ipv4(ip):
                         ipv4_list.append(ip)
                     elif is_valid_ipv6(ip):
@@ -272,7 +271,7 @@ class ResolverRpcd:
         """Call ubus function from this class base on name."""
         for item in self.__ubus_func_list:
             if item == name:
-                method_to_call = getattr(self, 'get_'+name)
+                method_to_call = getattr(self, "get_" + name)
                 method_to_call()
 
     def get_ubus_func_list(self):
@@ -321,12 +320,14 @@ class ResolverRpcd:
 
 if __name__ == "__main__":
     res_rpcd = ResolverRpcd()
-    if len(sys.argv) > 1:
-        if sys.argv[1] == "list":
-            res_rpcd.get_ubus_func_list()
-        elif sys.argv[1] == "call":
-            # call ubus function if exists
-            name = sys.argv[2]
-            res_rpcd.call_ubus_func(name)
-        else:
-            syslog.syslog("Unknown argument.")
+    parser = argparse.ArgumentParser(description="RPCD service for resolver")
+    parser.add_argument("cmd", type=str, help="List or call rpcd command.")
+    parser.add_argument("resolver_cmd", type=str, help="Resolver command.")
+    parser.add_argument("--verbosity", help="Increase output verbosity.")
+
+    if parser.cmd == "list":
+        res_rpcd.get_ubus_func_list()
+    elif parser.cmd == "call":
+        res_rpcd.call_ubus_func(parser.resolver_cmd)
+    else:
+        print("Unknow command")
