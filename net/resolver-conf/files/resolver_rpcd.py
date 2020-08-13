@@ -45,23 +45,29 @@ print(ubus.call("resolver_rpcd.py", "list_dns", {}))
 import os
 from os import listdir
 from os.path import isfile, join
+
 import json
-import sys
-import syslog
 from uci import Uci
-import socket
 import argparse
 
+import syslog
+from syslog import LOG_ERR, LOG_WARNING, LOG_INFO
+
+import ipaddress
+from ipaddress import AddressValueError
 
 DNS_SERVERS_DIR = "/etc/resolver/dns_servers/"
-
-FORWARD_CUSTOM = "forward_custom"
-FORWARD_UPSTREAM = "forward_upstream"
-RECURSIVE = "recursive"
+VERBOSITY = False
 
 
-def log():
-    pass
+def msg_log(str1, level=LOG_INFO):
+    """Logs error messages."""
+    if VERBOSITY:
+        syslog.syslog(level, str1)
+        print(str1)
+    else:
+        if level == LOG_ERR:
+            syslog.syslog(level, str1)
 
 
 def uci_conv_bool(str1, default):
@@ -172,6 +178,10 @@ class ResolverDoT:
 class ResolverConf:
     """Class for handling /etc/config/resolver uci configuration."""
 
+    MODE_FORWARD_CUSTOM = "forward_custom"
+    MODE_FORWARD_UPSTREAM = "forward_upstream"
+    MODE_RECURSIVE = "recursive"
+
     def __init__(self):
         """Init config and set resolv.conf.auto location.
 
@@ -185,9 +195,9 @@ class ResolverConf:
         elif os.path.isfile("/tmp/resolv.conf.d/resolv.conf.auto"):
             self.__resolv_path = "/tmp/resolv.conf.d/resolv.conf.auto"
         else:
-            raise FileExistsError(
-                "Could not find /tmp/resolv.conf.d/resolv.conf.auto or /tmp/resolv.conf.auto "
-            )
+            msg = "Could not find /tmp/resolv.conf.d/resolv.conf.auto or /tmp/resolv.conf.auto"
+            msg_log(msg, level=LOG_ERR)
+            raise FileExistsError(msg)
 
     def get_config(self):
         """Return dict with resolver config values."""
@@ -222,11 +232,11 @@ class ResolverConf:
         ret = None
         if conf["forward_upstream"] is True:
             if conf["forward_custom"] is not None:
-                ret = FORWARD_CUSTOM
+                ret = self.MODE_FORWARD_CUSTOM
             else:
-                ret = FORWARD_UPSTREAM
+                ret = self.MODE_FORWARD_UPSTREAM
         else:
-            ret = RECURSIVE
+            ret = self.MODE_RECURSIVE
         return ret
 
     def get_forwarder_ip(self):
@@ -237,18 +247,13 @@ class ResolverConf:
                 if line.startswith("nameserver"):
                     _, ip = line.split()
                     try:
-                        addr=ipaddress.ip_ipaddress(ip)
+                        addr = ipaddress.ip_address(ip)
                         if addr.version == 4:
                             ipv4_list.append(ip)
                         else:
                             ipv6_list.append(ip)
-                    except:
-                        print("Error")
-
-                    if is_valid_ipv4(ip):
-                        ipv4_list.append(ip)
-                    elif is_valid_ipv6(ip):
-                        ipv6_list.append(ip)
+                    except AddressValueError:
+                        msg_log("Error %s is not valid IP" % ip, LOG_ERR)
         return ipv4_list, ipv6_list
 
 
@@ -279,7 +284,6 @@ class ResolverRpcd:
         ret = {}
         for item in self.__ubus_func_list:
             ret.update({item: {}})
-        print(json.dumps(ret))
         return ret
 
     @json_ubus
@@ -308,7 +312,7 @@ class ResolverRpcd:
     def get_forward_custom_ip(self):
         """Return dict with ipv4/6 list if custom forwarding is selected."""
         active_method = self.__res_conf.get_active_mode()
-        if active_method == FORWARD_CUSTOM:
+        if active_method == self.__res_conf.MODE_FORWARD_CUSTOM:
             setting = self.__res_conf.get_config()
             name = "%s.conf" % setting["forward_custom"]
             dns_settings = self.__res_dot.get_dns(name)
@@ -323,11 +327,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="RPCD service for resolver")
     parser.add_argument("cmd", type=str, help="List or call rpcd command.")
     parser.add_argument("resolver_cmd", type=str, help="Resolver command.")
-    parser.add_argument("--verbosity", help="Increase output verbosity.")
+    parser.add_argument("--verbosity", help="Enalbe verbose output")
+
+    if parser.verbosity:
+        VERBOSITY = True
 
     if parser.cmd == "list":
-        res_rpcd.get_ubus_func_list()
+        print(json.dumps(res_rpcd.get_ubus_func_list()))
     elif parser.cmd == "call":
         res_rpcd.call_ubus_func(parser.resolver_cmd)
     else:
-        print("Unknow command")
+        msg_log("Unknown command %s" % parser.cmd, LOG_WARNING)
