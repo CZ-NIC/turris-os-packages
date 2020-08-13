@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=u-boot-omnia
-PKG_VERSION:=2019-07
-PKG_RELEASE:=10
+PKG_VERSION:=2019-07.1
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/turris-omnia-uboot.git
