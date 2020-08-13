@@ -42,14 +42,12 @@ ubus.connect("/var/run/ubus.sock")
 print(ubus.call("resolver_rpcd.py", "list_dns", {}))
 
 """
-import subprocess
 import os
 from os import listdir
 from os.path import isfile, join
 import json
 import sys
 import syslog
-import pprint
 from uci import Uci
 import socket
 
@@ -208,8 +206,11 @@ class ResolverConf:
         u = Uci()
         resolver_common = u.get("resolver")["common"]
         pref_resolver = resolver_common.get("prefered_resolver", None)
-        ignore_root_key = uci_conv_bool(resolver_common.get("ignore_root_key", None), None)
-        forward_upstream = uci_conv_bool(resolver_common.get("forward_upstream", None), None)
+
+        ignore_root_key = uci_conv_bool(
+                resolver_common.get("ignore_root_key", None), None)
+        forward_upstream = uci_conv_bool(
+                resolver_common.get("forward_upstream", None), None)
         forward_custom = resolver_common.get("forward_custom", None)
         return {
             "forward_custom": forward_custom,
@@ -229,8 +230,8 @@ class ResolverConf:
         """
         conf = self.__config
         ret = None
-        if conf["forward_upstream"] == True:
-            if conf["forward_custom"] != None:
+        if conf["forward_upstream"] is True:
+            if conf["forward_custom"] is not None:
                 ret = FORWARD_CUSTOM
             else:
                 ret = FORWARD_UPSTREAM
@@ -289,7 +290,8 @@ class ResolverRpcd:
 
     @json_ubus
     def get_active_mode(self):
-        """Return which mode is used by resolver forward_upstream, forward_custom or recursive."""
+        """Return which mode is used by resolver
+        forward_upstream, forward_custom or recursive."""
         return self.__res_conf.get_active_mode()
 
     @json_ubus
@@ -305,7 +307,7 @@ class ResolverRpcd:
 
     @json_ubus
     def get_forward_custom_ip(self):
-        """Return dict with ipv4, ipv6 list if custom forwarding is selected."""
+        """Return dict with ipv4/6 list if custom forwarding is selected."""
         active_method = self.__res_conf.get_active_mode()
         if active_method == FORWARD_CUSTOM:
             setting = self.__res_conf.get_config()
@@ -323,7 +325,7 @@ if __name__ == "__main__":
         if sys.argv[1] == "list":
             res_rpcd.get_ubus_func_list()
         elif sys.argv[1] == "call":
-            #call ubus function if exists
+            # call ubus function if exists
             name = sys.argv[2]
             res_rpcd.call_ubus_func(name)
         else:
