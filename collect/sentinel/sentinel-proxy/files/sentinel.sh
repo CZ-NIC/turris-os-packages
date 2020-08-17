@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# source OpenWrt functions if not sourced yet
+command -v config_load > /dev/null || . /lib/functions.sh
+
+
 allowed_to_run() {
 	local component_name="$1";
 	agreed_with_eula "${component_name}" && component_enabled "${component_name}"
