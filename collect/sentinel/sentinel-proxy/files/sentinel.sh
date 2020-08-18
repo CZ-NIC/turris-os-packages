@@ -1,4 +1,8 @@
 #!/bin/sh
+## sentinel.sh
+#
+# set of common functions intended to be sourced and reused in
+# sentinel-related scripts
 
 # source OpenWrt functions if not sourced yet
 command -v config_load > /dev/null || . /lib/functions.sh
