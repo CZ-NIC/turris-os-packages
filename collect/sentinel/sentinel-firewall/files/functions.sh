@@ -1,4 +1,8 @@
 #!/bin/sh
+## sentinel-firewall.sh
+#
+# set of firewall rules handling functions intended to be sourced and reused
+# in sentinel-related scripts
 
 # source OpenWrt functions if not sourced yet
 command -v config_load > /dev/null || . /lib/functions.sh
