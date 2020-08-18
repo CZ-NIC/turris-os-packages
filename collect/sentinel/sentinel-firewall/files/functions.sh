@@ -1,4 +1,8 @@
-. /lib/functions.sh
+#!/bin/sh
+
+# source OpenWrt functions if not sourced yet
+command -v config_load > /dev/null || . /lib/functions.sh
+
 
 # This function enables given option on firewall zone wan unless it is already set
 # to some value.
