@@ -49,6 +49,7 @@ endef
 
 define Package/foris-controller-app/conffiles
 /etc/config/foris-controller
+/etc/config/foris
 endef
 
 define Py3Package/foris-controller-app/install
@@ -57,6 +58,7 @@ define Py3Package/foris-controller-app/install
 
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) ./files/foris-controller.conf $(1)/etc/config/foris-controller
+	touch $(1)/etc/config/foris
 ifeq ($(CONFIG_TARGET_mvebu_cortexa53_DEVICE_cznic-mox),y)
 	sed -i 's|#\(option single true\)|\1|' $(1)/etc/config/foris-controller
 endif
