@@ -79,9 +79,6 @@ define Py3Package/foris/install
 	$(INSTALL_BIN) ./files/lighttpd-dynamic-conf $(1)/usr/share/foris/lighttpd-dynamic-conf
 	$(INSTALL_BIN) ./files/foris-config-cgi $(1)/usr/share/foris/foris-config-cgi
 	$(SED) 's%/usr/lib/python...%/usr/lib/python$(PYTHON3_VERSION)%g' $(1)/usr/share/foris/lighttpd-dynamic-conf
-
-	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_DATA) ./files/foris.conf $(1)/etc/config/foris
 endef
 
 define Package/foris/postinst
