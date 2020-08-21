@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-libsass
-PKG_VERSION:=0.19.4
+PKG_VERSION:=0.20.0
 PKG_RELEASE:=1
 
 PYPI_NAME:=libsass
-PKG_HASH:=8b5b6d1a7c4ea1d954e0982b04474cc076286493f6af2d0a13c2e950fbe0be95
+PKG_HASH:=b7452f1df274b166dc22ee2e9154c4adca619bcbbdf8041a7aa05f372a1dacbc
 
 include $(TOPDIR)/feeds/packages/lang/python/pypi.mk
 include $(INCLUDE_DIR)/package.mk
