@@ -7,7 +7,7 @@ STOP=00
 
 USE_PROCD=1
 EXTRA_COMMANDS="test_ipv6"
-PROG=/usr/bin/kresd
+PROG=/usr/sbin/kresd
 CONFIGFILE=/tmp/kresd.config
 ROOTKEYFILE=/etc/root.keys
 DEFAULT_RUNDIR=/tmp/kresd
@@ -258,9 +258,7 @@ modify_rundir() {
 		mkdir -p "$rundir"
 	fi
 
-	if id "$1" >/dev/null 2>&1; then
-		chown -R $USERNAME:$GROUP "$rundir" #maybe we should be more restrictive ...
-	fi
+	chown -R $USERNAME:$GROUP "$rundir"
 
 	DEFAULT_RUNDIR="$rundir"
 	HINTS_CONFIG=$DEFAULT_RUNDIR/hints.tmp
@@ -322,6 +320,9 @@ run_instance() {
 	init_header
 	load_uci_config_kresd
 	load_uci_config_common
+
+	echo "user('$USERNAME','$GROUP')" >> $CONFIGFILE
+
 	procd_close_instance
 	[ \! -x "$(which at)" ] || echo "/etc/init.d/kresd test_ipv6" | at now+2min 2>&1 | fgrep -v 'warning: commands will be executed using /bin/sh'
 }
