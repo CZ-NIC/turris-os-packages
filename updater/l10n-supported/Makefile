@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=l10n-supported
 PKG_VERSION:=1.3
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -28,6 +28,15 @@ define Package/l10n-supported/install
 	$(INSTALL_DATA) ./files/list $(1)/usr/share/updater/l10n_supported
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/10-l10n-supported
+endef
+
+define Package/l10n-supported/postinst
+if [ -n "$$IPKG_INSTROOT" ] && [ -n "$$BOOTSTRAP_L10N" ]; then
+	mkdir -p "$$IPKG_INSTROOT/usr/share/updater"
+	echo "$$BOOTSTRAP_L10N" \
+		> "$$IPKG_INSTROOT/usr/share/updater/bootstrap-l10n"
+fi
+}
 endef
 
 $(eval $(call BuildPackage,l10n-supported))

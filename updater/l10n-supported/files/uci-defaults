@@ -1,9 +1,31 @@
 #!/bin/sh
+set -eu
+
+# bootstrap file is created to store content of BOOTSTRAP_L10N environment
+# variable, if defined, when updater is run in out of root mode (the way bootstrap
+# is performed).
+# BOOTSTRAP_L10N contains comma separated list of languages to be enabled in root.
+bootstrap="/usr/share/updater/bootstrap-l10n"
+
+# Always create l10n section no matter if bootstrap file exists or not this
+# section should exist.
 if ! uci -q get updater.l10n; then
-	uci set updater.l10n=l10n
-	uci add_list updater.l10n.langs=cs
-	uci add_list updater.l10n.langs=de
+	uci set "updater.l10n=l10n"
 	LANG="$(uci get foris.settings.lang)" && [ "$LANG" != en ] && \
-		 uci add_list "updater.l10n.langs=$LANG"
-	uci commit updater
+		uci add_list "updater.l10n.langs=$LANG"
+fi
+
+if [ -f "$bootstrap" ]; then
+	while IFS="," read -r lang; do
+		[ "$lang" != "en" ] || continue
+		uci -q batch <<-EOF
+			del_list updater.l10n.langs='$lang'
+			add_list updater.l10n.langs='$lang'
+		EOF
+	done < "$bootstrap"
+	rm -f "$bootstrap"
+fi
+
+if [ -n "$(uci changes "updater.l10n")" ]; then
+	uci commit "updater.l10n"
 fi
