@@ -23,7 +23,7 @@ define Package/resolver-conf
 	CATEGORY:=Network
 	SUBMENU:=IP Addresses and Names
 	TITLE:=Resolver configuration
-	DEPENDS:=+python3-light +python3-multiprocessing +python3-logging +ca-bundle
+	DEPENDS:=+python3 +python3-uci +ca-bundle
 endef
 
 define Package/resolver-conf/description
