@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pkglists
 PKG_VERSION:=1.5.3
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -37,5 +37,13 @@ define Package/pkglists/conffiles
 endef
 
 Build/Compile:=:
+
+define Package/pkglists/postinst
+if [ -n "$$IPKG_INSTROOT" ] &&  [ -n "$$BOOTSTRAP_PKGLISTS" ]; then
+	mkdir -p "$$IPKG_INSTROOT/usr/share/updater"
+	echo "$$BOOTSTRAP_PKGLISTS" \
+		> "$$IPKG_INSTROOT/usr/share/updater/bootstrap-pkglists"
+fi
+endef
 
 $(eval $(call BuildPackage,pkglists))
