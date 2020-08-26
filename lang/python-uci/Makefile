@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018-2019 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2018-2020 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,9 +8,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-uci
-PKG_VERSION:=0.7
+PKG_VERSION:=0.8
 PKG_RELEASE:=1
-PKG_LICENSE:=GPLv3
+PKG_LICENSE:=GPL-3.0-or-later
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/pyuci.git
@@ -33,7 +33,7 @@ define Package/python3-uci
 endef
 
 define Package/python3-uci/description
-Python3 bindings for Unified Configuration Interface.
+  Python3 bindings for Unified Configuration Interface.
 endef
 
 $(eval $(call Py3Package,python3-uci))
