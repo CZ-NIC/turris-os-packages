@@ -98,8 +98,7 @@ class JsonUbusDecorator:
         def w(*func_args, **func_kwargs):
             name = m.__name__.lstrip("get_")
             ret = m(*func_args, **func_kwargs)
-            print(json.dumps({name: ret}))
-            return ret
+            return {name:ret}
 
         return w
 
@@ -335,6 +334,7 @@ if __name__ == "__main__":
     if parser.cmd == "list":
         print(json.dumps(res_rpcd.get_ubus_func_list()))
     elif parser.cmd == "call":
-        res_rpcd.call_ubus_func(parser.resolver_cmd)
+        ret = res_rpcd.call_ubus_func(parser.resolver_cmd)
+        print(json.dumps(ret))
     else:
         msg_log("Unknown command %s" % parser.cmd, LOG_WARNING)
