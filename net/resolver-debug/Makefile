@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-debug
 PKG_VERSION:=0.0.1
-PKG_RELEASE:=8
+PKG_RELEASE:=9
 
 PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec@nic.cz>
 PKG_LICENSE:=GPL-3.0
@@ -26,7 +26,8 @@ define Package/resolver-debug
 endef
 
 define Package/resolver-conf/description
-  Debug utils for knot-resolver and unbound.
+  Debug utils for knot-resolver and unbound. It adds
+  custom commands for debugging to LuCI.
 endef
 
 Build/Compile:=:
@@ -41,11 +42,12 @@ define Package/resolver-debug/postinst
 #!/bin/sh
 # check if we are on real system
 if [ -z "$$IPKG_INSTROOT" ]; then
+	/etc/resolver/resolver-debug.sh remove-btn
 	/etc/resolver/resolver-debug.sh add-btn
 fi
 endef
 
-define Package/resolver-debug/postrm
+define Package/resolver-debug/prerm
 #!/bin/sh
 # check if we are on real system
 if [ -z "$$IPKG_INSTROOT" ]; then

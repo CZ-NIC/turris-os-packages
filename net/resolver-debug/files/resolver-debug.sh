@@ -1,4 +1,6 @@
 #!/bin/bash
+. /lib/functions.sh
+
 START_DEBUG_CMD="/etc/resolver/resolver-debug.sh start"
 START_DEBUG_DESC="Start resolver debugging"
 STOP_DEBUG_CMD="/etc/resolver/resolver-debug.sh stop"
@@ -40,19 +42,22 @@ add_luci_custom_cmd () {
 	uci commit luci
 }
 
+del_luci_command () {
+	local config="$1"
+	local cmd_arg="$2"
+	config_get cmd "$config" command
+
+	if [ "$cmd_arg" = "$cmd" ]; then
+		echo "Remove command $cmd"
+		uci del luci.$config
+	fi
+}
+
+
 remove_luci_custom_cmd () {
-	cmd_arg="$1"
-	for item in $(uci show luci|grep "@command"|grep ".command=")
-	do
-		num=$(echo "$item"|awk -F"[" '{print $2}'|awk -F"]" '{print $1}')
-		cmd=$(echo "$item"|awk -F"'" '{print $2}')
-		if [ "$cmd_arg" = "$cmd" ]; then
-			echo "Remove cmd $cmd"
-			echo num $num
-			uci del luci.@command[$num]
-			uci commit luci
-		fi
-	done
+	config_load luci
+	config_foreach del_luci_command command "$1"
+	uci commit luci
 }
 
 run_dig () {
@@ -193,13 +198,13 @@ case $cmd in
 		print_log
 	;;
 	add-btn)
-		echo "Add btn to luci custom command"
+		echo "Add debug buttons in LuCI's Custom Commands"
 		add_luci_custom_cmd "$START_DEBUG_CMD" "$START_DEBUG_DESC"
 		add_luci_custom_cmd "$STOP_DEBUG_CMD" "$STOP_DEBUG_DESC"
 		add_luci_custom_cmd "$PRINT_LOG_CMD" "$PRINT_LOG_DESC"
 	;;
 	remove-btn)
-		echo "Remove btn from luci custom command"
+		echo "Remove buttons in LuCI's Custom Commands"
 		remove_luci_custom_cmd "$START_DEBUG_CMD"
 		remove_luci_custom_cmd "$STOP_DEBUG_CMD"
 		remove_luci_custom_cmd "$PRINT_LOG_CMD"
