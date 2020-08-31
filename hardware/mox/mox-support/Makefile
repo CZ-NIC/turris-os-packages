@@ -71,7 +71,7 @@ define Package/mox-support/install
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/init $(1)/etc/init.d/mox_autosetup
 	$(INSTALL_DIR) $(1)/lib/firmware/mrvl/
-	$(INSTALL_DATA) ./files/sd*.bin $(1)/lib/firmware/mrvl
+	$(INSTALL_DATA) ./files/sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl
 	ln -s sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl/sd8997_uapsta.bin
 endef
 
