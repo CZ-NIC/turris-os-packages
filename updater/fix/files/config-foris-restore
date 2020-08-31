@@ -1,0 +1,24 @@
+#!/bin/sh
+set -eu
+
+config="/etc/config/foris"
+
+if [ ! -s "$config" ]; then
+	schnapps list | awk 'NR > 2 { print $1 }' | sort -rn \
+		| while read -r snapshot; do
+			schnapps mount "$snapshot" >/dev/null
+			mntp="/mnt/snapshot-@$snapshot"
+			if [ -s "${mntp}${config}" ]; then
+				cp -a "${mntp}${config}" "$config"
+				umount "$mntp"
+				exit 0
+			fi
+			umount "$mntp"
+		done
+fi
+
+if [ ! -s "$config" ]; then
+	echo "Failed to locate latest non-empty version of /etc/config/foris in snapshots! Config is empty and wizard has to be performed again." >&2
+	create_create_notification -s error "Foris configuration has been flushed! Please make sure to set it up again by accessing router's web interface."
+	exit 1
+fi
