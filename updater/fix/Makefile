@@ -99,6 +99,13 @@ define Package/fix-updater-rm-log/description
   system.
 endef
 
+define Package/fix-config-foris-restore/description
+  With Turris OS 5.1.0 we moved config /etc/config/foris from package foris to
+  package foris-controller. Unfortunately updater was not prepared for it. It
+  also slipped trough testing so it landed to all users. The intention for this
+  fix package is to restore latest non-empty version from snapshots.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
@@ -106,3 +113,4 @@ $(eval $(call FIX,dns-forward-quad9-split,+resolver-conf +uci))
 $(eval $(call FIX,pkglists-options,+pkglists))
 $(eval $(call FIX,uboot-env-reset))
 $(eval $(call FIX,updater-rm-log,+updater-ng))
+$(eval $(call FIX,config-foris-restore,+foris-controller +schnapps))
