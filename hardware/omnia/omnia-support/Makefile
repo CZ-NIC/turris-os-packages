@@ -7,7 +7,7 @@ PKG_RELEASE:=3.2
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 PKG_BUILD_DIR:=$(KERNEL_BUILD_DIR)/packages
-PKG_BUILD_DEPENDS:=kernel
+PKG_BUILD_DEPENDS:=linux
 
 include $(INCLUDE_DIR)/package.mk
 
