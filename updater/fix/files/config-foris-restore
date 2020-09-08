@@ -19,6 +19,6 @@ fi
 
 if [ ! -s "$config" ]; then
 	echo "Failed to locate latest non-empty version of /etc/config/foris in snapshots! Config is empty and wizard has to be performed again." >&2
-	create_create_notification -s error "Foris configuration has been flushed! Please make sure to set it up again by accessing router's web interface."
+	create_notification -s error "Foris configuration has been flushed! Please make sure to set it up again by accessing router's web interface."
 	exit 1
 fi
