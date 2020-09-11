@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
 PKG_VERSION:=5.1.3
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-resolver
@@ -34,7 +34,17 @@ define Package/knot-resolver
   SUBMENU:=IP Addresses and Names
   TITLE:=Knot DNS Resolver
   URL:=https://www.knot-resolver.cz
-  DEPENDS=+knot-libs +knot-libzscanner +libuv +luajit +dnssec-rootkey +resolver-conf +luasec +luasocket +libstdcpp +lmdb
+  DEPENDS=\
+    +dnssec-rootkey \
+    +knot-libs \
+    +knot-libzscanner \
+    +libstdcpp \
+    +libuv \
+    +lmdb \
+    +luajit \
+    +resolver-conf \
+    PACKAGE_knot-resolver_dnstap:libfstrm \
+    PACKAGE_knot-resolver_dnstap:libprotobuf-c
   PROVIDES:=dns-resolver
   USERID:=kresd=3536:kresd=3536
 endef
@@ -44,10 +54,14 @@ define Package/knot-resolver/description
   implementation, including both a resolver library and a daemon.
 endef
 
+define Package/knot-resolver/config
+	source "$(SOURCE)/Config.in"
+endef
+
 MESON_ARGS+= \
-  -Ddnstap=disabled \
-  -Dcapng=disabled \
-  --prefix=/usr
+	$(if $(CONFIG_PACKAGE_knot-resolver_dnstap), -Ddnstap=enabled,-Ddnstap=disabled) \
+	-Dcapng=disabled \
+	--prefix=/usr
 
 define Package/knot-resolver/install
 	$(INSTALL_DIR) $(1)/usr/bin
