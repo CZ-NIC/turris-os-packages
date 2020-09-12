@@ -6,14 +6,15 @@
 #
 
 include $(TOPDIR)/rules.mk
+
 PKG_NAME:=haas-proxy
-PKG_VERSION:=1.9
-PKG_RELEASE:=3
-PKG_SOURCE_VERSION:=bbf8629d1d64840407eefc23d2b6c8835365347b
-PKG_SOURCE_URL:=https://gitlab.nic.cz/haas/proxy/raw/$(PKG_SOURCE_VERSION)/release/
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_MAINTAINER:=CZ.NIC <packaging@nic.cz>
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_VERSION:=2.0.2
+PKG_RELEASE:=1
+
+PKG_SOURCE:=proxy-v$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://gitlab.nic.cz/haas/proxy/-/archive/v$(PKG_VERSION)/
+PKG_HASH:=42bc51b8ef221516136987656c238b4b7132c3864fdc251ace8dddb91542c54a
+PKG_BUILD_DIR:=$(BUILD_DIR)/proxy-v$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 $(call include_mk, python-package.mk)
