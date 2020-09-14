@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=switch-branch
-PKG_VERSION:=2.5.3
+PKG_VERSION:=2.6.0
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -30,9 +30,6 @@ define Package/switch-branch/install
 
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
 	$(INSTALL_CONF) ./files/updater.lua $(1)/etc/updater/conf.d/switch-branch.lua
-
-	$(INSTALL_DIR) $(1)/usr/share/updater/switch-branch
-	echo "no-reinstall" > $(1)/usr/share/updater/switch-branch/reinstall-guard
 endef
 
 define Package/switch-branch/postinst
