@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pkglists
 PKG_VERSION:=1.5.4
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -20,6 +20,12 @@ define Package/pkglists
   CATEGORY:=Turris Updater
   TITLE:=Package lists for the updater
   DEPENDS:=+updater-ng +json4lua +libuci-lua
+endef
+
+define Package/pkglists/description
+  Turris OS provides various optional features. Those can be installed either
+  manually as packages or as package list. This provides database of all
+  available package lists in Turris OS and updater-ng's config to use it.
 endef
 
 define Package/pkglists/install

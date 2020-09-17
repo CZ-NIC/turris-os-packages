@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
 PKG_VERSION:=69.0.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/updater/updater.git
@@ -39,6 +39,11 @@ define Package/updater-ng
     +liburiparser \
     +libarchive \
     +ca-certificates
+endef
+
+define Package/updater-ng/description
+  Turris package manager designed for automatic updates in mind. It is
+  non-interactive in general but highly configurable through Lua scripts.
 endef
 
 CONFIGURE_ARGS += \

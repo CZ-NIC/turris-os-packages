@@ -21,6 +21,13 @@ define Package/l10n-supported
   TITLE:=List of localizations available in Turris repository
 endef
 
+define Package/l10n-supported/description
+  This provides database of Turris supported localizations. That is used by
+  updater to install appropriate localizations and in proxy trough
+  updater-supervisor it is also used by web frontend to give user a choice of
+  optional languages to be added to system.
+endef
+
 Build/Compile:=:
 
 define Package/l10n-supported/install

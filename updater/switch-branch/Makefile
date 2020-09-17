@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=switch-branch
 PKG_VERSION:=2.6.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -20,6 +20,14 @@ define Package/switch-branch
   CATEGORY:=Turris Updater
   TITLE:=Tool to set updater to follow different rolling branches
   DEPENDS:=+uci +coreutils-sort +opkg +updater-supervisor +curl
+endef
+
+define Package/switch-branch/description
+  Turris OS is released in various branches (with different guarantees and levels
+  of stability). This script allows simple switch between them and also between
+  archived versions. You should know that while move to more unstable branches is
+  commonly supported the opposite (while allowed by script) might be problematic.
+  The same applies to version downgrades.
 endef
 
 Build/Compile:=:

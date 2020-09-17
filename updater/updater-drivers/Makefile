@@ -22,6 +22,13 @@ define Package/updater-drivers
   DEPENDS:=+updater-ng
 endef
 
+define Package/updater-drivers/description
+  Hardware detection script for updater-ng used to install appropriate drivers for
+  known hardware. Script in this package only collects connected hardware and
+  passes it to script that is part of distribution lists. What hardware is
+  supported by this mechanism can be found only in that list, not in this package.
+endef
+
 define Package/updater-drivers/install
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
 	$(INSTALL_DATA) ./files/updater.lua $(1)/etc/updater/conf.d/drivers.lua

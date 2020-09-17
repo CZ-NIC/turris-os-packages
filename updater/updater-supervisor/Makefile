@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-supervisor
 PKG_VERSION:=1.4.3
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/updater/supervisor.git
@@ -30,6 +30,12 @@ define Package/updater-supervisor
     +python3-light +python3-uci +python3-distro \
     +cronie
   VARIANT:=python3
+endef
+
+define Package/updater-supervisor/description
+  Python library and program wrapping execution of updater-ng's pkgupdate tool. It
+  integrates it to frontend and provides additional reporting mechanisms.
+  Secondary this also serves as universal configuration API for updater-ng.
 endef
 
 define Py3Package/updater-supervisor/install

@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=localrepo
 PKG_VERSION:=0.2.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/updater/localrepo.git
@@ -25,6 +25,13 @@ define Package/localrepo
   CATEGORY:=Turris Updater
   TITLE:=Updater local repository manager
   DEPENDS:=+python3-light
+endef
+
+define Package/localrepo/description
+  Localrepo is script for managing local repository. This is solution for out of
+  tree packages installation of packages for updater-ng. Updater-ng can track and
+  keep in system only packages that are in some configured repository. By creating
+  local repository user can inject any arbitrary package to updater-ng.
 endef
 
 define Package/localrepo/install
