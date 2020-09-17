@@ -261,14 +261,14 @@ class DHCPv4:
         if op == "add":
             self._add_lease(hostname, ipv4)
             log("DHCP add new hostname [%s,%s]" % (hostname, ipv4), LOG_INFO)
-        elif op == "del":
+        elif op == "remove":
             self._del_lease(hostname, ipv4)
-            log("DHCP delete hostname [%s,%s,%s]" % (op, hostname, ipv4), LOG_INFO)
-        elif op == "old":
+            log("DHCP remove hostname [%s,%s]" % (hostname, ipv4), LOG_INFO)
+        elif op == "update":
             self._add_lease(hostname, ipv4)
-            log("DHCP update hostname [%s,%s,%s]" % (op, hostname, ipv4), LOG_INFO)
+            log("DHCP update hostname [%s,%s]" % (hostname, ipv4), LOG_INFO)
         else:
-            log("DHCP unknown update operation", LOG_WARNING)
+            log("DHCP unknown operation [%s,%s,%s]" % (op, hostname, ipv4), LOG_WARNING)
 
     def save_leases(self, overwrite=True):
         with open(self.__dhcp_leases_out_file, "w") as fp:
