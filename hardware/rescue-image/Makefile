@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rescue-image
 PKG_VERSION:=3.3
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 BB_VERSION:=1.31.1
 PKG_SOURCE:=busybox-$(BB_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://www.busybox.net/downloads \
@@ -80,9 +80,10 @@ define Build/Configure
 		-e 's|^\(CONFIG_KERNEL_.*\)=y|\1=n|' \
 		-e 's|^\(CONFIG_NET_VENDOR_.*\)=y|\1=n|' "$(LINUX_DIR)/.config"
 	cat ./files/kernel-config >> "$(LINUX_DIR)/.config"
+	[ \! -f ./files/kernel-config-$(DEVICE) ] || cat ./files/kernel-config-$(DEVICE) >> "$(LINUX_DIR)/.config"
 	# Busybox
 	cp files/busybox-config $(PKG_BUILD_DIR)/busybox/.config
-	$(MAKE) -C "$(PKG_BUILD_DIR)/busybox" $(MAKE_FLAGS) oldconfig
+	$(MAKE) -C "$(PKG_BUILD_DIR)/busybox" $(PKG_JOBS) $(MAKE_FLAGS) oldconfig
 endef
 
 define Build/Compile
