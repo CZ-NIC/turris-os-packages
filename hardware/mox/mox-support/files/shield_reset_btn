@@ -1,0 +1,13 @@
+#!/bin/sh
+[ "$BUTTON" = BTN_0 ] || exit 0
+[ "$ACTION" = released ] || exit 0
+
+# Sometimes button handling misbehaves and reports insane numbers
+if [ "$SEEN" -lt 4 ] || [ "$SEEN" -gt 60 ]; then
+	reboot
+else
+	schnapps rollback factory
+	# Reboot without any delay to let people "feel" the response
+	echo s > /proc/sysrq-trigger
+	echo b > /proc/sysrq-trigger
+fi

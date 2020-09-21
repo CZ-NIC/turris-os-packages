@@ -1,4 +1,13 @@
+set changed ""
 if test "$contract" != "turris_lists=contracts/@CONTRACT@"; then
 	setenv contract "turris_lists=contracts/@CONTRACT@"
+	set changed "true"
+fi
+if test "rescue_mode" != "@RESET@";then
+	setenv rescue_mode "@RESET@"
+	set changed "true"
+fi
+if test -n "$changed"; then
+	env delete changed
 	saveenv
 fi
