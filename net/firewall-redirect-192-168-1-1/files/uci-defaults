@@ -8,7 +8,7 @@ uci -q batch <<EOT
 	set firewall.redirect_192_168_1_1.path='/usr/libexec/firewall-redirect-192-168-1-1.sh'
 	set firewall.redirect_192_168_1_1.family='ipv4'
 	set firewall.redirect_192_168_1_1.reload='1'
-	commit firewall.sentinel_firewall
+	commit firewall.redirect_192_168_1_1
 EOT
 
 # Always reload firewall to use latest version
