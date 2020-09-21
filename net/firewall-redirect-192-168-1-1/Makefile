@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=firewall-redirect-192_168_1_1
-PKG_VERSION:=0.1.0
+PKG_VERSION:=0.1.1
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -34,6 +34,16 @@ define Package/firewall-redirect-192-168-1-1/install
 	$(INSTALL_BIN) ./files/firewall-redirect.sh $(1)/usr/libexec/firewall-redirect-192-168-1-1.sh
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/95-firewall-redirect-192-168-1-1
+endef
+
+define Package/firewall-redirect-192-168-1-1/prerm
+#!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
+	uci -q batch <<-EOF
+		delete firewall.redirect_192_168_1_1
+		commit firewall.redirect_192_168_1_1
+	EOF
+}
 endef
 
 $(eval $(call BuildPackage,firewall-redirect-192-168-1-1))
