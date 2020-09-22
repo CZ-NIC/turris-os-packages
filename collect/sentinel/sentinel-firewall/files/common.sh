@@ -45,7 +45,7 @@ iptables_drop() {
 # zone: name of firewall zone incoming packets are coming from
 # port: target port of packet
 # local_port: local port to redirect packet to
-# description: description for this redirect printed and recoded in comment
+# description: description for this redirect printed and recorded in comment
 iptables_redirect() {
 	local zone="$1"
 	local port="$2"
@@ -53,9 +53,7 @@ iptables_redirect() {
 	local description="$4"
 
 	report_operation "$description on zone '$zone' ($port -> $local_port)"
-	# Rule is inserted as second one because first rule is in fw3 always user
-	# specified custom rule (we want to allow user to override this).
-	iptables -t nat -I "zone_${zone}_prerouting" 2 \
+	iptables -t nat -A "zone_${zone}_prerouting" \
 		-p tcp \
 		-m tcp --dport "$port" \
 		-m comment --comment "!sentinel: $description port redirect" \
