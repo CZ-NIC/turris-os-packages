@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-storage-module
-PKG_VERSION:=0.4.2
+PKG_VERSION:=0.5
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
