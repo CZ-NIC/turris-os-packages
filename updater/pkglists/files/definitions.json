@@ -50,7 +50,23 @@
 	"hardening": {
 		"title": "Hardening",
 		"description": "Seccomp tools for system hardening.",
-		"labels": ["experimental"]
+		"options": {
+			"common_passwords": {
+				"title": "Common passwords filter",
+				"description": "Compare new password you are about to set to access router with list of common passwords used by robots trapped in Turris honeypots.",
+				"default": true
+			},
+			"ujail": {
+				"title": "OpenWrt's process jail",
+				"description": "ujail allows to limit processes by limiting syscalls and file-system access",
+				"labels": ["community", "experimental"]
+			},
+			"seccomp": {
+				"title": "Secure Computing Mode (seccomp)",
+				"description": "Optional support for seccomp allowing processes to isolate from them self",
+				"labels": ["community", "experimental"]
+			}
+		}
 	},
 	"luci_controls": {
 		"title": "LuCI extensions",
