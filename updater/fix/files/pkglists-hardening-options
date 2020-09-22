@@ -1,0 +1,18 @@
+#!/bin/sh
+. /lib/functions.sh
+config_load pkglists
+
+
+pkglist_handle() {
+	local lst="$1"
+	if [ "$lst" = "hardening" ]; then
+		uci -q batch <<-EOF
+			set pkglists.hardening=hardening
+			set pkglists.hardening.ujail=1
+			set pkglists.hardening.seccomp=1
+			commit pkglists
+		EOF
+		exit 0
+	fi
+}
+config_list_foreach pkglists pkglists pkglist_handle
