@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cd /sys/class/net
+uci delete network.lan.ifname
+for interface in lan*; do
+	uci add_list "network.lan.ifname=$interface"
+done
+uci commit network.lan.ifname
+/etc/init.d/network reload

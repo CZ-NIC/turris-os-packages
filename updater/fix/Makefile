@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fix
 PKG_VERSION:=1
-PKG_RELEASE:=2
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -100,6 +100,13 @@ define Package/fix-config-foris-restore/description
   fix package is to restore latest non-empty version from snapshots.
 endef
 
+define Package/fix-all-lan-ports-in-lan/description
+  There is a typo in first generation of Turris Shield that renders one LAN
+  port unusable. We noticed this really late, but as Shield doesn't support
+  manual interface assignements, it is safe to assume that all ports on
+  switch should be part of LAN network.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
@@ -107,3 +114,4 @@ $(eval $(call FIX,dns-forward-quad9-split,+resolver-conf +uci))
 $(eval $(call FIX,pkglists-options,+pkglists))
 $(eval $(call FIX,uboot-env-reset))
 $(eval $(call FIX,config-foris-restore,+foris-controller +schnapps))
+$(eval $(call FIX,all-lan-ports-in-lan,+uci +netifd))
