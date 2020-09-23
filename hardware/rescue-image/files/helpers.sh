@@ -3,12 +3,19 @@
 # Generic helper functions
 reset_uenv() {
     local bootcmd="env default -f -a;"
-    if [ -n "$(fw_printenv root_uuid 2> /dev/null)" ]; then
+
+    # Carry all important variables accross resets, but remove empty variables
+    # to help people who just empty them instead of deleting
+    if [ -n "$(fw_printenv -n root_uuid 2> /dev/null)" ]; then
         bootcmd="$bootcmd setenv root_uuid $(blkid "$NEW_TARGET_PART" | sed 's|.*UUID="\([^"]*\)".*|\1|');"
     fi
-    local contract="$(fw_printenv contract 2> /dev/null)"
+    local contract="$(fw_printenv -n contract 2> /dev/null)"
     if [ -n "$contract" ]; then
         bootcmd="$bootcmd setenv contract $contract;"
+    fi
+    local rescue_mode="$(fw_printenv -n rescue_mode 2> /dev/null)"
+    if [ -n "$default_rescue_mode" ]; then
+        bootcmd="$bootcmd setenv rescue_mode $rescue_mode;"
     fi
     fw_setenv bootcmd "$bootcmd saveenv; reset"
 }
@@ -271,7 +278,9 @@ next_mode() {
 }
 
 fetch_cmd_mode() {
+    local cmd_mode=""
     cmd_mode="$(sed -n 's|.*rescue_mode=\([0-9]\+\).*|\1|p' /proc/cmdline)"
+    [ -n "$cmd_mode" ] || cmd_mode="$(fw_printenv -n rescue_mode 2> /dev/null)"
     echo "Rescue mode $cmd_mode + 1 selected on cmdline"
     if [ -n "$cmd_mode" ]; then
         MODE="$(expr "$cmd_mode" + 1)"
