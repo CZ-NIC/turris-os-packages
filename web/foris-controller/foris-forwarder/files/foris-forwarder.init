@@ -1,0 +1,50 @@
+#!/bin/sh /etc/rc.common
+
+#Copyright 2020, CZ.NIC z.s.p.o. (http://www.nic.cz/)
+#
+#This file is part of foris-forwarder configuration server.
+#
+#foris-forwarder is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#foris-forwarder is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with foris-forwarder.  If not, see <http://www.gnu.org/licenses/>.
+
+START=66
+STOP=39
+
+USE_PROCD=1
+PROG=/usr/bin/foris-forwarder
+
+start_service() {
+	#config load foris-controller
+	#config_get credentials_file mqtt credentials_file "/etc/fosquitto/credentials.plain"
+	credentials_file="/etc/fosquitto/credentials.plain"
+
+	config_load fosquitto
+	config_get bus main bus mqtt
+	config_get port local port "11884"
+	config_get_bool debug global debug "0"
+
+	controller_id=$(crypto-wrapper serial-number)
+
+	if [ "$debug" == "1" ]; then
+		debug_arg="-d"
+	fi
+
+	procd_open_instance
+	procd_set_param command "$PROG" ${debug_arg:-} --port "$port" --controller-id "$controller_id" --passwd-file "$credentials_file"
+	procd_set_param file /etc/config/fosquitto
+	procd_set_param pidfile /var/run/foris-forwarder.pid
+	procd_set_param stdout 1 # forward stdout of the command to logd
+	procd_set_param stderr 1 # same for stderr
+	procd_set_param respawn
+	procd_close_instance
+}
