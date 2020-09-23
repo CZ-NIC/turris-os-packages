@@ -37,8 +37,8 @@ define Package/turris-webapps-transmission/install
 	$(INSTALL_DIR) $(1)/www/webapps-icons
 	$(INSTALL_DATA) ./files/transmission.svg $(1)/www/webapps-icons
 
-        $(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
-        $(CP) ./files/transmission.lighttpd $(1)/etc/lighttpd/conf.d/transmission.conf
+	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
+	$(CP) ./files/transmission.lighttpd $(1)/etc/lighttpd/conf.d/transmission.conf
 endef
 
 $(eval $(call BuildPackage,turris-webapps-transmission))
