@@ -1,0 +1,24 @@
+#!/bin/sh
+# Migrate SSH daemon configuration file if configuration was modified compared to
+# default one.
+
+configfile="/var/etc/ssh/sshd_config"
+default="sshd.@openssh[0]=openssh
+sshd.@openssh[0].PermitRootLogin='yes'
+sshd.@openssh[0].AuthorizedKeysFile='.ssh/authorized_keys'
+sshd.@openssh[0].Subsystem='sftp /usr/lib/sftp-server'"
+default_nuci="sshd.@openssh[0]=openssh
+sshd.@openssh[0].Port='22' '830'
+sshd.@openssh[0].PermitRootLogin='yes'
+sshd.@openssh[0].AuthorizedKeysFile='.ssh/authorized_keys'
+sshd.@openssh[0].Subsystem='sftp /usr/lib/sftp-server' 'netconf /usr/bin/nuci'"
+
+# We sort variables in script to use consistent sorting on any platform
+default="$(echo "$default" | sort)"
+default_nuci="$(echo "$default_nuci" | sort)"
+
+current_sshd="$(uci -q show sshd | sort)"
+if [ "$current_sshd" != "$default" ] && [ "$current_sshd" != "$default_nuci" ] && [ -f "$configfile" ]; then
+	cp "$configfile" "/etc/ssh/sshd_config"
+	/etc/init.d/sshd restart
+fi
