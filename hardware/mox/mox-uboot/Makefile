@@ -7,7 +7,7 @@
 #
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=u-boot-mox
+PKG_NAME:=mox-uboot
 PKG_VERSION:=2020-07-rc1
 PKG_RELEASE:=2
 
@@ -21,18 +21,19 @@ PKG_LICENSE_FILES:=README
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/u-boot-mox
+define Package/mox-uboot
   TITLE:=U-boot for Turris MOX
   DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox
+  PROVIDES:=u-boot-mox
 endef
 
 define Build/Compile
 	cd $(PKG_BUILD_DIR); make CROSS_COMPILE=$(TARGET_CROSS) u-boot.bin
 endef
 
-define Package/u-boot-mox/install
+define Package/mox-uboot/install
 	$(INSTALL_DIR) $(1)/usr/share/mox
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/u-boot.bin $(1)/usr/share/mox/uboot-devel
 endef
 
-$(eval $(call BuildPackage,u-boot-mox))
+$(eval $(call BuildPackage,mox-uboot))

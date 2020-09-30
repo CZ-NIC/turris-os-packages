@@ -7,7 +7,7 @@
 #
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=u-boot-omnia
+PKG_NAME:=omnia-uboot
 PKG_VERSION:=2019-07.1
 PKG_RELEASE:=1
 
@@ -22,9 +22,10 @@ PKG_LICENSE_FILES:=README
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/u-boot-omnia
+define Package/omnia-uboot
   TITLE:=u-boot-omnia
   DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
+  PROVIDES:=u-boot-omnia
 endef
 
 define Build/Compile
@@ -33,9 +34,9 @@ define Build/Compile
 	cd $(PKG_BUILD_DIR); make CROSS_COMPILE=$(TARGET_CROSS) u-boot-spl.kwb OMNIA_OLD_SPL=1
 endef
 
-define Package/u-boot-omnia/install
+define Package/omnia-uboot/install
 	$(INSTALL_DIR) $(1)/usr/share/omnia
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/u-boot-spl.kwb $(1)/usr/share/omnia/uboot-devel
 endef
 
-$(eval $(call BuildPackage,u-boot-omnia))
+$(eval $(call BuildPackage,omnia-uboot))
