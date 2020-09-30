@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-flask-babel
-PKG_VERSION:=1.0.0
+PKG_VERSION:=2.0.0
 PKG_RELEASE:=1
 
 PYPI_NAME:=Flask-Babel
-PKG_HASH:=d6a70468f9a8919d59fba2a291a003da3a05ff884275dddbd965f3b98b09ab3e
+PKG_HASH:=f9faf45cdb2e1a32ea2ec14403587d4295108f35017a7821a2b1acb8cfd9257d
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=BSD-3-Clause
