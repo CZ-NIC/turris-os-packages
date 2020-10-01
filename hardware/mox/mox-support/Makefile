@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mox-support
-PKG_VERSION:=2.1.0
-PKG_RELEASE:=5
+PKG_VERSION:=2.2.0
+PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
