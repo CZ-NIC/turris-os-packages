@@ -15,7 +15,7 @@ index 7be456a3b892fe3e6379e3a763250a281192989a..20a0f1df56f3ee38f56db41a2f3a9417
              backend.set_option("openvpn", id, "_client_foris", store_bool(True))
              backend.set_option("openvpn", id, "config", str(file_path))
 +            backend.set_option("openvpn", id, "dev", f"vpn_{id}")
-+            backend.add_to_list("firewall", "turris_vpn_client", "device", f"vpn_{id}")
++            backend.add_to_list("firewall", "turris_vpn_client", "device", [ f"vpn_{id}" ])
  
          with OpenwrtServices() as services:
              MaintainCommands().restart_network()
@@ -23,7 +23,7 @@ index 7be456a3b892fe3e6379e3a763250a281192989a..20a0f1df56f3ee38f56db41a2f3a9417
                  return False
  
              backend.del_section("openvpn", id)
-+            backend.del_from_list("firewall", "turris_vpn_client", "device", f"vpn_{id}")
++            backend.del_from_list("firewall", "turris_vpn_client", "device", [ f"vpn_{id}" ] )
  
              file_path = pathlib.Path("/etc/openvpn/foris") / f"{id}.conf"
              BaseFile().delete_file(str(file_path))
