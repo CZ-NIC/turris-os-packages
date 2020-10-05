@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-diagnostics
-PKG_VERSION:=12.3.2
+PKG_VERSION:=13.0.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
@@ -30,7 +30,8 @@ define Package/turris-diagnostics
 endef
 
 define Package/turris-diagnostics/description
-  Obtains diagnostics which are useful for troubleshooting of turris related functionality.
+  Obtains diagnostics which are useful for troubleshooting of turris related
+  functionality.
 endef
 
 Build/Compile:=:
