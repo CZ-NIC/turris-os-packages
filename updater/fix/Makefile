@@ -8,6 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fix
+# Warning: Do not bump this package!
+# These packages are controlled by updater list and in general are installed and
+# immediately removed. If they are kept in system they are commonly expected to
+# be run only once. Because of that bump is prohibited!
 PKG_VERSION:=1
 PKG_RELEASE:=1
 
@@ -36,7 +40,7 @@ Package/fix-$(1)/install ?= $$(Package/fix-$(1)/DefaultInstall)
 
 define Package/fix-$(1)/$(or $(3),postinst)
 #!/bin/sh
-/usr/libexec/fix/$(1)
+exec /usr/libexec/fix/$(1)
 endef
 
 $$(eval $$(call BuildPackage,fix-$(1)))
@@ -113,10 +117,9 @@ define Package/fix-all-lan-ports-in-lan/description
   switch should be part of LAN network.
 endef
 
-define Package/fix-contracts-handling-in-rescue/description
-  There is a bug in old rescue images that can break the environment
-  configuration. This script fixes the broken environment and updates
-  rescue image.
+define Package/fix-corrupted-contract-by-rescue/description
+  There was a bug in rescue images (version <3.4) that could break the environment
+  configuration. This script fixes the broken environment.
 endef
 
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
@@ -128,4 +131,4 @@ $(eval $(call FIX,uboot-env-reset))
 $(eval $(call FIX,updater-rm-log,+updater-ng))
 $(eval $(call FIX,config-foris-restore,+foris-controller +schnapps))
 $(eval $(call FIX,all-lan-ports-in-lan,+uci +netifd))
-$(eval $(call FIX,contracts-handling-in-rescue,+mox-generic-support))
+$(eval $(call FIX,corrupted-contract-by-rescue,+uboot-envtools))

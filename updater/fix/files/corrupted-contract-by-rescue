@@ -1,6 +1,5 @@
 #!/bin/sh
 set -eu
-nor-update
 if fw_printenv -n contract > /dev/null; then
 	# Cound be set to something like (contract=)\{number of factory resets\}turris_lists=contracts/name
 	# We need just turris_lists=contracts/name
