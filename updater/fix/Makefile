@@ -8,6 +8,10 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fix
+# Warning: Do not bump this package!
+# These packages are controlled by updater list and in general are installed and
+# immediately removed. If they are kept in system they are commonly expected to
+# be run only once. Because of that bump is prohibited!
 PKG_VERSION:=1
 PKG_RELEASE:=1
 
