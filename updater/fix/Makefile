@@ -107,10 +107,9 @@ define Package/fix-all-lan-ports-in-lan/description
   switch should be part of LAN network.
 endef
 
-define Package/fix-contracts-handling-in-rescue/description
-  There is a bug in old rescue images that can break the environment
-  configuration. This script fixes the broken environment and updates
-  rescue image.
+define Package/fix-corrupted-contract-by-rescue/description
+  There was a bug in rescue images (version <3.4) that could break the environment
+  configuration. This script fixes the broken environment.
 endef
 
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
@@ -121,4 +120,4 @@ $(eval $(call FIX,pkglists-options,+pkglists))
 $(eval $(call FIX,uboot-env-reset))
 $(eval $(call FIX,config-foris-restore,+foris-controller +schnapps))
 $(eval $(call FIX,all-lan-ports-in-lan,+uci +netifd))
-$(eval $(call FIX,contracts-handling-in-rescue,+mox-generic-support))
+$(eval $(call FIX,corrupted-contract-by-rescue,+uboot-envtools))
