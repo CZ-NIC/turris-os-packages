@@ -1,0 +1,116 @@
+#!/bin/sh
+set -eu
+. /usr/share/libubox/jshn.sh
+
+
+foris_password() {
+	local password
+	json_get_var password "foris_password" || {
+		echo "foris_password configuration not present. Abandoning initial configuration." >&2
+		exit 1
+	}
+
+	local pbkdf2
+	pbkdf2="$(python -c \
+		'import pbkdf2; import sys; print(pbkdf2.crypt(sys.argv[1], iterations=1000))' \
+			-- "$password")"
+	uci -q batch <<-EOF
+		foris.auth=config
+		foris.auth.password=$pbkdf2
+		commit foris.auth
+	EOF
+	echo "Foris password set." >&2
+}
+
+system_password() {
+	local password
+	json_get_var password "system_password" || {
+		echo "system_password configuration not present." >&2
+		return
+	}
+
+	echo "root:$password" | chpasswd
+	passwd -u root
+	echo "System password set." >&2
+}
+
+wireless() {
+	json_select "wireless" >/dev/null || {
+		echo "wireless configuration not present." >&2
+		return 0
+	}
+	local ssid key
+	for var in ssid key; do
+		json_get_var "$var" "$var" || {
+			echo "wireless.$var configuration is missing. Wireless configuration not performed." >&2
+			return 0
+		}
+	done
+	
+	local wifi_dev
+	wifi_dev="$(uci -q show 'wireless.@wifi-device[0]' \
+			| sed -nE 's|^wireless\.([^.=]+)=.*$|\1|p')"
+	if [ -z "$wifi_dev" ]; then
+		echo "Wireless configuration is not possible as there is no Wi-Fi device." >&2
+		return 0
+	fi
+
+	uci -q batch <<-EOF
+		wireless.wifinet_auto=wifi-iface
+		wireless.wifinet_auto.device=$wifi_dev
+		wireless.wifinet_auto.network=lan
+		wireless.wifinet_auto.mode=ap
+		wireless.wifinet_auto.ssid=$ssid
+		wireless.wifinet_auto.encryption=psk2+ccmp
+		wireless.wifinet_auto.key=$key
+		commit wireless.wifinet_auto
+	EOF
+}
+
+
+locate_config() {
+	local config_file
+	for dev in /dev/mmcblk*p* /dev/sd*; do
+		[ -e "$dev" ] || continue
+		echo "Checking device: $dev" >&2
+		mount "$dev" "$tmpmnt" || continue
+
+		config_file="$tmpmnt/medkit-config.json"
+		if [ -f "$config_file" ]; then
+			echo "Located config file: ${config_file##*/}" >&2
+			break
+		fi
+
+		umount -fl "$tmpmnt"
+	done
+	[ -z "$config_file" ] && return 1
+	echo "$config_file"
+}
+
+main() {
+	local config_file
+	config_file="$(locate_config)" || {
+		echo "Device with config file not located." >&2
+		exit 0
+	}
+
+	# Load config and apply it on system
+	json_init
+	json_load_file "$config_file"
+
+	foris_password
+	system_password
+	wireless
+
+	umount -fl "$tmpmnt"
+}
+
+
+tmpmnt="$(mktemp -d)"
+tmpclean() {
+	umount -fl "$tmpmnt" 2>/dev/null || true
+	rmdir "$tmpmnt" 2>/dev/null || true
+}
+trap tmpclean HUP INT QUIT TERM EXIT
+
+main
