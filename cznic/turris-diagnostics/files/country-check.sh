@@ -52,7 +52,7 @@ wireless_section_check_country() {
 
 check_country_system() {
 	local country
-	country="$(uci get -q 'system.@system[0]._country')" || true
+	country="$(uci -q get 'system.@system[0]._country')" || true
 
 	if ! check_valid_country "$country"; then
 		COUNTRY_SYSTEM_VALID='false'
