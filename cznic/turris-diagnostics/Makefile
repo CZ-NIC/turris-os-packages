@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-diagnostics
 PKG_VERSION:=9.3
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/diagnostics.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -41,7 +41,7 @@ define Package/$(PKG_NAME)/install
 
 	$(INSTALL_BIN) ./files/country-check.sh $(1)/usr/share/diagnostics/country-check.sh
 	$(INSTALL_DIR) $(1)/etc/cron.d/
-	$(INSTALL_BIN) ./files/country-check.cron $(1)/etc/cron.d/diagnostics-country-check
+	$(INSTALL_DATA) ./files/country-check.cron $(1)/etc/cron.d/diagnostics-country-check
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
