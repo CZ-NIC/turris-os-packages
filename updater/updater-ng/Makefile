@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
 PKG_VERSION:=67.0.2
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/updater/updater.git
@@ -83,7 +83,6 @@ if [ -n "$$IPKG_INSTROOT" ] && [ -n "$$BOOTSTRAP_UPDATER_BRANCH" ]; then
 	echo "$$BOOTSTRAP_UPDATER_BRANCH" \
 		> "$$IPKG_INSTROOT/usr/share/updater/bootstrap-updater-branch"
 fi
-}
 endef
 
 $(eval $(call BuildPackage,updater-ng))
