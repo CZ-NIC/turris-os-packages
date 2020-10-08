@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-ws
 PKG_VERSION:=1.6.1
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-ws.git
@@ -23,20 +23,23 @@ include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/foris-ws
-	TITLE:=foris-ws
-	URL:=https://gitlab.nic.cz/turris/foris-controller/foris-ws
-	DEPENDS:= \
-		+python3-light \
-		+python3-websockets \
-		+python3-prctl \
-		+rpcd \
-		+foris-client \
-		+python3-ubus \
-		+lighttpd-mod-proxy \
-		+fosquitto \
-		+python3-cachelib \
-		+python3-paho-mqtt
-	VARIANT:=python3
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=Foris Controller
+  TITLE:=foris-ws
+  URL:=https://gitlab.nic.cz/turris/foris-controller/foris-ws
+  DEPENDS:= \
+    +python3-light \
+    +python3-websockets \
+    +python3-prctl \
+    +rpcd \
+    +foris-client \
+    +python3-ubus \
+    +lighttpd-mod-proxy \
+    +fosquitto \
+    +python3-cachelib \
+    +python3-paho-mqtt
+  VARIANT:=python3
 endef
 
 define Package/foris-ws/description

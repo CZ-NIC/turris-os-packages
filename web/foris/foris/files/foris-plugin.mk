@@ -4,6 +4,9 @@
 define ForisPluginTranslation
 
  define Package/$(1)-l10n-$(3)
+    SECTION:=web
+    CATEGORY:=Web
+    SUBMENU:=Foris
 	TITLE:=$(1)-l10n-$(3)
 	DEPENDS:=\
 		+foris +foris-l10n-$(3)

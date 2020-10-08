@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps-nextcloud
 PKG_VERSION:=1.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -17,10 +17,12 @@ PKG_LICENSE:=GPL-3.0-or-later
 include $(INCLUDE_DIR)/package.mk
 
 define Package/turris-webapps-nextcloud
-  SECTION:=net
-  CATEGORY:=Network
-  TITLE:=Turris webapps integration of nextcloud
-  DEPENDS:=+nextcloud +lighttpd
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=WebApps
+  TITLE:=Nextcloud integration
+  DEPENDS:=+nextcloud \
+    +lighttpd
 endef
 
 define Package/turris-webapps-nextcloud/description

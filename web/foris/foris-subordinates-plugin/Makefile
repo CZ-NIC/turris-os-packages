@@ -9,6 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-subordinates-plugin
 PKG_VERSION:=0.6
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris/foris-subordinates-plugin.git
@@ -27,6 +28,9 @@ include ../foris/files/foris-translations.mk
 include ../foris/files/foris-plugin.mk
 
 define Package/foris-subordinates-plugin
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=Foris
   TITLE:=Foris Subordinates plugin
   DEPENDS:= \
     +foris +foris-controller-netboot-module +foris-controller-subordinates-module

@@ -9,13 +9,16 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fosquitto
 PKG_VERSION:=20
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/fosquitto
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=Foris Controller
   TITLE:=fosquitto
   DEPENDS:=+mosquitto-ssl +mosquitto-client-ssl
 endef
@@ -48,6 +51,9 @@ define Package/fosquitto/postinst
 endef
 
 define Package/fosquitto-monitor
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=Foris Controller
   TITLE:=fosquitto-monitor
   DEPENDS:=+fosquitto
 endef

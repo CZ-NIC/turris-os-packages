@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
 PKG_VERSION:=101.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris/foris.git
@@ -34,6 +34,9 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 include ./files/foris-translations.mk
 
 define Package/foris
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=Foris
   TITLE:=Foris
   DEPENDS:= \
     +python3-light +python3-bottle +python3-bottle-i18n +python3-setuptools \

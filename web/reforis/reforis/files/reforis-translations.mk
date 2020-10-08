@@ -4,10 +4,12 @@ REFORIS_TRANSLATIONS:=cs da de el en es fi fo fr hr hu it ja ko lt nb nl pl ro r
 define ReForisTranslation
 
  define Package/reforis-l10n-$(1)
-	TITLE:=reforis-l10n-$(1)
-	DEPENDS:=\
-		+reforis
-	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+   SECTION:=web
+   CATEGORY:=Web
+   SUBMENU:=reForis
+   TITLE:=reforis-l10n-$(1)
+   DEPENDS:=+reforis
+   MAINTAINER:=CZ.NIC <packaging@turris.cz>
  endef
 
  define Package/reforis-l10n-$(1)/install

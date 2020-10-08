@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis
 PKG_VERSION:=1.0.0
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis
@@ -28,6 +28,9 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 include ./files/reforis-translations.mk
 
 define Package/reforis
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=reForis
   TITLE:=reforis
   URL:=https://gitlab.nic.cz/turris/reforis
   DEPENDS:= \
