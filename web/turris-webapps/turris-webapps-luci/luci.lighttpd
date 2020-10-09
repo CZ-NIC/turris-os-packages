@@ -1,0 +1,25 @@
+# lighttpd include file for LuCI
+
+## Set CGI paths
+cgi.assign += (
+	"/cgi-bin/luci" => "",
+	"/cgi-bin/cgi-backup" => "",
+	"/cgi-bin/cgi-download" => "",
+	"/cgi-bin/cgi-upload" => "",
+	"/cgi-bin/cgi-exec" => ""
+)
+
+## Set aliases to LuCI install directory
+alias.url += (
+	"/cgi-bin/" => "/www/cgi-bin/",
+	"/luci-static/" => "/www/luci-static/"
+)
+
+$HTTP["url"] =~ "^/cgi-bin/luci" {
+	# Add 'X-Frame-Options' header, making sure it the website is not embedded in a frame or iframe.
+	# This avoids clickjacking, and might be helpfull for HTTPS websites
+	# As frames are not used nowadays, this should be safe to enable at least SAMEORIGIN
+	# Other option might be DENY or ALLOW-FROM. DENY is not used as frame is used in some old LuCI modules
+	setenv.add-response-header  += ( "X-Frame-Options" => "SAMEORIGIN")
+	setenv.add-environment = ( "PATH" => "/usr/bin:/usr/sbin:/bin:/sbin" )
+}
