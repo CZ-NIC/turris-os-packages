@@ -22,6 +22,7 @@ define Package/turris-webapps-netdata
   SUBMENU:=WebApps
   TITLE:=Netdata integration
   DEPENDS:=+netdata \
+    +turris-webapps \
     +lighttpd-mod-authn_pam +lighttpd-mod-auth +lighttpd-mod-authn_file \
     +lighttpd-mod-proxy
 endef

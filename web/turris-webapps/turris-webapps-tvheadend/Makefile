@@ -22,7 +22,7 @@ define Package/turris-webapps-tvheadend
   SUBMENU:=WebApps
   TITLE:=Tvheadend integration
   DEPENDS:=+tvheadend \
-    +lighttpd
+    +turris-webapps
 endef
 
 define Package/turris-webapps-tvheadend/description

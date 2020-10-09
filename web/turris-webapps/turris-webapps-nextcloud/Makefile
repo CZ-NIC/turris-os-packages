@@ -22,7 +22,7 @@ define Package/turris-webapps-nextcloud
   SUBMENU:=WebApps
   TITLE:=Nextcloud integration
   DEPENDS:=+nextcloud \
-    +lighttpd
+    +turris-webapps
 endef
 
 define Package/turris-webapps-nextcloud/description
