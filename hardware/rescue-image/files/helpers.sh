@@ -212,6 +212,10 @@ reflash() {
             mkdir -p /mnt/tmp
             mount "$(cat /tmp/medkit-drive)" /mnt/tmp
             cp /mnt/tmp/"$(cat /tmp/medkit-file)" /mnt/src
+            local extra_file="/mnt/tmp/$(sed 's|\.tar\.gz$|-extra.tar.gz|' /tmp/medkit-file)"
+            if [ -f "$extra_file" ]; then
+                cp "$extra_file" /mnt/src
+            fi
             umount -fl /mnt/tmp
             rm -f /tmp/medkit-drive
         else
@@ -222,6 +226,10 @@ reflash() {
     echo "Unpacking rootfs to the target directory"
     mount >> /tmp/debug.txt
     tar -C /mnt/trg -xzf /mnt/src/"$(cat /tmp/medkit-file)" >> /tmp/debug.txt || die 7 "Flashing failed!!!"
+    local extra_file="/mnt/src/$(sed 's|\.tar\.gz$|-extra.tar.gz|' /tmp/medkit-file)"
+    if [ -f "$extra_file" ]; then
+        tar -C /mnt/trg -xzf "$extra_file" >> /tmp/debug.txt || die 7 "Flashing failed!!!"
+    fi
     echo "Rootfs should be ready"
     check_clock /mnt/trg/etc/shadow
     sync
