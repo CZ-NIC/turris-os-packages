@@ -1,0 +1,150 @@
+#!/bin/sh
+set -eu
+
+DEVEL=""
+VERBOSE=""
+
+SECURE_FIRMWARE="secure-firmware.bin"
+SECURE_FIRMWARE_PART=""
+# There can't be automatically build secure firmware as it needs to be signed
+SECURE_FIRMWARE_DEVEL=""
+
+UBOOT="uboot"
+UBOOT_PART=""
+UBOOT_DEVEL=""
+
+RESCUE="rescue"
+RESCUE_PART=""
+RESCUE_DEVEL="/usr/share/rescue-image/image.fit.lzma"
+
+DTB="dtb"
+DTB_PART=""
+DTB_DEVEL="$(ls -1 /boot/*turris*.dtb 2> /dev/null | head -n1)"
+
+board_hook() {
+    :
+}
+
+# Note: die and v_echo might be used by board configuration so they are defined early
+
+die() {
+    echo "${0##*/}:" "$@" >&2
+    exit 1
+}
+
+# Echo that works only in verbose mode
+v_echo() {
+    [ -z "$VERBOSE" ] || echo "$@" >&2
+}
+
+###################################
+. "/usr/share/nor-update/config.sh"
+###################################
+
+print_usage() {
+    echo "Usage: ${0##*/} [-d] [-v]"
+}
+
+print_help() {
+    print_usage
+    echo "Turris NOR firmware update utility."
+    echo
+    echo "Options:"
+    echo "    -d   Use devel version - bleeding edge, but it might brick your device. Proceed with caution!"
+    echo "    -v   Be verbose about what is going on"
+    echo "    -h   Show help"
+}
+
+flash() {
+    local flashing="$1"
+    local part="$2"
+
+    [ -n "$part" ] || return 0
+
+    shift 2
+
+    while [ -n "${1:+x}" ] && [ ! -r "$1" ]; do
+        shift
+    done
+
+    if [ -z "${1:+x}" ]; then
+        echo "Can't find anything to flash to '$flashing' partition"
+        return 0
+    fi
+
+    if [ ! -c "/dev/$part" ]; then
+        die "/dev/$part is missing!"
+    fi
+
+    v_echo "Checking and flashing '$flashing' partition: $1 -> /dev/$part"
+	return 0 # TODO remove
+    if mtd verify "$1" "/dev/$part"; then
+        v_echo "Partition with $flashing was up to date already."
+    else
+        mtd -e "/dev/$part" write "$1" "/dev/$part" || \
+            die "Flashing '$flashing' partition (/dev/$part) failed!"
+    fi
+}
+
+boot_scr_cleanup() {
+    umount -fl "$tmpdir"
+    rmdir "$tmpdir"
+}
+
+# We need boot.scr in root of Btrfs partition to be symlink to @ subvolume to
+# be able to boot via distroboot that wasn't used on older boards.
+fix_boot_scr() (
+    local dev="$(sed -n 's|^\(/dev/[a-z0-9]*\) / btrfs .*|\1|p' /proc/mounts)"
+    # Fix is required only for BTRFS. No need to continue if root filesystem is not BTRFS.
+    [ -n "$dev" ] || return
+    tmpdir="$(mktemp -d)"
+    [ -n "$tmpdir" ] || die "Can't create a temp directory!"
+    trap boot_scr_cleanup EXIT
+    mount "$dev" "$tmpdir" || die "Can't mount root filesystem"
+    [ -e "$tmpdir"/boot.scr ] || \
+        ln -sf @/boot/boot.scr "$tmpdir"/boot.scr || \
+            die "Can't create boot.scr symlink"
+)
+
+while getopts ':dvh' OPT; do
+    case "$OPT" in
+        d)
+            DEVEL="y"
+            ;;
+        v)
+            VERBOSE="y"
+            ;;
+        h)
+            print_help
+            exit 0
+            ;;
+        \?)
+            print_usage
+            die "Illegal option '-$OPTARG'"
+            exit 1
+            ;;
+    esac
+done
+shift $(( OPTIND-1 ))
+[ $# -eq 0 ] || {
+    print_usage
+    die "Provided too many arguments. See help \`-h\`"
+}
+
+fix_boot_scr
+
+# To simplify the configuration so we can use relative paths for parts of the firmware
+cd "/usr/share/nor-update/"
+
+if [ -n "$DEVEL" ]; then
+    SECURE_FIRMWARE_DEVEL=""
+    UBOOT_DEVEL=""
+    RESCUE_DEVEL=""
+    DTB_DEVEL=""
+fi
+
+flash "secure firmware" "$SECURE_FIRMWARE_PART" "$SECURE_FIRMWARE_DEVEL" "$SECURE_FIRMWARE"
+flash "U-Boot" "$UBOOT_PART" "$UBOOT_DEVEL" "$UBOOT"
+flash "rescue system" "$RESCUE_PART" "$RESCUE_DEVEL" "$RESCUE"
+flash "dtb" "$DTB_PART" "$DTB_DEVEL" "$DTB"
+board_hook

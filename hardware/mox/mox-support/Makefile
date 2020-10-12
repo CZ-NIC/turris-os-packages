@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mox-support
-PKG_VERSION:=2.2.1
-PKG_RELEASE:=2
+PKG_VERSION:=2.3.0
+PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
@@ -48,14 +48,8 @@ endef
 Build/Compile:=:
 
 define Package/mox-generic-support/install
-	$(INSTALL_DIR) $(1)/sbin
-	$(INSTALL_BIN) ./files/nor-update $(1)/sbin
-	$(INSTALL_DIR) $(1)/usr/share/mox
-	$(INSTALL_DATA) ./files/secure-firmware.bin $(1)/usr/share/mox/secure-firmware
-	$(INSTALL_DATA) ./files/dtb $(1)/usr/share/mox/dtb
-	$(INSTALL_DATA) ./files/rescue $(1)/usr/share/mox/rescue
-	$(INSTALL_DATA) ./files/uboot $(1)/usr/share/mox/uboot
-	$(INSTALL_DIR) $(1)/etc
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/button
+	$(INSTALL_DATA) ./files/reset_btn $(1)/etc/hotplug.d/button/mox_reset
 	echo '/dev/mtd2 0 0x00010000' > $(1)/etc/fw_env.config
 endef
 

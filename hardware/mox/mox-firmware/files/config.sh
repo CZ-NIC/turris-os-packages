@@ -1,0 +1,5 @@
+SECURE_FIRMWARE_PART="mtd0"
+UBOOT_PART="mtd1"
+RESCUE_PART="mtd3"
+DTB_PART="mtd4"
+UBOOT_DEVEL="/usr/share/mox/uboot-devel"
