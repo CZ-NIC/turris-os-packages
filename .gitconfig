@@ -1,0 +1,12 @@
+# To use this config run: git config --local include.path ../.gitconfig
+# You also need bash to interpret hooks and scripts
+
+[core]
+	hooksPath = .githooks
+
+[alias]
+	new-mr = "!.gitscripts/new-mr"
+	new-branch = "!.gitscripts/new-branch"
+
+[sendemail]
+	to = packaging@turris.com

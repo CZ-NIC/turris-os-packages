@@ -1,0 +1,76 @@
+#!/bin/bash
+server="gitlab.nic.cz"
+server_old="gitlab.labs.nic.cz"
+
+zero_sha1="0000000000000000000000000000000000000000"
+
+
+is_new_branch() {
+	local remote_sha1="$1"
+	[ "$remote_sha1" = "$zero_sha1" ]
+}
+
+compare_ancestors() {
+	local local_hash="$1"
+	[ "$local_hash" != "$zero_sha1" ] || return 0 # ignore removals
+	git merge-base --is-ancestor \
+		"$(git merge-base "$local_hash" "$2")" \
+		"$(git merge-base "$local_hash" "$3")"
+}
+
+
+remote_name="$1"
+remote_url="$2"
+
+
+if [[ "$remote_url" != *$server* && "$remote_url" != *$server_old* ]]; then
+	# We are interested only in pushes to our server
+	exit 0
+fi
+
+push_master=
+push_develop=
+
+while read -r local_ref local_sha1 remote_ref remote_sha1; do
+	remote_ref="${remote_ref#refs/heads/}"
+	case "$remote_ref" in
+		master)
+			push_master="$local_sha1"
+			;;
+		develop)
+			push_develop="$local_sha1"
+			;;
+		hotfix/*)
+			if compare_ancestors "$local_sha1" master develop; then
+				echo "Reference has invalid ancestor, please base it on top of master: $local_ref" >&2
+				exit 1
+			fi
+			;;
+		feature/*|bugfix/*|refactor/*|hack/*)
+			if compare_ancestors "$local_sha1" develop master; then
+				echo "Reference has invalid ancestor, please base it on top of develop: $local_ref" >&2
+				exit 1
+			fi
+			;;
+		*)
+			# We terminate push only if this tries to create new branch of invalid
+			# name. This allows push to existing branches.
+			if is_new_branch "$remote_sha1"; then
+				echo "Creation of new branch of this name is not allowed: $remote_ref" >&2
+				exit 1
+			fi
+			;;
+	esac
+done
+
+if [ -n "$push_master" ]; then
+	if [ -z "$push_develop" ]; then
+		echo "Develop branch has to be always updated with master branch." >&2
+		echo "Push both at the same time with: git push origin master develop" >&2
+		exit 1
+	fi
+	if ! git merge-base --is-ancestor "$push_master" "$push_develop"; then
+		echo "Tip commit of master is not merged to develop branch." >&2
+		exit 1
+	fi
+fi
