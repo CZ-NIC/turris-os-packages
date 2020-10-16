@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd
 PKG_VERSION:=1.4.55
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://download.lighttpd.net/lighttpd/releases-1.4.x
@@ -149,6 +149,8 @@ define Package/lighttpd/install
 	done
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/lighttpd $(1)/usr/sbin/
+	$(INSTALL_DIR) $(1)/etc/logrotate.d
+	$(CP) ./files/lighttpd.logrotate $(1)/etc/logrotate.d/lighttpd.conf
 endef
 
 define BuildPlugin
