@@ -9,6 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dhparam
 PKG_VERSION:=2.1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=Michal Hrusecky <michal.hrusecky@nic.cz>
 
@@ -59,7 +60,7 @@ define Package/dhparam/install
 	$(INSTALL_DIR) $(1)/etc/dhparam
 	$(CP) ./files/*.pem $(1)/etc/dhparam
 	$(INSTALL_DIR) $(1)/usr/share/dhparam
-	$(CP) ./files/*.sh $(1)/usr/share/dhparam
+	$(INSTALL_BIN) ./files/*.sh $(1)/usr/share/dhparam
 	$(INSTALL_BIN) ./files/*.init $(1)/usr/share/dhparam
 endef
 
