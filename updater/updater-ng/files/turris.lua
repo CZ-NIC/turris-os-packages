@@ -40,16 +40,6 @@ else
 end
 Export('board')
 
--- Common URI to Turris OS lists
-local base_url
-if mode == "branch" then
-	base_url = "https://repo.turris.cz/" .. branch .. "/" .. board .. "/lists/"
-elseif mode == "version" then
-	base_url = "https://repo.turris.cz/archive/" .. version .. "/" .. board .. "/lists/"
-else
-	DIE("Invalid updater.turris.mode specified: " .. mode)
-end
-
 -- Common connection settings for Turris OS scripts
 local script_options = {
 	security = "Remote",
@@ -59,6 +49,33 @@ local script_options = {
 		"file:///etc/updater/keys/test.pub" -- It is normal for this one to not be present in production systems
 	}
 }
+
+-- Turris repository server URL (or override)
+local repo_url = "https://repo.turris.cz"
+local config, config_error = loadfile("/etc/updater/turris-repo.lua")
+if config then
+	config = config()
+	if config.url ~= nil then
+		repo_url = config.url
+		for _, field in {"pubkey", "ca", "crl", "ocsp"} do
+			if config[field] ~= nil then
+				script_options[field] = config[field]
+			end
+		end
+	end
+else
+	WARN("Failed to load /etc/updater/turris-repo.lua: " .. tostring(config_error))
+end
+
+-- Common URI to Turris OS lists
+local base_url
+if mode == "branch" then
+	base_url = repo_url .. "/" .. branch .. "/" .. board .. "/lists/"
+elseif mode == "version" then
+	base_url = repo_url .. "/archive/" .. version .. "/" .. board .. "/lists/"
+else
+	DIE("Invalid updater.turris.mode specified: " .. mode)
+end
 
 -- The distribution base script. It contains the repository and bunch of basic packages
 Script(base_url .. "base.lua", script_options)

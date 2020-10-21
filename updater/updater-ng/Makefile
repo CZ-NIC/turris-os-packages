@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=67.0.2
-PKG_RELEASE:=3
+PKG_VERSION:=67.0.3
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/updater/updater.git
@@ -49,7 +49,7 @@ CONFIGURE_ARGS += \
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/lib/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libupdater.so* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libupdater*.so* $(1)/usr/lib/
 
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
@@ -59,6 +59,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/conf.lua $(1)/etc/updater
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
 	$(INSTALL_CONF) ./files/turris.lua $(1)/etc/updater/conf.d/turris.lua
+	$(INSTALL_CONF) ./files/turris-repo.lua $(1)/etc/updater/turris-repo.lua
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/example.lua $(1)/etc/updater/conf.d/example.lua
 
 	$(INSTALL_DIR) $(1)/etc/updater/hook_preupdate
@@ -74,6 +75,7 @@ endef
 
 define Package/updater-ng/conffiles
 /etc/updater/conf.d/example.lua
+/etc/updater/turris-repo.lua
 /etc/config/updater
 endef
 
