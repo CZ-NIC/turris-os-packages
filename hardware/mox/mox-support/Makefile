@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mox-support
-PKG_VERSION:=2.2.0
-PKG_RELEASE:=2
+PKG_VERSION:=2.2.1
+PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
@@ -55,8 +55,6 @@ define Package/mox-generic-support/install
 	$(INSTALL_DATA) ./files/dtb $(1)/usr/share/mox/dtb
 	$(INSTALL_DATA) ./files/rescue $(1)/usr/share/mox/rescue
 	$(INSTALL_DATA) ./files/uboot $(1)/usr/share/mox/uboot
-	$(INSTALL_DIR) $(1)/etc/hotplug.d/button
-	$(INSTALL_DATA) ./files/reset_btn $(1)/etc/hotplug.d/button/mox_reset
 	echo '/dev/mtd2 0 0x00010000' > $(1)/etc/fw_env.config
 endef
 
@@ -73,11 +71,14 @@ define Package/mox-support/install
 	$(INSTALL_DIR) $(1)/lib/firmware/mrvl/
 	$(INSTALL_DATA) ./files/sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl
 	ln -s sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl/sd8997_uapsta.bin
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/button
+	$(INSTALL_DATA) ./files/reset_btn $(1)/etc/hotplug.d/button/mox_reset
 endef
 
 define Package/shield-support/install
 	$(INSTALL_DIR) $(1)/boot
-	sed 's|@CONTRACT@|shield|' files/contract-boot.txt | cat - files/boot.txt > $(PKG_BUILD_DIR)/boot.txt
+	# Factory reset by default - third mode but counting from 0
+	sed -e 's|@CONTRACT@|shield|' -e 's|@RESET@|2|' files/contract-boot.txt | cat - files/boot.txt > $(PKG_BUILD_DIR)/boot.txt
 	mkimage -T script -C none -n boot -d $(PKG_BUILD_DIR)/boot.txt "$(1)"/boot/boot.scr
 	ln -s boot.scr "$(1)"/boot/boot-btrfs.scr
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
@@ -86,6 +87,8 @@ define Package/shield-support/install
 	$(INSTALL_BIN) ./files/enable_updater $(1)/etc/uci-defaults/10_updater-enable
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
 	$(INSTALL_DATA) ./files/lighttpd-reforis-only.conf $(1)/etc/lighttpd/conf.d/reforis-redirect.conf
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/button
+	$(INSTALL_DATA) ./files/shield_reset_btn $(1)/etc/hotplug.d/button/mox_reset
 endef
 
 define Package/shield-support/postinst

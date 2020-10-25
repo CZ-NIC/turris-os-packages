@@ -1,14 +1,16 @@
 #!/bin/sh
-[ -z "$(uci -q get 'system.@system[0].handle_mox_button_manually' | egrep '(1|y|yes|true)' )" ] || exit 0
 [ "$BUTTON" = BTN_0 ] || exit 0
 [ "$ACTION" = released ] || exit 0
 
 # Procd hotplug sometimes misbehaves and give random high number in $SEEN
 [ "$SEEN" -lt 60 ] || exit 0
 
+# Sometimes button handling misbehaves and reports insane numbers
 if [ "$SEEN" -lt 4 ]; then
 	reboot
 else
+	schnapps rollback factory
+	# Reboot without any delay to let people "feel" the response
 	echo s > /proc/sysrq-trigger
 	echo b > /proc/sysrq-trigger
 fi
