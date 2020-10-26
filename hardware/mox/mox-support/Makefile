@@ -55,6 +55,7 @@ define Package/mox-generic-support/install
 	$(INSTALL_DATA) ./files/dtb $(1)/usr/share/mox/dtb
 	$(INSTALL_DATA) ./files/rescue $(1)/usr/share/mox/rescue
 	$(INSTALL_DATA) ./files/uboot $(1)/usr/share/mox/uboot
+	$(INSTALL_DIR) $(1)/etc
 	echo '/dev/mtd2 0 0x00010000' > $(1)/etc/fw_env.config
 endef
 
