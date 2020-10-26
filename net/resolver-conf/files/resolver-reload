@@ -1,10 +1,20 @@
 #!/bin/sh
 
-MD5=$(md5sum /tmp/resolv.conf.auto | cut -f1 -d\ )
+# Test for resolv.conf.auto new location
+# https://github.com/openwrt/openwrt/commit/cd48d8d3420dd4df03daaa548227ceb487ba7104
+if [ -f "/tmp/resolv.conf.auto" ]; then
+   RESOLV_CONF_PATH="/tmp/resolv.conf.auto"
+elif [ -f "/tmp/resolv.conf.d/resolv.conf.auto" ]; then
+   RESOLV_CONF_PATH="/tmp/resolv.conf.d/resolv.conf.auto"
+else
+   logger "Error! File resolv.conf.auto is missing"
+fi
+
+MD5=$(md5sum "$RESOLv_CONF_PATH" | cut -f1 -d\ )
 PREVIOUS=$(cat /tmp/resolv.conf.auto.last.md5 || true)
 DO_FORWARD=$(uci -q get resolver.common.forward_upstream || echo 1)
 if /etc/init.d/resolver enabled && \
    [ "$MD5" != "$PREVIOUS" ] && \
    [ "$DO_FORWARD" = "1" ] ; then
-	/etc/init.d/resolver reload
+   /etc/init.d/resolver reload
 fi

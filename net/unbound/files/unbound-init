@@ -141,12 +141,25 @@ init_unbound() {
     local hostname_config
     local static_domains
     local dynamic_domains
+    local resolv_conf_path
+
+    # Test for resolv.conf.auto new location
+    # https://github.com/openwrt/openwrt/commit/cd48d8d3420dd4df03daaa548227ceb487ba7104
+    if [ -f "/tmp/resolv.conf.auto" ]; then
+        resolv_conf_path="/tmp/resolv.conf.auto"
+    elif [ -f "/tmp/resolv.conf.d/resolv.conf.auto" ]; then
+        resolv_conf_path="/tmp/resolv.conf.d/resolv.conf.auto"
+    else
+        echo "Error! File resolv.conf.auto is missing"
+    fi
+
+
     config_get_bool ignore_root_key common ignore_root_key 0
 
     # Do not try to restore the root key if it's not used
     if [ "$ignore_root_key" = "0" ] ; then
         # Sometimes, the root anchor is broken. We first try unbound-anchor (with and without upstream DNS servers).
-        check_root_key unbound-anchor -f /tmp/resolv.conf.auto
+        check_root_key unbound-anchor -f "$resolv_conf_path"
         check_root_key unbound-anchor
         # unbound-anchor is of no use :-(. Try to restore it from the certificate backup, if there's anything.
         check_root_key cert-backup -x $ROOTKEYFILE
@@ -253,7 +266,7 @@ init_unbound() {
     else
     if [ "$do_forward" = "1" ] ; then
         local SERVERS
-        SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' /tmp/resolv.conf.auto | sort)
+        SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' "$resolv_conf_path" | sort)
         if [ "$SERVERS" ] ; then
             (
             echo 'forward-zone:'
@@ -264,7 +277,7 @@ init_unbound() {
             done
             ) >> "$CONFIGFILE"
         fi
-        md5sum /tmp/resolv.conf.auto | cut -f1 -d\ >/tmp/resolv.conf.auto.last.md5
+        md5sum "$resolv_conf_path" | cut -f1 -d\ >/tmp/resolv.conf.auto.last.md5
     fi
     fi
 }
