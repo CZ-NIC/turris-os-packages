@@ -116,6 +116,11 @@ define Package/fix-corrupted-contract-by-rescue/description
   configuration. This script fixes the broken environment.
 endef
 
+define Package/fix-edns-buffer-size/description
+  edns buffer size in DNS setting was changed from default value 4096 to 1232.
+  This change is related to DNS Flag Day 2020.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
@@ -125,3 +130,4 @@ $(eval $(call FIX,uboot-env-reset))
 $(eval $(call FIX,config-foris-restore,+foris-controller +schnapps))
 $(eval $(call FIX,all-lan-ports-in-lan,+uci +netifd))
 $(eval $(call FIX,corrupted-contract-by-rescue,+uboot-envtools))
+$(eval $(call FIX,edns-buffer-size,+resolver-conf +uci))

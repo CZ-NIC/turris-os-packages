@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+. /lib/functions.sh
+config_load resolver
+
+config_get edns_buffer_size common edns_buffer_size
+if [ "$edns_buffer_size" = "4096" ]; then
+	uci -q batch <<-EOT
+		set resolver.common.edns_buffer_size=1232
+		commit resolver.common.edns_buffer_size
+	EOT
+fi
