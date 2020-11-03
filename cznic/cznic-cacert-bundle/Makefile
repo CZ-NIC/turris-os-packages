@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2013-2015 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2013-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cznic-cacert-bundle
 PKG_VERSION:=38
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/misc.git
 PKG_SOURCE:=$(PKG_NAME).tar.gz
@@ -30,8 +30,8 @@ define Package/$(PKG_NAME)/postinst
 	# TODO: If ever anything gets removed from this list, use -r, not delete it manually.
 	/usr/sbin/cert-backup \
 		/etc/ssl/turris.pem \
-		/usr/bin/get-api-crl \
 		/etc/ssl/ucollect-server.pem \
+		-r /usr/bin/get-api-crl \
 		-r /etc/ssl/www_turris_cz_ca.pem \
 		-r /etc/ssl/startcom.pem \
 		-r /etc/ssl/api.turris.pem
@@ -55,13 +55,6 @@ define Package/$(PKG_NAME)/install
 	# TODO: If anything is modified here, it needs to be updated in the postinst too
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/emergency-ca/ca.crt $(1)/etc/ssl/turris.pem
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/ucollect-server.pem $(1)/etc/ssl/
-	ln -s /tmp/crl.pem $(1)/etc/ssl/crl.pem
-
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/cacerts/get-api-crl $(1)/usr/bin/
-
-	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(INSTALL_DATA) ./files/get-crl.cron $(1)/etc/cron.d/get-api
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
