@@ -1,0 +1,9 @@
+#!/bin/sh
+
+cert-backup \
+	-r /etc/ssl/api.turris.pem \
+	-r /etc/ssl/startcom.pem \
+	-r /etc/ssl/turris.pem \
+	-r /etc/ssl/ucollect-server.pem \
+	-r /etc/ssl/www_turris_cz_ca.pem \
+	-r /usr/bin/get-api-crl
