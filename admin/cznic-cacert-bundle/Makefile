@@ -25,13 +25,12 @@ define Package/cznic-cacert-bundle/postinst
 [ -n "$$IPKG_INSTROOT" ] || {
 	# TODO: If ever anything gets removed from this list, use -r, not delete it manually.
 	/usr/sbin/cert-backup \
-		/etc/ssl/turris.pem \
-		/usr/bin/get-api-crl \
-		/etc/ssl/ucollect-server.pem \
+		-r /etc/ssl/turris.pem \
+		-r /usr/bin/get-api-crl \
+		-r /etc/ssl/ucollect-server.pem \
 		-r /etc/ssl/www_turris_cz_ca.pem \
 		-r /etc/ssl/startcom.pem \
 		-r /etc/ssl/api.turris.pem
-	get-api-crl
 }
 endef
 
@@ -49,15 +48,6 @@ endef
 define Package/cznic-cacert-bundle/install
 	$(INSTALL_DIR) $(1)/etc/ssl/
 	# TODO: If anything is modified here, it needs to be updated in the postinst too
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/emergency-ca/ca.crt $(1)/etc/ssl/turris.pem
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/cacerts/ucollect-server.pem $(1)/etc/ssl/
-	ln -s /tmp/crl.pem $(1)/etc/ssl/crl.pem
-
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/cacerts/get-api-crl $(1)/usr/bin/
-
-	$(INSTALL_DIR) $(1)/etc/cron.d
-	$(INSTALL_DATA) ./files/get-crl.cron $(1)/etc/cron.d/get-api
 endef
 
 $(eval $(call BuildPackage,cznic-cacert-bundle))
