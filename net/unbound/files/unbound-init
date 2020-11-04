@@ -189,7 +189,7 @@ init_unbound() {
         add_parameter "$ROOTKEYFILE_TMP" "auto-trust-anchor-file"
     fi
 
-    set_parameter edns_buffer_size edns-buffer-size 4096
+    set_parameter edns_buffer_size edns-buffer-size 1232
     set_parameter msg_cache_size msg-cache-size 100k
     set_bool_parameter net_ipv4 do-ip4 1
     set_bool_parameter net_ipv6 do-ip6 1
