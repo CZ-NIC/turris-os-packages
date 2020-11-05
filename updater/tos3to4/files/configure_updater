@@ -40,10 +40,7 @@ uci delete updater.approvals
 pkglist_handle() {
 	local lst="$1"
 	case "$lst" in
-		netboot)
-			# These are ignored for now as they are hidden before we add support
-			;;
-		datacollect|dev-detect|dvb|honeypot|luci-controls|lxc|nas|netmetr|openvpn|pakon|printserver|tor)
+		datacollect|dev-detect|dvb|honeypot|luci-controls|lxc|nas|netboot|netmetr|openvpn|pakon|printserver|tor)
 			uci add_list updater.turris.pkglists=$lst
 			;;
 		netutils)
