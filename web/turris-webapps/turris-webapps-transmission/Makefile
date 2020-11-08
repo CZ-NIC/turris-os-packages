@@ -21,7 +21,7 @@ define Package/turris-webapps-transmission
   CATEGORY:=Web
   SUBMENU:=WebApps
   TITLE:=Transmission integration
-  DEPENDS:=+transmission-daemon +transmission-web \
+  DEPENDS:=+transmission-daemon @(PACKAGE_transmission-web||PACKAGE_transmission-web-control) \
     +turris-webapps \
     +lighttpd-mod-authn_pam +lighttpd-mod-auth +lighttpd-mod-authn_file
 endef
