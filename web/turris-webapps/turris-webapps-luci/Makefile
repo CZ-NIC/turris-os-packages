@@ -35,11 +35,11 @@ endef
 
 define Package/turris-webapps-luci/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
-	$(CP) files/luci.lighttpd $(1)/etc/lighttpd/conf.d/luci.conf
+	$(CP) ./files/luci.lighttpd $(1)/etc/lighttpd/conf.d/luci.conf
 	$(INSTALL_DIR) $(1)/www/webapps-icons
-	$(CP) files/luci.svg $(1)/www/webapps-icons/luci.svg
+	$(CP) ./files/luci.svg $(1)/www/webapps-icons/luci.svg
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
-	$(CP) files/luci.webapps $(1)/usr/share/turris-webapps/05_luci.conf
+	$(CP) ./files/luci.webapps $(1)/usr/share/turris-webapps/05_luci.conf
 endef
 
 define Package/turris-webapps-luci/postinst
