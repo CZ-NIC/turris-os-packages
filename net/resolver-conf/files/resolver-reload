@@ -10,7 +10,7 @@ else
    logger "Error! File resolv.conf.auto is missing"
 fi
 
-MD5=$(md5sum "$RESOLv_CONF_PATH" | cut -f1 -d\ )
+MD5=$(md5sum "$RESOLV_CONF_PATH" | cut -f1 -d\ )
 PREVIOUS=$(cat /tmp/resolv.conf.auto.last.md5 || true)
 DO_FORWARD=$(uci -q get resolver.common.forward_upstream || echo 1)
 if /etc/init.d/resolver enabled && \
