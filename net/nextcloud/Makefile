@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nextcloud
 PKG_VERSION:=18.0.7
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
@@ -65,6 +65,8 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) ./files/30_nextcloud.conf $(1)/usr/share/turris-webapps/
 	$(INSTALL_DIR) $(1)/www/webapps-icons
 	$(INSTALL_DATA) ./files/nextcloud.png $(1)/www/webapps-icons
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_DATA) ./files/nextcloud.cron $(1)/etc/cron.d/nextcloud
 endef
 
 define Package/$(PKG_NAME)-install/install
