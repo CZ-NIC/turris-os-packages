@@ -10,12 +10,12 @@ PKG_RELRO_FULL:=0
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
-PKG_VERSION:=5.1.3
-PKG_RELEASE:=3
+PKG_VERSION:=5.2.0
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-resolver
-PKG_HASH:=20cd829027e39a9f7d993894e3640e886825b492d9ac1a744ac5616cc101458b
+PKG_HASH:=8824267ca3331fa06d418c1351b68c648da0af121bcbc84c6e08f5b1e28d9433
 
 PKG_MAINTAINER:=Knot DNS <knot-dns@labs.nic.cz>
 PKG_LICENSE:=GPL-3.0-later
@@ -34,7 +34,7 @@ define Package/knot-resolver
   SUBMENU:=IP Addresses and Names
   TITLE:=Knot DNS Resolver
   URL:=https://www.knot-resolver.cz
-  DEPENDS=+knot-libs +knot-libzscanner +libuv +luajit +dnssec-rootkey +resolver-conf +luasec +luasocket +libstdcpp +lmdb
+  DEPENDS=+knot-libs +knot-libzscanner +libuv +luajit +dnssec-rootkey +resolver-conf +luasec +luasocket +libstdcpp +lmdb +libnghttp2
   PROVIDES:=dns-resolver
   USERID:=kresd=3536:kresd=3536
 endef
