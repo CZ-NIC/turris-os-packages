@@ -132,6 +132,12 @@ define Package/fix-edns-buffer-size/description
   This change is related to DNS Flag Day 2020.
 endef
 
+define Package/fix-dhparam-to-cagen/description
+  This is fix for removal of dhparam package. It is replaced with turris-cagen. It
+  is required to ensure that new file is in new expected location and that openvpn
+  is using it.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
@@ -144,3 +150,4 @@ $(eval $(call FIX,all-lan-ports-in-lan,+uci +netifd))
 $(eval $(call FIX,corrupted-contract-by-rescue,+uboot-envtools))
 $(eval $(call FIX,cleanup-cert-backup,+cert-backup))
 $(eval $(call FIX,edns-buffer-size,+resolver-conf +uci))
+$(eval $(call FIX,dhparam-to-cagen,+uci +turris-cagen))

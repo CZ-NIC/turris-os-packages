@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+dhparam="/etc/ssl/ca/openvpn/dhparam.pem"
+
+if [ -f "$dhparam" ] && ! uci get openvpn.server_turris >/dev/null 2>&1; then
+	exit 0
+fi
+
+old="/etc/dhparam/dh-default.pem"
+if [ -f "$old" ]; then
+	# Just to make it faster we copy original file if it is still present.
+	cp "$old" "$dhparam"
+else
+	turris-cagen switch openvpn gen_dh
+fi
+
+uci set openvpn.server_turris.dh="$dhparam"
+uci commit openvpn.server_turris.dh
