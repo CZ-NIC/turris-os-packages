@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-openvpn_client-module
-PKG_VERSION:=0.3
-PKG_RELEASE:=3
+PKG_VERSION:=0.5
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-openvpn_client-module.git
@@ -38,7 +38,7 @@ endef
 
 define ForisControllerModule/foris-controller-openvpn_client-module/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/uci-defaults/vpn-client-network $(1)/etc/uci-defaults/50_add-vpn-client-network
+	$(INSTALL_BIN) ./files/openvpn_cl.uci $(1)/etc/uci-defaults/50_add-vpn-client-network
 endef
 
 $(eval $(call ForisControllerModule,foris-controller-openvpn_client-module))

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if ! uci -q get firewall.turris_openvpn_client > /dev/null; then
+	uci batch <<-EOF
+		set firewall.turris_vpn_client=zone
+		set firewall.turris_vpn_client.name='tr_vpn_cl'
+		set firewall.turris_vpn_client.input='REJECT'
+		set firewall.turris_vpn_client.output='ACCEPT'
+		set firewall.turris_vpn_client.forward='REJECT'
+		set firewall.turris_vpn_client.masq='1'
+		set firewall.turris_vpn_client_forward='forwarding'
+		set firewall.turris_vpn_client_forward.src='lan'
+		set firewall.turris_vpn_client_forward.dest='tr_vpn_cl'
+		commit firewall
+	EOF
+fi
