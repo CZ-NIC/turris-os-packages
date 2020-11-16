@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-openvpn-module
-PKG_VERSION:=0.6.2
-PKG_RELEASE:=3
+PKG_VERSION:=0.6.3
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-openvpn-module.git
@@ -31,8 +31,7 @@ define Package/foris-controller-openvpn-module
   DEPENDS:=\
     +foris-controller \
     +turris-cagen \
-    +openvpn-openssl \
-    +dhparam
+    +openvpn-openssl
   VARIANT:=python3
 endef
 
