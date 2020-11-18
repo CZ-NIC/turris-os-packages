@@ -1,0 +1,15 @@
+#!/bin/sh
+. /lib/functions.sh
+config_load network
+
+interface_hadle() {
+	local interface="$1"
+	local proto
+	config_get proto "$interface" "proto"
+	[ "$proto" = "wireguard" ] || return 0
+	uci -q batch <<-EOF
+		del network.$interface.ifname
+		commit network.$interface.ifname
+	EOF
+}
+config_foreach interface_hadle interface
