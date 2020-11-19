@@ -85,46 +85,6 @@ append_topic() {
 	fi
 }
 
-load_subsubordinate() {
-	local id="$1"
-	config_get via "$id" via
-	config_get_bool enabled "$id" enabled 0
-	if [ -n "$via" -a "$enabled" == 1 ] ; then
-		local subsub_varname=subsubordinate_$id
-		local tmp="$(eval echo "\$$subsub_varname") $id"
-		eval "subsubordinate_$via=\"$tmp\""
-	fi
-}
-
-generate_subordinate() {
-	local id="$1"
-	config_get address "$id" address
-	config_get port "$id" port 11884
-	config_get_bool enabled "$id" enabled 0
-	if [ "$enabled" == 0 -o -z "$address" ]; then
-		return
-	fi
-
-	echo
-	echo "connection ${id}"
-	echo "address ${address}:${port}"
-	echo "restart_timeout 5"
-	echo "keepalive_interval 5"
-	echo "bridge_cafile /etc/fosquitto/bridges/${id}/ca.crt"
-	echo "bridge_certfile /etc/fosquitto/bridges/${id}/token.crt"
-	echo "bridge_keyfile /etc/fosquitto/bridges/${id}/token.key"
-	echo "bridge_insecure true"
-	echo "bridge_tls_version tlsv1.2"
-
-	append_topic "$id"
-	local subsub_varname=subsubordinate_$id
-	for subsub_id in $(eval echo "\$$subsub_varname") ; do
-		append_topic "$subsub_id"
-	done
-
-	echo
-}
-
 generate_config() {
 	echo "Generating fosquitto config file in $GENERATED_CONF"
 	echo "# fosquitto.conf file generated from UCI config." > "$GENERATED_CONF"
@@ -135,8 +95,6 @@ generate_config() {
 		generate_global
 		generate_local
 		generate_remote
-		config_foreach load_subsubordinate subsubordinate
-		config_foreach generate_subordinate subordinate
 	} >> "$GENERATED_CONF"
 }
 

@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fosquitto
-PKG_VERSION:=20
-PKG_RELEASE:=6
+PKG_VERSION:=21
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 

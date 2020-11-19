@@ -23,14 +23,17 @@ STOP=39
 USE_PROCD=1
 PROG=/usr/bin/foris-forwarder
 
+service_triggers()
+{
+        procd_add_reload_trigger "/etc/config/fosquitto"
+}
+
 start_service() {
-	#config load foris-controller
-	#config_get credentials_file mqtt credentials_file "/etc/fosquitto/credentials.plain"
 	credentials_file="/etc/fosquitto/credentials.plain"
 
 	config_load fosquitto
 	config_get bus main bus mqtt
-	config_get port local port "11884"
+	config_get port local port "11883"
 	config_get_bool debug global debug "0"
 
 	controller_id=$(crypto-wrapper serial-number)
@@ -47,4 +50,11 @@ start_service() {
 	procd_set_param stderr 1 # same for stderr
 	procd_set_param respawn
 	procd_close_instance
+}
+
+reload_service()
+{
+	# restart on reload
+	stop
+	start
 }

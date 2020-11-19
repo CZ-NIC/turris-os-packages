@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller
 PKG_VERSION:=1.0.20
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller.git
@@ -38,7 +38,7 @@ define Package/foris-controller-app
   TITLE:=foris-controller-app
   URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller
   DEPENDS:=\
-    +python3-light +python3-ubus +python3-prctl +python3-multiprocessing +python3-pbkdf2 \
+    +python3-light +python3-ubus +python3-prctl +python3-multiprocessing +python3-pbkdf2 +python3-zeroconf \
     +foris-schema +python3-setuptools +turrishw \
     +turris-maintain +updater-supervisor +user-notify \
     +l10n-supported +sqm-scripts +fosquitto +python3-paho-mqtt +turris-cagen \

@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-subordinates-module
 PKG_VERSION:=0.2.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-subordinates-module.git
@@ -30,6 +30,7 @@ define Package/foris-controller-subordinates-module
   TITLE:=Foris controller Subordinates module
   DEPENDS:=\
     +foris-controller \
+    +foris-forwarder \
     +fosquitto
   VARIANT:=python3
 endef
