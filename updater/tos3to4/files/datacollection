@@ -1,0 +1,25 @@
+#!/bin/sh
+contract="/usr/share/server-uplink/contract_valid"
+
+agreed_on_datacollection() {
+	[ "$(uci -q get foris.eula.agreed_collect)" = "1" ]
+}
+
+contract_is_valid() {
+	[ -f "$contract" ] && [ "$(cat "$contract")" = "valid" ]
+}
+
+
+if agreed_on_datacollection || contract_is_valid; then
+	uci -q batch <<-EOF
+		set sentinel.main.agreed_with_eula_version=1
+		commit sentinel.main.agreed_with_eula_version
+		del_list pkglists.pkglists.pkglist=datacollect
+		add_list pkglists.pkglists.pkglist=datacollect
+		commit pkglists.pkglists
+
+		delete foris.eula.agreed_collect
+		commit foris.eula.agreed_collect
+	EOF
+	rm -f "$contract"
+fi

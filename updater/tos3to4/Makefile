@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tos3to4
-PKG_VERSION:=2.1.0
-PKG_RELEASE:=3
+PKG_VERSION:=2.2.0
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -39,6 +39,7 @@ define Package/tos3to4/install
 	$(INSTALL_BIN) ./files/switch_and_vlans $(1)/usr/lib/tos3to4/switch_and_vlans
 	$(INSTALL_BIN) ./files/wifi $(1)/usr/lib/tos3to4/wifi
 	$(INSTALL_BIN) ./files/lxc $(1)/usr/lib/tos3to4/lxc
+	$(INSTALL_BIN) ./files/datacollection $(1)/usr/lib/tos3to4/datacollection
 ifdef CONFIG_TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
 	$(INSTALL_BIN) ./files/sfp-omnia $(1)/usr/lib/tos3to4/sfp-omnia
 endif
@@ -58,6 +59,7 @@ define Package/tos3to4/postinst
 	$(if $(CONFIG_TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia),/usr/lib/tos3to4/sfp-omnia || ec=$$?)
 	/usr/lib/tos3to4/wifi || ec=$$?
 	/usr/lib/tos3to4/lxc || ec=$$?
+	/usr/lib/tos3to4/datacollection || ec=$$?
 	exit $$ec
 }
 endef
