@@ -9,23 +9,8 @@ config_get SCRIPTNAME server scriptname "/foris"
 SCRIPTNAME=$(echo "$SCRIPTNAME" | sed -e 's;\\;\\\\;g' | sed -e 's;/*$;;g' | sed -e 's;^/*;;g' | sed -e 's;/+;/;g')
 
 HTTPS_URL="https://$SERVER_NAME$REQUEST_URI"
-HTTPS_REDIRECT="
-			let xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
-				if(this.status == 200 &&
-				   xhttp.responseText.search('redirectTo(url)')) {
-					redirectTo('$HTTPS_URL');
-				}
-			};
-			xhttp.open('GET', '$HTTPS_URL');
-			xhttp.send();
-"
 
 if [ "$WIZARD_FINISHED" = "1" ]; then
-  REDIRECT_SCRIPT=""
-  if [ "$REQUEST_SCHEME" = https ]; then
-    HTTPS_REDIRECT=""
-  fi
   DELAY="25"
   [ "$(ls -1 /usr/share/turris-webapps/[0-9]*.conf | wc -l)" -gt 2 ] || DELAY=5
   URL=""
@@ -38,7 +23,7 @@ if [ "$WIZARD_FINISHED" = "1" ]; then
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="UTF-8">		
+		<meta charset="UTF-8">
 		<meta http-equiv="Cache-Control" content="no-cache" />
 		<meta http-equiv="refresh" content="$DELAY; URL=$URL" />
 	<style>
@@ -126,7 +111,17 @@ if [ "$WIZARD_FINISHED" = "1" ]; then
 				redirectTo("$URL");
 			}
 		}, 1000);
-$HTTPS_REDIRECT
+	  if (location.protocol !== 'https:') {
+			let xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if(this.status == 200 &&
+				   xhttp.responseText.search('redirectTo(url)')) {
+					redirectTo('$HTTPS_URL');
+				}
+			};
+			xhttp.open('GET', '$HTTPS_URL');
+			xhttp.send();
+    }
 	};
 
 	function redirectTo(url) {
