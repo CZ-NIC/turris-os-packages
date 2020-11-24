@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=68.0.0
+PKG_VERSION:=69.0.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
