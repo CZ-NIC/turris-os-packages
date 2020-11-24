@@ -1,5 +1,9 @@
 #!/bin/sh
 . /lib/functions.sh
+# netifd provides default network overlay with current runtime configuration. We
+# are not interested in that. We need to work with real content of /etc/config so
+# we disable state loading.
+LOAD_STATE=
 config_load network
 
 if [ "$(cat /tmp/sysinfo/model)" = "Turris" ]; then
@@ -77,10 +81,9 @@ append_lan_ports() {
 }
 interface_handle() {
 	local cnf="$1"
-	local devices new_ifname
-	config_get devices "$cnf" device
-	[ -n "$devices" ] || config_get devices "$cnf" ifname
-	for ifn in $devices; do
+	local ifnames new_ifname
+	config_get ifnames "$cnf" ifname
+	for ifn in $ifnames; do
 		case "$ifn" in
 			"${CPU_LAN_1}"*|"${CPU_LAN_2}"*)
 				append_lan_ports
