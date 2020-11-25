@@ -186,8 +186,10 @@ load_uci_config_common() {
 		if [ "$do_forward" = "1" ] ; then
 			local SERVERS
 
-			SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' "$resolv_conf_path"| sort -u |head -n 4)
-			if [ "$SERVERS" ] ; then
+			# Get IP list for forwarding with respect to net_ipv4/6 setting
+			# Max number of servers used for forwarding is 4
+			SERVERS=$(get_servers_ip_addresses "$net_ipv4" "$net_ipv6" "$resolv_conf_path" 4)
+			if [ -n "$SERVERS" ]; then
 				# Slight hack around https://gitlab.nic.cz/knot/knot-resolver/issues/205#note_94566
 				echo "table.insert(policy.special_names, { count = 0, cb = policy.all(" >> $CONFIGFILE
 				if [ "$ignore_root_key" = "1"  ] ; then
