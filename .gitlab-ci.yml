@@ -1,0 +1,27 @@
+variables:
+  VERSION: snapshot
+
+include:
+  - local: .gitlab/ci/base.yml
+  - local: .gitlab/ci/deploy.yml
+  - local: .gitlab/ci/imagebuilder.yml
+  - local: .gitlab/ci/sdk.yml
+  - local: .gitlab/ci/rootfs.yml
+  - local: .gitlab/ci/targets_rootfs.yml
+  - remote: https://gitlab.com/ynezz/openwrt-ci/raw/master/openwrt-ci/gitlab/main.yml
+
+stages:
+  - pre-build
+  - build-deploy-container
+  - build
+  - test
+  - generate_targets
+  - deploy
+
+build deploy container:
+  extends: .build-deploy-container
+
+check scripts with shellcheck:
+  stage: pre-build
+  extends: .openwrt-shellcheck
+

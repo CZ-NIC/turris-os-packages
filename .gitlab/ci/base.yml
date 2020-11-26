@@ -1,0 +1,36 @@
+.build-deploy-container:
+  image: docker:latest
+  stage: build-deploy-container
+  services:
+    - docker:dind
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker build -t "$CI_REGISTRY_IMAGE:deploy" -f Dockerfile.deploy .
+    - docker push "$CI_REGISTRY_IMAGE:deploy"
+
+.build:
+  image: "$CI_REGISTRY_IMAGE:deploy"
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+
+
+generate-targets:
+  stage: generate_targets
+  script:
+    - bash ./generate_targets.sh
+  artifacts:
+    paths:
+      - targets.yml
+
+trigger-deploy:
+  variables:
+    VERSION: "$VERSION"
+  stage: deploy
+  trigger:
+    strategy: depend
+    include:
+      - artifact: targets.yml
+        job: generate-targets
