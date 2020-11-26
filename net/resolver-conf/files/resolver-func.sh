@@ -82,3 +82,23 @@ dns_config_load() {
 		echoerr "Error DNS Resolver config not found!"
 	fi
 }
+
+get_servers_ip_addresses() {
+	local ipv4_enabled="$1"
+	local ipv6_enabled="$2"
+	local resolv_conf="$3"
+	local max_ip="$4"
+	local i=0
+
+	# Limit maximum number of returned IP addresses to $max_ip
+	awk '$1 == "nameserver" {print $2}' "$resolv_conf" \
+		| while [ "$i" -lt "$max_ip" ] && read -r ip; do
+			if [ "$ipv4_enabled" = "1" ] && ipcheck.py -4 -c "$ip"; then
+				printf "$ip "
+				i=$((i+1))
+			elif [ "$ipv6_enabled" = "1" ] && ipcheck.py -6 -c "$ip"; then
+				printf "$ip "
+				i=$((i+1))
+			fi
+		done
+}
