@@ -20,8 +20,3 @@ stages:
 
 build deploy container:
   extends: .build-deploy-container
-
-check scripts with shellcheck:
-  stage: pre-build
-  extends: .openwrt-shellcheck
-
