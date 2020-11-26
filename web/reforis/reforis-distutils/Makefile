@@ -13,6 +13,7 @@ PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis-distutils.git
+PKG_MIRROR_HASH:=1bd8b65a9528bbdaac356c618577fde46f6cb62d83cdce3f160e9372413b9c50
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

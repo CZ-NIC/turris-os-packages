@@ -13,6 +13,7 @@ PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/crypto-wrapper.git
+PKG_MIRROR_HASH:=1fb45c61479a17e20601ad91c48ce00f358b1ad5f5f9b49ba3e6717403d9ceb7
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

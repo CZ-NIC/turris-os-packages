@@ -13,6 +13,7 @@ PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/luci-rainbow.git
+PKG_MIRROR_HASH:=a2bdbff104ad1de6a2b1364a560da305627f7fbba0c1bd50a8af07575fb9e2b6
 PKG_SOURCE_VERSION:=5828fadded08e4a15f2cf211c1a42d613743b58c
 
 

@@ -12,6 +12,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/omnia-mcutool.git
+PKG_MIRROR_HASH:=a825b8aa019ac02c2ec4f37eea6eeaf687d2db53d52aa3b16bf995b1e61cc98f
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

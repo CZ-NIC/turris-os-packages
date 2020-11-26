@@ -13,6 +13,7 @@ PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris/foris-subordinates-plugin.git
+PKG_MIRROR_HASH:=1d9b457e5a2e17a2c3e0188a62c424193d11bb74f32ca0b6faa44102c26663e3
 PKG_SOURCE_VERSION:=package-v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

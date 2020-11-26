@@ -13,6 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/turris-omnia-uboot.git
+PKG_MIRROR_HASH:=aeab20bcc0f36f57ca95fb4bc093d49e39c04fe50ab88bcd8ee280739acacea7
 PKG_SOURCE_DATE:=2020-09-07
 PKG_SOURCE_VERSION:=6dd804d78fdcd775f6eeebe0aa0527d6761a115f
 

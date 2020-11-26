@@ -13,6 +13,7 @@ PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/rainbow_omnia.git
+PKG_MIRROR_HASH:=34b82a94837caf928f472cf3da82d8e17a1bdfcd503532bede0cacb7bac964c4
 PKG_SOURCE_VERSION:=d4ded015bd5a400059ea20f2234a311e749dc519
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

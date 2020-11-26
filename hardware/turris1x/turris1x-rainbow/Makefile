@@ -13,6 +13,7 @@ PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/rainbow.git
+PKG_MIRROR_HASH:=ed6a2411a9d373a3e8779c37d344851cabca22e2af58f38ea13c1dcc543dd1d2
 PKG_SOURCE_VERSION:=5d7d5c8c3bdec184bdb418e857a6d5a11726fac4
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

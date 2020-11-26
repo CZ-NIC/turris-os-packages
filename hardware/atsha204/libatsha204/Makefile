@@ -13,6 +13,7 @@ PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/libatsha204.git
+PKG_MIRROR_HASH:=106ba16fbbfc0a0060139c7013b6be742ddd2dffd2e73073cfdec9342e83280d
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

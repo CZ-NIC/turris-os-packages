@@ -13,6 +13,7 @@ PKG_RELEASE:=4
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-netmetr-module.git
+PKG_MIRROR_HASH:=dc9430b78afd22fa457afb366223c8241cb000ccda32865d16d8ca109ae27781
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

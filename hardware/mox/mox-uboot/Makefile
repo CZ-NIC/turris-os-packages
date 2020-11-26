@@ -13,6 +13,7 @@ PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/mox-boot-builder.git
+PKG_MIRROR_HASH:=edb7469a6191fec9437dd1d55bcb6261840d1d667fa4c3128680d0c1d33751e1
 PKG_SOURCE_VERSION:=24de5b79eb0aeecaa611ced7513de8d87f0a1bcc
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

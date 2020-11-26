@@ -13,6 +13,7 @@ PKG_RELEASE:=5
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/turris-survey.git
+PKG_MIRROR_HASH:=5bbb43ef3c43807dbfc9c058fc6537c1a289fc54363ec6d16cfd0e3adcfc1fbb
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

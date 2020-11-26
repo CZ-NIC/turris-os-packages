@@ -13,6 +13,7 @@ PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/updater/opkg-wrapper.git
+PKG_MIRROR_HASH:=4f22127171467fc41b820197910a79547ebf6ced2e5e4b220e9b07cdbc29de20
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

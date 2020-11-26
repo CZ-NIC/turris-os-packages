@@ -13,6 +13,7 @@ PKG_RELEASE:=6
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-netboot-module.git
+PKG_MIRROR_HASH:=9b1b9e2276548d332df06be8644169216ca8e751d6002dd0778fe0bcb0531aca
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

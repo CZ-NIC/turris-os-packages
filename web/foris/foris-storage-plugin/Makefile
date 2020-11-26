@@ -13,6 +13,7 @@ PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris/foris-storage-plugin.git
+PKG_MIRROR_HASH:=3f190558692cd4379a067f6a6aa34309d342a8a2fefd8017fe0c6bac3f12b234
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

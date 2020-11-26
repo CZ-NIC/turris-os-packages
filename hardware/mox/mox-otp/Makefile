@@ -13,6 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/mox-otp.git
+PKG_MIRROR_HASH:=22e9aea11e7d1a49d0e3cd1ac06c94a0dfd5bfb67d3ec9a33ad8ee0affdc2d32
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
