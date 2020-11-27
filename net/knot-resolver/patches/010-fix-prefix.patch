@@ -1,0 +1,48 @@
+This is just workaround. It should be removed after proper fixing in upstream.
+Patch fixes problem with lmdb pkg confing. It also adds workaround for get_option
+which is now not propagated in OpenWrt meson host package.
+--- a/meson.build
++++ b/meson.build
+@@ -23,7 +23,7 @@ libknot = dependency('libknot', version:
+ libdnssec = dependency('libdnssec', version: knot_version)
+ libzscanner = dependency('libzscanner', version: knot_version)
+ libuv = dependency('libuv', version: '>=1.7')
+-lmdb = dependency('lmdb', required: false)
++lmdb = dependency('liblmdb', required: false)
+ if not lmdb.found()  # darwin workaround: missing pkgconfig
+   lmdb = meson.get_compiler('c').find_library('lmdb')
+ endif
+@@ -44,15 +44,19 @@ if host_machine.system() == 'darwin'
+ endif
+ 
+ ## Paths
+-prefix = get_option('prefix')
++## prefix = get_option('prefix')
++prefix = '/usr'
+ data_dir = join_paths(prefix, get_option('datadir'), 'knot-resolver')
+ doc_dir = join_paths(prefix, get_option('datadir'), 'doc', 'knot-resolver')
+ info_dir = join_paths(prefix, get_option('datadir'), 'info')
+ examples_dir = join_paths(doc_dir, 'examples')
+-etc_dir = join_paths(prefix, get_option('sysconfdir'), 'knot-resolver')
+-lib_dir = join_paths(prefix, get_option('libdir'), 'knot-resolver')
++## etc_dir = join_paths(prefix, get_option('sysconfdir'), 'knot-resolver')
++## lib_dir = join_paths(prefix, get_option('libdir'), 'knot-resolver')
++etc_dir = '/etc/kresd'
++lib_dir = '/usr/lib'
+ modules_dir = join_paths(lib_dir, 'kres_modules')
+-sbin_dir = join_paths(prefix, get_option('sbindir'))
++## sbin_dir = join_paths(prefix, get_option('sbindir'))
++sbin_dir = '/usr/bin'
+ run_dir = join_paths('/run', 'knot-resolver')
+ systemd_work_dir = join_paths(prefix, get_option('localstatedir'), 'lib', 'knot-resolver')
+ systemd_cache_dir = join_paths(prefix, get_option('localstatedir'), 'cache', 'knot-resolver')
+@@ -63,7 +67,8 @@ mod_inc_dir = include_directories('.', '
+ 
+ ## Trust anchors
+ managed_ta = get_option('managed_ta') == 'enabled'
+-keyfile_default = join_paths(etc_dir, get_option('keyfile_default'))
++## keyfile_default = join_paths(etc_dir, get_option('keyfile_default'))
++keyfile_default = '/etc/root.keys'
+ if keyfile_default == join_paths(etc_dir, 'root.keys')
+   managed_ta = managed_ta or get_option('managed_ta') == 'auto'
+ endif
