@@ -31,24 +31,31 @@ done
 
 # get bus config
 config_load foris-controller
-config_get BUS_HOST mqtt host "localhost"
-config_get BUS_PORT mqtt port "11883"
-config_get CREDENTIALS_FILE mqtt credentials_file "/etc/fosquitto/credentials.plain"
-if serial_number=$(crypto-wrapper serial-number); then
-	CONTROLLER_ID=" --mqtt-controller-id $serial_number"
-fi
+config_get BUS main bus "mqtt"
+case "$BUS" in
+	ubus)
+		config_get BUS_PATH ubus path "/var/run/ubus.sock"
+		echo "var.foris-$APP.flags = \" $EXTRA_FLAGS -a $APP -b $BUS --bus-socket $BUS_PATH\""
+		;;
+	unix)
+		config_get BUS_PATH unix path "/var/run/foris-controller.sock"
+		BUS="unix-socket"
+		echo "var.foris-$APP.flags = \" $EXTRA_FLAGS -a $APP -b $BUS --bus-socket $BUS_PATH\""
+		;;
+	mqtt)
+		config_get BUS_HOST mqtt host "localhost"
+		config_get BUS_PORT mqtt port "11883"
+		config_get CREDENTIALS_FILE mqtt credentials_file "/etc/fosquitto/credentials.plain"
+		if serial_number=$(crypto-wrapper serial-number); then
+			CONTROLLER_ID=" --mqtt-controller-id $serial_number"
+		fi
+		echo "var.foris-$APP.flags = \" $EXTRA_FLAGS -a $APP -b $BUS --mqtt-host $BUS_HOST --mqtt-port $BUS_PORT --mqtt-passwd-file ${CREDENTIALS_FILE}${CONTROLLER_ID}\""
+		;;
+esac
 
 echo "var.foris-$APP.bin = \"/usr/bin/foris\""
 echo "var.foris-$APP.cgi = \"/usr/share/foris/foris-$APP-cgi\""
 echo "var.foris-$APP.scriptname = \"$SCRIPTNAME/$APP\""
-case "$BUS" in
-	ubus|unix-socket)
-		echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --bus-socket $BUS_PATH\""
-		;;
-	mqtt)
-		echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --mqtt-host $BUS_HOST --mqtt-port $BUS_PORT --mqtt-passwd-file ${CREDENTIALS_FILE}${CONTROLLER_ID}\""
-		;;
-esac
 echo "var.foris-$APP.paths = \"$FORIS_PATHS\""
 echo
 echo "\$HTTP[\"url\"] =~ \"^\" + var.foris-$APP.scriptname + \"/(\" + var.foris-$APP.paths + \")$\" {"
