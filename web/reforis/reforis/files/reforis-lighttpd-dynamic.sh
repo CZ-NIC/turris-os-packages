@@ -36,6 +36,7 @@ echo "var.reforis.scriptname = \"/reforis\""
 
 echo
 echo "\$HTTP[\"url\"] =~ \"^\" + var.reforis.scriptname + \"/(.*)$\" {"
+echo "  server.max-read-idle = 90"
 case $SERVER in
 	flup)
 		echo '	fastcgi.debug = 0'
