@@ -41,7 +41,14 @@ fi
 echo "var.foris-$APP.bin = \"/usr/bin/foris\""
 echo "var.foris-$APP.cgi = \"/usr/share/foris/foris-$APP-cgi\""
 echo "var.foris-$APP.scriptname = \"$SCRIPTNAME/$APP\""
-echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b mqtt --mqtt-host $BUS_HOST --mqtt-port $BUS_PORT --mqtt-passwd-file ${CREDENTIALS_FILE}${CONTROLLER_ID}\""
+case "$BUS" in
+	ubus|unix-socket)
+		echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --bus-socket $BUS_PATH\""
+		;;
+	mqtt)
+		echo "var.foris-$APP.flags = \"$EXTRA_FLAGS -a $APP -b $BUS --mqtt-host $BUS_HOST --mqtt-port $BUS_PORT --mqtt-passwd-file ${CREDENTIALS_FILE}${CONTROLLER_ID}\""
+		;;
+esac
 echo "var.foris-$APP.paths = \"$FORIS_PATHS\""
 echo
 echo "\$HTTP[\"url\"] =~ \"^\" + var.foris-$APP.scriptname + \"/(\" + var.foris-$APP.paths + \")$\" {"
