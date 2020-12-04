@@ -23,12 +23,6 @@ EXTRA_FLAGS=""
 [ "$SESSION_TIMEOUT" != "" ] && EXTRA_FLAGS="$EXTRA_FLAGS --session-timeout $SESSION_TIMEOUT"
 EXTRA_FLAGS="$EXTRA_FLAGS -s $SERVER"
 
-FORIS_PATHS=""
-tmp_out=$(eval /usr/bin/foris -R $EXTRA_FLAGS -a $APP)
-for path in $tmp_out;  do
-	FORIS_PATHS="$FORIS_PATHS|${path:1}"  # remove first '/' character
-done
-
 # get bus config
 config_load foris-controller
 config_get BUS main bus "mqtt"
@@ -56,9 +50,19 @@ esac
 echo "var.foris-$APP.bin = \"/usr/bin/foris\""
 echo "var.foris-$APP.cgi = \"/usr/share/foris/foris-$APP-cgi\""
 echo "var.foris-$APP.scriptname = \"$SCRIPTNAME/$APP\""
-echo "var.foris-$APP.paths = \"$FORIS_PATHS\""
 echo
-echo "\$HTTP[\"url\"] =~ \"^\" + var.foris-$APP.scriptname + \"/(\" + var.foris-$APP.paths + \")$\" {"
+echo "\$HTTP[\"url\"] =~ \"^\" + var.foris-$APP.scriptname {"
+echo " \$HTTP[\"url\"] =~ \"^\" + var.foris-$APP.scriptname + \"/static/\" {"
+PLUGINS_DIR=/usr/lib/pythonX.X/site-packages/foris_plugins/
+for PLUGIN_PATH in $PLUGINS_DIR/*; do
+	PLUGIN_NAME=$(basename $PLUGIN_PATH)
+	[ -d "$PLUGIN_PATH/static" ] && {
+		echo "  alias.url += ( var.foris-$APP.scriptname + \"/static/plugins/$PLUGIN_NAME/\" => \"$PLUGIN_PATH/static/\" )"
+	}
+done
+echo "  alias.url += ( var.foris-$APP.scriptname + \"/static/generated/\" => \"/tmp/.foris_workdir/dynamic_assets/$APP/\" )"
+echo "  alias.url += ( var.foris-$APP.scriptname + \"/static/\" => \"/usr/lib/pythonX.X/site-packages/foris/static/\" )"
+echo " } else {"
 echo "  server.max-read-idle = 90"
 case $SERVER in
 	flup)
@@ -87,17 +91,5 @@ fi
 		echo '	cgi.assign = ( "" => "" )'
 	;;
 esac
+echo " }"
 echo "}"
-
-
-PLUGINS_DIR=/usr/lib/pythonX.X/site-packages/foris_plugins/
-
-for PLUGIN_PATH in $PLUGINS_DIR/*; do
-	PLUGIN_NAME=$(basename $PLUGIN_PATH)
-	[ -d "$PLUGIN_PATH/static" ] && {
-		echo "alias.url += ( var.foris-$APP.scriptname + \"/static/plugins/$PLUGIN_NAME/\" => \"$PLUGIN_PATH/static/\" )"
-	}
-done
-
-echo "alias.url += ( var.foris-$APP.scriptname + \"/static/generated/\" => \"/tmp/.foris_workdir/dynamic_assets/$APP/\" )"
-echo "alias.url += ( var.foris-$APP.scriptname + \"/static/\" => \"/usr/lib/pythonX.X/site-packages/foris/static/\" )"
