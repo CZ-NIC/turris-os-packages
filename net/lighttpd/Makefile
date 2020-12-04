@@ -191,7 +191,6 @@ $(eval $(call BuildPlugin,redirect,URL redirection,+PACKAGE_lighttpd-mod-redirec
 $(eval $(call BuildPlugin,auth,Authentication,,20))
 $(eval $(call BuildPlugin,authn_file,File-based authentication,,20))
 $(eval $(call BuildPlugin,authn_pam,PAM-based authentication,+PACKAGE_lighttpd-mod-authn_pam:libpam,20))
-$(eval $(call BuildPlugin,auth_ticket,Cookie-based authentication,,20))
 
 # Finally, everything else.
 $(eval $(call BuildPlugin,access,Access restrictions,,30))
