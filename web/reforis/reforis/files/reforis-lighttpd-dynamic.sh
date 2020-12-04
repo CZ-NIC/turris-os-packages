@@ -46,6 +46,8 @@ case $SERVER in
 		echo "				\"socket\" => \"/tmp/fastcgi.reforis.socket\","
 		echo "				\"bin-path\" => var.reforis.bin,"
 		echo '				"check-local" => "disable",'
+		echo '				"idle-timeout" => 180,'
+		echo '				"min-procs" => 0,'
 		echo '				"max-procs" => 1,'
 		echo '				"bin-environment" => ('
 if [ -n "$SENTRY_DSN" ]; then
