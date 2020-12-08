@@ -38,7 +38,7 @@ DEVICE := omnia
 else
 DEVICE := unknown
 endif
-kernel_files=$(TOPDIR)/target/linux/$(BOARD)/files-$(KERNEL_PATCHVER)/. $(TOPDIR)/target/linux/generic/files/.
+kernel_files=$(TOPDIR)/target/linux/$(BOARD)/files/. $(TOPDIR)/target/linux/generic/files/.
 
 define Package/rescue-image
 	TITLE:=rescue-image
@@ -98,7 +98,7 @@ define Build/Compile
 		$(STAGING_DIR_HOST)/bin/opkg --offline-root "$(PKG_BUILD_DIR)/rootfs" --force-depends install \{\} \; ;\
 	done
 	rm -rf "$(PKG_BUILD_DIR)/rootfs"/usr/lib/opkg
-	$(KERNEL_MAKE) $(PKG_JOBS) silentoldconfig $(KERNELNAME)
+	$(KERNEL_MAKE) $(PKG_JOBS) oldconfig $(KERNELNAME)
 	cd $(LINUX_DIR); ./scripts/gen_initramfs_list.sh \
 	-o "$(PKG_BUILD_DIR)"/kernel/linux-$(LINUX_VERSION)/arch/$(LINUX_KARCH)/boot/initrd.gz -u squash -g squash \
 	"$(PKG_BUILD_DIR)/rootfs" "$(PKG_BUILD_DIR)/rootfs.extra"
