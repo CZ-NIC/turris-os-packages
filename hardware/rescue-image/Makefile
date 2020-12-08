@@ -99,7 +99,7 @@ define Build/Compile
 	done
 	rm -rf "$(PKG_BUILD_DIR)/rootfs"/usr/lib/opkg
 	$(KERNEL_MAKE) $(PKG_JOBS) oldconfig $(KERNELNAME)
-	cd $(LINUX_DIR); ./scripts/gen_initramfs_list.sh \
+	cd $(LINUX_DIR); ./usr/gen_initramfs_list.sh \
 	-o "$(PKG_BUILD_DIR)"/kernel/linux-$(LINUX_VERSION)/arch/$(LINUX_KARCH)/boot/initrd.gz -u squash -g squash \
 	"$(PKG_BUILD_DIR)/rootfs" "$(PKG_BUILD_DIR)/rootfs.extra"
 	gzip -d "$(PKG_BUILD_DIR)"/kernel/linux-$(LINUX_VERSION)/arch/$(LINUX_KARCH)/boot/initrd.gz
