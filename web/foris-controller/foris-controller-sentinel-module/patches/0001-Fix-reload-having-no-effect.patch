@@ -1,0 +1,32 @@
+From e295cec06f65d1e115044bede6a7f7c4637c04b1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Karel=20Ko=C4=8D=C3=AD?= <cynerd@email.cz>
+Date: Tue, 8 Dec 2020 17:07:11 +0100
+Subject: [PATCH] Fix reload having no effect
+
+Reload reads UCI to apply changes. This means that all changes have to
+he commited in UCI before we run reload.
+
+This just moves sentinel-reload execution after UCI commit by moving it
+outside of with block (leaving block causes UCI commit).
+---
+ foris_controller_backends/sentinel/__init__.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/foris_controller_backends/sentinel/__init__.py b/foris_controller_backends/sentinel/__init__.py
+index fe44a36..331a67b 100644
+--- a/foris_controller_backends/sentinel/__init__.py
++++ b/foris_controller_backends/sentinel/__init__.py
+@@ -67,8 +67,8 @@ class SentinelUci:
+             if token:
+                 backend.set_option("sentinel", "main", "device_token", token)
+ 
+-            # Reload sentinel components
+-            BaseCmdLine._run_command_and_check_retval(["/usr/bin/sentinel-reload"], 0)
++        # Reload sentinel components
++        BaseCmdLine._run_command_and_check_retval(["/usr/bin/sentinel-reload"], 0)
+ 
+         return True, eula, token if eula != 0 else None
+ 
+-- 
+2.29.2
+
