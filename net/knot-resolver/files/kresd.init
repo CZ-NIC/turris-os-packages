@@ -169,15 +169,7 @@ load_uci_config_common() {
 	config_get forward_dns "$section" forward_custom
 
 
-	# Test for resolv.conf.auto new location
-	# https://github.com/openwrt/openwrt/commit/cd48d8d3420dd4df03daaa548227ceb487ba7104
-	if [ -f "/tmp/resolv.conf.auto" ]; then
-		resolv_conf_path="/tmp/resolv.conf.auto"
-	elif [ -f "/tmp/resolv.conf.d/resolv.conf.auto" ]; then
-		resolv_conf_path="/tmp/resolv.conf.d/resolv.conf.auto"
-	else
-		echo "Error! File resolv.conf.auto is missing"
-	fi
+	resolv_conf_path="$(get_resolv_conf)"
 
 	#check custom forwarding
 	if [ -n "$forward_dns" ] && [ "$do_forward" = "1" ]; then

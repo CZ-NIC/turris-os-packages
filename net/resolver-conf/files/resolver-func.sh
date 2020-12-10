@@ -20,6 +20,30 @@ load_variable() {
 	echo -ne $ret
 }
 
+get_resolv_conf() {
+	local use_vpn
+	config_load resolver
+	config_get_bool use_vpn "common" "use_vpn" 1
+	local resolv_conf_path=""
+	if [ "$use_vpn" -eq 1 ]; then
+		resolv_conf_path="$(ls -1 /etc/resolv.conf.vpn.* | head -n1)"
+	fi
+	# Test for resolv.conf.auto new location
+	# https://github.com/openwrt/openwrt/commit/cd48d8d3420dd4df03daaa548227ceb487ba7104
+	if [ \! -f "$resolv_conf_path" ]; then
+		if [ -f "/tmp/resolv.conf.auto" ]; then
+		   resolv_conf_path="/tmp/resolv.conf.auto"
+		elif [ -f "/tmp/resolv.conf.d/resolv.conf.auto" ]; then
+		   resolv_conf_path="/tmp/resolv.conf.d/resolv.conf.auto"
+		else
+		   resolv_conf_path=""
+		   logger "Error! File resolv.conf.auto is missing"
+           return
+		fi
+	fi
+	echo "$resolv_conf_path"
+}
+
 get_dns_ip() {
 	local ipv4="$1"
 	local ipv6="$2"

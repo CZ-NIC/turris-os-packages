@@ -3,8 +3,13 @@
 
 SERVICE_USE_PID=0
 
+. /usr/share/resolver/functions.sh
+
 DHCP_SCRIPT=/etc/resolver/dhcp_host_domain_ng.py
 DHCP_SCRIPT_OLD=/etc/kresd/dhcp_host_domain_ng.sh
+
+EXTRA_COMMANDS="check_reload"
+EXTRA_HELP="        check_reload  Reload if upstream resolver changed"
 
 START=60
 
@@ -162,6 +167,21 @@ save_resolver_info() {
 		echo $pid_num>/var/run/resolver.pid
 	fi
 	echo $LAST_SERVICE>/var/run/resolver.name
+}
+
+check_reload() {
+	config_load resolver
+	config_get_bool do_forward "common" forward_upstream 1
+
+	local resolv_conf_path="$(get_resolv_conf)"
+
+	MD5=$(md5sum "$resolv_conf_path" | cut -f1 -d\ )
+	PREVIOUS=$(cat /tmp/resolv.conf.auto.last.md5 || true)
+	if /etc/init.d/resolver enabled && \
+	   [ "$MD5" != "$PREVIOUS" ] && \
+	   [ "$do_forward" == "1" ] ; then
+		reload
+	fi
 }
 
 start() {

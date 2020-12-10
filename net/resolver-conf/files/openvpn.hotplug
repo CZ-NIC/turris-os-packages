@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ "$ACTION" = up ]; then
+    set | sed -n "s|foreign_option_[0-9]*='dhcp-option DNS \([^']*\)'|nameserver \1|p" > /tmp/resolv.conf.vpn."$INSTANCE"
+    grep -q nameserver /tmp/resolv.conf.vpn."$INSTANCE" || rm -f /tmp/resolv.conf.vpn."$INSTANCE"
+    /etc/init.d/resolver check_reload
+elif [ "$ACTION" = down ]; then
+    rm -f /tmp/resolv.conf.vpn."$INSTANCE"
+    /etc/init.d/resolver check_reload
+fi
+
