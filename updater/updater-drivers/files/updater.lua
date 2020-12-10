@@ -98,4 +98,4 @@ for name, _ in pairs(ls("/sys/bus/pci/devices")) do
 		})
 	end
 end
-turris_list("drivers/usb.lua")
+turris_list("drivers/pci.lua")
