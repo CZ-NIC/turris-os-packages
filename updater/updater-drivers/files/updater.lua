@@ -83,7 +83,7 @@ for name, _ in pairs(ls("/sys/bus/usb/devices")) do
 		})
 	end
 end
-turris_list("devices/usb.lua")
+turris_list("drivers/usb.lua")
 
 
 -- PCI
@@ -98,4 +98,4 @@ for name, _ in pairs(ls("/sys/bus/pci/devices")) do
 		})
 	end
 end
-turris_list("devices/usb.lua")
+turris_list("drivers/usb.lua")
