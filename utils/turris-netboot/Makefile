@@ -85,7 +85,7 @@ endef
 
 define Package/turris-netboot-data/install
 	$(INSTALL_DIR) $(1)/usr/share/turris-netboot
-	cd $(LINUX_DIR); ./scripts/gen_initramfs_list.sh \
+	cd $(LINUX_DIR); ./usr/gen_initramfs_list.sh \
 	-o $(1)/usr/share/turris-netboot/initrd-$(CONFIG_ARCH).gz -u squash -g squash \
 	"$(PKG_BUILD_DIR)/rootfs" "$(PKG_BUILD_DIR)/rootfs.extra"
 	gzip -d $(1)/usr/share/turris-netboot/initrd-$(CONFIG_ARCH).gz
