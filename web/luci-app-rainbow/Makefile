@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2015-2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2015-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-rainbow
-PKG_VERSION:=2
+PKG_VERSION:=2.1
 PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/luci-rainbow.git
-PKG_SOURCE_VERSION:=5828fadded08e4a15f2cf211c1a42d613743b58c
+PKG_SOURCE_VERSION:=7f11144cd32ad8c0c96cf2b69910ba63b3ef7d63
 
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -32,7 +32,7 @@ endif
 define Package/luci-app-rainbow
   TITLE:=luci-app-rainbow
   URL:=https://gitlab.nic.cz/turris/luci-rainbow
-  DEPENDS:=+luci +turris-rainbow
+  DEPENDS:=+luci +luci-compact +turris-rainbow
 endef
 
 define Build/Compile
