@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-rainbow
 PKG_VERSION:=2.1
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/luci-rainbow.git
@@ -33,7 +33,7 @@ endif
 define Package/luci-app-rainbow
   TITLE:=luci-app-rainbow
   URL:=https://gitlab.nic.cz/turris/luci-rainbow
-  DEPENDS:=+luci +luci-compact +turris-rainbow
+  DEPENDS:=+luci +luci-compat +turris-rainbow
 endef
 
 define Build/Compile
