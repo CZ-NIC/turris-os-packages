@@ -33,12 +33,12 @@ endef
 define Build/Compile
 	$(TARGET_CC) $(TARGET_CFLAGS) $(EXTRA_CFLAGS) $(EXTRA_LDFLAGS) $(TARGET_LDFLAGS) \
 		-o $(PKG_BUILD_DIR)/mcutool \
-		$(PKG_BUILD_DIR)/mcutool/mcutool.c
+		$(PKG_BUILD_DIR)/mcutool.c
 endef
 
 define Package/omnia-mcutool/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mcutool/mcutool $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/mcutool $(1)/usr/bin/
 endef
 
 $(eval $(call BuildPackage,omnia-mcutool))
