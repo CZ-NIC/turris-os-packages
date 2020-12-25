@@ -9,26 +9,25 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-uci
 PKG_VERSION:=0.8.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
+
+PYPI_NAME:=pyuci
+PKG_HASH:=9287fe41b427dc5c167592d429be48c1e6cfe276225681b1bdefddfe90d7e941
+
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
+PKG_LICENSE_FILES:=LICENSE
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/pyuci.git
-PKG_MIRROR_HASH:=63a0d2158b84b32ed461cfc640bc84f018e03d6cc7f8051b5ac55d5d31513d75
-PKG_SOURCE_VERSION:=v$(PKG_VERSION)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-
-
+include $(TOPDIR)/feeds/packages/lang/python/pypi.mk
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/python3-uci
-  TITLE:=python3-uci
-  SECTION:=lang-python
+  SECTION:=lang
   CATEGORY:=Languages
   SUBMENU:=Python
+  TITLE:=Python UCI bindings
   URL:=https://gitlab.nic.cz/turris/pyuci/
-  MAINTAINER:=CZ.NIC <packaging@turris.cz>
   DEPENDS:=+python3-light +libuci
   VARIANT:=python3
 endef
@@ -39,3 +38,4 @@ endef
 
 $(eval $(call Py3Package,python3-uci))
 $(eval $(call BuildPackage,python3-uci))
+$(eval $(call BuildPackage,python3-uci-src))
