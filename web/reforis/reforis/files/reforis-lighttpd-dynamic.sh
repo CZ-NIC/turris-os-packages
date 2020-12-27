@@ -67,4 +67,4 @@ esac
 echo "}"
 
 
-echo "alias.url += ( var.reforis.scriptname + \"/static/\" => \"/usr/lib/python3.6/site-packages/reforis_static/\" )"
+echo "alias.url += ( var.reforis.scriptname + \"/static/\" => \"/usr/lib/pythonX.X/site-packages/reforis_static/\" )"
