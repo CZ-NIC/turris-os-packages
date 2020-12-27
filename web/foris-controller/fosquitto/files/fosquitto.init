@@ -47,8 +47,8 @@ generate_global() {
 
 generate_local() {
 	config_get port local port 11883
-	echo "port $port"
-	echo "bind_address localhost"
+	echo "listener port $port"
+	echo "listener bind_address localhost"
 	echo
 }
 
