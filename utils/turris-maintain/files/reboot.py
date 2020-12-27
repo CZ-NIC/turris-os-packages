@@ -18,7 +18,7 @@ with euci.EUci() as uci:
     if bus == "ubus":
         path = uci.get(
             "foris-controller", "ubus", "notification_path",
-            default="/var/run/ubus.sock"
+            default="/var/run/ubus/ubus.sock"
         )
         from foris_controller.buses.ubus import UbusNotificationSender
         sender = UbusNotificationSender(path)

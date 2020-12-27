@@ -20,7 +20,7 @@ config_load foris-controller
 config_get BUS main bus "mqtt"
 case "$BUS" in
 	ubus)
-		config_get BUS_PATH ubus path "/var/run/ubus.sock"
+		config_get BUS_PATH ubus path "/var/run/ubus/ubus.sock"
 		;;
 	mqtt)
 		config_get BUS_HOST mqtt host "localhost"

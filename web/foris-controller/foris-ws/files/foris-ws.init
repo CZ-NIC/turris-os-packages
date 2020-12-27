@@ -37,7 +37,7 @@ start_service() {
 
 	procd_open_instance
 	if [ "$bus" == "ubus" ]; then
-		config_get path ubus path "/var/run/ubus.sock"
+		config_get path ubus path "/var/run/ubus/ubus.sock"
 		procd_set_param command "$PROG" ${debug_arg:-} -a ubus filesystem --host "127.0.0.1" --port "$port" ubus --path "$path"
 	elif [ "$bus" == "unix" ]; then
 		config_get path unix notification_path "/var/run/foris-controller-notifications.sock"

@@ -37,7 +37,7 @@ start_service() {
 
 	procd_open_instance
 	if [ "$bus" == "ubus" ]; then
-		config_get path ubus path "/var/run/ubus.sock"
+		config_get path ubus path "/var/run/ubus/ubus.sock"
 		config_get_bool single ubus single 0
 		if [ "$single" == "1" ]; then
 			single_arg="--single"

@@ -26,7 +26,7 @@ bus = uci_get("foris-controller", "main", "bus", "ubus")
 controller_id = None
 
 if bus == "ubus":
-    path = uci_get("foris-controller", "ubus", "notification_path", "/var/run/ubus.sock")
+    path = uci_get("foris-controller", "ubus", "notification_path", "/var/run/ubus/ubus.sock")
     from foris_controller.buses.ubus import UbusNotificationSender
     sender = UbusNotificationSender(path)
 elif bus == "unix":
