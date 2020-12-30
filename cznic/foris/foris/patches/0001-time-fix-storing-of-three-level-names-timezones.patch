@@ -1,0 +1,26 @@
+From 874348e484961f31427cbb47deb83d804603fe41 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Martin=20Mat=C4=9Bjek?= <martin.matejek@nic.cz>
+Date: Mon, 6 Jan 2020 16:22:25 +0100
+Subject: [PATCH] time: fix storing of three-level names timezones
+
+Fix storing of three-level names time zones such as America/Indiana/Indianapolis
+---
+ foris/config_handlers/misc.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/foris/config_handlers/misc.py b/foris/config_handlers/misc.py
+index f37f544..c062c3c 100644
+--- a/foris/config_handlers/misc.py
++++ b/foris/config_handlers/misc.py
+@@ -320,7 +320,7 @@ class UnifiedTimeHandler(BaseConfigHandler):
+         )
+ 
+         def region_form_cb(data):
+-            region, city = data["zonename"].split("/")
++            region, city = data["zonename"].split("/", maxsplit=1)
+             msg = {
+                 "city": city,
+                 "country": data["country"],
+-- 
+2.25.1
+
