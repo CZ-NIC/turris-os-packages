@@ -1,54 +1,46 @@
-# CZ.NIC folder
-cznic/foris/ @shenek
-cznic/fosquitto/ @shenek
-cznic/mozilla-iot-gateway-webapp/ @miska
-cznic/turrishw/ @shenek
-cznic/turris-netboot/ @miska
+# Data collection
+collect/sentinel/ @Cynerd @VojtechMyslivec @mprudek
+collect/haas-proxy/ @shenek
+collect/pakon/ @mmtj
+collect/pakon-lists/ @mmtj
 
-#  Hardware
+# Hardware
 hardware/ @miska
 hardware/crypto-wrapper/ @VojtechMyslivec
 hardware/mox/mox-otp/ @VojtechMyslivec
+hardware/mox/mox-uboot/ @pali @elkablo
+hardware/omnia/omnia-uboot/ @pali @elkablo
 
-# Lang
-lang/ @Cynerd
+# Lang - Python Packages
+lang/ @BKPepe @ja-pa
+lang/turrishw/ @mmtj
 
 # Libs
-libs/ @ja-pa @Cynerd
+libs/ @BKPepe @ja-pa
 
 # Multimedia
-multimedia/ @BKPepe
+multimedia/ @BKPepe @ja-pa
 
 # Net
-net/knot/ @salzmdan
-net/knot-resolver/ @ja-pa
+net/ @BKPepe
+net/knot-resolver/ @vcunat @ja-pa
 net/unbound/ @ja-pa
-net/tor/ @ja-pa
-net/torsocks/ @ja-pa
 net/resolver-conf/ @ja-pa
 net/resolver-debug/ @ja-pa
-net/lighttpd/ @miska
+net/lighttpd/ @BKPepe
 net/lighttpd-https-cert/ @miska
-net/netmetr/ @shenek @mprudek
 net/nextcloud/ @miska
 net/dnssec-rootkey/ @ja-pa @vcunat
-net/lighttpd/ @miska
-net/nextcloud/ @miska
-net/rmbt/ @mprudek
-
-# Pakon related stuff
-cznic/pakon/ @mmatejek
-cznic/pakon-dev-detect/ @mmatejek
-cznic/pakon-lists/ @mmatejek
+net/rmbt-client/ @mprudek
 
 # Updater
 updater/ @Cynerd
 
-# Data collection
-collect/ @miska
-
 # Utils
-utils/ @miska @ja-pa @Cynerd
+utils/ @miska @ja-pa @Cynerd @BKPepe
 
 # Web related packages
-web/ @miska @shenek @Cynerd
+web/foris-controller/ @mmtj @fhron
+web/foris/ @mmtj
+web/reforis/ @aleksan4g @MarekSasek
+web/turris-webapps/ @aleksan4g
