@@ -295,7 +295,8 @@ class DHCPv4:
                 for line in fp.read().splitlines():
                     if len(line.split()) >= 4:
                         timestamp, mac, ipv4, hostname = line.split()[:4]
-                        self._add_lease(hostname, ipv4)
+                        if hostname != "*": # any/no hostname
+                            self._add_lease(hostname, ipv4)
         except IOError:
             log("DHCP leases file does not exist %s " %
                 self.__dhcp_leases_file, LOG_WARNING)
@@ -319,7 +320,7 @@ class DHCPv4:
     def _del_lease(self, hostname, ipv4=None):
         hostname_suffix = "%s.%s" % (hostname, self.__local_suffix)
         if is_valid_hostname(hostname) is False:
-            log("Del_lease, hosname check failed", LOG_WARNING)
+            log("Del_lease, hostname check failed", LOG_WARNING)
             return False
         for index, item in enumerate(self.__leases_list):
             if item[0] == hostname_suffix:
