@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
-PKG_VERSION:=101.1
-PKG_RELEASE:=2
+PKG_VERSION:=101.1.1
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris/foris.git
