@@ -1,0 +1,30 @@
+From 69184365a5f9130b78d04b4e763443d3ee49cd5d Mon Sep 17 00:00:00 2001
+From: Stepan Henek <stepan.henek@nic.cz>
+Date: Tue, 12 Jan 2021 11:14:52 +0100
+Subject: [PATCH] Escape html for next param in login template
+
+---
+ foris/templates/index.html.j2 | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/foris/templates/index.html.j2 b/foris/templates/index.html.j2
+index 8a33812..180dd7e 100644
+--- a/foris/templates/index.html.j2
++++ b/foris/templates/index.html.j2
+@@ -18,10 +18,10 @@
+     {% if user_authenticated() %}
+         <a href="{{ url("logout") }}">{% trans %}Log out{% endtrans %}</a>
+     {% else %}
+-        <form action="{{ request.fullpath }}{{ '?next=%s' % next if next else '' }}" method="POST">
++        <form action="{{ request.fullpath }}{{ ('?next=%s' % next if next else '')|e }}" method="POST">
+             <input type="hidden" name="csrf_token" value="{{ get_csrf_token() }}">
+-        {% if request.GET.get("next") %}
+-            <input type="hidden" name="next" value="{{ request.GET['next'] }}">
++        {% if next %}
++            <input type="hidden" name="next" value="{{ next|e }}">
+         {% endif %}
+             <label for="field-password">{% trans %}Password{% endtrans %}</label>
+             <input id="field-password" type="password" name="password" placeholder="{% trans %}Password{% endtrans %}" autofocus>
+-- 
+GitLab
+
