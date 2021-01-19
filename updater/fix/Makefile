@@ -40,7 +40,9 @@ Package/fix-$(1)/install ?= $$(Package/fix-$(1)/DefaultInstall)
 
 define Package/fix-$(1)/$(or $(3),postinst)
 #!/bin/sh
+[ -n "$$IPKG_INSTROOT" ] || {
 exec /usr/libexec/fix/$(1)
+}
 endef
 
 $$(eval $$(call BuildPackage,fix-$(1)))
