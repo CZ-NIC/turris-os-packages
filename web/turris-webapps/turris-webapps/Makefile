@@ -53,7 +53,6 @@ define Package/turris-webapps/install
 	$(INSTALL_DIR) $(1)/www/turris-webapps/js
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/js/*.js $(1)/www/turris-webapps/js
 	$(INSTALL_DIR) $(1)/www/webapps-icons
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/icons/turris.svg $(1)/www/webapps-icons
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/icons/turris-light.svg $(1)/www/webapps-icons
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/icons/turris-dark.svg $(1)/www/webapps-icons
 

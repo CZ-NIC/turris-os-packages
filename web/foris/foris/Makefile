@@ -74,7 +74,7 @@ define Py3Package/foris/install
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
 	$(INSTALL_DATA) ./files/00_foris.conf $(1)/usr/share/turris-webapps/
 	$(INSTALL_DIR) $(1)/www/webapps-icons
-	$(INSTALL_DATA) ./files/foris.jpg $(1)/www/webapps-icons
+	$(INSTALL_DATA) ./files/turris.svg $(1)/www/webapps-icons
 
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_DATA) ./files/foris-config.lighttpd-conf $(1)/etc/lighttpd/conf.d/foris-config.conf
