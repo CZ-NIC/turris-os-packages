@@ -21,7 +21,11 @@ DTB="dtb"
 DTB_PART=""
 DTB_DEVEL="$(ls -1 /boot/*turris*.dtb 2> /dev/null | head -n1)"
 
-board_hook() {
+board_pre_hook() {
+    :
+}
+
+board_post_hook() {
     :
 }
 
@@ -143,8 +147,9 @@ if [ -n "$DEVEL" ]; then
     DTB_DEVEL=""
 fi
 
+board_pre_hook
 flash "secure firmware" "$SECURE_FIRMWARE_PART" "$SECURE_FIRMWARE_DEVEL" "$SECURE_FIRMWARE"
 flash "U-Boot" "$UBOOT_PART" "$UBOOT_DEVEL" "$UBOOT"
 flash "rescue system" "$RESCUE_PART" "$RESCUE_DEVEL" "$RESCUE"
 flash "dtb" "$DTB_PART" "$DTB_DEVEL" "$DTB"
-board_hook
+board_post_hook
