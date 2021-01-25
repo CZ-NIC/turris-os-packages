@@ -34,13 +34,20 @@ disable_btrfs() {
 override_root() {
     if [ -n "$(fw_printenv root_uuid 2> /dev/null)" ]; then
         UUID="$(fw_printenv root_uuid | sed 's|root_uuid=||')"
-        NEW_TARGET_PART="$(blkid | sed -n 's|^/dev/\([^:]*\):.*UUID="'"$UUID"'".*|\1|p' | head -n 1)"
+        local retry=5
+        local NEW_TARGET_PART=""
+        while [ "$retry" -gt 0 ] && [ -z "$NEW_TARGET_PART" ]; do
+            NEW_TARGET_PART="$(blkid | sed -n 's|^/dev/\([^:]*\):.*UUID="'"$UUID"'".*|\1|p' | head -n 1)"
+            sleep 1
+            retry="$(expr "$retry" - 1)"
+        done
         if [ "$NEW_TARGET_PART" ] && [ -d "/sys/class/block/$NEW_TARGET_PART" ]; then
             NEW_TARGET_DRIVE="$(ls -d /sys/class/block/*/"$NEW_TARGET_PART" | sed 's|/.*/\([^/]*\)/'"$NEW_TARGET_PART"'|\1|')"
             if [ -d "/sys/class/block/$NEW_TARGET_DRIVE" ]; then
                 TARGET_PART="/dev/$NEW_TARGET_PART"
                 PART_NO="$(echo "$NEW_TARGET_PART" | sed -n 's|.*[^0-9]\([0-9]\+\)$|\1|p')"
                 TARGET_DRIVE="/dev/$NEW_TARGET_DRIVE"
+                enable_btrfs
             fi
         fi
         echo "Newly selected root device is $TARGET_PART"
@@ -177,6 +184,7 @@ EOF
         mount "$TARGET_PART" "$trg_mnt_pth" || die 5 "Can't mount the partition"
         btrfs subvolume create "$trg_mnt_pth"/@ >> /tmp/debug.txt 2>&1 || die 6 "Can't create a subvolume"
         ln -s @/boot/boot.scr "$trg_mnt_pth"/boot.scr
+        echo "ROOT_DEV='${TARGET_PART}'" >> "$trg_mnt_pth"/@/etc/schnapps/config
         umount "$trg_mnt_pth"
         mount "$TARGET_PART" -o subvol=@ "$trg_mnt_pth"
     fi
