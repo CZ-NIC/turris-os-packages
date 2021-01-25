@@ -19,7 +19,7 @@ RESCUE_DEVEL="/usr/share/rescue-image/image.fit.lzma"
 
 DTB="dtb"
 DTB_PART=""
-DTB_DEVEL="$(ls -1 /boot *turris*.dtb | head -n1)"
+DTB_DEVEL="$(ls -1 /boot/*turris*.dtb 2> /dev/null | head -n1)"
 
 board_pre_hook() {
     :
@@ -56,22 +56,22 @@ print_help() {
 flash() {
     local flashing="$1"
     local part="$2"
+
+    [ -n "$part" ] || return 0
+
     shift 2
 
-    [ -n "$part" ] || return
-
-    while [ -n "$1" ] && [ \! -r "$1" ]; do
-        shift
+    while [ -n "$1" ] && [ \! -r "$1" ] && shift; do
+        :
     done
 
     if [ \! -r "$1" ]; then
         echo "Can't find anything to flash to '$flashing' partition"
-        return
+        return 0
     fi
 
     if [ \! -c "/dev/$part" ]; then
         die "/dev/$part is missing!"
-        return
     fi
 
     v_echo "Checking and flashing '$flashing' partition: $1 -> /dev/$part"
@@ -83,7 +83,7 @@ flash() {
     fi
 }
 
-boot_src_cleanup() {
+boot_scr_cleanup() {
     umount -fl "$tmpdir"
     rmdir "$tmpdir"
 }

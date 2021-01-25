@@ -23,7 +23,7 @@ endef
 
 define Package/turris-mox-firmware/description
   Stable firmware for Turris MOX
-enddef
+endef
 
 define Package/turris-mox-devel-firmware
   TITLE:=Data files for nor-update (development version)
