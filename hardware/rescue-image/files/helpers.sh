@@ -34,6 +34,7 @@ disable_btrfs() {
 override_root() {
     if [ -n "$(fw_printenv root_uuid 2> /dev/null)" ]; then
         UUID="$(fw_printenv root_uuid | sed 's|root_uuid=||')"
+        # Wait for specified device a little
         local retry=5
         local NEW_TARGET_PART=""
         while [ "$retry" -gt 0 ] && [ -z "$NEW_TARGET_PART" ]; do
@@ -47,7 +48,7 @@ override_root() {
                 TARGET_PART="/dev/$NEW_TARGET_PART"
                 PART_NO="$(echo "$NEW_TARGET_PART" | sed -n 's|.*[^0-9]\([0-9]\+\)$|\1|p')"
                 TARGET_DRIVE="/dev/$NEW_TARGET_DRIVE"
-                enable_btrfs
+                enable_btrfs # re-setup btrfs now with new device
             fi
         fi
         echo "Newly selected root device is $TARGET_PART"
