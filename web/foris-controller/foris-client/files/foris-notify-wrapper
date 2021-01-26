@@ -19,15 +19,12 @@
 #
 
 # This is a wrapper around foris-notify binary
-# It takes almost the same arguments as foris-controller except
-# for the message bus settings which is read from uci
+# It takes almost the same arguments as foris-controller
 
 
 . $IPKG_INSTROOT/lib/functions.sh
 
 config_load foris-controller
-
-config_get bus main bus
 
 
 args=""
@@ -56,20 +53,11 @@ while true; do
 done
 
 
-if [ "$bus" = "ubus" ]; then
-	config_get path ubus path
-	/usr/bin/foris-notify $args ubus --path "$path" "$1"  # only first notification
-elif [ "$bus" = "unix-socket" ]; then
-	config_get path unix_socket notification_path
-	/usr/bin/foris-notify $args unix-socket --path "$path" "$1"  # only first notification
-elif [ "$bus" = "mqtt" ]; then
-	config_get host mqtt host localhost
-	config_get port mqtt port 11883
-	config_get credentials_file mqtt credentials_file /etc/fosquitto/credentials.plain
-	serial_number=$(crypto-wrapper serial-number)
-	if [ $? == 0 ] ; then
-		controller_id="--controller-id $serial_number"
-	fi
-
-	/usr/bin/foris-notify $args mqtt --host "$host" --port "$port" --passwd-file "$credentials_file" $controller_id "$1"  # only first notification
+config_get host mqtt host localhost
+config_get port mqtt port 11883
+config_get credentials_file mqtt credentials_file /etc/fosquitto/credentials.plain
+if serial_number=$(crypto-wrapper serial-number); then
+	controller_id="--controller-id $serial_number"
 fi
+
+exec /usr/bin/foris-notify $args mqtt --host "$host" --port "$port" --passwd-file "$credentials_file" $controller_id "$1"  # only first notification
