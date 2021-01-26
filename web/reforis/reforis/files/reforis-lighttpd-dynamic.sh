@@ -17,19 +17,10 @@ SCRIPTNAME=$(echo "$SCRIPTNAME" | sed -e 's;\\;\\\\;g' | sed -e 's;/*$;;g' | sed
 
 # get bus config
 config_load foris-controller
-config_get BUS main bus "mqtt"
-case "$BUS" in
-	ubus)
-		config_get BUS_PATH ubus path "/var/run/ubus.sock"
-		;;
-	mqtt)
-		config_get BUS_HOST mqtt host "localhost"
-		config_get BUS_PORT mqtt port "11883"
-		config_get CREDENTIALS_FILE mqtt credentials_file "/etc/fosquitto/credentials.plain"
-		CONTROLLER_ID=$(crypto-wrapper serial-number)
-		BUS="mqtt"
-		;;
-esac
+config_get BUS_HOST mqtt host "localhost"
+config_get BUS_PORT mqtt port "11883"
+config_get CREDENTIALS_FILE mqtt credentials_file "/etc/fosquitto/credentials.plain"
+CONTROLLER_ID=$(crypto-wrapper serial-number)
 
 echo "var.reforis.bin = \"/usr/bin/reforis\""
 echo "var.reforis.scriptname = \"/reforis\""
