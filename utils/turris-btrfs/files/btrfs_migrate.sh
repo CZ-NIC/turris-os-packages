@@ -63,6 +63,8 @@ btrfs subvolume create /tmp/btrfs-convert/target/@ || die "Can't create subvolum
 mount -o bind / /tmp/btrfs-convert/src || die "Can't bind btrfs mount."
 tar -C /tmp/btrfs-convert/src -cf - . | tar -C /tmp/btrfs-convert/target/@ -xf - || die "Filesystem copy failed!"
 
+schnapps import -f https://repo.turris.cz/hbs/medkit/turris1x-medkit-latest.tar.gz
+
 mkdir -p /tmp/btrfs-convert/target/@/boot/tefi
 mount /dev/mmcblk0p1 /tmp/btrfs-convert/target/@/boot/tefi || die "Can't mount fat"
 cp /boot/zImage /boot/fdt /tmp/btrfs-convert/target/@/boot/tefi || die "Can't copy kernel"
