@@ -144,6 +144,9 @@ migrate_to_sdcard() {
 	mount -o bind / "$tmp/src" || die "Can't bind btrfs mount."
 	tar -C "$tmp/src" -cf - . | tar -C "$tmp/target/@" -xf - || die "Filesystem copy failed!"
 
+	# import factory image
+	schnapps import -f https://repo.turris.cz/hbs/medkit/turris1x-medkit-latest.tar.gz
+
 	# Copy kernel image and DTB to FAT partition
 	mkdir -p "$tmp/@/boot/tefi"
 	mount "${SDCARD}p1" "$tmp/target/@/boot/tefi" || die "Can't mount fat"
