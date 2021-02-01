@@ -1,0 +1,58 @@
+From 88f43400b1243927a9f083a494b6d07fdc58c58d Mon Sep 17 00:00:00 2001
+From: Miroslav Hanak <miroslav.hanak@nic.cz>
+Date: Wed, 13 Jan 2021 12:52:11 +0100
+Subject: [PATCH] http: fix content length parsing and processing
+
+Fixes:
+https://gitlab.nic.cz/turris/sentinel/minipot/-/issues/29
+
+---
+diff --git a/http.c b/http.c
+index 5708e83..dbfa39f 100644
+--- a/http.c
++++ b/http.c
+@@ -497,7 +497,7 @@ size_t get_prec_ws_len(uint8_t *str, size_t len) {
+ 	return ws_len;
+ }
+
+-static inline void skip_bytes(size_t *to_skip, uint8_t **buff, size_t *bytes_to_proc) {
++static inline void skip_bytes(int64_t *to_skip, uint8_t **buff, size_t *bytes_to_proc) {
+ 	size_t diff = MY_MIN(*to_skip, *bytes_to_proc);
+ 	*bytes_to_proc -= diff;
+ 	*to_skip -= diff;
+@@ -650,14 +650,13 @@ static int proc_con_len_head(struct conn_data *conn_data, uint8_t *val, size_t l
+ 		uint8_t sep[] = {HT, SP};
+ 		tokens_cnt = tokenize(val, len, tokens, TOKENS_LEN, sep, sizeof(sep) / sizeof(*sep));
+ 		FLOW_GUARD_WITH_RESP(tokens_cnt != 1, conn_data);
+-		// we have to create c-string for strtol
++		// we have to create c-string for strtoll
+ 		// in this stage it is safe
+ 		tokens[0].start_ptr[tokens[0].len] = 0 ;
+ 		char *end_ptr;
+ 		errno = 0;
+ 		int64_t result = strtoll(tokens[0].start_ptr, &end_ptr, 10);
+-		if ((errno == ERANGE && (result == LLONG_MAX || result == LLONG_MIN)) || // value out of range of long long int
+-			(result == 0 && errno != 0) || // another conversion error
++		if (errno != 0 || //conversion error
+ 			end_ptr == (char *)tokens[0].start_ptr || // no digits
+ 			result < 0) // negative value
+ 			conn_data->con_len = -1;
+@@ -784,14 +783,13 @@ static int proc_chunk_size(struct conn_data *conn_data) {
+ 		FLOW_GUARD_WITH_RESP(check_chunk_size_ext(semicolon + 1, token_len - chunk_size_str_len), conn_data);
+ 	}
+ 	// parse chunk size
+-	// we have to create c-string for strtol
++	// we have to create c-string for strtoll
+ 	// in this stage it is safe
+ 	conn_data->token_buff[chunk_size_str_len] = 0;
+ 	char *end_ptr;
+ 	errno = 0;
+ 	int64_t result = strtoll(conn_data->token_buff, &end_ptr, 16);
+-	FLOW_GUARD_WITH_RESP(((errno == ERANGE && (result == LLONG_MAX || result == LLONG_MIN)) || // value out of range of long long int
+-		(result == 0 && errno != 0) || // another conversion error
++	FLOW_GUARD_WITH_RESP((errno != 0 || // conversion error
+ 		end_ptr == (char *)conn_data->token_buff || // no digits
+ 		result < 0), // negative value
+ 		conn_data);
+--
+GitLab
