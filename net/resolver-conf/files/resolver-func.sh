@@ -41,6 +41,16 @@ get_dns_ip() {
 	echo "$ip_list"
 }
 
+get_wan_ipv6() {
+	local wan_ipv6
+
+	config_load network
+	config_get_bool wan_ipv6 wan ipv6 1
+	config_load resolver
+
+	echo "$wan_ipv6"
+}
+
 dns_config_load() {
 	local config_name="$1"
 	local resolver_callback="$2"
@@ -52,9 +62,16 @@ dns_config_load() {
 	#check file config file
 	if [ -f "$config_file" ]; then
 		local enable_tls="0" #set default value
-		local net_ipv6 net_ipv4
+		local net_ipv6 net_ipv4 wan_ipv6
+
+		wan_ipv6="$(get_wan_ipv6)"
+
 		config_get_bool net_ipv6 "common" "net_ipv6" 1
 		config_get_bool net_ipv4 "common" "net_ipv4" 1
+
+		if [ "$wan_ipv6" = "0" ]; then
+			net_ipv6=0
+		fi
 
 		# load variables from config file
 		local name="$(load_variable "$config_file" name 1)"
@@ -86,8 +103,9 @@ dns_config_load() {
 get_servers_ip_addresses() {
 	local ipv4_enabled="$1"
 	local ipv6_enabled="$2"
-	local resolv_conf="$3"
-	local max_ip="$4"
+	local wan_ipv6_enabled="$3"
+	local resolv_conf="$4"
+	local max_ip="$5"
 	local i=0
 
 	# Limit maximum number of returned IP addresses to $max_ip
@@ -96,7 +114,7 @@ get_servers_ip_addresses() {
 			if [ "$ipv4_enabled" = "1" ] && ipcheck.py -4 -c "$ip"; then
 				printf "$ip "
 				i=$((i+1))
-			elif [ "$ipv6_enabled" = "1" ] && ipcheck.py -6 -c "$ip"; then
+			elif [ "$ipv6_enabled" = "1" ] && [ "$wan_ipv6_enabled" = "1" ] && ipcheck.py -6 -c "$ip"; then
 				printf "$ip "
 				i=$((i+1))
 			fi
