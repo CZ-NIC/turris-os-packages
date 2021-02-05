@@ -168,6 +168,8 @@ load_uci_config_common() {
 	config_get_bool do_forward "$section" forward_upstream 1
 	config_get forward_dns "$section" forward_custom
 
+	# load IPv6 WAN setting
+        wan_ipv6="$(get_wan_ipv6)"
 
 	# Test for resolv.conf.auto new location
 	# https://github.com/openwrt/openwrt/commit/cd48d8d3420dd4df03daaa548227ceb487ba7104
@@ -188,7 +190,7 @@ load_uci_config_common() {
 
 			# Get IP list for forwarding with respect to net_ipv4/6 setting
 			# Max number of servers used for forwarding is 4
-			SERVERS=$(get_servers_ip_addresses "$net_ipv4" "$net_ipv6" "$resolv_conf_path" 4)
+			SERVERS=$(get_servers_ip_addresses "$net_ipv4" "$net_ipv6" "$wan_ipv6" "$resolv_conf_path" 4)
 			if [ -n "$SERVERS" ]; then
 				# Slight hack around https://gitlab.nic.cz/knot/knot-resolver/issues/205#note_94566
 				echo "table.insert(policy.special_names, { count = 0, cb = policy.all(" >> $CONFIGFILE
