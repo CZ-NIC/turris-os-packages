@@ -27,7 +27,7 @@ endef
 define Package/lighttpd-https-cert/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/ $(1)/etc/uci-defaults
 	$(INSTALL_CONF) ./files/ssl-enable.conf $(1)/etc/lighttpd/conf.d/ssl-enable.conf
-	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/99_lighttpd_htts_cert
+	$(INSTALL_BIN) ./files/uci-defaults $(1)/etc/uci-defaults/99_lighttpd_https_cert
 endef
 
 define Package/lighttpd-https-cert/postrm
