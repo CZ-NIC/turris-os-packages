@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd-https-cert
-PKG_VERSION:=5
-PKG_RELEASE:=3
+PKG_VERSION:=6.0
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0
