@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=lighttpd
-PKG_VERSION:=1.4.58
+PKG_VERSION:=1.4.59
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://download.lighttpd.net/lighttpd/releases-1.4.x
-PKG_HASH:=267feffda13a190ebdce7b15172d8be16da98008457f30fddecd72832d126d0e
+PKG_HASH:=fb953db273daef08edb6e202556cae8a3d07eed6081c96bd9903db957d1084d5
 
 PKG_MAINTAINER:=W. Michael Petullo <mike@flyn.org>
 PKG_LICENSE:=BSD-3-Clause
@@ -109,8 +109,8 @@ MESON_ARGS += \
 	-Dwith_webdav_locks=$(if $(CONFIG_PACKAGE_lighttpd-mod-webdav),true,false) \
 	-Dwith_webdav_props=$(if $(CONFIG_PACKAGE_lighttpd-mod-webdav),true,false) \
 	-Dwith_xattr=false \
-	-Dwith_zlib=$(if $(CONFIG_PACKAGE_lighttpd-mod-deflate),true,false)
-
+	-Dwith_zlib=$(if $(CONFIG_PACKAGE_lighttpd-mod-deflate),true,false) \
+	-Dwith_zstd=false
 
 BASE_MODULES:=dirlisting indexfile staticfile
 
