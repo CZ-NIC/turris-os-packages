@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2020-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-snapshots-plugin
-PKG_VERSION:=1.2.0
+PKG_VERSION:=1.2.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis-snapshots
-PKG_MIRROR_HASH:=820a986a899db353b31333b468d224eb7d02ba869208e3532da3458ec15f69df
+PKG_MIRROR_HASH:=8cae6622ed835b11bac837dc96ae78068b23c567f47b3f883a13ed7ce0fec546
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
