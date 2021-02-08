@@ -29,10 +29,10 @@ board_post_hook() {
     :
 }
 
-# die and v_echo might be used by board configuration
+# Note: die and v_echo might be used by board configuration so they are defined early
 
 die() {
-    echo "${0##*/}: $1" >&2
+    echo "${0##*/}:" "$@" >&2
     exit 1
 }
 
@@ -41,7 +41,10 @@ v_echo() {
     [ -z "$VERBOSE" ] || echo "$@" >&2
 }
 
+###################################
 . "/usr/share/nor-update/config.sh"
+###################################
+
 
 print_help() {
     echo "Usage:"
@@ -61,16 +64,16 @@ flash() {
 
     shift 2
 
-    while [ -n "$1" ] && [ \! -r "$1" ] && shift; do
-        :
+    while [ -n "${1:+x}" ] && [ ! -r "$1" ]; do
+        shift
     done
 
-    if [ \! -r "$1" ]; then
+    if [ -z "${1:+x}" ]; then
         echo "Can't find anything to flash to '$flashing' partition"
         return 0
     fi
 
-    if [ \! -c "/dev/$part" ]; then
+    if [ ! -c "/dev/$part" ]; then
         die "/dev/$part is missing!"
     fi
 
@@ -103,17 +106,23 @@ fix_boot_scr() (
             die "Can't create boot.scr symlink"
 )
 
-while [ -n "$1" ]; do
+while [ "$#" -gt 0 ]; do
     case "$1" in
-        "-d") DEVEL="y";;
-        "-v") VERBOSE="y";;
-        "-h") print_help
-              exit 0
-              ;;
-        *) echo "Invalid usage!!!"
-           print_help
-           exit 1
-           ;;
+        "-d")
+            DEVEL="y"
+            ;;
+        "-v")
+            VERBOSE="y"
+            ;;
+        "-h")
+            print_help
+            exit 0
+            ;;
+        *)
+            echo "Invalid usage!!!"
+            print_help
+            exit 1
+            ;;
     esac
     shift
 done
