@@ -47,8 +47,8 @@ v_echo() {
 
 
 print_help() {
-    echo "Usage:"
-    echo "    nor-update [-d] [-v]"
+    echo "Usage: ${0##*/} [-d] [-v]"
+	echo "Turris NOR firmware update utility."
     echo
     echo "Options:"
     echo "    -d   Use devel version - bleeding edge, but it might brick your device. Proceed with caution!"
@@ -78,6 +78,7 @@ flash() {
     fi
 
     v_echo "Checking and flashing '$flashing' partition: $1 -> /dev/$part"
+	return 0 # TODO remove
     if mtd verify "$1" "/dev/$part"; then
         v_echo "Partition with $flashing was up to date already."
     else
@@ -106,26 +107,26 @@ fix_boot_scr() (
             die "Can't create boot.scr symlink"
 )
 
-while [ "$#" -gt 0 ]; do
-    case "$1" in
-        "-d")
+while getopts ':dvh' OPT; do
+    case "$OPT" in
+        d)
             DEVEL="y"
             ;;
-        "-v")
+        v)
             VERBOSE="y"
             ;;
-        "-h")
+        h)
             print_help
             exit 0
             ;;
-        *)
-            echo "Invalid usage!!!"
-            print_help
+        \?)
+            die "Illegal option '-$OPTARG'"
             exit 1
             ;;
     esac
-    shift
 done
+shift $(( OPTIND-1 ))
+[ $# -eq 0 ] || die "Provided too many arguments. See help \`-h\`"
 
 fix_boot_scr
 
