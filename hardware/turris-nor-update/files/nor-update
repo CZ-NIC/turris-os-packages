@@ -45,10 +45,12 @@ v_echo() {
 . "/usr/share/nor-update/config.sh"
 ###################################
 
+print_usage() {
+    echo "Usage: ${0##*/} [-d] [-v]"
+}
 
 print_help() {
-    echo "Usage: ${0##*/} [-d] [-v]"
-    echo
+    print_usage
     echo "Turris NOR firmware update utility."
     echo
     echo "Options:"
@@ -121,13 +123,17 @@ while getopts ':dvh' OPT; do
             exit 0
             ;;
         \?)
+			print_usage
             die "Illegal option '-$OPTARG'"
             exit 1
             ;;
     esac
 done
 shift $(( OPTIND-1 ))
-[ $# -eq 0 ] || die "Provided too many arguments. See help \`-h\`"
+[ $# -eq 0 ] || {
+    print_usage
+    die "Provided too many arguments. See help \`-h\`"
+}
 
 fix_boot_scr
 
