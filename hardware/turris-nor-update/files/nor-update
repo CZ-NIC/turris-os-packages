@@ -48,7 +48,8 @@ v_echo() {
 
 print_help() {
     echo "Usage: ${0##*/} [-d] [-v]"
-	echo "Turris NOR firmware update utility."
+    echo
+    echo "Turris NOR firmware update utility."
     echo
     echo "Options:"
     echo "    -d   Use devel version - bleeding edge, but it might brick your device. Proceed with caution!"
