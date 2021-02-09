@@ -27,7 +27,7 @@ case "$cur_branch" in
 	hotfix/*)
 		open_merge_request master
 		;;
-	feature/*|bugfix/*|refacotr/*|hack/*)
+	feature/*|bugfix/*|refactor/*|hack/*)
 		open_merge_request develop
 		;;
 	*)
