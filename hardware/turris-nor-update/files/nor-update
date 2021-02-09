@@ -123,7 +123,7 @@ while getopts ':dvh' OPT; do
             exit 0
             ;;
         \?)
-			print_usage
+            print_usage
             die "Illegal option '-$OPTARG'"
             exit 1
             ;;
