@@ -1,9 +1,0 @@
-#!/bin/sh
-
-preinit_atsha204_feed_entropy() {
-	for i in $(seq 1 16); do
-		/usr/bin/atsha204cmd feed-entropy
-	done
-}
-
-boot_hook_add preinit_main preinit_atsha204_feed_entropy
