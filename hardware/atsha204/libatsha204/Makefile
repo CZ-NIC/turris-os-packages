@@ -65,7 +65,7 @@ endef
 define Package/libatsha204/install
 	$(call Common/install,$(1))
 
-	$(INSTALL_DIR) $(1)/init.d
+	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_DATA) ./files/atsha204-feed-entropy.init $(1)/etc/init.d/atsha204-feed-entropy
 
 	# Note: This script is here for libatsha204-emul. When this package is
