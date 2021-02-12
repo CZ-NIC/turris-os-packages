@@ -16,13 +16,13 @@ if ! uci -q get updater.l10n; then
 fi
 
 if [ -f "$bootstrap" ]; then
-	while IFS="," read -r lang; do
+	tr ',' '\n' < "$bootstrap" | while read -r lang; do
 		[ "$lang" != "en" ] || continue
 		uci -q batch <<-EOF
 			del_list updater.l10n.langs='$lang'
 			add_list updater.l10n.langs='$lang'
 		EOF
-	done < "$bootstrap"
+	done
 	rm -f "$bootstrap"
 fi
 

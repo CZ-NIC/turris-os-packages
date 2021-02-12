@@ -10,7 +10,7 @@ set -eu
 bootstrap="/usr/share/updater/bootstrap-pkgfiles"
 
 if [ -f "$bootstrap" ]; then
-	while IFS="," read -r pkglist; do
+	tr ',' '\n' < "$bootstrap" | while read -r pkglist; do
 		name="${pkglist%%(*}"
 		options="${pkglist#*(}"; options="${options%)}"
 		uci -q batch <<-EOF
@@ -20,11 +20,11 @@ if [ -f "$bootstrap" ]; then
 		EOF
 		if [ -n "$options" ]; then
 			uci set "pkglists.$name=$name"
-			echo "$options" | while IFS="|" read -r option; do
+			echo "$options" | tr '|' '\n' | while read -r option; do
 				uci set "pkglists.$name.$option=1"
 			done
 			uci commit "pkglists.$name"
 		fi
-	done < "$bootstrap"
+	done
 	rm -f "$bootstrap"
 fi
