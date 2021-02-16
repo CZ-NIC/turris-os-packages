@@ -76,8 +76,6 @@ case $SERVER in
 		echo "				\"socket\" => \"/tmp/fastcgi.foris-$APP.socket\","
 		echo "				\"bin-path\" => var.foris-$APP.bin + var.foris-$APP.flags,"
 		echo '				"check-local" => "disable",'
-		echo '				"idle-timeout" => 180,'
-		echo '				"min-procs" => 0,'
 		echo '				"max-procs" => 1,'
 if [ -n "$SENTRY_DSN" ]; then
 		echo '				"bin-environment" => ('
