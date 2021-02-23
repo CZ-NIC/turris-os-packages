@@ -32,34 +32,7 @@ for PKG in /ci/*.ipk; do
 			exit 1
 		fi
 	else
-		echo "Use generic test"
-	        PKG_FILES=$(opkg files "$PKG_NAME" | grep -E "/bin|/sbin|/usr/bin|/usr/sbin")
-		SUCCESS=0
-		FOUND_EXE=0
-		for FILE in $PKG_FILES; do
-			if [ -x "$FILE" ] && [ -f "$FILE" ]; then
-				FOUND_EXE=1
-				echo "Test executable $FILE"
-				for V in --version -version version -v -V; do
-					echo "Trying $FILE $V"
-					if "$FILE" "$V" 2>&1 | grep "$PKG_VERSION"; then
-						SUCCESS=1
-						break
-					fi
-				done
-
-			fi
-		done
-		if [ "$FOUND_EXE" -eq 1 ]; then
-			if [ "$SUCCESS" -eq 0 ]; then
-				echo "Generic test failed"
-				exit 1
-			else
-				echo "Test successful"
-			fi
-		else
-			echo "No executable found in package $PKG_NAME"
-		fi
+		echo "No test.sh script available"
 	fi
 
 	opkg remove "$PKG_NAME" --force-removal-of-dependent-packages --force-remove
