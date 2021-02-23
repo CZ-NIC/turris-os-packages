@@ -13,14 +13,14 @@ jobs:
           - powerpc_8540
         version:
           - master
-          - 19.07.5
+          - 19.07.6
         runtime_test: [false]
         include:
           - arch: aarch64_cortex-a53
             version: master
             runtime_test: true
           - arch: aarch64_cortex-a53
-            version: 19.07.5
+            version: 19.07.6
             runtime_test: true
 
     name: Target ${{ matrix.arch }} - OpenWrt ${{ matrix.version }}
