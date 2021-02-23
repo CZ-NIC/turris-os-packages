@@ -1,6 +1,6 @@
---- a/str/stream-tcp.c
+--- a/src/stream-tcp.c
 +++ b/src/stream-tcp.c
-@@ -333,6 +333,20 @@
+@@ -350,6 +350,20 @@ void StreamTcpInitConfig(char quiet)
              "TCP stream engine memcaps.");
      }
  
@@ -21,7 +21,7 @@
      if ((ConfGetInt("stream.prealloc-sessions", &value)) == 1) {
          stream_config.prealloc_sessions = (uint32_t)value;
      } else {
-@@ -4634,6 +4648,14 @@
+@@ -4829,6 +4843,14 @@ int StreamTcpPacket (ThreadVars *tv, Pac
          {
              /* we can call bypass callback, if enabled */
              if (StreamTcpBypassEnabled()) {
@@ -38,7 +38,7 @@
          }
 --- a/src/stream-tcp.h
 +++ b/src/stream-tcp.h
-@@ -63,6 +63,7 @@
+@@ -63,6 +63,7 @@ typedef struct TcpStreamCnf_ {
      uint16_t reassembly_toclient_chunk_size;
  
      bool streaming_log_api;

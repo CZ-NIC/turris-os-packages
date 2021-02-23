@@ -1,8 +1,6 @@
-diff --git a/src/flow.c b/src/flow.c
-index c371b54e..20bb4029 100644
 --- a/src/flow.c
 +++ b/src/flow.c
-@@ -309,6 +309,13 @@ void FlowHandlePacketUpdate(Flow *f, Packet *p)
+@@ -309,6 +309,13 @@ void FlowHandlePacketUpdate(Flow *f, Pac
              f->flags &= ~FLOW_PROTO_DETECT_TS_DONE;
              p->flags |= PKT_PROTO_DETECT_TS_DONE;
          }
@@ -16,7 +14,7 @@ index c371b54e..20bb4029 100644
      } else {
          f->tosrcpktcnt++;
          f->tosrcbytecnt += GET_PKT_LEN(p);
-@@ -324,6 +330,13 @@ void FlowHandlePacketUpdate(Flow *f, Packet *p)
+@@ -324,6 +331,13 @@ void FlowHandlePacketUpdate(Flow *f, Pac
              f->flags &= ~FLOW_PROTO_DETECT_TC_DONE;
              p->flags |= PKT_PROTO_DETECT_TC_DONE;
          }
@@ -29,9 +27,7 @@ index c371b54e..20bb4029 100644
 +#endif
      }
  
-     if ((f->flags & (FLOW_TO_DST_SEEN|FLOW_TO_SRC_SEEN)) == (FLOW_TO_DST_SEEN|FLOW_TO_SRC_SEEN)) {
-diff --git a/src/flow.h b/src/flow.h
-index 93ca7afc..fe696676 100644
+     if (SC_ATOMIC_GET(f->flow_state) == FLOW_STATE_ESTABLISHED) {
 --- a/src/flow.h
 +++ b/src/flow.h
 @@ -435,6 +435,12 @@ typedef struct Flow_
@@ -47,11 +43,9 @@ index 93ca7afc..fe696676 100644
  } Flow;
  
  enum FlowState {
-diff --git a/src/source-nfq.c b/src/source-nfq.c
-index 4c13f5a7..0acb1099 100644
 --- a/src/source-nfq.c
 +++ b/src/source-nfq.c
-@@ -426,6 +426,7 @@ static int NFQSetupPkt (Packet *p, struct nfq_q_handle *qh, void *data)
+@@ -426,6 +426,7 @@ static int NFQSetupPkt (Packet *p, struc
      int ret;
      char *pktdata;
      struct nfqnl_msg_packet_hdr *ph;
@@ -59,7 +53,7 @@ index 4c13f5a7..0acb1099 100644
  
      ph = nfq_get_msg_packet_hdr(tb);
      if (ph != NULL) {
-@@ -433,6 +434,13 @@ static int NFQSetupPkt (Packet *p, struct nfq_q_handle *qh, void *data)
+@@ -433,6 +434,13 @@ static int NFQSetupPkt (Packet *p, struc
          //p->nfq_v.hw_protocol = ntohs(p->nfq_v.ph->hw_protocol);
          p->nfq_v.hw_protocol = ph->hw_protocol;
      }
@@ -73,8 +67,6 @@ index 4c13f5a7..0acb1099 100644
      /* coverity[missing_lock] */
      p->nfq_v.mark = nfq_get_nfmark(tb);
      if (nfq_config.mode == NFQ_REPEAT_MODE) {
-diff --git a/src/source-nfq.h b/src/source-nfq.h
-index 374b3332..98af68f1 100644
 --- a/src/source-nfq.h
 +++ b/src/source-nfq.h
 @@ -45,6 +45,8 @@ typedef struct NFQPacketVars_
@@ -86,8 +78,6 @@ index 374b3332..98af68f1 100644
  } NFQPacketVars;
  
  typedef struct NFQQueueVars_
-diff --git a/src/flow-util.h b/src/flow-util.h
-index 374b3332..98af68f1 100644
 --- a/src/flow-util.h
 +++ b/src/flow-util.h
 @@ -29,12 +29,23 @@

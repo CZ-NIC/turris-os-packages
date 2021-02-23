@@ -12,8 +12,6 @@ outside of with block (leaving block causes UCI commit).
  foris_controller_backends/sentinel/__init__.py | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/foris_controller_backends/sentinel/__init__.py b/foris_controller_backends/sentinel/__init__.py
-index fe44a36..331a67b 100644
 --- a/foris_controller_backends/sentinel/__init__.py
 +++ b/foris_controller_backends/sentinel/__init__.py
 @@ -67,8 +67,8 @@ class SentinelUci:
@@ -27,6 +25,3 @@ index fe44a36..331a67b 100644
  
          return True, eula, token if eula != 0 else None
  
--- 
-2.29.2
-
