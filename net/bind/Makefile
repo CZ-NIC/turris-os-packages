@@ -115,8 +115,6 @@ endef
 
 export BUILD_CC="$(TARGET_CC)"
 
-TARGET_LDFLAGS += --std=gnu99
-
 CONFIGURE_ARGS += \
 	--enable-shared \
 	--enable-static \
@@ -164,7 +162,7 @@ define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR)/lib/dns \
 		BUILD_CC="$(HOSTCC)" \
 		CC="$(HOSTCC)" \
-		CFLAGS="-O2" \
+		CFLAGS="-O2 -std=gnu99" \
 		LIBS="" \
 		gen
 	$(call Build/Compile/Default)
