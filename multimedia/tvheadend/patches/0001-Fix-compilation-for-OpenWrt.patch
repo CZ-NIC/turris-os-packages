@@ -13,8 +13,6 @@ return __orig_mempcpy(__d, __s, __n);
  src/tvheadend.h | 5 -----
  1 file changed, 5 deletions(-)
 
-diff --git a/src/tvheadend.h b/src/tvheadend.h
-index e9ec6bbe3..0c112b13a 100644
 --- a/src/tvheadend.h
 +++ b/src/tvheadend.h
 @@ -20,8 +20,6 @@
@@ -36,6 +34,3 @@ index e9ec6bbe3..0c112b13a 100644
  #include "queue.h"
  #include "tvh_string.h"
  #include "hts_strtab.h"
--- 
-2.24.0
-

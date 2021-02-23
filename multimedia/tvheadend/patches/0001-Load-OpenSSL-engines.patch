@@ -7,8 +7,6 @@ Subject: [PATCH] Load OpenSSL engines
  src/main.c | 26 ++++++++++++++++----------
  1 file changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/src/main.c b/src/main.c
-index a6770e236..6d3c84046 100644
 --- a/src/main.c
 +++ b/src/main.c
 @@ -98,7 +98,7 @@ typedef struct {
@@ -111,6 +109,3 @@ index a6770e236..6d3c84046 100644
    /* OpenSSL - welcome to the "cleanup" hell */
    ENGINE_cleanup();
    RAND_cleanup();
--- 
-2.19.1
-

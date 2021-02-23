@@ -8,8 +8,6 @@ This also removes issues when cross-compiling.
  liburiparser.pc.in | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/liburiparser.pc.in b/liburiparser.pc.in
-index 22c7c95..9547860 100644
 --- a/liburiparser.pc.in
 +++ b/liburiparser.pc.in
 @@ -1,7 +1,7 @@
@@ -23,6 +21,3 @@ index 22c7c95..9547860 100644
  
  Name: liburiparser
  Description: URI parsing and handling library
--- 
-2.28.0
-

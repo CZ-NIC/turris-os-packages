@@ -1,8 +1,6 @@
-diff --git a/src/Makefile.am b/src/Makefile.am
-index 09fcafae..fe7e2579 100644
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
-@@ -289,6 +289,7 @@ output-file.c output-file.h \
+@@ -288,6 +288,7 @@ output-file.c output-file.h \
  output-filedata.c output-filedata.h \
  output-flow.c output-flow.h \
  output-json-alert.c output-json-alert.h \
@@ -10,9 +8,6 @@ index 09fcafae..fe7e2579 100644
  output-json-dns.c output-json-dns.h \
  output-json-dnp3.c output-json-dnp3.h \
  output-json-dnp3-objects.c output-json-dnp3-objects.h \
-diff --git a/src/output-json-flowstart.c b/src/output-json-flowstart.c
-new file mode 100644
-index 00000000..704b3774
 --- /dev/null
 +++ b/src/output-json-flowstart.c
 @@ -0,0 +1,278 @@
@@ -294,9 +289,6 @@ index 00000000..704b3774
 +}
 +
 +#endif
-diff --git a/src/output-json-flowstart.h b/src/output-json-flowstart.h
-new file mode 100644
-index 00000000..6085c1a9
 --- /dev/null
 +++ b/src/output-json-flowstart.h
 @@ -0,0 +1,30 @@
@@ -330,8 +322,6 @@ index 00000000..6085c1a9
 +void JsonFlowstartLogRegister(void);
 +
 +#endif /* __OUTPUT_JSON_FLOWSTART_H__ */
-diff --git a/src/output.c b/src/output.c
-index 4919c3c0..14dd80cb 100644
 --- a/src/output.c
 +++ b/src/output.c
 @@ -50,6 +50,7 @@
@@ -342,7 +332,7 @@ index 4919c3c0..14dd80cb 100644
  #include "output-json-drop.h"
  #include "log-httplog.h"
  #include "output-json-http.h"
-@@ -1041,6 +1042,8 @@ void OutputRegisterLoggers(void)
+@@ -1044,6 +1045,8 @@ void OutputRegisterLoggers(void)
      AlertSyslogRegister();
      /* unified2 log */
      Unified2AlertRegister();
@@ -351,11 +341,9 @@ index 4919c3c0..14dd80cb 100644
      /* drop log */
      LogDropLogRegister();
      JsonDropLogRegister();
-diff --git a/src/suricata-common.h b/src/suricata-common.h
-index 41e969ab..0aa752a2 100644
 --- a/src/suricata-common.h
 +++ b/src/suricata-common.h
-@@ -387,6 +387,7 @@ typedef enum {
+@@ -395,6 +395,7 @@ typedef enum {
      LOGGER_UNIFIED2,
      LOGGER_ALERT_SYSLOG,
      LOGGER_DROP,
@@ -363,17 +351,24 @@ index 41e969ab..0aa752a2 100644
      LOGGER_JSON_ALERT,
      LOGGER_JSON_DROP,
      LOGGER_JSON_SSH,
-diff --git a/src/output-json-flow.h b/src/output-json-flow.h
-index 4919c3c0..14dd80cb 100644
 --- a/src/output-json-flow.h
 +++ b/src/output-json-flow.h
-@@ -27,1 +27,2 @@
+@@ -25,6 +25,7 @@
+ #define __OUTPUT_JSON_FLOW_H__
+ 
  void JsonFlowLogRegister(void);
 +json_t *CreateJSONHeaderFromFlow(Flow *f, const char *event_type);
-diff --git a/src/output-json-flow.c b/src/output-json-flow.c
-index 4919c3c0..14dd80cb 100644
+ #ifdef HAVE_LIBJANSSON
+ void JsonAddFlow(Flow *f, json_t *js, json_t *hjs);
+ #endif /* HAVE_LIBJANSSON */
 --- a/src/output-json-flow.c
 +++ b/src/output-json-flow.c
-@@ -72,1 +72,1 @@
+@@ -69,7 +69,7 @@ typedef struct JsonFlowLogThread_ {
+ #define LOG_HTTP_EXTENDED 1
+ #define LOG_HTTP_CUSTOM 2
+ 
 -static json_t *CreateJSONHeaderFromFlow(Flow *f, const char *event_type)
 +json_t *CreateJSONHeaderFromFlow(Flow *f, const char *event_type)
+ {
+     char timebuf[64];
+     char srcip[46], dstip[46];

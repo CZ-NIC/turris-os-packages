@@ -13,11 +13,9 @@ Subject: [PATCH] mac keyword rule
  create mode 100644 src/detect-mac.c
  create mode 100644 src/detect-mac.h
 
-diff --git a/src/Makefile.am b/src/Makefile.am
-index 09fcafae..238ef4fa 100644
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
-@@ -246,6 +246,7 @@ detect-tls-cert-validity.c detect-tls-cert-validity.h \
+@@ -245,6 +245,7 @@ detect-tls-cert-validity.c detect-tls-ce
  detect-tls-version.c detect-tls-version.h \
  detect-tos.c detect-tos.h \
  detect-ttl.c detect-ttl.h \
@@ -25,9 +23,6 @@ index 09fcafae..238ef4fa 100644
  detect-uricontent.c detect-uricontent.h \
  detect-urilen.c detect-urilen.h \
  detect-window.c detect-window.h \
-diff --git a/src/detect-mac.c b/src/detect-mac.c
-new file mode 100644
-index 00000000..5eaa1240
 --- /dev/null
 +++ b/src/detect-mac.c
 @@ -0,0 +1,241 @@
@@ -272,9 +267,6 @@ index 00000000..5eaa1240
 +{
 +    return FALSE;
 +}
-diff --git a/src/detect-mac.h b/src/detect-mac.h
-new file mode 100644
-index 00000000..fe0a6407
 --- /dev/null
 +++ b/src/detect-mac.h
 @@ -0,0 +1,34 @@
@@ -312,8 +304,6 @@ index 00000000..fe0a6407
 +
 +#endif	/* _DETECT_MAC_H */
 +
-diff --git a/src/detect.c b/src/detect.c
-index 730cc6c2..c933550d 100644
 --- a/src/detect.c
 +++ b/src/detect.c
 @@ -129,6 +129,7 @@
@@ -324,7 +314,7 @@ index 730cc6c2..c933550d 100644
  #include "detect-fast-pattern.h"
  #include "detect-itype.h"
  #include "detect-icode.h"
-@@ -3818,6 +3819,7 @@ void SigTableSetup(void)
+@@ -3836,6 +3837,7 @@ void SigTableSetup(void)
      DetectCsumRegister();
      DetectStreamSizeRegister();
      DetectTtlRegister();
@@ -332,11 +322,9 @@ index 730cc6c2..c933550d 100644
      DetectTosRegister();
      DetectFastPatternRegister();
      DetectITypeRegister();
-diff --git a/src/detect.h b/src/detect.h
-index d377cbd0..6744615d 100644
 --- a/src/detect.h
 +++ b/src/detect.h
-@@ -1211,6 +1211,8 @@ enum {
+@@ -1220,6 +1220,8 @@ enum {
      DETECT_ICMP_SEQ,
      DETECT_DSIZE,
  
@@ -345,6 +333,3 @@ index d377cbd0..6744615d 100644
      DETECT_FLOW,
      /* end prefilter sort */
  
--- 
-2.11.0
-

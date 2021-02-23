@@ -3,7 +3,7 @@ Patch fixes problem with lmdb pkg confing. It also adds workaround for get_optio
 which is now not propagated in OpenWrt meson host package.
 --- a/meson.build
 +++ b/meson.build
-@@ -21,10 +21,10 @@ libknot = dependency('libknot', version:
+@@ -23,10 +23,10 @@ libknot = dependency('libknot', version:
  libdnssec = dependency('libdnssec', version: knot_version)
  libzscanner = dependency('libzscanner', version: knot_version)
  libuv = dependency('libuv', version: '>=1.7')

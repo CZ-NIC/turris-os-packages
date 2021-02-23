@@ -13,8 +13,6 @@ are handled in such a way.
  setup.py | 5 +----
  1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/setup.py b/setup.py
-index c047ef3..58be5f9 100755
 --- a/setup.py
 +++ b/setup.py
 @@ -209,10 +209,7 @@ def _add_rpath(settings, path):
@@ -29,6 +27,3 @@ index c047ef3..58be5f9 100755
  
  def settings_from_prefix(prefix=None, bundle_libzmq_dylib=False):
      """load appropriate library/include settings from ZMQ prefix"""
--- 
-2.25.1
-

@@ -7,8 +7,6 @@ Subject: [PATCH] include_dir config option
  src/conf-yaml-loader.c | 68 ++++++++++++++++++++++++++++++++++++++++++++++++--
  1 file changed, 66 insertions(+), 2 deletions(-)
 
-diff --git a/src/conf-yaml-loader.c b/src/conf-yaml-loader.c
-index c04ce1b1..88b0f4be 100644
 --- a/src/conf-yaml-loader.c
 +++ b/src/conf-yaml-loader.c
 @@ -31,6 +31,8 @@
@@ -28,7 +26,7 @@ index c04ce1b1..88b0f4be 100644
  };
  
  /**
-@@ -103,7 +106,6 @@ ConfYamlSetConfDirname(const char *filename)
+@@ -103,7 +106,6 @@ ConfYamlSetConfDirname(const char *filen
          conf_dirname[ep - filename] = '\0';
      }
  }
@@ -36,10 +34,10 @@ index c04ce1b1..88b0f4be 100644
  /**
   * \brief Include a file in the configuration.
   *
-@@ -155,6 +157,55 @@ ConfYamlHandleInclude(ConfNode *parent, const char *filename)
-     return 0;
+@@ -161,6 +163,55 @@ done:
+     return ret;
  }
-
+ 
 +/*
 +include_dir: basically only concatenate all files *.yaml in directory
 + into single file and pass that file to normal include
@@ -92,7 +90,7 @@ index c04ce1b1..88b0f4be 100644
  /**
   * \brief Parse a YAML layer.
   *
-@@ -237,7 +283,14 @@ ConfYamlParse(yaml_parser_t *parser, ConfNode *parent, int inseq)
+@@ -251,7 +302,14 @@ ConfYamlParse(yaml_parser_t *parser, Con
                  TAILQ_INSERT_TAIL(&parent->head, seq_node, next);
              }
              else {
@@ -108,7 +106,7 @@ index c04ce1b1..88b0f4be 100644
                      SCLogInfo("Including configuration file %s.", value);
                      if (ConfYamlHandleInclude(parent, value) != 0) {
                          goto fail;
-@@ -246,6 +299,10 @@ ConfYamlParse(yaml_parser_t *parser, ConfNode *parent, int inseq)
+@@ -260,6 +318,10 @@ ConfYamlParse(yaml_parser_t *parser, Con
                  }
                  else if (state == CONF_KEY) {
  
@@ -119,7 +117,7 @@ index c04ce1b1..88b0f4be 100644
                      if (strcmp(value, "include") == 0) {
                          state = CONF_INCLUDE;
                          goto next;
-@@ -291,6 +349,12 @@ ConfYamlParse(yaml_parser_t *parser, ConfNode *parent, int inseq)
+@@ -305,6 +367,12 @@ ConfYamlParse(yaml_parser_t *parser, Con
                      state = CONF_VAL;
                  }
                  else {
@@ -132,6 +130,3 @@ index c04ce1b1..88b0f4be 100644
                      if ((tag != NULL) && (strcmp(tag, "!include") == 0)) {
                          SCLogInfo("Including configuration file %s at "
                              "parent node %s.", value, node->name);
--- 
-2.11.0
-
