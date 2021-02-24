@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2018-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps
-PKG_VERSION:=3.5
+PKG_VERSION:=3.6
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/webapps
-PKG_MIRROR_HASH:=b9e059e75c297b991b92f87b81bb438ba0a5a4586fbd917365b293a1388a9d06
+PKG_MIRROR_HASH:=bb469f1d461b1ba2f6ce991c739677799d2478d420fb54c16b07ca8b491de97d
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
