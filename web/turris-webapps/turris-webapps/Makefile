@@ -44,16 +44,16 @@ define Package/turris-webapps/install
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/l10n.json $(1)/usr/share/turris-webapps
 
 	$(INSTALL_DIR) $(1)/www/turris-webapps
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/favicon-*.png $(1)/www/turris-webapps
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/favicon.ico $(1)/www/turris-webapps
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/index.html $(1)/www/turris-webapps
 
 	$(INSTALL_DIR) $(1)/www/turris-webapps/css
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/css/*.css $(1)/www/turris-webapps/css
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/css/*.min.css $(1)/www/turris-webapps/css
 
 	$(INSTALL_DIR) $(1)/www/turris-webapps/js
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/js/*.js $(1)/www/turris-webapps/js
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/js/*.min.js $(1)/www/turris-webapps/js
 	$(INSTALL_DIR) $(1)/www/webapps-icons
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/icons/turris-light.svg $(1)/www/webapps-icons
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/icons/turris-dark.svg $(1)/www/webapps-icons
 
 endef
