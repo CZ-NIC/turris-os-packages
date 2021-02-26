@@ -2,13 +2,12 @@
 
 USE_PROCD=1
 START=30
-EXTRA_COMMANDS="get_key probeid log create_backup load_backup"
-EXTRA_HELP="	get_key	print probe public key (used for probe registration)
-	probeid	print probe id
-	log	print probe status log
-	create_backup 	backup ssh key to tar.gz
-	load_backup 'backup.tar.gz' 	load backup ssh key from tar.gz
-"
+
+extra_command "get_key" "Print probe public key (used for probe registration)"
+extra_command "probeid" "Show probe ID"
+extra_command "log" "Show status log"
+extra_command "create_backup" "Backup SSH key to .tar.gz"
+extra_command "load_backup" "Load backup SSH key from .tar.gz"
 
 SCRIPTS_DIR="/usr/libexec/atlas-probe-scripts"
 TMP_BASE_DIR="/tmp/ripe_atlas_probe"
