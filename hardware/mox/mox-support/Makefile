@@ -14,27 +14,21 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/mox-generic-support
-  TITLE:=Generic MOX support package
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox \
-    +mtd +kmod-gpio-button-hotplug +mox-dtb
-endef
-
 define Package/mox-support
   TITLE:=MOX support package
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mox-generic-support
+  DEPENDS:= \
+    @TARGET_mvebu_cortexa53_DEVICE_cznic-mox \
+    +mtd +kmod-gpio-button-hotplug +mox-dtb
 endef
 
 define Package/shield-support
   TITLE:=Shield support package
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mox-generic-support \
-	  +pkglists
+  DEPENDS:= \
+    @TARGET_mvebu_cortexa53_DEVICE_cznic-mox \
+    +mtd +kmod-gpio-button-hotplug +mox-dtb \
+    +pkglists
   PROVIDES:=mox-support
   CONFLICTS:=mox-support
-endef
-
-define Package/mox-generic-support/description
- Contains generic supporting files for Turris MOX.
 endef
 
 define Package/mox-support/description
@@ -46,9 +40,6 @@ define Package/shield-support/description
 endef
 
 Build/Compile:=:
-
-define Package/mox-generic-support/install
-endef
 
 define Package/mox-support/install
 	$(INSTALL_DIR) $(1)/boot
@@ -90,6 +81,5 @@ define Package/shield-support/postinst
 }
 endef
 
-$(eval $(call BuildPackage,mox-generic-support))
 $(eval $(call BuildPackage,mox-support))
 $(eval $(call BuildPackage,shield-support))
