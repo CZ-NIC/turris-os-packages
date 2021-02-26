@@ -48,7 +48,6 @@ endef
 Build/Compile:=:
 
 define Package/mox-generic-support/install
-	echo '/dev/mtd2 0 0x00010000' > $(1)/etc/fw_env.config
 endef
 
 define Package/mox-support/install
