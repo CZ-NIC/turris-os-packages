@@ -1,0 +1,12 @@
+This fixes error use of undeclared identifier 'PATH_MAX'
+--- a/lib/utils.c
++++ b/lib/utils.c
+@@ -32,6 +32,8 @@
+ #include <sys/statvfs.h>
+ #include <sys/un.h>
+ 
++#include <linux/limits.h>
++
+ /* Always compile-in log symbols, even if disabled. */
+ #undef kr_verbose_status
+ #undef kr_verbose_set
