@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mox-support
 PKG_VERSION:=2.3.0
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
@@ -61,9 +61,6 @@ define Package/mox-support/install
 	$(INSTALL_BIN) ./files/mox_autosetup $(1)/usr/share/mox
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/init $(1)/etc/init.d/mox_autosetup
-	$(INSTALL_DIR) $(1)/lib/firmware/mrvl/
-	$(INSTALL_DATA) ./files/sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl
-	ln -s sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl/sd8997_uapsta.bin
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/button
 	$(INSTALL_DATA) ./files/reset_btn $(1)/etc/hotplug.d/button/mox_reset
 endef
