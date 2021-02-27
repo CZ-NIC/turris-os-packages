@@ -48,6 +48,7 @@ endef
 Build/Compile:=:
 
 define Package/mox-generic-support/install
+	true
 endef
 
 define Package/mox-support/install
