@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=initial-config
 PKG_VERSION:=0.1.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -19,7 +19,7 @@ define Package/initial-config
   SECTION:=updater
   CATEGORY:=Turris Updater
   TITLE:=Initial config for initial boot
-  DEPENDS:=+jsonfilter +python3-pbkdf2
+  DEPENDS:=+jshn +python3-pbkdf2
 endef
 
 define Package/medkit-initial-config/install
