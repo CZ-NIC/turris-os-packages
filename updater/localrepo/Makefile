@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2019-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -26,6 +26,7 @@ define Package/localrepo
   CATEGORY:=Turris Updater
   TITLE:=Updater local repository manager
   DEPENDS:=+python3-light
+  VARIANT:=python3
 endef
 
 define Package/localrepo/description
@@ -51,4 +52,6 @@ endef
 
 Build/Compile:=
 
+$(eval $(call Py3Package,localrepo))
 $(eval $(call BuildPackage,localrepo))
+$(eval $(call BuildPackage,localrepo-src))
