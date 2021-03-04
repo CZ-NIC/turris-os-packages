@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-proxy
 PKG_VERSION:=1.3.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/proxy.git
@@ -48,12 +48,13 @@ endef
 
 define Package/sentinel-proxy/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/sentinel-proxy $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/sentinel-device-token $(1)/usr/bin/
+        $(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/sentinel-proxy $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/sentinel-device-token $(1)/usr/bin/
 	$(INSTALL_BIN) ./files/sentinel-reload.sh $(1)/usr/bin/sentinel-reload
+	$(INSTALL_BIN) ./files/sentinel-status.sh $(1)/usr/bin/sentinel-status
 
 	$(INSTALL_DIR) $(1)/usr/lib/ $(1)/lib/functions/
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/lib/libsentinel-device-token.so* $(1)/usr/lib/
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/libsentinel-device-token.so* $(1)/usr/lib/
 	$(INSTALL_DATA) ./files/sentinel.sh $(1)/lib/functions/sentinel.sh
 
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -76,6 +77,10 @@ define Package/sentinel-proxy/install
 
 	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/reload_hooks.d
 	$(INSTALL_BIN) ./files/restart-proxy-hook.sh $(1)/usr/libexec/sentinel/reload_hooks.d/50_proxy.sh
+
+	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/status.d
+	$(INSTALL_BIN) ./files/status.d/00-proxy.sh $(1)/usr/libexec/sentinel/status.d/00-proxy.sh
+	$(INSTALL_DATA) ./files/status.d/common.sh $(1)/usr/libexec/sentinel/status.d/common.sh
 endef
 
 define Package/sentinel-proxy/conffiles
