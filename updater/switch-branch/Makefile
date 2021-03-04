@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=switch-branch
-PKG_VERSION:=2.5.2
-PKG_RELEASE:=1
+PKG_VERSION:=2.6.0
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -22,6 +22,14 @@ define Package/switch-branch
   DEPENDS:=+uci +coreutils-sort +opkg +updater-supervisor +curl
 endef
 
+define Package/switch-branch/description
+  Turris OS is released in various branches (with different guarantees and levels
+  of stability). This script allows simple switch between them and also between
+  archived versions. You should know that while move to more unstable branches is
+  commonly supported the opposite (while allowed by script) might be problematic.
+  The same applies to version downgrades.
+endef
+
 Build/Compile:=:
 
 define Package/switch-branch/install
@@ -30,9 +38,6 @@ define Package/switch-branch/install
 
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
 	$(INSTALL_CONF) ./files/updater.lua $(1)/etc/updater/conf.d/switch-branch.lua
-
-	$(INSTALL_DIR) $(1)/usr/share/updater/switch-branch
-	echo "no-reinstall" > $(1)/usr/share/updater/switch-branch/reinstall-guard
 endef
 
 define Package/switch-branch/postinst

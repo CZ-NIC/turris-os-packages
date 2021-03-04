@@ -30,6 +30,9 @@ include ../reforis/files/reforis-plugin.mk
 include ../reforis/files/reforis-translations.mk
 
 define Package/reforis-remote-wifi-settings-plugin
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=reForis
   TITLE:=reForis Remote Wi-Fi Settings plugin
   URL:=https://gitlab.nic.cz/turris/reforis/reforis-remote-wifi-settings
   DEPENDS:=\

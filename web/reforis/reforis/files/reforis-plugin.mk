@@ -4,10 +4,13 @@
 define ReForisPluginTranslation
 
  define Package/$(1)-l10n-$(3)
-	TITLE:=$(1)-l10n-$(3)
-	DEPENDS:=\
-		+reforis +reforis-l10n-$(3)
-	MAINTAINER:=CZ.NIC <packaging@turris.cz>
+    SECTION:=web
+    CATEGORY:=Web
+    SUBMENU:=reForis
+    TITLE:=$(1)-l10n-$(3)
+    DEPENDS:=\
+      +reforis +reforis-l10n-$(3)
+    MAINTAINER:=CZ.NIC <packaging@turris.cz>
  endef
 
  define Package/$(1)-l10n-$(3)/install

@@ -13,6 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/dev-detect.git
+PKG_MIRROR_HASH:=baa22230b64cb50cd78d2d994e69f6ea571665deb76953f91ab3bde2dc627256
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pkglists
-PKG_VERSION:=1.5.2
-PKG_RELEASE:=2
+PKG_VERSION:=1.6.1
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -20,6 +20,12 @@ define Package/pkglists
   CATEGORY:=Turris Updater
   TITLE:=Package lists for the updater
   DEPENDS:=+updater-ng +json4lua +libuci-lua
+endef
+
+define Package/pkglists/description
+  Turris OS provides various optional features. Those can be installed either
+  manually as packages or as package list. This provides database of all
+  available package lists in Turris OS and updater-ng's config to use it.
 endef
 
 define Package/pkglists/install
@@ -37,5 +43,13 @@ define Package/pkglists/conffiles
 endef
 
 Build/Compile:=:
+
+define Package/pkglists/postinst
+if [ -n "$$IPKG_INSTROOT" ] &&  [ -n "$$BOOTSTRAP_PKGLISTS" ]; then
+	mkdir -p "$$IPKG_INSTROOT/usr/share/updater"
+	echo "$$BOOTSTRAP_PKGLISTS" \
+		> "$$IPKG_INSTROOT/usr/share/updater/bootstrap-pkglists"
+fi
+endef
 
 $(eval $(call BuildPackage,pkglists))

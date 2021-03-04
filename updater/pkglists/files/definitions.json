@@ -35,6 +35,12 @@
 			}
 		}
 	},
+	"atlas": {
+		"title": "RIPE Atlas SW Probe",
+		"description": "Global platform, which measures Internet connectivity and reachability.",
+		"url": "https://wiki.turris.cz/doc/en/howto/atlas-probe",
+		"labels": ["community"]
+	},
 	"dvb": {
 		"title": "DVB tuner",
 		"description": "Software for sharing television received by a DVB tuner on Turris. Does not include device drivers.",
@@ -44,7 +50,23 @@
 	"hardening": {
 		"title": "Hardening",
 		"description": "Seccomp tools for system hardening.",
-		"labels": ["experimental"]
+		"options": {
+			"common_passwords": {
+				"title": "Common passwords filter",
+				"description": "Compare new password you are about to set to access router with list of common passwords used by robots trapped in Turris honeypots.",
+				"default": true
+			},
+			"ujail": {
+				"title": "OpenWrt's process jail",
+				"description": "ujail allows to limit processes by limiting syscalls and file-system access",
+				"labels": ["community", "experimental"]
+			},
+			"seccomp": {
+				"title": "Secure Computing Mode (seccomp)",
+				"description": "Optional support for seccomp allowing processes to isolate from them self",
+				"labels": ["community", "experimental"]
+			}
+		}
 	},
 	"luci_controls": {
 		"title": "LuCI extensions",
@@ -73,6 +95,12 @@
 			"statistics": {
 				"title": "Statistics",
 				"description": "Gather and render diagrams for system statistics by using collectd."
+			},
+			"wireguard": {
+				"title": "WireGuard",
+				"description": "Alternative to OpenVPN, it provides fast, modern and secure VPN tunnel.",
+				"url": "https://openwrt.org/docs/guide-user/services/vpn/wireguard/start",
+				"labels": ["advanced"]
 			}
 		},
 		"labels": ["community"]
@@ -141,6 +169,11 @@
 		"url": "https://docs.turris.cz/basics/apps/netboot",
 		"labels": ["high_storage", "experimental"]
 	},
+	"netdata": {
+		"title": "Netdata",
+		"description": "Real-time perfomance and health monitoring options.",
+		"labels": ["community", "high_memory"]
+	},
 	"nextcloud": {
 		"title": "Nextcloud",
 		"description": "Self-hosted files hosting and productivity platform that keeps you in control. Alternative to services such as Dropbox or Google Drive.",
@@ -172,10 +205,5 @@
 			}
 		},
 		"labels": ["advanced", "community"]
-	},
-	"netdata": {
-                "title": "Netdata",
-                "description": "Real-time perfomance and health monitoring options.",
-                "labels": ["community", "high_memory"]
-        }
+	}
 }

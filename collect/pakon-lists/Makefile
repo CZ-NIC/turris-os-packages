@@ -13,6 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/pakon-light-lists.git
+PKG_MIRROR_HASH:=c09537bfefad8d0253617e142702c7523a66f98a89f4e66f8267434b93e1a4d9
 PKG_SOURCE_VERSION:=a0afbc6604d55915b7246ac7e15bd65757b0f57f
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -20,7 +21,9 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 include $(INCLUDE_DIR)/package.mk
 
 define Package/pakon-lists
-	TITLE:=Pakon lists
+  SECTION:=collect
+  CATEGORY:=Collect
+  TITLE:=Pakon lists
 endef
 
 Build/Compile:=:

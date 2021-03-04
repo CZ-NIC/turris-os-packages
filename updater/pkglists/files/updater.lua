@@ -30,7 +30,7 @@ if uci then
 	local json_available, json = pcall(require, "json")
 	if json_available then
 		local deff = io.open(root_dir .. "/usr/share/updater/pkglists.json")
-		local defined = json.decode(deff:read())
+		local defined = json.decode(deff:read("*a"))
 		deff:close()
 		for name in pairs(lists) do
 			if not defined[name] then

@@ -13,6 +13,7 @@ PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/pakon-light.git
+PKG_MIRROR_HASH:=19ab1643d0133b6324eda6df2c5c4d2cf90cc3994ca8cb7e03fb3f265dcc72d2
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -24,11 +25,10 @@ PKG_INSTALL:=0
 include $(INCLUDE_DIR)/package.mk
 
 define Package/pakon
-	SECTION:=net
-	CATEGORY:=Network
-	SUBMENU:=Collect traffic events from suricata IDS
-	TITLE:=PArental KONtrol - light
-	DEPENDS:=+suricata-pakon +xz +python3-light +python3-logging +python3-ctypes +python3-cachetools +python3-sqlite3 +sqlite3-cli +pakon-lists +ouidb +suricata-conntrack-flows
+  SECTION:=collect
+  CATEGORY:=Collect
+  TITLE:=PArental KONtrol - light
+  DEPENDS:=+suricata-pakon +xz +python3-light +python3-logging +python3-ctypes +python3-cachetools +python3-sqlite3 +sqlite3-cli +pakon-lists +ouidb +suricata-conntrack-flows
 endef
 
 define Package/pakon/description

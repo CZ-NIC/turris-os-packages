@@ -9,10 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
 PKG_VERSION:=29.2
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/libatsha204.git
+PKG_MIRROR_HASH:=106ba16fbbfc0a0060139c7013b6be742ddd2dffd2e73073cfdec9342e83280d
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -64,8 +65,8 @@ endef
 define Package/libatsha204/install
 	$(call Common/install,$(1))
 
-	$(INSTALL_DIR) $(1)/lib/preinit
-	$(INSTALL_DATA) ./files/atsha204-feed-entropy.preinit $(1)/lib/preinit/81_atsha204_feed_entropy
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_DATA) ./files/atsha204-feed-entropy.init $(1)/etc/init.d/atsha204-feed-entropy
 
 	# Note: This script is here for libatsha204-emul. When this package is
 	# replaced with emul version then this config is used.

@@ -1,0 +1,10 @@
+server.modules += ( "mod_proxy" )
+
+$HTTP["url"] =~ "^/tvheadend" {
+  proxy.header = (
+    "map-host-request" => ( "-" => "127.0.0.1" ),
+    "map-urlpath" => ( "/tvheadend" => "", "/tvheadend/" => "/" ),
+    "https-remap" => "enable"
+  )
+  proxy.server = ( "" => ( ( "host" => "127.0.0.1", "port" => "9981") ) )
+}

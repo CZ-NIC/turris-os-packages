@@ -9,10 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-netmetr-plugin
 PKG_VERSION:=4.6.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris/foris-netmetr-plugin.git
+PKG_MIRROR_HASH:=e4e47d79185c805e0e56bfe76c1829f18ce7b6053bf28afe0cf4ce6d24240816
 PKG_SOURCE_VERSION:=package-v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -28,6 +29,9 @@ include ../foris/files/foris-translations.mk
 include ../foris/files/foris-plugin.mk
 
 define Package/foris-netmetr-plugin
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=Foris
   TITLE:=Foris Netmetr plugin
   DEPENDS:= \
     +foris \

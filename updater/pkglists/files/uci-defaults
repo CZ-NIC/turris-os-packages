@@ -1,0 +1,30 @@
+#!/bin/sh
+set -eu
+
+# bootstrap file is created to store content of BOOTSTRAP_PKGLISTS environment
+# variable, if defined and when updater is run in out of root mode (the way bootstrap
+# is performed).
+# BOOTSTRAP_PKGLISTS contains comma separated list of package lists. Every package
+# list can also have additional options in parentheses. Options should be split by
+# pipe character. Example of such format would be 'foo(opt1|opt2),fee'.
+bootstrap="/usr/share/updater/bootstrap-pkgfiles"
+
+if [ -f "$bootstrap" ]; then
+	tr ',' '\n' < "$bootstrap" | while read -r pkglist; do
+		name="${pkglist%%(*}"
+		options="${pkglist#*(}"; options="${options%)}"
+		uci -q batch <<-EOF
+			del_list pkglists.pkglists.pkglist='$name'
+			add_list pkglists.pkglists.pkglist='$name'
+			commit pkglists.pkglists
+		EOF
+		if [ -n "$options" ]; then
+			uci set "pkglists.$name=$name"
+			echo "$options" | tr '|' '\n' | while read -r option; do
+				uci set "pkglists.$name.$option=1"
+			done
+			uci commit "pkglists.$name"
+		fi
+	done
+	rm -f "$bootstrap"
+fi

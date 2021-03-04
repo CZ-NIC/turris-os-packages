@@ -8,11 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=schnapps
-PKG_VERSION:=2.3
+PKG_VERSION:=2.6.3
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/schnapps.git
+PKG_MIRROR_HASH:=5c593bbef0c45e552e91f5c756506ba12e0788198ba5bb5319fe0e6276b249f9
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@nic.cz>
@@ -39,7 +40,9 @@ define Package/schnapps/conffiles
 /etc/cron.d/schnapps
 endef
 
-Build/Compile:=:
+define Build/Compile
+	sed -i 's|@VERSION@|$(PKG_VERSION)|g' $(PKG_BUILD_DIR)/schnapps.sh
+endef
 
 define Package/schnapps/install
 	$(INSTALL_DIR) $(1)/usr/bin

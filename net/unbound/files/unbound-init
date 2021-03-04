@@ -259,6 +259,8 @@ init_unbound() {
     local do_forward
     config_get_bool do_forward common forward_upstream 1
     config_get forward_dns common forward_custom
+    config_get_bool net_ipv4 common net_ipv4 1
+    config_get_bool net_ipv6 common net_ipv6 1
 
     #check custom forwarding
     if [ -n "$forward_dns" ] && [ "$do_forward" = "1" ]; then
@@ -266,8 +268,10 @@ init_unbound() {
     else
     if [ "$do_forward" = "1" ] ; then
         local SERVERS
-        SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' "$resolv_conf_path" | sort)
-        if [ "$SERVERS" ] ; then
+	# Max number of servers used for forwarding is 10
+        SERVERS=$(get_servers_ip_addresses "$net_ipv4" "$net_ipv6" "$resolv_conf_path" 10)
+
+        if [ -n "$SERVERS" ] ; then
             (
             echo 'forward-zone:'
             echo '	name: "."'

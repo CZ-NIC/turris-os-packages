@@ -9,10 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-schema
 PKG_VERSION:=0.7.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-schema.git
+PKG_MIRROR_HASH:=2307fd66933001a6a5b453775284dde530611abaa2e1bc30f49ac19e010884d1
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -23,6 +24,9 @@ include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/foris-schema
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=Foris Controller
   TITLE:=Foris schema
   URL:=https://gitlab.nic.cz/turris/foris-controller/foris-schema
   DEPENDS:=+python3-jsonschema

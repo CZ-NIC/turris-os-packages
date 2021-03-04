@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tvheadend
 PKG_VERSION:=4.2.8
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_SOURCE_URL:=https://codeload.github.com/tvheadend/tvheadend/tar.gz/v$(PKG_VERSION)?
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
@@ -89,11 +89,6 @@ define Package/tvheadend/install
 	$(INSTALL_BIN) ./files/tvheadend.init $(1)/etc/init.d/tvheadend
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/tvheadend.config $(1)/etc/config/tvheadend
-
-	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
-	$(INSTALL_DATA) ./files/30_tvheadend.conf $(1)/usr/share/turris-webapps/
-	$(INSTALL_DIR) $(1)/www/webapps-icons
-	$(INSTALL_DATA) ./files/tvheadend.png $(1)/www/webapps-icons
 
 	$(MAKE) -C $(PKG_BUILD_DIR) install DESTDIR=$(1)
 endef

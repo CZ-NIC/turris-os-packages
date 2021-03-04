@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+. /lib/functions/sentinel-firewall.sh
+
+# fwlogs entry in sentinel config
+if [ "$(uci -q get sentinel.fwlogs)" != "fwlogs" ]; then
+	uci -q batch <<EOT
+		delete sentinel.fwlogs
+		set sentinel.fwlogs='fwlogs'
+		commit sentinel.fwlogs
+EOT
+fi
+
+
+# Enable for default interface
+config_firewall_default_enable "sentinel_fwlogs"
+
+# Always reload firewall to use latest version of sentinel-firewall script
+/etc/init.d/firewall reload

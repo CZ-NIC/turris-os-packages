@@ -9,10 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-opkg-wrapper
 PKG_VERSION:=0.2.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/updater/opkg-wrapper.git
+PKG_MIRROR_HASH:=4f22127171467fc41b820197910a79547ebf6ced2e5e4b220e9b07cdbc29de20
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -25,6 +26,13 @@ define Package/updater-opkg-wrapper
   CATEGORY:=Turris Updater
   TITLE:=OPKG compatibility wrapper for updater
   DEPENDS:=+opkg +updater-ng +localrepo
+endef
+
+define Package/updater-opkg-wrapper/description
+  Minimal script tracking opkg commands and changing into
+  updater-ng's configuration. This is needed so changes done by opkg are not
+  reverted by updater. In general, this covers only installation and removal of
+  packages and that is with exceptions too.
 endef
 
 define Package/updater-opkg-wrapper/install

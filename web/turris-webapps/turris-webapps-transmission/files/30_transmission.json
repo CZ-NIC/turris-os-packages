@@ -1,0 +1,10 @@
+{
+  "id": "transmission",
+  "title": "Transmission",
+  "url": "/transmission/",
+  "icon": "/icons/transmission.svg",
+  "description": {
+      "en": "A BitTorrent client.",
+      "cs": "BitTorrentový klient."
+  }
+}

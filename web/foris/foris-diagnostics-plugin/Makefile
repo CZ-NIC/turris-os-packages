@@ -9,10 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-diagnostics-plugin
 PKG_VERSION:=12.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris/foris-diagnostics-plugin.git
+PKG_MIRROR_HASH:=803dec04355bd8b380c49b1ab3c6d750f3f582cbeb4acbb3b4297076eb7f10ba
 PKG_SOURCE_VERSION:=package-v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -28,6 +29,9 @@ include ../foris/files/foris-translations.mk
 include ../foris/files/foris-plugin.mk
 
 define Package/foris-diagnostics-plugin
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=Foris
   TITLE:=Foris Diagnostics plugin
   DEPENDS:= \
     +foris +foris-controller-diagnostics-module

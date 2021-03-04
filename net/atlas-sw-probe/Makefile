@@ -12,6 +12,7 @@ PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/ripe-atlas-software-probe
+PKG_MIRROR_HASH:=7cc8accc87fd02e98d0e9fd3783bd66a34489c35ae7335ad0acc7df0077d3061
 PKG_SOURCE_VERSION:=6c08a2cd5dc24ad100f0dbca8375c0b7cba14b40
 
 PKG_SOURCE:=ripe-atlas-software-probe-$(PKG_VERSION).tar.gz

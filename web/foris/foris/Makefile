@@ -9,10 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris
 PKG_VERSION:=101.1.1
-PKG_RELEASE:=1
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris/foris.git
+PKG_MIRROR_HASH:=d9e8ba96063a32f59eede8daaf46a9dd70c263a6dd0b098356a940696d0b7ef4
 PKG_SOURCE_VERSION:=package-v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -34,6 +35,9 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 include ./files/foris-translations.mk
 
 define Package/foris
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=Foris
   TITLE:=Foris
   DEPENDS:= \
     +python3-light +python3-bottle +python3-bottle-i18n +python3-setuptools \
@@ -70,7 +74,7 @@ define Py3Package/foris/install
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
 	$(INSTALL_DATA) ./files/00_foris.conf $(1)/usr/share/turris-webapps/
 	$(INSTALL_DIR) $(1)/www/webapps-icons
-	$(INSTALL_DATA) ./files/foris.jpg $(1)/www/webapps-icons
+	$(INSTALL_DATA) ./files/turris.svg $(1)/www/webapps-icons
 
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_DATA) ./files/foris-config.lighttpd-conf $(1)/etc/lighttpd/conf.d/foris-config.conf

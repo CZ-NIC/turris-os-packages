@@ -7,7 +7,7 @@ STOP=00
 
 USE_PROCD=1
 EXTRA_COMMANDS="test_ipv6"
-PROG=/usr/bin/kresd
+PROG=/usr/sbin/kresd
 CONFIGFILE=/tmp/kresd.config
 ROOTKEYFILE=/etc/root.keys
 DEFAULT_RUNDIR=/tmp/kresd
@@ -37,7 +37,8 @@ add_listen_addr() {
 	local addr="$1"
 	local port="$2"
 	[ "$addr" = "::0" ] && addr="::"
-	procd_append_param command -a "$addr#$port"
+	echo "net.listen('$addr', $port, { kind = 'dns' })" >> "$CONFIGFILE"
+	echo "net.listen('$addr',   853, { kind = 'tls' })" >> "$CONFIGFILE"
 }
 
 init_header() {
@@ -96,7 +97,28 @@ load_uci_config_common() {
 	config_get port "$section" port
 
 	# list of listen addresses
-	config_list_foreach "$section" interface add_listen_addr $port
+	config_get interface "$section" interface
+
+	# in case of empty interface list try to listen automatically
+	if [ -z "$interface" ]; then
+		{
+			echo "for iface_name, iface in pairs(net.interfaces()) do"
+			echo "	for _, ip in pairs(iface.addr) do"
+			echo "		local suffix = ''"
+			echo "		if string.sub(ip,1,string.len('fe80')) == 'fe80' then"
+			echo "			suffix = '%' .. iface_name"
+			echo "		end"
+			echo "		if iface_name == 'lo' or iface_name == 'br-lan' then"
+			echo "			net.listen(ip .. suffix, $port, { kind = 'dns' })"
+			echo "			net.listen(ip .. suffix,   853, { kind = 'tls' })"
+			echo "		end"
+			echo "	end"
+			echo "end"
+		} >> "$CONFIGFILE"
+
+	else
+		config_list_foreach "$section" interface add_listen_addr "$port"
+	fi
 
 	# ignore keyfile
 	config_get_bool ignore_root_key "$section" ignore_root_key 0
@@ -164,8 +186,10 @@ load_uci_config_common() {
 		if [ "$do_forward" = "1" ] ; then
 			local SERVERS
 
-			SERVERS=$(sed -ne 's/^nameserver \(.*\)/\1/p' "$resolv_conf_path"| sort -u |head -n 4)
-			if [ "$SERVERS" ] ; then
+			# Get IP list for forwarding with respect to net_ipv4/6 setting
+			# Max number of servers used for forwarding is 4
+			SERVERS=$(get_servers_ip_addresses "$net_ipv4" "$net_ipv6" "$resolv_conf_path" 4)
+			if [ -n "$SERVERS" ]; then
 				# Slight hack around https://gitlab.nic.cz/knot/knot-resolver/issues/205#note_94566
 				echo "table.insert(policy.special_names, { count = 0, cb = policy.all(" >> $CONFIGFILE
 				if [ "$ignore_root_key" = "1"  ] ; then
@@ -236,9 +260,7 @@ modify_rundir() {
 		mkdir -p "$rundir"
 	fi
 
-	if id "$1" >/dev/null 2>&1; then
-		chown -R $USERNAME:$GROUP "$rundir" #maybe we should be more restrictive ...
-	fi
+	chown -R $USERNAME:$GROUP "$rundir"
 
 	DEFAULT_RUNDIR="$rundir"
 	HINTS_CONFIG=$DEFAULT_RUNDIR/hints.tmp
@@ -300,6 +322,9 @@ run_instance() {
 	init_header
 	load_uci_config_kresd
 	load_uci_config_common
+
+	echo "user('$USERNAME','$GROUP')" >> $CONFIGFILE
+
 	procd_close_instance
 	[ \! -x "$(which at)" ] || echo "/etc/init.d/kresd test_ipv6" | at now+2min 2>&1 | fgrep -v 'warning: commands will be executed using /bin/sh'
 }

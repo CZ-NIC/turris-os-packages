@@ -1,0 +1,9 @@
+{
+  "id": "tvheadend",
+  "title": "TVheadend",
+  "url": "/tvheadend/",
+  "icon": "/icons/tvheadend.svg",
+  "description": {
+      "en": "TV streaming server and recorder"
+  }
+}

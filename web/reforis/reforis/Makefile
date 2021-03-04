@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2019-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -8,11 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis
-PKG_VERSION:=0.9.5
-PKG_RELEASE:=1
+PKG_VERSION:=1.0.4
+PKG_RELEASE:=4
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis
+PKG_MIRROR_HASH:=d053ae3d166ce5184bb53dbe8dd46cab4ccf5fe80c80551d631f6eb0284c4b58
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -28,6 +29,9 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 include ./files/reforis-translations.mk
 
 define Package/reforis
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=reForis
   TITLE:=reforis
   URL:=https://gitlab.nic.cz/turris/reforis
   DEPENDS:= \
@@ -72,9 +76,9 @@ define Py3Package/reforis/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
-	$(INSTALL_DATA) ./files/01_reforis.conf $(1)/usr/share/turris-webapps/
+	$(INSTALL_DATA) ./files/01_reforis.json $(1)/usr/share/turris-webapps/
 	$(INSTALL_DIR) $(1)/www/webapps-icons
-	$(INSTALL_DATA) ./files/reforis.jpg $(1)/www/webapps-icons
+	$(INSTALL_DATA) ./files/reforis.svg $(1)/www/webapps-icons/
 
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_DATA) ./files/reforis-lighttpd.conf $(1)/etc/lighttpd/conf.d/reforis.conf

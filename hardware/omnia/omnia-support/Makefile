@@ -2,7 +2,8 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=omnia-support
-PKG_RELEASE:=3.2
+PKG_VERSION:=3.3
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -38,7 +39,6 @@ define Package/omnia-support/install
 	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot/boot.scr
 	ln -s boot/boot.scr "$(1)"/boot.scr
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) files/nor-update $(1)/usr/sbin
 endef
 
 define Package/omnia-support/postinst

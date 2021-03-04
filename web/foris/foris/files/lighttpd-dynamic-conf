@@ -66,6 +66,7 @@ esac
 echo "var.foris-$APP.paths = \"$FORIS_PATHS\""
 echo
 echo "\$HTTP[\"url\"] =~ \"^\" + var.foris-$APP.scriptname + \"/(\" + var.foris-$APP.paths + \")$\" {"
+echo "  server.max-read-idle = 90"
 case $SERVER in
 	flup)
 		echo '	fastcgi.debug = 0'

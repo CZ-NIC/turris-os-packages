@@ -1,0 +1,5 @@
+#!/bin/sh
+log="$ROOT_DIR/usr/share/updater/updater-log"
+if [ -f "$log" ]; then
+	rm -f "$log"
+fi

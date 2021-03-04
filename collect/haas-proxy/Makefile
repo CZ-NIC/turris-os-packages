@@ -23,8 +23,8 @@ include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/haas-proxy
-  SECTION:=net
-  CATEGORY:=Network
+  SECTION:=collect
+  CATEGORY:=Collect
   TITLE:=Honeypot as a Service proxy
   URL:=https://haas.nic.cz
   DEPENDS:= \

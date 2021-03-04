@@ -1,42 +1,55 @@
 #
-## Copyright (C) 2018-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2018-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
-## This is free software, licensed under the GNU General Public License v2.
+## This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
-# #
 #
+
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=user-notify
-PKG_VERSION:=61.3
+PKG_VERSION:=61.5
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/user-notify.git
+PKG_MIRROR_HASH:=b280f0653853b1976012f9c1fd907523a532057aab7e58ed8f5e5f6d55e16952
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=GPL-3.0-or-later
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/user-notify
-	TITLE:=user-notify
-	DEPENDS:=+at +msmtp +ca-certificates +crypto-wrapper +sentinel-certgen +gettext-tools +create_notification
+  TITLE:=Turris user notifications
+  DEPENDS:=+at +msmtp +ca-certificates +crypto-wrapper +sentinel-certgen +gettext-tools +create_notification
 endef
 
 Build/Compile:=:
 
 define Package/user-notify/install
-	cd $(PKG_BUILD_DIR); $(MAKE) DESTDIR="$(1)" install_scripts install_aux
-	rm $(1)/usr/bin/create_notification
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/scripts/list_notifications $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/scripts/notifier $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/scripts/user-notify-cleaner $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/scripts/user-notify-display $(1)/usr/bin/
+
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/user_notify.uci $(1)/etc/config/user_notify
+
+	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_DATA) ./files/user_notify.cron $(1)/etc/cron.d/user_notify
 endef
 
 define Package/user-notify/conffiles
 /etc/config/user_notify
 endef
 
+
 define Package/create_notification
-	TITLE:=create_notification
+  TITLE:=Create Turris user notification
+  DEPENDS:=+gettext-tools
 endef
 
 define Package/create_notification/install

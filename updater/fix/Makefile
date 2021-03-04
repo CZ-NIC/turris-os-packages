@@ -97,6 +97,12 @@ define Package/fix-uboot-env-reset/description
   existence of /etc/config/ubootenv file and skips execution if not located.
 endef
 
+define Package/fix-updater-rm-log/description
+  Remove obsolete and growing updater's log (/usr/share/updater/updater-log).
+  This log is no longer maintained by updater and it makes no sense to keep it in
+  system.
+endef
+
 define Package/fix-config-foris-restore/description
   With Turris OS 5.1.0 we moved config /etc/config/foris from package foris to
   package foris-controller. Unfortunately updater was not prepared for it. It
@@ -116,9 +122,26 @@ define Package/fix-corrupted-contract-by-rescue/description
   configuration. This script fixes the broken environment.
 endef
 
+define Package/fix-cleanup-cert-backup/description
+  Remove obsolete custom certificates from cert-bakup storage.
+  They originally belonged to now removed cznic-cacert-bundle package.
+endef
+
 define Package/fix-edns-buffer-size/description
   edns buffer size in DNS setting was changed from default value 4096 to 1232.
   This change is related to DNS Flag Day 2020.
+endef
+
+define Package/fix-dhparam-to-cagen/description
+  This is fix for removal of dhparam package. It is replaced with turris-cagen. It
+  is required to ensure that new file is in new expected location and that openvpn
+  is using it.
+endef
+
+define Package/fix-pkglists-hardening-options/description
+  Content of package list hardening was moved to conditional options that are not
+  automatically enabled. To keen user's configuration consistent this fix package
+  enables appropriate options for hardening package list if hardening is enabled.
 endef
 
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
@@ -127,7 +150,11 @@ $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
 $(eval $(call FIX,dns-forward-quad9-split,+resolver-conf +uci))
 $(eval $(call FIX,pkglists-options,+pkglists))
 $(eval $(call FIX,uboot-env-reset))
+$(eval $(call FIX,updater-rm-log,+updater-ng))
 $(eval $(call FIX,config-foris-restore,+foris-controller +schnapps))
 $(eval $(call FIX,all-lan-ports-in-lan,+uci +netifd))
 $(eval $(call FIX,corrupted-contract-by-rescue,+uboot-envtools))
+$(eval $(call FIX,cleanup-cert-backup,+cert-backup))
 $(eval $(call FIX,edns-buffer-size,+resolver-conf +uci))
+$(eval $(call FIX,dhparam-to-cagen,+uci +turris-cagen))
+$(eval $(call FIX,pkglists-hardening-options,+pkglists +uci))

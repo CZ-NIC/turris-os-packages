@@ -273,6 +273,14 @@ Tips for developers and maintainers
 This is collection of various tips and primarily configuration options you can use
 to simplify commands described in this flow.
 
+Use project specific git configuration::
+It is highly advised to use project specific git config. You can apply it by
+running following command:
+[,sh]
+----------------------------------------------------------------------------------
+git config --local include.path ../.gitconfig
+----------------------------------------------------------------------------------
+
 Sign commits and tags with GPG without using `--gpg-sign` and `-s`::
 You can configure global or local git option `commit.gpgSign` and `tag.gpgSign`.
 [,sh]

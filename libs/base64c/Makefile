@@ -13,6 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/base64c.git
+PKG_MIRROR_HASH:=d5ea65414eeec880da154bd3eb7bcb6c49da09193342398aff4b3eccf8d77e88
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

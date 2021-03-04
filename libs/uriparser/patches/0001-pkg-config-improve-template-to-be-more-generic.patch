@@ -1,0 +1,23 @@
+From 0d568a083936302227bca52f106f48c9d22ca9b1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Karel=20Ko=C4=8D=C3=AD?= <cynerd@email.cz>
+Date: Fri, 25 Sep 2020 06:24:40 +0200
+Subject: [PATCH] pkg-config: improve template to be more generic
+
+This also removes issues when cross-compiling.
+---
+ liburiparser.pc.in | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/liburiparser.pc.in
++++ b/liburiparser.pc.in
+@@ -1,7 +1,7 @@
+ prefix=@CMAKE_INSTALL_PREFIX@
+-exec_prefix=@CMAKE_INSTALL_PREFIX@
+-libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+-includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
++exec_prefix=${prefix}
++libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
++includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+ 
+ Name: liburiparser
+ Description: URI parsing and handling library

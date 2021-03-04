@@ -13,6 +13,7 @@ PKG_RELEASE:=5
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/turris-survey.git
+PKG_MIRROR_HASH:=5bbb43ef3c43807dbfc9c058fc6537c1a289fc54363ec6d16cfd0e3adcfc1fbb
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -23,8 +24,8 @@ include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/turris-survey
-  SECTION:=net
-  CATEGORY:=Network
+  SECTION:=collect
+  CATEGORY:=Collect
   SUBMENU:=Sentinel
   TITLE:=Turris Survey
   URL:=https://gitlab.nic.cz/turris/sentinel/turris-survey

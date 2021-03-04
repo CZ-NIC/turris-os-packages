@@ -1,8 +1,8 @@
 --- a/scripts/mysql_system_tables_fix.sql
 +++ b/scripts/mysql_system_tables_fix.sql
-@@ -800,3 +800,13 @@ IF 'BASE TABLE' = (select table_type fro
-   DROP TABLE user;
+@@ -814,3 +814,13 @@ IF 1 = (SELECT count(*) FROM information
  END IF//
+ 
  DELIMITER ;
 +
 +-- Expand localhost to 127.0.0.1

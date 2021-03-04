@@ -36,6 +36,7 @@ echo "var.reforis.scriptname = \"/reforis\""
 
 echo
 echo "\$HTTP[\"url\"] =~ \"^\" + var.reforis.scriptname + \"/(.*)$\" {"
+echo "  server.max-read-idle = 90"
 case $SERVER in
 	flup)
 		echo '	fastcgi.debug = 0'
@@ -64,4 +65,4 @@ esac
 echo "}"
 
 
-echo "alias.url += ( var.reforis.scriptname + \"/static/\" => \"/usr/lib/python3.6/site-packages/reforis_static/\" )"
+echo "alias.url += ( var.reforis.scriptname + \"/static/\" => \"/usr/lib/pythonX.X/site-packages/reforis_static/\" )"

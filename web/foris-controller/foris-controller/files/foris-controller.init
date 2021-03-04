@@ -52,11 +52,16 @@ start_service() {
 		config_get host mqtt host "localhost"
 		config_get port mqtt port "11883"
 		config_get credentials_file mqtt credentials_file "/etc/fosquitto/credentials.plain"
+
+		config_load fosquitto 
+		config_get remote_port remote port "11884"
+
 		serial_number=$(crypto-wrapper serial-number)
+
 		if [ "$?" == 0 ] ; then
 			controller_id="--controller-id $serial_number"
 		fi
-		procd_set_param command "$PROG" ${debug_arg:-} -b "$backend" -C "$client_socket" mqtt --host "${host}" --port "${port}" --passwd-file "${credentials_file}" ${controller_id}
+		procd_set_param command "$PROG" ${debug_arg:-} -b "$backend" -C "$client_socket" mqtt --host "${host}" --port "${port}" --passwd-file "${credentials_file}" ${controller_id} --zeroconf-enabled --zeroconf-port "${remote_port}"
 	fi
 
 	procd_set_param stdout 1 # forward stdout of the command to logd

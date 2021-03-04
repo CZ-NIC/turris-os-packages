@@ -1,0 +1,76 @@
+#!/bin/bash
+
+branch_name="$1"
+branch_base="$2"
+branch_desig="$3"
+
+valid_base() {
+	[[ "$1" == "master" || "$1" == "develop" ]]
+}
+
+valid_desig() {
+	local base="$1"
+	local desig="$2"
+	case "$base" in
+		master)
+			[ "$desig" = "hotfix" ]
+			return
+			;;
+		develop)
+			[[ "$desig" =~ ^(bugfix|feature|refactor|hack)$ ]]
+			return
+			;;
+		*)
+			return 1
+			;;
+	esac
+}
+
+while [ -z "$branch_name" ]; do
+	read -r -p "Branch name: " branch_name
+done
+
+while ! valid_base "$branch_base"; do
+	read -r -p "Branch base ([d]evelop/[m]aster): " branch_base
+	case "$branch_base" in
+		d|dev)
+			branch_base="develop"
+			;;
+		m)
+			branch_base="master"
+			;;
+	esac
+done
+
+while ! valid_desig "$branch_base" "$branch_desig"; do
+	case "$branch_base" in
+		master)
+			branch_desig="hotfix"
+			continue
+			;;
+		develop)
+			read -r -p "Branch designation (bugfix/feature/refactor/hack): " \
+				branch_desig
+			case "$branch_desig" in
+				b|bug)
+					branch_desig="bugfix"
+					;;
+				f)
+					branch_desig="feature"
+					;;
+				r|ref)
+					branch_desig="refactor"
+					;;
+				h)
+					branch_desig="hack"
+					;;
+			esac
+			;;
+	esac
+done
+
+branch="$branch_desig/$branch_name"
+echo "Creating branch: $branch"
+
+git branch "$branch" "$branch_base"
+git switch "$branch"

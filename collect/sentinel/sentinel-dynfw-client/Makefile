@@ -13,6 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/dynfw-client.git
+PKG_MIRROR_HASH:=9ae453d15799323e35ce48faca74773ea8d1feaa6d295151cbbf149a722d6d6c
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -21,8 +22,8 @@ PKG_LICENSE:=GPL-3.0-or-later
 include $(INCLUDE_DIR)/package.mk
 
 define Package/sentinel-dynfw-client
-  SECTION:=net
-  CATEGORY:=Network
+  SECTION:=collect
+  CATEGORY:=Collect
   SUBMENU:=Sentinel
   TITLE:=Dynamic firewall client
   DEPENDS:=+python3-light +python3-zmq +python3-msgpack +python3-urllib \

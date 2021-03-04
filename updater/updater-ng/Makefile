@@ -8,11 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=67.0.2
-PKG_RELEASE:=1
+PKG_VERSION:=69.0.0
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/updater/updater.git
+PKG_MIRROR_HASH:=e6c491c4bc9bd537b7514daba5bc72b8a9c4f4ace765f9027ee5e1c9e2d80775
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -41,6 +42,11 @@ define Package/updater-ng
     +ca-certificates
 endef
 
+define Package/updater-ng/description
+  Turris package manager designed for automatic updates in mind. It is
+  non-interactive in general but highly configurable through Lua scripts.
+endef
+
 CONFIGURE_ARGS += \
 		--disable-tests \
 		--disable-linters \
@@ -49,7 +55,7 @@ CONFIGURE_ARGS += \
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/lib/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libupdater.so* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libupdater*.so* $(1)/usr/lib/
 
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
@@ -59,6 +65,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/conf.lua $(1)/etc/updater
 	$(INSTALL_DIR) $(1)/etc/updater/conf.d
 	$(INSTALL_CONF) ./files/turris.lua $(1)/etc/updater/conf.d/turris.lua
+	$(INSTALL_CONF) ./files/turris-repo.lua $(1)/etc/updater/turris-repo.lua
 	$(INSTALL_CONF) $(PKG_BUILD_DIR)/src/pkgupdate/configs/example.lua $(1)/etc/updater/conf.d/example.lua
 
 	$(INSTALL_DIR) $(1)/etc/updater/hook_preupdate
@@ -68,15 +75,22 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/updater/hook_reboot_required
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/hook_reboot_required/50-create-notification.sh $(1)/etc/updater/hook_reboot_required/50-create-notification.sh
 
-	# Note: this file is not ever used as appropriate one is generated to medkit
-	# it is here only for reference and to make sure that it exists.
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/updater.config $(1)/etc/config/updater
 endef
 
 define Package/updater-ng/conffiles
 /etc/updater/conf.d/example.lua
+/etc/updater/turris-repo.lua
 /etc/config/updater
+endef
+
+define Package/updater-ng/postinst
+if [ -n "$$IPKG_INSTROOT" ] && [ -n "$$BOOTSTRAP_UPDATER_BRANCH" ]; then
+	mkdir -p "$$IPKG_INSTROOT/usr/share/updater"
+	echo "$$BOOTSTRAP_UPDATER_BRANCH" \
+		> "$$IPKG_INSTROOT/usr/share/updater/bootstrap-updater-branch"
+fi
 endef
 
 $(eval $(call BuildPackage,updater-ng))

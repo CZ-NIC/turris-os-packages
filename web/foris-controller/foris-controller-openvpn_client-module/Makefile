@@ -25,6 +25,9 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 include ../foris-controller/files/foris-controller-module.mk
 
 define Package/foris-controller-openvpn_client-module
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=Foris Controller
   TITLE:=Foris controller OpenVPN client module
   DEPENDS:= \
     +foris-controller \

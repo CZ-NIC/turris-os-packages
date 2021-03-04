@@ -1,0 +1,20 @@
+server.modules += ( "mod_proxy" )
+server.modules += ( "mod_authn_pam", "mod_auth" )
+
+$HTTP["url"] =~ "^/transmission" {
+  auth.backend = "pam"
+  auth.require = ( "" =>
+                   (
+                     "method"    => "basic",
+                     "realm"     => "Transmission",
+                     "require"   => "valid-user"
+                   )
+                 )
+  proxy.header = (
+    "map-host-request" => ( "-" => "127.0.0.1" ),
+    "map-urlpath" => ( "/transmission" => "", "/transmission/" => "/" ),
+    "https-remap" => "enable"
+  )
+  proxy.server = ( "" => ( ( "host" => "127.0.0.1", "port" => "9091") ) )
+}
+

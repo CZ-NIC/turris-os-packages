@@ -1,0 +1,36 @@
+#!/bin/bash
+repo="https://gitlab.nic.cz/turris/turris-os-packages"
+cur_branch="$(git branch --show-current)"
+
+
+open_merge_request() {
+	local target="$1"
+	local url="$repo/-/merge_requests/new?merge_request%5Bsource_branch%5D=$cur_branch&merge_request%5Btarget_branch%5D=$target"
+	if command -v xdg-open >/dev/null; then
+		xdg-open "$url"
+	else
+		echo "Open following URL to create merge request for branch: $cur_branch"
+		echo "$url"
+	fi
+}
+
+
+case "$cur_branch" in
+	master)
+		echo "Master branch is the most stable branch. There is no merge target for it." &2
+		exit 1
+		;;
+	develop)
+		echo "Develop branch is merged only on new Turris OS release." >&2
+		exit 1
+		;;
+	hotfix/*)
+		open_merge_request master
+		;;
+	feature/*|bugfix/*|refactor/*|hack/*)
+		open_merge_request develop
+		;;
+	*)
+		echo "Merge requests are not supported for this branch." >&2
+		;;
+esac

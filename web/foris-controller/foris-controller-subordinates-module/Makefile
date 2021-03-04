@@ -9,10 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-subordinates-module
 PKG_VERSION:=0.2.1
-PKG_RELEASE:=1
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-subordinates-module.git
+PKG_MIRROR_HASH:=71b55614c0f0fc56e5c81c265078de30d88242bfd320fc26cbcdfcec7909e830
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -24,9 +25,13 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 include ../foris-controller/files/foris-controller-module.mk
 
 define Package/foris-controller-subordinates-module
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=Foris Controller
   TITLE:=Foris controller Subordinates module
   DEPENDS:=\
     +foris-controller \
+    +foris-forwarder \
     +fosquitto
   VARIANT:=python3
 endef

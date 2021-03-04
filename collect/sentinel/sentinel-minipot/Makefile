@@ -13,6 +13,7 @@ PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/minipot.git
+PKG_MIRROR_HASH:=472eeeddd7f0541caac23d6046c6f8b4e9c28cf99803024848b5bc45efd37901
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -26,8 +27,8 @@ PKG_FIXUP:=autoreconf
 include $(INCLUDE_DIR)/package.mk
 
 define Package/sentinel-minipot
-  SECTION:=net
-  CATEGORY:=Network
+  SECTION:=collect
+  CATEGORY:=Collect
   SUBMENU:=Sentinel
   TITLE:=Minipots
   URL:=https://gitlab.nic.cz/turris/sentinel/minipot

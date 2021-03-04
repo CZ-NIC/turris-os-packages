@@ -1,5 +1,3 @@
-diff --git a/setup.py b/setup.py
-index 658d1a5..960bfbc 100755
 --- a/setup.py
 +++ b/setup.py
 @@ -6,48 +6,6 @@ import os

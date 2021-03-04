@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2016 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2016-2020 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,9 +9,9 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.2
-PKG_RELEASE:=11
+PKG_RELEASE:=12
 
-PKG_MAINTAINER:=Jan Pavlinec <jan.pavlinec@nic.cz>
+PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
 
 PKG_INSTALL:=0
@@ -48,6 +48,10 @@ endif
 	$(INSTALL_BIN) ./files/resolver-conv $(1)/etc/resolver/resolver-conv.sh
 	$(INSTALL_BIN) ./files/dhcp_host_domain_ng.py $(1)/etc/resolver/dhcp_host_domain_ng.py
 	$(INSTALL_BIN) ./files/dynamic-domain-conv $(1)/etc/resolver/dynamic-domain-conv.sh
+
+	$(INSTALL_DIR) $(1)/usr/bin/
+	$(INSTALL_BIN) ./files/ipcheck.py $(1)/usr/bin/
+
 	$(INSTALL_DIR) $(1)/usr/libexec/rpcd
 	$(INSTALL_BIN) ./files/resolver_rpcd.py $(1)/usr/libexec/rpcd/resolver_rpcd.py
 	$(INSTALL_DIR) $(1)/etc/resolver/dns_servers
@@ -58,6 +62,7 @@ endif
 	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
 	$(INSTALL_BIN) ./files/resolver-reload $(1)/etc/hotplug.d/iface/40-resolver-reload
+	$(INSTALL_BIN) ./files/ip-resolver-reload.hotplug $(1)/etc/hotplug.d/iface/40-ip-resolver-reload
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/dhcp/
 	$(INSTALL_BIN) ./files/dynamic-domains.hotplug $(1)/etc/hotplug.d/dhcp/40-dynamic-domains
 	$(INSTALL_DIR) $(1)/etc/uci-defaults

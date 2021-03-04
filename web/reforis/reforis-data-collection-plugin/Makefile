@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2020-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,11 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-data-collection-plugin
-PKG_VERSION:=0.2.1
+PKG_VERSION:=0.2.5
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis-data-collection
+PKG_MIRROR_HASH:=5ba06e235c6b0d59202befb7c8d0d2d49089f6daad37c38946afaa9f35c2ff64
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -29,6 +30,9 @@ include ../reforis/files/reforis-plugin.mk
 include ../reforis/files/reforis-translations.mk
 
 define Package/reforis-data-collection-plugin
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=reForis
   TITLE:=reForis Data Collection plugin
   URL:=https://gitlab.nic.cz/turris/reforis/reforis-data-collection
   DEPENDS:=\

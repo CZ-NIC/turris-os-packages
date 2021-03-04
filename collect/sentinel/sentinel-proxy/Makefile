@@ -13,6 +13,7 @@ PKG_RELEASE:=7
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/proxy.git
+PKG_MIRROR_HASH:=ea8a4bd05a98185e57ab178bc5c80ebc456b850a9eb81df363f366d424f6ec0b
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -25,8 +26,8 @@ PKG_BUILD_DEPENDS:=argp-standalone
 include $(INCLUDE_DIR)/package.mk
 
 define Package/sentinel-proxy
-  SECTION:=net
-  CATEGORY:=Network
+  SECTION:=collect
+  CATEGORY:=Collect
   SUBMENU:=Sentinel
   TITLE:=Proxy
   URL:=https://gitlab.nic.cz/turris/sentinel/proxy

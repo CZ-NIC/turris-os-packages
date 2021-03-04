@@ -9,10 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-data_collect-module
 PKG_VERSION:=1.1
-PKG_RELEASE:=6
+PKG_RELEASE:=7
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-data_collect-module.git
+PKG_MIRROR_HASH:=9b654bcec8874c21a6ecfe3f7770993f07a4c47222d30afc7a8d64c5e513a768
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -24,6 +25,9 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 include ../foris-controller/files/foris-controller-module.mk
 
 define Package/foris-controller-data_collect-module
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=Foris Controller
   TITLE:=Foris controller data collect module
   DEPENDS:=+foris-controller
   VARIANT:=python3

@@ -372,8 +372,14 @@ opkg update || \
 	echo "OPKG update failed. Please see previous output to know what went wrong." >&2
 
 ## Run updater
-updater-supervisor -d --ensure-run || \
+if updater-supervisor -d --ensure-run; then
+	cat <<-EOF
+		Update is running in the background now. Make sure that system update finished before you reboot or power off the router.
+		You are going to be notified about changes by notification system once the update is finished.
+	EOF
+else
 	echo "Updater failed to start. Please run it manually: pkgupdate" >&2
+fi
 
 ##################################################################################
 
@@ -384,7 +390,7 @@ print_snail() {
    | | '\ \ \_/ )
  ,-\ `-.' /.'  /
 '---`----'----'
-You are now on stable latest version of Turris OS.
+You are now tracking stable latest version of Turris OS.
 In case of problems please contact Turris support (https://docs.turris.cz/basics/support/).
 EOF
 }
@@ -397,7 +403,7 @@ print_turtle() {
  '-<_><_><_><_>=/\
    `/_/====/_/-'\_\
     ""     ""    ""
-You are now in branch containing next release candidate.
+You are now tracking branch containing next release candidate.
 You can discuss problems on forum (https://forum.turris.cz/).
 Please report unknown problems to support (https://docs.turris.cz/basics/support/).
 EOF
@@ -410,7 +416,7 @@ print_kitten() {
  (_Y_.)'  ._   )  `._ `. ``-..-'
    _..`--'_..-_/  /--'_.'
   ((((.-''  ((((.'  (((.-'
-You are now in branch containing software build every night. It often contains bugs and sometimes requires manual intervention!
+You are now tracking branch containing software build every night. It often contains bugs and sometimes requires manual intervention!
 It is based on latest stable OpenWrt branch with Turris OS changes.
 Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/).
 If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/turris/),
@@ -434,7 +440,7 @@ print_lion() {
     \\/         ) | |
      \         /_ | |__
      (___________)))))))
-You are now in branch containing software build every night. It often contains bugs and sometimes requires manual intervention!
+You are now tracking branch containing software build every night. It often contains bugs and sometimes requires manual intervention!
 It is based on latest stable OpenWrt branch with latest Turris OS changes.
 Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/).
 If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/turris/),
@@ -457,7 +463,7 @@ print_dragon() {
  | \____(      )___) )___
   \______(_______;;; __;;;
 
-You are now in branch containing software build every night. It often contains bugs and very often requires manual intervention!
+You are now tracking branch containing software build every night. It often contains bugs and very often requires manual intervention!
 It is based on latest OpenWrt development branch with latest Turris OS changes.
 Turris team provides no guarantees and no support for this branch. You can get some help on forum (https://forum.turris.cz/).
 If you encounter some bugs than please debug cause and report it to developers trough gitlab (https://gitlab.labs.nic.cz/turris/),
@@ -468,7 +474,7 @@ EOF
 
 print_unknown() {
 	cat <<"EOF"
-You are now in unknown branch. Unless you are a developer you shouldn't use this branch!
+You are now tracking unknown branch. Unless you are a developer you shouldn't use this branch!
 Turris team provides no guarantees and no support for this branch.
 To return to stable branch run this command: switch-branch hbs
 EOF

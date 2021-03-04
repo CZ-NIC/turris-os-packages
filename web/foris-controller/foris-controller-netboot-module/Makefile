@@ -9,10 +9,11 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-netboot-module
 PKG_VERSION:=0.4.1
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-netboot-module.git
+PKG_MIRROR_HASH:=9b1b9e2276548d332df06be8644169216ca8e751d6002dd0778fe0bcb0531aca
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -24,6 +25,9 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 include ../foris-controller/files/foris-controller-module.mk
 
 define Package/foris-controller-netboot-module
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=Foris Controller
   TITLE:=Foris controller netboot module
   DEPENDS:=\
     +foris-controller \

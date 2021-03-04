@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nextcloud
-PKG_VERSION:=18.0.7
-PKG_RELEASE:=3
+PKG_VERSION:=19.0.3
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
-PKG_HASH:=4b2cc7475d925faf9ce6c655d290cbbee8c02a40aaf0628d3d41b7ccd8416a5e
+PKG_HASH:=fc503985e8aa4ed795d882e35679e0e1b7670181768e7820307222d8b4658969
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -61,10 +61,6 @@ define Package/$(PKG_NAME)/install
 	done
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_DATA) ./files/nextcloud.conf $(1)/etc/lighttpd/conf.d/
-	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
-	$(INSTALL_DATA) ./files/30_nextcloud.conf $(1)/usr/share/turris-webapps/
-	$(INSTALL_DIR) $(1)/www/webapps-icons
-	$(INSTALL_DATA) ./files/nextcloud.png $(1)/www/webapps-icons
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/nextcloud.cron $(1)/etc/cron.d/nextcloud
 endef

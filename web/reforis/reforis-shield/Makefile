@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-shield
-PKG_VERSION:=0.99.3.1
-PKG_RELEASE:=1
+PKG_VERSION:=0.99.4
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis
+PKG_MIRROR_HASH:=78e8faaac7949f82c3402add9cf15459abb868b69a42a6310c60cf694d14fe91
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)-shield
-
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -26,9 +26,11 @@ PKG_BUILD_DEPENDS:=\
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
-include ../reforis/files/reforis-translations.mk
 
 define Package/reforis-shield
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=reForis
   TITLE:=reforis-shield
   URL:=https://gitlab.nic.cz/turris/reforis
   DEPENDS:= \
@@ -112,4 +114,3 @@ endef
 $(eval $(call Py3Package,reforis-shield))
 $(eval $(call BuildPackage,reforis-shield))
 $(eval $(call BuildPackage,reforis-shield-src))
-$(foreach trans,$(REFORIS_TRANSLATIONS),$(eval $(call ReForisTranslation,$(trans))))

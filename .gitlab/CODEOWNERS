@@ -1,54 +1,46 @@
-# CZ.NIC folder
-cznic/foris/ @shenek
-cznic/fosquitto/ @shenek
-cznic/mozilla-iot-gateway-webapp/ @mhrusecky
-cznic/turrishw/ @shenek
-cznic/turris-webapps/ @mhrusecky
+# Data collection
+collect/sentinel/ @kkoci @vmyslivec @mprudek
+collect/haas-proxy/ @shenek
+collect/pakon/ @mmatejek
+collect/pakon-lists/ @mmatejek
 
-#  Hardware
+# Hardware
 hardware/ @mhrusecky
 hardware/crypto-wrapper/ @vmyslivec
 hardware/mox/mox-otp/ @vmyslivec
+hardware/mox/mox-uboot/ @prohar @mbehun
+hardware/omnia/omnia-uboot/ @prohar @mbehun
 
-# Lang
-lang/ @kkoci
+# Lang - Python Packages
+lang/ @jschlehofer @jpavlinec
+lang/turrishw/ @mmatejek
 
 # Libs
-libs/ @jpavlinec @kkoci
+libs/ @jschlehofer @jpavlinec
 
 # Multimedia
-multimedia/ @jschlehofer
+multimedia/ @jschlehofer @jpavlinec
 
 # Net
-net/knot/ @dsalzman
-net/knot-resolver/ @jpavlinec
+net/ @jschlehofer
+net/knot-resolver/ @vcunat @jpavlinec
 net/unbound/ @jpavlinec
-net/tor/ @jpavlinec
-net/torsocks/ @jpavlinec
 net/resolver-conf/ @jpavlinec
 net/resolver-debug/ @jpavlinec
-net/lighttpd/ @mhrusecky
+net/lighttpd/ @jschlehofer
 net/lighttpd-https-cert/ @mhrusecky
 net/nextcloud/ @mhrusecky
 net/dnssec-rootkey/ @jpavlinec @vcunat
-net/lighttpd/ @mhrusecky
-net/nextcloud/ @mhrusecky
-net/nextcloud/ @mhrusecky
-net/rmbt/ @mprudek
-
-# Pakon related stuff
-cznic/pakon/ @mmatejek
-cznic/pakon-dev-detect/ @mmatejek
-cznic/pakon-lists/ @mmatejek
+net/rmbt-client/ @mprudek
 
 # Updater
 updater/ @kkoci
 
-# Data collection
-collect/ @mhrusecky
-
 # Utils
-utils/ @mhrusecky @jpavlinec @kkoci
+utils/ @mhrusecky @jpavlinec @kkoci @jschlehofer
 
 # Web related packages
-web/ @mhrusecky @shenek @kkoci
+web/foris-controller/ @mmatejek @fhron
+web/foris/ @mmatejek
+web/reforis/ @agumroian @msasek
+web/turris-webapps/ @agumroian

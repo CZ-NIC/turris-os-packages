@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+
+# bootstrap file is created to store content of BOOTSTRAP_UPDATER_BRANCH
+# environment variable, if defined, when updater is run in out root mode (the way
+# bootstrap is performed).
+# BOOTSTRAP_UPDATER_BRANCH contains simply target branch for updater (eg. HBL or HBD).
+bootstrap="/usr/share/updater/bootstrap-updater-branch"
+
+if [ -f "$bootstrap" ]; then
+	uci -q batch <<-EOF
+		set updater.turris.branch='$(cat "$bootstrap")'
+		commit updater.turris.branch
+	EOF
+	rm -f "$bootstrap"
+fi

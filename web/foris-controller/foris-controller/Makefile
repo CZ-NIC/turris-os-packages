@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2019-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -8,11 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller
-PKG_VERSION:=1.0.18
-PKG_RELEASE:=3
+PKG_VERSION:=1.2
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller.git
+PKG_MIRROR_HASH:=0f778f680b04da9173beca8a4048053008d9c365ff3d7846c006e8353c4b9079
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -23,6 +24,9 @@ include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 
 define Package/foris-controller
+  SECTION:=web
+  CATEGORY:=Web
+  SUBMENU:=Foris Controller
   TITLE:=foris-controller
   URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller
   DEPENDS:=+foris-controller-app +foris-controller-hotplug
@@ -35,7 +39,7 @@ define Package/foris-controller-app
   TITLE:=foris-controller-app
   URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller
   DEPENDS:=\
-    +python3-light +python3-ubus +python3-prctl +python3-multiprocessing +python3-pbkdf2 \
+    +python3-light +python3-ubus +python3-prctl +python3-multiprocessing +python3-pbkdf2 +python3-zeroconf \
     +foris-schema +python3-setuptools +turrishw \
     +turris-maintain +updater-supervisor +user-notify \
     +l10n-supported +sqm-scripts +fosquitto +python3-paho-mqtt +turris-cagen \

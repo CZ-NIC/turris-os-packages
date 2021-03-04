@@ -7,14 +7,14 @@ reset_uenv() {
     # Carry all important variables accross resets, but remove empty variables
     # to help people who just empty them instead of deleting
     if [ -n "$(fw_printenv -n root_uuid 2> /dev/null)" ]; then
-        bootcmd="$bootcmd setenv root_uuid $(blkid "$NEW_TARGET_PART" | sed 's|.*UUID="\([^"]*\)".*|\1|');"
+        bootcmd="$bootcmd setenv root_uuid $(blkid "$TARGET_PART" | sed 's|.*UUID="\([^"]*\)".*|\1|');"
     fi
     local contract="$(fw_printenv -n contract 2> /dev/null)"
     if [ -n "$contract" ]; then
         bootcmd="$bootcmd setenv contract $contract;"
     fi
     local rescue_mode="$(fw_printenv -n rescue_mode 2> /dev/null)"
-    if [ -n "$default_rescue_mode" ]; then
+    if [ -n "$rescue_mode" ]; then
         bootcmd="$bootcmd setenv rescue_mode $rescue_mode;"
     fi
     fw_setenv bootcmd "$bootcmd saveenv; reset"
@@ -31,16 +31,30 @@ disable_btrfs() {
     MODE1_NEXT=3
 }
 
+uuid2part() {
+    local uuid="$1"
+    local retry=5
+    local part=
+    # Wait for specified device a little
+    while [ "$retry" -gt 0 ] && [ -z "$part" ]; do
+        part="$(blkid | sed -n 's|^/dev/\([^:]*\):.*UUID="'"$uuid"'".*|\1|p' | head -n 1)"
+        sleep 1
+        retry="$(expr "$retry" - 1)"
+    done
+    echo "$part"
+} 
+
 override_root() {
     if [ -n "$(fw_printenv root_uuid 2> /dev/null)" ]; then
         UUID="$(fw_printenv root_uuid | sed 's|root_uuid=||')"
-        NEW_TARGET_PART="$(blkid | sed -n 's|^/dev/\([^:]*\):.*UUID="'"$UUID"'".*|\1|p' | head -n 1)"
+        NEW_TARGET_PART="$(uuid2part "$UUID")"
         if [ "$NEW_TARGET_PART" ] && [ -d "/sys/class/block/$NEW_TARGET_PART" ]; then
             NEW_TARGET_DRIVE="$(ls -d /sys/class/block/*/"$NEW_TARGET_PART" | sed 's|/.*/\([^/]*\)/'"$NEW_TARGET_PART"'|\1|')"
             if [ -d "/sys/class/block/$NEW_TARGET_DRIVE" ]; then
                 TARGET_PART="/dev/$NEW_TARGET_PART"
                 PART_NO="$(echo "$NEW_TARGET_PART" | sed -n 's|.*[^0-9]\([0-9]\+\)$|\1|p')"
                 TARGET_DRIVE="/dev/$NEW_TARGET_DRIVE"
+                enable_btrfs # re-setup btrfs now with new device
             fi
         fi
         echo "Newly selected root device is $TARGET_PART"
@@ -177,6 +191,7 @@ EOF
         mount "$TARGET_PART" "$trg_mnt_pth" || die 5 "Can't mount the partition"
         btrfs subvolume create "$trg_mnt_pth"/@ >> /tmp/debug.txt 2>&1 || die 6 "Can't create a subvolume"
         ln -s @/boot/boot.scr "$trg_mnt_pth"/boot.scr
+        echo "ROOT_DEV='${TARGET_PART}'" >> "$trg_mnt_pth"/@/etc/schnapps/config
         umount "$trg_mnt_pth"
         mount "$TARGET_PART" -o subvol=@ "$trg_mnt_pth"
     fi
@@ -212,6 +227,10 @@ reflash() {
             mkdir -p /mnt/tmp
             mount "$(cat /tmp/medkit-drive)" /mnt/tmp
             cp /mnt/tmp/"$(cat /tmp/medkit-file)" /mnt/src
+            local extra_file="/mnt/tmp/$(sed 's|\.tar\.gz$|-extra.tar.gz|' /tmp/medkit-file)"
+            if [ -f "$extra_file" ]; then
+                cp "$extra_file" /mnt/src
+            fi
             umount -fl /mnt/tmp
             rm -f /tmp/medkit-drive
         else
@@ -222,6 +241,10 @@ reflash() {
     echo "Unpacking rootfs to the target directory"
     mount >> /tmp/debug.txt
     tar -C /mnt/trg -xzf /mnt/src/"$(cat /tmp/medkit-file)" >> /tmp/debug.txt || die 7 "Flashing failed!!!"
+    local extra_file="/mnt/src/$(sed 's|\.tar\.gz$|-extra.tar.gz|' /tmp/medkit-file)"
+    if [ -f "$extra_file" ]; then
+        tar -C /mnt/trg -xzf "$extra_file" >> /tmp/debug.txt || die 7 "Flashing failed!!!"
+    fi
     echo "Rootfs should be ready"
     check_clock /mnt/trg/etc/shadow
     sync
