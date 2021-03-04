@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-fwlogs
 PKG_VERSION:=0.1.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/fwlogs.git
@@ -64,6 +64,9 @@ define Package/sentinel-fwlogs/install
 
 	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/reload_hooks.d
 	$(INSTALL_BIN) ./files/restart-proxy-hook.sh $(1)/usr/libexec/sentinel/reload_hooks.d/50_nikola.sh
+
+	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/status.d
+	$(INSTALL_BIN) ./files/sentinel-status.sh $(1)/usr/libexec/sentinel/status.d/20-fwlogs.sh
 endef
 
 $(eval $(call BuildPackage,sentinel-fwlogs))

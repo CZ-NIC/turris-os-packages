@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-minipot
 PKG_VERSION:=2.0.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/minipot.git
@@ -62,6 +62,9 @@ define Package/sentinel-minipot/install
 
 	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/reload_hooks.d
 	$(INSTALL_BIN) ./files/restart-minipot-hook.sh $(1)/usr/libexec/sentinel/reload_hooks.d/60_minipot.sh
+
+	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/status.d
+	$(INSTALL_BIN) ./files/sentinel-status.sh $(1)/usr/libexec/sentinel/status.d/21-minipots.sh
 endef
 
 $(eval $(call BuildPackage,sentinel-minipot))

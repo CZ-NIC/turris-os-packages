@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-survey
 PKG_VERSION:=0.1.1
-PKG_RELEASE:=5
+PKG_RELEASE:=6
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/turris-survey.git
@@ -43,6 +43,9 @@ define Py3Package/turris-survey/install
 
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_CONF) ./files/crond $(1)/etc/cron.d/turris-survey
+
+	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/status.d
+	$(INSTALL_BIN) ./files/sentinel-status.sh $(1)/usr/libexec/sentinel/status.d/22-turris-survey.sh
 endef
 
 $(eval $(call Py3Package,turris-survey))
