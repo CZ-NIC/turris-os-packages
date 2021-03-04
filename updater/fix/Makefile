@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+## Copyright (C) 2019-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -144,6 +144,18 @@ define Package/fix-pkglists-hardening-options/description
   enables appropriate options for hardening package list if hardening is enabled.
 endef
 
+define Package/fix-dhcp-downgrade-resolvfile/description
+  New dnsmasq uci config sets dhcp resolvfile value to /tmp/resolv.conf.d/resolv.conf.auto
+  In case of downgrade from HBD to HBL it is necessary to convert it back to
+  old value /tmp/resolv.conf.auto
+endef
+
+define Package/fix-dhcp-upgrade-resolvfile/description
+  New dnsmasq uci config sets dhcp resolvfile value to /tmp/resolv.conf.d/resolv.conf.auto
+  In case of upgrade from HBL to HBD  we should change value
+  to /tmp/resolv.conf.d/resolv.conf.auto
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
@@ -158,3 +170,5 @@ $(eval $(call FIX,cleanup-cert-backup,+cert-backup))
 $(eval $(call FIX,edns-buffer-size,+resolver-conf +uci))
 $(eval $(call FIX,dhparam-to-cagen,+uci +turris-cagen))
 $(eval $(call FIX,pkglists-hardening-options,+pkglists +uci))
+$(eval $(call FIX,dhcp-upgrade-resolvfile))
+$(eval $(call FIX,dhcp-downgrade-resolvfile))
