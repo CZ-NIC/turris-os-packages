@@ -262,11 +262,6 @@ init_unbound() {
     config_get_bool net_ipv4 common net_ipv4 1
     config_get_bool net_ipv6 common net_ipv6 1
 
-    local wan_ipv6
-    wan_ipv6="$(get_wan_ipv6)"
-
-    config_load resolver
-
     #check custom forwarding
     if [ -n "$forward_dns" ] && [ "$do_forward" = "1" ]; then
         dns_config_load "$forward_dns" print_unbound_forward_config
@@ -274,7 +269,8 @@ init_unbound() {
     if [ "$do_forward" = "1" ] ; then
         local SERVERS
 	# Max number of servers used for forwarding is 10
-        SERVERS=$(get_servers_ip_addresses "$net_ipv4" "$net_ipv6" "$wan_ipv6" "$resolv_conf_path" 10)
+        SERVERS=$(get_servers_ip_addresses "$net_ipv4" "$net_ipv6" "$resolv_conf_path" 10)
+
         if [ -n "$SERVERS" ] ; then
             (
             echo 'forward-zone:'
