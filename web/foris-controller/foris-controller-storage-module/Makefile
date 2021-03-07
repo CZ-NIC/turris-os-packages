@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-storage-module
 PKG_VERSION:=0.8
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-storage-module.git
@@ -58,10 +58,17 @@ mkdir -p "$${IPKG_INSTROOT}"/srv
 endef
 
 define ForisControllerModule/foris-controller-storage-module/install
-	$(INSTALL_DIR) $(1)/usr/libexec $(1)/etc/init.d $(1)/etc/config
+	$(INSTALL_DIR) $(1)/usr/libexec $(1)/etc/init.d $(1)/etc/config $(1)/etc/logrotate.d $(1)/usr/share/syslog-ng/include/scl/storage
+
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/format_and_set_srv.sh $(1)/usr/libexec
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/srv.init $(1)/etc/init.d/srv
+
+	$(CP) $(PKG_BUILD_DIR)/scripts/syslog-ng.conf $(1)/usr/share/syslog-ng/include/scl/storage/plugin.conf
+	$(CP) $(PKG_BUILD_DIR)/scripts/syslog-ng-logrotate.conf $(1)/etc/logrotate.d/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/syslog-ng.sh $(1)/usr/libexec/syslog-ng-srv.sh
+
 	$(INSTALL_DATA) ./files/storage.uci $(1)/etc/config/storage
+
 ifneq ($(CONFIG_RSYNC_xattr),y)
 	sed -i 's|\(.*rsync .*\)X\(.*\)|\1\2|' $(1)/etc/init.d/srv
 endif
