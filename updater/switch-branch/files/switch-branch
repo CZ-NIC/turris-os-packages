@@ -108,6 +108,23 @@ fetch_existing_versions() {
 	LATEST_VERSION="$(echo "$EXISTING_VERSIONS" | head -1)"
 }
 
+fetch_target_version() (
+	. /etc/os-release
+	board="omnia" # we use omnia as fallback but prefer to use correct board
+	case "$OPENWRT_DEVICE_PRODUCT" in
+		"Turris 1.x")
+			board="turris1x"
+			;;
+		"Turris Omnia")
+			board="omnia"
+			;;
+		"Turris Mox")
+			board="mox"
+			;;
+	esac
+	curl "https://repo.turris.cz/$1/$board/lists/turris-version"
+)
+
 # We allows some branch alternatives. This function replaces them with canonical variant
 branch_alts() {
 	case "$target" in
@@ -336,6 +353,22 @@ if [ "$mode" != "version" ]; then
 			fi
 			;;
 	esac
+fi
+
+# Verify that this is not a downgrade
+if [ "$force" != "y" ]; then
+	target_version="$target"
+	[ "$mode" = "branch" ] \
+		&& target_version="$(fetch_target_version "$target")"
+	if [ "$(printf "%s\n%s" "$target_version" "$CUR_VERSION" | sort -V | head -1)" != "$CUR_VERSION" ]; then
+		cat <<-EOF
+			$CUR_VERSION -> $target_version
+			You are attemping to do downgrade while only upgrades are tested.
+			Downgrade can cause unexpected issues because of migration steps performed on upgrade.
+			You can use schnapps to rollback to previous version or perform factory reset.
+		EOF
+		exit 1
+	fi
 fi
 
 ###################################
