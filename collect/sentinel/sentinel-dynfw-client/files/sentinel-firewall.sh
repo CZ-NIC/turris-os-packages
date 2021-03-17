@@ -3,6 +3,10 @@ set -e
 . "${0%/*}/common.sh"
 . /lib/functions.sh
 
+IPSET="turris-sn-dynfw-block"
+
+# Always create IP set to prevent iptables error about missing ipset.
+ipset create "$IPSET" hash:ip -exist
 
 dynfw_block() {
 	local config_section="$1"
@@ -22,7 +26,7 @@ dynfw_block() {
 		[ "${chain}" == "input" ] && bypass_mark="-m mark ! --mark 0x10/0x10"
 
 		iptables_drop "${zone}" "${chain}" \
-			-m set --match-set 'turris-sn-dynfw-block' src \
+			-m set --match-set "$IPSET" src \
 			${bypass_mark} \
 			-m conntrack --ctstate NEW \
 			-m comment --comment "!sentinel: dynamic firewall block"
