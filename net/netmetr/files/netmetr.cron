@@ -1,2 +1,2 @@
 MAILTO=""
-00 	* 	* 	* 	* 	root	netmetr --autostart --dwlhist --rwait 1800 &
+00 	* 	* 	* 	* 	root	netmetr --autostart --dwlhist &
