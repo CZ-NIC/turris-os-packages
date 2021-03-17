@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-data_collect-plugin
 PKG_VERSION:=1.4
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris/foris-data_collect-plugin.git
