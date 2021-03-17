@@ -1,2 +1,2 @@
 MAILTO=""
-00 	* 	* 	* 	* 	root	netmetr --autostart --dwlhist &
+00 	* 	* 	* 	* 	root	netmetr --autostart --dwlhist --syslog &
