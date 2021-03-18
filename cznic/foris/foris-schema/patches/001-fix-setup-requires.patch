@@ -1,0 +1,12 @@
+Index: foris-schema/setup.py
+===================================================================
+--- foris-schema.orig/setup.py
++++ foris-schema/setup.py
+@@ -49,7 +49,6 @@ setup(
+         'jsonschema',
+     ],
+     setup_requires=[
+-        'pytest-runner',
+     ],
+     tests_require=[
+         'pytest',
