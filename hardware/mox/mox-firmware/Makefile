@@ -29,7 +29,7 @@ define Package/turris-mox-devel-firmware
   TITLE:=Data files for nor-update (development version)
   DEPENDS:=+turris-nor-update +rescue-image +u-boot-mox @TARGET_mvebu_cortexa53_DEVICE_cznic-mox
   PROVIDES:=turris-nor-update-devel-firmware
-  VERSION:=0.0
+  VERSION:=0.1
   RELEASE:=1
 endef
 
@@ -40,11 +40,15 @@ endef
 
 Build/Compile:=:
 
-Package/turris-mox-devel-firmware/install:=:
-
 define Package/turris-mox-firmware/install
 	$(INSTALL_DIR) $(1)/usr/share/nor-update/
 	$(INSTALL_DATA) ./files/* $(1)/usr/share/nor-update/
+	$(RM) $(1)/usr/share/nor-update/secure-firmware-devel.bin
+endef
+
+define Package/turris-mox-devel-firmware/install
+	$(INSTALL_DIR) $(1)/usr/share/nor-update/
+	$(INSTALL_DATA) ./files/secure-firmware-devel.bin $(1)/usr/share/nor-update/
 endef
 
 $(eval $(call BuildPackage,turris-mox-firmware))
