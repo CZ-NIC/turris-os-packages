@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mox-uboot
-PKG_VERSION:=2020-07-rc1
-PKG_RELEASE:=2
+PKG_VERSION:=2021-01-rc1
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/mox-boot-builder.git
-PKG_MIRROR_HASH:=edb7469a6191fec9437dd1d55bcb6261840d1d667fa4c3128680d0c1d33751e1
-PKG_SOURCE_VERSION:=24de5b79eb0aeecaa611ced7513de8d87f0a1bcc
+PKG_MIRROR_HASH:=ffc040670f801ee0de390d0b9fe8e30d8afd6ebea7da2c8d895608941a08e015
+PKG_SOURCE_VERSION:=b0959e4d326fa3ae118afef931f6465f7b833bc3
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-2.0-or-later
@@ -29,12 +29,12 @@ define Package/mox-uboot
 endef
 
 define Build/Compile
-	cd $(PKG_BUILD_DIR); make CROSS_COMPILE=$(TARGET_CROSS) u-boot.bin
+	cd $(PKG_BUILD_DIR); make CROSS_COMPILE=$(TARGET_CROSS) a53-firmware.bin
 endef
 
 define Package/mox-uboot/install
 	$(INSTALL_DIR) $(1)/usr/share/mox
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/u-boot.bin $(1)/usr/share/mox/uboot-devel
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/a53-firmware.bin $(1)/usr/share/mox/uboot-devel
 endef
 
 $(eval $(call BuildPackage,mox-uboot))
