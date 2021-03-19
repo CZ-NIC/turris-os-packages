@@ -4,19 +4,25 @@
 reset_uenv() {
     local bootcmd="env default -f -a;"
 
-    # Carry all important variables accross resets, but remove empty variables
+    # Carry all important variables across resets, but remove empty variables
     # to help people who just empty them instead of deleting
+
+    # We want to update root_uuid if there was reflash
     if [ -n "$(fw_printenv -n root_uuid 2> /dev/null)" ]; then
         bootcmd="$bootcmd setenv root_uuid $(blkid "$TARGET_PART" | sed 's|.*UUID="\([^"]*\)".*|\1|');"
     fi
-    local contract="$(fw_printenv -n contract 2> /dev/null)"
-    if [ -n "$contract" ]; then
-        bootcmd="$bootcmd setenv contract $contract;"
-    fi
-    local rescue_mode="$(fw_printenv -n rescue_mode 2> /dev/null)"
-    if [ -n "$rescue_mode" ]; then
-        bootcmd="$bootcmd setenv rescue_mode $rescue_mode;"
-    fi
+
+    # Rest of variable we will just carry over
+    #
+    # contract - what contracts is router under
+    # rescue_mode - default rescue mode if not specified - differs between MOX and Shield
+    # boot_targets - to allow prioritize booting from SSD
+    for var in contract rescue_mode boot_targets; do
+        local value="$(fw_printenv -n $var 2> /dev/null)"
+        if [ -n "$value" ]; then
+            bootcmd="$bootcmd setenv $var '$value';"
+        fi
+    done
     fw_setenv bootcmd "$bootcmd saveenv; reset"
 }
 
