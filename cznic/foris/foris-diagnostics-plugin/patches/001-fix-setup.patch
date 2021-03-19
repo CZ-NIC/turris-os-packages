@@ -2,16 +2,13 @@ Index: foris-diagnostics-plugin/setup.py
 ===================================================================
 --- foris-diagnostics-plugin.orig/setup.py
 +++ foris-diagnostics-plugin/setup.py
-@@ -30,9 +30,9 @@ setup(
+@@ -30,9 +30,6 @@ setup(
          "foris @ git+https://gitlab.labs.nic.cz/turris/foris.git#egg=foris",
      ],
      setup_requires=[
 -        'babel',
 -        'jinja2',
 -        'libsass',
-+        'babel==2.6.0',
-+        'jinja2==2.10',
-+        'libsass==0.14.5',
          'foris-plugins-distutils',
      ],
      provides=[
