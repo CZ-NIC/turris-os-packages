@@ -109,14 +109,11 @@ download_medkit() {
     for ext in tar.gz tar.gz.sig; do
         i=0
         # We are checking signature, so we don't care about https certificate
-        while ! { \
-            wget --no-check-certificate -O /mnt/src/medkit.$ext https://repo.turris.cz/hbs/medkit/medkit-${BOARD}${MDKT_VARIANT}-latest.$ext || \
-            wget --no-check-certificate -O /mnt/src/medkit.$ext https://repo.turris.cz/hbs/medkit/${BOARD}-medkit${MDKT_VARIANT}-latest.$ext;   \
-            }; do
-                echo "Can't download $BOARD-medkit-latest.$ext :-("
-                sleep 2
-                i="$(expr "$i" + 1)"
-                [ "$i" -lt "$tries" ] || die 2 "Can't get $BOARD-medkit-latest.$ext"
+        while ! wget --no-check-certificate -O /mnt/src/medkit.$ext https://repo.turris.cz/hbs/medkit/${BOARD}-medkit${MDKT_VARIANT}-latest.$ext; do
+            echo "Can't download $BOARD-medkit-latest.$ext :-("
+            sleep 2
+            i="$(expr "$i" + 1)"
+            [ "$i" -lt "$tries" ] || die 2 "Can't get $BOARD-medkit-latest.$ext"
         done
     done
     usign -V -m /mnt/src/medkit.tar.gz -P /etc/opkg/keys || die 2 "Can't validate signature"
