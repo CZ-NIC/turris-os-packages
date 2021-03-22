@@ -1,0 +1,13 @@
+Index: foris-netmetr-plugin/setup.py
+===================================================================
+--- foris-netmetr-plugin.orig/setup.py
++++ foris-netmetr-plugin/setup.py
+@@ -28,7 +28,7 @@ setup(
+     url="https://gitlab.labs.nic.cz/turris/foris/foris-netmetr-plugin/",
+     license="GPL-3.0",
+     install_requires=["foris @ git+https://gitlab.labs.nic.cz/turris/foris/foris.git#egg=foris"],
+-    setup_requires=["babel", "jinja2", "libsass", "foris-plugins-distutils"],
++    setup_requires=[],
+     provides=["foris_plugins.netmetr"],
+     packages=["foris_plugins.netmetr"],
+     package_data={
