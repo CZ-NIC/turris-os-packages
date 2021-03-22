@@ -26,6 +26,7 @@ PKG_BUILD_DEPENDS:= \
                 python3-setuptools/host \
                 python3-jinja2/host \
                 python3-babel/host \
+                python3-six/host \
                 foris-plugins-distutils/host
 
 include $(INCLUDE_DIR)/package.mk
