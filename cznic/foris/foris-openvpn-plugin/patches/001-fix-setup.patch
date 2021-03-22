@@ -1,0 +1,15 @@
+Index: foris-openvpn-plugin/setup.py
+===================================================================
+--- foris-openvpn-plugin.orig/setup.py
++++ foris-openvpn-plugin/setup.py
+@@ -30,10 +30,6 @@ setup(
+         "foris @ git+https://gitlab.labs.nic.cz/turris/foris.git#egg=foris",
+     ],
+     setup_requires=[
+-        'babel',
+-        'jinja2',
+-        'libsass',
+-        'foris-plugins-distutils',
+     ],
+     provides=[
+         "foris_plugins.openvpn",
