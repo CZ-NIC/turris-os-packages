@@ -24,7 +24,13 @@ HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/$(PKG_NAME)
 
 PKG_LICENSE:=GPL-3.0
 
-PKG_BUILD_DEPENDS:=python3 python3-libsass
+HOST_BUILD_DEPENDS:= \
+                python3/host \
+                python3-libsass/host \
+                python3-setuptools/host \
+                python3-jinja2/host \
+                python3-babel/host
+
 PKG_BUILD_DEPENDS:= \
                 python3/host \
                 python3-libsass/host \
