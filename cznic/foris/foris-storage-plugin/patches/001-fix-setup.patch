@@ -1,0 +1,15 @@
+Index: foris-storage-plugin/setup.py
+===================================================================
+--- foris-storage-plugin.orig/setup.py
++++ foris-storage-plugin/setup.py
+@@ -30,10 +30,6 @@ setup(
+         "foris @ git+https://gitlab.labs.nic.cz/turris/foris.git#egg=foris",
+     ],
+     setup_requires=[
+-        'babel',
+-        'jinja2',
+-        'libsass',
+-        'foris-plugins-distutils',
+     ],
+     provides=[
+         "foris_plugins.storage",
