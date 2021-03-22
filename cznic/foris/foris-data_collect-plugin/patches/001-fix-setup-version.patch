@@ -1,15 +1,15 @@
---- a/setup.py
-+++ b/setup.py
-@@ -30,9 +30,9 @@ setup(
+Index: python3-foris-data_collect-plugin-1.4/setup.py
+===================================================================
+--- python3-foris-data_collect-plugin-1.4.orig/setup.py
++++ python3-foris-data_collect-plugin-1.4/setup.py
+@@ -30,10 +30,6 @@ setup(
          "foris @ git+https://gitlab.labs.nic.cz/turris/foris.git#egg=foris",
      ],
      setup_requires=[
 -        'babel',
 -        'jinja2',
 -        'libsass',
-+        'babel==2.6.0',
-+        'jinja2==2.10',
-+        'libsass==0.14.5',
-         'foris-plugins-distutils',
+-        'foris-plugins-distutils',
      ],
      provides=[
+         "foris_plugins.data_collect",
