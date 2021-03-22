@@ -16,10 +16,15 @@ PKG_SOURCE_URL:=https://pypi.python.org/packages/source/s/six/
 PKG_MD5SUM:=476881ef4012262dfc8adc645ee786c4
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/six-$(PKG_VERSION)
+HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/six-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=python3-setuptools
+HOST_BUILD_DEPENDS:=python3/host
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/host-build.mk
 $(call include_mk, python3-package.mk)
+$(call include_mk, python3-host.mk)
+
 
 define Package/python3-six
   SUBMENU:=Python
@@ -34,12 +39,22 @@ define Package/python3-six/description
   Python 2 and 3 compatibility utilities
 endef
 
+define Host/Compile
+	$(call Build/Compile/HostPy3Mod,,build)
+endef
+
+define Host/Install
+	$(call Build/Compile/HostPy3Mod,,install --prefix="" --root="$(STAGING_DIR_HOSTPKG)")
+endef
+
 define Build/Compile
 	$(call Build/Compile/Py3Mod,, \
 		install --root="$(PKG_INSTALL_DIR)" --prefix="/usr"  \
 		--single-version-externally-managed \
 	)
 endef
+
+$(eval $(call HostBuild))
 
 $(eval $(call Py3Package,python3-six))
 $(eval $(call BuildPackage,python3-six))
