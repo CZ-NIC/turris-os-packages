@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-pakon-plugin
 PKG_VERSION:=2.6.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris/foris-pakon-plugin.git
@@ -20,7 +20,13 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 PKG_LICENSE:=GPL-3.0
 PKG_LICENSE_FILE:=LICENSE
 
-PKG_BUILD_DEPENDS:=python3/host python3-libsass/host python3-setuptools/host foris-plugins-distutils/host
+PKG_BUILD_DEPENDS:= \
+                python3/host \
+                python3-libsass/host \
+                python3-setuptools/host \
+                python3-jinja2/host \
+                python3-babel/host \
+                foris-plugins-distutils/host
 
 include $(INCLUDE_DIR)/package.mk
 include ../foris/files/foris-translations.mk
