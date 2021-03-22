@@ -19,7 +19,7 @@ PKG_MD5SUM:=86934693e4825b360594e88a734c3b72
 PKG_BUILD_DIR:=$(BUILD_DIR)/libsass-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/libsass-$(PKG_VERSION)
 
-PKG_BUILD_DEPENDS:=python python3
+PKG_BUILD_DEPENDS:=python python3 python3-setuptools/host
 HOST_BUILD_DEPENDS:=python/host python-setuptools/host python3/host python3-setuptools/host
 
 include $(INCLUDE_DIR)/package.mk
