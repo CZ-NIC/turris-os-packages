@@ -36,7 +36,8 @@ PKG_BUILD_DEPENDS:= \
                 python3-libsass/host \
                 python3-setuptools/host \
                 python3-jinja2/host \
-                python3-babel/host
+                python3-babel/host \
+                python3-babel
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
