@@ -48,12 +48,14 @@ endef
 
 define Build/Compile
 	$(call Build/Compile/Py3Mod,, \
-		install --root="$(PKG_INSTALL_DIR)" --prefix="/usr"  \
-		--single-version-externally-managed \
+		install --root="$(PKG_INSTALL_DIR)/py3" --prefix="/usr"  \
 	)
 endef
 
 $(eval $(call HostBuild))
 
+PKG_INSTALL_DIR_ORIG:="$(PKG_INSTALL_DIR)"
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)/py3"
 $(eval $(call Py3Package,python3-babel))
+PKG_INSTALL_DIR:="$(PKG_INSTALL_DIR_ORIG)"
 $(eval $(call BuildPackage,python3-babel))
