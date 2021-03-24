@@ -1,0 +1,32 @@
+Index: foris-plugins-distutils/foris_plugins_distutils/__init__.py
+===================================================================
+--- foris-plugins-distutils.orig/foris_plugins_distutils/__init__.py
++++ foris-plugins-distutils/foris_plugins_distutils/__init__.py
+@@ -35,7 +35,27 @@ class make_messages(ForisPluginCommand):
+         pass
+ 
+     def run(self):
++        print(import shutil.__file__)
++        print("0000000000000000000000000000000000000000000000")
++        print("0000000000000000000000000000000000000000000000")
++        print("0000000000000000000000000000000000000000000000")
++        print("0000000000000000000000000000000000000000000000")
++        print("0000000000000000000000000000000000000000000000")
++        print("0000000000000000000000000000000000000000000000")
++        print("0000000000000000000000000000000000000000000000")
+         from babel.messages import frontend
++        import babel
++        print(babel.__version__)
++        print(babel.__file__)
++        print("0000000000000000000000000000000000000000000000")
++        print("0000000000000000000000000000000000000000000000")
++        print("0000000000000000000000000000000000000000000000")
++        print("0000000000000000000000000000000000000000000000")
++        print("0000000000000000000000000000000000000000000000")
++        print("0000000000000000000000000000000000000000000000")
++        print("0000000000000000000000000000000000000000000000")
++ 
++
+ 
+         plugin_name = self.get_plugin_name()
+         plugin_path = pathlib.Path("foris_plugins") / plugin_name
