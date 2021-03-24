@@ -26,7 +26,8 @@ PKG_BUILD_DEPENDS:= \
                 python3-setuptools/host \
                 python3-jinja2/host \
                 python3-babel/host \
-                foris-plugins-distutils/host
+                foris-plugins-distutils/host \
+                foris-plugins-distutils
 
 include $(INCLUDE_DIR)/package.mk
 include ../foris/files/foris-translations.mk
