@@ -13,6 +13,7 @@ PKG_RELEASE:=1
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 HOST_BUILD_DEPENDS:=ruby/host
+PKG_BUILD_DEPENDS:=ruby
 
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
