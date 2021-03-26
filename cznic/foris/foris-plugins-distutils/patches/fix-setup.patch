@@ -1,0 +1,12 @@
+Index: foris-plugins-distutils/setup.py
+===================================================================
+--- foris-plugins-distutils.orig/setup.py
++++ foris-plugins-distutils/setup.py
+@@ -10,6 +10,7 @@ setup(
+     author_email="stepan.henek@nic.cz",
+     url="https://gitlab.labs.nic.cz/turris/foris-plugins-distutils/",
+     license="GPL-3.0",
++    setup_requires=['babel'],
+     requires=[],
+     install_requires=["babel", "jinja2", "libsass"],
+     provides=["foris_plugins_distutils"],
