@@ -62,6 +62,12 @@ define Build/Compile
 	)
 endef
 
+define Build/Clean
+	$(call Build/Clean/Default)
+	find $(STAGING_DIR_HOST) -name foris_plugins_distutils -type d -exec rm -rf {} +
+	find $(STAGING_DIR) -name foris_plugins_distutils -type d -exec rm -rf {} +
+endef
+
 define Host/Compile
 	$(call Build/Compile/HostPy3Mod,,build)
 endef
