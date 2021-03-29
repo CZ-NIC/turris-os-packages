@@ -6,7 +6,7 @@ Index: foris-plugins-distutils/foris_plugins_distutils/__init__.py
          pass
  
      def run(self):
-+        print(import shutil.__file__)
++        print(shutil.__file__)
 +        print("0000000000000000000000000000000000000000000000")
 +        print("0000000000000000000000000000000000000000000000")
 +        print("0000000000000000000000000000000000000000000000")
