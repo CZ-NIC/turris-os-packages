@@ -44,6 +44,7 @@ endef
 
 define Host/Install
 	$(call Build/Compile/HostPy3Mod,,install --prefix="" --root="$(STAGING_DIR_HOSTPKG)")
+	$(call Build/Compile/HostPy3Mod,,install --prefix="" --root="$(STAGING_DIR)")
 endef
 
 define Build/Compile
