@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-translations
-PKG_VERSION:=1.4.0
+PKG_VERSION:=1.4.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/turris-translations.git
-PKG_MIRROR_HASH:=174d3eb7443c304e4a662e5f52416c5e4a3cf789b224f667e8f2c590af2891c2
+PKG_MIRROR_HASH:=d16b8581d8b6a7ae9b9761c63a94147a4edd8c1e350c6560adddef23002fe623
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
