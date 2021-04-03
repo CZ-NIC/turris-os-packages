@@ -67,11 +67,11 @@ flash() {
 
     shift 2
 
-    while [ -n "${1:+x}" ] && [ ! -r "$1" ]; do
+    while [ "$# -gt 0 ] && [ ! -r "$1" ]; do
         shift
     done
 
-    if [ -z "${1:+x}" ]; then
+    if [ "$#" -eq 0 ]; then
         echo "Can't find anything to flash to '$flashing' partition"
         return 0
     fi
@@ -81,7 +81,6 @@ flash() {
     fi
 
     v_echo "Checking and flashing '$flashing' partition: $1 -> /dev/$part"
-	return 0 # TODO remove
     if mtd verify "$1" "/dev/$part"; then
         v_echo "Partition with $flashing was up to date already."
     else
@@ -140,7 +139,7 @@ fix_boot_scr
 # To simplify the configuration so we can use relative paths for parts of the firmware
 cd "/usr/share/nor-update/"
 
-if [ -n "$DEVEL" ]; then
+if [ -z "$DEVEL" ]; then
     SECURE_FIRMWARE_DEVEL=""
     UBOOT_DEVEL=""
     RESCUE_DEVEL=""
