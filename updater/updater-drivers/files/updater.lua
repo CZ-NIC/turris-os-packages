@@ -89,8 +89,8 @@ turris_list("drivers/usb.lua")
 -- PCI
 devices = {}
 for name, _ in pairs(ls("/sys/bus/pci/devices")) do
-	local vendor = cat_file("/sys/bus/usb/devices/" .. name .. "/vendor")
-	local device = cat_file("/sys/bus/usb/devices/" .. name .. "/device")
+	local vendor = cat_file("/sys/bus/pci/devices/" .. name .. "/vendor")
+	local device = cat_file("/sys/bus/pci/devices/" .. name .. "/device")
 	if vendor and device then
 		table.insert(devices, {
 			vendor = tonumber(vendor),
