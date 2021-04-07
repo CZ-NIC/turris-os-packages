@@ -41,13 +41,13 @@ while read -r local_ref local_sha1 remote_ref remote_sha1; do
 			push_develop="$local_sha1"
 			;;
 		hotfix/*)
-			if compare_ancestors "$local_sha1" master develop; then
+			if ! compare_ancestors "$local_sha1" develop master; then
 				echo "Reference has invalid ancestor, please base it on top of master: $local_ref" >&2
 				exit 1
 			fi
 			;;
 		feature/*|bugfix/*|refactor/*|hack/*)
-			if compare_ancestors "$local_sha1" develop master; then
+			if ! compare_ancestors "$local_sha1" master develop; then
 				echo "Reference has invalid ancestor, please base it on top of develop: $local_ref" >&2
 				exit 1
 			fi
