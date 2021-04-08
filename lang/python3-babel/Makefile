@@ -17,7 +17,7 @@ PKG_MD5SUM:=c384ac03026e8fe6f9b90f55201f1bff
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/Babel-$(PKG_VERSION)
 HOST_BUILD_DIR:=$(BUILD_DIR_HOST)/Babel-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=python3-setuptools python3-pytz
+PKG_BUILD_DEPENDS:=python3-setuptools python3-pytz python3-babel/host
 HOST_BUILD_DEPENDS:=python3/host
 
 include $(INCLUDE_DIR)/package.mk
@@ -44,6 +44,7 @@ endef
 
 define Host/Install
 	$(call Build/Compile/HostPy3Mod,,install --prefix="" --root="$(STAGING_DIR_HOSTPKG)")
+	$(call Build/Compile/HostPy3Mod,,install --prefix="" --root="$(STAGING_DIR)")
 endef
 
 define Build/Compile
