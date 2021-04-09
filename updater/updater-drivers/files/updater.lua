@@ -94,7 +94,7 @@ for name, _ in pairs(ls("/sys/bus/pci/devices")) do
 	if vendor and device then
 		table.insert(devices, {
 			vendor = tonumber(vendor),
-			device = tonumber(product)
+			device = tonumber(device)
 		})
 	end
 end
