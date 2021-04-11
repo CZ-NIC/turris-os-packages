@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps-luci
-PKG_VERSION:=1.0
-PKG_RELEASE:=2
+PKG_VERSION:=1.1
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -24,10 +24,11 @@ define Package/turris-webapps-luci
   DEPENDS:=+luci-base \
     +turris-webapps
   PROVIDES:=luci-lighttpd
+  URL:=https://gitlab.nic.cz/turris/webapps
 endef
 
 define Package/turris-webapps-luci/description
-  Webapps integration package for LuCI.
+  WebApps integration package for LuCI.
 endef
 
 define Build/Compile
@@ -39,7 +40,7 @@ define Package/turris-webapps-luci/install
 	$(INSTALL_DIR) $(1)/www/webapps-icons
 	$(CP) ./files/luci.svg $(1)/www/webapps-icons/luci.svg
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
-	$(CP) ./files/luci.webapps $(1)/usr/share/turris-webapps/05_luci.conf
+	$(INSTALL_DATA) ./files/05_luci.json $(1)/usr/share/turris-webapps/
 endef
 
 define Package/turris-webapps-luci/postinst

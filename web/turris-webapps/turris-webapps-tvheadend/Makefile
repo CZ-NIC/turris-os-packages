@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps-tvheadend
 PKG_VERSION:=1.0
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -23,10 +23,12 @@ define Package/turris-webapps-tvheadend
   TITLE:=Tvheadend integration
   DEPENDS:=+tvheadend \
     +turris-webapps
+  URL:=https://gitlab.nic.cz/turris/webapps
 endef
 
 define Package/turris-webapps-tvheadend/description
-  Webapps integration package for tvheadend.
+  Webapps integration package for TVHeadend.
+  See https://tvheadend.org/
 endef
 
 define Build/Compile

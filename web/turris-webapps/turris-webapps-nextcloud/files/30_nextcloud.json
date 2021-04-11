@@ -4,6 +4,7 @@
   "url": "/nextcloud",
   "icon": "/icons/nextcloud.svg",
   "description": {
-      "en": "The self-hosted productivity platform that keeps you in control."
+      "en": "The self-hosted productivity platform that keeps you in control.",
+      "cs": "Vlastní souborový hosting a kancelářská platforma, kterou máte pod kontrolou."
   }
 }

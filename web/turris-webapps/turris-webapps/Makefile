@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps
 PKG_VERSION:=3.6
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/webapps
@@ -27,10 +27,11 @@ define Package/turris-webapps
   SUBMENU:=WebApps
   TITLE:=Turris WebApps
   DEPENDS:=+lighttpd +lighttpd-mod-alias +lighttpd-mod-cgi
+  URL:=https://gitlab.nic.cz/turris/webapps
 endef
 
 define Package/turris-webapps/description
- Common landding page for various installed web apps.
+ Common landding page for various installed WebApps.
 endef
 
 Build/Compile:=:

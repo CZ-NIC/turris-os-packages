@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps-transmission
 PKG_VERSION:=1.0
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -24,10 +24,12 @@ define Package/turris-webapps-transmission
   DEPENDS:=+transmission-daemon +transmission-web \
     +turris-webapps \
     +lighttpd-mod-authn_pam +lighttpd-mod-auth +lighttpd-mod-authn_file
+  URL:=https://gitlab.nic.cz/turris/webapps
 endef
 
 define Package/turris-webapps-transmission/description
-  Webapps integration package for transmission.
+  WebApps integration package for transmission.
+  See https://transmissionbt.com/
 endef
 
 define Build/Compile
