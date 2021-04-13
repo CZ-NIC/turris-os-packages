@@ -1,6 +1,8 @@
 #!/bin/sh
-set -eu
+set -e
+# Note: there is no `set -u` as jshn.sh is not compatible with it.
 . /usr/share/libubox/jshn.sh
+. /lib/functions.sh
 
 
 foris_password() {
@@ -34,7 +36,20 @@ system_password() {
 	echo "System password set." >&2
 }
 
-wireless() {
+wifi_handle() {
+	local iface="$1"
+	local device
+	config_get device "$iface" device
+	uci batch <<-EOF
+		set wireless.$iface.ssid=$ssid
+		set wireless.$iface.encryption=psk2+ccmp
+		set wireless.$iface.key=$key
+		set wireless.$device.disabled=0
+	EOF
+	echo "Wireless configured on device: $device" >&2
+}
+
+wireless() (
 	json_select "wireless" >/dev/null || {
 		echo "wireless configuration not present." >&2
 		return 0
@@ -46,26 +61,15 @@ wireless() {
 			return 0
 		}
 	done
-	
-	local wifi_dev
-	wifi_dev="$(uci -q show 'wireless.@wifi-device[0]' \
-			| sed -nE 's|^wireless\.([^.=]+)=.*$|\1|p')"
-	if [ -z "$wifi_dev" ]; then
-		echo "Wireless configuration is not possible as there is no Wi-Fi device." >&2
-		return 0
-	fi
 
-	uci -q batch <<-EOF
-		wireless.wifinet_auto=wifi-iface
-		wireless.wifinet_auto.device=$wifi_dev
-		wireless.wifinet_auto.network=lan
-		wireless.wifinet_auto.mode=ap
-		wireless.wifinet_auto.ssid=$ssid
-		wireless.wifinet_auto.encryption=psk2+ccmp
-		wireless.wifinet_auto.key=$key
-		commit wireless.wifinet_auto
-	EOF
-}
+	config_load wireless
+	config_foreach wifi_handle wifi-iface
+	if [ -n "$(uci changes wireless)" ]; then
+		uci commit wireless
+	else
+		echo "Wireless configuration is not possible as there is no Wi-Fi device." >&2
+	fi
+)
 
 
 locate_config() {
