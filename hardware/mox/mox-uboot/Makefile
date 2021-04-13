@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2018-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+## Copyright (C) 2018-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mox-uboot
-PKG_VERSION:=2021-01-rc1
+PKG_VERSION:=2021-04-rc1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/mox-boot-builder.git
-PKG_MIRROR_HASH:=ffc040670f801ee0de390d0b9fe8e30d8afd6ebea7da2c8d895608941a08e015
-PKG_SOURCE_VERSION:=b0959e4d326fa3ae118afef931f6465f7b833bc3
+PKG_MIRROR_HASH:=960e37c522a48d994b4ee99a2f039ccd3dc26fda1e17027929c90bab344844f1
+PKG_SOURCE_VERSION:=b8928b294a863f2c698c4b230e598f984828a2ad
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-2.0-or-later
