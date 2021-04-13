@@ -221,6 +221,10 @@ init_unbound() {
     set_parameter rrset_cache_size rrset-cache-size 100k
     set_parameter infra_cache_slabs infra-cache-slabs 1
     set_parameter infra_cache_numhosts infra-cache-numhosts 200
+
+    # Related to issue https://gitlab.nic.cz/turris/os/packages/-/issues/748
+    set_parameter cache_max_negative_ttl cache-max-negative-ttl 1000
+
     set_multiple_parameters access_control access-control
     set_quoted_parameter username username "$USERNAME"
     set_quoted_parameter pidfile pidfile "/var/run/unbound.pid"
