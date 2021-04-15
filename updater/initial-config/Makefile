@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=initial-config
 PKG_VERSION:=0.2.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -19,7 +19,8 @@ define Package/initial-config
   SECTION:=updater
   CATEGORY:=Turris Updater
   TITLE:=Initial config for initial boot
-  DEPENDS:=+jshn +python3-pbkdf2
+  DEPENDS:=+jshn +python3-pbkdf2 \
+    +kmod-fs-btrfs +kmod-fs-ext4 +kmod-fs-xfs +kmod-fs-vfat +kmod-fs-exfat
 endef
 
 define Package/initial-config/install
