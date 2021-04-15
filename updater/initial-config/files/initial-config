@@ -17,8 +17,8 @@ foris_password() {
 		'import pbkdf2; import sys; print(pbkdf2.crypt(sys.argv[1], iterations=1000))' \
 			-- "$password")"
 	uci -q batch <<-EOF
-		foris.auth=config
-		foris.auth.password=$pbkdf2
+		set foris.auth=config
+		set foris.auth.password=$pbkdf2
 		commit foris.auth
 	EOF
 	echo "Foris password set." >&2
