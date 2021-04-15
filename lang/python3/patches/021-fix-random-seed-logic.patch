@@ -1,0 +1,16 @@
+Fixes foris-controller error with ramdom module
+
+https://bugs.python.org/issue29208
+https://hg.python.org/cpython/rev/0a55e039d25f
+
+--- Python-3.6.0.orig/Modules/_randommodule.c
++++ Python-3.6.0/Modules/_randommodule.c
+@@ -245,7 +245,7 @@ random_seed(RandomObject *self, PyObject
+         return NULL;
+
+      if (arg == NULL || arg == Py_None) {
+-        if (random_seed_urandom(self) >= 0) {
++        if (random_seed_urandom(self) < 0) {
+             PyErr_Clear();
+
+             /* Reading system entropy failed, fall back on the worst entropy:
