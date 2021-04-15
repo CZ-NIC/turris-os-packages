@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=69.0.1
+PKG_VERSION:=69.1.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/updater/updater.git
-PKG_MIRROR_HASH:=0f39d7892c25757b725098e211d12788caad81572d981c25dad2eae6a7ac683c
+PKG_MIRROR_HASH:=a370ad93f86e80a3323d811516baaff5251583a1fd42b6a1d663ecefb7df0f59
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
