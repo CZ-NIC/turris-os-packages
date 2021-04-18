@@ -7,12 +7,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libpaho-mqtt-c
-PKG_VERSION:=1.3.4
+PKG_VERSION:=1.3.8
 PKG_RELEASE=1
 
 PKG_SOURCE:=v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/eclipse/paho.mqtt.c/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=1ae9b657b693254ed0710350df3dcf5232d1f479409a52861b5e5bb5cc3da046
+PKG_HASH:=4920ff685344cdb0272568bc4414dcf48fcdfc4a98c78b1f3ca49c38417bf391
 PKG_BUILD_DIR:=$(BUILD_DIR)/paho.mqtt.c-$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
