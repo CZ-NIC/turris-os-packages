@@ -20,9 +20,11 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=LICENSE
 
+ifneq ($(BUILDDEPENDS),skip)
 PKG_BUILD_DEPENDS:=\
 	node/host \
-	reforis-distutils/host \
+	reforis-distutils/host
+endif
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
