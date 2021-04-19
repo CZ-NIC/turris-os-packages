@@ -164,7 +164,7 @@ print_log() {
 	echo "====Log===="
 	date
 	echo "==========="
-	cat /var/log/messages
+	cat /var/log/resolver
 }
 
 
