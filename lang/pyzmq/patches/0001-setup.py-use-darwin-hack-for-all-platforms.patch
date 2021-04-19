@@ -15,15 +15,15 @@ are handled in such a way.
 
 --- a/setup.py
 +++ b/setup.py
-@@ -209,10 +209,7 @@ def _add_rpath(settings, path):
+@@ -233,10 +233,7 @@ def _add_rpath(settings, path):
  
      Implemented here because distutils runtime_library_dirs doesn't do anything on darwin
      """
 -    if sys.platform == 'darwin':
--        settings['extra_link_args'].extend(['-Wl,-rpath','-Wl,%s' % path])
+-        settings['extra_link_args'].extend(['-Wl,-rpath', '-Wl,%s' % path])
 -    else:
 -        settings['runtime_library_dirs'].append(path)
-+    settings['extra_link_args'].extend(['-Wl,-rpath','-Wl,%s' % path])
++    settings['extra_link_args'].extend(['-Wl,-rpath', '-Wl,%s' % path])
  
- def settings_from_prefix(prefix=None, bundle_libzmq_dylib=False):
-     """load appropriate library/include settings from ZMQ prefix"""
+ 
+ def settings_from_prefix(prefix=None):
