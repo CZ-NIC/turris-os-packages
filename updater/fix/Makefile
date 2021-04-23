@@ -144,6 +144,11 @@ define Package/fix-pkglists-hardening-options/description
   enables appropriate options for hardening package list if hardening is enabled.
 endef
 
+define Package/fix-nor-update/description
+  Sometimes we need to trigger update of the content of NOR memory - like U-Boot
+  or rescue image. This fix updates it to the latest stable version.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
@@ -158,3 +163,4 @@ $(eval $(call FIX,cleanup-cert-backup,+cert-backup))
 $(eval $(call FIX,edns-buffer-size,+resolver-conf +uci))
 $(eval $(call FIX,dhparam-to-cagen,+uci +turris-cagen))
 $(eval $(call FIX,pkglists-hardening-options,+pkglists +uci))
+$(eval $(call FIX,nor-update,+turris-nor-update +turris-nor-update-firmware))
