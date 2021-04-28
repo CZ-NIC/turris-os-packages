@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-netmetr-plugin
-PKG_VERSION:=0.2.2
+PKG_VERSION:=0.3.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-netmetr
-PKG_MIRROR_HASH:=6c0fee4bba2b0422e6cbc3157b2511159ee261beab98226a4f5880b8548ffe81
+PKG_MIRROR_HASH:=bfea675c7e91a55d1e2afcf9a92392f9f122cc4ccfbb0766725b0b708f78092e
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
