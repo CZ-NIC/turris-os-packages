@@ -1,0 +1,28 @@
+#!/bin/sh
+
+
+uci_add_section()
+{
+	local config="$1" # resolver
+	local section_name="$2" #fw_cloudflare
+	local section_type="$3" #zone
+
+	uci set $config.$section_name=$section_type
+	uci commit $config
+}
+
+set_unbound_option() {
+	local config="unbound" # resolver
+	local section_name="$1" #fw_cloudflare
+	local option_name="$2" #zone
+	local value="$3"
+
+	uci set $config.$section_name.$option_name=$value
+	uci commit $config
+
+}
+
+
+# Create zone with upstream forwarding
+uci_add_section "unbound" "upstream_forward" "zone"
+set_unbound_option "upstream_forward" "enable" "1"
