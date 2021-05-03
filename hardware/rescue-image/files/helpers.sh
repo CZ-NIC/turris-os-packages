@@ -4,19 +4,25 @@
 reset_uenv() {
     local bootcmd="env default -f -a;"
 
-    # Carry all important variables accross resets, but remove empty variables
+    # Carry all important variables across resets, but remove empty variables
     # to help people who just empty them instead of deleting
+
+    # We want to update root_uuid if there was reflash
     if [ -n "$(fw_printenv -n root_uuid 2> /dev/null)" ]; then
         bootcmd="$bootcmd setenv root_uuid $(blkid "$TARGET_PART" | sed 's|.*UUID="\([^"]*\)".*|\1|');"
     fi
-    local contract="$(fw_printenv -n contract 2> /dev/null)"
-    if [ -n "$contract" ]; then
-        bootcmd="$bootcmd setenv contract $contract;"
-    fi
-    local rescue_mode="$(fw_printenv -n rescue_mode 2> /dev/null)"
-    if [ -n "$rescue_mode" ]; then
-        bootcmd="$bootcmd setenv rescue_mode $rescue_mode;"
-    fi
+
+    # Rest of variable we will just carry over
+    #
+    # contract - what contracts is router under
+    # rescue_mode - default rescue mode if not specified - differs between MOX and Shield
+    # boot_targets - to allow prioritize booting from SSD
+    for var in contract rescue_mode boot_targets; do
+        local value="$(fw_printenv -n $var 2> /dev/null)"
+        if [ -n "$value" ]; then
+            bootcmd="$bootcmd setenv $var '$value';"
+        fi
+    done
     fw_setenv bootcmd "$bootcmd saveenv; reset"
 }
 
@@ -101,16 +107,13 @@ download_medkit() {
     mkdir -p /mnt/src
     # Download medkit and signature
     for ext in tar.gz tar.gz.sig; do
-        i=0
+        local i=0
         # We are checking signature, so we don't care about https certificate
-        while ! { \
-            wget --no-check-certificate -O /mnt/src/medkit.$ext https://repo.turris.cz/hbs/medkit/medkit-${BOARD}${MDKT_VARIANT}-latest.$ext || \
-            wget --no-check-certificate -O /mnt/src/medkit.$ext https://repo.turris.cz/hbs/medkit/${BOARD}-medkit${MDKT_VARIANT}-latest.$ext;   \
-            }; do
-                echo "Can't download $BOARD-medkit-latest.$ext :-("
-                sleep 2
-                i="$(expr "$i" + 1)"
-                [ "$i" -lt "$tries" ] || die 2 "Can't get $BOARD-medkit-latest.$ext"
+        while ! wget -T 3 --no-check-certificate -O /mnt/src/medkit.$ext https://repo.turris.cz/hbs/medkit/${BOARD}-medkit${MDKT_VARIANT}-latest.$ext; do
+            echo "Can't download $BOARD-medkit-latest.$ext :-("
+            sleep 2
+            i="$(expr "$i" + 1)"
+            [ "$i" -lt "$tries" ] || die 2 "Can't get $BOARD-medkit-latest.$ext"
         done
     done
     usign -V -m /mnt/src/medkit.tar.gz -P /etc/opkg/keys || die 2 "Can't validate signature"

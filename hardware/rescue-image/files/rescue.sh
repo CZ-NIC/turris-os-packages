@@ -25,6 +25,7 @@ wait_for_mode_change
 echo "Mode $MODE selected!"
 busy
 override_root # Some alternative roots might take a while to initialize
+haveged -F & # Provide some extra entropy
 mode_"$MODE"
 echo "Everything done, rebooting!"
 reboot
