@@ -1,0 +1,13 @@
+Index: jsonschema-2.6.0/setup.py
+===================================================================
+--- jsonschema-2.6.0.orig/setup.py
++++ jsonschema-2.6.0/setup.py
+@@ -29,7 +29,7 @@ setup(
+     name="jsonschema",
+     packages=["jsonschema", "jsonschema.tests"],
+     package_data={"jsonschema": ["schemas/*.json"]},
+-    setup_requires=["vcversioner>=2.16.0.0"],
++    setup_requires=[],
+     extras_require=extras_require,
+     author="Julian Berman",
+     author_email="Julian@GrayVines.com",
