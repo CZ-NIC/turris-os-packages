@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-diagnostics
 PKG_VERSION:=13.1.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/diagnostics.git
@@ -41,6 +41,9 @@ define Package/$(PKG_NAME)/install
 	$(CP) -r $(PKG_BUILD_DIR)/locale/* $(1)/usr/share/locale/
 	$(RM) -rf $(1)/usr/share/locale/*.pot
 	$(RM) -rf $(1)/usr/share/locale/*/LC_MESSAGES/*.po*
+
+	$(INSTALL_DIR) $(1)/usr/bin/
+	$(INSTALL_BIN) ./files/diagnostics.sh $(1)/usr/bin/turris-diagnostics
 
 	$(INSTALL_DIR) $(1)/usr/share/diagnostics/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/diagnostics.sh $(1)/usr/share/diagnostics/diagnostics.sh
