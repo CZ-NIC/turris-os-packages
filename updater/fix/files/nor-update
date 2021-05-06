@@ -1,0 +1,2 @@
+#!/bin/sh
+exec nor-update
