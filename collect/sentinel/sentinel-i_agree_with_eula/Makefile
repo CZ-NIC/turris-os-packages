@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-i_agree_with_eula
 PKG_VERSION:=1
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
@@ -32,12 +32,12 @@ endef
 define Package/sentinel-i_agree_with_eula/prerm
 #!/bin/sh
 [ -n "$${IPKG_INSTROOT}" ] || {
-  if [ "$$(uci -q get sentinel.main.agreed_with_eula_version)" = $(PKG_VERSION) ]; then
-    uci -q batch <<EOF
-      delete sentinel.main.agreed_with_eula_version
-      commit sentinel.main
-    EOF
-  fi
+	if [ "$$(uci -q get sentinel.main.agreed_with_eula_version)" = "$(PKG_VERSION)" ]; then
+		uci -q batch <<-EOF
+			delete sentinel.main.agreed_with_eula_version
+			commit sentinel.main
+		EOF
+	fi
 }
 endef
 
