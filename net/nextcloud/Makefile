@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nextcloud
 PKG_VERSION:=19.0.3
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
@@ -63,6 +63,8 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) ./files/nextcloud.conf $(1)/etc/lighttpd/conf.d/
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/nextcloud.cron $(1)/etc/cron.d/nextcloud
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) ./files/nextcloud-cron.sh $(1)/usr/bin/nextcloud-cron.sh
 endef
 
 define Package/$(PKG_NAME)-install/install
@@ -85,6 +87,7 @@ if [ -z "$$IPKG_INSTROOT" ]; then
 	fi
 fi
 chown -R nobody "$$IPKG_INSTROOT"/srv/www/nextcloud/
+chown nobody "$$IPKG_INSTROOT"/usr/bin/nextcloud-cron.sh
 endef
 
 $(eval $(call BuildPackage,nextcloud))
