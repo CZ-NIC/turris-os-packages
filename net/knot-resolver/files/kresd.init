@@ -171,12 +171,16 @@ load_uci_config_common() {
 
 	# Test for resolv.conf.auto new location
 	# https://github.com/openwrt/openwrt/commit/cd48d8d3420dd4df03daaa548227ceb487ba7104
-	if [ -f "/tmp/resolv.conf.auto" ]; then
-		resolv_conf_path="/tmp/resolv.conf.auto"
-	elif [ -f "/tmp/resolv.conf.d/resolv.conf.auto" ]; then
-		resolv_conf_path="/tmp/resolv.conf.d/resolv.conf.auto"
-	else
-		echo "Error! File resolv.conf.auto is missing"
+	resolv_conf_path="$(ls -1 /etc/resolv.conf.vpn.* | head -n1)"
+	if [ \! -f "$resolv_conv_path" ]; then
+		if [ -f "/tmp/resolv.conf.auto" ]; then
+			resolv_conf_path="/tmp/resolv.conf.auto"
+		elif [ -f "/tmp/resolv.conf.d/resolv.conf.auto" ]; then
+			resolv_conf_path="/tmp/resolv.conf.d/resolv.conf.auto"
+		else
+			resolv_conf_path=""
+			echo "Error! File resolv.conf.auto is missing"
+		fi
 	fi
 
 	#check custom forwarding
