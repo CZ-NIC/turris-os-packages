@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-cagen
-PKG_VERSION:=5
+PKG_VERSION:=6
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -36,6 +36,9 @@ define Package/turris-cagen/install
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) files/cagen.sh $(1)/usr/bin/turris-cagen
 	$(INSTALL_BIN) files/cagen-status.sh $(1)/usr/bin/turris-cagen-status
+
+	$(INSTALL_DIR) $(1)/usr/share/turris-cagen/
+	$(INSTALL_DATA) files/dhparam.pem $(1)/usr/share/turris-cagen/dhparam.pem
 endef
 
 

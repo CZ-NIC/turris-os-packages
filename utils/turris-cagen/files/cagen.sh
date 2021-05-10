@@ -1,6 +1,6 @@
-#!/bin/ash
+#!/bin/sh
 
-#Copyright 2018 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+#Copyright 2018-2021 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 #This file as originaly part of NUCI configuration server.
 #
@@ -21,6 +21,7 @@ set -e
 
 SCRIPT="$0"
 OPENSSL_CONF=/etc/cagen/openssl.cnf
+PREGENERATED_DHPARAM=/usr/share/turris-cagen/dhparam.pem
 CA_DIR=${CA_DIR:-/etc/ssl/ca/}
 
 LOCKFILE=
@@ -125,6 +126,11 @@ do_gen_ca() {
 	msg gen_ca "finished ($CA)"
 }
 
+do_link_dh() {
+	test_active_ca link_dh
+	ln -sf "$PREGENERATED_DHPARAM" dhparam.pem
+}
+
 do_gen_dh() {
 	msg gen_dh "started"
 	test_active_ca gen_dh
@@ -220,6 +226,9 @@ while [ "$1" ] ; do
 		gen_ca)
 			do_gen_ca
 			;;
+		link_dh)
+			do_link_dh
+			;;
 		gen_dh)
 			do_gen_dh
 			;;
@@ -259,6 +268,7 @@ Commands:
 	background		Terminate now and run the rest of the commands in background
 	new_ca <name>		Create a new CA (without any keys or certificates) and switch to it
 	gen_ca			Generate the certificates for the CA itself (invalidates all current certificates)
+	link_dh			Link pregenerated DH parameters
 	gen_dh			Generate new DH parameters
 	gen_server <name>	Generate a server-side certificate
 	gen_client <name>	Generate a client-side certificate
