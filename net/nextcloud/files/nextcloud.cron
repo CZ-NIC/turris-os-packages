@@ -1,1 +1,1 @@
-*/5  *  *  *  *  nobody /usr/bin/php-cli -f /srv/www/nextcloud/cron.php
+*/5  *  *  *  *  nobody /usr/bin/nextcloud-cron.sh
