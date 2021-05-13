@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Check if nextcloud config file is empty and remove it
+if [ ! -s /srv/www/nextcloud/config/config.php ]; then
+	rm -f /srv/www/nextcloud/config/config.php
+fi

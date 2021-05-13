@@ -149,6 +149,11 @@ define Package/fix-nor-update/description
   or rescue image. This fix updates it to the latest stable version.
 endef
 
+define Package/fix-nextcloud-conf/description
+  Nextcloud cron scripts accidentally creates an empty config.php file.
+  If there is empty config.php, which exists then it removes it.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
@@ -164,3 +169,4 @@ $(eval $(call FIX,edns-buffer-size,+resolver-conf +uci))
 $(eval $(call FIX,dhparam-to-cagen,+uci +turris-cagen))
 $(eval $(call FIX,pkglists-hardening-options,+pkglists +uci))
 $(eval $(call FIX,nor-update,+turris-nor-update +turris-nor-update-firmware))
+$(eval $(call FIX,nextcloud-conf,+nextcloud))
