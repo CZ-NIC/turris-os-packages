@@ -5,6 +5,6 @@
   "icon": "/icons/transmission.svg",
   "description": {
       "en": "A BitTorrent client.",
-      "cs": "BitTorrentový klient."
+      "cs": "BitTorrent klient."
   }
 }

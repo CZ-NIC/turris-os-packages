@@ -1,0 +1,10 @@
+{
+  "id": "netdata",
+  "title": "netdata",
+  "url": "/netdata/",
+  "icon": "/icons/netdata.svg",
+  "description": {
+      "en": "Realtime system overview.",
+      "cs": "Realtime přehled systému."
+  }
+}
