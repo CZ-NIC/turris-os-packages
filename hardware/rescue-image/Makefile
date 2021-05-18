@@ -56,7 +56,7 @@ define Build/Prepare
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/tmp"
 	mkdir -p "$(PKG_BUILD_DIR)/rootfs/var/lock"
 	mkdir -p "$(PKG_BUILD_DIR)/busybox"
-	echo "Turris Rescue $(PKG_VERSION)-$(PKG_RELEASE)" > "$(PKG_BUILD_DIR)/version"
+	echo "Turris Rescue $(PKG_VERSION)-$(PKG_RELEASE)" > "$(PKG_BUILD_DIR)/rootfs/version"
 	echo "root::0:0:root:/:/bin/sh" > "$(PKG_BUILD_DIR)/rootfs/etc/passwd"
 	echo "/bin/sh" > "$(PKG_BUILD_DIR)/rootfs/etc/shells"
 	$(INSTALL_BIN) ./files/helpers.sh "$(PKG_BUILD_DIR)/rootfs/lib/helpers.sh"
