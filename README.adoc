@@ -7,4 +7,4 @@ To understand what are files in this repository you can read appropriate
 https://openwrt.org/docs/guide-developer/packages[OpenWrt documentation].
 
 If you are looking for Turris OS itself see
-https://gitlab.labs.nic.cz/turris/turris-build[turris-build] repository.
+https://gitlab.nic.cz/turris/os/build[turris-build] repository.

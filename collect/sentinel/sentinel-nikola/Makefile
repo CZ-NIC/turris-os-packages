@@ -28,7 +28,7 @@ define Package/sentinel-nikola
   CATEGORY:=Collect
   SUBMENU:=Sentinel
   TITLE:=Nikola
-  URL:=https://gitlab.labs.nic.cz/turris/sentinel/nikola
+  URL:=https://gitlab.nic.cz/turris/sentinel/nikola
   DEPENDS:= \
     +python3-light \
     +python3-setuptools \
