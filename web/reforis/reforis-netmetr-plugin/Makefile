@@ -12,7 +12,7 @@ PKG_VERSION:=0.3.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-netmetr
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis-netmetr
 PKG_MIRROR_HASH:=bfea675c7e91a55d1e2afcf9a92392f9f122cc4ccfbb0766725b0b708f78092e
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
@@ -34,7 +34,7 @@ define Package/reforis-netmetr-plugin
   CATEGORY:=Web
   SUBMENU:=reForis
   TITLE:=reForis NetMetr plugin
-  URL:=https://gitlab.labs.nic.cz/turris/reforis/reforis-netmetr
+  URL:=https://gitlab.nic.cz/turris/reforis/reforis-netmetr
   DEPENDS:=\
     +reforis \
     +foris-controller-netmetr-module

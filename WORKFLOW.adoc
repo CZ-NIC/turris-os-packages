@@ -2,7 +2,7 @@ Turris OS packages repository workflow
 ======================================
 
 Before you start reading please be sure that you have read and understood workflow
-for https://gitlab.labs.nic.cz/turris/turris-build/blob/hbk/WORKFLOW.adoc[turris-build].
+for https://gitlab.nic.cz/turris/os/build/blob/hbk/WORKFLOW.adoc[turris-build].
 This workflow is referencing it as this repository is used as part of release
 cycle of that one.
 

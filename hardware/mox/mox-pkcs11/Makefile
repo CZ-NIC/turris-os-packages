@@ -12,7 +12,7 @@ PKG_VERSION:=0.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.labs.nic.cz/turris/mox-pkcs11.git
+PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/mox-pkcs11.git
 PKG_MIRROR_HASH:=4e001de00cdd58c666815894cd79fbc905d70a3555bb84c549703fa611c7c96b
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 

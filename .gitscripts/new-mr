@@ -1,5 +1,5 @@
 #!/bin/bash
-repo="https://gitlab.nic.cz/turris/turris-os-packages"
+repo="https://gitlab.nic.cz/turris/os/packages"
 cur_branch="$(git branch --show-current)"
 
 
