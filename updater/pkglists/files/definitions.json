@@ -182,7 +182,7 @@
 	},
 	"openvpn": {
 		"title": "OpenVPN",
-		"description": "Easy setup of the OpenVPN server from Foris.",
+		"description": "Easy setup of the OpenVPN client and server from Foris.",
 		"url": "https://docs.turris.cz/basics/apps/openvpn/openvpn/"
 	},
 	"tor": {
