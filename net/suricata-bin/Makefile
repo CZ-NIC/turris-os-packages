@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata-bin
 PKG_VERSION:=4.0.7
-PKG_RELEASE=3
+PKG_RELEASE=4
 
 PKG_SOURCE:=suricata-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.openinfosecfoundation.org/download/
@@ -34,15 +34,9 @@ CONFIGURE_ARGS+= \
 	--disable-libmagic \
 	--disable-gccprotect \
 	--enable-non-bundled-htp \
-	--disable-gccmarch-native
-
-ifeq (,$(filter $(CONFIG_PACKAGE_luajit),y m))
-CONFIGURE_ARGS+= --disable-luajit
-LUAJIT_DEP:=
-else
-CONFIGURE_ARGS+= --enable-luajit
-LUAJIT_DEP:=+luajit
-endif
+	--disable-gccmarch-native \
+	--disable-python \
+	--disable-luajit
 
 define Package/suricata-bin
   SECTION:=net
