@@ -43,11 +43,11 @@ define Build/Compile
 endef
 
 define Package/lua-cqueues/install
-	$(INSTALL_DIR) $(1)/usr/lib/lua
+	$(INSTALL_DIR) $(1)/usr/share/lua
 	$(MAKE) -C $(PKG_BUILD_DIR)/ \
-		lua51path=$(1)/usr/lib/lua lua51cpath=$(1)/usr/lib/lua \
+		lua51path=$(1)/usr/share/lua lua51cpath=$(1)/usr/share/lua \
 		install5.1
-	mv $(1)/usr/lib/lua/_cqueues.so $(1)/usr/lib/lua/cqueues.so
+	mv $(1)/usr/share/lua/_cqueues.so $(1)/usr/share/lua/cqueues.so
 endef
 
 $(eval $(call BuildPackage,lua-cqueues))
