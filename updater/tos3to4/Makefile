@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tos3to4
 PKG_VERSION:=2.2.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -30,7 +30,7 @@ endef
 define Package/tos3to4-early
   $(call Package/Common)
   TITLE+= installed early
-  DEPENDS+=+switch-branch +updater-ng +pkglists +localrepo
+  DEPENDS+=+switch-branch +updater-ng +pkglists
 endef
 
 define Package/tos3to4/install
