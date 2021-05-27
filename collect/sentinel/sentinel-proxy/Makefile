@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-proxy
-PKG_VERSION:=1.3
-PKG_RELEASE:=8
+PKG_VERSION:=1.3.1
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/proxy.git
-PKG_MIRROR_HASH:=ea8a4bd05a98185e57ab178bc5c80ebc456b850a9eb81df363f366d424f6ec0b
+PKG_MIRROR_HASH:=ad97d890976fbace6a05c5dff42360b9a0ec47f3c001e068430695491aac2d16
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
