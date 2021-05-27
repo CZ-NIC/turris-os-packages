@@ -186,16 +186,33 @@ init_unbound() {
 
     if [ "$ignore_root_key" = "0" ] ; then
         set_rootkey keyfile
-	# copy rootkey file with right permissions
-	cp "$ROOTKEYFILE" "$ROOTKEYFILE_TMP"
-	chown $USERNAME:$GROUP "$ROOTKEYFILE_TMP"
+        # copy rootkey file with right permissions
+        cp "$ROOTKEYFILE" "$ROOTKEYFILE_TMP"
+        chown $USERNAME:$GROUP "$ROOTKEYFILE_TMP"
         add_parameter "$ROOTKEYFILE_TMP" "auto-trust-anchor-file"
     fi
 
     set_parameter edns_buffer_size edns-buffer-size 1232
     set_parameter msg_cache_size msg-cache-size 100k
-    set_bool_parameter net_ipv4 do-ip4 1
-    set_bool_parameter net_ipv6 do-ip6 1
+
+    config_get_bool net_ipv4 common net_ipv4 1
+    config_get_bool net_ipv6 common net_ipv6 1
+
+    # IPv6 and IPv4 bool settings
+    # net_ipv6 & net_ipv4 are used only for setting
+    # outgoing interface and are no longer used to
+    # sets do-ipv4 or do-ipv6
+    [ "$net_ipv4" = "1" ] && \
+        echo '	outgoing-interface: 0.0.0.0/0'>>$CONFIGFILE
+    [ "$net_ipv6" = "1" ] && \
+        echo '	outgoing-interface: ::0/0'>>$CONFIGFILE
+    if [ "$net_ipv6" = "0" ] && [ "$net_ipv4" = "0" ]; then
+        # both net_ipv4 and net_ipv6
+        echo "Error! net_ipv6 and net_ipv4 setting in /etc/config/resolver is incorrect."
+        echo "Failback to net_ipv6=0 and net_ipv4=1 setting"
+        # Allow only outgoint ipv4
+        echo '	outgoing-interface: 0.0.0.0/0'>>$CONFIGFILE
+    fi
     set_parameter prefetch prefetch yes
 
     config_get hostname_config "unbound" hostname_config ""
@@ -266,8 +283,6 @@ init_unbound() {
     local do_forward
     config_get_bool do_forward common forward_upstream 1
     config_get forward_dns common forward_custom
-    config_get_bool net_ipv4 common net_ipv4 1
-    config_get_bool net_ipv6 common net_ipv6 1
 
     #check custom forwarding
     if [ -n "$forward_dns" ] && [ "$do_forward" = "1" ]; then
@@ -275,7 +290,7 @@ init_unbound() {
     else
     if [ "$do_forward" = "1" ] ; then
         local SERVERS
-	# Max number of servers used for forwarding is 10
+        # Max number of servers used for forwarding is 10
         SERVERS=$(get_servers_ip_addresses "$net_ipv4" "$net_ipv6" "$resolv_conf_path" 10)
 
         if [ -n "$SERVERS" ] ; then
