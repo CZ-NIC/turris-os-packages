@@ -8,13 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=logc
-PKG_VERSION:=0.1.0
+PKG_VERSION:=0.2.1
 PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/logc.git
-PKG_MIRROR_HASH:=20e2d4079436a223a9449b5cdf6084f7100c8587e9981591000873dc42c571c5
-PKG_SOURCE_VERSION:=v$(PKG_VERSION)
+PKG_SOURCE:=logc-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=https://gitlab.nic.cz/api/v4/projects/937/packages/generic/logc/$(PKG_VERSION)
+PKG_HASH:=b3830bb4a817db06b979b111692cea55658e2a5ea9ddb6b0c2501ce05b679c45
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=MIT
