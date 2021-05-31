@@ -17,7 +17,8 @@
 			"dynfw": {
 				"title": "Dynamic Firewall",
 				"description": "Add firewall rules to block attackers detected by Turris collection network.",
-				"default": true
+				"default": true,
+				"url": "https://docs.turris.cz/basics/collect/dynfw/collect-dynfw/"
 			},
 			"nikola": {
 				"title": "Firewall Logs",
@@ -31,7 +32,8 @@
 			},
 			"haas": {
 				"title": "SSH Honeypot",
-				"description": "SSH honeypot using Honeypot as a Service (haas.nic.cz)."
+				"description": "SSH honeypot using Honeypot as a Service (haas.nic.cz).",
+				"url": "https://docs.turris.cz/basics/collect/haas/"
 			}
 		}
 	},
@@ -90,11 +92,13 @@
 			},
 			"printserver": {
 				"title": "Print server (p910nd)",
-				"description": "Services allowing to connect a printer to the router and use it for remote printing."
+				"description": "Services allowing to connect a printer to the router and use it for remote printing.",
+				"url": "https://openwrt.org/docs/guide-user/services/print_server/p910ndprinterserver"
 			},
 			"statistics": {
 				"title": "Statistics",
-				"description": "Gather and render diagrams for system statistics by using collectd."
+				"description": "Gather and render diagrams for system statistics by using collectd.",
+				"url": "https://openwrt.org/docs/guide-user/perf_and_log/statistic.collectd"
 			},
 			"wireguard": {
 				"title": "WireGuard",
@@ -172,6 +176,7 @@
 	"netdata": {
 		"title": "Netdata",
 		"description": "Real-time perfomance and health monitoring options.",
+		"url": "https://docs.turris.cz/geek/netdata/netdata/",
 		"labels": ["community", "high_memory"]
 	},
 	"nextcloud": {
