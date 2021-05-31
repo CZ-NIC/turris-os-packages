@@ -7,7 +7,7 @@
 	"datacollect": {
 		"title": "Data Collection",
 		"description": "Software for participation in data collection and distributed adaptive firewall.",
-		"url": "https://docs.turris.cz/basics/collect/",
+		"url": "https://docs.turris.cz/basics/collect/collect/",
 		"options": {
 			"survey": {
 				"title": "Usage Survey",
@@ -183,7 +183,7 @@
 	"openvpn": {
 		"title": "OpenVPN",
 		"description": "Easy setup of the OpenVPN client and server from Foris.",
-		"url": "https://docs.turris.cz/basics/apps/openvpn/openvpn/"
+		"url": "https://docs.turris.cz/basics/apps/openvpn-server/openvpn/"
 	},
 	"tor": {
 		"title": "Tor",
