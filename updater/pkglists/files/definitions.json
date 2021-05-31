@@ -38,7 +38,7 @@
 	"atlas": {
 		"title": "RIPE Atlas SW Probe",
 		"description": "Global platform, which measures Internet connectivity and reachability.",
-		"url": "https://wiki.turris.cz/doc/en/howto/atlas-probe",
+		"url": "https://docs.turris.cz/basics/apps/atlas/",
 		"labels": ["community"]
 	},
 	"dvb": {
