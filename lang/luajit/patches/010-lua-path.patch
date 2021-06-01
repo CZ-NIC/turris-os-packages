@@ -1,5 +1,3 @@
-diff --git a/src/luaconf.h b/src/luaconf.h
-index 6c6f1131..c1374911 100644
 --- a/src/luaconf.h
 +++ b/src/luaconf.h
 @@ -35,8 +35,8 @@
