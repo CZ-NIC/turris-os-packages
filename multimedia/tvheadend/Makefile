@@ -8,12 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tvheadend
-PKG_VERSION:=4.2.8
-PKG_RELEASE:=5
+PKG_RELEASE:=1
 
-PKG_SOURCE_URL:=https://codeload.github.com/tvheadend/tvheadend/tar.gz/v$(PKG_VERSION)?
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_HASH=1aef889373d5fad2a7bd2f139156d4d5e34a64b6d38b87b868a2df415f01f7ad
+PKG_SOURCE_URL:=https://github.com/tvheadend/tvheadend.git
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_DATE:=2021-05-31
+PKG_SOURCE_VERSION:=9476680f88d3c2363f86bdb1d4ea93dd3c7d2c95
+PKG_MIRROR_HASH:=9c0ca4eb697d0c3810314014f4bf8e31d83e9990193d8f6f5e1354480838fab9
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0
@@ -30,7 +31,7 @@ define Package/tvheadend
   SECTION:=multimedia
   CATEGORY:=Multimedia
   TITLE:=TV streaming server and recorder
-  DEPENDS:=+libopenssl +librt +zlib +TVHEADEND_AVAHI_SUPPORT:libavahi-client $(ICONV_DEPENDS) +libffmpeg +libx264 +libx265 +libpcre2
+  DEPENDS:=+libopenssl +librt +zlib +TVHEADEND_AVAHI_SUPPORT:libavahi-client $(ICONV_DEPENDS) +libffmpeg +libx264 +libx265 +libpcre2 +libdvbcsa
   URL:=https://tvheadend.org
 endef
 
@@ -69,7 +70,7 @@ endif
 CONFIGURE_ARGS += \
 	--arch=$(ARCH) \
 	--disable-dbus_1 \
-	--enable-libav \
+	--disable-libav \
 	--disable-bundle \
 	--disable-uriparser \
 	--disable-ffmpeg_static

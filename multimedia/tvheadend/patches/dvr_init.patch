@@ -1,6 +1,6 @@
 --- a/src/dvr/dvr_config.c
 +++ b/src/dvr/dvr_config.c
-@@ -181,8 +181,8 @@ dvr_config_create(const char *name, cons
+@@ -177,8 +177,8 @@ dvr_config_create(const char *name, cons
    cfg->dvr_removal_days = DVR_RET_REM_FOREVER;
    cfg->dvr_clone = 1;
    cfg->dvr_tag_files = 1;
