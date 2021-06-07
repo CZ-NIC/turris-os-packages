@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2018-2021 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turrishw
-PKG_VERSION:=0.4.3
+PKG_VERSION:=0.5.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/turrishw.git
-PKG_MIRROR_HASH:=867e6f8bc055f960cfc3ccd23a1934e5947c4a5cbc09cf5f03268d4985971a8f
-PKG_SOURCE_VERSION:=29d8973dd645eb67e726bacc6972747c01985170
+PKG_MIRROR_HASH:=669b5764dfecde7d041b648c9b54580276b348da3690d0a186856d2f0ccd2069
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=BSL-1.0
