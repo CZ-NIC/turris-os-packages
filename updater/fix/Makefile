@@ -154,6 +154,13 @@ define Package/fix-nextcloud-conf/description
   If there is empty config.php, which exists then it removes it.
 endef
 
+define Package/sentinel-nikola-to-fwlogs/description
+  Sentinel Nikola is being replaced by Sentinel FWLogs. They are pretty much
+  compatible with exception of one UCI section name. This renames this UCI config
+  (sentinel.nikola -> sentinel.fwlogs). This way Nikola configuration is migrated
+  to FWLogs and Nikola can be removed.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
@@ -170,3 +177,4 @@ $(eval $(call FIX,dhparam-to-cagen,+uci +turris-cagen))
 $(eval $(call FIX,pkglists-hardening-options,+pkglists +uci))
 $(eval $(call FIX,nor-update,+turris-nor-update +turris-nor-update-firmware))
 $(eval $(call FIX,nextcloud-conf,+nextcloud))
+$(eval $(call FIX,sentinel-nikola-to-fwlogs,+uci +sentinel-proxy))
