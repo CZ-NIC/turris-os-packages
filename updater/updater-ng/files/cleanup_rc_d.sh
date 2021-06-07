@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-cd "/etc/rc.d"
+cd "$ROOT_DIR/etc/rc.d"
 
 # Remove any dangling links
 for rc in *; do
@@ -23,5 +23,5 @@ find -maxdepth 1 -type l \
 		| while read -r service; do
 	echo "Fixing multiple startup/shutdown links for service: $service" >&2
 	rm -f [SK]??"$service"
-	"/etc/init.d/$service" enable
+	/bin/sh "$ROOT_DIR/etc/rc.common" "$ROOT_DIR/etc/init.d/$service" enable
 done
