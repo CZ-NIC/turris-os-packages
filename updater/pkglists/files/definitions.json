@@ -20,7 +20,7 @@
 				"default": true,
 				"url": "https://docs.turris.cz/basics/collect/dynfw/collect-dynfw/"
 			},
-			"nikola": {
+			"fwlogs": {
 				"title": "Firewall Logs",
 				"description": "Collect logs from firewall for attempted connections.",
 				"default": true

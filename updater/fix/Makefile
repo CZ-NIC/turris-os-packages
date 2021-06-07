@@ -161,6 +161,11 @@ define Package/sentinel-nikola-to-fwlogs/description
   to FWLogs and Nikola can be removed.
 endef
 
+define Package/pkglists-nikola-to-fwlogs/description
+  Sentinel Nikola is being replaced by Sentinel FWLogs. This fixes rename of
+  option in datacollect package list.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
@@ -177,4 +182,5 @@ $(eval $(call FIX,dhparam-to-cagen,+uci +turris-cagen))
 $(eval $(call FIX,pkglists-hardening-options,+pkglists +uci))
 $(eval $(call FIX,nor-update,+turris-nor-update +turris-nor-update-firmware))
 $(eval $(call FIX,nextcloud-conf,+nextcloud))
-$(eval $(call FIX,sentinel-nikola-to-fwlogs,+uci +sentinel-proxy))
+$(eval $(call FIX,sentinel-nikola-to-fwlogs,+sentinel-proxy))
+$(eval $(call FIX,pkglists-nikola-to-fwlogs,+pkglists))

@@ -1,0 +1,11 @@
+#!/bin/sh
+. /lib/functions.sh
+
+config_load "pkglists"
+config_get_bool nikola_enabled "datacollect" "nikola" "1"
+
+uci -q batch  <<EOT
+	set pkglists.datacollect.fwlogs=$nikola_enabled
+	delete pkglists.datacollect.nikola
+	commit pkglists.datacollect
+EOT
