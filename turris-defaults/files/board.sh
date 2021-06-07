@@ -3,7 +3,7 @@
 board_config_update
 
 
-ucidef_set_hostname 'Turris'
+ucidef_set_hostname 'turris'
 
 while read -r ntpserver; do
 	[ -n "$ntpserver" ] || continue
