@@ -6,6 +6,6 @@ if ! uci -q get 'system.@system[-1]._country'; then
 	uci set 'system.@system[-1]._country=CZ'
 fi
 
-if [ -n "$(uci change 'system.@system[-1]')" ]; then
+if [ -n "$(uci changes 'system.@system[-1]')" ]; then
 	uci commit 'system.@system[-1]'
 fi
