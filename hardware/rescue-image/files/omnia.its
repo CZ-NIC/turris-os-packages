@@ -1,81 +1,81 @@
 /dts-v1/;
 
 / {
-    description = "Rescue image with single Linux kernel and FDT blob";
-    #address-cells = <1>;
+	description = "Rescue image with single Linux kernel and FDT blob";
+	#address-cells = <1>;
 
-    images {
-        kernel {
-            description = "Linux kernel";
-            data = /incbin/("./zImage");
-            type = "kernel";
-            arch = "arm";
-            os = "linux";
-            compression = "none";
-            load =  <0x800000>;
-            entry = <0x800000>;
-            hash@1 {
-                algo = "crc32";
-            };
-            hash@2 {
-                algo = "sha1";
-            };
-        };
-        ramdisk {
-            description = "Initial Ramdisk";
-            data = /incbin/("./initrd");
-            type = "ramdisk";
-            arch = "arm";
-            os = "linux";
-            compression = "none";
-            hash@1 {
-                algo = "crc32";
-            };
-            hash@2 {
-                algo = "sha1";
-            };
-        };
-        phy-dtb {
-            description = "Flattened Device Tree blob (metalic WAN)";
-            data = /incbin/("./dts/armada-385-turris-omnia-phy.dtb");
-            type = "flat_dt";
-            arch = "arm";
-            compression = "none";
-            hash@1 {
-                algo = "crc32";
-            };
-            hash@2 {
-                algo = "sha1";
-            };
-        };
-        sfp-dtb {
-            description = "Flattened Device Tree blob (SFP WAN)";
-            data = /incbin/("./dts/armada-385-turris-omnia-sfp.dtb");
-            type = "flat_dt";
-            arch = "arm";
-            compression = "none";
-            hash@1 {
-                algo = "crc32";
-            };
-            hash@2 {
-                algo = "sha1";
-            };
-        };
-    };
+	images {
+		kernel {
+			description = "Linux kernel";
+			data = /incbin/("./zImage");
+			type = "kernel";
+			arch = "arm";
+			os = "linux";
+			compression = "none";
+			load =  <0x800000>;
+			entry = <0x800000>;
+			hash@1 {
+				algo = "crc32";
+			};
+			hash@2 {
+				algo = "sha1";
+			};
+		};
+		ramdisk {
+			description = "Initial Ramdisk";
+			data = /incbin/("./initrd");
+			type = "ramdisk";
+			arch = "arm";
+			os = "linux";
+			compression = "none";
+			hash@1 {
+				algo = "crc32";
+			};
+			hash@2 {
+				algo = "sha1";
+			};
+		};
+		phy-dtb {
+			description = "Flattened Device Tree blob (metalic WAN)";
+			data = /incbin/("./dts/armada-385-turris-omnia-phy.dtb");
+			type = "flat_dt";
+			arch = "arm";
+			compression = "none";
+			hash@1 {
+				algo = "crc32";
+			};
+			hash@2 {
+				algo = "sha1";
+			};
+		};
+		sfp-dtb {
+			description = "Flattened Device Tree blob (SFP WAN)";
+			data = /incbin/("./dts/armada-385-turris-omnia-sfp.dtb");
+			type = "flat_dt";
+			arch = "arm";
+			compression = "none";
+			hash@1 {
+				algo = "crc32";
+			};
+			hash@2 {
+				algo = "sha1";
+			};
+		};
+	};
 
-    configurations {
-        default = "def";
-        def {
-            description = "Turris Omnia rescue image";
-            kernel = "kernel";
-            ramdisk = "ramdisk";
-            fdt = "phy-dtb";
-        };
-        sfp {
-            description = "Turris Omnia rescue image (SFP)";
-            kernel = "kernel";
-            ramdisk = "ramdisk";
-            fdt = "sfp-dtb";
-        };
-    };
+	configurations {
+		default = "def";
+		def {
+			description = "Turris Omnia rescue image";
+			kernel = "kernel";
+			ramdisk = "ramdisk";
+			fdt = "phy-dtb";
+		};
+		sfp {
+			description = "Turris Omnia rescue image (SFP)";
+			kernel = "kernel";
+			ramdisk = "ramdisk";
+			fdt = "sfp-dtb";
+		};
+	};
 };
