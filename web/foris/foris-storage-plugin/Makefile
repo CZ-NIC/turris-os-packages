@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018-2020 CZ.NIC z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2018-2021 CZ.NIC z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-storage-plugin
-PKG_VERSION:=3.0
-PKG_RELEASE:=2
+PKG_VERSION:=3.0.1
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris/foris-storage-plugin.git
-PKG_MIRROR_HASH:=3f190558692cd4379a067f6a6aa34309d342a8a2fefd8017fe0c6bac3f12b234
+PKG_MIRROR_HASH:=0043d7d553bf605d26595d3fa61570de6dbd3a5bfba57a9102df13ba25ba6463
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
