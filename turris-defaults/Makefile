@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-defaults
 PKG_VERSION:=0.1.2
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -31,7 +31,7 @@ define Package/turris-defaults/install
 	$(INSTALL_BIN) ./files/board.sh $(1)/etc/board.d/00_turris_defaults
 
 	$(INSTALL_DIR) $(1)/usr/share/turris-defaults/
-	$(INSTALL_DATA ./files/defaults/ntpservers $(1)/usr/share/turris-defaults/
+	$(INSTALL_DATA) ./files/defaults/ntpservers $(1)/usr/share/turris-defaults/
 endef
 
 Build/Compile:=:
