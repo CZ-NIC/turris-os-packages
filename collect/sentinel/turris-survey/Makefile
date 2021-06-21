@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+## Copyright (C) 2020-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-survey
-PKG_VERSION:=0.1.1
-PKG_RELEASE:=6
+PKG_VERSION:=0.2
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/turris-survey.git
-PKG_MIRROR_HASH:=5bbb43ef3c43807dbfc9c058fc6537c1a289fc54363ec6d16cfd0e3adcfc1fbb
+PKG_MIRROR_HASH:=26aca2bb9bcdf0be1b858ec8e8557360969cfa6db826d5fe205cc10a8df93e18
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
