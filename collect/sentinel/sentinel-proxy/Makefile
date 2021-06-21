@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2018-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2018-2021 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-proxy
-PKG_VERSION:=1.3.1
-PKG_RELEASE:=2
+PKG_VERSION:=1.4
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/proxy.git
-PKG_MIRROR_HASH:=ad97d890976fbace6a05c5dff42360b9a0ec47f3c001e068430695491aac2d16
+PKG_MIRROR_HASH:=fd595c07673f23bf4ce54fb5bf28f03bc15c63eb8a7adfff9948e184085cf288
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -38,6 +38,7 @@ define Package/sentinel-proxy
     +zlib \
     +libopenssl \
     +libconfig \
+    +msgpack-c \
     +sentinel-certgen \
     +sentinel-eula
 endef
