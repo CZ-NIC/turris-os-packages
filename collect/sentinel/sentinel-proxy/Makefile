@@ -48,7 +48,7 @@ endef
 
 define Package/sentinel-proxy/install
 	$(INSTALL_DIR) $(1)/usr/bin
-        $(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/sentinel-proxy $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/sentinel-proxy $(1)/usr/bin/
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/sentinel-device-token $(1)/usr/bin/
 	$(INSTALL_BIN) ./files/sentinel-reload.sh $(1)/usr/bin/sentinel-reload
 	$(INSTALL_BIN) ./files/sentinel-status.sh $(1)/usr/bin/sentinel-status
