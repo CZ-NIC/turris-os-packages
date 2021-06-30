@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-sentinel-module
-PKG_VERSION:=0.2
+PKG_VERSION:=0.3.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-sentinel-module.git
-PKG_MIRROR_HASH:=996b044820c08634328d8ed19d5a8ff5ee9296efcd08ef5b3537de5d0df4966f
+PKG_MIRROR_HASH:=116db888aee270fbc7f539b7742d2cd4814fcc4c0aa032d021f7a984e8cbd18d
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
