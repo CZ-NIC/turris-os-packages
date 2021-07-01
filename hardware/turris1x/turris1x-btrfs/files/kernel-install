@@ -5,7 +5,11 @@ TARGET_ROOT="${1:-}"
 MNT="$(mktemp -d)"
 trap 'rmdir "$MNT"' EXIT
 
-mount -t vfat /dev/mmcblk0p1 "$MNT"
+# sd[a-z] with label turris-boot is a first choice, mmcblk0 is a backup
+BOOTPART="$(blkid | sed -n 's|^\(/dev/[^:]*\):.*LABEL="turris-boot".*|\1|p')"
+[ -n "$BOOTPART" ] || BOOTPART="/dev/mmcblk0p1"
+
+mount -t vfat "$BOOTPART" "$MNT"
 trap 'umount "$MNT" && rmdir "$MNT"' EXIT
 
 deploy() {
