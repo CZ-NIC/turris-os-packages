@@ -1,0 +1,38 @@
+From 59f1cce5ebf2f280bec7795a3839e5ab39bbff1e Mon Sep 17 00:00:00 2001
+From: Josef Schlehofer <pepe.schlehofer@gmail.com>
+Date: Wed, 21 Jul 2021 14:59:49 +0200
+Subject: [PATCH] Move ubus socket path
+
+Since OpenWrt 21.02 and newer, we need to change it, because developers of OpenWrt
+they decided that ubusd will run as non-root users, so they moved it.
+
+Reference:
+- https://github.com/openwrt/openwrt/commit/2dffadece9a7243a236ce7d91719787a671e23d4#diff-9536a91ee901a062b8e38e62fe624247e76fa4c268c9be6ba68af284ff0f641e
+
+- https://git.openwrt.org/?p=project/ubus.git;a=commit;h=13a4438b4ebdf85d301999e0a615640ac4c9b0a8
+---
+ reforis/config/prod.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/reforis/config/prod.py b/reforis/config/prod.py
+index f827eada..3df22872 100644
+--- a/reforis/config/prod.py
++++ b/reforis/config/prod.py
+@@ -1,4 +1,4 @@
+-#  Copyright (C) 2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
++#  Copyright (C) 2019-2021 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+ #
+ #  This is free software, licensed under the GNU General Public License v3.
+ #  See /LICENSE for more information.
+@@ -22,7 +22,7 @@ BUSES_CONF = {
+         'timeout': 30000,
+     },
+     'ubus': {
+-        'path': '/var/run/ubus.sock',
++        'path': '/var/run/ubus/ubus.sock',
+         'timeout': 30000
+     }
+ }
+-- 
+2.30.2
+
