@@ -1,0 +1,48 @@
+From a6e53e211665d800749ee12e5e4fa6b6882216a0 Mon Sep 17 00:00:00 2001
+From: Josef Schlehofer <pepe.schlehofer@gmail.com>
+Date: Wed, 21 Jul 2021 14:53:59 +0200
+Subject: [PATCH 1/2] treewide: change ubus socket path
+
+OpenWrt developers in upcoming version of OpenWrt 21.02 and newer
+decided that the will run ubusd as non-root user and because of that,
+they moved it from /var/run/ubus.sock to
+/var/run/ubus/ubus.sock
+
+Reference:
+- https://github.com/openwrt/openwrt/commit/2dffadece9a7243a236ce7d91719787a671e23d4#diff-9536a91ee901a062b8e38e62fe624247e76fa4c268c9be6ba68af284ff0f641e
+
+- https://git.openwrt.org/?p=project/ubus.git;a=commit;h=13a4438b4ebdf85d301999e0a615640ac4c9b0a8
+---
+ foris_controller/controller/__main__.py | 2 +-
+ foris_controller/notify/__main__.py     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/foris_controller/controller/__main__.py b/foris_controller/controller/__main__.py
+index 1cb0b50..660a3d7 100644
+--- a/foris_controller/controller/__main__.py
++++ b/foris_controller/controller/__main__.py
+@@ -86,7 +86,7 @@ def main():
+ 
+     if "ubus" in available_buses:
+         ubus_parser = subparsers.add_parser("ubus", help="use ubus to recieve commands")
+-        ubus_parser.add_argument("--path", default="/var/run/ubus.sock")
++        ubus_parser.add_argument("--path", default="/var/run/ubus/ubus.sock")
+         ubus_parser.add_argument(
+             "--single",
+             default=False,
+diff --git a/foris_controller/notify/__main__.py b/foris_controller/notify/__main__.py
+index 22146af..240600b 100644
+--- a/foris_controller/notify/__main__.py
++++ b/foris_controller/notify/__main__.py
+@@ -72,7 +72,7 @@ def main():
+     unix_parser.add_argument("--path", default="/tmp/foris-controller.soc")
+     if "ubus" in available_buses:
+         ubus_parser = subparsers.add_parser("ubus", help="use ubus to send notifications")
+-        ubus_parser.add_argument("--path", default="/var/run/ubus.sock")
++        ubus_parser.add_argument("--path", default="/var/run/ubus/ubus.sock")
+ 
+     if "mqtt" in available_buses:
+         mqtt_parser = subparsers.add_parser("mqtt", help="use mqtt to send notification")
+-- 
+2.30.2
+
