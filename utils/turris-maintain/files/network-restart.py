@@ -6,6 +6,8 @@ import json
 import re
 import subprocess
 
+from foris_controller.buses.mqtt import MqttNotificationSender
+
 TIME = 2000
 STEP = 200
 
@@ -21,36 +23,22 @@ def uci_get(config, section, option, default):
     return val
 
 
-bus = uci_get("foris-controller", "main", "bus", "ubus")
 
 controller_id = None
 
-if bus == "ubus":
-    path = uci_get("foris-controller", "ubus", "notification_path", "/var/run/ubus.sock")
-    from foris_controller.buses.ubus import UbusNotificationSender
-    sender = UbusNotificationSender(path)
-elif bus == "unix":
-    path = uci_get(
-        "foris-controller", "unix", "notification_path",
-        "/var/run/foris-controller-notifications.sock"
-    )
-    from foris_controller.buses.unix_socket import UnixSocketNotificationSender
-    sender = UnixSocketNotificationSender(path)
-elif bus == "mqtt":
-    host = uci_get("foris-controller", "mqtt", "host", "localhost")
-    port = int(uci_get("foris-controller", "mqtt", "port", 11883))
-    passwd_path = uci_get(
-        "foris-controller", "mqtt", "credentials_file", "/etc/fosquitto/credentials.plain"
-    )
-    try:
-        controller_id = subprocess.check_output(
-            ["crypto-wrapper", "serial-number"]).decode().strip()
-    except subprocess.CalledProcessError:
-        controller_id = None
-    with open(passwd_path, "r") as f:
-        credentials = re.match(r"^([^:]+):(.*)$", f.readlines()[0][:-1]).groups()
-    from foris_controller.buses.mqtt import MqttNotificationSender
-    sender = MqttNotificationSender(host, port, credentials)
+host = uci_get("foris-controller", "mqtt", "host", "localhost")
+port = int(uci_get("foris-controller", "mqtt", "port", 11883))
+passwd_path = uci_get(
+    "foris-controller", "mqtt", "credentials_file", "/etc/fosquitto/credentials.plain"
+)
+try:
+    controller_id = subprocess.check_output(
+        ["crypto-wrapper", "serial-number"]).decode().strip()
+except subprocess.CalledProcessError:
+    controller_id = None
+with open(passwd_path, "r") as f:
+    credentials = re.match(r"^([^:]+):(.*)$", f.readlines()[0][:-1]).groups()
+sender = MqttNotificationSender(host, port, credentials)
 
 ips = []
 # try to detect ips from uci
