@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 
-import uci
 import time
 import json
 import re
 import subprocess
+import euci
 
 from foris_controller.buses.mqtt import MqttNotificationSender
 
@@ -12,24 +12,13 @@ TIME = 2000
 STEP = 200
 
 
-u = uci.Uci()
-
-
-def uci_get(config, section, option, default):
-    try:
-        val = u.get(config, section, option)
-    except uci.UciExceptionNotFound:
-        return default
-    return val
-
-
-
+uci = euci.EUci()
 controller_id = None
 
-host = uci_get("foris-controller", "mqtt", "host", "localhost")
-port = int(uci_get("foris-controller", "mqtt", "port", 11883))
-passwd_path = uci_get(
-    "foris-controller", "mqtt", "credentials_file", "/etc/fosquitto/credentials.plain"
+host = uci.get("foris-controller", "mqtt", "host", default="localhost")
+port = uci.get("foris-controller", "mqtt", "port", dtype=int, default=11883)
+passwd_path = uci.get(
+    "foris-controller", "mqtt", "credentials_file", default="/etc/fosquitto/credentials.plain"
 )
 try:
     controller_id = subprocess.check_output(
@@ -42,10 +31,11 @@ sender = MqttNotificationSender(host, port, credentials)
 
 ips = []
 # try to detect ips from uci
-ips += [e for e in uci_get("network", "wan", "ipaddr", "").split(" ") if e]
-ips += [e for e in uci_get("network", "wan", "ip6addr", "").split(" ") if e]
-ips += [e for e in uci_get("network", "lan", "ipaddr", "").split(" ") if e]
-ips += [e for e in uci_get("network", "lan", "ip6addr", "").split(" ") if e]
+# parse ips as if they were in CIDR notation
+ips += [e.split("/")[0] for e in uci.get("network", "wan", "ipaddr", list=True, default=()) if e]
+ips += [e.split("/")[0] for e in uci.get("network", "wan", "ip6addr", list=True, default=()) if e]
+ips += [e.split("/")[0] for e in uci.get("network", "lan", "ipaddr", list=True, default=()) if e]
+ips += [e.split("/")[0] for e in uci.get("network", "lan", "ip6addr", list=True, default=()) if e]
 
 # try to detect_ips from ubus
 for network in ["wan", "lan"]:
