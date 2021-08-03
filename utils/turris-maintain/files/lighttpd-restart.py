@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
-import uci
 import time
 import re
 import subprocess
+import euci
 
 from foris_controller.buses.mqtt import MqttNotificationSender
 
@@ -11,23 +11,13 @@ TIME = 2000
 STEP = 200
 
 
-u = uci.Uci()
-
-
-def uci_get(config, section, option, default):
-    try:
-        val = u.get(config, section, option)
-    except uci.UciExceptionNotFound:
-        return default
-    return val
-
-
+uci = euci.EUci()
 controller_id = None
 
-host = uci_get("foris-controller", "mqtt", "host", "localhost")
-port = int(uci_get("foris-controller", "mqtt", "port", 11883))
-passwd_path = uci_get(
-    "foris-controller", "mqtt", "credentials_file", "/etc/fosquitto/credentials.plain"
+host = uci.get("foris-controller", "mqtt", "host", default="localhost")
+port = uci.get("foris-controller", "mqtt", "port", dtype=int, default=11883)
+passwd_path = uci.get(
+    "foris-controller", "mqtt", "credentials_file", default="/etc/fosquitto/credentials.plain"
 )
 try:
     controller_id = subprocess.check_output(
