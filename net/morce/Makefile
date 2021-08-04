@@ -15,6 +15,8 @@ PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/morce.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=GPL-3.0-or-later
+PKG_LICENSE_FILES:=COPYING
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -33,10 +35,10 @@ Build/Compile:=:
 
 define Package/morce/install
 	$(INSTALL_DIR) $(1)/etc/init.d/
-	$(INSTALL_BIN) init/morce $(1)/etc/init.d/morce
+	$(INSTALL_BIN) ./init/morce $(1)/etc/init.d/morce
 
 	$(INSTALL_DIR) $(1)/usr/share/morce/loggers/
-	$(INSTALL_DATA) logger/alert_morce.lua $(1)/usr/share/morce/loggers/
+	$(INSTALL_DATA) ./logger/alert_morce.lua $(1)/usr/share/morce/loggers/
 
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./uci/morce $(1)/etc/config
