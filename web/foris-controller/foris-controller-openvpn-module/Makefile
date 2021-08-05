@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-openvpn-module
-PKG_VERSION:=0.6.4
+PKG_VERSION:=0.7.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
