@@ -1,0 +1,10 @@
+{
+    "id": "pakon",
+    "title": "PaKon",
+    "url": "/pakon/",
+    "icon": "/icons/pakon.png",
+    "description": {
+        "en": "Your network traffic history.",
+        "cs": "Záznam síťového provozu."
+    }
+}

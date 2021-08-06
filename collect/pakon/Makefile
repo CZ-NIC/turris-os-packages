@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon
-PKG_VERSION:=1.2.1
-PKG_RELEASE:=4
+PKG_VERSION:=1.3.1
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/pakon.git
-PKG_MIRROR_HASH:=19ab1643d0133b6324eda6df2c5c4d2cf90cc3994ca8cb7e03fb3f265dcc72d2
+PKG_MIRROR_HASH:=04ab824e22a60378eb94018f3024e44c43397eceed99c4562f78b7d9b7f0fcc5
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -28,11 +28,11 @@ define Package/pakon
   SECTION:=collect
   CATEGORY:=Collect
   TITLE:=PArental KONtrol - light
-  DEPENDS:=+suricata-pakon +xz +python3-light +python3-logging +python3-ctypes +python3-cachetools +python3-sqlite3 +sqlite3-cli +pakon-lists +ouidb +suricata-conntrack-flows
+  DEPENDS:=+suricata-pakon +xz +python3-light +python3-logging +python3-ctypes +python3-cachetools +python3-sqlite3 +sqlite3-cli +pakon-lists +ouidb +suricata-conntrack-flows +lighttpd-mod-authn_pam +lighttpd-mod-proxy
 endef
 
 define Package/pakon/description
-  Simple daemon that is able to collect events from suricata, store them locally to SQLite DB.
+  Simple daemon that is able to collect events from suricata and store them locally to SQLite DB.
 endef
 
 define Build/Compile
@@ -48,6 +48,22 @@ define Package/pakon/conffiles
 endef
 
 define Package/pakon/install
+	# WebApps
+	$(INSTALL_DIR) $(1)/usr/share/turris-webapps/
+	$(INSTALL_DATA) ./files/webapps-pakon.json $(1)/usr/share/turris-webapps/10_pakon.json
+	$(INSTALL_DIR) $(1)/www/webapps-icons/
+	$(INSTALL_DATA) ./files/pakon.png $(1)/www/webapps-icons/
+
+	# Web
+	$(INSTALL_DIR) $(1)/www/pakon
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/web/index.html $(1)/www/pakon
+	$(CP) -r $(PKG_BUILD_DIR)/web/static $(1)/www/pakon
+	$(INSTALL_DIR) $(1)/www/cgi-bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/web/api.cgi $(1)/www/cgi-bin/pakon
+	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
+	$(INSTALL_DATA) ./files/lighttpd-pakon.conf $(1)/etc/lighttpd/conf.d/pakon.conf
+
+	# PaKon itself
 	$(INSTALL_DIR) $(1)/etc/suricata-pakon/output_conf.d
 	$(INSTALL_DATA) ./files/pakon-output.yaml $(1)/etc/suricata-pakon/output_conf.d/pakon.yaml
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -73,17 +89,25 @@ endef
 
 define Package/pakon/postinst
 #!/bin/sh
-[ -n "$$IPKG_INSTROOT" ] || {
+if [ -z "$$IPKG_INSTROOT" ]; then
 	/usr/libexec/pakon-light/create_db.py
 	# one time fix - convert all names to lowercase. Mixed case names shouldn't be saved anymore (fixed in monitor)
 	[ -f /var/lib/pakon.db ] && sqlite3 /var/lib/pakon.db "UPDATE traffic SET app_hostname = LOWER(app_hostname);" || true
-	[ -f /srv/pakon/pakon-archive.db ] && /usr/bin/sqlite3 /srv/pakon/pakon-archive.db "UPDATE traffic SET app_hostname = LOWER(app_hostname);" || true
-        /etc/init.d/pakon-monitor enable
-        /etc/init.d/pakon-monitor restart 2>/dev/null
-        /etc/init.d/pakon-handler enable
-        /etc/init.d/pakon-handler restart 2>/dev/null
+	[ -f /srv/pakon/pakon-archive.db ] && sqlite3 /srv/pakon/pakon-archive.db "UPDATE traffic SET app_hostname = LOWER(app_hostname);" || true
+	/etc/init.d/pakon-monitor enable
+	/etc/init.d/pakon-monitor restart 2>/dev/null
+	/etc/init.d/pakon-handler enable
+	/etc/init.d/pakon-handler restart 2>/dev/null
 	/etc/init.d/suricata-pakon restart 2>/dev/null
-}
+	/etc/init.d/lighttpd restart 2>/dev/null
+fi
+endef
+
+define Package/pakon/postrm
+#!/bin/sh
+if [ -z "$$IPKG_INSTROOT" ]; then
+	/etc/init.d/lighttpd restart 2>/dev/null
+fi
 endef
 
 define Package/pakon/prerm
