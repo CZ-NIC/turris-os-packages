@@ -1,0 +1,4 @@
+if test "$contract" != "turris_lists=contracts/@CONTRACT@"; then
+	setenv contract "turris_lists=contracts/@CONTRACT@"
+	saveenv
+fi
