@@ -1,0 +1,8 @@
+Package: tos3to4-notify
+Version: 1
+License: GPL-3.0
+Section: none
+Architecture: all
+Installed-Size: 0
+Description:  Send notification to suggest migration
+

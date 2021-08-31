@@ -1,0 +1,12 @@
+Package: tos3to4-notify
+Version: 1
+License: GPL-3.0
+Section: none
+Architecture: all
+Installed-Size: 0
+Filename: tos3to4-notify.ipk
+MD5Sum: 41af8ebd194e6335d1edb6cfd2ed8adb
+SHA256sum: a41d0f4cbc5cc7a9e1306d45f7117dc6e1fb3585d8e4112235f5e7be80209f20
+SHA256Sum: a41d0f4cbc5cc7a9e1306d45f7117dc6e1fb3585d8e4112235f5e7be80209f20
+Description:  Send notification to suggest migration
+
