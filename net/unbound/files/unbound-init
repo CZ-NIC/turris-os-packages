@@ -303,7 +303,6 @@ init_unbound() {
             done
             ) >> "$CONFIGFILE"
         fi
-        md5sum "$resolv_conf_path" | cut -f1 -d\ >/tmp/resolv.conf.auto.last.md5
     fi
     fi
 }

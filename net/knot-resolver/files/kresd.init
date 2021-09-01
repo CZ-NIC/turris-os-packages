@@ -207,7 +207,6 @@ load_uci_config_common() {
 				echo "}))})" >> $CONFIGFILE
 			fi
 		fi
-		md5sum "$resolv_conf_path" | cut -f1 -d\ >/tmp/resolv.conf.auto.last.md5
 	fi
 
 	# enable static local domains
