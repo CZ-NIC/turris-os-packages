@@ -20,6 +20,8 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=LICENSE
 
+HOST_BUILD_DEPENDS:=node/host
+
 PKG_BUILD_DEPENDS:=\
 	node/host \
 	reforis-distutils/host \
