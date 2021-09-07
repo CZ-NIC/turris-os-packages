@@ -25,7 +25,7 @@ start_service() {
   procd_close_instance
 }
 
-stop_service() {
+service_stopped() {
   mkdir -p /srv/pakon/
   [ -f /var/lib/pakon.db ] && /usr/libexec/pakon-light/backup_sqlite.sh /var/lib/pakon.db /srv/pakon/pakon.db.xz
 }
