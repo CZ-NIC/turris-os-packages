@@ -11,8 +11,6 @@ Fixes:
  lib/private/Http/Client/Client.php | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/private/Http/Client/Client.php b/lib/private/Http/Client/Client.php
-index eedd347..071c25f 100644
 --- a/lib/private/Http/Client/Client.php
 +++ b/lib/private/Http/Client/Client.php
 @@ -91,7 +91,7 @@ class Client implements IClient {
@@ -24,6 +22,3 @@ index eedd347..071c25f 100644
  		}
  
  		return $options;
--- 
-2.30.2
-
