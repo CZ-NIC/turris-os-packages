@@ -5,34 +5,34 @@
 		"url": "https://wiki.turris.cz/doc/en/howto/lte_modem_install"
 	},
 	"datacollect": {
-		"title": "Data Collection",
-		"description": "Software for participation in data collection and distributed adaptive firewall.",
+		"title": "Advanced security & analytics - Turris Sentinel",
+		"description": "Software for participation in threat detection program which provides distributed adaptive firewall and statistics.",
 		"url": "https://docs.turris.cz/basics/collect/collect/",
 		"options": {
 			"survey": {
 				"title": "Usage Survey",
-				"description": "Collect data about router usage (installed packages, Internet connection type and etc.).",
+				"description": "Collects data about router usage (installed packages, Internet connection type and etc.).",
 				"default": true
 			},
 			"dynfw": {
 				"title": "Dynamic Firewall",
-				"description": "Add firewall rules to block attackers detected by Turris collection network.",
+				"description": "Adds firewall rules to block attackers detected by Turris Sentinel network.",
 				"default": true,
 				"url": "https://docs.turris.cz/basics/collect/dynfw/collect-dynfw/"
 			},
 			"fwlogs": {
 				"title": "Firewall Logs",
-				"description": "Collect logs from firewall for attempted connections.",
+				"description": "Threat detection tool. Collects firewall logs about failed connection attempts.",
 				"default": true
 			},
 			"minipot": {
 				"title": "Minipots",
-				"description": "Minimal honeypots to catch attackers for various protocols.",
+				"description": "Threat detection tool. Minimal honeypots to catch attackers by mimicking various protocols.",
 				"default": true
 			},
 			"haas": {
 				"title": "SSH Honeypot",
-				"description": "SSH honeypot using Honeypot as a Service (haas.nic.cz).",
+				"description": "Threat detection tool. SSH honeypot using Honeypot as a Service (haas.nic.cz).",
 				"url": "https://docs.turris.cz/basics/collect/haas/"
 			}
 		}
