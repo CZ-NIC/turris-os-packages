@@ -1,0 +1,32 @@
+From b59491861e8c38a3a2795b96a868d675d76b75f1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Marek=20Sa=C5=A1ek?= <marek.sasek@nic.cz>
+Date: Tue, 7 Sep 2021 16:37:38 +0200
+Subject: [PATCH] Rename Data Collection card
+
+---
+ js/src/overview/Cards/DataCollectionCard.js | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/js/src/overview/Cards/DataCollectionCard.js b/js/src/overview/Cards/DataCollectionCard.js
+index 96044f27..31999bf2 100644
+--- a/js/src/overview/Cards/DataCollectionCard.js
++++ b/js/src/overview/Cards/DataCollectionCard.js
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
++ * Copyright (C) 2020-2021 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+  *
+  * This is free software, licensed under the GNU General Public License v3.
+  * See /LICENSE for more information.
+@@ -41,7 +41,7 @@ function DataCollectionCard({ details: { eula } }) {
+                     <div className="row align-items-center">
+                         <div className="col">
+                             <h6 className="text-uppercase text-muted mb-2">
+-                                {_("Data Collection")}
++                                {_("Attack detection")}
+                             </h6>
+                             <span className="status">
+                                 {eula === 1 ? _("Activated") : _("Disabled")}
+-- 
+2.30.2
+
