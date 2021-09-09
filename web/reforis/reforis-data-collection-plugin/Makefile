@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-data-collection-plugin
-PKG_VERSION:=0.3.1
+PKG_VERSION:=0.3.2
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis-data-collection
-PKG_MIRROR_HASH:=8d7d63dec988f961ed7d1ecd64063b4f9926ab9272503732d7ab7cd13fefc570
+PKG_MIRROR_HASH:=c66c95b4d533aa00e200000ddcac6732eac4e63996703bd9d1f6e7a2811fc942
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
