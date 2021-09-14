@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris1x-btrfs
-PKG_VERSION:=3.0
+PKG_VERSION:=2.99
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -60,6 +60,9 @@ endef
 define Package/turris1x-btrfs-migrate/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/btrfs_migrate.sh $(1)/usr/bin/btrfs_migrate
+	$(INSTALL_DIR) $(1)/usr/share/turris-btrfs
+	$(INSTALL_BIN) ./files/zImage $(1)/usr/share/turris-btrfs
+	$(INSTALL_BIN) ./files/fdt $(1)/usr/share/turris-btrfs
 endef
 
 define Package/turris1x-btrfs/prerm

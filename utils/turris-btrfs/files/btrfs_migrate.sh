@@ -157,7 +157,33 @@ migrate_to_sdcard() {
     # Copy kernel image and DTB to FAT partition
     mkdir -p "$TMPDIR/target/@/boot/tefi"
     mount "${SDCARDP}1" "$TMPDIR/target/@/boot/tefi" || die "Can't mount fat"
-    cp /boot/zImage /boot/fdt "$TMPDIR/target/@/boot/tefi" || die "Can't copy kernel"
+    # Use kernel and fdt from the future release to have access to USB drive, will be overwritten during migration
+    cp /usr/share/turris-btrfs/zImage /usr/share/turris-btrfs/fdt "$TMPDIR/target/@/boot/tefi" || die "Can't copy kernel"
+
+    # Hack to trigger migration to 5.x on reboot
+    uci -c "$TMPDIR/target/@/etc/config" add_list updater.pkglists.lists=3xmigrate
+    uci -c "$TMPDIR/target/@/etc/config" commit updater
+    mv "$TMPDIR/target/@/etc/rc.local" "$TMPDIR/target/@/etc/rc.local.premigration"
+    cat > "$TMPDIR/target/@/etc/rc.local" << EOF
+#!/bin/sh
+rainbow all enable blue
+if pkgupdate --batch; then
+    rainbow all enable green
+else
+    rainbow all enable red
+fi
+
+sleep 10 # Let people notice it finished
+
+mv /etc/rc.local.premigration /etc/rc.local
+
+# Restore LEDs
+/etc/init.d/rainbow restart
+/etc/init.d/led restart
+
+# Run user init
+source /etc/rc.local
+EOF
 
     trap "" EXIT
     clean
