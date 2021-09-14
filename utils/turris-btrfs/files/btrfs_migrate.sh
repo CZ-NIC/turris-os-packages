@@ -16,22 +16,29 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 set -e
 
-SDCARD="$(blkid | sed -n 's|\(/dev/sd[a-z]\).*LABEL="turris-destroy".*|\1|p')"
-if [ -n "$SDCARD" ]; then
-    SDCARDP="$SDCARD"
-else
-    SDCARD="/dev/mmcblk0"
-    SDCARDP="/dev/mmcblk0p"
-fi
-
 die() {
     echo "$1" >&2
     exit 1
 }
 
-# Verify that it makes sense to migrate to SD card
-verify() {
-    [ -b "$SDCARD" ] || die "No MicroSD card present!"
+# Detect the external storage device and verify that it makes sense to migrate
+detect_and_verify() {
+    if [ "$RESTORE" = no ]; then 
+        SDCARD="$(blkid | sed -n 's|\(/dev/sd[a-z]\).*LABEL="turris-destroy".*|\1|p')"
+        SDCARDP="$SDCARD"
+    else
+        SDCARD="$(blkid | sed -n 's|\(/dev/sd[a-z]\).*LABEL="turris-rootfs".*|\1|p')"
+        SDCARDP="$SDCARD"
+        ROOT_UUID="$(blkid "${SDCARDP}2" | sed -n 's|^/dev/.*UUID="\([0-9a-fA-F-]*\)".*|\1|p')"
+    fi
+    if [ -z "$SDCARD" ]; then
+        SDCARD="/dev/mmcblk0"
+    fi
+    if [ "$SDCARD" = /dev/mmcblk0 ]; then
+        SDCARDP="/dev/mmcblk0p"
+    fi
+
+    [ -b "$SDCARD" ] || die "No external storage present!"
     grep -q " / ubifs " < /proc/mounts || die "1.1 firmware required!"
 }
 
@@ -221,8 +228,9 @@ for ARG in "$@"; do
     esac
 done
 
-verify
-are_you_sure
+detect_and_verify
+
+[ "$RESTORE" = yes ] || are_you_sure
 
 configure_schnapps
 
@@ -232,6 +240,5 @@ if [ "$RESTORE" = "no" ]; then
 fi
 
 setup_uboot
-
 
 echo "Migration successful, please reboot!" >&2
