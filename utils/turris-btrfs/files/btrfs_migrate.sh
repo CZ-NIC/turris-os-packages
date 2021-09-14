@@ -99,11 +99,11 @@ ubiboot max6370_wdt_off; setenv bootargs \$bootargsubi; ubi part rootfs; ubifsmo
 bootcmd setexpr.b reflash *0xFFA0001F; if test \$reflash -ge \$reflash_timeout; then echo BOOT NOR; run norboot; else echo NORMAL BOOT; run turris_boot; fi
 norboot max6370_wdt_off; setenv bootargs \$bootargsnor; bootm 0xef020000 - 0xef000000
 root_uuid=$ROOT_UUID
-bootargsbtrfs root=PARTUUID=\$root_uuid rootwait rw rootfstype=btrfs rootflags=subvol=@,commit=5 console=ttyS0,115200
-mmcboot fatload mmc 0:1 \$nandfdtaddr fdt; setenv bootargs \$bootargsbtrfs; bootm \$nandbootaddr - \$nandfdtaddr
-usbboot fatload usb \$devnum:1 \$nandfdtaddr fdt; setenv bootargs \$bootargsbtrfs; bootm \$nandbootaddr - \$nandfdtaddr
+bootargsbtrfs rootwait rw rootfstype=btrfs rootflags=subvol=@,commit=5 console=ttyS0,115200
+mmcboot fatload mmc 0:1 \$nandfdtaddr fdt; setenv bootargs \$bootargsbtrfs root=PARTUUID=\$root_uuid; bootm \$nandbootaddr - \$nandfdtaddr
+usbboot fatload usb \$devnum:1 \$nandfdtaddr fdt; setenv bootargs \$bootargsbtrfs root=PARTUUID=\$root_uuid; usb stop; bootm \$nandbootaddr - \$nandfdtaddr
 mmctry mmc rescan; if fatload mmc 0:1 \$nandbootaddr zImage; then run mmcboot; fi
-usbtry usb start; for devnum in 0 1 2 3 4 5 6 7 8; do if fatload usb \$devnum:1 \$nandbootaddr zImage; then run usbboot; fi; done
+usbtry usb start; for devnum in 0 1 2 3 4 5 6 7 8; do if fatload usb \$devnum:1 \$nandbootaddr zImage; then run usbboot; else usb stop; fi; done
 turris_boot max6370_wdt_off; run mmctry; run usbtry; run ubiboot;
 EOF
 }
