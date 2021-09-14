@@ -1,8 +1,0 @@
-#!/bin/sh
-if [ "`cat /proc/mounts | grep '^/dev/mmcblk0p2 / btrfs'`" ]; then
-	mkdir -p /boot/tefi
-	mount -t vfat /dev/mmcblk0p1 /boot/tefi
-	cmp /boot/zImage /boot/tefi/zImage || cp /boot/zImage /boot/tefi/zImage
-	cmp /boot/fdt /boot/tefi/fdt || cp /boot/fdt /boot/tefi/fdt
-	umount /boot/tefi
-fi

@@ -14,66 +14,54 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+set -e
 
+SDCARD="$(blkid | sed -n 's|\(/dev/sd[a-z]\).*LABEL="turris-destroy".*|\1|p')"
+if [ -n "$SDCARD" ]; then
+    SDCARDP="$SDCARD"
+else
+    SDCARD="/dev/mmcblk0"
+    SDCARDP="/dev/mmcblk0p"
+fi
 
 die() {
-	echo "$1" >&2
-	exit 1
+    echo "$1" >&2
+    exit 1
 }
 
-RESTORE=""
-[ "$1" \!= restore ] || RESTORE=yes
+# Verify that it makes sense to migrate to SD card
+verify() {
+    [ -b "$SDCARD" ] || die "No MicroSD card present!"
+    grep -q " / ubifs " < /proc/mounts || die "1.1 firmware required!"
+}
 
-[ -b /dev/mmcblk0 ]         || die "No MicroSD card present!"
-[ -n "`mount | grep ubi`" ] || die "1.1 firmware required!"
+are_you_sure() {
+    local answer
+    local question="Are you sure you want to lose everything on $SDCARD? (yes/No): "
+    read -r -p "$question" answer
+    case "$(echo "$answer" | awk '{ print tolower($0) }')" in
+        y|yes)
+            return 0
+            ;;
+        ""|n|no)
+            echo "No change was performed. Exiting." >&2
+            exit 0
+            ;;
+        *)
+            die "Unknown answer: $answer"
+            ;;
+    esac
+}
 
-mkdir -p /etc/schnapps
-echo 'ROOT_DEV="/dev/mmcblk0p2"' > /etc/schnapps/config
+# Set chnapps to manage specified device
+configure_schnapps() {
+    mkdir -p /etc/schnapps
+    echo "ROOT_DEV='${SDCARDP}2'" > /etc/schnapps/config
+}
 
-if [ -z "$RESTORE" ]; then
-
-ANS=""
-echo "Are you sure you want to lose everything on mmcblk0? (yes/no)"
-read ANS
-if [ "$ANS" \!= "yes" ]; then
-	exit 0
-fi
-
-dd if=/dev/zero of=/dev/mmcblk0 bs=10M count=11
-fdisk /dev/mmcblk0 <<EOF
-o
-n
-p
-1
-
-+100M
-n
-p
-2
-
-
-w
-EOF
-mkdir -p /tmp/btrfs-convert/target
-mkdir -p /tmp/btrfs-convert/src
-mkfs.vfat /dev/mmcblk0p1 || die "Can't create fat!"
-mkfs.btrfs -f /dev/mmcblk0p2 || die "Can't format btrfs partition!"
-mount /dev/mmcblk0p2 /tmp/btrfs-convert/target || die "Can't mount mmclbk0p2"
-btrfs subvolume create /tmp/btrfs-convert/target/@ || die "Can't create subvolume!"
-mount -o bind / /tmp/btrfs-convert/src || die "Can't bind btrfs mount."
-tar -C /tmp/btrfs-convert/src -cf - . | tar -C /tmp/btrfs-convert/target/@ -xf - || die "Filesystem copy failed!"
-
-mkdir -p /tmp/btrfs-convert/target/@/boot/tefi
-mount /dev/mmcblk0p1 /tmp/btrfs-convert/target/@/boot/tefi || die "Can't mount fat"
-cp /boot/zImage /boot/fdt /tmp/btrfs-convert/target/@/boot/tefi || die "Can't copy kernel"
-umount /tmp/btrfs-convert/target/@/boot/tefi
-umount /tmp/btrfs-convert/target
-umount /tmp/btrfs-convert/src
-
-fi
-
-# Setup u-Boot
-fw_setenv -s - <<EOF
+# This sets u-boot environment to boot from SD card
+setup_uboot() {
+    fw_setenv -s - <<EOF
 baudrate 115200
 bootargsnor root=/dev/mtdblock2 rw rootfstype=jffs2 console=ttyS0,115200
 bootargsubi root=ubi0:rootfs rootfstype=ubifs ubi.mtd=9,2048 rootflags=chk_data_crc rw console=ttyS0,115200
@@ -93,25 +81,131 @@ mtdparts mtdparts=ef000000.nor:128k(dtb-image),1664k(kernel),1536k(root),11264k(
 nandbootaddr 2100000
 nandfdtaddr 2000000
 netdev eth0
-nfsboot setenv bootargs root=/dev/nfs rw nfsroot=\$serverip:\$rootpath ip=\$ipaddr:\$serverip:\$gatewayip:\$netmask:\$hostname:\$netdev:off console=\$consoledev,\$baudrate \$othbootargs;tftp \$loadaddr \$bootfile;tftp \$fdtaddr \$fdtfile;bootm \$loadaddr - \$fdtaddr
 norbootaddr ef080000
 norfdtaddr ef040000
-ramboot setenv bootargs root=/dev/ram rw console=\$consoledev,\$baudrate \$othbootargs ramdisk_size=\$ramdisk_size;tftp \$ramdiskaddr \$ramdiskfile;tftp \$loadaddr \$bootfile;tftp \$fdtaddr \$fdtfile;bootm \$loadaddr \$ramdiskaddr \$fdtaddr
-ramdisk_size 120000
-ramdiskaddr 2000000
-ramdiskfile rootfs.ext2.gz.uboot
 reflash_timeout 40
-rootpath /opt/nfsroot
 stderr serial
 stdin serial
 stdout serial
-tftpflash tftpboot \$loadaddr \$uboot; protect off 0xeff40000 +\$filesize; erase 0xeff40000 +\$filesize; cp.b \$loadaddr 0xeff40000 \$filesize; protect on 0xeff40000 +\$filesize; cmp.b \$loadaddr 0xeff40000 \$filesize
+hwconfig usb1:dr_mode=host,phy_type=ulpi
 ubiboot max6370_wdt_off; setenv bootargs \$bootargsubi; ubi part rootfs; ubifsmount ubi0:rootfs; ubifsload \$nandfdtaddr /boot/fdt; ubifsload \$nandbootaddr /boot/zImage; bootm \$nandbootaddr - \$nandfdtaddr
-uboot u-boot.bin
-backbootcmd setexpr.b reflash *0xFFA0001F;if test \$reflash -ge \$reflash_timeout; then echo BOOT NOR; run norboot; else echo BOOT NAND; run ubiboot; fi
-bootcmd setexpr.b reflash *0xFFA0001F;if test \$reflash -ge \$reflash_timeout; then echo BOOT NOR; run norboot; else echo BOOT NAND; mmc rescan; if fatload mmc 0:1 \$nandbootaddr zImage; then run mmcboot; else run ubiboot; fi; fi
-norboot max6370_wdt_off; env default -a; saveenv; setenv bootargs \$bootargsnor; bootm 0xef020000 - 0xef000000
-bootargsmmc root=/dev/mmcblk0p2 rootwait rw rootfstype=btrfs rootflags=subvol=@,commit=5 console=ttyS0,115200
-mmcboot max6370_wdt_off; fatload mmc 0:1 \$nandfdtaddr fdt; setenv bootargs \$bootargsmmc; bootm \$nandbootaddr - \$nandfdtaddr
+bootcmd setexpr.b reflash *0xFFA0001F; if test \$reflash -ge \$reflash_timeout; then echo BOOT NOR; run norboot; else echo NORMAL BOOT; run turris_boot; fi
+norboot max6370_wdt_off; setenv bootargs \$bootargsnor; bootm 0xef020000 - 0xef000000
+root_uuid=$ROOT_UUID
+bootargsbtrfs root=PARTUUID=\$root_uuid rootwait rw rootfstype=btrfs rootflags=subvol=@,commit=5 console=ttyS0,115200
+mmcboot fatload mmc 0:1 \$nandfdtaddr fdt; setenv bootargs \$bootargsbtrfs; bootm \$nandbootaddr - \$nandfdtaddr
+usbboot fatload usb \$devnum:1 \$nandfdtaddr fdt; setenv bootargs \$bootargsbtrfs; bootm \$nandbootaddr - \$nandfdtaddr
+mmctry mmc rescan; if fatload mmc 0:1 \$nandbootaddr zImage; then run mmcboot; fi
+usbtry usb start; for devnum in 0 1 2 3 4 5 6 7 8; do if fatload usb \$devnum:1 \$nandbootaddr zImage; then run usbboot; fi; done
+turris_boot max6370_wdt_off; run mmctry; run usbtry; run ubiboot;
 EOF
-echo "Migration successful, please reboot!"
+}
+
+# Setup partitions on SD card
+format_sdcard() {
+    dd if=/dev/zero of="$SDCARD" bs=10M count=11
+    fdisk "$SDCARD" <<EOF
+o
+n
+p
+1
+
++100M
+n
+p
+2
+
+
+w
+EOF
+    mkfs.vfat -n turris-boot "${SDCARDP}1" || die "Can't create fat!"
+    mkfs.btrfs -L turris-rootfs -f "${SDCARDP}2" || die "Can't format btrfs partition!"
+    ROOT_UUID="$(blkid "${SDCARDP}2" | sed -n 's|^/dev/.*UUID="\([0-9a-fA-F-]*\)".*|\1|p')"
+}
+
+clean() (
+    # Note: we use here rmdir to not recursivelly remove mounted FS if umount fails.
+    set +e # just to continue if unmount fails with another umount
+    umount "$TMPDIR/target/@/boot/tefi"
+    umount "$TMPDIR/target"
+    rmdir "$TMPDIR/target"
+    umount "$TMPDIR/src"
+    rmdir "$TMPDIR/src"
+    rmdir "$TMPDIR"
+)
+
+# Copy current root to SD card
+migrate_to_sdcard() {
+    TMPDIR="$(mktemp -d)"
+    trap clean EXIT 
+
+    mkdir -p "$TMPDIR/target"
+    mkdir -p "$TMPDIR/src"
+    # Mount and migrate root filesystem
+    mount "${SDCARDP}2" "$TMPDIR/target" || die "Can't mount mmclbk0p2"
+    btrfs subvolume create "$TMPDIR/target/@" || die "Can't create subvolume!"
+    mount -o bind / "$TMPDIR/src" || die "Can't bind btrfs mount."
+    tar -C "$TMPDIR/src" -cf - . | tar -C "$TMPDIR/target/@" -xf - || die "Filesystem copy failed!"
+
+    # import factory image - best effort, proceed even if it fails
+    btrfs subvolume create "$TMPDIR/target/@factory" || die "Can't create factory subvolume!"
+    cd /tmp
+    wget https://repo.turris.cz/hbs/medkit/turris1x-medkit-latest.tar.gz || die "Can't download medkit"
+    wget -O - https://repo.turris.cz/hbs/medkit/turris1x-medkit-latest.tar.gz.sha256 | sha256sum -c - || die "Can't verify medkit integrity"
+    tar -C "$TMPDIR/target/@factory" -xzf /tmp/turris1x-medkit-latest.tar.gz  || echo "Creating factory snapshot failed" >&2
+
+    # Copy kernel image and DTB to FAT partition
+    mkdir -p "$TMPDIR/target/@/boot/tefi"
+    mount "${SDCARDP}1" "$TMPDIR/target/@/boot/tefi" || die "Can't mount fat"
+    cp /boot/zImage /boot/fdt "$TMPDIR/target/@/boot/tefi" || die "Can't copy kernel"
+
+    trap "" EXIT
+    clean
+}
+
+##################################################################################
+
+print_usage() {
+    echo "Usage: $0 [restore]" >&2
+}
+
+print_help() {
+    print_usage
+    {
+        echo
+        echo "restore: do not format SD card but only set appropriate u-boot environment"
+    } >&2
+}
+
+RESTORE="no"
+for ARG in "$@"; do
+    case "$ARG" in
+        -h|-\?|--help)
+            print_help
+            exit 0
+            ;;
+        restore)
+            RESTORE="yes"
+            ;;
+        *)
+            echo "Unknown argument: $ARG" >&2
+            print_usage
+            exit 1
+            ;;
+    esac
+done
+
+verify
+are_you_sure
+
+configure_schnapps
+
+if [ "$RESTORE" = "no" ]; then
+    format_sdcard
+    migrate_to_sdcard
+fi
+
+setup_uboot
+
+
+echo "Migration successful, please reboot!" >&2
