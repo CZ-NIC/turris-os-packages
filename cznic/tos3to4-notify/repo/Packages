@@ -10,3 +10,13 @@ SHA256sum: a41d0f4cbc5cc7a9e1306d45f7117dc6e1fb3585d8e4112235f5e7be80209f20
 SHA256Sum: a41d0f4cbc5cc7a9e1306d45f7117dc6e1fb3585d8e4112235f5e7be80209f20
 Description:  Send notification to suggest migration
 
+Package: userlists
+Version: 11.10
+Depends: libc
+Maintainer: CZ.NIC <packaging@turris.cz>
+Filename: userlists.ipk
+MD5Sum: 4e716df55687978e2a936c7a54ebc3ba
+SHA256sum: 3fcba7adb952ad1afda083cbc8380afdfcc33e17729741dc315601444f05001a
+SHA256Sum: 3fcba7adb952ad1afda083cbc8380afdfcc33e17729741dc315601444f05001a
+Description:  Userlists for the updater
+

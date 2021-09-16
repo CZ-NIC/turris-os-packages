@@ -1,0 +1,5 @@
+Package: userlists
+Version: 11.10
+Depends: libc
+Maintainer: CZ.NIC <packaging@turris.cz>
+Description:  Userlists for the updater

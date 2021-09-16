@@ -1,0 +1,4 @@
+[ -n "$IPKG_INSTROOT" ] || {
+	# Rename i_agree_honeypot to honeypot
+	sed -i "s/list lists 'i_agree_honeypot'/list lists 'honeypot'/" /etc/config/updater
+}

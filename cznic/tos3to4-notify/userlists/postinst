@@ -1,0 +1,9 @@
+#!/bin/sh
+pkgname=$(basename ${0%.*})
+[ "${IPKG_NO_SCRIPT}" = "1" ] && exit 0
+. ${IPKG_INSTROOT}/lib/functions.sh
+if type default_postinst > /dev/null; then
+	default_postinst $0 $@ || true
+elif [ -f ${IPKG_INSTROOT}/usr/lib/opkg/info/${pkgname}.postinst-pkg ]; then
+	. ${IPKG_INSTROOT}/usr/lib/opkg/info/${pkgname}.postinst-pkg
+fi

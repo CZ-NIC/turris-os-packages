@@ -1,0 +1,107 @@
+{
+	"3xmigrate": {
+		"title": "Migration to Turris OS 5.x",
+		"description": "This is migration to the latest version of Turris OS. Make sure that you thoroughly read https://docs.turris.cz/geek/tos3_migration/ before enabling this!",
+		"visible": true
+	},
+	"api-token": {
+		"title": "Access tokens",
+		"description": "A Foris plugin allowing to manage remote API access tokens (for example for use in Spectator or Android application).",
+		"visible": true
+	},
+	"automation": {
+		"title": "Home automation",
+		"description": "Control software for home automation, including Turris Gadgets. (OBSOLETE)",
+		"visible": true
+	},
+	"datacollect": {
+		"title": "Data Collection",
+		"description": "Software for participation in data collection and dynamic distributed firewall.",
+		"visible": true
+	},
+	"dev-detect": {
+		"title": "Device detection",
+		"description": "Software for detecting new devices on local network (EXPERIMENTAL).",
+		"visible": true
+	},
+	"dvb": {
+		"title": "DVB tuner",
+		"description": "Software for sharing television received by a DVB tuner on Turris. Does not include device drivers.",
+		"visible": true
+	},
+	"luci-controls": {
+		"title": "LuCI extensions",
+		"description": "Several addional tabs and controls for the advanced LuCI interface.",
+		"visible": true
+	},
+	"pakon": {
+		"title": "Pakon",
+		"description": "Software for in depth monitoring of your traffic.",
+		"visible": true
+	},
+	"nas": {
+		"title": "NAS",
+		"description": "Services allowing to connect a disk to the router and use it as network data store.",
+		"visible": true
+	},
+	"honeypot": {
+		"title": "SSH Honeypot",
+		"description": "Trap for password-guessing robots on SSH.",
+		"visible": true
+	},
+	"lxc": {
+		"title": "LXC utilities",
+		"description": "Set of utilities to manage Linux Containers (lightweight virtualization technology).",
+		"visible": true
+	},
+	"netboot": {
+		"title": "Turris MOX network boot",
+		"description": "Server side for Turris MOX without SD card used as Wi-Fi access point.",
+		"visible": true
+	},
+	"netutils": {
+		"title": "Extensions of network protocols",
+		"description": "Support for additional protocols and connection types.",
+		"visible": true
+	},
+	"netmetr": {
+		"title": "Internet connection speed measurement",
+		"description": "Actively measures speed of Internet connection using netmetr.cz service.",
+		"visible": true
+	},
+	"openvpn": {
+		"title": "OpenVPN",
+		"description": "An easy setup of OpenVPN server from Foris.",
+		"visible": true
+	},
+	"printserver": {
+		"title": "Print server",
+		"description": "Services allowing to connect a printer to the router and use it for remote printing. (OBSOLETE)",
+		"visible": true
+	},
+	"ssbackup": {
+		"title": "Cloud Backups",
+		"description": "Service for storing configuration backups on remote servers.",
+		"visible": true
+	},
+	"snd": {
+		"title": "Sound card",
+		"description": "Support for USB sound card. (OBSOLETE)",
+		"visible": true
+	},
+	"squid": {
+		"title": "Squid",
+		"description": "HTTP caching proxy Squid. (OBSOLETE)",
+		"visible": true
+	},
+	"tor": {
+		"title": "Tor",
+		"description": "Service to increase anonymity on the Internet.",
+		"visible": true
+	},
+	"webcam": {
+		"title": "Web camera",
+		"description": "Support to capture image with web camera. (OBSOLETE)",
+		"visible": true
+	}
+}
