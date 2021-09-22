@@ -1,7 +1,7 @@
 server.modules += ( "mod_proxy" )
 server.modules += ( "mod_authn_pam", "mod_auth" )
 
-$HTTP["url"] =~ "^/netdata" {
+$HTTP["url"] =~ "^/netdata/" {
   auth.backend = "pam" 
   auth.require = ( "" =>
                    (
@@ -18,3 +18,6 @@ $HTTP["url"] =~ "^/netdata" {
   proxy.server = ( "" => ( ( "host" => "127.0.0.1", "port" => "19999") ) )
 }
 
+$HTTP["url"] =~ "^/netdata$" {
+    url.redirect = ( "^/netdata$" => "/netdata/" )
+}
