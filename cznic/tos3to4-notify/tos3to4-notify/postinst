@@ -1,8 +1,8 @@
 #!/bin/sh
 create_notification -s news \
-"Aktualizace na nejnovější verzi Turris OS je k dispozici. Pro provedení je prozatím nutné ruční schválení. Pro aktualizaci aktivujte seznam balíčků 'Migration to Turris OS 5.x (HIGHLY EXPERIMENTAL)' ve webovém rozhraní Foris.
+"Aktualizace na nejnovější verzi Turris OS je k dispozici. Pro provedení je prozatím nutné ruční schválení. Pro aktualizaci aktivujte seznam balíčků 'Migration to Turris OS 5.x' ve webovém rozhraní Foris.
 
 Více informací naleznete v dokumentaci https://docs.turris.cz/geek/tos3-migration/." \
-"Update to the latest Turris OS version is available. The update, for now, requires manual approval. To update your router, you must enable package list 'Migration to Turris OS 5.x (HIGHLY EXPERIMENTAL)' in the Foris web interface.
+"Update to the latest Turris OS version is available. The update, for now, requires manual approval. To update your router, you must enable package list 'Migration to Turris OS 5.x' in the Foris web interface.
 
 More info is available in the official documentation https://docs.turris.cz/geek/tos3-migration/."

@@ -1,22 +1,22 @@
 Package: tos3to4-notify
-Version: 1
+Version: 1.1
 License: GPL-3.0
 Section: none
 Architecture: all
 Installed-Size: 0
 Filename: tos3to4-notify.ipk
-MD5Sum: 41af8ebd194e6335d1edb6cfd2ed8adb
-SHA256sum: a41d0f4cbc5cc7a9e1306d45f7117dc6e1fb3585d8e4112235f5e7be80209f20
-SHA256Sum: a41d0f4cbc5cc7a9e1306d45f7117dc6e1fb3585d8e4112235f5e7be80209f20
+MD5Sum: d2f0b709880056a894ce62677ddafb22
+SHA256sum: d3fa1adb49a0fcd2a0854300134200a708b8fa27243e9f16fcef45d4ca66c6d9
+SHA256Sum: d3fa1adb49a0fcd2a0854300134200a708b8fa27243e9f16fcef45d4ca66c6d9
 Description:  Send notification to suggest migration
 
 Package: userlists
 Version: 11.10
-Depends: libc
+Architecture: all
 Maintainer: CZ.NIC <packaging@turris.cz>
 Filename: userlists.ipk
-MD5Sum: 4e716df55687978e2a936c7a54ebc3ba
-SHA256sum: 3fcba7adb952ad1afda083cbc8380afdfcc33e17729741dc315601444f05001a
-SHA256Sum: 3fcba7adb952ad1afda083cbc8380afdfcc33e17729741dc315601444f05001a
+MD5Sum: 74a33d1d4393b6bf8ca3762d7e2dc07f
+SHA256sum: 5ff83bd1684e4a5fef1cf6a374cede756ff0b38af0f01e5386193070e1e4f527
+SHA256Sum: 5ff83bd1684e4a5fef1cf6a374cede756ff0b38af0f01e5386193070e1e4f527
 Description:  Userlists for the updater
 
