@@ -13,9 +13,9 @@ foris_password() {
 	}
 
 	local pbkdf2
-	pbkdf2="$(python -c \
+	pbkdf2="$(python3 -c \
 		'import pbkdf2; import sys; print(pbkdf2.crypt(sys.argv[1], iterations=1000))' \
-			-- "$password")"
+			"$password")"
 	uci -q batch <<-EOF
 		set foris.auth=config
 		set foris.auth.password=$pbkdf2
