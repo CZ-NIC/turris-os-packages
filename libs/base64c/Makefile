@@ -13,7 +13,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=base64c-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://gitlab.nic.cz/api/v4/projects/973/packages/generic/base64c/$(PKG_VERSION)
-PKG_HASH:=b5a2a460e28e35f7473ab61cc457d9b4ede25d2bb9c4ba36fca518e25e17ec1a
+PKG_HASH:=ebc12ecdb66a9261ba3d5cd06e87588764ac53aea2c64bd4c226f13cc2bf77d4
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=MIT
