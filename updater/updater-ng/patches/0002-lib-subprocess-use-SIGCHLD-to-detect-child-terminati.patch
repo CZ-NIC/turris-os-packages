@@ -1,0 +1,134 @@
+From 0c7a6601f8dd2c8675c029e0d17196e5a68beddc Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Karel=20Ko=C4=8D=C3=AD?= <karel.koci@nic.cz>
+Date: Tue, 3 Aug 2021 15:13:51 +0200
+Subject: [PATCH 2/2] lib/subprocess: use SIGCHLD to detect child termination
+ early
+
+The subprocess now handles SIGCHLD for faster subprocess termination. We
+care about the original child and nothild else. If that dies we consider
+it as termination of subprocess and abandon reading from pipes even when
+there could be still process writing to them.
+
+This should prevent from scripts hanging.
+---
+ CHANGELOG.md         |  5 +++++
+ src/lib/subprocess.c | 27 +++++++++++++++++++++++++--
+ tests/c/subprocess.c | 11 +++++++++++
+ 3 files changed, 41 insertions(+), 2 deletions(-)
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 0de99945..de47372f 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
+ - Support for `FilesSignature` field in packages. On mismatch it trigger
+   reinstall.
+ 
++### Fixed
++- Subprocess call is now terminated way earlier thanks to `SIGCHLD` signal
++  handling. This improves update time for any scripts spawning "daemon" processes
++  that do not correctly redirect or close standard outputs.
++
+ 
+ ## [69.1.3] - 2021-06-16
+ ### Changed
+diff --git a/src/lib/subprocess.c b/src/lib/subprocess.c
+index 208b4471..24a5f2dd 100644
+--- a/src/lib/subprocess.c
++++ b/src/lib/subprocess.c
+@@ -29,6 +29,7 @@
+ #include <sys/select.h>
+ #include <time.h>
+ #include <sys/wait.h>
++#include <sys/signalfd.h>
+ 
+ static int kill_timeout = 60000;
+ 
+@@ -122,9 +123,18 @@ int subprocloc(int timeout, FILE *fd[2], subproc_callback callback, void *data,
+ 	ASSERT(close(p_out[1]) != -1);
+ 	ASSERT(close(p_err[1]) != -1);
+ 
++	sigset_t sigset;
++	sigemptyset(&sigset);
++	sigaddset(&sigset, SIGCHLD);
++	sigset_t oldset;
++	ASSERT(sigprocmask(SIG_BLOCK, &sigset, &oldset) == 0);
++	int sigfd = signalfd(-1, &sigset, SFD_CLOEXEC);
++	ASSERT(sigfd >= 0);
++
+ 	struct pollfd pfds[] = {
+ 		{ .fd = p_out[0], .events = POLLIN },
+-		{ .fd = p_err[0], .events = POLLIN }
++		{ .fd = p_err[0], .events = POLLIN },
++		{ .fd = sigfd, .events = POLLIN },
+ 	};
+ 	time_t t_start = time(NULL);
+ 	bool term_sent = false;
+@@ -135,7 +145,9 @@ int subprocloc(int timeout, FILE *fd[2], subproc_callback callback, void *data,
+ 			poll_timeout = rem_t < 0 ? 0 : rem_t;
+ 		}
+ 		// We ignore interrupt errors as those are really not an errors
+-		ASSERT_MSG(poll(pfds, 2, poll_timeout) != -1 || errno == EINTR, "Subprocess poll failed with error: %s", strerror(errno));
++		ASSERT_MSG(
++			poll(pfds, sizeof(pfds) / sizeof(*pfds), poll_timeout) != -1 || errno == EINTR,
++			"Subprocess poll failed with error: %s", strerror(errno));
+ 		int dead = 0;
+ 		for (int i = 0; i < 2; i++) {
+ 			if (pfds[i].revents & POLLIN) {
+@@ -148,6 +160,15 @@ int subprocloc(int timeout, FILE *fd[2], subproc_callback callback, void *data,
+ 				dead++;
+ 			ASSERT(!(pfds[i].revents & POLLERR) && !(pfds[i].revents & POLLNVAL));
+ 		}
++		if (pfds[2].revents & POLLIN) {
++			struct signalfd_siginfo siginfo;
++			while (read(sigfd, &siginfo, sizeof(siginfo)) > 0)
++				if (siginfo.ssi_pid == pid) {
++					dead = 2; // process terminated, consider both pipes closed
++					break;
++				}
++		}
++		ASSERT(!(pfds[2].revents & POLLERR) && !(pfds[2].revents & POLLNVAL));
+ 		if (dead >= 2)
+ 			break; // Both feeds are dead so break this loop
+ 		if (timeout >= 0 && 1000*(time(NULL) - t_start) >= timeout) {
+@@ -166,6 +187,8 @@ int subprocloc(int timeout, FILE *fd[2], subproc_callback callback, void *data,
+ 
+ 	ASSERT(close(p_out[0]) != -1);
+ 	ASSERT(close(p_err[0]) != -1);
++	ASSERT(close(sigfd) != -1);
++	ASSERT(sigprocmask(SIG_SETMASK, &oldset, NULL) == 0);
+ 
+ 	int wstatus;
+ 	ASSERT(waitpid(pid, &wstatus, 0) != -1);
+diff --git a/tests/c/subprocess.c b/tests/c/subprocess.c
+index 88ce78dc..82fd19f3 100644
+--- a/tests/c/subprocess.c
++++ b/tests/c/subprocess.c
+@@ -50,6 +50,16 @@ START_TEST(timeout) {
+ }
+ END_TEST
+ 
++// Test that we detect process termination without waiting for timeout.
++START_TEST(termination) {
++	FILE *devnull = fopen("/dev/null", "w");
++	FILE *fds[] = {devnull, devnull};
++	subproc_kill_t(10000);
++	time_t prev = time(NULL);
++	ck_assert_int_eq(0, subprocvo(10000, fds, "sh", "-c", "nohup sleep 100 &", NULL));
++	ck_assert_int_lt(time(NULL) - prev, 10);
++}
++
+ struct buffs {
+ 	FILE *fds[2];
+ 	char *b_out, *b_err;
+@@ -129,6 +139,7 @@ Suite *gen_test_suite(void) {
+ 	tcase_set_timeout(subproc, 30);
+ 	tcase_add_test(subproc, exit_code);
+ 	tcase_add_test(subproc, timeout);
++	tcase_add_test(subproc, termination);
+ 	tcase_add_test(subproc, output);
+ 	tcase_add_test(subproc, callback);
+ 	suite_add_tcase(
+-- 
+2.33.0
+

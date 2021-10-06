@@ -1,0 +1,143 @@
+From 05bf057092c5dbb6fb78b1520deea408aed6d42e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Karel=20Ko=C4=8D=C3=AD?= <karel.koci@nic.cz>
+Date: Wed, 9 Jun 2021 10:15:56 +0200
+Subject: [PATCH 1/2] Add FilesSignature support
+
+We need this to cover case when files change in package without anything
+other changing. The issue this tries to cover is conflicts between
+packages because two packages provide same file but in reality that is
+only because local version is older than the one in repository. This
+forces reinstall and thus resolved such collision.
+---
+ CHANGELOG.md            |  6 +++++
+ docs/opkg.adoc          |  6 +++++
+ src/lib/lua/planner.lua |  2 +-
+ tests/lua/planner.lua   | 51 ++++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 63 insertions(+), 2 deletions(-)
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index b0674a72..0de99945 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
+ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+ 
++## [Unreleased]
++### Added
++- Support for `FilesSignature` field in packages. On mismatch it trigger
++  reinstall.
++
++
+ ## [69.1.3] - 2021-06-16
+ ### Changed
+ - Error generated from Lua when URI is being finished now includes error message
+diff --git a/docs/opkg.adoc b/docs/opkg.adoc
+index 3c8cba6b..505d4d5d 100644
+--- a/docs/opkg.adoc
++++ b/docs/opkg.adoc
+@@ -197,6 +197,12 @@ LinkSignature::
+   This is Turris extension. This is used to identify link changes in package
+   without version change. This covers situation when library changes API and all
+   packages depending on it has to be reinstalled because of that.
++FilesSignature::
++  This is also Turris extension. This is used to identify changes in packages.
++  This covers only list of files not their content and thus it won't trigger
++  reinstall of package if file is changed. This covers situation when
++  configuration changes and new file is added or moved between packages without
++  package bump.
+ 
+ Compared to `/usr/lib/opkg/status` following fields are on the other hand not
+ present:
+diff --git a/src/lib/lua/planner.lua b/src/lib/lua/planner.lua
+index ddb6dae4..163f9ebf 100644
+--- a/src/lib/lua/planner.lua
++++ b/src/lib/lua/planner.lua
+@@ -630,7 +630,7 @@ local function check_install_version(status, requests)
+ 				install[request.name] = request
+ 			else
+ 				local different = nil
+-				for _, field in ipairs({"Version", "Architecture", "LinkSignature", "Depends", "Conflicts", "Provides"}) do
++				for _, field in ipairs({"Version", "Architecture", "LinkSignature", "FilesSignature", "Depends", "Conflicts", "Provides"}) do
+ 					local installed_field = status[request.name][field] or ""
+ 					local requested_field = request.package[field] or ""
+ 					if installed_field ~= requested_field then
+diff --git a/tests/lua/planner.lua b/tests/lua/planner.lua
+index 382b0715..e28251c8 100644
+--- a/tests/lua/planner.lua
++++ b/tests/lua/planner.lua
+@@ -1917,7 +1917,19 @@ function test_filter_required()
+ 		pkg7 = {
+ 			Version = "7",
+ 			LinkSignature = "xxxx"
+-		}
++		},
++		pkg8 = {
++			Version = "8",
++			LinkSignature = "xxxx"
++		},
++		pkg9 = {
++			Version = "9",
++			FilesSignature = "xxxx"
++		},
++		pkg10 = {
++			Version = "10",
++			FilesSignature = "xxxx"
++		},
+ 	}
+ 	local requests = {
+ 		{
+@@ -1977,6 +1989,42 @@ function test_filter_required()
+ 			critical = false,
+ 			modifier = {}
+ 		},
++		{
++			-- Installed with correct version and same LinkSignature
++			action = "require",
++			name = "pkg8",
++			package = {
++				Version = "8",
++				LinkSignature = "xxxx",
++				repo = def_repo
++			},
++			critical = false,
++			modifier = {}
++		},
++		{
++			-- Installed with correct version but different FilesSignature
++			action = "require",
++			name = "pkg9",
++			package = {
++				Version = "9",
++				FilesSignature = "XXXXXX",
++				repo = def_repo
++			},
++			critical = false,
++			modifier = {}
++		},
++		{
++			-- Installed with correct version and same FilesSignature
++			action = "require",
++			name = "pkg10",
++			package = {
++				Version = "10",
++				FilesSignature = "xxxx",
++				repo = def_repo
++			},
++			critical = false,
++			modifier = {}
++		},
+ 	}
+ 	local result = planner.filter_required(status, requests, true)
+ 	local expected = {
+@@ -1993,6 +2041,7 @@ function test_filter_required()
+ 		},
+ 		requests[4],
+ 		requests[5],
++		requests[7],
+ 		{
+ 			action = "remove",
+ 			name = "pkg4",
+-- 
+2.33.0
+
