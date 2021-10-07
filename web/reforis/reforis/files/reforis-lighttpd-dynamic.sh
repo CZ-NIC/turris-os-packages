@@ -46,7 +46,8 @@ if [ -n "$SENTRY_DSN" ]; then
 fi
 		echo "					\"CONTROLLER_ID\" => \"$CONTROLLER_ID\","
 		echo '				),'
-		echo '			)'
+		echo '			),'
+		echo '			turris_auth_scriptname => turris_auth'
 		echo '		)'
 		echo '	)'
 	;;
