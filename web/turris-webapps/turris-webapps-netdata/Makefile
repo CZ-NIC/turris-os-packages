@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps-netdata
 PKG_VERSION:=1.1
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -23,7 +23,9 @@ define Package/turris-webapps-netdata
   TITLE:=Netdata integration
   DEPENDS:=+netdata \
     +turris-webapps \
-    +lighttpd-mod-authn_pam +lighttpd-mod-proxy
+    +turris-auth \
+    +lighttpd-mod-proxy \
+    +lighttpd-mod-setenv
   URL:=https://gitlab.nic.cz/turris/webapps
 endef
 
@@ -32,8 +34,7 @@ define Package/turris-webapps-netdata/description
   See https://www.netdata.cloud/
 endef
 
-define Build/Compile
-endef
+Build/Compile:=:
 
 define Package/turris-webapps-netdata/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
