@@ -1,6 +1,3 @@
-server.modules += ( "mod_proxy" )
-server.modules += ( "mod_authn_pam", "mod_auth" )
-
 $HTTP["url"] =~ "^/netdata/" {
   auth.backend = "pam" 
   auth.require = ( "" =>

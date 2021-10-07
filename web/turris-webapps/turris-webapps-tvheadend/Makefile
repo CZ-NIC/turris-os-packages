@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps-tvheadend
 PKG_VERSION:=1.0
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -22,7 +22,8 @@ define Package/turris-webapps-tvheadend
   SUBMENU:=WebApps
   TITLE:=Tvheadend integration
   DEPENDS:=+tvheadend \
-    +turris-webapps
+    +turris-webapps \
+    +lighttpd-mod-proxy
   URL:=https://gitlab.nic.cz/turris/webapps
 endef
 

@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps-luci
 PKG_VERSION:=1.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -22,7 +22,7 @@ define Package/turris-webapps-luci
   SUBMENU:=WebApps
   TITLE:=LuCI integration
   DEPENDS:=+luci-base \
-    +turris-webapps
+    +turris-webapps +lighttpd-mod-setenv
   PROVIDES:=luci-lighttpd
   URL:=https://gitlab.nic.cz/turris/webapps
 endef
