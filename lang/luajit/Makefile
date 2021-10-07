@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luajit
 PKG_VERSION:=2.2.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=moonjit-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/moonjit/moonjit/tar.gz/$(PKG_VERSION)?
@@ -67,6 +67,7 @@ define Package/luajit/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/*.so* $(1)/usr/lib/
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
+	$(LN) moonjit-$(PKG_VERSION) $(1)/usr/bin/moonjit
 endef
 
 define Build/InstallDev

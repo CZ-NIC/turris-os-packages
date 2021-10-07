@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller
-PKG_VERSION:=1.2
+PKG_VERSION:=2.1.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller.git
-PKG_MIRROR_HASH:=0f778f680b04da9173beca8a4048053008d9c365ff3d7846c006e8353c4b9079
+PKG_MIRROR_HASH:=ccd7e8ec4308e559e421d128a94bc9c4822b580b990edd3bd88160a21998c565
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -43,7 +43,7 @@ define Package/foris-controller-app
     +foris-schema +python3-setuptools +turrishw \
     +turris-maintain +updater-supervisor +user-notify \
     +l10n-supported +sqm-scripts +fosquitto +python3-paho-mqtt +turris-cagen \
-   +crypto-wrapper +python3-slugify
+    +crypto-wrapper +python3-slugify
   VARIANT:=python3
 endef
 

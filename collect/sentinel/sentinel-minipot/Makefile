@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2018-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+## Copyright (C) 2018-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-minipot
-PKG_VERSION:=2.0.1
-PKG_RELEASE:=2
+PKG_VERSION:=2.2
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/minipot.git
-PKG_MIRROR_HASH:=472eeeddd7f0541caac23d6046c6f8b4e9c28cf99803024848b5bc45efd37901
+PKG_MIRROR_HASH:=a842b4b47e13300759dd197da59700375160f89a207619d8844c79a095ba5478
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -35,6 +35,8 @@ define Package/sentinel-minipot
   DEPENDS:=\
     +czmq \
     +libevent2 \
+    +logc \
+    +logc-argp \
     +msgpack-c \
     +base64c \
     +sentinel-firewall \
@@ -62,6 +64,9 @@ define Package/sentinel-minipot/install
 
 	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/reload_hooks.d
 	$(INSTALL_BIN) ./files/restart-minipot-hook.sh $(1)/usr/libexec/sentinel/reload_hooks.d/60_minipot.sh
+
+	$(INSTALL_DIR) $(1)/usr/libexec/sentinel/status.d
+	$(INSTALL_BIN) ./files/sentinel-status.sh $(1)/usr/libexec/sentinel/status.d/21-minipots.sh
 endef
 
 $(eval $(call BuildPackage,sentinel-minipot))

@@ -1,63 +1,41 @@
 #!/usr/bin/python3
 
-import uci
 import time
 import json
 import re
 import subprocess
+import euci
+
+from foris_controller.buses.mqtt import MqttNotificationSender
 
 TIME = 2000
 STEP = 200
 
 
-u = uci.Uci()
-
-
-def uci_get(config, section, option, default):
-    try:
-        val = u.get(config, section, option)
-    except uci.UciExceptionNotFound:
-        return default
-    return val
-
-
-bus = uci_get("foris-controller", "main", "bus", "ubus")
-
+uci = euci.EUci()
 controller_id = None
 
-if bus == "ubus":
-    path = uci_get("foris-controller", "ubus", "notification_path", "/var/run/ubus.sock")
-    from foris_controller.buses.ubus import UbusNotificationSender
-    sender = UbusNotificationSender(path)
-elif bus == "unix":
-    path = uci_get(
-        "foris-controller", "unix", "notification_path",
-        "/var/run/foris-controller-notifications.sock"
-    )
-    from foris_controller.buses.unix_socket import UnixSocketNotificationSender
-    sender = UnixSocketNotificationSender(path)
-elif bus == "mqtt":
-    host = uci_get("foris-controller", "mqtt", "host", "localhost")
-    port = int(uci_get("foris-controller", "mqtt", "port", 11883))
-    passwd_path = uci_get(
-        "foris-controller", "mqtt", "credentials_file", "/etc/fosquitto/credentials.plain"
-    )
-    try:
-        controller_id = subprocess.check_output(
-            ["crypto-wrapper", "serial-number"]).decode().strip()
-    except subprocess.CalledProcessError:
-        controller_id = None
-    with open(passwd_path, "r") as f:
-        credentials = re.match(r"^([^:]+):(.*)$", f.readlines()[0][:-1]).groups()
-    from foris_controller.buses.mqtt import MqttNotificationSender
-    sender = MqttNotificationSender(host, port, credentials)
+host = uci.get("foris-controller", "mqtt", "host", default="localhost")
+port = uci.get("foris-controller", "mqtt", "port", dtype=int, default=11883)
+passwd_path = uci.get(
+    "foris-controller", "mqtt", "credentials_file", default="/etc/fosquitto/credentials.plain"
+)
+try:
+    controller_id = subprocess.check_output(
+        ["crypto-wrapper", "serial-number"]).decode().strip()
+except subprocess.CalledProcessError:
+    controller_id = None
+with open(passwd_path, "r") as f:
+    credentials = re.match(r"^([^:]+):(.*)$", f.readlines()[0][:-1]).groups()
+sender = MqttNotificationSender(host, port, credentials)
 
 ips = []
 # try to detect ips from uci
-ips += [e for e in uci_get("network", "wan", "ipaddr", "").split(" ") if e]
-ips += [e for e in uci_get("network", "wan", "ip6addr", "").split(" ") if e]
-ips += [e for e in uci_get("network", "lan", "ipaddr", "").split(" ") if e]
-ips += [e for e in uci_get("network", "lan", "ip6addr", "").split(" ") if e]
+# parse ips as if they were in CIDR notation
+ips += [e.split("/")[0] for e in uci.get("network", "wan", "ipaddr", list=True, default=()) if e]
+ips += [e.split("/")[0] for e in uci.get("network", "wan", "ip6addr", list=True, default=()) if e]
+ips += [e.split("/")[0] for e in uci.get("network", "lan", "ipaddr", list=True, default=()) if e]
+ips += [e.split("/")[0] for e in uci.get("network", "lan", "ip6addr", list=True, default=()) if e]
 
 # try to detect_ips from ubus
 for network in ["wan", "lan"]:

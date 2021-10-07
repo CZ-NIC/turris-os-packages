@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis
-PKG_VERSION:=1.0.8
-PKG_RELEASE:=1
+PKG_VERSION:=1.1.1
+PKG_RELEASE:=4
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis
-PKG_MIRROR_HASH:=173aafb8a9999fd35f292df0059596ff3092dc4def4e37ebcf88c14a1b34c381
+PKG_MIRROR_HASH:=1482fe19b9c945a661696aced221053f592ff82a872640a396ed5ec5344f05a2
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -48,7 +48,6 @@ define Package/reforis
     +python3-flask \
     +python3-flask-babel \
     +python3-flask-seasurf \
-    +python3-flask-session \
     +python3-flup \
     +python3-light \
     +python3-paho-mqtt \

@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-openvpn-plugin
-PKG_VERSION:=1.4.1
-PKG_RELEASE:=2
+PKG_VERSION:=1.5.0
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis-openvpn
-PKG_MIRROR_HASH:=ca39d77b767d943299173c8d5dea9ad72327823c5e20a937829bd4023c7cfff4
+PKG_MIRROR_HASH:=22b06d2615071a007a9bc827b5e8fb5af27223b8a4117821573a6455bf0a7dc4
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

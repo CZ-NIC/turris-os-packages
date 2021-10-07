@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
 PKG_VERSION:=69.1.3
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/updater/updater.git
@@ -71,7 +71,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/updater/hook_preupdate
 	touch $(1)/etc/updater/hook_preupdate/.keep
 	$(INSTALL_DIR) $(1)/etc/updater/hook_postupdate
-	touch $(1)/etc/updater/hook_postupdate/.keep
+	$(INSTALL_BIN) ./files/cleanup_rc_d.sh $(1)/etc/updater/hook_postupdate/
 	$(INSTALL_DIR) $(1)/etc/updater/hook_reboot_required
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/pkgupdate/hook_reboot_required/50-create-notification.sh $(1)/etc/updater/hook_reboot_required/50-create-notification.sh
 

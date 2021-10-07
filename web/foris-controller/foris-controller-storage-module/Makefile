@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-storage-module
-PKG_VERSION:=0.8.1
+PKG_VERSION:=0.10.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-storage-module.git
-PKG_MIRROR_HASH:=710da4b838a0e30b389df8727a68d7b0e3d72a7e30d931313d431ec0e19aec81
+PKG_MIRROR_HASH:=b9b031b6e327659859537c98c63d5370f4837b639299c344b0b08c77e5f0378c
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -58,7 +58,7 @@ mkdir -p "$${IPKG_INSTROOT}"/srv
 endef
 
 define ForisControllerModule/foris-controller-storage-module/install
-	$(INSTALL_DIR) $(1)/usr/libexec $(1)/etc/init.d $(1)/etc/config $(1)/etc/logrotate.d $(1)/usr/share/syslog-ng/include/scl/storage
+	$(INSTALL_DIR) $(1)/usr/libexec $(1)/etc/init.d $(1)/etc/config $(1)/etc/logrotate.d $(1)/usr/share/syslog-ng/include/scl/storage $(1)/etc/lighttpd/conf.d
 
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/format_and_set_srv.sh $(1)/usr/libexec
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/srv.init $(1)/etc/init.d/srv
@@ -66,6 +66,8 @@ define ForisControllerModule/foris-controller-storage-module/install
 	$(CP) $(PKG_BUILD_DIR)/scripts/syslog-ng.conf $(1)/usr/share/syslog-ng/include/scl/storage/plugin.conf
 	$(CP) $(PKG_BUILD_DIR)/scripts/syslog-ng-logrotate.conf $(1)/etc/logrotate.d/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/syslog-ng.sh $(1)/usr/libexec/syslog-ng-srv.sh
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/lighttpd_srv_setting.sh $(1)/usr/libexec/lighttpd_srv_setting.sh
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/scripts/lighttpd.conf $(1)/etc/lighttpd/conf.d/srv.conf
 
 	$(INSTALL_DATA) ./files/storage.uci $(1)/etc/config/storage
 

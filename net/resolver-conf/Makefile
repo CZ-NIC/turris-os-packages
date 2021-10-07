@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
-PKG_VERSION:=0.0.2
-PKG_RELEASE:=13
+PKG_VERSION:=0.0.4
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -62,7 +62,8 @@ endif
 	$(INSTALL_BIN) ./files/resolver-init $(1)/etc/init.d/resolver
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface/
 	$(INSTALL_BIN) ./files/resolver-reload $(1)/etc/hotplug.d/iface/40-resolver-reload
-	$(INSTALL_BIN) ./files/ip-resolver-reload.hotplug $(1)/etc/hotplug.d/iface/40-ip-resolver-reload
+	$(INSTALL_DIR) $(1)/etc/hotplug.d/openvpn/
+	$(INSTALL_BIN) ./files/openvpn.hotplug $(1)/etc/hotplug.d/openvpn/40-resolver-integration
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/dhcp/
 	$(INSTALL_BIN) ./files/dynamic-domains.hotplug $(1)/etc/hotplug.d/dhcp/40-dynamic-domains
 	$(INSTALL_DIR) $(1)/etc/uci-defaults

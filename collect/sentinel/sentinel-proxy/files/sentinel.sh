@@ -1,4 +1,3 @@
-#!/bin/sh
 ## sentinel.sh
 #
 # set of common functions intended to be sourced and reused in

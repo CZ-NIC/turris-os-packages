@@ -1,28 +1,24 @@
-From e334f2c72dd0c54b65133d5e9887837f5520177c Mon Sep 17 00:00:00 2001
+From 1845bc826d9c980bb1518867798ce4330df6c048 Mon Sep 17 00:00:00 2001
 From: Josef Schlehofer <pepe.schlehofer@gmail.com>
-Date: Tue, 15 Jun 2021 15:24:10 +0200
+Date: Sat, 26 Jun 2021 06:20:47 +0200
 Subject: [PATCH] Replace gzip by identity
 
 Fixes:
 1. https://github.com/nextcloud/server/issues/24136
 2. https://gitlab.nic.cz/turris/turris-os-packages/-/issues/662
+
 ---
- lib/private/App/AppStore/Fetcher/Fetcher.php | 2 +-
+ lib/private/Http/Client/Client.php | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/private/App/AppStore/Fetcher/Fetcher.php b/lib/private/App/AppStore/Fetcher/Fetcher.php
-index d8f6a8d..eb24dd9 100644
---- a/lib/private/App/AppStore/Fetcher/Fetcher.php
-+++ b/lib/private/App/AppStore/Fetcher/Fetcher.php
-@@ -98,7 +98,7 @@ abstract class Fetcher {
+--- a/lib/private/Http/Client/Client.php
++++ b/lib/private/Http/Client/Client.php
+@@ -91,7 +91,7 @@ class Client implements IClient {
+ 		}
  
- 		$options = [
- 			'timeout' => 60,
--			'headers' => ['Accept-Encoding' => 'gzip'],
-+			'headers' => ['Accept-Encoding' => 'identity'],
- 		];
+ 		if (!isset($options[RequestOptions::HEADERS]['Accept-Encoding'])) {
+-			$options[RequestOptions::HEADERS]['Accept-Encoding'] = 'gzip';
++			$options[RequestOptions::HEADERS]['Accept-Encoding'] = 'identity';
+ 		}
  
- 		if ($ETag !== '') {
--- 
-2.25.1
-
+ 		return $options;

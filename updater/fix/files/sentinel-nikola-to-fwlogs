@@ -1,0 +1,6 @@
+#!/bin/sh
+uci -q batch  <<EOT
+	rename sentinel.nikola=fwlogs
+	set sentinel.fwlogs=fwlogs
+	commit sentinel.fwlogs
+EOT

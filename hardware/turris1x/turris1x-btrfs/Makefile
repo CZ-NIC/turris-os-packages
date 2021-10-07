@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris1x-btrfs
-PKG_VERSION:=2.1
+PKG_VERSION:=3.0
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -33,7 +33,7 @@ endef
 define Package/turris1x-btrfs-migrate
   $(call Package/Common)
   TITLE:=Btrfs migration tool for Turris 1.x routers
-  DEPENDS+=+turris1x-btrfs +btrfs-progs +uboot-envtools +fdisk +dosfstools
+  DEPENDS+=+turris1x-btrfs +btrfs-progs +uboot-envtools +fdisk +dosfstools +kmod-usb-storage +wget
   PROVIDES:=turris-btrfs-migrate
 endef
 

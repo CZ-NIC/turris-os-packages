@@ -15,6 +15,7 @@ PKG_SOURCE:=$(PKG_NAME)-v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/$(PKG_NAME)/-/archive/v$(PKG_VERSION)/
 PKG_HASH:=53352352ed85c2c021bbdf93a86f62a732a73011d8e8ec28f3b5bc6a04a5b100
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-v$(PKG_VERSION)
+HOST_PYTHON3_PACKAGE_BUILD_DEPENDS:=l18n
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later

@@ -14,8 +14,8 @@ if [ -n "$SENTRY_DSN" ]; then
 fi
 
 EXTRA_FLAGS=""
-[ "$DEBUG" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS -d"
-[ "$NOAUTH" == "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS --noauth"
+[ "$DEBUG" = "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS -d"
+[ "$NOAUTH" = "1" ] && EXTRA_FLAGS="$EXTRA_FLAGS --noauth"
 [ "$SESSION_TIMEOUT" != "" ] && EXTRA_FLAGS="$EXTRA_FLAGS --session-timeout $SESSION_TIMEOUT"
 
 if [ -z "$SCRIPTNAME" ]; then
@@ -23,26 +23,11 @@ if [ -z "$SCRIPTNAME" ]; then
 fi
 
 config_load foris-controller
-config_get BUS main bus "mqtt"
-case "$BUS" in
-	ubus)
-		config_get BUS_PATH ubus path "/var/run/ubus.sock"
-		exec /usr/bin/foris -s cgi $EXTRA_FLAGS -b "$BUS" --bus-socket "$BUS_PATH" -a config
-		;;
-	unix)
-		config_get BUS_PATH unix path "/var/run/foris-controller.sock"
-		BUS="unix-socket"
-		exec /usr/bin/foris -s cgi $EXTRA_FLAGS -b "$BUS" --bus-socket "$BUS_PATH" -a config
-		;;
-	mqtt)
-		config_get HOST mqtt host "localhost"
-		config_get PORT mqtt port "11883"
-		config_get credentials_file mqtt credentials_file "/etc/fosquitto/credentials.plain"
-		serial_number=$(crypto-wrapper serial-number)
-		if [ $? == 0 ] ; then
-			controller_id="--mqtt-controller-id $serial_number"
-		fi
-		exec /usr/bin/foris -s cgi $EXTRA_FLAGS -b "$BUS" --mqtt-host "$HOST" --mqtt-port "$PORT" --mqtt-passwd-file "$credentials_file" $controller_id -a config
-		;;
-esac
+config_get HOST mqtt host "localhost"
+config_get PORT mqtt port "11883"
+config_get credentials_file mqtt credentials_file "/etc/fosquitto/credentials.plain"
+if serial_number=$(crypto-wrapper serial-number); then
+	controller_id="--mqtt-controller-id $serial_number"
+fi
 
+exec /usr/bin/foris -s cgi $EXTRA_FLAGS -b "$BUS" --mqtt-host "$HOST" --mqtt-port "$PORT" --mqtt-passwd-file "$credentials_file" $controller_id -a config

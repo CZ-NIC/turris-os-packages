@@ -1,0 +1,47 @@
+From b039e946ad36c44bb8153a12f3fe60e503d8dedc Mon Sep 17 00:00:00 2001
+From: Stepan Henek <stepan.henek@nic.cz>
+Date: Wed, 1 Sep 2021 10:07:40 +0200
+Subject: [PATCH] Don't set socket when starting WSGIServer
+
+Note that if reforis is started using lighttpd, lighttpd
+is responsible for creating the socket not reforis.
+
+Kudos to Glenn Strauss
+
+see https://flask.palletsprojects.com/en/2.0.x/deploying/fastcgi/#configuring-lighttpd
+---
+ reforis/__main__.py | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/reforis/__main__.py b/reforis/__main__.py
+index 2f641055..96767317 100644
+--- a/reforis/__main__.py
++++ b/reforis/__main__.py
+@@ -1,6 +1,6 @@
+ #
+ # reforis
+-# Copyright (C) 2019 CZ.NIC, z.s.p.o. (http://www.nic.cz/)
++# Copyright (C) 2021 CZ.NIC, z.s.p.o. (http://www.nic.cz/)
+ #
+ # This program is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+@@ -17,8 +17,6 @@
+ # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+ #
+ 
+-import os
+-
+ from flup.server.fcgi import WSGIServer
+ 
+ from . import create_app
+@@ -39,7 +37,6 @@ def main():
+     WSGIServer(
+         app,
+         debug=True,
+-        bindAddress=os.environ.get('FCGI_SOCKET', '/tmp/fastcgi.reforis.socket-0')
+     ).run()
+ 
+ 
+-- 
+2.33.0
+

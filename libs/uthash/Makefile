@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=uthash
-PKG_VERSION:=2.1.0
+PKG_VERSION:=2.3.0
 PKG_RELEASE:=1
 
 PKG_SOURCE:=v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/troydhanson/uthash/archive
-PKG_HASH:=152ccd8e64d0f495377232e3964d06c7ec8bb8c3fbd3217f8a5702614f9a669e
+PKG_HASH:=e10382ab75518bad8319eb922ad04f907cb20cccb451a3aa980c9d005e661acc
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 

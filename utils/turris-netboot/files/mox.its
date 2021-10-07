@@ -5,7 +5,7 @@
     #address-cells = <1>;
 
     images {
-        kernel@0 {
+        kernel-0 {
             description = "Linux kernel without";
             data = /incbin/("./boot/Image");
             type = "kernel_noload";
@@ -14,49 +14,49 @@
             compression = "none";
             load =  <0x5000000>;
             entry = <0x5000000>;
-            hash@1 {
+            hash-1 {
                 algo = "crc32";
             };
-            hash@2 {
+            hash-2 {
                 algo = "sha1";
             };
         };
-        ramdisk@0 {
+        ramdisk-0 {
             description = "initramfs";
             data = /incbin/("./usr/share/turris-netboot/initrd-aarch64");
             type = "ramdisk";
             arch = "arm64";
             os = "linux";
             compression = "none";
-            hash@1 {
+            hash-1 {
                 algo = "crc32";
             };
-            hash@2 {
+            hash-2 {
                 algo = "sha1";
             };
         };
-        fdt@0 {
+        fdt-0 {
             description = "Flattened Device Tree blob";
             data = /incbin/("./boot/armada-3720-turris-mox.dtb");
             type = "flat_dt";
             arch = "arm64";
             compression = "none";
-            hash@1 {
+            hash-1 {
                 algo = "crc32";
             };
-            hash@2 {
+            hash-2 {
                 algo = "sha1";
             };
         };
     };
 
     configurations {
-        default = "conf@1";
-        conf@1 {
+        default = "conf-1";
+        conf-1 {
             description = "Turris MOX netboot image";
-            kernel = "kernel@0";
-			ramdisk = "ramdisk@0";
-            fdt = "fdt@0";
+            kernel = "kernel-0";
+            ramdisk = "ramdisk-0";
+            fdt = "fdt-0";
         };
     };
 };
