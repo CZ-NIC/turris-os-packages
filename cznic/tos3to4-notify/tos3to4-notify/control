@@ -1,5 +1,6 @@
 Package: tos3to4-notify
-Version: 1.1
+Version: 1.2
+Depends: mount-utils, bc, libatsha204
 License: GPL-3.0
 Section: none
 Architecture: all

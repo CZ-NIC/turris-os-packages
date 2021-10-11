@@ -1,8 +1,18 @@
 #!/bin/sh
-create_notification -s news \
+if tos3to4-automatic; then
+	create_notification -s news \
+"Váš router bude automaticky aktualizován na nejnovější verzi Turris OS. Další aktualizace nainstaluje balíček 'tos3to4' a migrace započne.
+
+Více informací naleznete v dokumentaci https://docs.turris.cz/geek/tos3-migration/." \
+"The automatic migration to the latest Turris OS version was enabled for your router. The next update is going to install package 'tos3to4' and initiate the migration.
+
+More info is available in the official documentation https://docs.turris.cz/geek/tos3-migration/."
+else
+	create_notification -s news \
 "Aktualizace na nejnovější verzi Turris OS je k dispozici. Pro provedení je prozatím nutné ruční schválení. Pro aktualizaci aktivujte seznam balíčků 'Migration to Turris OS 5.x' ve webovém rozhraní Foris.
 
 Více informací naleznete v dokumentaci https://docs.turris.cz/geek/tos3-migration/." \
 "Update to the latest Turris OS version is available. The update, for now, requires manual approval. To update your router, you must enable package list 'Migration to Turris OS 5.x' in the Foris web interface.
 
 More info is available in the official documentation https://docs.turris.cz/geek/tos3-migration/."
+fi

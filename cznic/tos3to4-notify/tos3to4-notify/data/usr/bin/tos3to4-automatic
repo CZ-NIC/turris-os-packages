@@ -1,0 +1,35 @@
+#!/bin/sh
+
+migrate() {
+	exit 0
+}
+do_not_migrate() {
+	exit 1
+}
+
+if [ "$(awk '$1 == "MemAvailable:" { print $2 }' /proc/meminfo)" -lt 100000 ]; then
+	echo "There is not minimum 100MB of free memory to allow migration." >&2
+	do_not_migrate
+fi
+if [ "$(df -P / | awk 'NR == 2 { print $4 }')" -lt 400000 ]; then
+	echo "There is not minimum 400MB of free storage to allow migration." >&2
+	do_not_migrate
+fi
+
+if [ "$(cat /tmp/sysinfo/model)" = "Turris" ]; then
+	contract="/usr/share/server-uplink/contract_valid"
+	[ -f "$contract" ] \
+		|| /usr/share/server-uplink/contract_valid.sh
+	if [ "$(cat "$contract")" = "valid" ]; then
+		do_not_migrate # Contract require ucollect. Contract has to be terminated to migrate
+	fi
+	if [ "$(findmnt -nfo FSTYPE / 2>/dev/null)" = "btrfs" ]; then
+		migrate
+	fi
+else
+	serial="$(echo "ibase=16; $(atsha204cmd serial-number) % A" | bc)"
+	if [ "$serial" -lt 1 ]; then
+		migrate
+	fi
+fi
+do_not_migrate
