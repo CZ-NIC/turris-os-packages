@@ -69,7 +69,7 @@ define Package/turris-restart/install
 	$(INSTALL_BIN) ./files/lighttpd-restart.py $(1)/usr/bin/maintain-lighttpd-restart
 endef
 
-Package/turris-maintain/install :=
+Package/turris-maintain/install:=:
 Build/Compile:=:
 
 $(eval $(call BuildPackage,turris-backup))
