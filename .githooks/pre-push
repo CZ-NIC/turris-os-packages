@@ -65,12 +65,16 @@ done
 
 if [ -n "$push_master" ]; then
 	if [ -z "$push_develop" ]; then
-		echo "Develop branch has to be always updated with master branch." >&2
-		echo "Push both at the same time with: git push origin master develop" >&2
-		exit 1
-	fi
-	if ! git merge-base --is-ancestor "$push_master" "$push_develop"; then
-		echo "Tip commit of master is not merged to develop branch." >&2
-		exit 1
+		# We allow push only master if it is a fast-forward
+		if ! git merge-base --is-ancestor "$push_master" "$(git rev-parse "$remote_name/develop")"; then
+			echo "Develop branch has to be always updated with master branch." >&2
+			echo "Push both at the same time with: git push origin master develop" >&2
+			exit 1
+		fi
+	else
+		if ! git merge-base --is-ancestor "$push_master" "$push_develop"; then
+			echo "Tip commit of master is not merged to develop branch." >&2
+			exit 1
+		fi
 	fi
 fi
