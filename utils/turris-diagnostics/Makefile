@@ -8,17 +8,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-diagnostics
-PKG_VERSION:=14.0.0
+PKG_VERSION:=15.0.0
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/diagnostics.git
-PKG_MIRROR_HASH:=8682fb2c385f0cac0520361f186a893cb254fb1ae914640991a44edaa5658488
+PKG_MIRROR_HASH:=7abf1d938530922d8acadc6bcfcde8cf933a668499453b5c3931dbad65438ad9
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=LICENSE
+
+LOCALES:=cs da de el es fi fo fr hr hu it ja ko lt nb nl pl ro ru sk sv
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -37,11 +39,6 @@ endef
 Build/Compile:=:
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/usr/share/locale/
-	$(CP) -r $(PKG_BUILD_DIR)/locale/* $(1)/usr/share/locale/
-	$(RM) -rf $(1)/usr/share/locale/*.pot
-	$(RM) -rf $(1)/usr/share/locale/*/LC_MESSAGES/*.po*
-
 	$(INSTALL_DIR) $(1)/usr/bin/
 	$(INSTALL_BIN) ./files/diagnostics.sh $(1)/usr/bin/turris-diagnostics
 
@@ -53,4 +50,20 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/modules/*.module $(1)/usr/share/diagnostics/modules/
 endef
 
+define TRANSLATION
+
+define Package/turris-diagnostics-l10n-$(1)
+  TITLE:=Translation for package turris-diagnostics: $(1)
+  DEPENDS:=+turris-diagnostics
+endef
+
+define Package/turris-diagnostics-l10n-$(1)/install
+	$(MAKE) -C $(PKG_BUILD_DIR) DESTDIR="$$(1)" install-$(1)
+endef
+
+$$(eval $$(call BuildPackage,turris-diagnostics-l10n-$(1)))
+
+endef
+
 $(eval $(call BuildPackage,turris-diagnostics))
+$(foreach LANG,$(LOCALES),$(eval $(call TRANSLATION,$(LANG))))
