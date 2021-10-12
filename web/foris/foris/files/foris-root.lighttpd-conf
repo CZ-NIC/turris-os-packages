@@ -1,3 +1,0 @@
-# Make sure that wirzard passes during a migration from older image
-url.redirect += ( "^/wizard/.*$" => "/foris/config/" )
-url.redirect += ( "^/foris/wizard/.*$" => "/foris/config/" )
