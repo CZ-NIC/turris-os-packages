@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libatsha204
 PKG_VERSION:=29.2
-PKG_RELEASE:=4
+PKG_RELEASE:=5
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/libatsha204.git
@@ -35,6 +35,7 @@ define Package/libatsha204-emul
   TITLE:=libatsha204-emul
   PROVIDES:=libatsha204 turris-otp
   DEPENDS:=+libopenssl +libunbound
+  CONFLICTS:=libatsha204
   VARIANT:=emul
 endef
 
