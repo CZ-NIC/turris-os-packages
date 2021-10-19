@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mox-support
 PKG_VERSION:=2.3.0
-PKG_RELEASE:=3
+PKG_RELEASE:=4
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
@@ -87,7 +87,7 @@ endef
 define Package/shield-support/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-	/sbin/nor-update
+	/usr/sbin/nor-update
 }
 endef
 

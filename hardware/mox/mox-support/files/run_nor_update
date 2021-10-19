@@ -1,2 +1,2 @@
 #!/bin/sh
-exec /sbin/nor-update
+exec /usr/sbin/nor-update
