@@ -1,0 +1,136 @@
+From 09bc7002130f72adc08daf300a40694ed44ef115 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Martin=20Mat=C4=9Bjek?= <martin.matejek@nic.cz>
+Date: Thu, 21 Oct 2021 01:25:01 +0200
+Subject: [PATCH] quickfix: detect reForis translations instead of Foris ones
+
+Foris is no longer present in TOS 5.3.0 and was superseded by reForis
+Use reForis translations to determine available localization for reForis
+
+This is mostly quick fix - i.e. just replace Foris with reForis - until
+we figure out better long term solution, so foris-controller could
+become even more loosely coupled with the current and future web UIs
+shipped with Turris OS
+---
+ foris_controller_backends/web/__init__.py | 28 +++++++++++++++--------
+ tests/blackbox/test_web.py                | 17 ++++++++------
+ 2 files changed, 28 insertions(+), 17 deletions(-)
+
+diff --git a/foris_controller_backends/web/__init__.py b/foris_controller_backends/web/__init__.py
+index 0aec7a8..2d7c72f 100644
+--- a/foris_controller_backends/web/__init__.py
++++ b/foris_controller_backends/web/__init__.py
+@@ -1,6 +1,6 @@
+ #
+ # foris-controller
+-# Copyright (C) 2020 CZ.NIC, z.s.p.o. (http://www.nic.cz/)
++# Copyright (C) 2020-2021 CZ.NIC, z.s.p.o. (http://www.nic.cz/)
+ #
+ # This program is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+@@ -20,16 +20,23 @@
+ import logging
+ import os
+ import sys
++import typing
+ 
+ import turrishw
++
+ from foris_controller import profiles
+ from foris_controller.exceptions import UciException, UciRecordNotFound
+ from foris_controller_backends.about import SystemInfoFiles
+ from foris_controller_backends.files import BaseMatch
+-from foris_controller_backends.password import ForisPasswordUci
+ from foris_controller_backends.maintain import MaintainCommands
++from foris_controller_backends.password import ForisPasswordUci
++from foris_controller_backends.uci import (
++    UciBackend,
++    get_option_named,
++    parse_bool,
++    store_bool,
++)
+ from foris_controller_backends.wan import WanUci
+-from foris_controller_backends.uci import UciBackend, get_option_named, parse_bool, store_bool
+ 
+ logger = logging.getLogger(__name__)
+ 
+@@ -207,20 +214,21 @@ class WebUciCommands:
+         return True
+ 
+ 
+-class Languages(object):
+-    LANG_DIR = "/usr/lib/python%s.%s/site-packages/foris/langs/" % (
++class Languages():
++    # reForis is the only web UI of Turris OS at the moment, so only look for reForis translations
++    LANG_DIR = "/usr/lib/python%s.%s/site-packages/reforis/translations" % (
+         sys.version_info.major,
+         sys.version_info.minor,
+     )
+-    INSTALLED_LANG_MATCHES = [os.path.join(LANG_DIR, "??.py"), os.path.join(LANG_DIR, "??_??.py")]
++    INSTALLED_LANG_MATCHES = [os.path.join(LANG_DIR, "??"), os.path.join(LANG_DIR, "??_??")]
+ 
+     @staticmethod
+-    def list_languages():
++    def list_languages() -> typing.List[str]:
+         """ List installed languages
+         :returns: list of installed languages
+         :rtype: list of str
+         """
+ 
+-        return [DEFAULT_LANGUAGE] + [
+-            os.path.basename(e)[:-3] for e in BaseMatch.list_files(Languages.INSTALLED_LANG_MATCHES)
+-        ]
++        return list({DEFAULT_LANGUAGE} | {
++            os.path.basename(e) for e in BaseMatch.list_files(Languages.INSTALLED_LANG_MATCHES)
++        })
+diff --git a/tests/blackbox/test_web.py b/tests/blackbox/test_web.py
+index 3e4df31..2ea94b4 100644
+--- a/tests/blackbox/test_web.py
++++ b/tests/blackbox/test_web.py
+@@ -21,8 +21,6 @@ import os
+ import sys
+ 
+ import pytest
+-from foris_controller import profiles
+-from foris_controller.exceptions import UciRecordNotFound
+ from foris_controller_testtools.fixtures import (
+     FILE_ROOT_PATH,
+     UCI_CONFIG_DIR_PATH,
+@@ -38,11 +36,14 @@ from foris_controller_testtools.fixtures import (
+ from foris_controller_testtools.utils import (
+     FileFaker,
+     get_uci_module,
++    network_restart_was_called,
+     prepare_turrishw,
+     prepare_turrishw_root,
+-    network_restart_was_called,
+ )
+ 
++from foris_controller import profiles
++from foris_controller.exceptions import UciRecordNotFound
++
+ NEW_WORKFLOWS = [
+     e for e in profiles.WORKFLOWS if e not in (profiles.WORKFLOW_OLD, profiles.WORKFLOW_SHIELD)
+ ]
+@@ -70,13 +71,15 @@ RECOMMENDED_WORKFLOWS = {
+ 
+ @pytest.fixture(scope="function")
+ def installed_languages(request):
+-    trans_dir = "/usr/lib/python%s.%s/site-packages/foris/langs/" % (
++    trans_dir = "/usr/lib/python%s.%s/site-packages/reforis/translations/" % (
+         sys.version_info.major,
+         sys.version_info.minor,
+     )
+-    with FileFaker(FILE_ROOT_PATH, os.path.join(trans_dir, "cs.py"), False, "") as f1, FileFaker(
+-        FILE_ROOT_PATH, os.path.join(trans_dir, "de.py"), False, ""
+-    ) as f2, FileFaker(FILE_ROOT_PATH, os.path.join(trans_dir, "nb_NO.py"), False, "") as f3:
++    mo_file = "LC_MESSAGES/messages.mo"
++
++    with FileFaker(FILE_ROOT_PATH, os.path.join(trans_dir, "cs", mo_file), False, "") as f1, FileFaker(
++        FILE_ROOT_PATH, os.path.join(trans_dir, "de", mo_file), False, ""
++    ) as f2, FileFaker(FILE_ROOT_PATH, os.path.join(trans_dir, "nb_NO", mo_file), False, "") as f3:
+         yield f1, f2, f3
+ 
+ 
+-- 
+2.30.2
+
