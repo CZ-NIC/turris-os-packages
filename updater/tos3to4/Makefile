@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tos3to4
-PKG_VERSION:=2.2.1
-PKG_RELEASE:=3
+PKG_VERSION:=2.3.0
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -19,18 +19,24 @@ define Package/Common
   SECTION:=updater
   CATEGORY:=Turris Updater
   TITLE:=Turris OS 3.x to 4.x migration package
-  DEPENDS:=+uci
+  DEPENDS:=@(TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia||TARGET_mpc85xx_p2020_DEVICE_turris1x)
 endef
 
 define Package/tos3to4
   $(call Package/Common)
-  DEPENDS+=+TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia:omnia-support
+  DEPENDS+=+uci +TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia:omnia-support
 endef
 
 define Package/tos3to4-early
   $(call Package/Common)
   TITLE+= installed early
-  DEPENDS+=+switch-branch +updater-ng +pkglists
+  DEPENDS+=+uci +switch-branch +updater-ng +pkglists
+endef
+
+define Package/tos3to4-earliest
+  $(call Package/Common)
+  TITLE+= installed earliest
+  DEPENDS+=+create_notification
 endef
 
 define Package/tos3to4/install
@@ -48,6 +54,10 @@ endef
 define Package/tos3to4-early/install
 	$(INSTALL_DIR) $(1)/usr/lib/tos3to4
 	$(INSTALL_BIN) ./files/configure_updater $(1)/usr/lib/tos3to4/configure_updater
+endef
+
+define Package/tos3to4-earliest/install
+	$(INSTALL_DIR) $(1)/usr/lib/tos3to4
 	$(INSTALL_BIN) ./files/localrepo $(1)/usr/lib/tos3to4/localrepo
 endef
 
@@ -67,7 +77,7 @@ endef
 define Package/tos3to4/postrm
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || create_notification -s update \
-		"Migraton from Turris OS 3.x was completed.
+		"Migration from Turris OS 3.x was completed.
 
 These are primary changes:
 * Turris OS now closely tracks upstream OpenWrt development
@@ -91,6 +101,13 @@ define Package/tos3to4-early/postinst
 [ -n "$$IPKG_INSTROOT" ] || {
 	ec=0
 	/usr/lib/tos3to4/configure_updater || ec=$$?
+	exit $$ec
+}
+endef
+
+define Package/tos3to4-earliest/postinst
+[ -n "$$IPKG_INSTROOT" ] || {
+	ec=0
 	/usr/lib/tos3to4/localrepo || ec=$$?
 	exit $$ec
 }
@@ -100,3 +117,4 @@ Build/Compile:=
 
 $(eval $(call BuildPackage,tos3to4))
 $(eval $(call BuildPackage,tos3to4-early))
+$(eval $(call BuildPackage,tos3to4-earliest))
