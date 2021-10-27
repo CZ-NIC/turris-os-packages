@@ -25,7 +25,7 @@ include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
 define Package/pakon
   SECTION:=collect
   CATEGORY:=Collect
-  TITLE:=Network monitoring toolt
+  TITLE:=Network monitoring tool
   DEPENDS:=+suricata-pakon +xz +python3-light +python3-logging +python3-ctypes +python3-cachetools +python3-sqlite3 +sqlite3-cli +pakon-lists +ouidb +suricata-conntrack-flows +lighttpd-mod-authn_pam +lighttpd-mod-proxy
   VARIANT:=python3
 endef
