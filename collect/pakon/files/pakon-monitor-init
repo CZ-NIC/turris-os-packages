@@ -5,7 +5,7 @@ START=90
 STOP=10
 
 start_service() {
-  pgrep -f pakon-monitor.py > /dev/null && {
+  pgrep -f pakon-monitor > /dev/null && {
       echo "Already running" >&2
       exit 1
   }
@@ -17,10 +17,10 @@ start_service() {
 
   # recreate database if it doesn't exist (was corrupted)
   ARCHIVE_PATH=$(uci -q get pakon.archive.path || echo "/srv/pakon/pakon-archive.db")
-  [[ -f /var/lib/pakon.db && -f "$ARCHIVE_PATH" ]] || python3 /usr/libexec/pakon-light/create_db.py
+  [[ -f /var/lib/pakon.db && -f "$ARCHIVE_PATH" ]] || /usr/bin/pakon-maintain create-databases
 
   procd_open_instance
-  procd_set_param command /usr/libexec/pakon-light/pakon-monitor.py
+  procd_set_param command /usr/bin/pakon-monitor
   procd_set_param respawn ${respawn_threshold:-600} ${respawn_timeout:-5} ${respawn_retry:-5}
   procd_close_instance
 }
@@ -31,5 +31,5 @@ service_stopped() {
 }
 
 reload_service() {
-  pgrep -f pakon-monitor.py | xargs kill -s USR1
+  pgrep -f pakon-monitor | xargs kill -s USR1
 }
