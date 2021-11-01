@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cronie
 PKG_VERSION:=1.5.7
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/cronie-crond/cronie/archive
@@ -41,6 +41,7 @@ define Package/cronie/description
   security and configuration enhancements like the ability to use pam and SELinux.
 endef
 
+# the default editor is /usr/bin/vi, but OpenWrt has vi in /bin/vi
 CONFIGURE_ARGS += \
 	--enable-syscrontab \
 	--without-selinux \
@@ -48,6 +49,7 @@ CONFIGURE_ARGS += \
 	--with-inotify \
 	--with-daemon_username=cron \
 	--with-daemon_groupname=cron \
+	--with-editor=/bin/vi \
 	--disable-anacron
 CONFIGURE_VARS += \
 		SPOOL_DIR=/var/spool/cron/crontabs
