@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pakon
 PKG_VERSION:=1.3.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/pakon.git
@@ -20,28 +20,33 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-only
 PKG_LICENSE_FILES:=LICENSE
 
-PKG_INSTALL:=0
-
 include $(INCLUDE_DIR)/package.mk
 
 define Package/pakon
   SECTION:=collect
   CATEGORY:=Collect
   TITLE:=PArental KONtrol - light
-  DEPENDS:=+suricata-pakon +xz +python3-light +python3-logging +python3-ctypes +python3-cachetools +python3-sqlite3 +sqlite3-cli +pakon-lists +ouidb +suricata-conntrack-flows +lighttpd-mod-authn_pam +lighttpd-mod-proxy
+  DEPENDS:=\
+    +suricata-pakon \
+    +suricata-conntrack-flows \
+    +pakon-lists \
+    +python3-light \
+    +python3-logging \
+    +python3-ctypes \
+    +python3-cachetools \
+    +python3-sqlite3 \
+    +sqlite3-cli \
+    +xz \
+    +ouidb \
+    +turris-auth \
+    +lighttpd-mod-proxy
 endef
 
 define Package/pakon/description
   Simple daemon that is able to collect events from suricata and store them locally to SQLite DB.
 endef
 
-define Build/Compile
-  true
-endef
-
-define Build/Install
-  true
-endef
+Build/Compile:=:
 
 define Package/pakon/conffiles
 /etc/config/pakon
@@ -112,10 +117,10 @@ endef
 
 define Package/pakon/prerm
 #!/bin/sh
-        /etc/init.d/pakon-monitor disable
-        /etc/init.d/pakon-monitor stop
-        /etc/init.d/pakon-handler disable
-        /etc/init.d/pakon-handler stop
+/etc/init.d/pakon-monitor disable
+/etc/init.d/pakon-monitor stop
+/etc/init.d/pakon-handler disable
+/etc/init.d/pakon-handler stop
 endef
 
 $(eval $(call BuildPackage,pakon))
