@@ -13,7 +13,7 @@ TESTS="$(echo "$TESTS" | sed -e 's/ /X/g')"
 # IP addresses and DNS names we are testing against
 IP4='217.31.205.50 198.41.0.4 199.7.83.42 8.8.8.8'
 IP6='2001:1488:0:3::2 2001:500:3::42 2001:500:2d::d 2606:2800:220:6d:26bf:1447:1097:aa7'
-NAMES='api.turris.cz www.nic.cz c.root-servers.net'
+NAMES='repo.turris.cz www.nic.cz c.root-servers.net'
 BAD_NAMES='www.rhybar.cz'
 
 # Runs multiple tests on given function. It runs given function for every argument
