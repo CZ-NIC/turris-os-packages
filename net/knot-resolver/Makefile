@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
 PKG_VERSION:=5.4.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-resolver
@@ -103,11 +103,11 @@ sleep 2 # Cooldown for above (problems in times of reinstall)
 /etc/kresd/kresd.postinst.sh && rm /etc/kresd/kresd.postinst.sh
 /etc/kresd/convert_config.sh && rm /etc/kresd/convert_config.sh
 if [ "`uci -q get resolver.common.prefered_resolver`" = kresd ] && uci -q get resolver.common.forward_upstream | egrep -q '(1|yes|true|enabled|on)'; then
-	ping -c 1 api.turris.cz 2> /dev/null >&2 || {
+	ping -c 1 repo.turris.cz 2> /dev/null >&2 || {
 		uci set resolver.common.forward_upstream=0
 		uci commit
 		/etc/init.d/resolver restart
-		if ping -c 1 api.turris.cz 2> /dev/null >&2; then
+		if ping -c 1 repo.turris.cz 2> /dev/null >&2; then
 			create_notification -s error "DNS servery vašeho poskytovatele internetu nefungují úplně dobře - pravděpodobně nepodporují DNSSEC. Bylo proto vypnuto forwardování a váš router bude nyní vyhodnocovat DNS dotazy sám." "Your ISPs DNS servers does not work properly - most likely they don't support DNSSEC. Therefore DNS forwarding was turned off and your router will now resolve all DNS queries by itself."
 		else
 			uci set resolver.common.forward_upstream=1

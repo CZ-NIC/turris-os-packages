@@ -144,7 +144,7 @@ run_test () {
 	fi
 
 	echo "== resolution attempts =="
-	run_${QTOOL} api.turris.cz  # should pass
+	run_${QTOOL} repo.turris.cz  # should pass
 	run_${QTOOL} www.google.com  # should pass
 	run_${QTOOL} www.facebook.com  # should pass
 	run_${QTOOL} www.youtube.com  # should pass
