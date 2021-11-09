@@ -7,6 +7,4 @@ COLLIDED="/usr/share/updater/collided$SOURCE"
 if [ -f "$SOURCE/localrepo.lua" ]; then
 	mkdir -p "${COLLIDED%/*}"
 	mv  "$SOURCE" "$COLLIDED"
-	create_notification -s error \
-		"Localrepo was preventively flushed because of binary compatibility. You can found your packages in: $COLLIDED"
 fi

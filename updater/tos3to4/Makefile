@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tos3to4
-PKG_VERSION:=2.3.0
+PKG_VERSION:=2.3.1
 PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -36,7 +36,6 @@ endef
 define Package/tos3to4-earliest
   $(call Package/Common)
   TITLE+= installed earliest
-  DEPENDS+=+create_notification
 endef
 
 define Package/tos3to4/install
