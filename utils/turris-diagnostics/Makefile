@@ -28,7 +28,7 @@ define Package/turris-diagnostics
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=Turris Diagnostics
-  DEPENDS:=+lsblk +socat +crypto-wrapper +gettext-tools
+  DEPENDS:=+lsblk +socat +crypto-wrapper +gettext-tools +file
 endef
 
 define Package/turris-diagnostics/description
