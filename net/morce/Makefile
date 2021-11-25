@@ -24,7 +24,7 @@ define Package/morce
   SECTION:=net
   CATEGORY:=Network
   TITLE:=MORCE - Simple IDS integration
-  DEPENDS:=+libuci-lua +luasql-sqlite3 +snort3 +sqlite3-cli +wget-ssl
+  DEPENDS:=+libuci-lua +luasql-sqlite3 +snort3 +sqlite3-cli +tar +wget-ssl
 endef
 
 define Package/morce/description
