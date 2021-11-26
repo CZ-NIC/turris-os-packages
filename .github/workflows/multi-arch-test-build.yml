@@ -13,15 +13,11 @@ jobs:
           - powerpc_8540
         version:
           - master
-          - 19.07.8
-          - 21.02.0
+          - 21.02.1
         runtime_test: [false]
         include:
           - arch: aarch64_cortex-a53
             version: master
-            runtime_test: true
-          - arch: aarch64_cortex-a53
-            version: 19.07.8
             runtime_test: true
           - arch: aarch64_cortex-a53
             version: 21.02.0
