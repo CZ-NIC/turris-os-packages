@@ -34,7 +34,8 @@ vlan_handle() {
 	local vlan="$1"
 	local ports vid
 	config_get ports "$vlan" ports
-	config_get vid "$vlan" vid 0
+	config_get vid "$vlan" vlan 0
+	config_get vid "$vlan" vid "$vid"
 	for port in $ports; do
 		case "$port" in
 			"$CPU_TRUNK_1")
