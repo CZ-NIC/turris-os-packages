@@ -14,6 +14,9 @@ if [ "$(cat /tmp/sysinfo/model)" = "Turris" ]; then
 	CPU_TRUNK_2="0"
 	WAN="eth2"
 	NEW_WAN="eth2"
+	maplan() {
+		echo "$((6 - $1))"
+	}
 else
 	# Turris Omnia
 	CPU_LAN_1="eth0"
@@ -22,6 +25,9 @@ else
 	CPU_TRUNK_2="6"
 	WAN="eth1"
 	NEW_WAN="eth2"
+	maplan() {
+		echo "$1"
+	}
 fi
 
 vlandir="$(mktemp -d)"
@@ -78,10 +84,10 @@ append_lan_ports() {
 				# Ignore CPU ports those are managed by DSA
 				;;
 			*t)
-				append new_ifname "lan${port%t}.${vid}"
+				append new_ifname "lan$(maplan "${port%t}").${vid}"
 				;;
 			*)
-				append new_ifname "lan${port}"
+				append new_ifname "lan$(maplan "${port}")"
 				;;
 		esac
 	done
