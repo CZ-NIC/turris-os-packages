@@ -14,6 +14,9 @@ if [ "$(cat /tmp/sysinfo/model)" = "Turris" ]; then
 	CPU_TRUNK_2="0"
 	WAN="eth2"
 	NEW_WAN="eth2"
+	maplan() {
+		echo "$((6 - $1))"
+	}
 else
 	# Turris Omnia
 	CPU_LAN_1="eth0"
@@ -22,11 +25,15 @@ else
 	CPU_TRUNK_2="6"
 	WAN="eth1"
 	NEW_WAN="eth2"
+	maplan() {
+		echo "$1"
+	}
 fi
 
 vlandir="$(mktemp -d)"
+freevlandir="$(mktemp -d)"
 cleanup() {
-	rm -rf "$vlandir"
+	rm -rf "$vlandir" "$freelandir"
 }
 trap cleanup EXIT TERM INT QUIT ABRT
 
@@ -36,70 +43,57 @@ vlan_handle() {
 	config_get ports "$vlan" ports
 	config_get vid "$vlan" vlan 0
 	config_get vid "$vlan" vid "$vid"
+	local freevlan="y"
 	for port in $ports; do
 		case "$port" in
 			"$CPU_TRUNK_1")
+				freevlan="n"
 				echo "$vlan" > "$vlandir/$CPU_LAN_1"
 				;;
 			"${CPU_TRUNK_1}t")
+				freevlan="n"
 				echo "$vlan" > "$vlandir/$CPU_LAN_1.$vid"
 				;;
 			"$CPU_TRUNK_2")
+				freevlan="n"
 				echo "$vlan" > "$vlandir/$CPU_LAN_2"
 				;;
 			"${CPU_TRUNK_2}t")
+				freevlan="n"
 				echo "$vlan" > "$vlandir/$CPU_LAN_2.$vid"
 				;;
 		esac
 	done
-	# Note: if there is no CPU port then creating new bridge can be solution but
-	# at the moment we do not do it as we have routers not smart switches.
+	if [ "$freevlan" = "y" ]; then
+		# The VLAN has no termination in CPU. This is sort of smart switch
+		# setup. We have to create a new bridge for such network.
+		touch "$freevlandir/$vlan"
+	fi
 }
 config_foreach vlan_handle switch_vlan
 
 append_lan_ports() {
-	[ -f "$vlandir/$ifn" ] || return # ignore VLANs that are not in switch
-	# Note: there can be tagged vlan going to switch but if switch is not
-	# configured for it it does not work anyway.
-
-	local vlan ports vid
-	vlan="$(cat "$vlandir/$ifn")"
+	local vlan="$1"
+	local ports vid
 	config_get ports "$vlan" ports
-	config_get vid "$vlan" vid
+	config_get vid "$vlan" vlan 0
+	config_get vid "$vlan" vid "$vid"
 	for port in $ports; do
 		case "$port" in
 			"$CPU_TRUNK_1"|"${CPU_TRUNK_1}t"|"$CPU_TRUNK_2"|"${CPU_TRUNK_2}t")
 				# Ignore CPU ports those are managed by DSA
 				;;
 			*t)
-				append new_ifname "lan${port%t}.${vid}"
+				append new_ifname "lan$(maplan "${port%t}").${vid}"
 				;;
 			*)
-				append new_ifname "lan${port}"
+				append new_ifname "lan$(maplan "${port}")"
 				;;
 		esac
 	done
 }
-interface_handle() {
-	local cnf="$1"
-	local ifnames new_ifname
-	config_get ifnames "$cnf" ifname
-	for ifn in $ifnames; do
-		case "$ifn" in
-			"${CPU_LAN_1}"*|"${CPU_LAN_2}"*)
-				append_lan_ports
-				;;
-			"${WAN}"*)
-				# Replace new old wan with new one and keep any VLAN configuration
-				append new_ifname "${NEW_WAN}${ifn#${WAN}}"
-				;;
-			*)
-				append new_ifname "$ifn"
-				;;
-		esac
-	done
-
-	uci delete "network.$cnf.ifname"
+set_new_ifname_ports() {
+	uci delete "network.$cnf.ifname" 2>/dev/null || true
 	case "$new_ifname" in
 		*\ *)
 			for ifn in $new_ifname; do
@@ -111,7 +105,46 @@ interface_handle() {
 			;;
 	esac
 }
+
+
+interface_handle() {
+	local cnf="$1"
+	local ifnames new_ifname
+	config_get ifnames "$cnf" ifname
+	for ifn in $ifnames; do
+		case "$ifn" in
+			"${CPU_LAN_1}"*|"${CPU_LAN_2}"*)
+				[ -f "$vlandir/$ifn" ] || continue # ignore VLANs that are not in switch
+				# Note: there can be tagged vlan going to switch but if switch is not
+				# configured for it it does not work anyway.
+				append_lan_ports "$(cat "$vlandir/$ifn")"
+				;;
+			"${WAN}"*)
+				# Replace new old wan with new one and keep any VLAN configuration
+				append new_ifname "${NEW_WAN}${ifn#${WAN}}"
+				;;
+			*)
+				append new_ifname "$ifn"
+				;;
+		esac
+	done
+	set_new_ifname_ports
+}
 config_foreach interface_handle interface
+
+free_vlan_interface() {
+	local vlan="$1"
+	local cnf new_ifname
+	cnf="$(uci add network interface)"
+	uci set "network.$cnf.proto=none"
+	append_lan_ports "$vlan"
+	# Note: there are no CPU ports
+	set_new_ifname_ports
+}
+for freevlan in "$freevlandir"/*; do
+	[ -f "$freevlan" ] || continue
+	free_vlan_interface "${freevlan##*/}"
+done
 
 
 network_section_remove() {
