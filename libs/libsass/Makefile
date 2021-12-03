@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libsass
-PKG_VERSION:=3.6.4
+PKG_VERSION:=3.6.5
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/sass/libsass/tar.gz/$(PKG_VERSION)?
-PKG_HASH:=f9484d9a6df60576e791566eab2f757a97fd414fce01dd41fc0a693ea5db2889
+PKG_HASH:=89d8f2c46ae2b1b826b58ce7dde966a176bac41975b82e84ad46b01a55080582
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=MIT
