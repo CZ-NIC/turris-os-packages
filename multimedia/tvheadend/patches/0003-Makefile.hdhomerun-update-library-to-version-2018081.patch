@@ -11,8 +11,6 @@ The latest version can not be used somehow as the compilation fails.
  Makefile.hdhomerun | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Makefile.hdhomerun b/Makefile.hdhomerun
-index dcce37d1b..e8fa736ca 100644
 --- a/Makefile.hdhomerun
 +++ b/Makefile.hdhomerun
 @@ -32,10 +32,10 @@ endif
@@ -29,6 +27,3 @@ index dcce37d1b..e8fa736ca 100644
  
  # ###########################################################################
  # Library Config
--- 
-2.30.2
-
