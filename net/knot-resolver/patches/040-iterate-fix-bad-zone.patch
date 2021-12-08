@@ -1,0 +1,65 @@
+From f4dabfbec92737036c8851ddbf51d6731e81a0f8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Vladim=C3=ADr=20=C4=8Cun=C3=A1t?= <vladimir.cunat@nic.cz>
+Date: Wed, 8 Dec 2021 14:30:18 +0100
+Subject: [PATCH 1/2] iterate: fix bad zone_cut update in a rare case
+
+https://forum.turris.cz/t/kresd-name-unresolution/16275
+
+Example problematic query during QNAME minimization:
+```
+[resolv][43578.24]   => id: '08532' querying: 'ns-921.amazon.com.'@'34.196.62.143#00053' zone cut: 'aws.amazon.com.' qname: 'coNsOlE.aWs.AmAzON.Com.' qtype: 'NS' proto: 'udp'
+[iterat][43578.24]   <= answer received:
+;; ->>HEADER<<- opcode: QUERY; status: NXDOMAIN; id: 8532
+;; Flags: qr aa  QUERY: 1; ANSWER: 4; AUTHORITY: 1; ADDITIONAL: 0
+
+;; QUESTION SECTION
+console.aws.amazon.com.         NS
+
+;; ANSWER SECTION
+console.aws.amazon.com. 600     NS      ns-921.amazon.com.
+console.aws.amazon.com. 60      CNAME   us-east-1.console.aws.amazon.com.
+us-east-1.console.aws.amazon.com. 600   NS      ns-921.amazon.com.
+us-east-1.console.aws.amazon.com. 60    CNAME   gr.console-geo.us-east-1.amazonaws.com.
+
+;; AUTHORITY SECTION
+us-east-1.amazonaws.com.        60      SOA     ns-921.amazon.com. root.amazon.com. 1638962488 3600 900 7776000 60
+
+[iterat][43578.24]   <= rcode: NXDOMAIN
+```
+
+Here the zone_cut would get updated to us-east-1.console.aws.amazon.com.
+breaking further resolution towards    eu-west-3.console.aws.amazon.com.
+---
+ lib/layer/iterate.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+--- a/lib/layer/iterate.c
++++ b/lib/layer/iterate.c
+@@ -447,12 +447,16 @@ static int process_authority(knot_pkt_t
+ 
+ 	/* Nameserver is authoritative for both parent side and the child side of the
+ 	 * delegation may respond with an NS record in the answer section, and still update
+-	 * the zone cut (e.g. what a.gtld-servers.net would respond for `com NS`) */
++	 * the zone cut (this e.g. happens on the `nrl.navy.mil.` zone cut).
++	 * By updating the zone cut, we can continue with QNAME minimization,
++	 * as the current code is only able to minimize one label below a zone cut. */
+ 	if (!ns_record_exists && knot_wire_get_aa(pkt->wire)) {
+ 		for (unsigned i = 0; i < an->count; ++i) {
+ 			const knot_rrset_t *rr = knot_pkt_rr(an, i);
+ 			if (rr->type == KNOT_RRTYPE_NS
+-			    && knot_dname_in_bailiwick(rr->owner, qry->zone_cut.name) > 0) {
++			    && knot_dname_in_bailiwick(rr->owner, qry->zone_cut.name) > 0
++			    /* "confusing" NS records can happen e.g. on a CNAME chain */
++			    && knot_dname_in_bailiwick(qry->sname, rr->owner) >= 0) {
+ 				/* NS below cut in authority indicates different authority,
+ 				 * but same NS set. */
+ 				qry->zone_cut.name = knot_dname_copy(rr->owner, &req->pool);
+@@ -1010,7 +1014,7 @@ static int resolve(kr_layer_t *ctx, knot
+ 	WITH_VERBOSE(query) {
+ 		if (query->flags.TRACE) {
+ 			auto_free char *pkt_text = kr_pkt_text(pkt);
+-			VERBOSE_MSG("<= answer received: \n%s\n", pkt_text);
++			VERBOSE_MSG("<= answer received:\n%s\n", pkt_text);
+ 		}
+ 	}
+ 
