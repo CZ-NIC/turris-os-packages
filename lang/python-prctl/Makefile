@@ -8,11 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-prctl
-PKG_VERSION:=1.7
-PKG_RELEASE:=2
+PKG_VERSION:=1.8.1
+PKG_RELEASE:=1
 
 PYPI_NAME:=python-prctl
-PKG_HASH:=57ebd556616d6ffe1f794f514680e84a03737cb070de37722198d7ad6c8f4fda
+PKG_HASH:=b4ca9a25a7d4f1ace4fffd1f3a2e64ef5208fe05f929f3edd5e27081ca7e67ce
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
