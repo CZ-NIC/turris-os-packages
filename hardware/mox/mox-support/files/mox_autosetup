@@ -8,7 +8,7 @@ if [ \! -f /etc/mox_modules ]; then
 	uci delete network.lan
 	uci delete network.wan
 
-	lans="$(echo $(cd /sys/class/net/; ls -d lan* 2> /dev/null))"
+	lans="$(cd /sys/class/net/; echo lan* 2> /dev/null)"
 	wan_if=""
 	lan_if=""
 	lan_mac="$(cat /sys/class/net/eth1/address)"
