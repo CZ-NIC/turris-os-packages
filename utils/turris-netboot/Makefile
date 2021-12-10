@@ -88,7 +88,7 @@ define Package/turris-netboot-data/install
 	cd $(LINUX_DIR); ./usr/gen_initramfs.sh \
 	-o $(1)/usr/share/turris-netboot/initrd-$(CONFIG_ARCH).gz -u squash -g squash \
 	"$(PKG_BUILD_DIR)/rootfs" "$(PKG_BUILD_DIR)/rootfs.extra"
-	gzip -d $(1)/usr/share/turris-netboot/initrd-$(CONFIG_ARCH).gz
+	cp $(1)/usr/share/turris-netboot/initrd-$(CONFIG_ARCH).gz $(1)/usr/share/turris-netboot/initrd-$(CONFIG_ARCH)
 	$(INSTALL_DATA) ./files/mox.its $(1)/usr/share/turris-netboot
 endef
 
