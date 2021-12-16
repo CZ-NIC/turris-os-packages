@@ -1,0 +1,27 @@
+From 7105fb9859f4d3264dbaaee5dc7596c561dc3e1a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Karel=20Ko=C4=8D=C3=AD?= <karel.koci@nic.cz>
+Date: Tue, 4 Jan 2022 18:38:38 +0100
+Subject: [PATCH] configure.ac: fix cross compilation
+
+The AC_CHECK_FILE is not supported when cross compiling. We can just use
+plain AS_IF with test for the same effect.
+---
+ configure.ac | 2 +-
+ 1 files changed, 1 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 5946a53..b6d42ea 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -18,7 +18,7 @@ PKG_INSTALLDIR
+ AX_CHECK_COMPILE_FLAG([-std=c11], , AC_MSG_ERROR([Compiler with C11 standard support is required]))
+ AX_APPEND_FLAG([-std=c11])
+ 
+-AC_CHECK_FILE([${0%/*}/bootstrap],[
++AS_IF([test -x "${0%/*}/bootstrap" ],[
+   AC_PATH_PROG([GPERF], [gperf])
+   AS_IF([test -z "$GPERF"], [AC_MSG_ERROR([Missing gperf generator])])
+ ])
+-- 
+GitLab
+
