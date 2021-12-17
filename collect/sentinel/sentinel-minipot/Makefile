@@ -37,6 +37,8 @@ define Package/sentinel-minipot
     +libevent2 \
     +logc \
     +logc-argp \
+    +logc-czmq \
+    +logc-libevent \
     +msgpack-c \
     +base64c \
     +sentinel-firewall \
