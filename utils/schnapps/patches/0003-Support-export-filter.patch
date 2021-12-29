@@ -1,0 +1,45 @@
+From 7f3ec7ebdfe694006dd251c600ef20263fa23c4d Mon Sep 17 00:00:00 2001
+From: Michal Hrusecky <michal.hrusecky@turris.com>
+Date: Thu, 2 Dec 2021 11:15:33 +0100
+Subject: [PATCH 3/6] Support export filter
+
+We might want to exclude various certificates during export, especially
+fosquito ones that are tied to serial number and thus will not work on
+other/replacement device.
+---
+ schnapps.sh | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/schnapps.sh b/schnapps.sh
+index 2d05523..5d789c6 100755
+--- a/schnapps.sh
++++ b/schnapps.sh
+@@ -559,6 +559,7 @@ snp_status() {
+ }
+ 
+ tar_it() {
++    [ \! -f /etc/schnapps/export-exclude ] || EXCLUDE="--exclude-from=/etc/schnapps/export-exclude"
+     if [ -n "$GPG_PASS" ] && [ -n "`which gpg`" ]; then
+         rm -rf /tmp/schnapps-gpg
+         mkdir -p /tmp/schnapps-gpg/home
+@@ -566,7 +567,7 @@ tar_it() {
+         chmod -R 0700 /tmp/schnapps-gpg
+         export GNUPGHOME=/tmp/schnapps-gpg/home
+         echo "$GPG_PASS" > /tmp/schnapps-gpg/pass
+-        tar -C "$1" --numeric-owner --one-file-system -cpvf "$2".gpg . \
++        tar -C "$1" --numeric-owner $EXCLUDE --one-file-system -cpvf "$2".gpg . \
+         --use-compress-program="gzip -c - | gpg  \
+         --batch --yes --passphrase-file /tmp/schnapps-gpg/pass \
+         --cipher-algo=AES256 -c"
+@@ -574,7 +575,7 @@ tar_it() {
+         rm -rf /tmp/schnapps-gpg
+         return $ret
+     else
+-        tar -C "$1" --numeric-owner --one-file-system -cpzvf "$2" .
++        tar -C "$1" --numeric-owner $EXCLUDE --one-file-system -cpzvf "$2" .
+         return $?
+     fi
+ }
+-- 
+2.34.1
+
