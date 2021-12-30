@@ -1,0 +1,45 @@
+From 73ac130fe70b08fa3f5ad8f975035d6b28ba7a7f Mon Sep 17 00:00:00 2001
+From: Michal Hrusecky <michal.hrusecky@turris.com>
+Date: Wed, 27 Oct 2021 16:16:25 +0200
+Subject: [PATCH 1/6] Allow to specify vers in samba mounts
+
+Extend syntax to allow smb:3.1.1://host/share URLs to specify specific
+dialect of Samba to speak.
+---
+ schnapps.sh | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/schnapps.sh b/schnapps.sh
+index 1d6a734..fcde10d 100755
+--- a/schnapps.sh
++++ b/schnapps.sh
+@@ -657,9 +657,10 @@ remote_mount() {
+             [ -n "`which sshfs`" ] || die "sshfs is not available"
+             sshfs "$FINAL_REMOTE_URL" "$TMP_RMT_MNT_DIR" || die "Can't access remote filesystem"
+             ;;
+-        smb://*|cifs://*)
+-            local final_remote_url="$(echo "$REMOTE_URL" | sed -e 's|^[a-z]*://|//|')"
++        smb:*|cifs:*)
++            local final_remote_url="$(echo "$REMOTE_URL" | sed -e 's|^[a-z:0-9.]*://|//|')"
+             local domain="$(echo "$REMOTE_URL" | cut -d/ -f 3)"
++            local vers="$(echo "$REMOTE_URL" | sed -n 's|^[a-z]*:\([0-9.]\+\)://.*|\1|p')"
+             local opts
+             if [ -n "$REMOTE_USER" ]; then
+                 mk_tmp_dir
+@@ -669,9 +670,12 @@ remote_mount() {
+             else
+                 opts="guest"
+             fi
++            if [ -n "$vers" ]; then
++                opts="$opts,vers=$vers"
++            fi
+             mount.cifs "$final_remote_url" -o "$opts" "$TMP_RMT_MNT_DIR" || die "Can't access remote filesystem"
+             ;;
+-        *) die "Invalid URL" ;;
++        *) die "Invalid URL - $REMOTE_URL" ;;
+     esac
+     REMOTE_MOUNTED="yes"
+ }
+-- 
+2.34.1
+

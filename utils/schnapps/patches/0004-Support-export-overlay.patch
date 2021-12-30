@@ -1,0 +1,47 @@
+From 9c51d5226b7f0f61099d90d74a325d7d1619a56f Mon Sep 17 00:00:00 2001
+From: Michal Hrusecky <michal.hrusecky@turris.com>
+Date: Thu, 2 Dec 2021 11:35:42 +0100
+Subject: [PATCH 4/6] Support export overlay
+
+We might want to add few extra files to the exported tarball. Like some
+uci-defaults script to adapt configuration to new hardware - change the
+MACs to the correct ones and if serial changed, regenerate device token
+and such.
+---
+ schnapps.sh | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/schnapps.sh b/schnapps.sh
+index 5d789c6..ceef300 100755
+--- a/schnapps.sh
++++ b/schnapps.sh
+@@ -560,6 +560,7 @@ snp_status() {
+ 
+ tar_it() {
+     [ \! -f /etc/schnapps/export-exclude ] || EXCLUDE="--exclude-from=/etc/schnapps/export-exclude"
++    [ \! -d /etc/schnapps/export-overlay ] || OVERLAY="-C /etc/schnapps/export-overlay ."
+     if [ -n "$GPG_PASS" ] && [ -n "`which gpg`" ]; then
+         rm -rf /tmp/schnapps-gpg
+         mkdir -p /tmp/schnapps-gpg/home
+@@ -567,15 +568,15 @@ tar_it() {
+         chmod -R 0700 /tmp/schnapps-gpg
+         export GNUPGHOME=/tmp/schnapps-gpg/home
+         echo "$GPG_PASS" > /tmp/schnapps-gpg/pass
+-        tar -C "$1" --numeric-owner $EXCLUDE --one-file-system -cpvf "$2".gpg . \
++        tar --numeric-owner $EXCLUDE --one-file-system -cpvf "$2".gpg \
+         --use-compress-program="gzip -c - | gpg  \
+         --batch --yes --passphrase-file /tmp/schnapps-gpg/pass \
+-        --cipher-algo=AES256 -c"
++        --cipher-algo=AES256 -c"  -C "$1" . $OVERLAY
+         ret="$?"
+         rm -rf /tmp/schnapps-gpg
+         return $ret
+     else
+-        tar -C "$1" --numeric-owner $EXCLUDE --one-file-system -cpzvf "$2" .
++        tar --numeric-owner $EXCLUDE --one-file-system -cpzvf "$2" -C "$1" . $OVERLAY
+         return $?
+     fi
+ }
+-- 
+2.34.1
+
