@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2020-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+## Copyright (C) 2020-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-survey
-PKG_VERSION:=0.2
+PKG_VERSION:=0.4
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/turris-survey.git
-PKG_MIRROR_HASH:=26aca2bb9bcdf0be1b858ec8e8557360969cfa6db826d5fe205cc10a8df93e18
+PKG_MIRROR_HASH:=ac6cf838afc5cd78d430c138cd9f76abffb5072232ce3770ca77233e7c11c2fe
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -34,7 +34,8 @@ define Package/turris-survey
 endef
 
 define Package/turris-survey/description
-  Periodically collect router statistics like usage, installed software.
+  Periodically collects Turris OS usage information - OS version, list of
+  installed packages and package lists.
 endef
 
 define Py3Package/turris-survey/install
