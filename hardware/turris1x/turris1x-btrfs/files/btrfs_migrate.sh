@@ -118,7 +118,7 @@ p
 
 w
 EOF
-    mkfs.vfat -n turris-boot "${SDCARDP}1" || die "Can't create fat!"
+    mkfs.fat -n turris-boot "${SDCARDP}1" || die "Can't create fat!"
     mkfs.btrfs -L turris-rootfs -f "${SDCARDP}2" || die "Can't format btrfs partition!"
     ROOT_UUID="$(blkid "${SDCARDP}2" | sed -n 's|^/dev/.*UUID="\([0-9a-fA-F-]*\)".*|\1|p')"
 }
