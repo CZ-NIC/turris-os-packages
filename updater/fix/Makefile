@@ -166,6 +166,7 @@ define Package/fix-pkglists-nikola-to-fwlogs/description
   option in datacollect package list.
 endef
 
+
 define Package/fix-lighttpd-sync-with-upstream/description
   We are getting close to dropping our maintained package lighttpd in favor of
   upstream variant, but before we are able to do it, we need to move
@@ -174,6 +175,14 @@ define Package/fix-lighttpd-sync-with-upstream/description
   UI is not accessible and it wants to download file with name download,
   because lighttpd in OpenWrt does not use the first mentioned folder
   modules.d
+endef
+
+define Package/fix-firewall-zone-limit/description
+  The OpenWrt 21.02 introduced the limit for 11 characters for firewall zone
+  names. The reason is that they are used in iptables as chain names and 11
+  characters is maximum possible legth (plus the characters the firewall3 adds
+  on its own automatically).
+  This fix trims all zone names to 11 characters.
 endef
 
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
@@ -195,3 +204,4 @@ $(eval $(call FIX,nextcloud-conf,+nextcloud))
 $(eval $(call FIX,sentinel-nikola-to-fwlogs,+sentinel-proxy))
 $(eval $(call FIX,pkglists-nikola-to-fwlogs,+pkglists))
 $(eval $(call FIX,lighttpd-sync-with-upstream,+lighttpd))
+$(eval $(call FIX,firewall-zone-limit,+firewall))
