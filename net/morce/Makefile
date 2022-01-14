@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2022 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -7,12 +7,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=morce
-PKG_VERSION:=1.0
+PKG_VERSION:=1.0.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/morce.git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
+PKG_MIRROR_HASH:=a9091d26088a6b2a3e8feefe752eb0165e701d61cf3b8511aa372e91c439fd9a
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
