@@ -1,0 +1,28 @@
+From 9fbeec3174a2cefb28f9a8c916b4333b7c7cbf66 Mon Sep 17 00:00:00 2001
+From: Michal Hrusecky <michal.hrusecky@turris.com>
+Date: Mon, 17 Jan 2022 23:32:46 +0100
+Subject: [PATCH] Partial revert of 89952d49938aaa4ffdd0797ba347d8cc63a6fd3d
+
+Let's keep broken json for a little longer as Foris Controller checks
+for the type of number and breaks on type change and it doesn't support
+remote snapshots as of yet.
+---
+ schnapps.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/schnapps.sh b/schnapps.sh
+index 800912a..cbbc2ee 100755
+--- a/schnapps.sh
++++ b/schnapps.sh
+@@ -275,7 +275,7 @@ generic_list() {
+             printf " %${TBL_NUM}s | %-9s | %11s | %25s | %s\n" "$i" "$TYPE" "$SIZE" "$CREATED" "$DESCRIPTION"
+         else
+             [ -n "$FIRST" ] || echo -n ", "
+-            echo "{ \"number\": \"$i\", \"type\": \"$TYPE\", \"size\": \"$SIZE\", \"created\": \"$CREATED\", \"description\": \"$DESCRIPTION\" }"
++            echo "{ \"number\": $i, \"type\": \"$TYPE\", \"size\": \"$SIZE\", \"created\": \"$CREATED\", \"description\": \"$DESCRIPTION\" }"
+             FIRST=""
+         fi
+     done
+-- 
+2.34.1
+
