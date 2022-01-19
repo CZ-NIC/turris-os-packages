@@ -185,6 +185,11 @@ define Package/fix-firewall-zone-limit/description
   This fix trims all zone names to 11 characters.
 endef
 
+define Package/fix-network-devices/description
+  The OpenWrt 21.02 introduced the new way for configuring network devices. They
+  are now configured separatelly and only referenced in network interfaces.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
@@ -205,3 +210,4 @@ $(eval $(call FIX,sentinel-nikola-to-fwlogs,+sentinel-proxy))
 $(eval $(call FIX,pkglists-nikola-to-fwlogs,+pkglists))
 $(eval $(call FIX,lighttpd-sync-with-upstream,+lighttpd))
 $(eval $(call FIX,firewall-zone-limit,+firewall))
+$(eval $(call FIX,network-devices,+netifd))

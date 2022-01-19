@@ -1,0 +1,95 @@
+#!/bin/sh
+set -e
+. /lib/functions.sh
+# netifd provides default network overlay with current runtime configuration. We
+# are not interested in that. We need to work with real content of /etc/config so
+# we disable state loading.
+LOAD_STATE=
+config_load network
+
+config_network="/etc/config/network"
+config_network_backup="$config_network.backup"
+cp "$config_network" "$config_network_backup"
+lanports="$(mktemp -d)"
+lanmerge="$(mktemp -d)"
+devmerged="$(mktemp -d)"
+cleanup() {
+	local ec=$?
+	if [ $ec -ne 0 ]; then
+		mv "$config_network_backup" "$config_network"
+		echo "The network migration failed. Reverting to the original state.  Please migrate the network configuration manually!" >&2
+		exit $ec
+	else
+		rm -f "$config_network_backup"
+	fi
+	rm -rf "$lanports" "$lanmerge" "$devmerged"
+}
+trap cleanup EXIT TERM INT QUIT ABRT
+
+
+device_attrs="
+macaddr mtu mtu6
+"
+bridge_attrs="
+bridge_empty igmp_snooping multicast_querier query_interval
+query_response_interval last_member_interval hash_max robustness stp
+forward_delay hello_time priority ageing_time max_age
+"
+
+
+# This splits off the new device sections from existing interfaces.
+for_interface_ifname() {
+	local ifname="$1"
+	uci add_list "network.$dcnf.ports=$ifname"
+}
+for_interfaces() {
+	local name="$1"
+	local type ifname
+	config_get type "$name" "type"
+	config_get ifname "$name" "ifname"
+
+	local devname dcnf empty="y"
+	if [ "$type" = "bridge" ]; then
+		devname="br-$name"
+		empty="n" # we always create device for bridge
+		dcnf="$(uci add "network" "device")"
+		uci set "network.$dcnf.name=$devname"
+		uci set "network.$dcnf.type=bridge"
+		for attr in $bridge_attrs; do
+			local value
+			config_get value "$name" "$attr"
+			[ -n "$value" ] && uci set "network.$dcnf.$attr=$value"
+			uci -q del "network.$name.$attr" || true
+		done
+		config_list_foreach "$name" "ifname" for_interface_ifname
+	else
+		devname="$ifname"
+		# We do not create device for interfaces if it references some other
+		# interface or if is just empty
+		if [ -n "$ifname" ] && [ "${ifname:0:1}" != "@" ]; then
+			dcnf="$(uci add "network" "device")"
+			uci set "network.$dcnf.name=$devname"
+		fi
+	fi
+	if [ -n "$dcnf" ]; then
+		for attr in $device_attrs; do
+			local value
+			config_get value "$name" "$attr"
+			if [ -n "$value" ]; then
+				uci set "network.$dcnf.$attr=$value"
+				empty="n"
+			fi
+			uci -q del "network.$name.$attr" || true
+		done
+		# Remove the section if it is empty
+		[ "$empty" = "y" ] && uci -q delete "network.$dcnf"
+	fi
+
+	uci -q del "network.$name.ifname" || true
+	[ -z "$devname" ] \
+		|| uci set "network.$name.device=$devname"
+}
+config_foreach for_interfaces "interface"
+
+uci commit network
+/etc/init.d/network restart
