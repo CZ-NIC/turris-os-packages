@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-diagnostics
 PKG_VERSION:=15.0.0
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/diagnostics.git
@@ -28,7 +28,7 @@ define Package/turris-diagnostics
   SECTION:=utils
   CATEGORY:=Utilities
   TITLE:=Turris Diagnostics
-  DEPENDS:=+lsblk +socat +crypto-wrapper +gettext-tools +file
+  DEPENDS:=+lsblk +hwinfo +socat +crypto-wrapper +gettext-tools +file
 endef
 
 define Package/turris-diagnostics/description
