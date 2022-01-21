@@ -23,10 +23,13 @@ config_get CREDENTIALS_FILE mqtt credentials_file "/etc/fosquitto/credentials.pl
 CONTROLLER_ID=$(crypto-wrapper serial-number)
 
 echo "var.reforis.bin = \"/usr/bin/reforis\""
-echo "var.reforis.scriptname = \"/reforis\""
+echo "var.reforis.scriptname = \"$SCRIPTNAME\""
 
 echo
-echo "\$HTTP[\"url\"] =~ \"^\" + var.reforis.scriptname + \"/(.*)$\" {"
+echo "\$HTTP[\"url\"] =~ \"^\" + var.reforis.scriptname + \"/\" {"
+echo " \$HTTP[\"url\"] =~ \"^\" + var.reforis.scriptname + \"/static/\" {"
+echo "  alias.url += ( var.reforis.scriptname + \"/static/\" => \"/usr/lib/pythonX.X/site-packages/reforis_static/\" )"
+echo " } else {"
 echo "  server.max-read-idle = 90"
 case $SERVER in
 	flup)
@@ -52,11 +55,11 @@ fi
 		echo '	)'
 	;;
 	cgi)
-		echo "	alias.url = ( var.reforis.scriptname => var.reforis.cgi )"
+		echo "	alias.url = ( var.reforis.scriptname => var.reforis.bin )"
 		echo '	cgi.assign = ( "" => "" )'
 	;;
 esac
+echo " }"
 echo "}"
 
 
-echo "alias.url += ( var.reforis.scriptname + \"/static/\" => \"/usr/lib/pythonX.X/site-packages/reforis_static/\" )"
