@@ -7,7 +7,6 @@ config_get SCRIPTNAME server scriptname "/reforis"
 # config_get_bool DEBUG server debug "0"
 # config_get_bool NOAUTH auth noauth "0"
 config_get SESSION_TIMEOUT auth session_timeout ""
-config_get SERVER server server "flup"
 config_get SENTRY_DSN sentry dsn ""
 
 # scriptname must not contain escape codes (avoid CRLF injection in sed later)
@@ -31,34 +30,26 @@ echo " \$HTTP[\"url\"] =~ \"^\" + var.reforis.scriptname + \"/static/\" {"
 echo "  alias.url += ( var.reforis.scriptname + \"/static/\" => \"/usr/lib/pythonX.X/site-packages/reforis_static/\" )"
 echo " } else {"
 echo "  server.max-read-idle = 90"
-case $SERVER in
-	flup)
-		echo '	fastcgi.debug = 0'
-		echo '	fastcgi.server = ('
-		echo "		var.reforis.scriptname => ("
-		echo '			"python-fcgi" => ('
-		echo "				\"socket\" => \"/tmp/fastcgi.reforis.socket\","
-		echo "				\"bin-path\" => var.reforis.bin,"
-		echo '				"check-local" => "disable",'
-		echo '				"idle-timeout" => 180,'
-		echo '				"min-procs" => 0,'
-		echo '				"max-procs" => 1,'
-		echo '				"bin-environment" => ('
+echo '	fastcgi.debug = 0'
+echo '	fastcgi.server = ('
+echo "	var.reforis.scriptname => ("
+echo '		"python-fcgi" => ('
+echo "			\"socket\" => \"/tmp/fastcgi.reforis.socket\","
+echo "			\"bin-path\" => var.reforis.bin,"
+echo '			"check-local" => "disable",'
+echo '			"idle-timeout" => 180,'
+echo '			"min-procs" => 0,'
+echo '			"max-procs" => 1,'
+echo '			"bin-environment" => ('
 if [ -n "$SENTRY_DSN" ]; then
-		echo "					\"SENTRY_DSN\" => \"$SENTRY_DSN\","
+    echo "			\"SENTRY_DSN\" => \"$SENTRY_DSN\","
 fi
-		echo "					\"CONTROLLER_ID\" => \"$CONTROLLER_ID\","
-		echo '				),'
-		echo '			),'
-		echo '			turris_auth_scriptname => turris_auth'
-		echo '		)'
-		echo '	)'
-	;;
-	cgi)
-		echo "	alias.url = ( var.reforis.scriptname => var.reforis.bin )"
-		echo '	cgi.assign = ( "" => "" )'
-	;;
-esac
+echo "			\"CONTROLLER_ID\" => \"$CONTROLLER_ID\","
+echo '			),'
+echo '		),'
+echo '	turris_auth_scriptname => turris_auth'
+echo '	)'
+echo ')'
 echo " }"
 echo "}"
 
