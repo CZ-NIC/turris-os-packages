@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2018-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2018-2022 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,14 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=omnia-uboot
-PKG_VERSION:=2019-07.1
+PKG_VERSION:=2022.01
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/turris-omnia-uboot.git
-PKG_MIRROR_HASH:=aeab20bcc0f36f57ca95fb4bc093d49e39c04fe50ab88bcd8ee280739acacea7
-PKG_SOURCE_DATE:=2020-09-07
-PKG_SOURCE_VERSION:=6dd804d78fdcd775f6eeebe0aa0527d6761a115f
+PKG_SOURCE_URL:=https://source.denx.de/u-boot/u-boot.git
+PKG_MIRROR_HASH:=14816a081d20b353253b053f271eaef2309c599975c18f4720f8dfea5a4b4986
+PKG_SOURCE_DATE:=2022-01-10
+PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-2.0-or-later
@@ -27,6 +27,7 @@ define Package/omnia-uboot
   TITLE:=u-boot-omnia
   DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
   PROVIDES:=u-boot-omnia
+  VERSION:=$(PKG_VERSION)-$(PKG_RELEASE)-ddr
 endef
 
 define Build/Compile
