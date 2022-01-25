@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps
 PKG_VERSION:=3.7.1
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/webapps
@@ -61,16 +61,6 @@ endef
 
 define Package/turris-webapps/postinst
 #!/bin/sh
-
-# migrate Turris-specific lighttpd package to OpenWrt upstream lighttpd package
-for i in /etc/lighttpd/modules.d/*.load; do
-       [ -f "$i" ] || continue
-       i="${i##*/}"
-       i="${i%.load}"
-       mv -n "/etc/lighttpd/modules.d/$i.load" "/etc/lighttpd/conf.d/$i.conf"
-done
-rmdir /etc/lighttpd/modules.d/ 2>/dev/null
-
 [ -n "$$IPKG_INSTROOT" ] || {
 	/etc/init.d/lighttpd restart
 }
