@@ -154,14 +154,14 @@ define Package/fix-nextcloud-conf/description
   If there is empty config.php, which exists then it removes it.
 endef
 
-define Package/sentinel-nikola-to-fwlogs/description
+define Package/fix-sentinel-nikola-to-fwlogs/description
   Sentinel Nikola is being replaced by Sentinel FWLogs. They are pretty much
   compatible with exception of one UCI section name. This renames this UCI config
   (sentinel.nikola -> sentinel.fwlogs). This way Nikola configuration is migrated
   to FWLogs and Nikola can be removed.
 endef
 
-define Package/pkglists-nikola-to-fwlogs/description
+define Package/fix-pkglists-nikola-to-fwlogs/description
   Sentinel Nikola is being replaced by Sentinel FWLogs. This fixes rename of
   option in datacollect package list.
 endef
