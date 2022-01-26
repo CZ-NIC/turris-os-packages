@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2016-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2016-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-ng
-PKG_VERSION:=69.1.3
-PKG_RELEASE:=3
+PKG_VERSION:=70.0.0
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/updater/updater.git
-PKG_MIRROR_HASH:=865b4472cb79daabaae8556ddc2ed201c200fdc13021150b43098fbe6f83f4fb
+PKG_MIRROR_HASH:=32c751b0642da4b939d8e197df19af4209bb8c4c43eb733b01416a618a54f753
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -39,6 +39,7 @@ define Package/updater-ng
     +libcurl \
     +liburiparser \
     +libarchive \
+    +base64c \
     +ca-certificates
 endef
 
