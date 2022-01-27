@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2019-2022 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=uriparser
-PKG_VERSION:=0.9.5
+PKG_VERSION:=0.9.6
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/uriparser/uriparser/archive
-PKG_HASH:=dece5067b4517c4b16cde332c491b4b3508249d2a8f4ba393229575d3c5241c0
+PKG_HASH:=defaf550bf6fe05e89afb9814dccc6bd643a3b0a8308801a2c04b76682b87383
 PKG_BUILD_DIR:=$(BUILD_DIR)/uriparser-uriparser-$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
