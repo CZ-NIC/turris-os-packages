@@ -19,7 +19,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/mox-dtb
   TITLE:=Device tree for Turris MOX
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox
+  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox
 endef
 
 define Package/mox-dtb/description

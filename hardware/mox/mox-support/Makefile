@@ -16,18 +16,18 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/mox-generic-support
   TITLE:=Generic MOX support package
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox \
+  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox \
     +mtd +kmod-gpio-button-hotplug +mox-dtb
 endef
 
 define Package/mox-support
   TITLE:=MOX support package
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mox-generic-support
+  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox +mox-generic-support
 endef
 
 define Package/shield-support
   TITLE:=Shield support package
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mox-generic-support \
+  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox +mox-generic-support \
 	  +pkglists +turris-nor-update +turris-mox-firmware
   PROVIDES:=mox-support
   CONFLICTS:=mox-support

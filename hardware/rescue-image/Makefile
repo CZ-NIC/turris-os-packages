@@ -31,7 +31,7 @@ include $(INCLUDE_DIR)/quilt.mk
 include $(INCLUDE_DIR)/package.mk
 
 PATCH_DIR := $(PLATFORM_DIR)/patches$(if $(wildcard $(PLATFORM_DIR)/patches-$(KERNEL_PATCHVER)),-$(KERNEL_PATCHVER))
-ifeq ($(CONFIG_TARGET_mvebu_cortexa53_DEVICE_cznic-mox),y)
+ifeq ($(CONFIG_TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox),y)
 DEVICE := mox
 else ifeq ($(CONFIG_TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia),y)
 DEVICE := omnia
@@ -42,7 +42,7 @@ kernel_files=$(TOPDIR)/target/linux/$(BOARD)/files/. $(TOPDIR)/target/linux/gene
 
 define Package/rescue-image
 	TITLE:=rescue-image
-	DEPENDS:=@(TARGET_mvebu_cortexa53_DEVICE_cznic-mox||TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia)
+	DEPENDS:=@(TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox||TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia)
 endef
 
 define Build/Prepare

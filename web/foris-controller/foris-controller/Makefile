@@ -63,7 +63,7 @@ define Py3Package/foris-controller-app/install
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) ./files/foris-controller.conf $(1)/etc/config/foris-controller
 	touch $(1)/etc/config/foris
-ifeq ($(CONFIG_TARGET_mvebu_cortexa53_DEVICE_cznic-mox),y)
+ifeq ($(CONFIG_TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox),y)
 	sed -i 's|#\(option single true\)|\1|' $(1)/etc/config/foris-controller
 endif
 	$(INSTALL_CONF) ./files/foris-controller-subordinates.conf $(1)/etc/config/foris-controller-subordinates

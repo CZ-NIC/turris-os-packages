@@ -23,7 +23,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/mox-pkcs11
   TITLE:=MOX PKCS11
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +libopenssl
+  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox +libopenssl
 endef
 
 define Package/mox-pkcs11/description
