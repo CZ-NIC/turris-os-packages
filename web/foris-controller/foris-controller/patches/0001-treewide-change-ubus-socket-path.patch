@@ -17,11 +17,9 @@ Reference:
  foris_controller/notify/__main__.py     | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/foris_controller/controller/__main__.py b/foris_controller/controller/__main__.py
-index 1cb0b50..660a3d7 100644
 --- a/foris_controller/controller/__main__.py
 +++ b/foris_controller/controller/__main__.py
-@@ -86,7 +86,7 @@ def main():
+@@ -88,7 +88,7 @@ def main():
  
      if "ubus" in available_buses:
          ubus_parser = subparsers.add_parser("ubus", help="use ubus to recieve commands")
@@ -30,8 +28,6 @@ index 1cb0b50..660a3d7 100644
          ubus_parser.add_argument(
              "--single",
              default=False,
-diff --git a/foris_controller/notify/__main__.py b/foris_controller/notify/__main__.py
-index 22146af..240600b 100644
 --- a/foris_controller/notify/__main__.py
 +++ b/foris_controller/notify/__main__.py
 @@ -72,7 +72,7 @@ def main():
@@ -43,6 +39,3 @@ index 22146af..240600b 100644
  
      if "mqtt" in available_buses:
          mqtt_parser = subparsers.add_parser("mqtt", help="use mqtt to send notification")
--- 
-2.30.2
-
