@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=omnia-uboot
 PKG_VERSION:=2022.01
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://source.denx.de/u-boot/u-boot.git
@@ -31,9 +31,8 @@ define Package/omnia-uboot
 endef
 
 define Build/Compile
-	sed -i '/DCONFIG_KWB_SECURE/ d' $(PKG_BUILD_DIR)/tools/Makefile
 	cd $(PKG_BUILD_DIR); make CROSS_COMPILE=$(TARGET_CROSS) turris_omnia_defconfig
-	cd $(PKG_BUILD_DIR); make CROSS_COMPILE=$(TARGET_CROSS) u-boot-spl.kwb OMNIA_OLD_SPL=1
+	cd $(PKG_BUILD_DIR); make CROSS_COMPILE=$(TARGET_CROSS) u-boot-spl.kwb
 endef
 
 define Package/omnia-uboot/install
