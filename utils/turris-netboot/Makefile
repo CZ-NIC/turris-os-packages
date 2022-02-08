@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-netboot
 PKG_VERSION:=0.6.2
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
@@ -85,7 +85,7 @@ endef
 
 define Package/turris-netboot-data/install
 	$(INSTALL_DIR) $(1)/usr/share/turris-netboot
-	cd $(LINUX_DIR); ./usr/gen_initramfs_list.sh \
+	cd $(LINUX_DIR); ./usr/gen_initramfs.sh \
 	-o $(1)/usr/share/turris-netboot/initrd-$(CONFIG_ARCH).gz -u squash -g squash \
 	"$(PKG_BUILD_DIR)/rootfs" "$(PKG_BUILD_DIR)/rootfs.extra"
 	gzip -d $(1)/usr/share/turris-netboot/initrd-$(CONFIG_ARCH).gz
