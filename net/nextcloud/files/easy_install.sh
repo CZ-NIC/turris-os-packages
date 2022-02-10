@@ -72,7 +72,7 @@ fi
 # Hack MySQL database
 /etc/init.d/mysqld stop 2> /dev/null
 sleep $DELAY
-sudo -u mysql mysqld --skip-networking --skip-grant-tables --socket=/tmp/mysql_nextcloud.sock > /dev/null 2>&1 &
+sudo -u mariadb mysqld --skip-networking --skip-grant-tables --socket=/tmp/mysql_nextcloud.sock > /dev/null 2>&1 &
 PID="$!"
 i=0
 while [ "$i" -lt 15 ] && [ \! -S /tmp/mysql_nextcloud.sock ]; do
