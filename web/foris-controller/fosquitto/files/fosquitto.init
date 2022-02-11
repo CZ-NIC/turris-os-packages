@@ -142,6 +142,9 @@ start_service() {
 	try_chown_dirs
 	check_credentials_files_owner
 
+	config_get_bool remote_enabled remote enabled "0"
+	config_get remote_port remote port "11884"
+
 	procd_open_instance
 	procd_set_param command mosquitto
 	procd_append_param command -c $GENERATED_CONF
@@ -150,6 +153,11 @@ start_service() {
 	procd_set_param stdout 1 # forward stdout of the command to logd
 	procd_set_param stderr 1 # same for stderr
 	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-0.2} ${respawn_retry:-25}
+	if [ "$remote_enabled" = "1" ]; then
+		if serial_number=$(crypto-wrapper serial-number); then
+			procd_add_mdns fosquitto tcp "${remote_port}" id=${serial_number}
+		fi
+	fi
 	procd_close_instance
 }
 
