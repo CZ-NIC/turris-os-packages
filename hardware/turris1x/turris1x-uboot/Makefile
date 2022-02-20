@@ -17,7 +17,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/turris1x-uboot
   TITLE:=Turris 1.x U-boot
-  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_turris1x
+  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_cznic_turris1x
   PROVIDES:=u-boot-turris1x
 endef
 

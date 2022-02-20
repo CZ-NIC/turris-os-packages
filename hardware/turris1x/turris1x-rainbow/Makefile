@@ -26,7 +26,7 @@ define Package/turris1x-rainbow
   TITLE:=turris1x-rainbow
   URL:=https://gitlab.nic.cz/turris/rainbow
   PROVIDES:=turris-rainbow
-  DEPENDS:=@KERNEL_DEVMEM @TARGET_mpc85xx_p2020_DEVICE_turris1x
+  DEPENDS:=@KERNEL_DEVMEM @TARGET_mpc85xx_p2020_DEVICE_cznic_turris1x
 endef
 
 define Package/turris1x-rainbow/conffiles

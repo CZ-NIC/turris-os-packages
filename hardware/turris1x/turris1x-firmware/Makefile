@@ -17,7 +17,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/turris-1x-firmware
   TITLE:=Firmware for Turris 1.x
-  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_turris1x
+  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_cznic_turris1x
   PROVIDES:=turris-nor-update-firmware
 endef
 

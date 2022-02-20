@@ -42,7 +42,7 @@ endef
 define Package/cert-backup-turris1x
   $(call Package/CommonBackend)
   TITLE+= - Turris 1.x backend
-  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_turris1x
+  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_cznic_turris1x
   CONFLICTS:=cert-backup-btrfs
 endef
 

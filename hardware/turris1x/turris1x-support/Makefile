@@ -15,7 +15,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/turris1x-support
   TITLE:=Turris 1.x hardware support files
   VERSION:=$(LINUX_VERSION)-$(LINUX_RELEASE)-$(LINUX_VERMAGIC)
-  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_turris1x
+  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_cznic_turris1x
 endef
 
 define Package/turris1x-support/description

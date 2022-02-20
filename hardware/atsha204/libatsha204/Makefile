@@ -27,7 +27,7 @@ define Package/libatsha204
   URL:=https://gitlab.nic.cz/turris/libatsha204
   PROVIDES:=turris-otp
   DEPENDS:=+libopenssl +libunbound
-  DEPENDS+=@(TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia||TARGET_mpc85xx_p2020_DEVICE_turris1x)
+  DEPENDS+=@(TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia||TARGET_mpc85xx_p2020_DEVICE_cznic_turris1x)
   VARIANT:=real
 endef
 
@@ -45,7 +45,7 @@ ifeq ($(BUILD_VARIANT),real)
   MAKE_FLAGS += USE_LAYER=USE_LAYER_NI2C
   ifeq ($(CONFIG_TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia),y)
     MAKE_FLAGS += DEFAULT_NI2C_DEV_PATH=NI2C_DEV_PATH_OMNIA
-  else ifeq ($(CONFIG_TARGET_mpc85xx_p2020_DEVICE_turris1x),y)
+  else ifeq ($(CONFIG_TARGET_mpc85xx_p2020_DEVICE_cznic_turris1x),y)
     MAKE_FLAGS += DEFAULT_NI2C_DEV_PATH=NI2C_DEV_PATH_TURRIS
   endif
 endif
