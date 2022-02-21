@@ -193,6 +193,11 @@ define Package/fix-turris1x-btrfs-sdcard/description
   The fix for Turris 1.x SD card going to read only mode.
   This adds command that forces SD card controller to the RW mode as part of the
   boot process (U-Boot environment).
+
+define Package/fix-i-agree-with-eula-1/description
+  The Sentinel EULA agreement. This is used in combination with removal of
+  sentinel-i_agree_with_eula and thus switch from forced enable to optional.
+  It reenables agreement after package that forced it is removed.
 endef
 
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
@@ -217,3 +222,4 @@ $(eval $(call FIX,lighttpd-sync-with-upstream,+lighttpd))
 $(eval $(call FIX,firewall-zone-limit,+firewall))
 $(eval $(call FIX,network-devices,+netifd))
 $(eval $(call FIX,turris1x-btrfs-sdcard,+pkglists))
+$(eval $(call FIX,i-agree-with-eula-1,+uci,prerm))

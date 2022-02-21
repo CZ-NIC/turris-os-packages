@@ -1,0 +1,10 @@
+#!/bin/sh
+uci -q batch <<EOF
+  set sentinel.main="main"
+  set sentinel.main.agreed_with_eula_version=1
+  commit sentinel.main
+
+  set pkglists.pkglists=pkglists
+  add_list pkglists.pkglists.pkglist=datacollect
+  commit pkglists.pkglists
+EOF
