@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-bootstrap-theme
-PKG_VERSION:=0.3.0
+PKG_VERSION:=0.3.1
 PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/bootstrap-theme.git
-PKG_MIRROR_HASH:=02c88d86ec4b49f1c3e866b12bdb30e26eec12e9fd1affc88feeb257d29a4d9a
+PKG_MIRROR_HASH:=1158322774de1682d47ca26b582e3e96360b9b848d1a0ed354f6d45e5cbfc9d9
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
