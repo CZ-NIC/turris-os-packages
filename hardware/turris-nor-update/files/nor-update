@@ -99,7 +99,7 @@ boot_scr_cleanup() {
 fix_boot_scr() (
     local dev="$(sed -n 's|^\(/dev/[a-z0-9]*\) / btrfs .*|\1|p' /proc/mounts)"
     # Fix is required only for BTRFS. No need to continue if root filesystem is not BTRFS.
-    [ -n "$dev" ] || return
+    [ -n "$dev" ] || return 0
     tmpdir="$(mktemp -d)"
     [ -n "$tmpdir" ] || die "Can't create a temp directory!"
     trap boot_scr_cleanup EXIT
