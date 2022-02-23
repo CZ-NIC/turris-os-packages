@@ -152,7 +152,7 @@ start_service() {
 	procd_set_param pidfile /var/run/fosquitto.pid
 	procd_set_param stdout 1 # forward stdout of the command to logd
 	procd_set_param stderr 1 # same for stderr
-	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-0.2} ${respawn_retry:-25}
+	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-2} ${respawn_retry:-25}
 	if [ "$remote_enabled" = "1" ]; then
 		if serial_number=$(crypto-wrapper serial-number); then
 			procd_add_mdns fosquitto tcp "${remote_port}" id=${serial_number}
