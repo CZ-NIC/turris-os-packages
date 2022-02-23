@@ -1,0 +1,60 @@
+From 0791fd0abfa5f90118fdae014f09a2f212325963 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Karel=20Ko=C4=8D=C3=AD?= <karel.koci@nic.cz>
+Date: Tue, 22 Feb 2022 13:40:42 +0100
+Subject: [PATCH] files/immediate_reboot: fix block on package removal
+
+This makes sure that init script is not executed when we are installing
+or removing package. The important problem this covers is the block of
+execution on package removal as immediate_reboot init script waits for
+termination of opkg or updater while at the same time opkg waits for
+postinstall script termination and thus termination of the initial wait.
+This creates deadlock.
+---
+ CHANGELOG.md                | 6 ++++++
+ files/immediate_reboot.init | 6 ++++++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 9806b03..5433fcf 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
+ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+ 
++## [Unreleased]
++### Fixed
++- block of execution when package is removed or reinstalled using opkg
++- do not attempt recovery of journal on package installation
++
++
+ ## [1.5.0] - 2022-02-16
+ ### Added
+ - Reboot requirement info to approval message
+diff --git a/files/immediate_reboot.init b/files/immediate_reboot.init
+index 9d4ee08..89bd602 100755
+--- a/files/immediate_reboot.init
++++ b/files/immediate_reboot.init
+@@ -12,6 +12,9 @@ status() {
+ }
+ 
+ start() {
++	# Make sure that this is not executed from package. Recovery when package is
++	# being installed is not desirable.
++	[ -z "$PKG_UPGRADE" ] || return 0
+ 	# Recover updater's journal if it exists
+ 	if [ -e "/usr/share/updater/journal" ]; then
+ 		# Note: supervisor runs pkgupdate that recovers run from journal and later
+@@ -23,6 +26,9 @@ start() {
+ }
+ 
+ stop() {
++	# Make sure that this is not executed from package. We do not want to block
++	# the removal of package.
++	[ -z "$PKG_UPGRADE" ] || return 0
+ 	# Block shutdown when update is running
+ 	# We have to use Python3 as there seems to be no shell tool to simply use
+ 	# POSIX file locks (lockf instead of flock)
+-- 
+2.32.0
+
