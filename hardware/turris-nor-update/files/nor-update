@@ -3,6 +3,7 @@ set -eu
 
 DEVEL=""
 VERBOSE=""
+BACKUP_UBOOT_ENV="/usr/share/nor-update/uboot-env.backup"
 
 SECURE_FIRMWARE="secure-firmware.bin"
 SECURE_FIRMWARE_PART=""
@@ -26,6 +27,10 @@ board_pre_hook() {
 }
 
 board_post_hook() {
+    :
+}
+
+board_ubootenv_hook() {
     :
 }
 
@@ -62,6 +67,8 @@ print_help() {
 flash() {
     local flashing="$1"
     local part="$2"
+    local preupdate_hook="$3"
+    local postupdate_hook="$4"
 
     [ -n "$part" ] || return 0
 
@@ -84,14 +91,47 @@ flash() {
     if mtd verify "$1" "/dev/$part"; then
         v_echo "Partition with $flashing was up to date already."
     else
+        "$preupdate_hook"
         mtd -e "/dev/$part" write "$1" "/dev/$part" || \
             die "Flashing '$flashing' partition (/dev/$part) failed!"
+        "$postupdate_hook"
     fi
 }
 
-boot_scr_cleanup() {
-    umount -fl "$tmpdir"
-    rmdir "$tmpdir"
+uboot_preupdate() {
+    BACKUP_UBOOT_ENV="/usr/share/nor-update/uboot-env.backup"
+    v_echo "Storing old U-boot environment to be preserved"
+    fw_printenv >"$BACKUP_UBOOT_ENV" || {
+        # Let's assume that there is a default environment if we can't read it.
+        rm -f "$BACKUP_UBOOT_ENV"
+        return 0
+    }
+    board_ubootenv_hook  # to perform any possible migrations
+}
+
+uboot_postupdate() {
+    [ -f "$BACKUP_UBOOT_ENV" ] || return 0
+    if ! fw_printenv >/dev/null 2>&1; then
+        echo "Updating configuration for U-Boot environment access."
+        rm -f /etc/config/ubootenv
+        fw_env-config-init.sh
+    fi
+
+    if [ "$(fw_printenv 2>/dev/null)" = "$(cat "$BACKUP_UBOOT_ENV")" ]; then
+        # The environment is the same so no migration is needed
+        rm "$BACKUP_UBOOT_ENV"
+        return 0
+    fi
+
+    if fw_setenv -s "$BACKUP_UBOOT_ENV"; then
+        echo "Your U-Boot environment was migrated to new U-Boot"
+        echo "You can find it in $BACKUP_UBOOT_ENV"
+        echo "You can reset it via 'fw_setenv bootcmd \"env default -f -a; saveenv; reset\"'"
+    else
+        echo "Migration of your U-Boot environment failed."
+        echo "You can find it in $BACKUP_UBOOT_ENV"
+        echo "Set whatever you need manually via 'fw_setenv'"
+    fi
 }
 
 # We need boot.scr in root of Btrfs partition to be symlink to @ subvolume to
@@ -99,10 +139,10 @@ boot_scr_cleanup() {
 fix_boot_scr() (
     local dev="$(sed -n 's|^\(/dev/[a-z0-9]*\) / btrfs .*|\1|p' /proc/mounts)"
     # Fix is required only for BTRFS. No need to continue if root filesystem is not BTRFS.
-    [ -n "$dev" ] || return
+    [ -n "$dev" ] || return 0
     tmpdir="$(mktemp -d)"
     [ -n "$tmpdir" ] || die "Can't create a temp directory!"
-    trap boot_scr_cleanup EXIT
+    trap 'umount -fl "$tmpdir" && rmdir "$tmpdir"' EXIT
     mount "$dev" "$tmpdir" || die "Can't mount root filesystem"
     [ -e "$tmpdir"/boot.scr ] || \
         ln -sf @/boot/boot.scr "$tmpdir"/boot.scr || \
@@ -147,8 +187,8 @@ if [ -z "$DEVEL" ]; then
 fi
 
 board_pre_hook
-flash "secure firmware" "$SECURE_FIRMWARE_PART" "$SECURE_FIRMWARE_DEVEL" "$SECURE_FIRMWARE"
-flash "U-Boot" "$UBOOT_PART" "$UBOOT_DEVEL" "$UBOOT"
-flash "rescue system" "$RESCUE_PART" "$RESCUE_DEVEL" "$RESCUE"
-flash "dtb" "$DTB_PART" "$DTB_DEVEL" "$DTB"
+flash "secure firmware" "$SECURE_FIRMWARE_PART" true true "$SECURE_FIRMWARE_DEVEL" "$SECURE_FIRMWARE"
+flash "U-Boot" "$UBOOT_PART" uboot_preupdate uboot_postupdate "$UBOOT_DEVEL" "$UBOOT"
+flash "rescue system" "$RESCUE_PART" true true "$RESCUE_DEVEL" "$RESCUE"
+flash "dtb" "$DTB_PART" true true "$DTB_DEVEL" "$DTB"
 board_post_hook
