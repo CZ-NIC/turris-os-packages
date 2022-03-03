@@ -28,7 +28,7 @@ trap cleanup EXIT TERM INT QUIT ABRT
 
 
 device_attrs="
-macaddr mtu mtu6
+type macaddr mtu mtu6
 "
 bridge_attrs="
 bridge_empty igmp_snooping multicast_querier query_interval
@@ -50,7 +50,6 @@ for_interfaces() {
 		empty="n" # we always create device for bridge
 		dcnf="$(uci add "network" "device")"
 		uci set "network.$dcnf.name=$devname"
-		uci set "network.$dcnf.type=bridge"
 		for attr in $bridge_attrs; do
 			local value
 			config_get value "$name" "$attr"
