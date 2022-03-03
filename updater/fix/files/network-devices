@@ -38,10 +38,6 @@ forward_delay hello_time priority ageing_time max_age
 
 
 # This splits off the new device sections from existing interfaces.
-for_interface_ifname() {
-	local ifname="$1"
-	uci add_list "network.$dcnf.ports=$ifname"
-}
 for_interfaces() {
 	local name="$1"
 	local type ifname
@@ -61,7 +57,9 @@ for_interfaces() {
 			[ -n "$value" ] && uci set "network.$dcnf.$attr=$value"
 			uci -q del "network.$name.$attr" || true
 		done
-		config_list_foreach "$name" "ifname" for_interface_ifname
+		for ifnm in $ifname; do
+			uci add_list "network.$dcnf.ports=$ifnm"
+		done
 	else
 		devname="$ifname"
 		# We do not create device for interfaces if it references some other
