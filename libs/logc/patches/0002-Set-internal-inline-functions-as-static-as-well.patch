@@ -1,0 +1,35 @@
+From 334bcb27c9f01a67899a78187ffa88971c8a26db Mon Sep 17 00:00:00 2001
+From: Michal Hrusecky <michal.hrusecky@turris.com>
+Date: Mon, 20 Dec 2021 14:39:25 +0100
+Subject: [PATCH 2/2] Set internal inline functions as static as well
+
+Making sure those functions are not exported and prevent future build
+errors like those:
+
+/home/fast/miska/omnia6-build/staging_dir/toolchain-arm_cortex-a9+vfpv3-d16_gcc-8.4.0_musl_eabi/lib64/gcc/arm-openwrt-linux-muslgnueabi/8.4.0/../../../../arm-openwrt-linux-muslgnueabi/bin/ld: /home/fast/miska/omnia6-build/staging_dir/target-arm_cortex-a9+vfpv3-d16_musl_eabi/usr/lib/liblogc.so: undefined reference to `msg2syslog_level'
+/home/fast/miska/omnia6-build/staging_dir/toolchain-arm_cortex-a9+vfpv3-d16_gcc-8.4.0_musl_eabi/lib64/gcc/arm-openwrt-linux-muslgnueabi/8.4.0/../../../../arm-openwrt-linux-muslgnueabi/bin/ld: /home/fast/miska/omnia6-build/staging_dir/target-arm_cortex-a9+vfpv3-d16_musl_eabi/usr/lib/liblogc.so: undefined reference to `str_empty'
+---
+ logc/util.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/logc/util.h b/logc/util.h
+index f0c1c27..4c77d8c 100644
+--- a/logc/util.h
++++ b/logc/util.h
+@@ -24,11 +24,11 @@
+ #include <syslog.h>
+ 
+ 
+-inline bool str_empty(const char *str) {
++static inline bool str_empty(const char *str) {
+ 	return !str || *str == '\0';
+ }
+ 
+-inline int msg2syslog_level(enum log_message_level msg_level) {
++static inline int msg2syslog_level(enum log_message_level msg_level) {
+ 	switch (msg_level) {
+ 		case LL_CRITICAL:
+ 			return LOG_CRIT;
+-- 
+2.34.1
+

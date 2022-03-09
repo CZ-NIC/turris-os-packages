@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-minipot
-PKG_VERSION:=2.2
-PKG_RELEASE:=2
+PKG_VERSION:=2.3.0
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/minipot.git
-PKG_MIRROR_HASH:=a842b4b47e13300759dd197da59700375160f89a207619d8844c79a095ba5478
+PKG_MIRROR_HASH:=01f6ff3e95c277c692aba589718cd8eafc44c3a6304cd402df7b37d2bdb14592
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -37,6 +37,8 @@ define Package/sentinel-minipot
     +libevent2 \
     +logc \
     +logc-argp \
+    +logc-czmq \
+    +logc-libevent \
     +msgpack-c \
     +base64c \
     +sentinel-firewall \

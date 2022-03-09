@@ -1,0 +1,34 @@
+From 5bf796bd73ce6e2ad8f2e42c8f64b9440ae1c227 Mon Sep 17 00:00:00 2001
+From: Michal Hrusecky <michal.hrusecky@turris.com>
+Date: Mon, 20 Dec 2021 14:50:43 +0100
+Subject: [PATCH] configure: Do not check for bootstrap file
+
+We can check for gperf unconditionally. No idea why would existence of a
+file prevent us for checking for iperf, but this particular check fails
+when cross-compiling. And dropping it shouldn't hurt.
+
+checking for ./bootstrap... configure: error: cannot check for file existence when cross compiling
+---
+ configure.ac | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 96729e8..078e784 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -29,10 +29,8 @@ AS_IF([test "$argp_standalone_required" = "yes"],
+   AC_CHECK_LIB([argp], [argp_parse], , AC_MSG_ERROR([Unable to find libargp])))
+ 
+ dnl Build helpers
+-AC_CHECK_FILE([${0%/*}/bootstrap],[
+-  AC_PATH_PROG([GPERF], [gperf])
+-  AS_IF([test -z "$GPERF"], [AC_MSG_ERROR([Missing gperf generator])])
+-])
++AC_PATH_PROG([GPERF], [gperf])
++AS_IF([test -z "$GPERF"], [AC_MSG_ERROR([Missing gperf generator])])
+ AM_CONDITIONAL([GPERF_GENERATE], [test -n "$GPERF"])
+ 
+ 
+-- 
+2.34.1
+
