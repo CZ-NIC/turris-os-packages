@@ -103,8 +103,8 @@ load_current_state() {
 
 fetch_existing_versions() {
 	EXISTING_VERSIONS="$(curl "https://repo.turris.cz/archive/" | \
-		sed -n 's|.*alt="\[DIR\]".*<a href="\([^"]*\)/".*|\1|p' | \
-		grep -Ev "^(omnia|turris|3.x)$" | sort -Vr)"
+		sed -n 's|.*<a href="\([^"]*\)/".*|\1|p' | \
+		grep -Ev "^(\.\.|omnia|turris|3.x)$" | sort -Vr)"
 	LATEST_VERSION="$(echo "$EXISTING_VERSIONS" | head -1)"
 }
 
