@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2013-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2013-2020, 2022 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,13 +8,14 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ouidb
-PKG_VERSION:=20200531
+PKG_VERSION:=20220320
+PKG_RELEASE:=1
 
-PKG_SOURCE_VERSION:=5e0ebc9fc05b1f0ad557136e748adc9088bfdca4
+PKG_SOURCE_VERSION:=6a97b2095c4c2a31b2099037a43814990c611648
 PKG_SOURCE_URL:=https://github.com/wireshark/wireshark/raw/$(PKG_SOURCE_VERSION)
 PKG_SOURCE_URL_FILE:=manuf
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).txt
-PKG_HASH:=3241416dcc37c9778a0bab500fd1154e89996d51105a982bb9c02c6714303c8d
+PKG_HASH:=0737d8aaaa404f3d0606e34b4622c840535885fc899aecb2964a4b96f2db51d6
 
 UNPACK_CMD:=:
 
