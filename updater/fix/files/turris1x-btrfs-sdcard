@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+. /etc/os-release
+
+[ "$OPENWRT_DEVICE_PRODUCT" = "Turris 1.x" ] || exit 0
+
+arg="mw ffee0060 40000000;"
+
+current="$(fw_printenv 'bootcmd')"
+value="${current#bootcmd=}"
+if ! echo "$value" | grep -qF "$arg"; then
+	fw_setenv 'bootcmd' "$arg $value"
+fi
