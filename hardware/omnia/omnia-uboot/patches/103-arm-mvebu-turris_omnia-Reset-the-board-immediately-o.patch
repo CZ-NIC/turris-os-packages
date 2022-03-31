@@ -1,7 +1,7 @@
 From 930c46e86123aeea1c73ae55d70ff3dcfc077992 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
 Date: Thu, 17 Feb 2022 13:54:43 +0100
-Subject: [PATCH 3/3] arm: mvebu: turris_omnia: Reset the board immediately on
+Subject: [PATCH 4/4] arm: mvebu: turris_omnia: Reset the board immediately on
  DDR training failure
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8

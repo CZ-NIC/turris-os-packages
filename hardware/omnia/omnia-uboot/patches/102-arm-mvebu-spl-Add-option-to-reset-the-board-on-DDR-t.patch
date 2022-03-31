@@ -1,0 +1,79 @@
+From 7bb7f788743f4951b4d4c795f125b82132dd3205 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Date: Thu, 17 Feb 2022 13:54:42 +0100
+Subject: [PATCH 3/4] arm: mvebu: spl: Add option to reset the board on DDR
+ training failure
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Some boards may occacionally fail DDR training. Currently we hang() in
+this case. Add an option that makes the board do an immediate reset in
+such a case, so that a new training is tried as soon as possible,
+instead of hanging and possibly waiting for watchdog to reset the board.
+
+(If the DDR training fails while booting the image via UART, we will
+ still hang - it doesn't make sense to reset in such a case, because
+ after reset the board will try booting from another medium, and the
+ UART booting utility does not expect that.)
+
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Reviewed-by: Pali Rohár <pali@kernel.org>
+Reviewed-by: Stefan Roese <sr@denx.de>
+---
+ arch/arm/mach-mvebu/Kconfig | 13 +++++++++++++
+ arch/arm/mach-mvebu/spl.c   |  7 ++++++-
+ 2 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
+index d23cc0c760..7d487f270b 100644
+--- a/arch/arm/mach-mvebu/Kconfig
++++ b/arch/arm/mach-mvebu/Kconfig
+@@ -213,6 +213,19 @@ config DDR_LOG_LEVEL
+ 	  At level 3, rovides the windows margin of each DQ as a results of
+ 	  DQS centeralization.
+ 
++config DDR_RESET_ON_TRAINING_FAILURE
++	bool "Reset the board on DDR training failure instead of hanging"
++	depends on ARMADA_38X || ARMADA_XP
++	help
++	  If DDR training fails in SPL, reset the board instead of hanging.
++	  Some boards are known to fail DDR training occasionally and an
++	  immediate reset may be preferable to waiting until the board is
++	  reset by watchdog (if there even is one).
++
++	  Note that if booting via UART and the DDR training fails, the
++	  device will still hang - it doesn't make sense to reset the board
++	  in such a case.
++
+ config SYS_BOARD
+ 	default "clearfog" if TARGET_CLEARFOG
+ 	default "helios4" if TARGET_HELIOS4
+diff --git a/arch/arm/mach-mvebu/spl.c b/arch/arm/mach-mvebu/spl.c
+index 216b9765ef..479ee5d49e 100644
+--- a/arch/arm/mach-mvebu/spl.c
++++ b/arch/arm/mach-mvebu/spl.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <common.h>
++#include <cpu_func.h>
+ #include <dm.h>
+ #include <debug_uart.h>
+ #include <fdtdec.h>
+@@ -290,7 +291,11 @@ void board_init_f(ulong dummy)
+ 	ret = ddr3_init();
+ 	if (ret) {
+ 		printf("ddr3_init() failed: %d\n", ret);
+-		hang();
++		if (IS_ENABLED(CONFIG_DDR_RESET_ON_TRAINING_FAILURE) &&
++		    get_boot_device() != BOOT_DEVICE_UART)
++			reset_cpu();
++		else
++			hang();
+ 	}
+ #endif
+ 
+-- 
+2.35.1
+
