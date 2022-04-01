@@ -166,7 +166,6 @@ define Package/fix-pkglists-nikola-to-fwlogs/description
   option in datacollect package list.
 endef
 
-
 define Package/fix-lighttpd-sync-with-upstream/description
   We are getting close to dropping our maintained package lighttpd in favor of
   upstream variant, but before we are able to do it, we need to move
@@ -190,6 +189,12 @@ define Package/fix-network-devices/description
   are now configured separatelly and only referenced in network interfaces.
 endef
 
+define Package/fix-turris1x-btrfs-sdcard/description
+  The fix for Turris 1.x SD card going to read only mode.
+  This adds command that forces SD card controller to the RW mode as part of the
+  boot process (U-Boot environment).
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
@@ -211,3 +216,4 @@ $(eval $(call FIX,pkglists-nikola-to-fwlogs,+pkglists))
 $(eval $(call FIX,lighttpd-sync-with-upstream,+lighttpd))
 $(eval $(call FIX,firewall-zone-limit,+firewall))
 $(eval $(call FIX,network-devices,+netifd))
+$(eval $(call FIX,turris1x-btrfs-sdcard,+pkglists))
