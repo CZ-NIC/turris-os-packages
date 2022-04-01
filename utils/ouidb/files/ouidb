@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#    Copyright (c) 2015, CZ.NIC, z.s.p.o. (http://www.nic.cz/)
+#    Copyright (c) 2015, 2022, CZ.NIC, z.s.p.o. (http://www.nic.cz/)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Settings
-OUI_FILE="oui.db"
+OUI_FILE="/usr/share/ouidb/oui.db"
 
 QRY="$1"
 
