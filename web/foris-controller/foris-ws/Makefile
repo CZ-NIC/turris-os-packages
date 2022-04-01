@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2019-2022 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -64,7 +64,7 @@ define Py3Package/foris-ws/install
 	$(INSTALL_DIR) $(1)/usr/share/foris-ws/bin/
 	$(INSTALL_BIN) ./files/socat.sh $(1)/usr/share/foris-ws/bin/socat.sh
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
-	$(INSTALL_DATA) ./files/lighttpd-foris-ws.conf $(1)/etc/lighttpd/conf.d/foris-ws.conf
+	$(INSTALL_DATA) ./files/lighttpd-foris-ws.conf $(1)/etc/lighttpd/conf.d/70-foris-ws.conf
 endef
 
 define Package/foris-ws/postinst

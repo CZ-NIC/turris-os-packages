@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2020-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -43,7 +43,7 @@ define Package/turris-webapps-tvheadend/install
 	$(INSTALL_DATA) ./files/tvheadend.svg $(1)/www/webapps-icons
 
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
-	$(CP) ./files/tvheadend.lighttpd $(1)/etc/lighttpd/conf.d/tvheadend.conf
+	$(CP) ./files/tvheadend.lighttpd $(1)/etc/lighttpd/conf.d/80-tvheadend.conf
 endef
 
 $(eval $(call BuildPackage,turris-webapps-tvheadend))

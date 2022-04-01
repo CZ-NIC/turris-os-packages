@@ -60,7 +60,7 @@ define Package/$(PKG_NAME)/install
 		expr $$$$i : ipkg || $(CP) -r $(PKG_BUILD_DIR)/$$$$i $(1)/srv/www/nextcloud;\
 	done
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
-	$(INSTALL_DATA) ./files/nextcloud.conf $(1)/etc/lighttpd/conf.d/
+	$(INSTALL_DATA) ./files/nextcloud.conf $(1)/etc/lighttpd/conf.d/80-nextcloud.conf
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/nextcloud.cron $(1)/etc/cron.d/nextcloud
 	$(INSTALL_DIR) $(1)/usr/bin

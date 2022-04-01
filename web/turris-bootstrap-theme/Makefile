@@ -37,7 +37,7 @@ Build/Compile:=:
 
 define Package/turris-bootstrap-theme/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
-	$(INSTALL_CONF) ./files/lighttpd.conf $(1)/etc/lighttpd/conf.d/theme.conf
+	$(INSTALL_CONF) ./files/lighttpd.conf $(1)/etc/lighttpd/conf.d/70-theme.conf
 
 	$(INSTALL_DIR) $(1)/www/turris-theme
 	$(MAKE) -C $(PKG_BUILD_DIR) install NO_BUILD=y INSTALL_DIR=$(1)/www/turris-theme

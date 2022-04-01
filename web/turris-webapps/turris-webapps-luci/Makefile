@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2020-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -36,7 +36,7 @@ endef
 
 define Package/turris-webapps-luci/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
-	$(CP) ./files/luci.lighttpd $(1)/etc/lighttpd/conf.d/luci.conf
+	$(CP) ./files/luci.lighttpd $(1)/etc/lighttpd/conf.d/80-luci.conf
 	$(INSTALL_DIR) $(1)/www/webapps-icons
 	$(CP) ./files/luci.svg $(1)/www/webapps-icons/luci.svg
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps

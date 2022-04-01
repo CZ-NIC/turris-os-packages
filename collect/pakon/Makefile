@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017-2020 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2017-2022 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -66,7 +66,7 @@ define Package/pakon/install
 	$(INSTALL_DIR) $(1)/www/cgi-bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/web/api.cgi $(1)/www/cgi-bin/pakon
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
-	$(INSTALL_DATA) ./files/lighttpd-pakon.conf $(1)/etc/lighttpd/conf.d/pakon.conf
+	$(INSTALL_DATA) ./files/lighttpd-pakon.conf $(1)/etc/lighttpd/conf.d/80-pakon.conf
 
 	# PaKon itself
 	$(INSTALL_DIR) $(1)/etc/suricata-pakon/output_conf.d

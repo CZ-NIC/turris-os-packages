@@ -78,7 +78,7 @@ define Py3Package/reforis/install
 	$(INSTALL_DATA) ./files/reforis.svg $(1)/www/webapps-icons/
 
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
-	$(INSTALL_DATA) ./files/reforis-lighttpd.conf $(1)/etc/lighttpd/conf.d/reforis.conf
+	$(INSTALL_DATA) ./files/reforis-lighttpd.conf $(1)/etc/lighttpd/conf.d/80-reforis.conf
 
 	$(INSTALL_DIR) $(1)/usr/libexec/reforis
 	$(INSTALL_BIN) ./files/reforis-lighttpd-dynamic.sh $(1)/usr/libexec/reforis/lighttpd-dynamic

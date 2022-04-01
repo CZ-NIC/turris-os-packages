@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2020-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -38,7 +38,7 @@ Build/Compile:=:
 
 define Package/turris-webapps-netdata/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
-	$(CP) ./files/netdata.lighttpd $(1)/etc/lighttpd/conf.d/netdata.conf
+	$(CP) ./files/netdata.lighttpd $(1)/etc/lighttpd/conf.d/80-netdata.conf
 	$(INSTALL_DIR) $(1)/www/webapps-icons
 	$(CP) ./files/netdata.svg $(1)/www/webapps-icons/netdata.svg
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps

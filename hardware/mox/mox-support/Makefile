@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+## Copyright (C) 2019-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -76,7 +76,7 @@ define Package/shield-support/install
 	$(INSTALL_BIN) ./files/enable_sentinel $(1)/etc/uci-defaults/10_sentinel-enable
 	$(INSTALL_BIN) ./files/enable_updater $(1)/etc/uci-defaults/10_updater-enable
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
-	$(INSTALL_DATA) ./files/lighttpd-reforis-only.conf $(1)/etc/lighttpd/conf.d/reforis-redirect.conf
+	$(INSTALL_DATA) ./files/lighttpd-reforis-only.conf $(1)/etc/lighttpd/conf.d/60-reforis-redirect.conf
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/button
 	$(INSTALL_DATA) ./files/shield_reset_btn $(1)/etc/hotplug.d/button/mox_reset
 endef

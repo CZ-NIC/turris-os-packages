@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2017-2021 CZ.NIC z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2017-2022 CZ.NIC z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -66,7 +66,7 @@ define ForisControllerModule/foris-controller-storage-module/install
 	$(CP) $(PKG_BUILD_DIR)/scripts/syslog-ng-logrotate.conf $(1)/etc/logrotate.d/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/syslog-ng.sh $(1)/usr/libexec/syslog-ng-srv.sh
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/scripts/lighttpd_srv_setting.sh $(1)/usr/libexec/lighttpd_srv_setting.sh
-	$(INSTALL_CONF) $(PKG_BUILD_DIR)/scripts/lighttpd.conf $(1)/etc/lighttpd/conf.d/srv.conf
+	$(INSTALL_CONF) $(PKG_BUILD_DIR)/scripts/lighttpd.conf $(1)/etc/lighttpd/conf.d/45-srv.conf
 
 	$(INSTALL_DATA) ./files/storage.uci $(1)/etc/config/storage
 

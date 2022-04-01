@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2018-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -38,7 +38,7 @@ Build/Compile:=:
 
 define Package/turris-webapps/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/turris-root.conf $(1)/etc/lighttpd/conf.d/turris-root.conf
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/turris-root.conf $(1)/etc/lighttpd/conf.d/90-turris-root.conf
 
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/turris-webapps-json-cgi $(1)/usr/share/turris-webapps
