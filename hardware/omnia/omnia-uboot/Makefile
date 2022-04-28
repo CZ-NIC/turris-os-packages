@@ -27,7 +27,6 @@ define Package/omnia-uboot
   TITLE:=u-boot-omnia
   DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
   PROVIDES:=u-boot-omnia
-  VERSION:=$(PKG_VERSION)-$(PKG_RELEASE)-ddr
 endef
 
 define Build/Compile
