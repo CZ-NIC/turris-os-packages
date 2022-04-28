@@ -164,6 +164,12 @@
 				"description": "Software for in depth monitoring of your traffic using Suricata.",
 				"url": "https://docs.turris.cz/basics/apps/pakon/",
 				"labels": ["experimental", "netload", "high_memory", "storage"]
+			},
+			"morce": {
+				"title": "Morce",
+				"description": "Simple integration of Intrusion Detection System.",
+				"url": "https://docs.turris.cz/geek/morce/",
+				"labels": ["experimental", "netload", "high_memory", "storage"]
 			}
 		}
 	},
