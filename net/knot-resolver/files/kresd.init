@@ -103,15 +103,9 @@ load_uci_config_common() {
 	if [ -z "$interface" ]; then
 		{
 			echo "for iface_name, iface in pairs(net.interfaces()) do"
-			echo "	for _, ip in pairs(iface.addr) do"
-			echo "		local suffix = ''"
-			echo "		if string.sub(ip,1,string.len('fe80')) == 'fe80' then"
-			echo "			suffix = '%' .. iface_name"
-			echo "		end"
-			echo "		if iface_name == 'lo' or iface_name == 'br-lan' then"
-			echo "			net.listen(ip .. suffix, $port, { kind = 'dns' })"
-			echo "			net.listen(ip .. suffix,   853, { kind = 'tls' })"
-			echo "		end"
+			echo "	if iface_name == 'lo' or iface_name == 'br-lan' then"
+			echo "		net.listen(iface, $port, { kind = 'dns' })"
+			echo "		net.listen(iface,   853, { kind = 'tls' })"
 			echo "	end"
 			echo "end"
 		} >> "$CONFIGFILE"
