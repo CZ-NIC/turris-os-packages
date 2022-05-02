@@ -114,6 +114,7 @@ define Package/rescue-image/install
 	"$(STAGING_DIR_HOST)"/bin/mkimage -f rescue.its $(1)/usr/share/rescue-image/image.fit
 	xz -k9 -F lzma $(1)/usr/share/rescue-image/image.fit
 	[ "`stat -c '%s' $(1)/usr/share/rescue-image/image.fit.lzma`" -lt 7340032 ]
+	[ "`stat -c '%s' $(1)/usr/share/rescue-image/image.fit.lzma`" -gt 1000000 ]
 endef
 
 $(eval $(call BuildPackage,rescue-image))
