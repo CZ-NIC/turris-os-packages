@@ -1,6 +1,6 @@
 --- a/lib/defines.h
 +++ b/lib/defines.h
-@@ -47,7 +47,7 @@ static inline int KR_COLD kr_error(int x
+@@ -48,7 +48,7 @@ static inline int KR_COLD kr_error(int x
   * @cond internal
   */
  #define KR_CONN_RTT_MAX 2000 /* Timeout for network activity */
