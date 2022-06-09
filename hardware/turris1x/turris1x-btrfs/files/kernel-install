@@ -19,3 +19,5 @@ deploy() {
 
 deploy zImage
 deploy fdt
+deploy turris1x.dtb
+deploy boot.scr
