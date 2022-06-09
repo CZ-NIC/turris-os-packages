@@ -1,0 +1,93 @@
+From b5eb6ab54ce20b8534da83709926a60e062167ee Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Vladim=C3=ADr=20=C4=8Cun=C3=A1t?= <vladimir.cunat@nic.cz>
+Date: Tue, 24 May 2022 09:02:53 +0200
+Subject: [PATCH 1/2] lib/selection: improve IPv6 avoidance if broken
+
+It was still possible to get into a deadlock here.
+https://forum.turris.cz/t/not-connecting-to-applications-like-discord/17111/7
+If A records for a NS fell out of cache but AAAA remained,
+with probability 1-\epsilon we'd choose an AAAA address
+even if IPv6 was considered broken.
+
+I looked at *the whole* no6 strategy again, and I do think that
+there are no such holes anymore.  A few percent attempts will still
+go over IPv6 even if it's considered broken, but that sounds OK-ish.
+---
+ lib/selection.c | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+--- a/lib/selection.c
++++ b/lib/selection.c
+@@ -81,7 +81,7 @@ static struct {
+ 	uint8_t addr_prefixes[NO6_PREFIX_COUNT][NO6_PREFIX_BYTES];
+ } no6_est = { .len_used = 0 };
+ 
+-static inline bool no6_is_bad(void)
++bool no6_is_bad(void)
+ {
+ 	return no6_est.len_used == NO6_PREFIX_COUNT;
+ }
+@@ -445,7 +445,9 @@ struct kr_transport *select_transport(co
+ 	const struct choice *best = select_best(choices, choices_len);
+ 	const struct choice *chosen;
+ 
+-	const bool explore = choices_len == 0 || kr_rand_coin(EPSILON_NOMIN, EPSILON_DENOM);
++	const bool explore = choices_len == 0 || kr_rand_coin(EPSILON_NOMIN, EPSILON_DENOM)
++		/* We may need to explore to get at least one A record. */
++		|| (no6_is_bad() && best->address.ip.sa_family == AF_INET6);
+ 	if (explore) {
+ 		/* "EXPLORE":
+ 		 * randomly choose some option
+@@ -462,8 +464,6 @@ struct kr_transport *select_transport(co
+ 		/* "EXPLOIT":
+ 		 * choose a resolved address which seems best right now. */
+ 		chosen = best;
+-		if (no6_is_bad())
+-			VERBOSE_MSG(NULL, "NO6: is KO [exploit]\n");
+ 	}
+ 
+ 	/* Don't try the same server again when there are other choices to be explored */
+--- a/lib/selection.h
++++ b/lib/selection.h
+@@ -263,3 +263,7 @@ uint8_t *ip_to_bytes(const union kr_sock
+  */
+ void update_address_state(struct address_state *state, union kr_sockaddr *address,
+ 			  size_t address_len, struct kr_query *qry);
++
++/** @internal Return whether IPv6 is considered to be broken. */
++bool no6_is_bad(void);
++
+--- a/lib/selection_iter.c
++++ b/lib/selection_iter.c
+@@ -249,10 +249,29 @@ void iter_choose_transport(struct kr_que
+ 	// Filter valid addresses and names from the tries
+ 	int choices_len = get_valid_addresses(local_state, choices);
+ 	int resolvable_len = get_resolvable_names(local_state, resolvable, qry);
++	bool * const force_resolve_p = &qry->server_selection.local_state->force_resolve;
+ 
+-	if (qry->server_selection.local_state->force_resolve && resolvable_len) {
++	// Print some stats into debug logs.
++	if (kr_log_is_debug_qry(SELECTION, qry)) {
++		int v4_choices = 0;
++		for (int i = 0; i < choices_len; ++i)
++			if (choices[i].address.ip.sa_family == AF_INET)
++				++v4_choices;
++		int v4_resolvable = 0;
++		for (int i = 0; i < resolvable_len; ++i)
++			if (resolvable[i].type == KR_TRANSPORT_RESOLVE_A)
++				++v4_resolvable;
++		VERBOSE_MSG(qry, "=> id: '%05u' choosing from addresses: %d v4 + %d v6; "
++			"names to resolve: %d v4 + %d v6; "
++			"force_resolve: %d; NO6: IPv6 is %s\n",
++			qry->id, v4_choices, choices_len - v4_choices,
++			v4_resolvable, resolvable_len - v4_resolvable,
++			(int)*force_resolve_p, no6_is_bad() ? "KO" : "OK");
++	}
++
++	if (*force_resolve_p && resolvable_len) {
+ 		choices_len = 0;
+-		qry->server_selection.local_state->force_resolve = false;
++		*force_resolve_p = false;
+ 	}
+ 
+ 	bool tcp = qry->flags.TCP || qry->server_selection.local_state->truncated;
