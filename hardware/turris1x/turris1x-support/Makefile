@@ -34,7 +34,7 @@ endef
 
 define Package/turris1x-support/install
 	$(INSTALL_DIR) $(1)/boot
-	$(INSTALL_DATA) $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts/turris1x.dtb "$(1)"/boot/
+	$(INSTALL_DATA) $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/turris1x.dtb "$(1)"/boot/
 	ln -sf turris1x.dtb "$(1)"/boot/fdt
 	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot.scr
 endef
