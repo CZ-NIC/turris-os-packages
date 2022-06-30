@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=resolver-conf
 PKG_VERSION:=0.0.4
-PKG_RELEASE:=2
+PKG_RELEASE:=3
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -39,11 +39,8 @@ Build/Install:=:
 
 define Package/resolver-conf/install
 	$(INSTALL_DIR) $(1)/etc/config
-ifneq ($(filter-out n,$(CONFIG_PACKAGE_knot-resolver)),)
 	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolver
-else
-	$(INSTALL_CONF) ./files/resolver-turris-config $(1)/etc/config/resolver
-endif
+
 	$(INSTALL_DIR) $(1)/etc/resolver
 	$(INSTALL_BIN) ./files/resolver-conv $(1)/etc/resolver/resolver-conv.sh
 	$(INSTALL_BIN) ./files/dhcp_host_domain_ng.py $(1)/etc/resolver/dhcp_host_domain_ng.py
