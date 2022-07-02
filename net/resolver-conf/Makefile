@@ -39,7 +39,7 @@ Build/Install:=:
 
 define Package/resolver-conf/install
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_CONF) ./files/resolver-omnia-config $(1)/etc/config/resolver
+	$(INSTALL_CONF) ./files/resolver-config $(1)/etc/config/resolver
 
 	$(INSTALL_DIR) $(1)/etc/resolver
 	$(INSTALL_BIN) ./files/resolver-conv $(1)/etc/resolver/resolver-conv.sh
