@@ -165,7 +165,7 @@ load_uci_config_common() {
 
 	# Test for resolv.conf.auto new location
 	# https://github.com/openwrt/openwrt/commit/cd48d8d3420dd4df03daaa548227ceb487ba7104
-	resolv_conf_path="$(ls -1 /etc/resolv.conf.vpn.* | head -n1)"
+	resolv_conf_path="$(ls -1 /etc/resolv.conf.vpn.* 2>/dev/null | head -n1)"
 	if [ \! -f "$resolv_conv_path" ]; then
 		if [ -f "/tmp/resolv.conf.auto" ]; then
 			resolv_conf_path="/tmp/resolv.conf.auto"
