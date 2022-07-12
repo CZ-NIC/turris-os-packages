@@ -44,11 +44,14 @@ for_interfaces() {
 	config_get type "$name" "type"
 	config_get ifname "$name" "ifname"
 
+	# (1) Create new 'device' section and migrate ifaces to new device.
 	local devname dcnf empty="y"
 	if [ "$type" = "bridge" ]; then
 		devname="br-$name"
+		dcnf=${devname//[-]/_}
 		empty="n" # we always create device for bridge
-		dcnf="$(uci add "network" "device")"
+		# create new named section
+		uci set "network.$dcnf=device"
 		uci set "network.$dcnf.name=$devname"
 		for attr in $bridge_attrs; do
 			local value
@@ -64,10 +67,15 @@ for_interfaces() {
 		# We do not create device for interfaces if it references some other
 		# interface or if is just empty
 		if [ -n "$ifname" ] && [ "${ifname:0:1}" != "@" ]; then
-			dcnf="$(uci add "network" "device")"
+			# Use prefix for section name to avoid named section collisions
+			# in case of non-bridged interface (e.g. wan) during migration.
+			dcnf="dev_$name"
+			uci set "network.$dcnf=device"
 			uci set "network.$dcnf.name=$devname"
 		fi
 	fi
+
+	# (2) Migrate device related attributes to the new device.
 	if [ -n "$dcnf" ]; then
 		for attr in $device_attrs; do
 			local value
@@ -82,6 +90,7 @@ for_interfaces() {
 		[ "$empty" = "y" ] && uci -q delete "network.$dcnf"
 	fi
 
+	# (3) migrate interface's `ifname` to new `device` section
 	uci -q del "network.$name.ifname" || true
 	[ -z "$devname" ] \
 		|| uci set "network.$name.device=$devname"
