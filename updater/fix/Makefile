@@ -13,7 +13,7 @@ PKG_NAME:=fix
 # immediately removed. If they are kept in system they are commonly expected to
 # be run only once. Because of that bump is prohibited!
 PKG_VERSION:=1
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 

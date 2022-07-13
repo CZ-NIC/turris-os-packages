@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-bottle-i18n
 PKG_VERSION:=0.1.5
-PKG_RELEASE:=5
+PKG_RELEASE:=$(AUTORELEASE)
 
 PYPI_NAME:=bottle-i18n
 PKG_HASH:=7f9d343ae30b18a9676cbe612a8be2e99d4741aa4aa6a1b875ea232ba94c7678

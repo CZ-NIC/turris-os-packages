@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-timezone
 PKG_VERSION:=0.2.1
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE:=$(PKG_NAME)-v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/$(PKG_NAME)/-/archive/v$(PKG_VERSION)/
@@ -34,7 +34,7 @@ define Package/turris-timezone
 endef
 
 define Package/turris-timezone/description
-  Due to missing /usr/share/zoneinfo on OpenWrt, this package should 
+  Due to missing /usr/share/zoneinfo on OpenWrt, this package should
   provide some basic data extracted from /usr/share/zoneinfo of build machnine.
 endef
 

@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=compass
 PKG_VERSION:=1.0.3
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 HOST_BUILD_DEPENDS:=ruby/host
