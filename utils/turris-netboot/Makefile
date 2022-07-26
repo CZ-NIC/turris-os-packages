@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2016-2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2016-2022 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,13 +8,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-netboot
-PKG_VERSION:=0.6.2
-PKG_RELEASE:=2
+PKG_VERSION:=0.7.0
+PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/turris-netboot.git
-PKG_MIRROR_HASH:=0e115d474eacd4394e08b748e3e8641d68d77d0e9b8cf5a5898b1f7e451029cb
+PKG_MIRROR_HASH:=7508dc2904d8d8e04f558f7c7154d7591bf716816a52696f0b041bfe8abcfaa8
 
 BB_VERSION:=1.29.3
 PKG_BB_SOURCE:=busybox-$(BB_VERSION).tar.bz2
@@ -36,7 +36,7 @@ endef
 
 define Package/turris-netboot-tools
   TITLE:=Turris Netboot tools
-  DEPENDS:=+dnsmasq +dtc +uboot-mkimage +openssh-server +python3-cryptography +wget +foris-client +python3-uci
+  DEPENDS:=+dnsmasq +dtc +uboot-mkimage +openssh-server +python3-cryptography +wget +foris-client +python3-uci +sudo
 endef
 
 define Build/Prepare
@@ -104,6 +104,7 @@ define Package/turris-netboot-tools/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/cron.d
+	$(INSTALL_DIR) $(1)/etc/sudoers.d
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/netboot $(1)/etc/config/netboot
 	$(INSTALL_DATA) ./files/netboot-update.cron $(1)/etc/cron.d/netboot-update
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/server.sh $(1)/usr/bin/netboot-server
@@ -113,6 +114,7 @@ define Package/turris-netboot-tools/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/set-static-lease.py $(1)/usr/bin/netboot-set-static-lease
 	$(INSTALL_DIR) $(1)/usr/share/turris-netboot
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/network-setup.sh $(1)/usr/share/turris-netboot/setup.sh
+	$(INSTALL_DATA) -m 0600 $(PKG_BUILD_DIR)/netboot.sudoers $(1)/etc/sudoers.d/netboot
 endef
 
 $(eval $(call BuildPackage,turris-netboot-data))
