@@ -1,0 +1,105 @@
+From 908581218587dc64cd98173ce55ebc8cb8d253a0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Martin=20Mat=C4=9Bjek?= <martin.matejek@nic.cz>
+Date: Fri, 1 Jul 2022 21:58:47 +0200
+Subject: [PATCH 1/2] approvals: Fix case when updates were incorrectly
+ auto-approved
+
+Rewrite and fix condition that decides, whether auto-approval is used.
+
+Previously it unfortunatelly allowed case when updates were
+auto-approved, even though manual confirmation was required.
+
+Closes: #32
+---
+ CHANGELOG.md           |  5 +++++
+ svupdater/approvals.py | 23 +++++++++++++++--------
+ 2 files changed, 20 insertions(+), 8 deletions(-)
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 2ccd801..fc7d6ac 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
+ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+ 
++## [Unreleased]
++### Fixed
++- Fixed case when updates were installed automatically, even though manual
++  confirmation was required.
++
+ ## [1.5.2] - 2022-03-17
+ ### Fixed
+ - crash when approvals are enabled without window being configured
+diff --git a/svupdater/approvals.py b/svupdater/approvals.py
+index f2b8c86..d4391e7 100644
+--- a/svupdater/approvals.py
++++ b/svupdater/approvals.py
+@@ -139,16 +139,23 @@ def _approved(now: typing.Optional[datetime.datetime] = None):
+     now = now or datetime.datetime.now()
+     auto_grant_time = autorun.auto_approve_time()
+     auto_grant_window = autorun.auto_approve_window()
++    approval_in_window = auto_grant_window and auto_grant_window.in_window(now)
++
+     with const.APPROVALS_STAT_FILE.open("r") as file:
+         cols = file.readline().split(" ")
+-        if cols[1].strip() == "granted" or (
+-            (auto_grant_window is None or auto_grant_window.in_window(now))
+-            and (
+-                not auto_grant_time or auto_grant_time and (int(cols[2]) < (now.timestamp() - (auto_grant_time * 3600)))
+-            )
+-        ):
+-            return cols[0]
+-        return None
++
++    delayed_time_passed = auto_grant_time and (int(cols[2]) < (now.timestamp() - (auto_grant_time * 3600)))
++    approval_hash = cols[0]
++    if cols[1].strip() == "granted":
++        return approval_hash
++
++    if delayed_time_passed and auto_grant_window is None:
++        return approval_hash
++
++    if approval_in_window and (auto_grant_time is None or delayed_time_passed):
++        return approval_hash
++
++    return None
+ 
+ 
+ def next_approve(now: typing.Optional[datetime.datetime] = None) -> typing.Optional[datetime.datetime]:
+-- 
+GitLab
+
+
+From 60b9a0eb27c370bcb4df6e24ca3b635c5b394581 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Martin=20Mat=C4=9Bjek?= <martin.matejek@nic.cz>
+Date: Fri, 22 Jul 2022 17:25:40 +0200
+Subject: [PATCH 2/2] approvals: Slightly adjust reading of APPROVAL_STAT_FILE
+
+Apply `split()` on result of `readline()` without specific split character,
+so it will get rid of the trailing newline in resulting columns as well.
+
+For example:
+'396cbf917e7a2865c750098a75c1fbd1b5eab70995de72526fd03261bceabc3c asked 1658502744\n'
+
+Would result in timestamp '1658502744' instead of `1658502744\n'
+---
+ svupdater/approvals.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/svupdater/approvals.py b/svupdater/approvals.py
+index d4391e7..9b14b2d 100644
+--- a/svupdater/approvals.py
++++ b/svupdater/approvals.py
+@@ -142,7 +142,7 @@ def _approved(now: typing.Optional[datetime.datetime] = None):
+     approval_in_window = auto_grant_window and auto_grant_window.in_window(now)
+ 
+     with const.APPROVALS_STAT_FILE.open("r") as file:
+-        cols = file.readline().split(" ")
++        cols = file.readline().split()
+ 
+     delayed_time_passed = auto_grant_time and (int(cols[2]) < (now.timestamp() - (auto_grant_time * 3600)))
+     approval_hash = cols[0]
+-- 
+GitLab
+

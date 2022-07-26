@@ -1,0 +1,61 @@
+From c0e39f3c72bbfc1166aa3c67ba1e9e0599c19bc4 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Martin=20Mat=C4=9Bjek?= <martin.matejek@nic.cz>
+Date: Tue, 28 Jun 2022 17:40:04 +0200
+Subject: [PATCH 1/2] approvals: fix typo and correctly mark delayed reboot
+
+Fix typo `delayd` -> `delayed`, which in turn should fix detection of
+delayed reboot.
+
+It should fix following issues:
+* (1) Treat delayed reboot as "reboot is required".
+* (2) Create correct notification.
+---
+ svupdater/approvals.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/svupdater/approvals.py b/svupdater/approvals.py
+index f2b8c86..19b1648 100644
+--- a/svupdater/approvals.py
++++ b/svupdater/approvals.py
+@@ -81,7 +81,7 @@ def current() -> typing.Optional[ApprovalRequest]:
+                 "finished"
+                 if "finished" in (result["reboot"], cols[3].strip())
+                 else "delayed"
+-                if "delayd" in (result["reboot"], cols[3].strip())
++                if "delayed" in (result["reboot"], cols[3].strip())
+                 else None
+             )
+ 
+-- 
+GitLab
+
+
+From 8a9e0283c0169cda2022aa30ab51faaf15fe9fc0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Martin=20Mat=C4=9Bjek?= <martin.matejek@nic.cz>
+Date: Wed, 20 Jul 2022 22:41:23 +0200
+Subject: [PATCH 2/2] fixup! approvals: fix typo and correctly mark delayed
+ reboot
+
+---
+ CHANGELOG.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 2ccd801..23041ff 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
+ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+ 
++## [Unreleased]
++### Fixed
++- Fix detection of delayed reboot and create proper notification for it.
++
++
+ ## [1.5.2] - 2022-03-17
+ ### Fixed
+ - crash when approvals are enabled without window being configured
+-- 
+GitLab
+
