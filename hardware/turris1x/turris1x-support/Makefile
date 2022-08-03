@@ -3,7 +3,7 @@ include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=turris1x-support
 PKG_VERSION:=1.3
-PKG_RELEASE:=2
+PKG_RELEASE:=1
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -36,7 +36,7 @@ define Package/turris1x-support/install
 	$(INSTALL_DIR) $(1)/boot
 	$(INSTALL_DATA) $(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/turris1x.dtb "$(1)"/boot/
 	ln -sf turris1x.dtb "$(1)"/boot/fdt
-	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot/boot.scr
+	mkimage -T script -C none -n boot -d files/boot.txt "$(1)"/boot.scr
 endef
 
 $(eval $(call BuildPackage,turris1x-support))
