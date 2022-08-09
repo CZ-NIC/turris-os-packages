@@ -248,8 +248,21 @@ First find git hash for turris-os-packages feed from tag in turris-build. Then y
 can create appropriate tag.
 [,sh]
 ----------------------------------------------------------------------------------
-git tag -s -m "Turris OS X.Y.Z" vX.Y.Z HASH
-git push --tags origin vX.Y.Z
+git tag -s vX.Y.Z HASH
+----------------------------------------------------------------------------------
+Enter tag message containing changelog of the tagged version from NEWS.
+```
+Turris OS packages for Turris OS X.Y.Z
+
+* A NEW FEATURE
+* ANOTHER NEW FEATURE
+* ...
+```
+
+After creating the tag, it is necessary to push it to the remote repository.
+[,sh]
+----------------------------------------------------------------------------------
+git push origin vX.Y.Z
 ----------------------------------------------------------------------------------
 
 === Preparing next minor or major version of Turris OS
