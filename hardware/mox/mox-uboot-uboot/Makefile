@@ -25,7 +25,6 @@ include $(INCLUDE_DIR)/package.mk
 define Package/mox-uboot-uboot
   TITLE:=U-boot for Turris MOX
   DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox
-  BUILDONLY:=1
 endef
 
 define Build/Compile
