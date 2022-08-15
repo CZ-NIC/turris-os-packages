@@ -29,7 +29,7 @@ define Package/turris-mox-devel-firmware
   TITLE:=Data files for nor-update (development version)
   DEPENDS:=+turris-nor-update +rescue-image +mox-a53-firmware @TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox
   PROVIDES:=turris-nor-update-devel-firmware
-  VERSION:=0.1
+  VERSION:=1.0
   RELEASE:=1
 endef
 
