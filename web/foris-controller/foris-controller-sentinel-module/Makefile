@@ -33,7 +33,6 @@ define Package/foris-controller-sentinel-module
     +foris-controller \
     +sentinel-eula \
     +sentinel-proxy
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-sentinel-module/description

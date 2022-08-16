@@ -38,7 +38,6 @@ define Package/reforis-remote-wifi-settings-plugin
     +reforis \
     +reforis-remote-devices-plugin \
     +foris-controller-subordinates-module
-  VARIANT:=python3
 endef
 
 define Package/reforis-remote-wifi-settings-plugin/description

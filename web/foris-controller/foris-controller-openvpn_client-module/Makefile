@@ -33,7 +33,6 @@ define Package/foris-controller-openvpn_client-module
     +foris-controller \
     +turris-cagen \
     +openvpn-openssl
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-openvpn_client-module/description

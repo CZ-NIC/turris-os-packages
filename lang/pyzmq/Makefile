@@ -27,7 +27,6 @@ define Package/python3-zmq
   TITLE:=Python bindings for 0MQ
   URL:=https://github.com/zeromq/pyzmq
   DEPENDS:=+python3 +libzmq
-  VARIANT:=python3
 endef
 
 define Package/python3-zmq/description

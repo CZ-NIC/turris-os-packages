@@ -28,7 +28,6 @@ define Package/python3-pbkdf2
   TITLE:=PKCS#5 v2.0 PBKDF2 Module
   URL:=https://www.dlitz.net/software/python-pbkdf2/
   DEPENDS:=+python3-light +python3-openssl
-  VARIANT:=python3
 endef
 
 define Package/python-pbkdf2/description

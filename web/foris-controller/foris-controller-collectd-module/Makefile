@@ -32,7 +32,6 @@ define Package/foris-controller-collectd-module
   DEPENDS:= \
     +foris-controller \
     +follectd
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-collectd-module/description

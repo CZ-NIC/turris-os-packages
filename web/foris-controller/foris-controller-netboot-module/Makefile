@@ -32,7 +32,6 @@ define Package/foris-controller-netboot-module
   DEPENDS:=\
     +foris-controller \
     +turris-netboot-tools
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-netboot-module/description

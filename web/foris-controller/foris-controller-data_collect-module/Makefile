@@ -30,7 +30,6 @@ define Package/foris-controller-data_collect-module
   SUBMENU:=Foris Controller
   TITLE:=Foris controller data collect module
   DEPENDS:=+foris-controller
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-data_collect-module/description

@@ -32,7 +32,6 @@ define Package/python3-atsha204
   URL:=https://gitlab.nic.cz/turris/libatsha204
   DEPENDS:=+python3-light +libatsha204
   PROVIDES:=python3-libatsha204
-  VARIANT:=python3
 endef
 
 PYTHON3_PKG_SETUP_DIR:=/src/python

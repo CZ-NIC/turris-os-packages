@@ -37,7 +37,6 @@ define Package/reforis-snapshots-plugin
   DEPENDS:=\
     +reforis \
     +foris-controller-schnapps-module
-  VARIANT:=python3
 endef
 
 define Package/reforis-netboot-plugin/description

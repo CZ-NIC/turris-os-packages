@@ -32,7 +32,6 @@ define Package/foris-controller-schnapps-module
   DEPENDS:= \
     +foris-controller \
     +schnapps
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-schnapps-module/description

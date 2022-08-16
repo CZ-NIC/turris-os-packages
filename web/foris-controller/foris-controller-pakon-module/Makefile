@@ -32,7 +32,6 @@ define Package/foris-controller-pakon-module
   DEPENDS:= \
     +foris-controller \
     +pakon
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-pakon-module/description

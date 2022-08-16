@@ -39,7 +39,6 @@ define Package/haas-proxy
 	+sentinel-firewall \
 	+@KERNEL_CFS_BANDWIDTH
   CONFLICTS:=mitmproxy
-  VARIANT:=python3
 endef
 
 define Package/haas-proxy/description

@@ -37,7 +37,6 @@ define Package/reforis-storage-plugin
   DEPENDS:=\
     +reforis \
     +foris-controller-storage-module
-  VARIANT:=python3
 endef
 
 define Package/reforis-storage-plugin/description

@@ -33,7 +33,6 @@ define Package/foris-controller-nextcloud-module
     +foris-controller \
     +foris-controller-storage-module \
     +nextcloud-install
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-nextcloud-module/description

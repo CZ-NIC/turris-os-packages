@@ -29,7 +29,6 @@ define Package/mox-otp
   PROVIDES:=turris-otp
   DEPENDS:=+python3-light
   DEPENDS+=@TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox
-  VARIANT:=python3
 endef
 
 define Package/mox-otp/description

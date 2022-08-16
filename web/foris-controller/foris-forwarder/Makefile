@@ -34,7 +34,6 @@ define Package/foris-forwarder
     +fosquitto \
     +python3-paho-mqtt \
     +python3-zeroconf
-  VARIANT:=python3
 endef
 
 define Package/foris-forwarder/description

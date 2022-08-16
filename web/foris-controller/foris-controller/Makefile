@@ -44,7 +44,6 @@ define Package/foris-controller-app
     +turris-maintain +updater-supervisor +user-notify \
     +l10n-supported +sqm-scripts +fosquitto +python3-paho-mqtt +turris-cagen \
     +crypto-wrapper +python3-slugify +turris-timezone
-  VARIANT:=python3
 endef
 
 define Package/foris-controller/description

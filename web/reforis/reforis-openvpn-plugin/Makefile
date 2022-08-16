@@ -38,7 +38,6 @@ define Package/reforis-openvpn-plugin
     +reforis \
     +foris-controller-openvpn-module \
     +foris-controller-openvpn_client-module
-  VARIANT:=python3
 endef
 
 define Package/reforis-openvpn-plugin/description

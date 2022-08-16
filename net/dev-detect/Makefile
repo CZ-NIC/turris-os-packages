@@ -33,7 +33,6 @@ define Package/dev-detect
         +python3-sqlite3 \
         +python3-uci \
         +ouidb
-  VARIANT:=python3
 endef
 
 define Package/dev-detect/description

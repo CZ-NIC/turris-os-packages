@@ -28,7 +28,6 @@ define Package/christmas
   URL:=https://gitlab.nic.cz/turris/christmas
   DEPENDS:=+python3-light +python3-uci
   DEPENDS+=@(TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia||TARGET_mpc85xx_p2020_DEVICE_turris1x)
-  VARIANT:=python3
 endef
 
 define Package/christmas/description

@@ -30,7 +30,6 @@ define Package/python3-crontab
   TITLE:=Parse and use crontab schedules in Python
   URL:=https://github.com/josiahcarlson/parse-crontab
   DEPENDS:=+python3-light
-  VARIANT:=python3
 endef
 
 define Package/python3-crontab/description

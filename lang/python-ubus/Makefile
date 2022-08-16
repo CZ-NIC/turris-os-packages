@@ -31,7 +31,6 @@ define Package/python3-ubus
   TITLE:=Python3 ubus
   URL:=https://gitlab.nic.cz/turris/python-ubus/
   DEPENDS:=+libubus +libblobmsg-json +python3-light
-  VARIANT:=python3
 endef
 
 define Package/python3-ubus/description

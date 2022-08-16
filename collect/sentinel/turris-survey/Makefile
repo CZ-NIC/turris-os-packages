@@ -30,7 +30,6 @@ define Package/turris-survey
   TITLE:=Turris Survey
   URL:=https://gitlab.nic.cz/turris/sentinel/turris-survey
   DEPENDS:=+python3-light +python3-msgpack +python3-zmq +sentinel-proxy +updater-supervisor +cronie
-  VARIANT:=python3
 endef
 
 define Package/turris-survey/description

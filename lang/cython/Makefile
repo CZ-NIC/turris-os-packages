@@ -22,7 +22,6 @@ define Package/cython
   TITLE:=Cython compiler for writing C extensions for Python
   URL:=https://www.cython.org/
   DEPENDS:=+python3
-  VARIANT:=python3
 endef
 
 define Package/cython/description

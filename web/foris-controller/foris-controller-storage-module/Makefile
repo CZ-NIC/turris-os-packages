@@ -37,7 +37,6 @@ define Package/foris-controller-storage-module
     +rsync \
     +partx-utils \
     +blkid
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-storage-module/description

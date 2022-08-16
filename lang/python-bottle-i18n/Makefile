@@ -31,7 +31,6 @@ define Package/python3-bottle-i18n
   TITLE:=python3-bottle-i18n
   URL:=https://github.com/iocast/bottle-i18n
   DEPENDS:=+python3-light +python3-bottle
-  VARIANT:=python3
 endef
 
 define Package/python3-bottle-i18n/description

@@ -30,7 +30,6 @@ define Package/updater-supervisor
     +updater-ng +pkglists +l10n-supported \
     +python3-light +python3-uci +python3-distro +python3-packaging +python3-crontab \
     +cronie
-  VARIANT:=python3
 endef
 
 define Package/updater-supervisor/description

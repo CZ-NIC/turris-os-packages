@@ -28,7 +28,6 @@ define Package/python3-periphery
   TITLE:=Linux Peripheral I/O
   URL:=https://github.com/vsergeev/python-periphery
   DEPENDS:=+python3-light
-  VARIANT:=python3
 endef
 
 define Package/python3-periphery/description

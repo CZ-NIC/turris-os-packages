@@ -35,7 +35,6 @@ define Package/netmetr
   +rmbt-client \
   +cronie \
   +xz
-  VARIANT:=python3
 endef
 
 define Package/netmetr/description

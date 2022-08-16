@@ -41,7 +41,6 @@ define Package/foris-ws
     +fosquitto \
     +python3-cachelib \
     +python3-paho-mqtt
-  VARIANT:=python3
 endef
 
 define Package/foris-ws/description

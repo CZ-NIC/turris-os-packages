@@ -38,7 +38,6 @@ define Package/reforis-netboot-plugin
     +reforis \
     +reforis-remote-devices-plugin \
     +foris-controller-netboot-module
-  VARIANT:=python3
 endef
 
 define Package/reforis-netboot-plugin/description

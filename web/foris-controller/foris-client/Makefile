@@ -35,7 +35,6 @@ define Package/foris-client
     +python3-ubus \
     +python3-setuptools \
     +crypto-wrapper
-  VARIANT:=python3
 endef
 
 define Package/foris-client/description

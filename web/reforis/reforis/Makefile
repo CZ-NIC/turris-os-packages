@@ -52,7 +52,6 @@ define Package/reforis
     +python3-light \
     +python3-paho-mqtt \
     +turris-maintain
-  VARIANT:=python3
 endef
 
 define Package/reforis/description

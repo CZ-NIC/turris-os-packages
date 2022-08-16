@@ -36,7 +36,6 @@ define Package/reforis-remote-access-plugin
   URL:=https://gitlab.nic.cz/turris/reforis/reforis-remote-access
   DEPENDS:=\
     +reforis
-  VARIANT:=python3
 endef
 
 define Package/reforis-remote-access-plugin/description

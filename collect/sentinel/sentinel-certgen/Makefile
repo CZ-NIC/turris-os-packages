@@ -30,7 +30,6 @@ define Package/sentinel-certgen
   TITLE:=Certgen
   URL:=https://gitlab.nic.cz/turris/sentinel/certgen
   DEPENDS:=+python3-light +python3-six +python3-requests +python3-cryptography +crypto-wrapper
-  VARIANT:=python3
 endef
 
 define Package/sentinel-certgen/description

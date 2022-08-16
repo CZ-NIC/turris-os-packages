@@ -31,7 +31,6 @@ define Package/python3-prctl
   DEPENDS:= \
   +python3-light \
   +libcap
-  VARIANT:=python3
 endef
 
 define Package/python3-prctl/description

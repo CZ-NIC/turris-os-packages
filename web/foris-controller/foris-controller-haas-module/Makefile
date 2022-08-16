@@ -32,7 +32,6 @@ define Package/foris-controller-haas-module
   DEPENDS:=\
     +foris-controller \
     +haas-proxy
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-haas-module/description

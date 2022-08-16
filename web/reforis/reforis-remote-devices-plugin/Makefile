@@ -37,7 +37,6 @@ define Package/reforis-remote-devices-plugin
   DEPENDS:= \
     +reforis \
     +foris-controller-subordinates-module
-  VARIANT:=python3
 endef
 
 define Package/reforis-remote-devices-plugin/description

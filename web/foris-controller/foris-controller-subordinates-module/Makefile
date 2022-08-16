@@ -33,7 +33,6 @@ define Package/foris-controller-subordinates-module
     +foris-controller \
     +foris-forwarder \
     +fosquitto
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-subordinates-module/description

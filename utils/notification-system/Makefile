@@ -36,7 +36,6 @@ define Package/notification-system
         +python3-logging
   PROVIDES:=user-notify
   CONFLICTS:=user-notify
-  VARIANT:=python3
 endef
 
 define Package/notification-system/description

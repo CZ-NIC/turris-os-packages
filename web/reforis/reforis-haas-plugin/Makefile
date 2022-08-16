@@ -38,7 +38,6 @@ define Package/reforis-haas-plugin
     +reforis \
     +reforis-data-collection-plugin \
     +foris-controller-haas-module
-  VARIANT:=python3
 endef
 
 define Package/reforis-haas-plugin/description

@@ -32,7 +32,6 @@ define Package/foris-controller-netmetr-module
   DEPENDS:=\
     +foris-controller \
     +netmetr
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-netmetr-module/description

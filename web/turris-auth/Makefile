@@ -38,7 +38,6 @@ define Package/turris-auth
     +python3-flup \
     +python3-jinja2 \
     +python3-uci
-  VARIANT:=python3
 endef
 
 define Package/turris-auth/description

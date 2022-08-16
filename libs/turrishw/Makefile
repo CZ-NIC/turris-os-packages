@@ -29,7 +29,6 @@ define Package/turrishw
   SUBMENU:=Python
   TITLE:=turrishw
   DEPENDS:=+python3-light +python3-logging
-  VARIANT:=python3
 endef
 
 define Package/turrishw/description

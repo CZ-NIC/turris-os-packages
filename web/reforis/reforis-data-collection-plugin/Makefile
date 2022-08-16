@@ -37,7 +37,6 @@ define Package/reforis-data-collection-plugin
   DEPENDS:=\
     +reforis \
     +foris-controller-sentinel-module
-  VARIANT:=python3
 endef
 
 define Package/reforis-data-collection-plugin/description

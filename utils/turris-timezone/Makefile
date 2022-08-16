@@ -30,7 +30,6 @@ define Package/turris-timezone
   TITLE:=Turris timezone
   URL:=https://gitlab.nic.cz/turris/foris-controller/turris-timezone/
   DEPENDS:=+python3-light
-  VARIANT:=python3
 endef
 
 define Package/turris-timezone/description

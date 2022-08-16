@@ -32,7 +32,6 @@ define Package/foris-controller-diagnostics-module
   DEPENDS:= \
     +foris-controller \
     +turris-diagnostics
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-diagnostics-module/description

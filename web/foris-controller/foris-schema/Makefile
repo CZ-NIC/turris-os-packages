@@ -30,7 +30,6 @@ define Package/foris-schema
   TITLE:=Foris schema
   URL:=https://gitlab.nic.cz/turris/foris-controller/foris-schema
   DEPENDS:=+python3-jsonschema
-  VARIANT:=python3
 endef
 
 define Package/foris-schema/description
