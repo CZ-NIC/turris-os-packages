@@ -51,7 +51,6 @@ define Package/reforis
     +python3-flup \
     +python3-light \
     +python3-paho-mqtt \
-    +python3-simplejson \
     +turris-maintain
   VARIANT:=python3
 endef
