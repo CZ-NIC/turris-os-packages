@@ -50,6 +50,12 @@ define Py3Package/turris-auth/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
 	$(INSTALL_CONF) ./files/lighttpd.conf $(1)/etc/lighttpd/conf.d/_turris-auth.conf
+	$(INSTALL_DIR) $(1)/etc/config
+	touch $(1)/etc/config/turris-auth
+endef
+
+define Package/turris-auth/conffiles
+/etc/config/turris-auth
 endef
 
 define Package/turris-auth/postinst
