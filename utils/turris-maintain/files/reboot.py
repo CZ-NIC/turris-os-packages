@@ -32,13 +32,13 @@ sender = MqttNotificationSender(host, port, credentials)
 ips = []
 # try to detect ips from uci
 # parse ips as if they were in CIDR notation
-ips += [e.split("/")[0] for e in uci.get("network", "wan", "ipaddr", list=True, default=()) if e]
-ips += [e.split("/")[0] for e in uci.get("network", "wan", "ip6addr", list=True, default=()) if e]
 ips += [e.split("/")[0] for e in uci.get("network", "lan", "ipaddr", list=True, default=()) if e]
 ips += [e.split("/")[0] for e in uci.get("network", "lan", "ip6addr", list=True, default=()) if e]
+ips += [e.split("/")[0] for e in uci.get("network", "wan", "ipaddr", list=True, default=()) if e]
+ips += [e.split("/")[0] for e in uci.get("network", "wan", "ip6addr", list=True, default=()) if e]
 
 # try to detect_ips from ubus
-for network in ["wan", "lan"]:
+for network in ["lan", "wan"]:
     try:
         output = subprocess.check_output(["ifstatus", network])
         data = json.loads(output)
