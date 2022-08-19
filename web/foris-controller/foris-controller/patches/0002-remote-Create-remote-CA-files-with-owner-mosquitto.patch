@@ -1,0 +1,131 @@
+From 2402364344b4c7d45a59a44f1f99e111d157d8dc Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Martin=20Mat=C4=9Bjek?= <martin.matejek@nic.cz>
+Date: Thu, 18 Aug 2022 22:59:03 +0200
+Subject: [PATCH 1/2] remote: Create remote CA files with owner mosquitto
+
+From OpenWrt 21.02 on, mosquitto runs under it's own user (mosquitto),
+but CA files are created by foris-controller with owner root.
+
+Mosquitto fails with following error:
+
+```
+Error: Unable to load server key file "/etc/ssl/ca/remote/01.key". Check keyfile.
+```
+
+Which in turn breaks other services using `mosquitto` as message bus.
+For example: foris-controller & reforis
+
+This is quick hack to change owner of particular files, so that
+mosquitto is able to start and in turn the rest of the services will
+start too.
+
+This could probably be fixed in `turis-cagen` script, but I'd consider
+this Remote Access CA as special case and do not want to somehow mess up
+CA file permission for every other CA generated via `turris-cagen`.
+
+Closes: #211
+---
+ foris_controller_backends/remote/__init__.py | 53 ++++++++++++++++----
+ 1 file changed, 42 insertions(+), 11 deletions(-)
+
+diff --git a/foris_controller_backends/remote/__init__.py b/foris_controller_backends/remote/__init__.py
+index 975626b..bd0cca2 100644
+--- a/foris_controller_backends/remote/__init__.py
++++ b/foris_controller_backends/remote/__init__.py
+@@ -17,30 +17,34 @@
+ # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
+ #
+ 
++import base64
++import json
++import logging
+ import os
+ import re
+-import logging
++import shutil
+ import tarfile
+-import base64
+-import json
+-
+-from io import BytesIO
+ from collections import OrderedDict
++from io import BytesIO
+ 
+ from foris_controller.app import app_info
+-
+ from foris_controller_backends.cmdline import AsyncCommand, BaseCmdLine
+-from foris_controller_backends.files import BaseFile, path_exists, makedirs
++from foris_controller_backends.files import (
++    BaseFile,
++    inject_file_root,
++    makedirs,
++    path_exists,
++)
++from foris_controller_backends.networks import NetworksCmd
++from foris_controller_backends.services import OpenwrtServices
+ from foris_controller_backends.uci import (
+     UciBackend,
++    UciException,
++    get_option_anonymous,
+     get_option_named,
+     parse_bool,
+-    UciException,
+     store_bool,
+-    get_option_anonymous,
+ )
+-from foris_controller_backends.networks import NetworksCmd
+-from foris_controller_backends.services import OpenwrtServices
+ 
+ logger = logging.getLogger(__name__)
+ 
+@@ -50,6 +54,8 @@ NETBOOT_CONFIGURED_PATH = "/tmp/netboot-configured"
+ class RemoteAsync(AsyncCommand):
+     def generate_ca(self, notify_function, exit_notify_function, reset_notify_function):
+         def handler_exit(process_data):
++            # The first certificate should be server certificate for the device
++            RemoteAsync._fix_remote_ca_file_permissions("01")
+             exit_notify_function(
+                 {
+                     "task_id": process_data.id,
+@@ -105,6 +111,25 @@ class RemoteAsync(AsyncCommand):
+ 
+         return task_id
+ 
++    @staticmethod
++    def _fix_remote_ca_file_permissions(client_id: str) -> None:
++        """Set correct owners to .key file so that mosquitto can access client keys.
++
++        Quick hack to do not let mosquitto crash on
++
++        `Error: Unable to load server key file "/etc/ssl/ca/remote/01.key". Check keyfile.`
++
++        Since OpenWrt 21.02, mosquitto is running under it's own user (mosquitto) and cannot access clients files,
++        which are owned by root:root.
++        E.g.: `01.key`, `02.key`, etc.
++
++        Ideally we should be able to set permissions by invocation of `turris-cagen` script (optional parameters?),
++        but right now this is special case for remote access CA.
++        So for the sake of not breaking even more things that relies on `turris-cagen`, lets resort to this quickhack.
++        """
++        filename = os.path.join(RemoteFiles.BASE_CERT_PATH, f"{client_id}.key")
++        shutil.chown(inject_file_root(filename), "mosquitto", "mosquitto")
++
+ 
+ class RemoteCmds(BaseCmdLine):
+     def get_status(self):
+@@ -134,6 +159,12 @@ class RemoteCmds(BaseCmdLine):
+ 
+         return {"status": ca_status, "tokens": clients}
+ 
++    def get_latest_token_id(self) -> str:
++        """Helper function to get latest generated client token ID."""
++        tokens = self.get_status()["tokens"]
++        last_token = tokens[-1]
++        return last_token["id"]
++
+     def revoke(self, cert_id):
+         retval, _, _ = self._run_command(
+             "/usr/bin/turris-cagen", "switch", "remote", "revoke", cert_id
+-- 
+2.37.0
+
