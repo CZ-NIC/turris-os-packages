@@ -1,0 +1,29 @@
+From 2a95ed81e5402c505f1eb03a2b9ace1b2776dd3e Mon Sep 17 00:00:00 2001
+From: Aleksandr Gumroian <aleksandr.gumroian@nic.cz>
+Date: Fri, 19 Aug 2022 12:15:11 +0200
+Subject: [PATCH] Fix empty cookie removal on logout
+
+---
+ turris_auth/server/wsgi.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/turris_auth/server/wsgi.py b/turris_auth/server/wsgi.py
+index c03dec9..9c2bc7a 100644
+--- a/turris_auth/server/wsgi.py
++++ b/turris_auth/server/wsgi.py
+@@ -112,7 +112,11 @@ class Server:
+ 
+     def _logout(self, environ, start_response):
+         httpcookie = cookie.remove(environ.get("HTTP_COOKIE"), self.luci_login)
+-        start_response(STATUS_FOUND, [("Location", "/"), ("Set-Cookie:", httpcookie.output(header=""))])
++        cookies = [("Set-Cookie", e.output(header="").strip()) for e in httpcookie.values()]
++        start_response(
++            STATUS_FOUND, 
++            [("Location", "/")] + cookies,
++        )
+         return []
+ 
+     @staticmethod
+-- 
+GitLab
+
