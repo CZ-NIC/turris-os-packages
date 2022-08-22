@@ -1,0 +1,31 @@
+From 9fbeec3174a2cefb28f9a8c916b4333b7c7cbf66 Mon Sep 17 00:00:00 2001
+From: Michal Hrusecky <michal.hrusecky@turris.com>
+Date: Mon, 17 Jan 2022 23:32:46 +0100
+Subject: [PATCH] Partial revert of 89952d49938aaa4ffdd0797ba347d8cc63a6fd3d
+
+Let's keep broken json for a little longer as Foris Controller checks
+for the type of number and breaks on type change and it doesn't support
+remote snapshots as of yet.
+
+[rebased on schnapps 2.10.1]
+Signed-off-by: Šimon Bořek <simon.borek@nic.cz>
+---
+ schnapps.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/schnapps.sh b/schnapps.sh
+index ea26a7c..36f9aac 100755
+--- a/schnapps.sh
++++ b/schnapps.sh
+@@ -292,7 +292,7 @@ generic_list() {
+                     ;;
+                 json)
+                     [ "$first" = "y" ] || echo ", "
+-                    printf '  { "id": "%s", "type": "%s", "size": "%s", "created": "%s", "description": "%s" }' "$snapshot" "$TYPE" "$SIZE" "$CREATED" "$DESCRIPTION"
++                    printf '  { "number": %s, "type": "%s", "size": "%s", "created": "%s", "description": "%s" }' "$snapshot" "$TYPE" "$SIZE" "$CREATED" "$DESCRIPTION"
+                     first=""
+                     ;;
+                 csv)
+-- 
+2.37.2
+
