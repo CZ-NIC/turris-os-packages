@@ -1,0 +1,97 @@
+From 455f55e4a39c23b3aa4ead57b9e81318a8bc990a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+Date: Wed, 10 Aug 2022 11:00:25 +0200
+Subject: [PATCH] arm: mvebu: turris_omnia: Show MCU version
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+There are already more MCU firmware versions for Turris Omnia in
+production, so display git commit (version) of the MCU firmware during
+U-Boot startup. It will help to identify what version of MCU firmware is
+Turris Omnia using.
+
+MCU firmware for Turris Omnia is open source and available at website:
+https://gitlab.nic.cz/turris/hw/omnia_hw_ctrl
+
+It can be updated from running system via i2c bus with this tool:
+https://gitlab.nic.cz/turris/omnia-mcutool
+
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Reviewed-by: Stefan Roese <sr@denx.de>
+---
+ board/CZ.NIC/turris_omnia/turris_omnia.c | 36 ++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+diff --git a/board/CZ.NIC/turris_omnia/turris_omnia.c b/board/CZ.NIC/turris_omnia/turris_omnia.c
+index 3eca08bafc..ab5061ef58 100644
+--- a/board/CZ.NIC/turris_omnia/turris_omnia.c
++++ b/board/CZ.NIC/turris_omnia/turris_omnia.c
+@@ -21,6 +21,7 @@
+ #include <dm/uclass.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <fdt_support.h>
++#include <hexdump.h>
+ #include <time.h>
+ #include <linux/bitops.h>
+ #include <linux/delay.h>
+@@ -61,7 +62,9 @@ DECLARE_GLOBAL_DATA_PTR;
+ enum mcu_commands {
+ 	CMD_GET_STATUS_WORD	= 0x01,
+ 	CMD_GET_RESET		= 0x09,
++	CMD_GET_FW_VERSION_APP	= 0x0a,
+ 	CMD_WATCHDOG_STATE	= 0x0b,
++	CMD_GET_FW_VERSION_BOOT	= 0x0e,
+ 
+ 	/* available if STS_FEATURES_SUPPORTED bit set in status word */
+ 	CMD_GET_FEATURES	= 0x10,
+@@ -418,6 +421,38 @@ static const char * const omnia_get_mcu_type(void)
+ 	return mcu_types[stsword & STS_MCU_TYPE_MASK];
+ }
+ 
++static const char * const omnia_get_mcu_version(void)
++{
++	static char version[82];
++	u8 version_app[20];
++	u8 version_boot[20];
++	int ret;
++
++	ret = omnia_mcu_read(CMD_GET_FW_VERSION_APP, &version_app, sizeof(version_app));
++	if (ret)
++		return "unknown";
++
++	ret = omnia_mcu_read(CMD_GET_FW_VERSION_BOOT, &version_boot, sizeof(version_boot));
++	if (ret)
++		return "unknown";
++
++	/*
++	 * If git commits of MCU bootloader and MCU application are same then
++	 * show version only once. If they are different then show both commits.
++	 */
++	if (!memcmp(version_app, version_boot, 20)) {
++		bin2hex(version, version_app, 20);
++		version[40] = '\0';
++	} else {
++		bin2hex(version, version_boot, 20);
++		version[40] = '/';
++		bin2hex(version + 41, version_app, 20);
++		version[81] = '\0';
++	}
++
++	return version;
++}
++
+ /*
+  * Define the DDR layout / topology here in the board file. This will
+  * be used by the DDR3 init code in the SPL U-Boot version to configure
+@@ -934,6 +969,7 @@ int show_board_info(void)
+ 	err = turris_atsha_otp_get_serial_number(&version_num, &serial_num);
+ 	printf("Model: Turris Omnia\n");
+ 	printf("  MCU type: %s\n", omnia_get_mcu_type());
++	printf("  MCU version: %s\n", omnia_get_mcu_version());
+ 	printf("  RAM size: %i MiB\n", omnia_get_ram_size_gb() * 1024);
+ 	if (err)
+ 		printf("  Serial Number: unknown\n");
+-- 
+GitLab
+
