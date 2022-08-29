@@ -40,7 +40,7 @@ define Build/Compile
 		OPENSSL_DIR=$(TOPDIR)/staging_dir/host \
 		mrvl_bootimage
 	cp $(PKG_BUILD_DIR)/build/a3700/release/boot-image.bin $(PKG_BUILD_DIR)/a53-firmware.bin
-	cd $(PKG_BUILD_DIR); od -v -tu8 -An -j 131184 -N 8 $(PKG_BUILD_DIR)/a53-firmware.bin | LC_ALL=C awk '{ for (i = 0; i < 64; i += 8) printf "%c", and(rshift(1310720-131072-$$$$1, i), 255) }' | dd of=$(PKG_BUILD_DIR)/a53-firmware.bin bs=1 seek=131192 count=8 conv=notrunc 2>/dev/null
+	cd $(PKG_BUILD_DIR); od -v -tu8 -An -j 131184 -N 8 $(PKG_BUILD_DIR)/a53-firmware.bin | LC_ALL=C awk '{ for (i = 0; i < 64; i += 8) printf "%c", and(rshift(1310720-$$$$1, i), 255) }' | dd of=$(PKG_BUILD_DIR)/a53-firmware.bin bs=1 seek=131192 count=8 conv=notrunc 2>/dev/null
 endef
 
 define Package/mox-a53-firmware/install
