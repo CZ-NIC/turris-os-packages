@@ -20,6 +20,7 @@ PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-2.0-or-later
 PKG_LICENSE_FILES:=README
+PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -30,8 +31,8 @@ define Package/omnia-uboot
 endef
 
 define Build/Compile
-	cd $(PKG_BUILD_DIR); make CROSS_COMPILE=$(TARGET_CROSS) turris_omnia_defconfig
-	cd $(PKG_BUILD_DIR); make CROSS_COMPILE=$(TARGET_CROSS) u-boot-spl.kwb
+	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) CROSS_COMPILE=$(TARGET_CROSS) turris_omnia_defconfig
+	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) CROSS_COMPILE=$(TARGET_CROSS) u-boot-spl.kwb
 endef
 
 define Package/omnia-uboot/install

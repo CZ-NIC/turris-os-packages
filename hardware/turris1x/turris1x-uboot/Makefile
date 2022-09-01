@@ -18,6 +18,9 @@ PKG_SOURCE_DATE:=2022-08-31
 PKG_SOURCE_VERSION:=turris1x-v2022.04
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=GPL-2.0-or-later
+PKG_LICENSE_FILES:=README
+PKG_BUILD_PARALLEL:=0
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -41,8 +44,8 @@ define Package/turris1x-uboot-nor/description
 endef
 
 define Build/Compile
-	cd $(PKG_BUILD_DIR); make CROSS_COMPILE=$(TARGET_CROSS) turris_1x_sdcard_defconfig u-boot-with-spl.bin
-	cd $(PKG_BUILD_DIR); make CROSS_COMPILE=$(TARGET_CROSS) turris_1x_nor_defconfig u-boot-with-dtb.bin
+  $(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) CROSS_COMPILE=$(TARGET_CROSS) turris_1x_sdcard_defconfig u-boot-with-spl.bin
+  $(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) CROSS_COMPILE=$(TARGET_CROSS) turris_1x_nor_defconfig u-boot-with-dtb.bin
 endef
 
 define Package/turris1x-uboot/install
