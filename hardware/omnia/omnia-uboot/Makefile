@@ -25,7 +25,7 @@ PKG_BUILD_PARALLEL:=1
 include $(INCLUDE_DIR)/package.mk
 
 define Package/omnia-uboot
-  TITLE:=u-boot-omnia
+  TITLE:=U-boot for Turris Omnia
   DEPENDS:=@TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia
   PROVIDES:=u-boot-omnia
 endef
