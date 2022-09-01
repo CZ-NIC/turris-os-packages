@@ -30,33 +30,33 @@ define Package/turris1x-uboot
   PROVIDES:=u-boot-turris1x
 endef
 
-define Package/turris1x-uboot-nor
-  TITLE:=Turris 1.x U-boot NOR
+define Package/turris1x-uboot-sd
+  TITLE:=Turris 1.x U-boot SD
   DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_turris1x
 endef
 
 define Package/turris1x-uboot/description
-  SDCard U-boot version for Turris 1.x
-endef
-
-define Package/turris1x-uboot-nor/description
   NOR U-boot version for Turris 1.x
 endef
 
+define Package/turris1x-uboot-nor/description
+  SDCard U-boot version for Turris 1.x
+endef
+
 define Build/Compile
-  $(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) CROSS_COMPILE=$(TARGET_CROSS) turris_1x_sdcard_defconfig u-boot-with-spl.bin
   $(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) CROSS_COMPILE=$(TARGET_CROSS) turris_1x_nor_defconfig u-boot-with-dtb.bin
+  $(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) CROSS_COMPILE=$(TARGET_CROSS) turris_1x_sdcard_defconfig u-boot-with-spl.bin
 endef
 
 define Package/turris1x-uboot/install
 	$(INSTALL_DIR) $(1)/usr/share/turris1x
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/u-boot-with-spl.bin $(1)/usr/share/turris1x/u-boot-sdcard.bin
-endef
-
-define Package/turris1x-uboot-nor/install
-	$(INSTALL_DIR) $(1)/usr/share/turris1x
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/u-boot-with-dtb.bin $(1)/usr/share/turris1x/u-boot-nor.bin
 endef
 
+define Package/turris1x-uboot-sd/install
+	$(INSTALL_DIR) $(1)/usr/share/turris1x
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/u-boot-with-spl.bin $(1)/usr/share/turris1x/u-boot-sdcard.bin
+endef
+
 $(eval $(call BuildPackage,turris1x-uboot))
-$(eval $(call BuildPackage,turris1x-uboot-nor))
+$(eval $(call BuildPackage,turris1x-uboot-sd))
