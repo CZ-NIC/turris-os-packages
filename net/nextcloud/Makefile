@@ -84,6 +84,8 @@ if [ -z "$$IPKG_INSTROOT" ]; then
 		if [ -n "$$VER" ] && [ $$VER -lt "`echo $(PKG_VERSION) | sed 's|\.||g'`" ]; then
 			sudo -u nobody php-cli ./occ upgrade --no-app-disable --no-interaction
 		fi
+	else
+		/etc/init.d/lighttpd restart
 	fi
 fi
 chown -R nobody "$$IPKG_INSTROOT"/srv/www/nextcloud/

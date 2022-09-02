@@ -53,7 +53,6 @@ fi
 /etc/init.d/mysqld enable
 /etc/init.d/php7-fpm start
 /etc/init.d/php7-fpm enable
-/etc/init.d/lighttpd restart
 
 DELAY=5
 
@@ -122,7 +121,6 @@ sudo -u nobody php-cli ./occ config:system:set --value false updatechecker --typ
 [ -z "$(uname -n)" ] || sudo -u nobody php-cli ./occ config:system:set --value "$(uname -n ).local" trusted_domains 2
 
 /etc/init.d/php7-fpm restart
-/etc/init.d/lighttpd restart
 
 echo "Your Nextcloud installation should be available at http://$IP/nextcloud"
 echo "Your username is '$ALOGIN' and password '$APASS'"
