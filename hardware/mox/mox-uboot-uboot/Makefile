@@ -18,6 +18,8 @@ PKG_HASH:=92b08eb49c24da14c1adbf70a71ae8f37cc53eeb4230e859ad8b6733d13dcf5e
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-2.0-or-later
 PKG_LICENSE_FILES:=README
+PKG_BUILD_PARALLEL:=1
+
 PKG_BUILD_DIR:=$(BUILD_DIR)/u-boot-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
@@ -28,7 +30,7 @@ define Package/mox-uboot-uboot
 endef
 
 define Build/Compile
-	make -C $(PKG_BUILD_DIR) CROSS_COMPILE=$(TARGET_CROSS) \
+	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) CROSS_COMPILE=$(TARGET_CROSS) \
 		HOSTCFLAGS=-I$(TOPDIR)/staging_dir/host/include/ \
 		HOSTLDFLAGS=-L$(TOPDIR)/staging_dir/host/lib/ \
 		HOSTLDLIBS=-lpthread \

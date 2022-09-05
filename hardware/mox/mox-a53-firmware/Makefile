@@ -18,6 +18,8 @@ PKG_HASH:=53422dc649153838e03820330ba17cb10afe3e330ecde0db11e4d5f1361a33e6
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=BSD-3-Clause
 PKG_LICENSE_FILES:=docs/license.rst
+PKG_BUILD_PARALLEL:=1
+
 PKG_BUILD_DIR:=$(BUILD_DIR)/trusted-firmware-a-$(PKG_VERSION)
 PKG_BUILD_DEPENDS:=mox-uboot-uboot
 
@@ -30,7 +32,7 @@ define Package/mox-a53-firmware
 endef
 
 define Build/Compile
-	make -C $(PKG_BUILD_DIR) \
+	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) \
 		CROSS_COMPILE=$(TARGET_CROSS) \
 		USE_COHERENT_MEM=0 \
 		PLAT=a3700 \
