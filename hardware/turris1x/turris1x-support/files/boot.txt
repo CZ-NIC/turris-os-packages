@@ -68,7 +68,7 @@ if test "${loaded}" = "1"; then
 		# old fdt files have rootfs mtd named "rootfs-ubifs" and new just "rootfs"
 		# read mtd label from loaded fdt file, it may be on two different locations
 		fdt addr ${fdt_addr_r}
-		fdt get value rootfsmtd /localbus@ffe05000/nand@1,0/partitions/partition@0 label || fdt get value rootfsmtd /localbus@ffe05000/nand@1,0/partition@00 label || setenv rootfsmtd rootfs
+		fdt get value rootfsmtd /localbus@ffe05000/nand@1,0/partitions/partition@00 label || fdt get value rootfsmtd /localbus@ffe05000/nand@1,0/partition@00 label || fdt get value rootfsmtd /localbus@ffe05000/nand@1,0/partitions
 		setenv bootfstype "ubifs"
 		if test "${bootubioff}" != ""; then
 			setenv rootfsmtd ${rootfsmtd},${bootubioff}
