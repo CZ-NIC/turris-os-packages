@@ -193,6 +193,7 @@ define Package/fix-turris1x-btrfs-sdcard/description
   The fix for Turris 1.x SD card going to read only mode.
   This adds command that forces SD card controller to the RW mode as part of the
   boot process (U-Boot environment).
+endef
 
 define Package/fix-i-agree-with-eula-1/description
   The Sentinel EULA agreement. This is used in combination with removal of
