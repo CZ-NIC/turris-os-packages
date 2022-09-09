@@ -23,7 +23,7 @@ PKG_BUILD_PARALLEL:=1
 export GCC_HONOUR_COPTS=s
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/trusted-firmware-a-$(PKG_VERSION)
-PKG_BUILD_DEPENDS:=mox-uboot
+PKG_BUILD_DEPENDS:=uboot-mvebu
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -40,7 +40,7 @@ define Build/Compile
 		PLAT=a3700 \
 		CM3_SYSTEM_RESET=1 \
 		FIP_ALIGN=0x100 \
-		BL33=$(STAGING_DIR_ROOT)/usr/share/mox/u-boot.bin \
+		BL33=$(STAGING_DIR_IMAGE)/mox-u-boot.bin \
 		OPENSSL_DIR=$(STAGING_DIR_HOST) \
 		mrvl_bootimage
 	cp $(PKG_BUILD_DIR)/build/a3700/release/boot-image.bin $(PKG_BUILD_DIR)/a53-firmware.bin
