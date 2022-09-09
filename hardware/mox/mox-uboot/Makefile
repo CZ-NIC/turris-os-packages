@@ -7,7 +7,7 @@
 #
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=mox-uboot-uboot
+PKG_NAME:=mox-uboot
 PKG_VERSION:=2022.07
 PKG_RELEASE:=$(AUTORELEASE)
 
@@ -22,24 +22,26 @@ PKG_BUILD_PARALLEL:=1
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/u-boot-$(PKG_VERSION)
 
+export GCC_HONOUR_COPTS=s
+
 include $(INCLUDE_DIR)/package.mk
 
-define Package/mox-uboot-uboot
+define Package/mox-uboot
   TITLE:=U-boot for Turris MOX
   DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox
 endef
 
 define Build/Compile
 	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) CROSS_COMPILE=$(TARGET_CROSS) \
-		HOSTCFLAGS=-I$(TOPDIR)/staging_dir/host/include/ \
-		HOSTLDFLAGS=-L$(TOPDIR)/staging_dir/host/lib/ \
+		HOSTCFLAGS="$(HOST_CFLAGS)" \
+		HOSTLDFLAGS="$(HOST_LDFLAGS)" \
 		HOSTLDLIBS=-lpthread \
 		turris_mox_defconfig u-boot.bin
 endef
 
-define Package/mox-uboot-uboot/install
+define Package/mox-uboot/install
 	$(INSTALL_DIR) $(1)/usr/share/mox
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/u-boot.bin $(1)/usr/share/mox/u-boot.bin
 endef
 
-$(eval $(call BuildPackage,mox-uboot-uboot))
+$(eval $(call BuildPackage,mox-uboot))
