@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+
+if [ -d /etc/ssl/ca/remote ]; then
+	chown mosquitto:mosquitto /etc/ssl/ca/remote/*
+	/etc/init.d/fosquitto restart
+	/etc/init.d/foris-controller restart
+fi
