@@ -208,6 +208,11 @@ define Package/fix-remote-access-ca-permissions/description
   Change owner of CA files so that mosquitto is able to operate again.
 endef
 
+define Package/fix-omnia-leds-migrate/description
+  Migrating LED names on Turris Omnia routers from old names to new upstream
+  names. Updates both Rainbow and OpenWrt LED config.
+endef
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
@@ -232,3 +237,4 @@ $(eval $(call FIX,network-devices,+netifd))
 $(eval $(call FIX,turris1x-btrfs-sdcard,+pkglists))
 $(eval $(call FIX,i-agree-with-eula-1,+uci,prerm))
 $(eval $(call FIX,remote-access-ca-permissions,+turris-cagen +foris-controller))
+$(eval $(call FIX,omnia-leds-migrate,+rainbow @TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia))
