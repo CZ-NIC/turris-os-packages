@@ -1,0 +1,27 @@
+From fe0d8d3b16de3d922d35402772301f26fab207f3 Mon Sep 17 00:00:00 2001
+From: Michal Hrusecky <michal@hrusecky.net>
+Date: Sun, 18 Sep 2022 21:58:46 +0200
+Subject: [PATCH] uci.sh: Fix uci
+
+UCI doesn't support dash inside of section name. So when fetching LEDs
+settings, replace dash with underscore.
+---
+ rainbow/uci.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rainbow/uci.sh b/rainbow/uci.sh
+index 525d909..b979e8d 100644
+--- a/rainbow/uci.sh
++++ b/rainbow/uci.sh
+@@ -44,7 +44,7 @@ base_config() {
+ 		default_r="$color_r" default_g="$color_g" default_b="$color_b"
+ 		default_mode="$mode" default_mode_args="$mode_args"
+ 		for led in $LEDS; do
+-			_uci_rainbow_section "$led"
++			_uci_rainbow_section "$(echo "$led" | sed 's|-|_|')"
+ 			echo "$color_r	$color_g	$color_b	$mode${mode_args:+ }$mode_args"
+ 		done >"$rainbowdir/000-base"
+ 
+-- 
+2.37.3
+

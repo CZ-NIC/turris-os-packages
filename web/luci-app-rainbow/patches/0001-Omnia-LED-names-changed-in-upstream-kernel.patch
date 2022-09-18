@@ -1,0 +1,49 @@
+From 1a05dcbe850a6aab7c80122c03a7703a8eaaa774 Mon Sep 17 00:00:00 2001
+From: Michal Hrusecky <michal.hrusecky@turris.com>
+Date: Fri, 16 Sep 2022 14:55:46 +0200
+Subject: [PATCH 1/2] Omnia LED names changed in upstream kernel
+
+Updating model for Omnia to reflect those changes and to make Rainbow
+work again.
+---
+ omnia-luasrc/model/cbi/rainbow/rainbow.lua | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/omnia-luasrc/model/cbi/rainbow/rainbow.lua b/omnia-luasrc/model/cbi/rainbow/rainbow.lua
+index e9643c9..a9dc31f 100644
+--- a/omnia-luasrc/model/cbi/rainbow/rainbow.lua
++++ b/omnia-luasrc/model/cbi/rainbow/rainbow.lua
+@@ -3,19 +3,19 @@ m = Map("rainbow", "Rainbow", translate("Utility Rainbow enables control of Omni
+ 
+ -- Define values for form
+ local led_sections = {
+-	{"pwr", "Power"},
++	{"power", "Power"},
+ 	{"lan", "LAN ports"},
+-	{"lan0", "LAN 0"},
+-	{"lan1", "LAN 1"},
+-	{"lan2", "LAN 2"},
+-	{"lan3", "LAN 3"},
+-	{"lan4", "LAN 4"},
++	{"lan-0", "LAN 0"},
++	{"lan-1", "LAN 1"},
++	{"lan-2", "LAN 2"},
++	{"lan-3", "LAN 3"},
++	{"lan-4", "LAN 4"},
+ 	{"wan", "WAN"},
+-	{"pci1", "PCI 1"},
+-	{"pci2", "PCI 2"},
+-	{"pci3", "PCI 3"},
+-	{"usr1", "User 1"},
+-	{"usr2", "User 2"}
++	{"wlan-1", "PCI 1"},
++	{"wlan-2", "PCI 2"},
++	{"wlan-3", "PCI 3"},
++	{"indicator-1", "User 1"},
++	{"indicator-2", "User 2"}
+ };
+ 
+ local colors = {
+-- 
+2.37.3
+
