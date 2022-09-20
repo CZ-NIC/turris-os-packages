@@ -27,6 +27,11 @@ if [ -f /srv/www/nextcloud/config/config.php ]; then
     die "Already configured"
 fi
 
+if [ "x$1" = x--daemon ] || [ "x$1" = x-d ]; then
+    "$0" --batch "$@" > /dev/null 2>&1 &
+    exit 0
+fi
+
 [ \! -f /tmp/nextcloud_configuring ] || die "Installation already in process"
 touch /tmp/nextcloud_configuring
 
