@@ -8,15 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=omnia-rainbow-backend
-PKG_VERSION:=0.1.0
+PKG_VERSION:=0.1.1
 PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/rainbow-ng.git
-PKG_MIRROR_HASH:=65d34cc4b88878174d9db1da684f31eca9fd034369840d9d69223d6eb20faadb
+PKG_MIRROR_HASH:=9d9e126949dd16bd52cc9fe520c5e834a637cbdb124c24d41589565cddda8073
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=GPL-3.0-or-later
+PKG_LICENSE_FILES:=COPYING
 
 include $(INCLUDE_DIR)/package.mk
 
