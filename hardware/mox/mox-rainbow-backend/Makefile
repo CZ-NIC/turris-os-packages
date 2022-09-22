@@ -8,15 +8,17 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mox-rainbow-backend
-PKG_VERSION:=0.1.0
+PKG_VERSION:=0.1.1
 PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/rainbow-ng.git
-PKG_MIRROR_HASH:=f292cd56bbfe8771ad3f83a6c30aa9989bff0efea3a6d09850fbb93a9d22213f
+PKG_MIRROR_HASH:=83f86b7c52862f4fcada855b52f70834dbcf4fccab0885348e9a35a3404b8492
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
+PKG_LICENSE:=GPL-3.0-or-later
+PKG_LICENSE_FILES:=COPYING
 
 include $(INCLUDE_DIR)/package.mk
 
