@@ -1,0 +1,67 @@
+#!/bin/sh
+
+print_config() {
+	led=$1
+	color=$2
+	status=$3
+	brightness=$4
+	echo
+	echo "config led '$led'"
+	[ -n "$color" ] && echo "        option color '$color'"
+	[ -n "$status" ] && echo "        option status '$status'"
+	[ -n "$brightness" ] && echo "        option brightness '$brightness'"
+}
+
+uci_get() {
+	out=$(uci get $1 2>/dev/null)
+	if [ $? = 0 ]; then
+		echo $out
+	fi
+}
+
+migrate_led() {
+	led=$1
+	if [ -z "$(uci_get rainbow.$led)" ]; then
+		return
+	fi
+	color=$(uci_get rainbow.$led.color)
+	status=$(uci_get rainbow.$led.status)
+	brightness=$(uci_get rainbow.$led.brightness)
+	[ $led = pwr ] && led=power
+	[ $led = wifi ] && led=wlan
+	[ $led = lan1 ] && led=lan-1
+	[ $led = lan2 ] && led=lan-2
+	[ $led = lan3 ] && led=lan-3
+	[ $led = lan4 ] && led=lan-4
+	[ $led = lan5 ] && led=lan-5
+
+	print_config $led $color $status $brightness
+}
+
+migrate() {
+	for led in all pwr wifi wan; do
+		migrate_led $led
+	done
+
+	# if lan section was specified, it was used for all lan LEDs even if there was
+	# a section for a specific lan led. Current rainbow-ng doesn't use the lan
+	# section anymore and only supports setting specific lan-* LEDS
+
+	if [ -n "$(uci_get rainbow.lan)" ]; then
+		color=$(uci_get rainbow.lan.color)
+		status=$(uci_get rainbow.lan.status)
+		print_config lan-1 $color $status
+		print_config lan-2 $color $status
+		print_config lan-3 $color $status
+		print_config lan-4 $color $status
+		print_config lan-5 $color $status
+	else
+		for led in lan1 lan2 lan3 lan4 lan5; do
+			migrate_led $led
+		done
+	fi
+}
+
+cp /etc/config/rainbow /etc/config/rainbow.old
+migrate > /etc/config/rainbow.new
+mv /etc/config/rainbow.new /etc/config/rainbow
