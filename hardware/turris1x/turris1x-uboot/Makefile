@@ -48,12 +48,12 @@ endef
 
 define Package/turris1x-uboot/install
 	$(INSTALL_DIR) $(1)/usr/share/turris1x
-	$(CP) $(STAGING_DIR_IMAGE)/turris1x-nor-u-boot-with-dtb.bin (1)/usr/share/turris1x/u-boot-nor.bin
+	$(CP) $(STAGING_DIR_IMAGE)/turris1x-nor-u-boot-with-dtb.bin $(1)/usr/share/turris1x/u-boot-nor.bin
 endef
 
 define Package/turris1x-uboot-sd/install
 	$(INSTALL_DIR) $(1)/usr/share/turris1x
-	$(CP) $(PKG_BUILD_DIR)/turris1x-sd-u-boot-with-spl.bin $(1)/usr/share/turris1x/u-boot-sdcard.bin
+	$(CP) $(STAGING_DIR_IMAGE)/turris1x-sd-u-boot-with-spl.bin $(1)/usr/share/turris1x/u-boot-sdcard.bin
 endef
 
 $(eval $(call BuildPackage,turris1x-uboot))
