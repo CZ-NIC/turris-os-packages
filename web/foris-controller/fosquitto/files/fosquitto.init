@@ -19,6 +19,8 @@ generate_password() {
 	echo "local:${new_password}" > "${PLAIN_PASSWORD}"
 	cp "${PLAIN_PASSWORD}" "${HASHED_PASSWORD}"
 	mosquitto_passwd -U "${HASHED_PASSWORD}"
+	chown mosquitto "${HASHED_PASSWORDS}"
+	chown mosquitto "${PLAIN_PASSWORDS}"
 	umask ${stored_umask}
 
 	# Sync these files just to make sure that content is written to disk.
@@ -120,6 +122,16 @@ check_credentials_files() {
 	[ -e "$PLAIN_PASSWORD" -a -e "$HASHED_PASSWORD" ]
 }
 
+check_credentials_files_owner() {
+	local hash_owner="$(stat -c '%U' $HASHED_PASSWORD)"
+	local plain_owner="$(stat -c '%U' $PLAIN_PASSWORD)"
+
+	if [ "$hash_owner" != "mosquitto" -o "$plain_owner" != "mosquitto" ]; then
+		chown mosquitto "${HASHED_PASSWORD}"
+		chown mosquitto "${PLAIN_PASSWORD}"
+	fi
+}
+
 start_service() {
 	mkdir -p "/var/etc"
 	generate_config
@@ -128,6 +140,7 @@ start_service() {
 		generate_password
 	fi
 	try_chown_dirs
+	check_credentials_files_owner
 
 	config_get_bool remote_enabled remote enabled "0"
 	config_get remote_port remote port "11884"
@@ -139,7 +152,7 @@ start_service() {
 	procd_set_param pidfile /var/run/fosquitto.pid
 	procd_set_param stdout 1 # forward stdout of the command to logd
 	procd_set_param stderr 1 # same for stderr
-	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-0.2} ${respawn_retry:-25}
+	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-2} ${respawn_retry:-25}
 	if [ "$remote_enabled" = "1" ]; then
 		if serial_number=$(crypto-wrapper serial-number); then
 			procd_add_mdns fosquitto tcp "${remote_port}" id=${serial_number}

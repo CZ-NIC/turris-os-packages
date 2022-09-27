@@ -1,0 +1,59 @@
+From ae82b3abb056544bf3804e118ad81cef9daa43bf Mon Sep 17 00:00:00 2001
+From: Michal Hrusecky <michal.hrusecky@turris.com>
+Date: Fri, 16 Sep 2022 15:43:41 +0200
+Subject: [PATCH 2/2] Adopt backend for new Omnia LEDs names
+
+Make sure we have correct names of the LEDs and let's add new colors
+available in rainbow while we are at it. There is one issue though. UCI
+can't handle sections containing dash (-), so I had to replace them with
+underscore (_). We need to make appropriate adjustments in Rainbow as
+well.
+---
+ omnia-luasrc/model/cbi/rainbow/rainbow.lua | 24 ++++++++++++----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
+
+diff --git a/omnia-luasrc/model/cbi/rainbow/rainbow.lua b/omnia-luasrc/model/cbi/rainbow/rainbow.lua
+index a9dc31f..3a91a03 100644
+--- a/omnia-luasrc/model/cbi/rainbow/rainbow.lua
++++ b/omnia-luasrc/model/cbi/rainbow/rainbow.lua
+@@ -4,24 +4,26 @@ m = Map("rainbow", "Rainbow", translate("Utility Rainbow enables control of Omni
+ -- Define values for form
+ local led_sections = {
+ 	{"power", "Power"},
+-	{"lan", "LAN ports"},
+-	{"lan-0", "LAN 0"},
+-	{"lan-1", "LAN 1"},
+-	{"lan-2", "LAN 2"},
+-	{"lan-3", "LAN 3"},
+-	{"lan-4", "LAN 4"},
++	{"lan_0", "LAN 0"},
++	{"lan_1", "LAN 1"},
++	{"lan_2", "LAN 2"},
++	{"lan_3", "LAN 3"},
++	{"lan_4", "LAN 4"},
+ 	{"wan", "WAN"},
+-	{"wlan-1", "PCI 1"},
+-	{"wlan-2", "PCI 2"},
+-	{"wlan-3", "PCI 3"},
+-	{"indicator-1", "User 1"},
+-	{"indicator-2", "User 2"}
++	{"wlan_1", "PCI 1"},
++	{"wlan_2", "PCI 2"},
++	{"wlan_3", "PCI 3"},
++	{"indicator_1", "User 1"},
++	{"indicator_2", "User 2"}
+ };
+ 
+ local colors = {
+ 	red = translatef("Red %s", "(FF0000)"),
+ 	green = translatef("Green %s", "(00FF00)"),
+ 	blue = translatef("Blue %s", "(0000FF)"),
++	yellow = translatef("Yellow %s", "(FFFF00)"),
++	cyan = translatef("Cyan %s", "(00FFFF)"),
++	magenta = translatef("Magenta %s", "(FF00FF)"),
+ 	white = translatef("White %s", "(FFFFFF)"),
+ 	black = translatef("Black %s", "(000000)")
+ };
+-- 
+2.37.3
+

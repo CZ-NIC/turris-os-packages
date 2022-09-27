@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+## Copyright (C) 2019-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mox-otp
-PKG_VERSION:=0.3
-PKG_RELEASE:=1
+PKG_VERSION:=0.3.1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/mox-otp.git
-PKG_MIRROR_HASH:=22e9aea11e7d1a49d0e3cd1ac06c94a0dfd5bfb67d3ec9a33ad8ee0affdc2d32
+PKG_MIRROR_HASH:=3e10093edb08c82f3aeff9d95ce18ca4a391d726df5dc85a4fbb56d7957cf3de
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -28,8 +28,7 @@ define Package/mox-otp
   URL:=https://gitlab.nic.cz/turris/mox-otp
   PROVIDES:=turris-otp
   DEPENDS:=+python3-light
-  DEPENDS+=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox
-  VARIANT:=python3
+  DEPENDS+=@TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox
 endef
 
 define Package/mox-otp/description

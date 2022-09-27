@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=base64c
 PKG_VERSION:=0.2.1
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE:=base64c-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://gitlab.nic.cz/api/v4/projects/973/packages/generic/base64c/$(PKG_VERSION)

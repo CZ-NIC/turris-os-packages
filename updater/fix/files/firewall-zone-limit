@@ -1,0 +1,61 @@
+#!/bin/sh
+set -e
+. /lib/functions.sh
+config_load firewall
+
+zones_map="$(mktemp -d)"
+cleanup() {
+	rm -rf "$zones_map"
+}
+trap cleanup EXIT TERM INT QUIT ABRT
+
+
+for_zones() {
+	local cnf="$1"
+	local name
+	config_get name "$cnf" "name"
+	if [ "${#name}" -gt 11 ]; then
+		new_name="${name:0:11}"
+		case "$name" in
+			guest_turris)
+				new_name="tr_guest"
+				;;
+		esac
+		echo "$new_name" > "$zones_map/$name"
+		uci set "firewall.$cnf.name=$new_name"
+	fi
+}
+config_foreach for_zones "zone"
+
+
+for_forwardings_rules_redirects() {
+	local cnf="$1"
+	local src dest
+	config_get src "$cnf" "src" ""
+	config_get dest "$cnf" "dest" ""
+	if [ -f "$zones_map/$src" ]; then
+		uci set "firewall.$cnf.src=$(cat "$zones_map/$src")"
+	fi
+	if [ -f "$zones_map/$dest" ]; then
+		uci set "firewall.$dest.src=$(cat "$zones_map/$dest")"
+	fi
+}
+config_foreach for_forwardings_rules_redirects "forwarding"
+config_foreach for_forwardings_rules_redirects "rule"
+config_foreach for_forwardings_rules_redirects "redirect"
+
+for_redirects_reflection() {
+	local zone="$1"
+	if [ -f "$zones_map/$zone" ]; then
+		uci del_list "firewall.$cnf.reflection_zone=$zone"
+		uci add_list "firewall.$cnf.reflection_zone=$(cat "$zones_map/$zone")"
+	fi
+}
+for_redirects() {
+	local cnf="$1"
+	config_list_foreach "$cnf" "reflection_zone" for_redirects_reflection
+}
+config_foreach for_redirects "redirect"
+
+
+uci commit firewall

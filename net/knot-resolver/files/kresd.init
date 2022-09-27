@@ -6,7 +6,7 @@ START=61
 STOP=00
 
 USE_PROCD=1
-EXTRA_COMMANDS="test_ipv6"
+extra_command "test_ipv6" "Test IPv6 connection"
 PROG=/usr/sbin/kresd
 CONFIGFILE=/tmp/kresd.config
 ROOTKEYFILE=/etc/root.keys
@@ -165,12 +165,12 @@ load_uci_config_common() {
 
 	# Test for resolv.conf.auto new location
 	# https://github.com/openwrt/openwrt/commit/cd48d8d3420dd4df03daaa548227ceb487ba7104
-	resolv_conf_path="$(ls -1 /etc/resolv.conf.vpn.* 2>/dev/null | head -n1)"
-	if [ \! -f "$resolv_conv_path" ]; then
-		if [ -f "/tmp/resolv.conf.auto" ]; then
-			resolv_conf_path="/tmp/resolv.conf.auto"
-		elif [ -f "/tmp/resolv.conf.d/resolv.conf.auto" ]; then
+	resolv_conf_path="$(ls -1 /tmp/resolv.conf.d/resolv.conf.vpn.* 2>/dev/null | head -n1)"
+	if [ \! -f "$resolv_conf_path" ]; then
+		if [ -f "/tmp/resolv.conf.d/resolv.conf.auto" ]; then
 			resolv_conf_path="/tmp/resolv.conf.d/resolv.conf.auto"
+		elif [ -f "/tmp/resolv.conf.auto" ]; then
+			resolv_conf_path="/tmp/resolv.conf.auto"
 		else
 			resolv_conf_path=""
 			echo "Error! File resolv.conf.auto is missing"

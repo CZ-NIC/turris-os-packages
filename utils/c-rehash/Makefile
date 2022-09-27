@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=c-rehash
 PKG_VERSION:=1.7
-PKG_RELEASE:=3
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 

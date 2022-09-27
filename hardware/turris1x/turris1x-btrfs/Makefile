@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris1x-btrfs
 PKG_VERSION:=3.1.0
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-2.0-or-later
@@ -20,7 +20,7 @@ define Package/Common
   SECTION:=utils
   CATEGORY:=Utilities
   SUBMENU:=Filesystem
-  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_turris1x
+  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_cznic_turris1x
 endef
 
 define Package/turris1x-btrfs

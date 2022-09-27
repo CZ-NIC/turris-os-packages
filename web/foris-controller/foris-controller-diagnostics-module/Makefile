@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-diagnostics-module
 PKG_VERSION:=1.0.5
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-diagnostics-module.git
@@ -32,7 +32,6 @@ define Package/foris-controller-diagnostics-module
   DEPENDS:= \
     +foris-controller \
     +turris-diagnostics
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-diagnostics-module/description

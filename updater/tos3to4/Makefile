@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=tos3to4
 PKG_VERSION:=2.4.1
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 

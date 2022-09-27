@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2019-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=updater-supervisor
-PKG_VERSION:=1.4.3
-PKG_RELEASE:=2
+PKG_VERSION:=1.5.3
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/updater/supervisor.git
-PKG_MIRROR_HASH:=e4252dfcac1f68d654df09837a62ec61731cd8cf6c1b78819ef9ccb86310141a
+PKG_MIRROR_HASH:=232ddf02231e34a87970441dde6d9ec4d11aee4f66a788808389cb80f5707d5c
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -28,9 +28,8 @@ define Package/updater-supervisor
   TITLE:=Updater supervisor and its library
   DEPENDS:= \
     +updater-ng +pkglists +l10n-supported \
-    +python3-light +python3-uci +python3-distro \
+    +python3-light +python3-uci +python3-distro +python3-packaging +python3-crontab \
     +cronie
-  VARIANT:=python3
 endef
 
 define Package/updater-supervisor/description

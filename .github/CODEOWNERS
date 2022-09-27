@@ -8,7 +8,8 @@ collect/pakon-lists/ @mmtj
 hardware/ @miska
 hardware/crypto-wrapper/ @VojtechMyslivec
 hardware/mox/mox-otp/ @VojtechMyslivec
-hardware/mox/mox-uboot/ @pali @elkablo
+hardware/mox/mox-uboot-uboot/ @pali @elkablo
+hardware/mox/mox-a53-firmware/ @pali @elkablo
 hardware/omnia/omnia-uboot/ @pali @elkablo
 
 # Lang - Python Packages

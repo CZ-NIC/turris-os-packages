@@ -11,7 +11,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=knot-resolver
 PKG_VERSION:=5.5.3
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 PKG_SOURCE_URL:=https://secure.nic.cz/files/knot-resolver
@@ -64,7 +64,6 @@ MESON_ARGS+= \
 	-Dcapng=disabled \
 	-Dclient=disabled \
 	-Dconfig_tests=disabled \
-	-Ddnstap=disabled \
 	-Ddoc=disabled \
 	-Dinstall_kresd_conf=disabled \
 	-Dinstall_root_keys=disabled \

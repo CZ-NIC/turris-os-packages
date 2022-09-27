@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2019-2022 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-ws
-PKG_VERSION:=1.6.1
-PKG_RELEASE:=5
+PKG_VERSION:=1.6.2
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-ws.git
-PKG_MIRROR_HASH:=ea9d5c059f0198d34cdde1eda1e4bd4ffd2d0e43e2676c732f65bc0c5ecd2f3f
+PKG_MIRROR_HASH:=9ed6c5ce90b0a11bacb9cd57a26a9fcf4ffa768bb4a58f5f221fb3627ea5e1e2
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -37,10 +37,10 @@ define Package/foris-ws
     +foris-client \
     +python3-ubus \
     +lighttpd-mod-proxy \
+    +turris-auth \
     +fosquitto \
     +python3-cachelib \
     +python3-paho-mqtt
-  VARIANT:=python3
 endef
 
 define Package/foris-ws/description
@@ -64,7 +64,7 @@ define Py3Package/foris-ws/install
 	$(INSTALL_DIR) $(1)/usr/share/foris-ws/bin/
 	$(INSTALL_BIN) ./files/socat.sh $(1)/usr/share/foris-ws/bin/socat.sh
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
-	$(INSTALL_DATA) ./files/lighttpd-foris-ws.conf $(1)/etc/lighttpd/conf.d/foris-ws.conf
+	$(INSTALL_DATA) ./files/lighttpd-foris-ws.conf $(1)/etc/lighttpd/conf.d/70-foris-ws.conf
 endef
 
 define Package/foris-ws/postinst

@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-pakon-module
 PKG_VERSION:=0.2.1
-PKG_RELEASE:=4
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-pakon-module.git
@@ -32,7 +32,6 @@ define Package/foris-controller-pakon-module
   DEPENDS:= \
     +foris-controller \
     +pakon
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-pakon-module/description

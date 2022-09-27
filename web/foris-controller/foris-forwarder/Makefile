@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-forwarder
 PKG_VERSION:=0.3.0
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-forwarder.git
@@ -34,7 +34,6 @@ define Package/foris-forwarder
     +fosquitto \
     +python3-paho-mqtt \
     +python3-zeroconf
-  VARIANT:=python3
 endef
 
 define Package/foris-forwarder/description

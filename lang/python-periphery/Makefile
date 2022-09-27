@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-periphery
 PKG_VERSION:=2.3.0
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
@@ -28,7 +28,6 @@ define Package/python3-periphery
   TITLE:=Linux Peripheral I/O
   URL:=https://github.com/vsergeev/python-periphery
   DEPENDS:=+python3-light
-  VARIANT:=python3
 endef
 
 define Package/python3-periphery/description

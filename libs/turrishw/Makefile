@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turrishw
-PKG_VERSION:=0.5.3
-PKG_RELEASE:=1
+PKG_VERSION:=0.9.0
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/turrishw.git
-PKG_MIRROR_HASH:=43194ae6f131d4039f86f81288648304d2d647d7a258277c7a50ec041ec90b2b
+PKG_MIRROR_HASH:=e865fefa306dc827725f6556f3fe012173175d7b3e8060bafefff69506bc3e12
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -29,7 +29,6 @@ define Package/turrishw
   SUBMENU:=Python
   TITLE:=turrishw
   DEPENDS:=+python3-light +python3-logging
-  VARIANT:=python3
 endef
 
 define Package/turrishw/description

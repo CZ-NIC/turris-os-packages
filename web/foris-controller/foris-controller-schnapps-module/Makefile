@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-schnapps-module
 PKG_VERSION:=0.5
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-schnapps-module.git
@@ -32,7 +32,6 @@ define Package/foris-controller-schnapps-module
   DEPENDS:= \
     +foris-controller \
     +schnapps
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-schnapps-module/description

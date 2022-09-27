@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nextcloud
-PKG_VERSION:=21.0.9
-PKG_RELEASE:=1
+PKG_VERSION:=22.2.10
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
-PKG_HASH:=a7a6ef8135e69a318ddd3450a46f3c7f760f92c874433586f63f4a9c48dcaea1
+PKG_HASH:=8de167bfcfcaa661245a00a5ac36628e7961951b9fe2dfaf4f8a5aac6907ccdb
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -60,7 +60,7 @@ define Package/$(PKG_NAME)/install
 		expr $$$$i : ipkg || $(CP) -r $(PKG_BUILD_DIR)/$$$$i $(1)/srv/www/nextcloud;\
 	done
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
-	$(INSTALL_DATA) ./files/nextcloud.conf $(1)/etc/lighttpd/conf.d/
+	$(INSTALL_DATA) ./files/nextcloud.conf $(1)/etc/lighttpd/conf.d/80-nextcloud.conf
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/nextcloud.cron $(1)/etc/cron.d/nextcloud
 	$(INSTALL_DIR) $(1)/usr/bin
@@ -84,6 +84,8 @@ if [ -z "$$IPKG_INSTROOT" ]; then
 		if [ -n "$$VER" ] && [ $$VER -lt "`echo $(PKG_VERSION) | sed 's|\.||g'`" ]; then
 			sudo -u nobody php-cli ./occ upgrade --no-app-disable --no-interaction
 		fi
+	else
+		/etc/init.d/lighttpd restart
 	fi
 fi
 chown -R nobody "$$IPKG_INSTROOT"/srv/www/nextcloud/

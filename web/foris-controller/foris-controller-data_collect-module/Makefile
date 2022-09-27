@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-data_collect-module
 PKG_VERSION:=1.1
-PKG_RELEASE:=7
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-data_collect-module.git
@@ -30,7 +30,6 @@ define Package/foris-controller-data_collect-module
   SUBMENU:=Foris Controller
   TITLE:=Foris controller data collect module
   DEPENDS:=+foris-controller
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-data_collect-module/description

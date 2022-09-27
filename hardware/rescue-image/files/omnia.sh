@@ -2,12 +2,26 @@
 
 . /lib/board_helpers.sh
 
+find_mtd_index() {
+    local PART="$(grep "\"$1\"" /proc/mtd | awk -F: '{print $1}')"
+    local INDEX="${PART##mtd}"
+
+    echo ${INDEX}
+}
+
 board_init() {
+    local idx
+
     generic_pre_init
     # Default mode on Omnia is serial
     MODE=7
     mkdir -p /etc
-    echo '/dev/mtd0 0xF0000 0x10000 0x10000' > /etc/fw_env.config
+    idx="$(find_mtd_index u-boot-env)"
+    if [ -n "$idx" ]; then
+        echo "/dev/mtd${idx} 0x0 0x10000 0x10000" > /etc/fw_env.config
+    else
+        echo '/dev/mtd0 0xF0000 0x10000 0x10000' > /etc/fw_env.config
+    fi
     TARGET_DRIVE="/dev/mmcblk0"
     PART_NO="1"
     TARGET_PART="${TARGET_DRIVE}p${PART_NO}"

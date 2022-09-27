@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mox-pkcs11
 PKG_VERSION:=0.1
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/mox-pkcs11.git
@@ -23,7 +23,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/mox-pkcs11
   TITLE:=MOX PKCS11
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +libopenssl
+  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox +libopenssl
 endef
 
 define Package/mox-pkcs11/description

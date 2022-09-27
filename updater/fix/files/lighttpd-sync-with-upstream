@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+
+# Move user-created files and some leftovers from our maintained lighttpd package
+for file in /etc/lighttpd/modules.d/*.load; do
+       [ -f "$file" ] || continue
+       file="${file##*/}"
+       mv -n "/etc/lighttpd/modules.d/$file" "/etc/lighttpd/conf.d/$file.conf"
+done
+rmdir /etc/lighttpd/modules.d/ 2>/dev/null || true

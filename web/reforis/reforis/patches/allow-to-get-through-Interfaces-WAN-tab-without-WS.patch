@@ -1,0 +1,74 @@
+From 9794b67edd3486e8ec081ca3367facbf14275ffc Mon Sep 17 00:00:00 2001
+From: Aleksandr Gumroian <aleksandr.gumroian@nic.cz>
+Date: Wed, 10 Aug 2022 14:36:59 +0200
+Subject: [PATCH] Allow to get through Interfaces & WAN tab without WS
+
+For now, there is a bug in Chromium-based browsers
+that fails on HTTPS + WSS connection for no reason:
+https://bugs.chromium.org/p/chromium/issues/detail?id=1346579.
+
+This fix will allow users to get through the onboarding wizard.
+---
+ js/src/interfaces/Interfaces.js | 8 +++++++-
+ js/src/wan/WAN.js               | 8 +++++++-
+ 2 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/js/src/interfaces/Interfaces.js b/js/src/interfaces/Interfaces.js
+index 863d56fa..2a1616b7 100644
+--- a/js/src/interfaces/Interfaces.js
++++ b/js/src/interfaces/Interfaces.js
+@@ -19,9 +19,14 @@ import "./Interfaces.css";
+ 
+ Interfaces.propTypes = {
+     ws: PropTypes.object.isRequired,
++    postCallback: PropTypes.func,
+ };
+ 
+-export default function Interfaces({ ws }) {
++Interfaces.defaultProps = {
++    postCallback: () => undefined,
++};
++
++export default function Interfaces({ ws, postCallback }) {
+     return (
+         <>
+             <h1>{_("Network Interfaces")}</h1>
+@@ -36,6 +41,7 @@ export default function Interfaces({ ws }) {
+                     endpoint: API_URLs.interfaces,
+                     wsModule: "networks",
+                 }}
++                postCallback={postCallback}
+                 prepDataToSubmit={prepDataToSubmit}
+                 validator={validateInterfaces}
+             >
+diff --git a/js/src/wan/WAN.js b/js/src/wan/WAN.js
+index 4321d6b7..3e2dadd6 100644
+--- a/js/src/wan/WAN.js
++++ b/js/src/wan/WAN.js
+@@ -20,9 +20,14 @@ import WANForm, { validateWANForm } from "./WANForm";
+ 
+ WAN.propTypes = {
+     ws: PropTypes.object.isRequired,
++    postCallback: PropTypes.func,
+ };
+ 
+-export default function WAN({ ws }) {
++WAN.defaultProps = {
++    postCallback: () => undefined,
++};
++
++export default function WAN({ ws, postCallback }) {
+     return (
+         <>
+             <h1>{_("WAN")}</h1>
+@@ -40,6 +45,7 @@ export default function WAN({ ws }) {
+                 prepData={prepData}
+                 prepDataToSubmit={prepDataToSubmit}
+                 validator={validator}
++                postCallback={postCallback}
+             >
+                 <WANForm />
+                 <WAN6Form />
+-- 
+2.34.1
+

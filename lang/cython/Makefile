@@ -1,11 +1,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cython
-PKG_VERSION:=0.29.23
-PKG_RELEASE:=1
+PKG_VERSION:=0.29.28
+PKG_RELEASE:=$(AUTORELEASE)
 
 PYPI_NAME:=Cython
-PKG_HASH:=6a0d31452f0245daacb14c979c77e093eb1a546c760816b5eed0047686baad8e
+PKG_HASH:=d6fac2342802c30e51426828fe084ff4deb1b3387367cf98976bb2e64b6f8e45
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=Apache-2.0
@@ -22,7 +22,6 @@ define Package/cython
   TITLE:=Cython compiler for writing C extensions for Python
   URL:=https://www.cython.org/
   DEPENDS:=+python3
-  VARIANT:=python3
 endef
 
 define Package/cython/description

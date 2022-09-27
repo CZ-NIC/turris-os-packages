@@ -8,7 +8,8 @@ collect/pakon-lists/ @mmatejek
 hardware/ @mhrusecky
 hardware/crypto-wrapper/ @vmyslivec
 hardware/mox/mox-otp/ @vmyslivec
-hardware/mox/mox-uboot/ @prohar @mbehun
+hardware/mox/mox-uboot-uboot/ @prohar @mbehun
+hardware/mox/mox-a53-firmware/ @prohar @mbehun
 hardware/omnia/omnia-uboot/ @prohar @mbehun
 
 # Lang - Python Packages

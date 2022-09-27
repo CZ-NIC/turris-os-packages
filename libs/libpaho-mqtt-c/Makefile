@@ -8,7 +8,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libpaho-mqtt-c
 PKG_VERSION:=1.3.9
-PKG_RELEASE=1
+PKG_RELEASE=$(AUTORELEASE)
 
 PKG_SOURCE:=v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/eclipse/paho.mqtt.c/tar.gz/v$(PKG_VERSION)?

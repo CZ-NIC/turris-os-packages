@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-1x-firmware
 PKG_VERSION:=1.0
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -17,7 +17,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/turris-1x-firmware
   TITLE:=Firmware for Turris 1.x
-  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_turris1x
+  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_cznic_turris1x
   PROVIDES:=turris-nor-update-firmware
 endef
 

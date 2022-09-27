@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=cert-backup
 PKG_VERSION:=14
-PKG_RELEASE:=2
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=BSD-3-Clause
@@ -42,7 +42,7 @@ endef
 define Package/cert-backup-turris1x
   $(call Package/CommonBackend)
   TITLE+= - Turris 1.x backend
-  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_turris1x
+  DEPENDS:=@TARGET_mpc85xx_p2020_DEVICE_cznic_turris1x
   CONFLICTS:=cert-backup-btrfs
 endef
 

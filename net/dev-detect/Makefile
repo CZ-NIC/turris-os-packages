@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dev-detect
 PKG_VERSION:=0.3.1
-PKG_RELEASE:=2
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/dev-detect.git
@@ -33,7 +33,6 @@ define Package/dev-detect
         +python3-sqlite3 \
         +python3-uci \
         +ouidb
-  VARIANT:=python3
 endef
 
 define Package/dev-detect/description

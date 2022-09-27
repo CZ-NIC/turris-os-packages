@@ -3,8 +3,7 @@
 USE_PROCD=1
 START=95
 STOP=05
-EXTRA_COMMANDS="status"
-EXTRA_HELP="        status Get suricata status (as exit code)"
+extra_command "status" "Display the service status (as exit code)"
 IPTABLES_RULES="/tmp/suricata/suricata.fw"
 IP6TABLES_RULES="/tmp/suricata/suricata.fw6"
 PID_FILE="/var/run/suricata/suricata.pid"
