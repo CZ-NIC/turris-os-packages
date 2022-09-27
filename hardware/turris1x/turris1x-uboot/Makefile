@@ -44,8 +44,8 @@ define Package/turris1x-uboot-nor/description
 endef
 
 define Build/Compile
-  $(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) CROSS_COMPILE=$(TARGET_CROSS) turris_1x_nor_defconfig u-boot-with-dtb.bin
-  $(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) CROSS_COMPILE=$(TARGET_CROSS) turris_1x_sdcard_defconfig u-boot-with-spl.bin
+	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) CROSS_COMPILE=$(TARGET_CROSS) turris_1x_nor_defconfig u-boot-with-dtb.bin
+	$(MAKE) $(PKG_JOBS) -C $(PKG_BUILD_DIR) CROSS_COMPILE=$(TARGET_CROSS) turris_1x_sdcard_defconfig u-boot-with-spl.bin
 endef
 
 define Package/turris1x-uboot/install
