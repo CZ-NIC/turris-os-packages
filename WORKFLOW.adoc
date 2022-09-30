@@ -276,7 +276,15 @@ recursive merge (without merge conflicts).
 [,sh]
 ----------------------------------------------------------------------------------
 git checkout master
-git merge --no-ff --gpg-sign develop
+git merge --no-ff --no-commit develop
+----------------------------------------------------------------------------------
+
+Change the branch in .github/workflows/multi-arch-test-build.yml from develop
+to master.
+[,sh]
+----------------------------------------------------------------------------------
+git add .github/workflows/multi-arch-test-build.yml
+git commit --no-edit --gpg-sign
 git push origin master
 ----------------------------------------------------------------------------------
 
