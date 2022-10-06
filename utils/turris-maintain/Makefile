@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2019-2021 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2019-2022 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,7 +8,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-maintain
-PKG_VERSION:=13
+PKG_VERSION:=14
 PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>

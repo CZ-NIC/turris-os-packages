@@ -47,18 +47,21 @@ for network in ["lan", "wan"]:
     except (subprocess.CalledProcessError, ):
         pass
 
+# Set would be almost fine for this, but it does not preserve insertion order.
+# Lets use this trick with dictionary, which are ordered by default since Python 3.7, to maintain original list order.
+unique_ips = list(dict.fromkeys(ips))
 
 remains = TIME
 while remains > 0:
     sender.notify(
-        "maintain", "reboot", {"ips": list(set(ips)), "remains": remains},
+        "maintain", "reboot", {"ips": unique_ips, "remains": remains},
         controller_id=controller_id,
     )
     time.sleep(float(STEP) / 1000)
     remains -= STEP
 
 sender.notify(
-    "maintain", "reboot", {"ips": ips, "remains": 0}, controller_id=controller_id,
+    "maintain", "reboot", {"ips": unique_ips, "remains": 0}, controller_id=controller_id,
 )
 
 subprocess.call("reboot")
