@@ -1,0 +1,23 @@
+From 56c097fef801fa0ec63c36a1de67488a0e084dee Mon Sep 17 00:00:00 2001
+From: Michal Vasilek <michal.vasilek@nic.cz>
+Date: Thu, 13 Oct 2022 18:02:13 +0200
+Subject: [PATCH] rainbow.sh: use bash
+
+color.sh sourced by rainbow uses many bash specific features
+---
+ rainbow/rainbow.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rainbow/rainbow.sh b/rainbow/rainbow.sh
+index 4d60771..3578021 100755
+--- a/rainbow/rainbow.sh
++++ b/rainbow/rainbow.sh
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ 
+ # SPDX-License-Identifier: GPL-3.0-or-later
+ # Copyright 2022, CZ.NIC z.s.p.o. (https://www.nic.cz/)
+-- 
+2.38.0
+
