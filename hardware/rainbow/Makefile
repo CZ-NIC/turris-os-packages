@@ -89,8 +89,8 @@ Build/Compile:=:
 define Package/rainbow/postinst
 #!/bin/sh
 [ -n "$$IPKG_INSTROOT" ] || {
-	/etc/init.d/rainbow enable
-	/etc/init.d/rainbow restart
+	/etc/init.d/rainbow enable 2>/dev/null || true
+	/etc/init.d/rainbow restart 2>/dev/null || true
 }
 endef
 
