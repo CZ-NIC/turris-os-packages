@@ -1,4 +1,6 @@
 #!/bin/sh
+
+echo '#!/bin/sh
 set -e
 . /lib/functions.sh
 # netifd provides default network overlay with current runtime configuration. We
@@ -44,7 +46,7 @@ for_interfaces() {
 	config_get type "$name" "type"
 	config_get ifname "$name" "ifname"
 
-	# (1) Create new 'device' section and migrate ifaces to new device.
+	# (1) Create new "device" section and migrate ifaces to new device.
 	local devname dcnf empty="y"
 	if [ "$type" = "bridge" ]; then
 		devname="br-$name"
@@ -90,7 +92,7 @@ for_interfaces() {
 		[ "$empty" = "y" ] && uci -q delete "network.$dcnf"
 	fi
 
-	# (3) migrate interface's `ifname` to new `device` section
+	# (3) migrate interfaces `ifname` to new `device` section
 	uci -q del "network.$name.ifname" || true
 	[ -z "$devname" ] \
 		|| uci set "network.$name.device=$devname"
@@ -99,3 +101,6 @@ config_foreach for_interfaces "interface"
 
 uci commit network
 /etc/init.d/network restart
+' > /etc/uci-defaults/network-migrate
+create_notification -s restart 'Your network settings will be automatically migrated on next reboot, please refrain from changes in the configuration until then.'
+chmod a+rx /etc/uci-defaults/network-migrate
