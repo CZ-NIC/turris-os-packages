@@ -1,0 +1,87 @@
+diff --git a/backend/mox/backend.sh b/backend/mox/backend.sh
+index cbaad82..51ba510 100644
+--- a/backend/mox/backend.sh
++++ b/backend/mox/backend.sh
+@@ -55,13 +55,13 @@ set_led() {
+ 
+ 	# We have to disable trigger first to make sure that changes are correctly
+ 	# applied and not modified by this in the meantime.
+-	echo "none" > "$SYSFS/trigger"
+-	echo "$brightness" > "$SYSFS/brightness"
++	[ ! -e "$SYSFS/trigger" ] || echo "none" > "$SYSFS/trigger"
++	[ ! -e "$SYSFS/brightness" ] || echo "$brightness" > "$SYSFS/brightness"
+ 	if [ "$trigger" = "activity" ]; then
+ 		apply_activity "$led" $mode_args "$@" \
+ 			|| echo "Warning: activity setup failed for: $led" >&2
+ 	else
+-		echo "$trigger" > "$SYSFS/trigger"
++		[ ! -e "$SYSFS/trigger" ] || echo "$trigger" > "$SYSFS/trigger"
+ 	fi
+ }
+ 
+diff --git a/backend/omnia/backend.sh b/backend/omnia/backend.sh
+index 0eeab08..035133c 100644
+--- a/backend/omnia/backend.sh
++++ b/backend/omnia/backend.sh
+@@ -42,7 +42,7 @@ preapply() {
+ 	brightness_level="$(brightness)"
+ 	# The full range is only 0-100 but that is good enough so we don't adjust
+ 	# more. We just loose the precision on Omnia but who can see it anyway.
+-	echo "$((brightness_level * 100 / 255))" > "$SYSFS/brightness"
++	[ ! -e "$SYSFS/brightness" ] || echo "$((brightness_level * 100 / 255))" > "$SYSFS/brightness"
+ }
+ 
+ set_led() {
+@@ -95,14 +95,14 @@ set_led() {
+ 	sysfs="$(led2sysfs "$led")"
+ 	# We have to disable trigger first to make sure that changes are correctly
+ 	# applied and not modified by this in the meantime.
+-	echo "none" > "$sysfs/trigger"
+-	echo "$brightness" > "$sysfs/brightness"
+-	echo "$r $g $b" > "$sysfs/multi_intensity"
++	[ ! -e "$sysfs/trigger" ] || echo "none" > "$sysfs/trigger"
++	[ ! -e "$sysfs/brightness" ] || echo "$brightness" > "$sysfs/brightness"
++	[ ! -e "$sysfs/multi_intensity" ] || echo "$r $g $b" > "$sysfs/multi_intensity"
+ 	if [ "$trigger" = "activity" ]; then
+ 		apply_activity "$led" "$@" \
+ 			|| echo "Warning: activity setup failed for: $led" >&2
+ 	else
+-		echo "$trigger" > "$sysfs/trigger"
++		[ ! -e "$sysfs/trigger" ] || echo "$trigger" > "$sysfs/trigger"
+ 	fi
+ }
+ 
+diff --git a/backend/turris1x/backend.sh b/backend/turris1x/backend.sh
+index 4744928..f1a614d 100644
+--- a/backend/turris1x/backend.sh
++++ b/backend/turris1x/backend.sh
+@@ -47,8 +47,8 @@ preapply() {
+ 	if [ $brightness_level = 8 ]; then
+ 		brightness_level=7
+ 	fi
+-	echo 0 2 4 8 16 32 64 255 > $SYSFS/brightness_values
+-	echo $brightness_level > $SYSFS/brightness_level
++	[ ! -e $SYSFS/brightness_values ] || echo 0 2 4 8 16 32 64 255 > $SYSFS/brightness_values
++	[ ! -e $SYSFS/brightness_level ] || echo $brightness_level > $SYSFS/brightness_level
+ }
+ 
+ set_led() {
+@@ -91,14 +91,14 @@ set_led() {
+ 	sysfs="$(led2sysfs "$led")"
+ 	# We have to disable trigger first to make sure that changes are correctly
+ 	# applied and not modified by this in the meantime.
+-	echo "none" > "$sysfs/trigger"
+-	echo "$brightness" > "$sysfs/brightness"
+-	echo "$r $g $b" > "$sysfs/multi_intensity"
++	[ ! -e "$sysfs/trigger" ] || echo "none" > "$sysfs/trigger"
++	[ ! -e "$sysfs/brightness" ] || echo "$brightness" > "$sysfs/brightness"
++	[ ! -e "$sysfs/multi_intensity" ] || echo "$r $g $b" > "$sysfs/multi_intensity"
+ 	if [ "$trigger" = "activity" ]; then
+ 		apply_activity "$led" "$@" \
+ 			|| echo "Warning: activity setup failed for: $led" >&2
+ 	else
+-		echo "$trigger" > "$sysfs/trigger"
++		[ ! -e "$sysfs/trigger" ] || echo "$trigger" > "$sysfs/trigger"
+ 	fi
+ }
+ 
