@@ -1,0 +1,3 @@
+#!/bin/sh
+iptables -S | grep -q ' -j zone_wan_input' || /etc/init.d/firewall restart
+iptables -S | grep -q ' -j zone_wan_input' || iptables -P INPUT drop

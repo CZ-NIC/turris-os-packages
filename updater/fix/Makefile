@@ -218,6 +218,13 @@ define Package/fix-turris1x-leds-migrate/description
   names. Updates both Rainbow and OpenWrt LED config.
 endef
 
+define Package/fix-firewall-doublesafe/description
+  Under some circumstances, wan ruleset might disappear from firewall. Try
+  restarting the firewall to get it back or in worst case, block all incoming
+  connections. Better safe then sorry.
+endef
+
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
@@ -244,3 +251,4 @@ $(eval $(call FIX,i-agree-with-eula-1,+uci,prerm))
 $(eval $(call FIX,remote-access-ca-permissions,+turris-cagen +foris-controller))
 $(eval $(call FIX,omnia-leds-migrate,+rainbow @TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia))
 $(eval $(call FIX,turris1x-leds-migrate,+rainbow @TARGET_mpc85xx_p2020_DEVICE_cznic_turris1x))
+$(eval $(call FIX,firewall-doublesafe))
