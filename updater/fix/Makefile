@@ -224,6 +224,12 @@ define Package/fix-firewall-doublesafe/description
   connections. Better safe then sorry.
 endef
 
+define Package/fix-firewall-check-reboot/description
+  Under some circumstances, wan ruleset might disappear from firewall. Previous
+  fix prevents anybody from exploiting it but also limits the access to the router.
+  This one tries restarting the router but make sure that Turris 1.X kernel is
+  deployed correctly beforehand.
+endef
 
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
@@ -252,3 +258,4 @@ $(eval $(call FIX,remote-access-ca-permissions,+turris-cagen +foris-controller))
 $(eval $(call FIX,omnia-leds-migrate,+rainbow @TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia))
 $(eval $(call FIX,turris1x-leds-migrate,+rainbow @TARGET_mpc85xx_p2020_DEVICE_cznic_turris1x))
 $(eval $(call FIX,firewall-doublesafe))
+$(eval $(call FIX,firewall-check-reboot))

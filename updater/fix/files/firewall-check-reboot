@@ -1,0 +1,5 @@
+#!/bin/sh
+echo 'if ! iptables -S | grep -q " -j zone_wan_input"; then
+    [ ! -x /etc/updater/hook_postupdate/10_kernel-install ] || /etc/updater/hook_postupdate/10_kernel-install
+    reboot
+fi' | at now + 5min
