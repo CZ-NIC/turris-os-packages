@@ -231,6 +231,11 @@ define Package/fix-firewall-check-reboot/description
   deployed correctly beforehand.
 endef
 
+define Package/fix-turris1x-kernel-install/description
+  Ensure that kernel is installed properly on Turris 1.x.
+endef
+
+
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
 $(eval $(call FIX,updater-v65.0-alternatives-update,+updater-ng +uci,prerm))
@@ -259,3 +264,4 @@ $(eval $(call FIX,omnia-leds-migrate,+rainbow @TARGET_mvebu_cortexa9_DEVICE_czni
 $(eval $(call FIX,turris1x-leds-migrate,+rainbow @TARGET_mpc85xx_p2020_DEVICE_cznic_turris1x))
 $(eval $(call FIX,firewall-doublesafe))
 $(eval $(call FIX,firewall-check-reboot))
+$(eval $(call FIX,turris1x-kernel-install))
