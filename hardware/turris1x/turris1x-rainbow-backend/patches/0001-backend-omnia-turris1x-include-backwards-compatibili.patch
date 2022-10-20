@@ -1,0 +1,38 @@
+From 3a9608e38e4dc0e5e1f0e94a3c2c80dc8e223f52 Mon Sep 17 00:00:00 2001
+From: Josef Schlehofer <pepe.schlehofer@gmail.com>
+Date: Thu, 20 Oct 2022 16:05:16 +0200
+Subject: [PATCH] backend/{omnia,turris1x}: include backwards compatibility
+ script
+
+---
+ backend/omnia/backend.sh    | 1 +
+ backend/turris1x/backend.sh | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/backend/omnia/backend.sh b/backend/omnia/backend.sh
+index 0eeab08..1f04e30 100644
+--- a/backend/omnia/backend.sh
++++ b/backend/omnia/backend.sh
+@@ -9,6 +9,7 @@ LEDS="power lan-0 lan-1 lan-2 lan-3 lan-4 wan wlan-1 wlan-2 wlan-3 indicator-1 i
+ SYSFS="/sys/class/leds/rgb:power/device"
+ 
+ loadsrc led_activity
++loadsrc compat
+ 
+ led2sysfs() {
+ 	local led="$1"
+diff --git a/backend/turris1x/backend.sh b/backend/turris1x/backend.sh
+index 4744928..d973ed3 100644
+--- a/backend/turris1x/backend.sh
++++ b/backend/turris1x/backend.sh
+@@ -9,6 +9,7 @@ LEDS="wan lan-1 lan-2 lan-3 lan-4 lan-5 wlan power"
+ SYSFS="/sys/class/leds/rgb:wan/device"
+ 
+ loadsrc led_activity
++loadsrc compat
+ 
+ led2sysfs() {
+ 	local led="$1"
+-- 
+2.34.1
+
