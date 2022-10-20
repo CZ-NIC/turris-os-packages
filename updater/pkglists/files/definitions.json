@@ -168,7 +168,7 @@
 			"morce": {
 				"title": "Morce",
 				"description": "Simple integration of Intrusion Detection System.",
-				"url": "https://docs.turris.cz/geek/morce/",
+				"url": " https://docs.turris.cz/basics/apps/morce/",
 				"labels": ["experimental", "netload", "high_memory", "storage"]
 			}
 		}
