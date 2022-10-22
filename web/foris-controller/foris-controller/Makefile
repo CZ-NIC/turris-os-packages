@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2019-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller
-PKG_VERSION:=2.1.1
-PKG_RELEASE:=2
+PKG_VERSION:=5.2.0
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller.git
-PKG_MIRROR_HASH:=ccd7e8ec4308e559e421d128a94bc9c4822b580b990edd3bd88160a21998c565
+PKG_MIRROR_HASH:=b5fd73db5db91d60414f50168046e6d594c0328bb298f7fa77fd0d11b4976ca2
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -43,8 +43,7 @@ define Package/foris-controller-app
     +foris-schema +python3-setuptools +turrishw \
     +turris-maintain +updater-supervisor +user-notify \
     +l10n-supported +sqm-scripts +fosquitto +python3-paho-mqtt +turris-cagen \
-    +crypto-wrapper +python3-slugify
-  VARIANT:=python3
+    +crypto-wrapper +python3-slugify +turris-timezone
 endef
 
 define Package/foris-controller/description
@@ -63,7 +62,7 @@ define Py3Package/foris-controller-app/install
 	$(INSTALL_DIR) $(1)/etc/config/
 	$(INSTALL_CONF) ./files/foris-controller.conf $(1)/etc/config/foris-controller
 	touch $(1)/etc/config/foris
-ifeq ($(CONFIG_TARGET_mvebu_cortexa53_DEVICE_cznic-mox),y)
+ifeq ($(CONFIG_TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox),y)
 	sed -i 's|#\(option single true\)|\1|' $(1)/etc/config/foris-controller
 endif
 	$(INSTALL_CONF) ./files/foris-controller-subordinates.conf $(1)/etc/config/foris-controller-subordinates

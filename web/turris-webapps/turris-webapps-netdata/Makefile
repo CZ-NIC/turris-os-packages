@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2020-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps-netdata
 PKG_VERSION:=1.1
-PKG_RELEASE:=2
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -23,8 +23,9 @@ define Package/turris-webapps-netdata
   TITLE:=Netdata integration
   DEPENDS:=+netdata \
     +turris-webapps \
-    +lighttpd-mod-authn_pam +lighttpd-mod-auth +lighttpd-mod-authn_file \
-    +lighttpd-mod-proxy
+    +turris-auth \
+    +lighttpd-mod-proxy \
+    +lighttpd-mod-setenv
   URL:=https://gitlab.nic.cz/turris/webapps
 endef
 
@@ -33,12 +34,11 @@ define Package/turris-webapps-netdata/description
   See https://www.netdata.cloud/
 endef
 
-define Build/Compile
-endef
+Build/Compile:=:
 
 define Package/turris-webapps-netdata/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
-	$(CP) ./files/netdata.lighttpd $(1)/etc/lighttpd/conf.d/netdata.conf
+	$(CP) ./files/netdata.lighttpd $(1)/etc/lighttpd/conf.d/80-netdata.conf
 	$(INSTALL_DIR) $(1)/www/webapps-icons
 	$(CP) ./files/netdata.svg $(1)/www/webapps-icons/netdata.svg
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps

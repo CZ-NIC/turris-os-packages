@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+## Copyright (C) 2020-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=logc
-PKG_VERSION:=0.1.0
-PKG_RELEASE:=1
+PKG_VERSION:=0.4.0
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/logc.git
-PKG_MIRROR_HASH:=20e2d4079436a223a9449b5cdf6084f7100c8587e9981591000873dc42c571c5
+PKG_MIRROR_HASH:=8d9d5d0fec6b70e1c85c78eb786c77d0b4489935f88aaf6b4901af6a73626e85
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -53,6 +53,9 @@ define Package/logc-argp/description
 endef
 
 define Build/InstallDev
+	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/* $(1)/usr/lib/pkgconfig/
+
 	$(INSTALL_DIR) $(1)/usr/include
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/* $(1)/usr/include/
 

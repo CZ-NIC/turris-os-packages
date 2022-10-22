@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-i_agree_with_eula
 PKG_VERSION:=1
-PKG_RELEASE:=4
+PKG_RELEASE:=$(AUTORELEASE)
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk

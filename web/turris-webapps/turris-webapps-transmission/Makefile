@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2020-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps-transmission
 PKG_VERSION:=1.0
-PKG_RELEASE:=5
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -23,7 +23,7 @@ define Package/turris-webapps-transmission
   TITLE:=Transmission integration
   DEPENDS:=+transmission-daemon +transmission-web \
     +turris-webapps \
-    +lighttpd-mod-authn_pam +lighttpd-mod-auth +lighttpd-mod-authn_file
+    +lighttpd-mod-authn_pam +lighttpd-mod-proxy
   URL:=https://gitlab.nic.cz/turris/webapps
 endef
 
@@ -43,7 +43,7 @@ define Package/turris-webapps-transmission/install
 	$(INSTALL_DATA) ./files/transmission.svg $(1)/www/webapps-icons
 
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
-	$(CP) ./files/transmission.lighttpd $(1)/etc/lighttpd/conf.d/transmission.conf
+	$(CP) ./files/transmission.lighttpd $(1)/etc/lighttpd/conf.d/80-transmission.conf
 endef
 
 $(eval $(call BuildPackage,turris-webapps-transmission))

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2020-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps-luci
 PKG_VERSION:=1.1
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -22,7 +22,7 @@ define Package/turris-webapps-luci
   SUBMENU:=WebApps
   TITLE:=LuCI integration
   DEPENDS:=+luci-base \
-    +turris-webapps
+    +turris-webapps +lighttpd-mod-setenv
   PROVIDES:=luci-lighttpd
   URL:=https://gitlab.nic.cz/turris/webapps
 endef
@@ -36,7 +36,7 @@ endef
 
 define Package/turris-webapps-luci/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
-	$(CP) ./files/luci.lighttpd $(1)/etc/lighttpd/conf.d/luci.conf
+	$(CP) ./files/luci.lighttpd $(1)/etc/lighttpd/conf.d/80-luci.conf
 	$(INSTALL_DIR) $(1)/www/webapps-icons
 	$(CP) ./files/luci.svg $(1)/www/webapps-icons/luci.svg
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps

@@ -1,0 +1,30 @@
+From e4fc2b5e01eb19cbf4025d18a0345b90490ee564 Mon Sep 17 00:00:00 2001
+From: Michal Vasilek <michal.vasilek@nic.cz>
+Date: Mon, 17 Oct 2022 15:14:50 +0200
+Subject: [PATCH] Translate new colors
+
+4f87f1e471d71b53249304cc14261a9bef0d4312 and a4639b35137c7461e08b3a1544b26727e5c0eeb7
+added new colors, but didn't translate them to Czech
+---
+ rainbow.po | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/rainbow.po b/rainbow.po
+index 46dbfeb..af3b3a9 100644
+--- a/rainbow.po
++++ b/rainbow.po
+@@ -55,3 +55,11 @@ msgstr "Nástroj Rainbow umožňuje ovládání LED diod routeru Omnia."
+ msgid "White %s"
+ msgstr "Bílá %s"
+ 
++msgid "Cyan %s"
++msgstr "Tyrkysová %s"
++
++msgid "Magenta %s"
++msgstr "Purpurová %s"
++
++msgid "Yellow %s"
++msgstr "Žlutá %s"
+-- 
+2.38.0
+

@@ -1,7 +1,8 @@
 #!/bin/sh
 
 die() {
-    echo "$@" >&2
+    echo "ERROR: $1" >&2
+    foris-notify-wrapper -m nextcloud -a state_change '{"configuration": "failed", "msg": "'"$1"'"}'
     rm -f /tmp/nextcloud_configuring
     exit 1
 }
@@ -22,7 +23,13 @@ if [ -f /srv/www/nextcloud/config/config.php ]; then
     echo "You can enter MySQL console using 'mysql -u root' command"
     echo
     echo "WARNING: This will delete all your data from Nextcloud!!"
-    exit 1
+    echo
+    die "Already configured"
+fi
+
+if [ "x$1" = x--daemon ] || [ "x$1" = x-d ]; then
+    "$0" --batch "$@" > /dev/null 2>&1 &
+    exit 0
 fi
 
 [ \! -f /tmp/nextcloud_configuring ] || die "Installation already in process"
@@ -41,6 +48,7 @@ else
     read answer
     if [ "$answer" \!= YES ]; then
         echo "You decided not to proceed, so not doing anything"
+        foris-notify-wrapper -m nextcloud -a state_change '{"configuration": "failed", "msg": "Canceled"}'
         exit 0
     fi
 fi
@@ -50,7 +58,6 @@ fi
 /etc/init.d/mysqld enable
 /etc/init.d/php7-fpm start
 /etc/init.d/php7-fpm enable
-/etc/init.d/lighttpd restart
 
 DELAY=5
 
@@ -72,7 +79,7 @@ fi
 # Hack MySQL database
 /etc/init.d/mysqld stop 2> /dev/null
 sleep $DELAY
-sudo -u mysql mysqld --skip-networking --skip-grant-tables --socket=/tmp/mysql_nextcloud.sock > /dev/null 2>&1 &
+sudo -u mariadb mysqld --skip-networking --skip-grant-tables --socket=/tmp/mysql_nextcloud.sock > /dev/null 2>&1 &
 PID="$!"
 i=0
 while [ "$i" -lt 15 ] && [ \! -S /tmp/mysql_nextcloud.sock ]; do
@@ -86,7 +93,7 @@ CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY '$DBPASS';
 GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost';
 CREATE USER 'nextcloud'@'127.0.0.1' IDENTIFIED BY '$DBPASS';
 GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'127.0.0.1';
-" | mysql -u root -B --socket=/tmp/mysql_nextcloud.sock || die "Creating nextcloud database failed"
+" | mysql -u root -B --socket=/tmp/mysql_nextcloud.sock || die "Creating Nextcloud database failed"
 sleep 1
 kill "$PID"
 i=0
@@ -119,9 +126,11 @@ sudo -u nobody php-cli ./occ config:system:set --value false updatechecker --typ
 [ -z "$(uname -n)" ] || sudo -u nobody php-cli ./occ config:system:set --value "$(uname -n ).local" trusted_domains 2
 
 /etc/init.d/php7-fpm restart
-/etc/init.d/lighttpd restart
 
 echo "Your Nextcloud installation should be available at http://$IP/nextcloud"
 echo "Your username is '$ALOGIN' and password '$APASS'"
 
 rm -f /tmp/nextcloud_configuring
+
+# Send notification about the Nextcloud configuration process
+foris-notify-wrapper -m nextcloud -a state_change '{"configuration": "completed"}'

@@ -20,7 +20,7 @@ are handled in such a way.
      Implemented here because distutils runtime_library_dirs doesn't do anything on darwin
      """
 -    if sys.platform == 'darwin':
--        settings['extra_link_args'].extend(['-Wl,-rpath','-Wl,%s' % path])
+-        settings['extra_link_args'].extend(['-Wl,-rpath', '-Wl,%s' % path])
 -    else:
 -        settings['runtime_library_dirs'].append(path)
 +    settings['extra_link_args'].extend(['-Wl,-rpath','-Wl,%s' % path])

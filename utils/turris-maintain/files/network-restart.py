@@ -32,13 +32,13 @@ sender = MqttNotificationSender(host, port, credentials)
 ips = []
 # try to detect ips from uci
 # parse ips as if they were in CIDR notation
-ips += [e.split("/")[0] for e in uci.get("network", "wan", "ipaddr", list=True, default=()) if e]
-ips += [e.split("/")[0] for e in uci.get("network", "wan", "ip6addr", list=True, default=()) if e]
 ips += [e.split("/")[0] for e in uci.get("network", "lan", "ipaddr", list=True, default=()) if e]
 ips += [e.split("/")[0] for e in uci.get("network", "lan", "ip6addr", list=True, default=()) if e]
+ips += [e.split("/")[0] for e in uci.get("network", "wan", "ipaddr", list=True, default=()) if e]
+ips += [e.split("/")[0] for e in uci.get("network", "wan", "ip6addr", list=True, default=()) if e]
 
 # try to detect_ips from ubus
-for network in ["wan", "lan"]:
+for network in ["lan", "wan"]:
     try:
         output = subprocess.check_output(["ifstatus", network])
         data = json.loads(output)
@@ -48,17 +48,21 @@ for network in ["wan", "lan"]:
         pass
 
 
+# Set would be almost fine for this, but it does not preserve insertion order.
+# Lets use this trick with dictionary, which are ordered by default since Python 3.7, to maintain original list order.
+unique_ips = list(dict.fromkeys(ips))
+
 remains = TIME
 while remains > 0:
     sender.notify(
-        "maintain", "network-restart", {"ips": list(set(ips)), "remains": remains},
+        "maintain", "network-restart", {"ips": unique_ips, "remains": remains},
         controller_id=controller_id,
     )
     time.sleep(float(STEP) / 1000)
     remains -= STEP
 
 sender.notify(
-    "maintain", "network-restart", {"ips": ips, "remains": 0}, controller_id=controller_id,
+    "maintain", "network-restart", {"ips": unique_ips, "remains": 0}, controller_id=controller_id,
 )
 
 subprocess.call(["/etc/init.d/network", "reload"])

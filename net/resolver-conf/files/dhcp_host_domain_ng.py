@@ -8,7 +8,18 @@ import re
 import socket
 import os
 from os import listdir
+from euci import EUci
+from uci import UciExceptionNotFound
 
+try:
+    whats_my_name = next(
+            e.get('system', section, 'hostname')
+            for e in [EUci()]
+            for section in e.get('system')
+            if e.get('system', section) == 'system'
+        )
+except UciExceptionNotFound:
+    whats_my_name = None
 
 def is_valid_hostname(hostname):
     if len(hostname) > 255:
@@ -17,6 +28,8 @@ def is_valid_hostname(hostname):
         return False
     if hostname[-1] == ".":
         hostname = hostname[:-1]
+    if hostname == whats_my_name:
+        return False
     allowed = re.compile(r"^(?!-)[A-Z\d_-]{1,63}(?<!-)$", re.IGNORECASE)
     for x in hostname.split("."):
         if allowed.match(x) is None:
@@ -47,7 +60,7 @@ def is_valid_ipv6(address):
 
 
 def log(text, priority=LOG_INFO, output="syslog"):
-    if output is "syslog":
+    if output == "syslog":
         syslog.syslog(priority, text)
     else:
         print(text)

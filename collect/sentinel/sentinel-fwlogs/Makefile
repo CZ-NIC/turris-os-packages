@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+## Copyright (C) 2020, 2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -8,13 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-fwlogs
-PKG_VERSION:=0.1.0
-PKG_RELEASE:=3
+PKG_VERSION:=0.3.0
+PKG_RELEASE:=$(AUTORELEASE)
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/fwlogs.git
-PKG_MIRROR_HASH:=fdb2dae1d7f62d5f57ccf70232a7b1aeededea3844845002167701272340029b
-PKG_SOURCE_VERSION:=v$(PKG_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://gitlab.nic.cz/api/v4/projects/976/packages/generic/sentinel-fwlogs/$(PKG_VERSION)
+PKG_HASH:=e9df14ac2d2fef15b02a6291f0a580e998b74c9a5fe1c85cb6becbcbc167c8c7
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
@@ -23,9 +22,9 @@ PKG_LICENSE_FILES:=LICENSE
 PKG_BUILD_DEPENDS:=argp-standalone
 
 PKG_INSTALL:=1
-PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/autotools.mk
 
 define Package/sentinel-fwlogs
   SECTION:=collect
@@ -36,7 +35,7 @@ define Package/sentinel-fwlogs
   DEPENDS:=\
     +czmq \
     +msgpack-c \
-    +logc +logc-argp \
+    +logc +logc-argp +logc-czmq \
     +libnetfilter-log \
     +sentinel-firewall +iptables-mod-nflog \
     +sentinel-proxy

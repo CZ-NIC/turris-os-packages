@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019-2020 CZ.NIC z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2019-2020, 2022 CZ.NIC z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-openvpn_client-module
-PKG_VERSION:=0.5.1
-PKG_RELEASE:=1
+PKG_VERSION:=0.6.0
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-openvpn_client-module.git
-PKG_MIRROR_HASH:=ff2378f8804225f1c34c02e1d17e83e7f1dea26706d0ae9109d89997dc4be0f2
+PKG_MIRROR_HASH:=e0ed82fab528d72b290444b024da1ccbe1dc449f4d4d199db6353f481f168041
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -33,7 +33,6 @@ define Package/foris-controller-openvpn_client-module
     +foris-controller \
     +turris-cagen \
     +openvpn-openssl
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-openvpn_client-module/description

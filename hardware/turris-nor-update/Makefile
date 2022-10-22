@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-nor-update
-PKG_VERSION:=1.0.1
-PKG_RELEASE:=2
+PKG_VERSION:=1.1.0
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -17,7 +17,7 @@ include $(INCLUDE_DIR)/package.mk
 
 define Package/turris-nor-update
   TITLE:=NOR update for Turris routers
-  DEPENDS:=+mtd +turris-nor-update-firmware
+  DEPENDS:=+mtd +turris-nor-update-firmware +uboot-envtools
 endef
 
 define Package/turris-nor-update/description

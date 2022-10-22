@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=suricata-bin
 PKG_VERSION:=4.0.7
-PKG_RELEASE=4
+PKG_RELEASE=$(AUTORELEASE)
 
 PKG_SOURCE:=suricata-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://www.openinfosecfoundation.org/download/
@@ -51,6 +51,7 @@ define Package/suricata-bin
 	+libpthread \
 	+librt \
 	+libpcap \
+	+libcap-ng \
 	$(LUAJIT_DEP) \
 	+libnetfilter-queue \
 	+iptables-mod-nfqueue \

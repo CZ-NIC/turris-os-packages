@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2019-2020 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+## Copyright (C) 2019-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -9,25 +9,25 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=mox-support
 PKG_VERSION:=2.3.0
-PKG_RELEASE:=4
+PKG_RELEASE:=$(AUTORELEASE)
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/mox-generic-support
   TITLE:=Generic MOX support package
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox \
+  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox \
     +mtd +kmod-gpio-button-hotplug +mox-dtb
 endef
 
 define Package/mox-support
   TITLE:=MOX support package
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mox-generic-support
+  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox +mox-generic-support
 endef
 
 define Package/shield-support
   TITLE:=Shield support package
-  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic-mox +mox-generic-support \
+  DEPENDS:=@TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox +mox-generic-support \
 	  +pkglists +turris-nor-update +turris-mox-firmware
   PROVIDES:=mox-support
   CONFLICTS:=mox-support
@@ -61,9 +61,6 @@ define Package/mox-support/install
 	$(INSTALL_BIN) ./files/mox_autosetup $(1)/usr/share/mox
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/init $(1)/etc/init.d/mox_autosetup
-	$(INSTALL_DIR) $(1)/lib/firmware/mrvl/
-	$(INSTALL_DATA) ./files/sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl
-	ln -s sdsd8997_combo_v4.bin $(1)/lib/firmware/mrvl/sd8997_uapsta.bin
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/button
 	$(INSTALL_DATA) ./files/reset_btn $(1)/etc/hotplug.d/button/mox_reset
 endef
@@ -79,7 +76,7 @@ define Package/shield-support/install
 	$(INSTALL_BIN) ./files/enable_sentinel $(1)/etc/uci-defaults/10_sentinel-enable
 	$(INSTALL_BIN) ./files/enable_updater $(1)/etc/uci-defaults/10_updater-enable
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d
-	$(INSTALL_DATA) ./files/lighttpd-reforis-only.conf $(1)/etc/lighttpd/conf.d/reforis-redirect.conf
+	$(INSTALL_DATA) ./files/lighttpd-reforis-only.conf $(1)/etc/lighttpd/conf.d/60-reforis-redirect.conf
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/button
 	$(INSTALL_DATA) ./files/shield_reset_btn $(1)/etc/hotplug.d/button/mox_reset
 endef

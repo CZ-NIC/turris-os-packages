@@ -13,7 +13,7 @@ PKG_NAME:=fix
 # immediately removed. If they are kept in system they are commonly expected to
 # be run only once. Because of that bump is prohibited!
 PKG_VERSION:=1
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 
@@ -154,17 +154,87 @@ define Package/fix-nextcloud-conf/description
   If there is empty config.php, which exists then it removes it.
 endef
 
-define Package/sentinel-nikola-to-fwlogs/description
+define Package/fix-sentinel-nikola-to-fwlogs/description
   Sentinel Nikola is being replaced by Sentinel FWLogs. They are pretty much
   compatible with exception of one UCI section name. This renames this UCI config
   (sentinel.nikola -> sentinel.fwlogs). This way Nikola configuration is migrated
   to FWLogs and Nikola can be removed.
 endef
 
-define Package/pkglists-nikola-to-fwlogs/description
+define Package/fix-pkglists-nikola-to-fwlogs/description
   Sentinel Nikola is being replaced by Sentinel FWLogs. This fixes rename of
   option in datacollect package list.
 endef
+
+define Package/fix-lighttpd-sync-with-upstream/description
+  We are getting close to dropping our maintained package lighttpd in favor of
+  upstream variant, but before we are able to do it, we need to move
+  files from /etc/lighttpd/modules.d/ to /etc/lighttpd/conf.d/
+  and rename their suffix from .load to .conf. If we don't do it, then
+  UI is not accessible and it wants to download file with name download,
+  because lighttpd in OpenWrt does not use the first mentioned folder
+  modules.d
+endef
+
+define Package/fix-firewall-zone-limit/description
+  The OpenWrt 21.02 introduced the limit for 11 characters for firewall zone
+  names. The reason is that they are used in iptables as chain names and 11
+  characters is maximum possible legth (plus the characters the firewall3 adds
+  on its own automatically).
+  This fix trims all zone names to 11 characters.
+endef
+
+define Package/fix-network-devices/description
+  The OpenWrt 21.02 introduced the new way for configuring network devices. They
+  are now configured separatelly and only referenced in network interfaces.
+endef
+
+define Package/fix-turris1x-btrfs-sdcard/description
+  The fix for Turris 1.x SD card going to read only mode.
+  This adds command that forces SD card controller to the RW mode as part of the
+  boot process (U-Boot environment).
+endef
+
+define Package/fix-i-agree-with-eula-1/description
+  The Sentinel EULA agreement. This is used in combination with removal of
+  sentinel-i_agree_with_eula and thus switch from forced enable to optional.
+  It reenables agreement after package that forced it is removed.
+endef
+
+define Package/fix-remote-access-ca-permissions/description
+  The fix for incorrect permissions of remote access CA files.
+  Mosquitto now runs under it's own dedicated user and fails to start with
+  CA files owner by root.
+  Change owner of CA files so that mosquitto is able to operate again.
+endef
+
+define Package/fix-omnia-leds-migrate/description
+  Migrating LED names on Turris Omnia routers from old names to new upstream
+  names. Updates both Rainbow and OpenWrt LED config.
+endef
+
+define Package/fix-turris1x-leds-migrate/description
+  Migrating LED names on Turris 1.x routers from old names to new upstream
+  names. Updates both Rainbow and OpenWrt LED config.
+endef
+
+define Package/fix-firewall-doublesafe/description
+  Under some circumstances, wan ruleset might disappear from firewall. Try
+  restarting the firewall to get it back or in worst case, block all incoming
+  connections. Better safe then sorry.
+endef
+
+define Package/fix-firewall-check-reboot/description
+  Under some circumstances, wan ruleset might disappear from firewall. Previous
+  fix prevents anybody from exploiting it but also limits the access to the router.
+  This one tries restarting the router but make sure that Turris 1.X kernel is
+  deployed correctly beforehand.
+endef
+
+define Package/fix-turris1x-kernel-install/description
+  Ensure that kernel is installed properly on Turris 1.x.
+endef
+
 
 $(eval $(call FIX,sentinel-remove-invalid-firewall-rules,+firewall +uci))
 $(eval $(call FIX,samba-migrate-to-samba4,+samba4-server +uci))
@@ -184,3 +254,14 @@ $(eval $(call FIX,nor-update,+turris-nor-update +turris-nor-update-firmware))
 $(eval $(call FIX,nextcloud-conf,+nextcloud))
 $(eval $(call FIX,sentinel-nikola-to-fwlogs,+sentinel-proxy))
 $(eval $(call FIX,pkglists-nikola-to-fwlogs,+pkglists))
+$(eval $(call FIX,lighttpd-sync-with-upstream,+lighttpd))
+$(eval $(call FIX,firewall-zone-limit,+firewall))
+$(eval $(call FIX,network-devices,+netifd))
+$(eval $(call FIX,turris1x-btrfs-sdcard,+pkglists))
+$(eval $(call FIX,i-agree-with-eula-1,+uci,prerm))
+$(eval $(call FIX,remote-access-ca-permissions,+turris-cagen +foris-controller))
+$(eval $(call FIX,omnia-leds-migrate,+rainbow @TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia))
+$(eval $(call FIX,turris1x-leds-migrate,+rainbow @TARGET_mpc85xx_p2020_DEVICE_cznic_turris1x))
+$(eval $(call FIX,firewall-doublesafe))
+$(eval $(call FIX,firewall-check-reboot))
+$(eval $(call FIX,turris1x-kernel-install))

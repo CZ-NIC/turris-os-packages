@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis-diagnostics-plugin
 PKG_VERSION:=2.5.1
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis-diagnostics
@@ -20,9 +20,8 @@ PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=LICENSE
 
-PKG_BUILD_DEPENDS:=\
-	node/host \
-	reforis-distutils/host \
+HOST_PYTHON3_PACKAGE_BUILD_DEPENDS:=reforis-distutils
+PKG_BUILD_DEPENDS:=node/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -38,7 +37,6 @@ define Package/reforis-diagnostics-plugin
   DEPENDS:= \
     +reforis \
     +foris-controller-diagnostics-module
-  VARIANT:=python3
 endef
 
 define Package/reforis-diagnostics-plugin/description

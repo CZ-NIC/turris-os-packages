@@ -1,0 +1,86 @@
+From 679b8bd05b49d75cc83f3afd9cfeddbdb75e4ff3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Martin=20Mat=C4=9Bjek?= <martin.matejek@nic.cz>
+Date: Mon, 15 Aug 2022 16:04:51 +0200
+Subject: [PATCH] notify: Do not send full stacktrace in notification
+
+Supervisor just passes the updater error message without really knowing
+what went wrong, just that something unexpected happened.
+
+This workaround is more or less hack to silence overly verbose trace
+from Lua code. Instead of passing the full stacktrace, try to find line
+with error message.
+
+Basically look for following pattern:
+
+```
+  msg = string: "\
+<ERROR MESSAGE HERE>"
+```
+
+Perhaps the root cause would be better handled in updater Lua code,
+because updater has more context of what went wrong.
+
+Closes: #34
+---
+ svupdater/notify.py | 31 +++++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
+
+diff --git a/svupdater/notify.py b/svupdater/notify.py
+index cb32dc6..020b8bc 100644
+--- a/svupdater/notify.py
++++ b/svupdater/notify.py
+@@ -3,7 +3,7 @@
+ These are notifications send to user using notification system.
+ """
+ import datetime
+-import os
++import re
+ import subprocess
+ import typing
+ 
+@@ -18,6 +18,23 @@ def clear_logs():
+         const.PKGUPDATE_CRASH_LOG.unlink()
+ 
+ 
++def parse_lua_stack_trace(stacktrace: str) -> typing.Optional[str]:
++    """Try to get meaningfull message from Lua stack trace"""
++    # Quick hack to silence overly verbose stack trace from Lua code
++    # We are trying to find pattern:
++    #
++    # ```
++    # msg = string: "\
++    # <ERROR MESSAGE HERE>"
++    # ```
++    # It may break anytime when logging of failures in Lua changes somehow...
++    m = re.search(r'(?<=msg = string: "\\\n)(.*)', stacktrace)
++    if m:
++        return m.group(0)
++
++    return None
++
++
+ def crash(exit_code: int, trace: typing.Optional[str]):
+     """Send notification about updater's failure."""
+     if exit_code == 0 or exit_code == 1 and not const.PKGUPDATE_CRASH_LOG.is_file():
+@@ -32,9 +49,15 @@ def crash(exit_code: int, trace: typing.Optional[str]):
+             # crashes. Anything else is package installation failure and crash log is not relevant.
+             return
+         with const.PKGUPDATE_CRASH_LOG.open("r") as file:
+-            content = "\n".join(file.readlines())
+-        msg_en += content
+-        msg_cs += content
++            content = file.read()
++
++        err_msg = parse_lua_stack_trace(content)
++        if not err_msg:
++            msg_en += f"Unknown error (Exit code: {exit_code})"
++            msg_cs += f"Neznámá chyba (Návratový kód: {exit_code})"
++        else:
++            msg_en += err_msg
++            msg_cs += err_msg
+     elif trace:
+         msg_en += trace + f"\n\nExit code: {exit_code}"
+         msg_cs += trace + f"\n\nNávratový kód: {exit_code}"
+-- 
+2.37.0
+

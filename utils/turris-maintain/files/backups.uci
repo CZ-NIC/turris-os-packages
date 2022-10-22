@@ -1,0 +1,13 @@
+
+config generate 'generate'
+	# This controls if files from /etc/sysupdate.conf and /lib/upgrade/keep.d/*
+	# should be included in backup.
+	#option include_sysupgrade '1'
+	# This controls if any configuration file that was modified should be
+	# included as well.
+	#option include_modified_configs '0'
+	# This controls if Turris default file set should be included in the backup.
+	#option include_default '1'
+	# You can specify additonal files and directories to backup using:
+	#list dirs '/root/.ssh'
+

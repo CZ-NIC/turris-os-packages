@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018-2020 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
+# Copyright (C) 2018-2022 CZ.NIC, z. s. p. o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=nextcloud
-PKG_VERSION:=20.0.4
-PKG_RELEASE:=3
+PKG_VERSION:=22.2.10
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://download.nextcloud.com/server/releases/
-PKG_HASH:=269f1622e326f5d11e387d3861aad4e2b0e79334ae97eed5a7b3352ba7661420
+PKG_HASH:=8de167bfcfcaa661245a00a5ac36628e7961951b9fe2dfaf4f8a5aac6907ccdb
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -30,7 +30,7 @@ define Package/nextcloud
 	CATEGORY:=Network
 	TITLE:=Nextcloud server
 	URL:=https://nextcloud.com/
-	DEPENDS=+php7-mod-opcache +php7-fpm +php7-cli +sudo +php7-mod-ctype +php7-mod-fileinfo +php7-mod-xmlreader +php7-mod-openssl +php7-mod-hash +php7-mod-gd +php7-mod-xml +php7-mod-xmlwriter +php7-mod-json +php7-mod-mbstring +php7-mod-pcntl +php7-mod-opcache +php7-mod-session +php7-mod-simplexml +php7-mod-iconv +php7-mod-curl +php7-mod-zip +php7-mod-dom +coreutils-stat +php7 +lighttpd-mod-access +php7-mod-intl +icu-full-data
+	DEPENDS=+php7-mod-opcache +php7-fpm +php7-cli +sudo +php7-mod-ctype +php7-mod-fileinfo +php7-mod-xmlreader +php7-mod-openssl +php7-mod-gd +php7-mod-xml +php7-mod-xmlwriter +php7-mod-json +php7-mod-mbstring +php7-mod-pcntl +php7-mod-opcache +php7-mod-session +php7-mod-simplexml +php7-mod-iconv +php7-mod-curl +php7-mod-zip +php7-mod-dom +coreutils-stat +php7 +lighttpd-mod-access +php7-mod-intl +php7-mod-filter +icu-full-data
 endef
 
 define Package/nextcloud-install
@@ -60,7 +60,7 @@ define Package/$(PKG_NAME)/install
 		expr $$$$i : ipkg || $(CP) -r $(PKG_BUILD_DIR)/$$$$i $(1)/srv/www/nextcloud;\
 	done
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
-	$(INSTALL_DATA) ./files/nextcloud.conf $(1)/etc/lighttpd/conf.d/
+	$(INSTALL_DATA) ./files/nextcloud.conf $(1)/etc/lighttpd/conf.d/80-nextcloud.conf
 	$(INSTALL_DIR) $(1)/etc/cron.d
 	$(INSTALL_DATA) ./files/nextcloud.cron $(1)/etc/cron.d/nextcloud
 	$(INSTALL_DIR) $(1)/usr/bin
@@ -84,6 +84,8 @@ if [ -z "$$IPKG_INSTROOT" ]; then
 		if [ -n "$$VER" ] && [ $$VER -lt "`echo $(PKG_VERSION) | sed 's|\.||g'`" ]; then
 			sudo -u nobody php-cli ./occ upgrade --no-app-disable --no-interaction
 		fi
+	else
+		/etc/init.d/lighttpd restart
 	fi
 fi
 chown -R nobody "$$IPKG_INSTROOT"/srv/www/nextcloud/

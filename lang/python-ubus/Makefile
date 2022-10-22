@@ -8,15 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-ubus
-PKG_VERSION:=0.1
-PKG_RELEASE:=2
+PKG_VERSION:=0.1.2
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=LGPLv2.1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/python-ubus.git
-PKG_MIRROR_HASH:=8a1ee1eaa811d983ccdef186f3f248a099867e651575f56b72318367f19d56e9
+PKG_MIRROR_HASH:=ab8fb7ca84ee22fa4f3ca96c3c130e619e346f9abad4c1da5c72cb951acb043b
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
@@ -31,7 +31,6 @@ define Package/python3-ubus
   TITLE:=Python3 ubus
   URL:=https://gitlab.nic.cz/turris/python-ubus/
   DEPENDS:=+libubus +libblobmsg-json +python3-light
-  VARIANT:=python3
 endef
 
 define Package/python3-ubus/description

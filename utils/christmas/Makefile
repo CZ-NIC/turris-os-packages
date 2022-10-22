@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=christmas
 PKG_VERSION:=0.3
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/christmas.git
@@ -28,7 +28,6 @@ define Package/christmas
   URL:=https://gitlab.nic.cz/turris/christmas
   DEPENDS:=+python3-light +python3-uci
   DEPENDS+=@(TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia||TARGET_mpc85xx_p2020_DEVICE_turris1x)
-  VARIANT:=python3
 endef
 
 define Package/christmas/description

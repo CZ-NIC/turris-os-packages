@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2019-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2019-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -8,21 +8,20 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=reforis
-PKG_VERSION:=1.1.2
-PKG_RELEASE:=1
+PKG_VERSION:=1.3.1
+PKG_RELEASE:=$(AUTORELEASE).1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/reforis/reforis
-PKG_MIRROR_HASH:=03d835b3863051777b5a6e5437b87ff9bb51d14b4b18402af7d062b5a70b0a26
+PKG_MIRROR_HASH:=8e40eb6bf00d443e3d679822da70b8334f328d3e9bbe919e416f7a8c8a786588
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=LICENSE
 
-PKG_BUILD_DEPENDS:=\
-	node/host \
-	reforis-distutils/host \
+HOST_PYTHON3_PACKAGE_BUILD_DEPENDS:=reforis-distutils
+PKG_BUILD_DEPENDS:=node/host
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/python/python3-package.mk
@@ -45,15 +44,14 @@ define Package/reforis
     +lighttpd-mod-fastcgi \
     +lighttpd-mod-redirect \
     +lighttpd-mod-setenv \
+    +turris-auth \
     +python3-flask \
     +python3-flask-babel \
     +python3-flask-seasurf \
     +python3-flup \
     +python3-light \
     +python3-paho-mqtt \
-    +python3-simplejson \
     +turris-maintain
-  VARIANT:=python3
 endef
 
 define Package/reforis/description
@@ -80,7 +78,7 @@ define Py3Package/reforis/install
 	$(INSTALL_DATA) ./files/reforis.svg $(1)/www/webapps-icons/
 
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
-	$(INSTALL_DATA) ./files/reforis-lighttpd.conf $(1)/etc/lighttpd/conf.d/reforis.conf
+	$(INSTALL_DATA) ./files/reforis-lighttpd.conf $(1)/etc/lighttpd/conf.d/80-reforis.conf
 
 	$(INSTALL_DIR) $(1)/usr/libexec/reforis
 	$(INSTALL_BIN) ./files/reforis-lighttpd-dynamic.sh $(1)/usr/libexec/reforis/lighttpd-dynamic

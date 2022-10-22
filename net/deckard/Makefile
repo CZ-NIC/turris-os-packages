@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2020-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -7,12 +7,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=deckard
-PKG_VERSION:=0.1
-PKG_RELEASE:=1
+PKG_VERSION:=3.0
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/knot/deckard
-PKG_SOURCE_VERSION:=a179ddb1b5b67a61dc89a97833520485c49f784b
+PKG_SOURCE_VERSION:=2cb9779c550e8327667e96e28be83ecab430af96
+PKG_MIRROR_HASH:=e10fe75613b5da883baaeb02055c5d878ce0a125060c339ebae07201463bb8b8
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 PKG_LICENSE:=BSD-2-Clause

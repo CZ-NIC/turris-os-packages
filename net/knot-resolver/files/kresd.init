@@ -6,7 +6,7 @@ START=61
 STOP=00
 
 USE_PROCD=1
-EXTRA_COMMANDS="test_ipv6"
+extra_command "test_ipv6" "Test IPv6 connection"
 PROG=/usr/sbin/kresd
 CONFIGFILE=/tmp/kresd.config
 ROOTKEYFILE=/etc/root.keys
@@ -103,15 +103,9 @@ load_uci_config_common() {
 	if [ -z "$interface" ]; then
 		{
 			echo "for iface_name, iface in pairs(net.interfaces()) do"
-			echo "	for _, ip in pairs(iface.addr) do"
-			echo "		local suffix = ''"
-			echo "		if string.sub(ip,1,string.len('fe80')) == 'fe80' then"
-			echo "			suffix = '%' .. iface_name"
-			echo "		end"
-			echo "		if iface_name == 'lo' or iface_name == 'br-lan' then"
-			echo "			net.listen(ip .. suffix, $port, { kind = 'dns' })"
-			echo "			net.listen(ip .. suffix,   853, { kind = 'tls' })"
-			echo "		end"
+			echo "	if iface_name == 'lo' or iface_name == 'br-lan' then"
+			echo "		net.listen(iface, $port, { kind = 'dns' })"
+			echo "		net.listen(iface,   853, { kind = 'tls' })"
 			echo "	end"
 			echo "end"
 		} >> "$CONFIGFILE"
@@ -171,12 +165,12 @@ load_uci_config_common() {
 
 	# Test for resolv.conf.auto new location
 	# https://github.com/openwrt/openwrt/commit/cd48d8d3420dd4df03daaa548227ceb487ba7104
-	resolv_conf_path="$(ls -1 /etc/resolv.conf.vpn.* | head -n1)"
-	if [ \! -f "$resolv_conv_path" ]; then
-		if [ -f "/tmp/resolv.conf.auto" ]; then
-			resolv_conf_path="/tmp/resolv.conf.auto"
-		elif [ -f "/tmp/resolv.conf.d/resolv.conf.auto" ]; then
+	resolv_conf_path="$(ls -1 /tmp/resolv.conf.d/resolv.conf.vpn.* 2>/dev/null | head -n1)"
+	if [ \! -f "$resolv_conf_path" ]; then
+		if [ -f "/tmp/resolv.conf.d/resolv.conf.auto" ]; then
 			resolv_conf_path="/tmp/resolv.conf.d/resolv.conf.auto"
+		elif [ -f "/tmp/resolv.conf.auto" ]; then
+			resolv_conf_path="/tmp/resolv.conf.auto"
 		else
 			resolv_conf_path=""
 			echo "Error! File resolv.conf.auto is missing"

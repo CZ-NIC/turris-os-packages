@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=python-pbkdf2
 PKG_VERSION:=1.3
-PKG_RELEASE:=4
+PKG_RELEASE:=$(AUTORELEASE)
 
 PYPI_NAME:=pbkdf2
 PKG_HASH:=ac6397369f128212c43064a2b4878038dab78dab41875364554aaf2a684e6979
@@ -28,7 +28,6 @@ define Package/python3-pbkdf2
   TITLE:=PKCS#5 v2.0 PBKDF2 Module
   URL:=https://www.dlitz.net/software/python-pbkdf2/
   DEPENDS:=+python3-light +python3-openssl
-  VARIANT:=python3
 endef
 
 define Package/python-pbkdf2/description

@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2018-2020 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2018-2022 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-translations
-PKG_VERSION:=1.4.1
-PKG_RELEASE:=1
+PKG_VERSION:=1.6.0
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/turris-translations.git
-PKG_MIRROR_HASH:=d16b8581d8b6a7ae9b9761c63a94147a4edd8c1e350c6560adddef23002fe623
+PKG_MIRROR_HASH:=a843ca2a1ca4b43e065848aa7d92e6b2865e42fe0c000b0bdf5e49267f5b499c
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -46,5 +46,5 @@ define TRANSLATION
 $$(foreach LANG,$(2),$$(eval $$(call TRANSLATION_LANG,$(1),$$(LANG))))
 endef
 
-$(eval $(call TRANSLATION,pkglists,cs da de el es fi fo fr hr hu it ja ko lt nb nl pl ro ru sk sv))
-$(eval $(call TRANSLATION,user-notify,cs da de el es fi fo fr hr hu it ja ko lt nb nl pl ro ru sk sv))
+$(eval $(call TRANSLATION,pkglists,cs da de el es fi fo fr hr hu it ja ko lt nb_NO nl pl ro ru sk sv))
+$(eval $(call TRANSLATION,user-notify,cs da de el es fi fo fr hr hu it ja ko lt nb_NO nl pl ro ru sk sv tr))

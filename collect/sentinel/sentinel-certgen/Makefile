@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=sentinel-certgen
 PKG_VERSION:=6.2
-PKG_RELEASE:=1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/sentinel/certgen.git
@@ -30,7 +30,6 @@ define Package/sentinel-certgen
   TITLE:=Certgen
   URL:=https://gitlab.nic.cz/turris/sentinel/certgen
   DEPENDS:=+python3-light +python3-six +python3-requests +python3-cryptography +crypto-wrapper
-  VARIANT:=python3
 endef
 
 define Package/sentinel-certgen/description

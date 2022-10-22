@@ -1,0 +1,106 @@
+#!/bin/sh
+
+echo '#!/bin/sh
+set -e
+. /lib/functions.sh
+# netifd provides default network overlay with current runtime configuration. We
+# are not interested in that. We need to work with real content of /etc/config so
+# we disable state loading.
+LOAD_STATE=
+config_load network
+
+config_network="/etc/config/network"
+config_network_backup="$config_network.backup"
+cp "$config_network" "$config_network_backup"
+lanports="$(mktemp -d)"
+lanmerge="$(mktemp -d)"
+devmerged="$(mktemp -d)"
+cleanup() {
+	local ec=$?
+	if [ $ec -ne 0 ]; then
+		mv "$config_network_backup" "$config_network"
+		echo "The network migration failed. Reverting to the original state.  Please migrate the network configuration manually!" >&2
+		exit $ec
+	else
+		rm -f "$config_network_backup"
+	fi
+	rm -rf "$lanports" "$lanmerge" "$devmerged"
+}
+trap cleanup EXIT TERM INT QUIT ABRT
+
+
+device_attrs="
+type macaddr mtu mtu6
+"
+bridge_attrs="
+bridge_empty igmp_snooping multicast_querier query_interval
+query_response_interval last_member_interval hash_max robustness stp
+forward_delay hello_time priority ageing_time max_age
+"
+
+
+# This splits off the new device sections from existing interfaces.
+for_interfaces() {
+	local name="$1"
+	local type ifname
+	config_get type "$name" "type"
+	config_get ifname "$name" "ifname"
+
+	# (1) Create new "device" section and migrate ifaces to new device.
+	local devname dcnf empty="y"
+	if [ "$type" = "bridge" ]; then
+		devname="br-$name"
+		dcnf=${devname//[-]/_}
+		empty="n" # we always create device for bridge
+		# create new named section
+		uci set "network.$dcnf=device"
+		uci set "network.$dcnf.name=$devname"
+		for attr in $bridge_attrs; do
+			local value
+			config_get value "$name" "$attr"
+			[ -n "$value" ] && uci set "network.$dcnf.$attr=$value"
+			uci -q del "network.$name.$attr" || true
+		done
+		for ifnm in $ifname; do
+			uci add_list "network.$dcnf.ports=$ifnm"
+		done
+	else
+		devname="$ifname"
+		# We do not create device for interfaces if it references some other
+		# interface or if is just empty
+		if [ -n "$ifname" ] && [ "${ifname:0:1}" != "@" ]; then
+			# Use prefix for section name to avoid named section collisions
+			# in case of non-bridged interface (e.g. wan) during migration.
+			dcnf="dev_$name"
+			uci set "network.$dcnf=device"
+			uci set "network.$dcnf.name=$devname"
+		fi
+	fi
+
+	# (2) Migrate device related attributes to the new device.
+	if [ -n "$dcnf" ]; then
+		for attr in $device_attrs; do
+			local value
+			config_get value "$name" "$attr"
+			if [ -n "$value" ]; then
+				uci set "network.$dcnf.$attr=$value"
+				empty="n"
+			fi
+			uci -q del "network.$name.$attr" || true
+		done
+		# Remove the section if it is empty
+		[ "$empty" = "y" ] && uci -q delete "network.$dcnf"
+	fi
+
+	# (3) migrate interfaces `ifname` to new `device` section
+	uci -q del "network.$name.ifname" || true
+	[ -z "$devname" ] \
+		|| uci set "network.$name.device=$devname"
+}
+config_foreach for_interfaces "interface"
+
+uci commit network
+/etc/init.d/network restart
+' > /etc/uci-defaults/network-migrate
+create_notification -s restart 'Your network settings will be automatically migrated on next reboot, please refrain from changes in the configuration until then.'
+chmod a+rx /etc/uci-defaults/network-migrate

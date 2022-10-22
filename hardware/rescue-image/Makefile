@@ -9,15 +9,15 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rescue-image
 PKG_VERSION:=3.6.1
-PKG_RELEASE:=1
-BB_VERSION:=1.32.1
+PKG_RELEASE:=$(AUTORELEASE)
+BB_VERSION:=1.33.2
 PKG_SOURCE:=busybox-$(BB_VERSION).tar.bz2
 PKG_SOURCE_URL:=https://www.busybox.net/downloads \
 		http://sources.buildroot.net
-PKG_HASH:=9d57c4bd33974140fd4111260468af22856f12f5b5ef7c70c8d9b75c712a0dee
+PKG_HASH:=6843ba7977081e735fa0fdb05893e3c002c8c5ad7c9c80da206e603cc0ac47e7
 PKG_MAINTAINER:=Michal Hrusecky <michal.hrusecky@nic.cz>
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-ROOTFS_INSTALL:=+libgcc +libc +libubox +mtd +libpthread +librt +libattr +libuuid +zlib +libblkid +liblzo +btrfs-progs +schnapps +dropbear +uboot-envtools +usign +cznic-repo-keys +libopenssl +libpcre +wget +libhavege +haveged
+ROOTFS_INSTALL:=+libgcc +libc +libubox +mtd +libpthread +librt +libattr +libuuid +zlib +libblkid +liblzo +btrfs-progs +schnapps +dropbear +uboot-envtools +usign +cznic-repo-keys +libopenssl +libpcre +wget-ssl +libhavege +haveged
 PKG_BUILD_DEPENDS:=opkg/host mtd btrfs-progs schnapps wget cznic-repo-keys usign uboot-tools dropbear haveged
 
 KERNEL_BUILD_DIR:=$(PKG_BUILD_DIR)/kernel
@@ -31,18 +31,18 @@ include $(INCLUDE_DIR)/quilt.mk
 include $(INCLUDE_DIR)/package.mk
 
 PATCH_DIR := $(PLATFORM_DIR)/patches$(if $(wildcard $(PLATFORM_DIR)/patches-$(KERNEL_PATCHVER)),-$(KERNEL_PATCHVER))
-ifeq ($(CONFIG_TARGET_mvebu_cortexa53_DEVICE_cznic-mox),y)
+ifeq ($(CONFIG_TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox),y)
 DEVICE := mox
 else ifeq ($(CONFIG_TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia),y)
 DEVICE := omnia
 else
 DEVICE := unknown
 endif
-kernel_files=$(TOPDIR)/target/linux/$(BOARD)/files-$(KERNEL_PATCHVER)/. $(TOPDIR)/target/linux/generic/files/.
+kernel_files=$(TOPDIR)/target/linux/$(BOARD)/files/. $(TOPDIR)/target/linux/generic/files/.
 
 define Package/rescue-image
 	TITLE:=rescue-image
-	DEPENDS:=@(TARGET_mvebu_cortexa53_DEVICE_cznic-mox||TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia)
+	DEPENDS:=@(TARGET_mvebu_cortexa53_DEVICE_cznic_turris-mox||TARGET_mvebu_cortexa9_DEVICE_cznic_turris-omnia)
 endef
 
 define Build/Prepare
@@ -99,11 +99,11 @@ define Build/Compile
 		$(STAGING_DIR_HOST)/bin/opkg --offline-root "$(PKG_BUILD_DIR)/rootfs" --force-depends install \{\} \; ;\
 	done
 	rm -rf "$(PKG_BUILD_DIR)/rootfs"/usr/lib/opkg
-	$(KERNEL_MAKE) $(PKG_JOBS) silentoldconfig $(KERNELNAME)
-	cd $(LINUX_DIR); ./scripts/gen_initramfs_list.sh \
+	$(KERNEL_MAKE) $(PKG_JOBS) oldconfig $(KERNELNAME)
+	cd $(LINUX_DIR); ./usr/gen_initramfs.sh \
 	-o "$(PKG_BUILD_DIR)"/kernel/linux-$(LINUX_VERSION)/arch/$(LINUX_KARCH)/boot/initrd.gz -u squash -g squash \
 	"$(PKG_BUILD_DIR)/rootfs" "$(PKG_BUILD_DIR)/rootfs.extra"
-	gzip -d "$(PKG_BUILD_DIR)"/kernel/linux-$(LINUX_VERSION)/arch/$(LINUX_KARCH)/boot/initrd.gz
+	cp "$(PKG_BUILD_DIR)"/kernel/linux-$(LINUX_VERSION)/arch/$(LINUX_KARCH)/boot/initrd.gz "$(PKG_BUILD_DIR)"/kernel/linux-$(LINUX_VERSION)/arch/$(LINUX_KARCH)/boot/initrd
 	$(CP) "$(PKG_BUILD_DIR)"/rescue.its "$(PKG_BUILD_DIR)"/kernel/linux-$(LINUX_VERSION)/arch/$(LINUX_KARCH)/boot/rescue.its
 endef
 
@@ -114,6 +114,7 @@ define Package/rescue-image/install
 	"$(STAGING_DIR_HOST)"/bin/mkimage -f rescue.its $(1)/usr/share/rescue-image/image.fit
 	xz -k9 -F lzma $(1)/usr/share/rescue-image/image.fit
 	[ "`stat -c '%s' $(1)/usr/share/rescue-image/image.fit.lzma`" -lt 7340032 ]
+	[ "`stat -c '%s' $(1)/usr/share/rescue-image/image.fit.lzma`" -gt 1000000 ]
 endef
 
 $(eval $(call BuildPackage,rescue-image))

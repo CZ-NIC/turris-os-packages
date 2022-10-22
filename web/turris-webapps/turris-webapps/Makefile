@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018-2021 CZ.NIC z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2018-2022 CZ.NIC z.s.p.o. (https://www.nic.cz/)
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=turris-webapps
-PKG_VERSION:=3.7
-PKG_RELEASE:=1
+PKG_VERSION:=3.7.1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/webapps
-PKG_MIRROR_HASH:=07b77160d251e4f0fecf3b41988ac949720e5f3e1894052559c7defaff6f5bcd
+PKG_MIRROR_HASH:=67e355dd98edd09df77dfc7c2c41655e0d6b40e89c364ac861d108b2d6b287f6
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
@@ -26,7 +26,7 @@ define Package/turris-webapps
   CATEGORY:=Web
   SUBMENU:=WebApps
   TITLE:=Turris WebApps
-  DEPENDS:=+lighttpd +lighttpd-mod-alias +lighttpd-mod-cgi
+  DEPENDS:=+lighttpd +lighttpd-mod-alias +lighttpd-mod-cgi +lighttpd-mod-setenv
   URL:=https://gitlab.nic.cz/turris/webapps
 endef
 
@@ -38,7 +38,7 @@ Build/Compile:=:
 
 define Package/turris-webapps/install
 	$(INSTALL_DIR) $(1)/etc/lighttpd/conf.d/
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/turris-root.conf $(1)/etc/lighttpd/conf.d/turris-root.conf
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/turris-root.conf $(1)/etc/lighttpd/conf.d/90-turris-root.conf
 
 	$(INSTALL_DIR) $(1)/usr/share/turris-webapps
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/turris-webapps-json-cgi $(1)/usr/share/turris-webapps

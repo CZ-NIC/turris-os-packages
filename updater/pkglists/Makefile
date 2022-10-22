@@ -1,5 +1,5 @@
 #
-## Copyright (C) 2016-2021 CZ.NIC z.s.p.o. (http://www.nic.cz/)
+## Copyright (C) 2016-2022 CZ.NIC z.s.p.o. (http://www.nic.cz/)
 #
 ## This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -8,8 +8,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pkglists
-PKG_VERSION:=1.7.1
-PKG_RELEASE:=1
+PKG_VERSION:=1.8.1
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_MAINTAINER:=CZ.NIC <packaging@turris.cz>
 

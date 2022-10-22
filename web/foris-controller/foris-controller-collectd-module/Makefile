@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=foris-controller-collectd-module
 PKG_VERSION:=0.2
-PKG_RELEASE:=3
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://gitlab.nic.cz/turris/foris-controller/foris-controller-collectd-module.git
@@ -32,7 +32,6 @@ define Package/foris-controller-collectd-module
   DEPENDS:= \
     +foris-controller \
     +follectd
-  VARIANT:=python3
 endef
 
 define Package/foris-controller-collectd-module/description

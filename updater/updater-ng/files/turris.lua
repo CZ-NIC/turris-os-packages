@@ -40,6 +40,17 @@ else
 end
 Export('board')
 
+-- Detect container
+local env = io.open("/proc/1/environ", "rb")
+for name, value in env:read("*a"):gmatch"([^=]+)=([^%z]+)%z?" do
+	if name == "container" then
+		container=value
+		Export("container")
+	end
+end
+env:close()
+
+
 -- Common connection settings for Turris OS scripts
 local script_options = {
 	security = "Remote",

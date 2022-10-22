@@ -1,0 +1,22 @@
+#!/bin/sh /etc/rc.common
+
+# Start at the end, so the colors change after the boot is done.
+START=99
+STOP=00
+
+reload() {
+	rainbow reset -n
+}
+
+restart() {
+	rainbow reset -a
+}
+
+start() {
+	rainbow reset -a -b &
+}
+
+stop() {
+	# Reset to the default, so a reboot can be recognized.
+	rainbow -p 100 -n shutdown all enable white
+}

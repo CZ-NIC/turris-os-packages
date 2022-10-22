@@ -99,3 +99,17 @@ for name, _ in pairs(ls("/sys/bus/pci/devices")) do
 	end
 end
 turris_list("drivers/pci.lua")
+
+-- SDIO
+devices = {}
+for name, _ in pairs(ls("/sys/bus/sdio/devices")) do
+	local vendor = cat_file("/sys/bus/sdio/devices/" .. name .. "/vendor")
+	local device = cat_file("/sys/bus/sdio/devices/" .. name .. "/device")
+	if vendor and device then
+		table.insert(devices, {
+			vendor = tonumber(vendor),
+			device = tonumber(device)
+		})
+	end
+end
+turris_list("drivers/sdio.lua")

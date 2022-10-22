@@ -1,0 +1,147 @@
+From eb304a5f6f07efcdc92693e2c11c35943adbbbcc Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Martin=20Mat=C4=9Bjek?= <martin.matejek@nic.cz>
+Date: Sat, 20 Aug 2022 22:55:08 +0200
+Subject: [PATCH 1/2] wan: store wan interface L2 options in device section
+
+Since OpenWrt 21.02, L2 interface options should be stored in
+interface's `device` section instead of `interface` section.
+
+OpenWrt 19.07
+
+```
+config interface 'wan'
+    option iface 'eth0'
+    option macaddr '11:22:33:44:55:66'
+```
+
+OpenWrt 21.02
+
+```
+config interface 'wan'
+    option device 'eth0'
+
+config device
+    option name 'eth0'
+    option macaddr '11:22:33:44:55:66'
+```
+---
+ foris_controller_backends/wan/__init__.py | 64 ++++++++++++++++++++---
+ 1 file changed, 56 insertions(+), 8 deletions(-)
+
+diff --git a/foris_controller_backends/wan/__init__.py b/foris_controller_backends/wan/__init__.py
+index 0e9d93a..6ef8c98 100644
+--- a/foris_controller_backends/wan/__init__.py
++++ b/foris_controller_backends/wan/__init__.py
+@@ -1,6 +1,6 @@
+ #
+ # foris-controller
+-# Copyright (C) 2020-2021 CZ.NIC, z.s.p.o. (http://www.nic.cz/)
++# Copyright (C) 2020-2022 CZ.NIC, z.s.p.o. (http://www.nic.cz/)
+ #
+ # This program is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+@@ -19,13 +19,19 @@
+ 
+ import logging
+ 
+-from foris_controller_backends.uci import UciBackend, get_option_named, parse_bool, store_bool
+-from foris_controller.exceptions import UciException, GenericError
++from foris_controller.exceptions import GenericError, UciException
++from foris_controller.utils import parse_to_list, unwrap_list
+ from foris_controller_backends.cmdline import AsyncCommand, BaseCmdLine
+-from foris_controller_backends.maintain import MaintainCommands
+ from foris_controller_backends.files import BaseFile
++from foris_controller_backends.maintain import MaintainCommands
+ from foris_controller_backends.networks import NetworksCmd, NetworksUci
+-from foris_controller.utils import unwrap_list, parse_to_list
++from foris_controller_backends.uci import (
++    UciBackend,
++    get_option_named,
++    parse_bool,
++    section_exists,
++    store_bool,
++)
+ 
+ logger = logging.getLogger(__name__)
+ 
+@@ -106,7 +112,7 @@ class WanUci:
+             else:
+                 wan6_settings["wan6_6in4"]["dynamic_ipv4"]["enabled"] = False
+ 
+-        custom_mac = get_option_named(network_data, "network", "wan", "macaddr", "")
++        custom_mac = WanUci._fetch_mac_address(network_data)
+ 
+         networks = NetworksUci()
+         networks_settings = networks.get_settings()
+@@ -144,6 +150,18 @@ class WanUci:
+             "qos": qos
+         }
+ 
++    @staticmethod
++    def _fetch_mac_address(network_data: dict) -> str:
++        """Backward compatible reading of both OpenWrt 19.07 and 21.02 config style.
++
++        Prefer the new way (21.02) and try that first.
++        """
++        if section_exists(network_data, "network", "dev_wan"):
++            return get_option_named(network_data, "network", "dev_wan", "macaddr", "")
++
++        # try to fallback on `inteface 'wan'`, i.e. OpenWrt 19.07 style config syntax
++        return get_option_named(network_data, "network", "wan", "macaddr", "")
++
+     def update_settings(self, wan_settings, wan6_settings, mac_settings, qos=None):
+         with UciBackend() as backend:
+             # WAN
+@@ -301,10 +319,17 @@ class WanUci:
+                 backend.set_option("resolver", "common", "net_ipv6", store_bool(True))
+ 
+             # MAC
++            WanUci._migrate_old_config(backend)
++            # create new `device` section in case there is none and wasn't created through migration
++            # TODO: what if there is no 'option device <dev>' set?
++            network_data = backend.read("network")
++            wan_device = get_option_named(network_data, "network", "wan", "device")
++            backend.add_section("network", "device", "dev_wan")
++            backend.set_option("network", "dev_wan", "name", wan_device)
+             if mac_settings["custom_mac_enabled"]:
+-                backend.set_option("network", "wan", "macaddr", mac_settings["custom_mac"])
++                backend.set_option("network", "dev_wan", "macaddr", mac_settings["custom_mac"])
+             else:
+-                backend.del_option("network", "wan", "macaddr", fail_on_error=False)
++                backend.del_option("network", "dev_wan", "macaddr", fail_on_error=False)
+ 
+             if qos:
+                 network_data = backend.read("network")
+@@ -331,6 +356,29 @@ class WanUci:
+ 
+         return True
+ 
++    @staticmethod
++    def _migrate_old_config(backend: UciBackend) -> None:
++        """Try to migrate device config to OpenWrt 21.02 style config.
++
++        Create new `device` section for L2 option if needed.
++        """
++        network_data = backend.read("network")
++        ifname = get_option_named(network_data, "network", "wan", "ifname", "")
++        if not ifname:
++            return
++
++        backend.del_option("network", "wan", "ifname", fail_on_error=False)
++        backend.set_option("network", "wan", "device", ifname)
++
++        backend.add_section("network", "device", "dev_wan")
++        backend.set_option("network", "dev_wan", "name", ifname)
++
++        # move the `macaddr` to correct location
++        macaddr = get_option_named(network_data, "network", "wan", "macaddr", "")
++        if macaddr:
++            backend.del_option("network", "wan", "macaddr", fail_on_error=False)
++            backend.set_option("network", "dev_wan", "macaddr", macaddr)
++
+     def update_uncofigured_wan_to_default(self) -> bool:
+         """
+         Updates wan if it was not configured to get IP address via DHCP
+-- 
+2.34.1
+

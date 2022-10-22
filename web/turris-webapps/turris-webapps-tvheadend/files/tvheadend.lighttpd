@@ -1,5 +1,3 @@
-server.modules += ( "mod_proxy" )
-
 $HTTP["url"] =~ "^/tvheadend" {
   proxy.header = (
     "map-host-request" => ( "-" => "127.0.0.1" ),

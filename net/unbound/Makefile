@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=unbound
-PKG_VERSION:=1.13.1
-PKG_RELEASE:=4
+PKG_VERSION:=1.16.3
+PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://nlnetlabs.nl/downloads/unbound/
-PKG_HASH:=8504d97b8fc5bd897345c95d116e0ee0ddf8c8ff99590ab2b4bd13278c9f50b8
+PKG_HASH:=ea0c6665e2c3325b769eac1dfccd60fe1828d5fcf662650039eccb3f67edb28e
 
 PKG_BUILD_PARALLEL:=1
 PKG_FIXUP:=autoreconf
@@ -86,6 +86,7 @@ define Package/libunbound
   SECTION:=libs
   CATEGORY:=Libraries
   TITLE+= (library)
+  DEPENDS+= +libevent2 +libpthread +libmnl
 endef
 
 define Package/libunbound/description
@@ -99,7 +100,11 @@ CONFIGURE_ARGS += \
 	--enable-subnet \
 	--with-libexpat="$(STAGING_DIR)/usr" \
 	--with-ssl="$(STAGING_DIR)/usr" \
-	--without-pthreads
+	--enable-event-api \
+	--with-libevent="$(STAGING_DIR)/usr" \
+	--enable-ipset \
+	--with-libmnl="$(STAGING_DIR)/usr" \
+	--with-pthreads
 
 # uClibc doesn't support TCP fast open -> --enable-tfo-{client,server} would fail
 ifneq ($(CONFIG_USE_UCLIBC),y)
@@ -113,10 +118,11 @@ define Package/unbound/conffiles
 endef
 
 define Build/InstallDev
-	$(INSTALL_DIR) $(1)/usr/include
-	$(CP) $(PKG_INSTALL_DIR)/usr/include/unbound.h $(1)/usr/include/
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libunbound.{so*,a,la} $(1)/usr/lib/
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/lib/libunbound.{so*,a,la} $(1)/usr/lib/
+	$(INSTALL_DIR) $(1)/usr/include
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/include/unbound.h $(1)/usr/include/
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/include/unbound-event.h $(1)/usr/include/
 endef
 
 define Package/unbound/install

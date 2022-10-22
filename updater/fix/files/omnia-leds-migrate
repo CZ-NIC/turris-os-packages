@@ -1,0 +1,12 @@
+#!/bin/sh
+sed -i -e 's|pwr|power|g' \
+       -e 's|lan\([0-9]\)|lan_\1|g' \
+       -e 's|pci\([0-9]\)|wlan_\1|g' \
+       -e 's|usr\([0-9]\)|indicator_\1|g' /etc/config/rainbow
+sed -i -e 's|omnia-led:pwr|rgb:power|g' \
+       -e 's|omnia-led:lan\([0-9]\)|rgb:lan-\1|g' \
+       -e 's|omnia-led:wan|rgb:wan|g' \
+       -e 's|omnia-led:pci\([0-9]\)|rgb:wlan-\1|g' \
+       -e 's|omnia-led:usr\([0-9]\)|rgb:indicator-\1|g' /etc/config/system
+/etc/init.d/rainbow restart || true 2> /dev/null
+/etc/init.d/led restart || true

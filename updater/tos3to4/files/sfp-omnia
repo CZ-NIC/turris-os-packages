@@ -5,7 +5,7 @@ dev="/sys/class/gpio/gpio$detgpio"
 
 if ! [ -e "$dev/value" ]; then
 	echo -n "$detgpio" > "/sys/class/gpio/export"
-	echo -n "out" > "$dev/direction"
+	echo -n "in" > "$dev/direction"
 fi
 
 if [ "$(cat "$dev/value")" = "0" ]; then
